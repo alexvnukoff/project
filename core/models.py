@@ -188,4 +188,3 @@ class Value(models.Model):
 @receiver(pre_save, sender=Item)
 def item_create_callback(sender, **kwargs):
     print("Item creation: check authority!")
-
