@@ -1,0 +1,191 @@
+from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Identity defines role in application
+#----------------------------------------------------------------------------------------------------------
+class Identity(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    member = models.ManyToManyField('self', through='Participant', symmetrical=False, related_name='i2i')
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Participant defines relationships between two Identities
+#----------------------------------------------------------------------------------------------------------
+class Participant(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    community = models.ForeignKey(Identity, related_name='comm2part')
+    part = models.ForeignKey(Identity, related_name='part2comm')
+
+    date_from = models.DateField(default=0)
+    date_to = models.DateField(default=0)
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Dictionary defines dictionary for attributes in application
+#----------------------------------------------------------------------------------------------------------
+class Dictionary(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Slot defines row in dictionary for attributes in application
+#----------------------------------------------------------------------------------------------------------
+class Slot(models.Model):
+    title = models.CharField(max_length=128)
+    dict = models.ForeignKey(Dictionary, related_name='slot')
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Attribute defines attributes for Item in application
+#----------------------------------------------------------------------------------------------------------
+class Attribute(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    type = models.CharField(max_length=3)
+    dict = models.ForeignKey(Dictionary, related_name='attr')
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    created_date = models.DateField(auto_now_add=True)
+    updated_date = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Permission defines operations for particular Identity
+#----------------------------------------------------------------------------------------------------------
+class Permission(models.Model):
+    title = models.CharField(max_length=128)
+
+    role = models.ForeignKey(Identity, related_name='identity')
+
+    create_flag = models.BooleanField(default=False)
+    read_flag = models.BooleanField(default=True)
+    update_flag = models.BooleanField(default=False)
+    delete_flag = models.BooleanField(default=False)
+    get_flag = models.BooleanField(default=True)
+    run_flag = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("title", "role")
+
+    def __str__(self):
+        return self.title
+
+    def get_perm_for_identity(self):
+        return self.create_flag, self.read_flag, self.update_flag, self.delete_flag, self.get_flag, self.run_flag
+
+#----------------------------------------------------------------------------------------------------------
+#             Class State defines current state for particular item instance
+#----------------------------------------------------------------------------------------------------------
+class State(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    perm = models.ForeignKey(Permission, related_name='state')
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Process defines process which is attached to particular Item
+#----------------------------------------------------------------------------------------------------------
+class Process(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Action defines member of the process, which is attached to particular Item
+#----------------------------------------------------------------------------------------------------------
+class Action(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    papa = models.ForeignKey(Process, related_name='action')
+    child_proc = models.ForeignKey(Process, related_name='start_node', default=0) #handle to child process
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class ActionPath defines connection between two Actions in Process
+#----------------------------------------------------------------------------------------------------------
+class ActionPath(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    source = models.ForeignKey(Action, related_name='act2path')
+    target = models.ForeignKey(Action, related_name='path2act')
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Item defines basic primitive for application objects
+#----------------------------------------------------------------------------------------------------------
+class Item(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    member = models.ManyToManyField('self', through='Relationship', symmetrical=False)
+    attr = models.ManyToManyField(Attribute, related_name='item')
+    status = models.ForeignKey(State, null=True)
+    proc = models.ForeignKey(Process, null=True)
+
+    def __str__(self):
+        return self.title
+
+'''    def create(self):
+        if self.status.perm.create_flag:
+            return self.objects.create(self)
+        else:
+            return 'You can\'t create Item. Not enough rights.'
+'''
+#----------------------------------------------------------------------------------------------------------
+#             Class Relationship defines relationships between two Items
+#----------------------------------------------------------------------------------------------------------
+class Relationship(models.Model):
+    title = models.CharField(max_length=128, unique=True)
+    parent = models.ForeignKey(Item, related_name='p2c')
+    child = models.ForeignKey(Item, related_name='c2p')
+
+    qty = models.FloatField()
+    create_date = models.DateField(auto_now_add=True)
+    create_user = models.ForeignKey(Identity)
+
+    class Meta:
+        unique_together = ("parent", "child")
+
+    def __str__(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class Value defines value for particular Attribute-Item relationship
+#----------------------------------------------------------------------------------------------------------
+class Value(models.Model):
+    title = models.CharField(max_length=1024)
+    attr = models.ForeignKey(Attribute, related_name='value')
+    item = models.ForeignKey(Item)
+
+#    class Meta:
+        #db_tablespace = 'core_values'
+
+    def __str__(self):
+        return self.title
+
+    def get(self):
+        return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------
+#             Signal receivers
+#----------------------------------------------------------------------------------------------------------
+@receiver(pre_save, sender=Item)
+def item_create_callback(sender, **kwargs):
+    print("Item creation: check authority!")
+
