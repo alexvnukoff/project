@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The books list </title>
+</head>
+<body>
+<table>
+
+{% for title , attr  in itemsList.items %}
+    {% load staticfiles %}
+    {%   with attr.Detail_Text|first as text  %}
+    {%   with attr.Detail_Picture|first as picture  %}
+
+
+  <tr >
+     <td rowspan="2" style="vertical-align: middle;" >
+     <img src=" {% static  picture %}/">
+     </td>
+     <td style="padding-top: 40px;vertical-align: top;">
+       <span>{{ title }}</span>
+     </td>
+  </tr>
+  <tr >
+       <td  >
+
+      <span>{{ text }}</span>
+
+       </td>
+ </tr>
+
+        {% endwith %}
+        {% endwith %}
+    {% empty %}
+   <TR>
+       <td>
+           <span> It's empty</span>
+       </td>
+   </TR>
+
+{% endfor %}
+
+
+</table>
+</body>
+</html>
+
+

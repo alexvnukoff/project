@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Identity defines role in application
 #----------------------------------------------------------------------------------------------------------
@@ -51,7 +53,7 @@ class Slot(models.Model):
 class Attribute(models.Model):
     title = models.CharField(max_length=128, unique=True)
     type = models.CharField(max_length=3)
-    dict = models.ForeignKey(Dictionary, related_name='attr')
+    dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
     start_date = models.DateField()
     end_date = models.DateField()
@@ -132,13 +134,31 @@ class ActionPath(models.Model):
 #----------------------------------------------------------------------------------------------------------
 class Item(models.Model):
     title = models.CharField(max_length=128, unique=True)
-    member = models.ManyToManyField('self', through='Relationship', symmetrical=False)
+    member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     attr = models.ManyToManyField(Attribute, related_name='item')
-    status = models.ForeignKey(State, null=True)
-    proc = models.ForeignKey(Process, null=True)
+    status = models.ForeignKey(State, null=True, blank=True)
+    proc = models.ForeignKey(Process, null=True, blank=True)
+
+    #def __init__(self, name):
+    #   title = name
+
 
     def __str__(self):
         return self.title
+
+
+    def getAttributesValue(self, *attr):
+        '''
+           Return values of attribute list in specific Item
+        '''
+        attributes = Value.objects.filter(attr__title__in=attr, item=self.id)  # Filtering values by attributes
+        attributeValue = {}                                      # Dictionary  will contain { attribute : [value,] ,}
+        for attribute in attr:
+            attributeValue[str(attribute).replace(' ', '_')] = list(attributes.filter(attr__title=attribute))
+        return attributeValue
+
+
+
 
 '''    def create(self):
         if self.status.perm.create_flag:
@@ -168,18 +188,22 @@ class Relationship(models.Model):
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
-    title = models.CharField(max_length=1024)
-    attr = models.ForeignKey(Attribute, related_name='value')
-    item = models.ForeignKey(Item)
+    title = models.TextField()
+    attr = models.ForeignKey(Attribute, related_name='attr2value')
+    item = models.ForeignKey(Item, related_name='item2value')
 
 #    class Meta:
         #db_tablespace = 'core_values'
+
 
     def __str__(self):
         return self.title
 
     def get(self):
         return self.title
+
+
+
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
