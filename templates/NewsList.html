@@ -4,7 +4,7 @@
     <title>The books list </title>
 </head>
 <body>
-<table>
+<table style="max-width: 850px;">
 
 {% for title , attr  in itemsList.items %}
     {% load staticfiles %}
@@ -13,17 +13,18 @@
 
 
   <tr >
-     <td rowspan="2" style="vertical-align: middle;" >
-     <img src=" {% static  picture %}/">
-     </td>
-     <td style="padding-top: 40px;vertical-align: top;">
-       <span>{{ title }}</span>
+
+     <td colspan="2">
+       <span  style="font-size: x-large;">{{ title }}</span>
      </td>
   </tr>
   <tr >
-       <td  >
+   <td>
+     <img width="120" height="100" src=" {% static  picture%}"/>
+     </td>
+       <td style="vertical-align: top;" >
 
-      <span>{{ text }}</span>
+      <span>{{ text|truncatechars:250}}</span>
 
        </td>
  </tr>
@@ -41,6 +42,7 @@
 
 
 </table>
+{% include "Paginator.html" %}
 </body>
 </html>
 
