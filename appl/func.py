@@ -15,7 +15,6 @@ def getItemsListWithPagination(cls,  *attr,  page=1):
     '''
     items = (globals()[cls]).objects.select_related().all()
     paginator = Paginator(items, 2)
-
     try:
       page = items = paginator.page(page)  #check if page is valid
     except Exception:
