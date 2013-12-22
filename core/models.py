@@ -51,7 +51,7 @@ class Slot(models.Model):
 #             Class Attribute defines attributes for Item in application
 #----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
-    title = models.CharField(max_length=128, unique=True)
+    title = models.CharField(max_length=128)
     type = models.CharField(max_length=3)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
@@ -60,6 +60,9 @@ class Attribute(models.Model):
 
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
+
+    class Meta:
+        unique_together = ("title", "type")
 
     def __str__(self):
         return self.title
@@ -201,9 +204,6 @@ class Value(models.Model):
 
     def get(self):
         return self.title
-
-
-
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
