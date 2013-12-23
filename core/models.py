@@ -39,6 +39,28 @@ class Dictionary(models.Model):
 
 
 
+    def getSlotsList(self):
+        slots = Slot.objects.filter(dict=self.id)
+        return slots
+
+    def createSlot(self, title):
+        slot = Slot(title=title, dict=self)
+        slot.save()
+
+    def updateSlot(self,oldTitle,newTitle):
+        Slot.objects.filter(dict__id=self.id, title=oldTitle).update(title=newTitle)
+
+
+    def deleteSlot(self,slotTitle):
+        slot = Slot.objects.get(dict=self.id,title=slotTitle)
+        slot.delete()
+
+
+
+
+
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Slot defines row in dictionary for attributes in application
 #----------------------------------------------------------------------------------------------------------
@@ -48,6 +70,8 @@ class Slot(models.Model):
 
     def __str__(self):
         return self.title
+
+
 
 
 
@@ -169,15 +193,11 @@ class Item(models.Model):
         self.title = kwargs['title']
         self.save()
 
-
-
-
-
     def __str__(self):
         return self.title
 
 
-    def creatAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
+    def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
         '''
         Method create new Attribute and set it to specific item
         '''
