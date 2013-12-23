@@ -155,6 +155,12 @@ class Item(models.Model):
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
 
+    class Meta:
+        permissions = (
+            ("can_get", "Can get Item"),
+            ("can_run", "Can run Procedure"),
+        )
+
     #def __init__(self, name):
     #   title = name
 
@@ -248,8 +254,8 @@ class Value(models.Model):
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
-#    class Meta:
-        #db_tablespace = 'core_values'
+    class Meta:
+        db_tablespace = 'TPP_CORE_VALUES'
 
 
     def __str__(self):
