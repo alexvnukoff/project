@@ -37,5 +37,4 @@ def getItemsList(cls,  *attr,  qny=None):
     itemsList = {}
     for item in items:
         itemsList[item.name] = item.getAttributesValue(*attr)
-
     return itemsList
