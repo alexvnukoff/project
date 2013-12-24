@@ -10,12 +10,13 @@
     {% load staticfiles %}
     {%   with attr.Detail_Text|first as text  %}
     {%   with attr.Detail_Picture|first as picture  %}
-
+     {%   with attr.title|first as name  %}
+         {%  with attr.Anonce_Text|first as anons  %}
 
   <tr >
 
      <td colspan="2">
-       <span  style="font-size: x-large;">{{ title }}</span>
+       <span  style="font-size: x-large;">{{ anons }}</span>
      </td>
   </tr>
   <tr >
@@ -28,7 +29,8 @@
 
        </td>
  </tr>
-
+        {% endwith %}
+        {% endwith %}
         {% endwith %}
         {% endwith %}
     {% empty %}

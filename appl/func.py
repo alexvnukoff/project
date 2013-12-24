@@ -13,18 +13,19 @@ def getItemsListWithPagination(cls,  *attr,  page=1):
     attr = (list of item's attributes)
     page = number of current page
     '''
-    items = (globals()[cls]).objects.select_related().all()
+
+    items = (globals()[cls]).objects.values('id')
+
+
     paginator = Paginator(items, 2)
     try:
       page = items = paginator.page(page)  #check if page is valid
     except Exception:
       page = items = paginator.page(1)
+    items = tuple([item['id'] for item in page.object_list])
+    attributeValues = (globals()[cls]).getItemsAttributesValues(attr, items)
 
-    itemsList = {}
-    for item in items:
-        itemsList[item.name] = item.getAttributesValue(*attr)
-
-    return itemsList, page  #Return List Item and Page object of current page
+    return attributeValues, page  #Return List Item and Page object of current page
 
 def getItemsList(cls,  *attr,  qny=None):
     '''

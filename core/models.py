@@ -40,18 +40,30 @@ class Dictionary(models.Model):
 
 
     def getSlotsList(self):
+        '''
+        Return queryset of Slots  associated with dictionary
+        '''
         slots = Slot.objects.filter(dict=self.id)
         return slots
 
     def createSlot(self, title):
+        '''
+        Create new Slot
+        '''
         slot = Slot(title=title, dict=self)
         slot.save()
 
     def updateSlot(self,oldTitle,newTitle):
+        '''
+        Update Slot
+        '''
         Slot.objects.filter(dict__id=self.id, title=oldTitle).update(title=newTitle)
 
 
     def deleteSlot(self,slotTitle):
+        '''
+        Delete slot
+        '''
         slot = Slot.objects.get(dict=self.id,title=slotTitle)
         slot.delete()
 
@@ -71,7 +83,8 @@ class Slot(models.Model):
     def __str__(self):
         return self.title
 
-
+    class Meta:
+        unique_together = ("title", "dict")
 
 
 
@@ -183,9 +196,6 @@ class Item(models.Model):
     #   title = name
 
 
-    def saveItem(self, *args, **kwargs):
-        self.title = kwargs['title']
-        self.save()
 
     def __str__(self):
         return self.title
@@ -223,22 +233,65 @@ class Item(models.Model):
         return attribute
 
 
-    def getAttributesValue(self, *attr):
+
+    @staticmethod
+    def getItemsAttributesValues(attr, items):
+        '''
+           Return values of attribute list in items list
+        '''
+        values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+        values = list(values.values("title", "attr__title", "item__title", "item"))
+
+
+        valuesAttribute = {}
+
+        for valuesDict in values:
+            if valuesDict['item'] not in valuesAttribute:
+                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
+
+            if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
+                valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+
+            valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+
+        return valuesAttribute
+
+
+    def getAttributeValues(self, *attr):
         '''
            Return values of attribute list in specific Item
         '''
-        attributes = Value.objects.filter(attr__title__in=attr, item=self.id)  # Filtering values by attributes
-        attributeValue = {}                                      # Dictionary  will contain { attribute : [value,] ,}
-        for attribute in attr:
-            attributeValue[str(attribute).replace(' ', '_')] = list(attributes.filter(attr__title=attribute))
-        return attributeValue
+        values = Value.objects.filter(attr__title__in=attr, item=self.id)
+        values = list(values.values("title", "attr__title", "item__title", "item"))
+
+
+        valuesAttribute = {}
+
+        for valuesDict in values:
+            if valuesDict['item'] not in valuesAttribute:
+                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
+
+            if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
+                valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+
+            valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+
+        return valuesAttribute
+
+
+
+
+
+
+
+
 
 
 
 
 '''    def create(self):
         if self.status.perm.create_flag:
-            return self.objects.create(self)
+            return self.objects.create(s    elf)
         else:
             return 'You can\'t create Item. Not enough rights.'
 '''
@@ -270,7 +323,8 @@ class Value(models.Model):
 
 #    class Meta:
         #db_tablespace = 'core_values'
-
+    class Meta:
+        unique_together = ("title", "attr","item")
 
     def __str__(self):
         return self.title
