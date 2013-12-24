@@ -27,15 +27,3 @@ def getItemsListWithPagination(cls,  *attr,  page=1):
 
     return attributeValues, page  #Return List Item and Page object of current page
 
-def getItemsList(cls,  *attr,  qny=None):
-    '''
-    Method return List of Item of specific class
-    cls = (class name of specific Item (News , Company))
-    attr = (list of item's attributes)
-    qny = (number of returned items)
-    '''
-    items = (globals()[cls]).objects.select_related().all()[:None]
-    itemsList = {}
-    for item in items:
-        itemsList[item.name] = item.getAttributesValue(*attr)
-    return itemsList
