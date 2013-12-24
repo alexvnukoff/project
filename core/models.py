@@ -3,8 +3,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
-
-
+from django.core.exceptions import ObjectDoesNotExist
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Identity defines role in application
@@ -39,6 +38,30 @@ class Dictionary(models.Model):
     def __str__(self):
         return self.title
 
+
+
+    def getSlotsList(self):
+        slots = Slot.objects.filter(dict=self.id)
+        return slots
+
+    def createSlot(self, title):
+        slot = Slot(title=title, dict=self)
+        slot.save()
+
+    def updateSlot(self,oldTitle,newTitle):
+        Slot.objects.filter(dict__id=self.id, title=oldTitle).update(title=newTitle)
+
+
+    def deleteSlot(self,slotTitle):
+        slot = Slot.objects.get(dict=self.id,title=slotTitle)
+        slot.delete()
+
+
+
+
+
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Slot defines row in dictionary for attributes in application
 #----------------------------------------------------------------------------------------------------------
@@ -49,22 +72,38 @@ class Slot(models.Model):
     def __str__(self):
         return self.title
 
+
+
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Attribute defines attributes for Item in application
 #----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
-    title = models.CharField(max_length=128, unique=True)
+    title = models.CharField(max_length=128)
     type = models.CharField(max_length=3)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
 
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
+    class Meta:
+        unique_together = ("title", "type")
+
+
     def __str__(self):
         return self.title
+
+
+
+
+
+
+
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Permission defines operations for particular Identity
@@ -141,12 +180,54 @@ class Item(models.Model):
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
 
+    class Meta:
+        permissions = (
+            ("can_get", "Can get Item"),
+            ("can_run", "Can run Procedure"),
+        )
+
     #def __init__(self, name):
     #   title = name
 
 
+    def saveItem(self, *args, **kwargs):
+        self.title = kwargs['title']
+        self.save()
+
     def __str__(self):
         return self.title
+
+
+    def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
+        '''
+        Method create new Attribute and set it to specific item
+        '''
+        attribute = Attribute(title=title, type=type, dict=dict, start_date=start_date, end_date=end_date)
+        attribute.save()
+        item = Item.objects.get(id=self.id)
+        attribute.item.add(item)
+
+    def setAttribute(self, title, type):
+        '''
+        Method set existing  attribute to specific item , if attribute is not found return False
+        '''
+        attribute = self.getAttribute(title, type)
+        if attribute != False:
+            item = Item.objects.get(id=self.id)
+            attribute.item.add(item)
+        else:
+            return False
+
+    def getAttribute(self, title, type):
+        '''
+        Method return attribute by title and type , if is not found return False
+        '''
+        try:
+          attribute = Attribute.objects.get(title=title, type=type)
+        except ObjectDoesNotExist:
+            return False
+
+        return attribute
 
 
     def getAttributesValue(self, *attr):
@@ -258,8 +339,8 @@ class Value(models.Model):
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
-#    class Meta:
-        #db_tablespace = 'core_values'
+    class Meta:
+        db_tablespace = 'TPP_CORE_VALUES'
 
 
     def __str__(self):
@@ -267,9 +348,6 @@ class Value(models.Model):
 
     def get(self):
         return self.title
-
-
-
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
