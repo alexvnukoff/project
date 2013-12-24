@@ -1,8 +1,9 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.db.models import Q
+from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
-
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Identity defines role in application
@@ -192,6 +193,12 @@ class Item(models.Model):
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
 
+    class Meta:
+        permissions = (
+            ("can_get", "Can get Item"),
+            ("can_run", "Can run Procedure"),
+        )
+
     #def __init__(self, name):
     #   title = name
 
@@ -261,6 +268,7 @@ class Item(models.Model):
         '''
            Return values of attribute list in specific Item
         '''
+
         values = Value.objects.filter(attr__title__in=attr, item=self.id)
         values = list(values.values("title", "attr__title", "item__title", "item"))
 
@@ -287,7 +295,70 @@ class Item(models.Model):
 
 
 
+    @transaction.atomic
+    def setAttributeValue(self, attrWithValues):
+        '''
+            Set values for attributes (mass)
+        '''
+        if not isinstance(attrWithValues, dict) or not attrWithValues :
+            raise ValueError
 
+        queries = []
+        bulkInsert = []
+        attributes = attrWithValues.keys()
+        existsAttributes = Attribute.objects.filter(title__in=attributes).all()
+
+        if len(existsAttributes) != len(attrWithValues):
+            raise ValueError
+
+        for attr in attributes:
+            attributeObj = existsAttributes.get(title=attr)
+            dictID = attributeObj.dict_id
+            attr = attributeObj.title
+            values = attrWithValues[attr]
+
+            if not isinstance(values, list):
+                values = [values]
+
+            for value in values:
+
+                if dictID is None:
+                    bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
+                else:
+                    #security
+                    dictID = int(dictID)
+                    valueID = int(value)
+
+                    #check if dictionary slot exists for this dictionary - creating conditions
+                    queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
+
+        #check if dictionary slot exists for this dictionary - using conditions
+        filter_or = ' | '.join(queries)
+        attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__attr__title','title','dict__attr__id')
+
+        if len(attributesValue) < len(queries):
+            raise ValueError
+
+        for attribute in attributesValue:
+            value = attribute['title']
+            attrID = attribute['dict__attr__id']
+            attributeObj = existsAttributes.get(pk=attrID)
+
+            bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
+
+        sid = transaction.savepoint()
+
+        try:
+            Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+            Value.objects.bulk_create(bulkInsert)
+        except Exception:
+            transaction.savepoint_rollback(sid)
+
+            raise Exception
+        else:
+            transaction.savepoint_commit(sid)
+
+        return True
 
 '''    def create(self):
         if self.status.perm.create_flag:
@@ -321,10 +392,14 @@ class Value(models.Model):
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
+
 #    class Meta:
         #db_tablespace = 'core_values'
     class Meta:
         unique_together = ("title", "attr","item")
+        db_tablespace = 'TPP_CORE_VALUES'
+
+
 
     def __str__(self):
         return self.title
