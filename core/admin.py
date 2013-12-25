@@ -1,5 +1,5 @@
 from core.models import (Action, ActionPath, Attribute, Identity, Item, Participant, Permission, Relationship,
-                         Dictionary, State, Slot, Process, Value)
+                         Dictionary, State, Slot, Process, Value, AttrTemplate)
 from django.contrib import admin
 
 admin.site.register(Action)
@@ -15,3 +15,4 @@ admin.site.register(Dictionary)
 admin.site.register(State)
 admin.site.register(Slot)
 admin.site.register(Value)
+admin.site.register(AttrTemplate)
