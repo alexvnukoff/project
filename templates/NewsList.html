@@ -8,20 +8,20 @@
 
 {% for title , attr  in itemsList.items %}
     {% load staticfiles %}
-    {%   with attr.Detail_Text|first as text  %}
-    {%   with attr.Detail_Picture|first as picture  %}
-     {%   with attr.title|first as name  %}
-         {%  with attr.Anonce_Text|first as anons  %}
+    {% with attr.Detail_Text|first as text  %}
+    {% with attr.Detail_Picture|first as picture  %}
+    {%with attr.title|first as name  %}
+    {%  with attr.Anonce_Text|first as anons  %}
 
   <tr >
 
      <td colspan="2">
-       <span  style="font-size: x-large;">{{ anons }}</span>
+       <span  style="font-size: x-large;">{{ name }}</span>
      </td>
   </tr>
   <tr >
    <td>
-     <img width="120" height="100" src=" {% static  picture%}"/>
+     <img width="120" height="100" src=" {% static  picture %}"/>
      </td>
        <td style="vertical-align: top;" >
 

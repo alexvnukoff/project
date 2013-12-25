@@ -4,12 +4,22 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.contenttypes.models import ContentType
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Identity defines role in application
 #----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 class Identity(models.Model):
-    title = models.CharField(max_length=128, unique=True)
+    title = models.CharField(max_length=128)
     member = models.ManyToManyField('self', through='Participant', symmetrical=False, related_name='i2i')
 
     def __str__(self):
@@ -94,7 +104,13 @@ class Slot(models.Model):
 #----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
     title = models.CharField(max_length=128)
-    type = models.CharField(max_length=3)
+    TYPE_OF_ATTRIBUTES = (
+        ('Str', 'String'),
+        ('Dec', 'Decimal'),
+        ('Chr', 'Char'),)
+
+
+    type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
     start_date = models.DateField(null=True, blank=True)
@@ -110,10 +126,19 @@ class Attribute(models.Model):
     def __str__(self):
         return self.title
 
+#----------------------------------------------------------------------------------------------------------
+#             Class AttrTemplate defines
+#----------------------------------------------------------------------------------------------------------
+class AttrTemplate(models.Model):
+    required = models.BooleanField(default=False)
+    classId = models.ForeignKey(ContentType)
+    attrId = models.ForeignKey(Attribute)
 
+    def __str__(self):
+        return self.classId.name
 
-
-
+    class Meta:
+        unique_together = ("classId", "attrId")
 
 
 
@@ -206,6 +231,7 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
+
 
 
     def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
@@ -406,6 +432,11 @@ class Value(models.Model):
 
     def get(self):
         return self.title
+
+
+
+
+
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
