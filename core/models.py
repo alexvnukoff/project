@@ -7,12 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-#----------------------------------------------------------------------------------------------------------
-#             Class User extend Django's User class
-#----------------------------------------------------------------------------------------------------------
-#class Client(models.Model):
-#   user = models.OneToOneField(User)
-#    avatar = models.ImageField(verbose_name='Avatar', upload_to='photos/%Y/%m/%d', blank=True, null=True)
+from django.contrib.contenttypes.models import ContentType
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
@@ -129,8 +124,12 @@ class Slot(models.Model):
 #             Class Attribute defines attributes for Item in application
 #----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
-    title = models.CharField(max_length=128, unique=True)
-    type = models.CharField(max_length=3)
+    title = models.CharField(max_length=128)
+    TYPE_OF_ATTRIBUTES = (
+        ('Str', 'String'),
+        ('Dec', 'Decimal'),
+        ('Chr', 'Char'),)
+    type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
     start_date = models.DateField(null=True, blank=True)
@@ -139,9 +138,26 @@ class Attribute(models.Model):
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
+    class Meta:
+        unique_together = ("title", "type")
+
 
     def __str__(self):
         return self.title
+
+#----------------------------------------------------------------------------------------------------------
+#             Class AttrTemplate defines
+#----------------------------------------------------------------------------------------------------------
+class AttrTemplate(models.Model):
+    required = models.BooleanField(default=False)
+    classId = models.ForeignKey(ContentType)
+    attrId = models.ForeignKey(Attribute)
+
+    def __str__(self):
+        return self.classId.name
+
+    class Meta:
+        unique_together = ("classId", "attrId")
 
 #----------------------------------------------------------------------------------------------------------
 #             Class State defines current state for particular item instance
@@ -190,7 +206,6 @@ class ActionPath(models.Model):
 class Item(models.Model):
     title = models.CharField(max_length=128, unique=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
-#    attr = models.ManyToManyField(Attribute, related_name='item')
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
 
@@ -199,37 +214,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
-
-    def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
-        '''
-        Method create new Attribute and set it to specific item
-        '''
-        attribute = Attribute(title=title, type=type, dict=dict, start_date=start_date, end_date=end_date)
-        attribute.save()
-        item = Item.objects.get(id=self.id)
-        attribute.item.add(item)
-
-    def setAttribute(self, title, type):
-        '''
-        Method set existing  attribute to specific item , if attribute is not found return False
-        '''
-        attribute = self.getAttribute(title, type)
-        if attribute != False:
-            item = Item.objects.get(id=self.id)
-            attribute.item.add(item)
-        else:
-            return False
-
-    def getAttribute(self, title, type):
-        '''
-        Method return attribute by title and type , if is not found return False
-        '''
-        try:
-          attribute = Attribute.objects.get(title=title, type=type)
-        except ObjectDoesNotExist:
-            return False
-
-        return attribute
 
     @staticmethod
     def getItemsAttributesValues(attr, items):
@@ -361,7 +345,6 @@ class Relationship(models.Model):
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
-    #title = models.TextField()
     title = models.CharField(max_length=1024)
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
