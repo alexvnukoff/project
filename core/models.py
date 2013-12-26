@@ -4,30 +4,15 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from PIL import Image
+from django.contrib.auth.models import User, Group
 
 #----------------------------------------------------------------------------------------------------------
-#             Class Identity defines role in application
+#             Class User extend Django's User class
 #----------------------------------------------------------------------------------------------------------
-class Identity(models.Model):
-    title = models.CharField(max_length=128, unique=True)
-    member = models.ManyToManyField('self', through='Participant', symmetrical=False, related_name='i2i')
-
-    def __str__(self):
-        return self.title
-
-#----------------------------------------------------------------------------------------------------------
-#             Class Participant defines relationships between two Identities
-#----------------------------------------------------------------------------------------------------------
-class Participant(models.Model):
-    title = models.CharField(max_length=128, unique=True)
-    community = models.ForeignKey(Identity, related_name='comm2part')
-    part = models.ForeignKey(Identity, related_name='part2comm')
-
-    date_from = models.DateField(default=0)
-    date_to = models.DateField(default=0)
-
-    def __str__(self):
-        return self.title
+class Client(models.Model):
+    user = models.OneToOneField(User)
+    avatar = models.ImageField(verbose_name='Avatar', upload_to='photos/%Y/%m/%d', blank=True, null=True)
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
@@ -37,8 +22,6 @@ class Dictionary(models.Model):
 
     def __str__(self):
         return self.title
-
-
 
     def getSlotsList(self):
         '''
@@ -68,12 +51,6 @@ class Dictionary(models.Model):
         slot = Slot.objects.get(dict=self.id,title=slotTitle)
         slot.delete()
 
-
-
-
-
-
-
 #----------------------------------------------------------------------------------------------------------
 #             Class Slot defines row in dictionary for attributes in application
 #----------------------------------------------------------------------------------------------------------
@@ -87,13 +64,11 @@ class Slot(models.Model):
     class Meta:
         unique_together = ("title", "dict")
 
-
-
 #----------------------------------------------------------------------------------------------------------
 #             Class Attribute defines attributes for Item in application
 #----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=128, unique=True)
     type = models.CharField(max_length=3)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
@@ -103,51 +78,16 @@ class Attribute(models.Model):
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
-    class Meta:
-        unique_together = ("title", "type")
-
 
     def __str__(self):
         return self.title
-
-
-
-
-
-
-
-
-
-#----------------------------------------------------------------------------------------------------------
-#             Class Permission defines operations for particular Identity
-#----------------------------------------------------------------------------------------------------------
-class Permission(models.Model):
-    title = models.CharField(max_length=128)
-
-    role = models.ForeignKey(Identity, related_name='identity')
-
-    create_flag = models.BooleanField(default=False)
-    read_flag = models.BooleanField(default=True)
-    update_flag = models.BooleanField(default=False)
-    delete_flag = models.BooleanField(default=False)
-    get_flag = models.BooleanField(default=True)
-    run_flag = models.BooleanField(default=False)
-
-    class Meta:
-        unique_together = ("title", "role")
-
-    def __str__(self):
-        return self.title
-
-    def get_perm_for_identity(self):
-        return self.create_flag, self.read_flag, self.update_flag, self.delete_flag, self.get_flag, self.run_flag
 
 #----------------------------------------------------------------------------------------------------------
 #             Class State defines current state for particular item instance
 #----------------------------------------------------------------------------------------------------------
 class State(models.Model):
     title = models.CharField(max_length=128, unique=True)
-    perm = models.ForeignKey(Permission, related_name='state')
+    perm = models.ForeignKey(Group, related_name='state')
 
     def __str__(self):
         return self.title
@@ -189,24 +129,15 @@ class ActionPath(models.Model):
 class Item(models.Model):
     title = models.CharField(max_length=128, unique=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
-    attr = models.ManyToManyField(Attribute, related_name='item')
+#    attr = models.ManyToManyField(Attribute, related_name='item')
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
-
-    class Meta:
-        permissions = (
-            ("can_get", "Can get Item"),
-            ("can_run", "Can run Procedure"),
-        )
 
     #def __init__(self, name):
     #   title = name
 
-
-
     def __str__(self):
         return self.title
-
 
     def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
         '''
@@ -239,8 +170,6 @@ class Item(models.Model):
 
         return attribute
 
-
-
     @staticmethod
     def getItemsAttributesValues(attr, items):
         '''
@@ -248,7 +177,6 @@ class Item(models.Model):
         '''
         values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
         values = list(values.values("title", "attr__title", "item__title", "item"))
-
 
         valuesAttribute = {}
 
@@ -262,7 +190,6 @@ class Item(models.Model):
             valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
 
         return valuesAttribute
-
 
     def getAttributeValues(self, *attr):
         '''
@@ -285,15 +212,6 @@ class Item(models.Model):
             valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
 
         return valuesAttribute
-
-
-
-
-
-
-
-
-
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues):
@@ -360,12 +278,6 @@ class Item(models.Model):
 
         return True
 
-'''    def create(self):
-        if self.status.perm.create_flag:
-            return self.objects.create(s    elf)
-        else:
-            return 'You can\'t create Item. Not enough rights.'
-'''
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
 #----------------------------------------------------------------------------------------------------------
@@ -376,7 +288,7 @@ class Relationship(models.Model):
 
     qty = models.FloatField()
     create_date = models.DateField(auto_now_add=True)
-    create_user = models.ForeignKey(Identity)
+    create_user = models.ForeignKey(Client)
 
     class Meta:
         unique_together = ("parent", "child")
@@ -388,18 +300,14 @@ class Relationship(models.Model):
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
-    title = models.TextField()
+    #title = models.TextField()
+    title = models.CharField(max_length=1024)
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
-
-#    class Meta:
-        #db_tablespace = 'core_values'
     class Meta:
-        unique_together = ("title", "attr","item")
+        unique_together = ("title", "attr", "item")
         db_tablespace = 'TPP_CORE_VALUES'
-
-
 
     def __str__(self):
         return self.title
