@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Item, Identity, Value
+from core.models import Item
 
 
 class TPP(Item):
@@ -21,14 +21,6 @@ class Department(Item):
 
     def __str__(self):
         return self.name
-
-
-class User(Identity):
-    name = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.name
-
 
 class Site(Item):
     name = models.CharField(max_length=128, unique=True)
