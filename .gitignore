@@ -1,5 +1,4 @@
 .idea/
-tpp/settings.py
 *.pyc
 *.pyo
 */migrations/*_initial.py
