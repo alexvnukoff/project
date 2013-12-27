@@ -351,7 +351,7 @@ class Value(models.Model):
 
     class Meta:
         unique_together = ("title", "attr", "item")
-        db_tablespace = 'TPP_CORE_VALUES'
+        #db_tablespace = 'TPP_CORE_VALUES'
 
     def __str__(self):
         return self.title

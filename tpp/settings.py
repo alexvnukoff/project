@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'modeltranslation',
-    'south',
+    #'south',
     'core',
     'appl',
 )
@@ -63,11 +63,11 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'djdb',
+        'NAME': 'ORCL',
         'USER': 'tpp',
-        'PASSWORD': 'Digemp30061994',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'PASSWORD': 'migirov',
+        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '1521',                      # Set to empty string for default.
     }
 #    'default': {
 #        'ENGINE': 'django.db.backends.oracle',
