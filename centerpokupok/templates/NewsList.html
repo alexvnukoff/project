@@ -8,9 +8,9 @@
 
 {% for title , attr  in itemsList.items %}
     {% load staticfiles %}
-    {% with attr.Detail_Text|first as text  %}
-    {% with attr.Detail_Picture|first as picture  %}
-    {%with attr.title|first as name  %}
+    {% with attr.Text|first as text  %}
+    {% with attr.Image|first as picture  %}
+    {%with attr.Anons|first as name  %}
     {%  with attr.Anonce_Text|first as anons  %}
 
   <tr >
