@@ -1,6 +1,7 @@
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
-                         Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, TPP, Tender,
+                         Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Site, Shipment,)
+
 from django.contrib import admin
 
 admin.site.register(Advertising)
@@ -19,7 +20,7 @@ admin.site.register(ForumThread)
 admin.site.register(Order)
 admin.site.register(Payment)
 admin.site.register(Product)
-admin.site.register(TPP)
+admin.site.register(Tpp)
 admin.site.register(Tender)
 admin.site.register(Rate)
 admin.site.register(Rating)
