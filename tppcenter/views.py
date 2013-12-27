@@ -5,6 +5,7 @@ from django.http import Http404
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate
 from appl import func
 
+
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm
 
@@ -45,5 +46,6 @@ def set_item_list(request, item):
 
 
 def get_item_form(request, item):
-    form = ItemForm(initial=item)
+    form = ItemForm(item)
+
     return render_to_response('forelement.html', locals())
