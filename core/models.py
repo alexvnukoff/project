@@ -4,41 +4,72 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from PIL import Image
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 #----------------------------------------------------------------------------------------------------------
-#             Class Identity defines role in application
+#             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
+class UserManager(BaseUserManager):
+    def create_user(self, email, username, password=None):
+        if not email:
+            raise ValueError('Users must have an email address')
 
+        user = self.model(
+            email=UserManager.normalize_email(email),
+            username=username)
 
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-
-
-
-
-
-
-class Identity(models.Model):
-    title = models.CharField(max_length=128)
-    member = models.ManyToManyField('self', through='Participant', symmetrical=False, related_name='i2i')
-
-    def __str__(self):
-        return self.title
+    def create_superuser(self, email, username, password):
+        user = self.create_user(email,
+                                password=password,
+                                username=username)
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
 #----------------------------------------------------------------------------------------------------------
-#             Class Participant defines relationships between two Identities
+#             Class User define a new user for Django system
 #----------------------------------------------------------------------------------------------------------
-class Participant(models.Model):
-    title = models.CharField(max_length=128, unique=True)
-    community = models.ForeignKey(Identity, related_name='comm2part')
-    part = models.ForeignKey(Identity, related_name='part2comm')
+class User(AbstractBaseUser):
+    email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
+    username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
+    avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
+    first_name = models.CharField(verbose_name='Name',  max_length=255, blank=True)
+    last_name = models.CharField(verbose_name='Surname',  max_length=255, blank=True)
+    date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
 
-    date_from = models.DateField(default=0)
-    date_to = models.DateField(default=0)
+    objects = UserManager()
 
-    def __str__(self):
-        return self.title
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name,)
+
+    def get_short_name(self):
+        return self.username
+
+    def __unicode__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
@@ -48,8 +79,6 @@ class Dictionary(models.Model):
 
     def __str__(self):
         return self.title
-
-
 
     def getSlotsList(self):
         '''
@@ -79,12 +108,6 @@ class Dictionary(models.Model):
         slot = Slot.objects.get(dict=self.id,title=slotTitle)
         slot.delete()
 
-
-
-
-
-
-
 #----------------------------------------------------------------------------------------------------------
 #             Class Slot defines row in dictionary for attributes in application
 #----------------------------------------------------------------------------------------------------------
@@ -98,8 +121,6 @@ class Slot(models.Model):
     class Meta:
         unique_together = ("title", "dict")
 
-
-
 #----------------------------------------------------------------------------------------------------------
 #             Class Attribute defines attributes for Item in application
 #----------------------------------------------------------------------------------------------------------
@@ -109,8 +130,6 @@ class Attribute(models.Model):
         ('Str', 'String'),
         ('Dec', 'Decimal'),
         ('Chr', 'Char'),)
-
-
     type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
@@ -141,39 +160,12 @@ class AttrTemplate(models.Model):
     class Meta:
         unique_together = ("classId", "attrId")
 
-
-
-
-#----------------------------------------------------------------------------------------------------------
-#             Class Permission defines operations for particular Identity
-#----------------------------------------------------------------------------------------------------------
-class Permission(models.Model):
-    title = models.CharField(max_length=128)
-
-    role = models.ForeignKey(Identity, related_name='identity')
-
-    create_flag = models.BooleanField(default=False)
-    read_flag = models.BooleanField(default=True)
-    update_flag = models.BooleanField(default=False)
-    delete_flag = models.BooleanField(default=False)
-    get_flag = models.BooleanField(default=True)
-    run_flag = models.BooleanField(default=False)
-
-    class Meta:
-        unique_together = ("title", "role")
-
-    def __str__(self):
-        return self.title
-
-    def get_perm_for_identity(self):
-        return self.create_flag, self.read_flag, self.update_flag, self.delete_flag, self.get_flag, self.run_flag
-
 #----------------------------------------------------------------------------------------------------------
 #             Class State defines current state for particular item instance
 #----------------------------------------------------------------------------------------------------------
 class State(models.Model):
     title = models.CharField(max_length=128, unique=True)
-    perm = models.ForeignKey(Permission, related_name='state')
+    perm = models.ForeignKey(Group, related_name='state')
 
     def __str__(self):
         return self.title
@@ -215,60 +207,16 @@ class ActionPath(models.Model):
 class Item(models.Model):
     title = models.CharField(max_length=128, unique=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
-    attr = models.ManyToManyField(Attribute, related_name='item')
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site)
 
 
-    class Meta:
-        permissions = (
-            ("can_get", "Can get Item"),
-            ("can_run", "Can run Procedure"),
-        )
-
     #def __init__(self, name):
     #   title = name
 
-
-
     def __str__(self):
         return self.title
-
-
-
-    def createAndSetAttribute(self, title, type, dict=None, start_date=None, end_date=None):
-        '''
-        Method create new Attribute and set it to specific item
-        '''
-        attribute = Attribute(title=title, type=type, dict=dict, start_date=start_date, end_date=end_date)
-        attribute.save()
-        item = Item.objects.get(id=self.id)
-        attribute.item.add(item)
-
-    def setAttribute(self, title, type):
-        '''
-        Method set existing  attribute to specific item , if attribute is not found return False
-        '''
-        attribute = self.getAttribute(title, type)
-        if attribute != False:
-            item = Item.objects.get(id=self.id)
-            attribute.item.add(item)
-        else:
-            return False
-
-    def getAttribute(self, title, type):
-        '''
-        Method return attribute by title and type , if is not found return False
-        '''
-        try:
-          attribute = Attribute.objects.get(title=title, type=type)
-        except ObjectDoesNotExist:
-            return False
-
-        return attribute
-
-
 
     @staticmethod
     def getItemsAttributesValues(attr, items):
@@ -277,7 +225,6 @@ class Item(models.Model):
         '''
         values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
         values = list(values.values("title", "attr__title", "item__title", "item"))
-
 
         valuesAttribute = {}
 
@@ -291,7 +238,6 @@ class Item(models.Model):
             valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
 
         return valuesAttribute
-
 
     def getAttributeValues(self, *attr):
         '''
@@ -314,15 +260,6 @@ class Item(models.Model):
             valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
 
         return valuesAttribute
-
-
-
-
-
-
-
-
-
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues):
@@ -389,12 +326,6 @@ class Item(models.Model):
 
         return True
 
-'''    def create(self):
-        if self.status.perm.create_flag:
-            return self.objects.create(s    elf)
-        else:
-            return 'You can\'t create Item. Not enough rights.'
-'''
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
 #----------------------------------------------------------------------------------------------------------
@@ -405,7 +336,7 @@ class Relationship(models.Model):
 
     qty = models.FloatField()
     create_date = models.DateField(auto_now_add=True)
-    create_user = models.ForeignKey(Identity)
+    create_user = models.ForeignKey(User)
 
     class Meta:
         unique_together = ("parent", "child")
@@ -421,25 +352,15 @@ class Value(models.Model):
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
-
-#    class Meta:
-        #db_tablespace = 'core_values'
     class Meta:
         unique_together = ("title", "attr", "item")
         db_tablespace = 'TPP_CORE_VALUES'
-
-
 
     def __str__(self):
         return self.title
 
     def get(self):
         return self.title
-
-
-
-
-
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------

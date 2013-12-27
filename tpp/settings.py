@@ -11,7 +11,12 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+
+
+
 
 
 
@@ -39,12 +44,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'modeltranslation',
     'south',
     'core',
     'appl',
-
 )
-
 
 
 MIDDLEWARE_CLASSES = (
@@ -58,7 +62,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-
 ROOT_URLCONF = 'tpp.urls'
 
 WSGI_APPLICATION = 'tpp.wsgi.application'
@@ -68,14 +71,24 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'djdb',
-        'USER': 'privaloff',
-        'PASSWORD': '24111987',
+        'USER': 'tpp',
+        'PASSWORD': 'Digemp30061994',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
+#    'default': {
+#        'ENGINE': 'django.db.backends.oracle',
+#        'NAME': 'ORCL',
+#        'USER': 'tpp',
+#        'PASSWORD': 'migirov',
+#        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+#        'PORT': '1521',
+#    }
+
 }
 
 #Section for Oracle
@@ -98,14 +111,63 @@ USE_L10N = True
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
 
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
-                 os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'),
-                 os.path.join(os.path.dirname(__file__), '..', 'centerpokupok/templates').replace('\\', '/'), )
+
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
+
+
+#Were added by Expert Center -----------------------------------------------------
+
+#AUTH_PROFILE_MODULE = 'core.Client'
+AUTH_USER_MODEL = 'core.User'
+MEDIA_ROOT = '/home/media'
+AUTHENTICATION_BACKENDS = (
+    ('django.contrib.auth.backends.ModelBackend'),
+)
+
+gettext = lambda s: s
+LANGUAGES = (
+    ('ru', gettext('Russia')),
+    ('am', gettext('Armenia')),
+    ('az', gettext('Azerbaijan')),
+    ('by', gettext('Belarus')),
+    ('en', gettext('England')),
+    ('et', gettext('Estonia')),
+    ('ge', gettext('Georgia')),
+    ('kz', gettext('Kazakhstan')),
+    ('kg', gettext('Kyrgyzstan')),
+    ('lt', gettext('Lithuania')),
+    ('lv', gettext('Latvia')),
+    ('md', gettext('Moldova')),
+    ('tj', gettext('Tajikistan')),
+    ('tm', gettext('Turkmenistan')),
+    ('uk', gettext('Ukrainian')),
+    ('uz', gettext('Uzbekistan')),
+)
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'default': ('ru', 'en'),
+    'am': ('ru',),
+    'az': ('ru',),
+    'by': ('ru',),
+    'et': ('ru',),
+    'ge': ('ru',),
+    'kz': ('ru',),
+    'kg': ('ru',),
+    'lt': ('ru',),
+    'lv': ('ru',),
+    'md': ('ru',),
+    'tj': ('ru',),
+    'tm': ('ru',),
+    'uk': ('ru',),
+    'uz': ('ru',),
+}
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
