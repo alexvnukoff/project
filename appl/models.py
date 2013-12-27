@@ -2,7 +2,7 @@ from django.db import models
 from core.models import Item, Identity, Value
 
 
-class TPP(Item):
+class Tpp(Item):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):

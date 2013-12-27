@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 import appl.views
+import usersites.views
 
 from django.contrib import admin
 admin.autodiscover()
@@ -7,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'tpp.views.home', name='home'),
+     url(r'^$', usersites.views.home),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

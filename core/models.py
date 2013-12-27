@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib.sites.models import Site
+from django.contrib.sites.managers import CurrentSiteManager
 #----------------------------------------------------------------------------------------------------------
 #             Class Identity defines role in application
 #----------------------------------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ class Attribute(models.Model):
         return self.title
 
 #----------------------------------------------------------------------------------------------------------
-#             Class AttrTemplate defines
+#             Class AttrTemplate defines default attributes for specific Item class
 #----------------------------------------------------------------------------------------------------------
 class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
@@ -135,7 +136,7 @@ class AttrTemplate(models.Model):
     attrId = models.ForeignKey(Attribute)
 
     def __str__(self):
-        return self.classId.name
+        return "Class Name:   " + self.classId.name + "    attribute: " + self.attrId.title
 
     class Meta:
         unique_together = ("classId", "attrId")
@@ -217,6 +218,8 @@ class Item(models.Model):
     attr = models.ManyToManyField(Attribute, related_name='item')
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
+    sites = models.ManyToManyField(Site)
+
 
     class Meta:
         permissions = (
@@ -414,7 +417,7 @@ class Relationship(models.Model):
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
-    title = models.TextField()
+    title = models.CharField(max_length=1024)
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
@@ -422,7 +425,7 @@ class Value(models.Model):
 #    class Meta:
         #db_tablespace = 'core_values'
     class Meta:
-        unique_together = ("title", "attr","item")
+        unique_together = ("title", "attr", "item")
         db_tablespace = 'TPP_CORE_VALUES'
 
 
