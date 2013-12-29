@@ -7,7 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
 from django.contrib.auth.models import Group, BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib.sites.models import Site
+from django.contrib.sites.managers import CurrentSiteManager
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -145,7 +146,7 @@ class Attribute(models.Model):
         return self.title
 
 #----------------------------------------------------------------------------------------------------------
-#             Class AttrTemplate defines
+#             Class AttrTemplate defines default attributes for specific Item class
 #----------------------------------------------------------------------------------------------------------
 class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
@@ -153,7 +154,7 @@ class AttrTemplate(models.Model):
     attrId = models.ForeignKey(Attribute)
 
     def __str__(self):
-        return self.classId.name
+        return "Class Name:   " + self.classId.name + "    attribute: " + self.attrId.title
 
     class Meta:
         unique_together = ("classId", "attrId")
@@ -207,6 +208,8 @@ class Item(models.Model):
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
+    sites = models.ManyToManyField(Site)
+
 
     #def __init__(self, name):
     #   title = name
@@ -350,7 +353,7 @@ class Value(models.Model):
 
     class Meta:
         unique_together = ("title", "attr", "item")
-        db_tablespace = 'TPP_CORE_VALUES'
+        #db_tablespace = 'TPP_CORE_VALUES'
 
     def __str__(self):
         return self.title

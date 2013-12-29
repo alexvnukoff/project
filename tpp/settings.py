@@ -10,7 +10,14 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+
+
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,11 +43,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'modeltranslation',
     'south',
     'core',
     'appl',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -49,7 +58,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare'
 )
+
 
 ROOT_URLCONF = 'tpp.urls'
 
@@ -60,24 +71,14 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'djdb',
+        'NAME': 'ORCL',
         'USER': 'tpp',
-        'PASSWORD': 'Digemp30061994',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'PASSWORD': 'migirov',
+        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        'PORT': '1521',
     }
-#    'default': {
-#        'ENGINE': 'django.db.backends.oracle',
-#        'NAME': 'ORCL',
-#        'USER': 'tpp',
-#        'PASSWORD': 'migirov',
-#        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
-#        'PORT': '1521',
-#    }
-
 }
 
 #Section for Oracle
@@ -104,6 +105,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
+
 
 #Were added by Expert Center -----------------------------------------------------
 

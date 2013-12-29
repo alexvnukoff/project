@@ -1,9 +1,11 @@
 from django.db import models
 from core.models import Item
-from appl.models import News
+from appl.models import News, Basket, Tpp
+from django.contrib.sites.models import get_current_site
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
+from django.conf import settings
 
 
 def getItemsListWithPagination(cls,  *attr,  page=1):
@@ -14,7 +16,7 @@ def getItemsListWithPagination(cls,  *attr,  page=1):
     page = number of current page
     '''
 
-    items = (globals()[cls]).objects.values('id')
+    items = (globals()[cls]).objects.filter(sites__id=settings.SITE_ID).values('id')
 
 
     paginator = Paginator(items, 2)
