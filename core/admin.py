@@ -1,4 +1,4 @@
-from core.models import Action, ActionPath, Attribute, Item, Relationship, Dictionary, State, Slot, Process, Value
+from core.models import Action, ActionPath, Attribute, Item, Relationship, Dictionary, State, Slot, Process, Value, AttrTemplate
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
