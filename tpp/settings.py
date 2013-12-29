@@ -71,24 +71,14 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'ORCL',
         'USER': 'tpp',
         'PASSWORD': 'migirov',
-        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '1521',                      # Set to empty string for default.
+        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        'PORT': '1521',
     }
-#    'default': {
-#        'ENGINE': 'django.db.backends.oracle',
-#        'NAME': 'ORCL',
-#        'USER': 'tpp',
-#        'PASSWORD': 'migirov',
-#        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
-#        'PORT': '1521',
-#    }
-
 }
 
 #Section for Oracle
@@ -168,3 +158,5 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 }
 try:
     from local_settings import *
+except ImportError:
+    pass
