@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
-from PIL import Image
+#from PIL import Image
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
@@ -40,7 +40,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
-    avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
+    #avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
     first_name = models.CharField(verbose_name='Name',  max_length=255, blank=True)
     last_name = models.CharField(verbose_name='Surname',  max_length=255, blank=True)
     date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
@@ -153,6 +153,7 @@ class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
     classId = models.ForeignKey(ContentType)
     attrId = models.ForeignKey(Attribute)
+    order = models.IntegerField()
 
     def __str__(self):
         return "Class Name:   " + self.classId.name + "    attribute: " + self.attrId.title
