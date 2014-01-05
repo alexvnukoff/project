@@ -1,4 +1,6 @@
 .idea/
+locale/
+local_settings.py
 
 *.pyc
 *.pyo

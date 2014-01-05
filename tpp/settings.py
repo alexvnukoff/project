@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -54,10 +55,12 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare'
 )
 
@@ -70,9 +73,14 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
+       'ENGINE': 'django.db.backends.oracle',
+
         'NAME': 'ORCL',
         'USER': 'tpp',
         'PASSWORD': 'migirov',
@@ -90,7 +98,7 @@ OPTIONS = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -99,6 +107,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = ("locale",)
 
 
 # Static files (CSS, JavaScript, Images)
@@ -156,6 +166,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'uk': ('ru',),
     'uz': ('ru',),
 }
+
 try:
     from local_settings import *
 except ImportError:

@@ -4,11 +4,14 @@
     <title></title>
 </head>
 <body>
+<form action="" method="post">
 {% for field in form %}
         <div class="fieldWrapper">
-            {{ field.errors }}
-            {{ field.label_tag }} {{ field }}
+
+            {{ field.label_tag }} {{ field.as_widget}} {{ field.errors }}
         </div>
     {% endfor %}
+<input type="submit" name="submit">
+</form>
 </body>
 </html>

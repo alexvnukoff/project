@@ -19,7 +19,7 @@ def getItemsListWithPagination(cls,  *attr,  page=1):
     items = (globals()[cls]).objects.filter(sites__id=settings.SITE_ID).values('id')
 
 
-    paginator = Paginator(items, 2)
+    paginator = Paginator(items, 10)
     try:
       page = items = paginator.page(page)  #check if page is valid
     except Exception:
