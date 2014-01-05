@@ -4,6 +4,7 @@ from appl.models import News, Basket, Tpp
 from django.http import Http404
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate
 from appl import func
+from django.core.exceptions import ValidationError
 
 
 from django.db.models import get_app, get_models
@@ -46,6 +47,35 @@ def set_item_list(request, item):
 
 
 def get_item_form(request, item):
-    form = ItemForm(item)
+
+    i = request.POST
+    if not i:
+        form = ItemForm(item)
+    else:
+        form = ItemForm(item, values=request.POST)
+        form.clean()
+        if form.is_valid():
+            form.save()
+    return render_to_response('forelement.html', locals())
+
+def update_item(request, item, id):
+
+    i = request.POST
+    if not i:
+        form = ItemForm(item, id=id)
+    else:
+        form = ItemForm(item, values=request.POST, id=id)
+        form.clean()
+        if form.is_valid():
+            form.save()
+
 
     return render_to_response('forelement.html', locals())
+
+
+
+
+
+
+
+
