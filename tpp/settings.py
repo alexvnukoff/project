@@ -76,9 +76,11 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
 
+
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.oracle',
+
         'NAME': 'ORCL',
         'USER': 'tpp',
         'PASSWORD': 'migirov',
