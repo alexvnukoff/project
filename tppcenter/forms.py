@@ -20,6 +20,11 @@ class ItemForm(forms.Form):
 
 
     def new_fields(self, item, values):
+        """
+       Method that define new form fields for items
+       item - specific class (news, company and etc.)
+       values - initial values of fields
+       """
 
         object_id = ContentType.objects.get(name=str(item).lower()).id
         attributes = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict").order_by('order')
@@ -48,7 +53,7 @@ class ItemForm(forms.Form):
                 slots = tuple(dict.getSlotsList().values_list("id", "title"))
                 self.fields[title] = forms.ChoiceField(widget=forms.Select, choices=slots, required=bool(required),
 
-                                                       error_messages={'required': _('Please enter your Source')})
+                                                       error_messages={'required': _('Field is required')})
                 self.fields[title].initial = value
 
 
@@ -69,10 +74,14 @@ class ItemForm(forms.Form):
 
             if attr.type == "Dec":
                 self.fields[title] = forms.IntegerField(required=bool(required),
-                                                        error_messages={'required': 'Please enter your ALo'})
+                                                        error_messages={'required': _('Field is required')})
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
     def clean(self):
+        """
+        Method that validate fields of the form
+
+        """
         self._errors = {}
         for title in self.fields:
             try:
@@ -81,12 +90,19 @@ class ItemForm(forms.Form):
                 self._errors[title] = e.messages[0]
 
     def is_valid(self):
+        """
+        Method return True if form is valid and False otherwise
+        """
         if len(self._errors) > 0:
             return False
         else:
             return True
 
     def save(self):
+        """
+        Method create new item and set values of attributes
+        if object exist its update his attribute
+        """
         if not self.is_valid():
             raise ValidationError
         if not self.id:
