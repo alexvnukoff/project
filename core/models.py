@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
-from django.contrib.auth.models import Group, BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
@@ -36,7 +37,7 @@ class UserManager(BaseUserManager):
 #----------------------------------------------------------------------------------------------------------
 #             Class User define a new user for Django system
 #----------------------------------------------------------------------------------------------------------
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
     avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
