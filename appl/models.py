@@ -8,12 +8,25 @@ class Tpp(Item):
     def __str__(self):
         return self.name
 
+    def getItemList(self, cls=None):
+        i = self.c2p
+        if cls:
+            return globals()[cls].objects.filter(c2p__parent_id=self.pk) #TODO fix hiearchy
+        else:
+            return Item.objects.filter(c2p__parent_id=self.pk)
+
 
 class Company(Item):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
+
+    def getItemList(self, cls=None):
+        if cls:
+            return globals()[cls].objects.filter(c2p__parent_id=self.pk) #TODO fix hiearchy
+        else:
+            return Item.objects.filter(c2p__parent_id=self.pk)
 
 
 class Department(Item):
