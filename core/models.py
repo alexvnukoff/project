@@ -130,7 +130,7 @@ class Attribute(models.Model):
         ('Str', 'String'),
         ('Dec', 'Decimal'),
         ('Chr', 'Char'),)
-    type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
+    type = models.CharField(max_length=10, choices=TYPE_OF_ATTRIBUTES)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
     start_date = models.DateField(null=True, blank=True)
@@ -299,19 +299,20 @@ class Item(models.Model):
                     #check if dictionary slot exists for this dictionary - creating conditions
                     queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
-        #check if dictionary slot exists for this dictionary - using conditions
-        filter_or = ' | '.join(queries)
-        attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__attr__title','title','dict__attr__id')
+        if len(queries) > 0:
+            #check if dictionary slot exists for this dictionary - using conditions
+            filter_or = ' | '.join(queries)
+            attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__attr__title','title','dict__attr__id')
 
-        if len(attributesValue) < len(queries):
-            raise ValueError
+            if len(attributesValue) < len(queries):
+                raise ValueError
 
-        for attribute in attributesValue:
-            value = attribute['title']
-            attrID = attribute['dict__attr__id']
-            attributeObj = existsAttributes.get(pk=attrID)
+            for attribute in attributesValue:
+                value = attribute['title']
+                attrID = attribute['dict__attr__id']
+                attributeObj = existsAttributes.get(pk=attrID)
 
-            bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
+                bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
 
         sid = transaction.savepoint()
 
@@ -327,6 +328,167 @@ class Item(models.Model):
 
         return True
 
+    def getSiblings(self):
+        '''
+            Get siblings in hierarchy
+        '''
+        parent = self.c2p.get(p2c__type="hier")
+
+        return parent.getChildren()
+
+    def getAncestors(self, includeSelf = False):
+        '''
+            Get list of ancestors in hierarchy
+            List contains item objects
+        '''
+        translation = {'rev_level': 'level'}
+
+        ancestors = Item.objects.raw('''SELECT PARENT_ID, MAX(LEVEL) OVER () + 1 - LEVEL AS rev_level , item.id as id
+                                FROM
+                              (
+                                SELECT parent_id, child_id, type
+                                  FROM core_relationship
+                                UNION
+                                SELECT NULL, id, null
+                                  FROM core_item i
+                                 WHERE NOT EXISTS
+                                (
+                                  SELECT *
+                                    FROM core_relationship
+                                   WHERE child_id = i.id AND type='hier'
+                                )
+                              ) rel
+                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
+                            WHERE rel.type='hier' OR PARENT_ID is null
+                            CONNECT BY PRIOR  rel.PARENT_ID = rel.CHILD_ID
+                            START WITH rel.CHILD_ID = %s
+                            ORDER BY rev_level''', [self.id], translations=translation)
+
+        ancestors = list(ancestors)
+
+        if includeSelf is False:
+            del ancestors[len(ancestors) - 1]
+
+        return ancestors
+
+    def getDescendants(self, includeSelf = False):
+        '''
+            Get descendants in hierarchy
+        '''
+        translation = {'LEVEL': 'level'}
+
+        descendants = Item.objects.raw('''SELECT PARENT_ID, CHILD_ID, LEVEL, CONNECT_BY_ISLEAF as isLeaf, item.id as id
+                                            FROM
+                                          (
+                                            SELECT parent_id, child_id, type
+                                              FROM core_relationship
+                                            UNION
+                                            SELECT NULL, id, null
+                                              FROM core_item i
+                                             WHERE NOT EXISTS
+                                            (
+                                              SELECT *
+                                                FROM core_relationship
+                                               WHERE child_id = i.id AND type='hier'
+                                            )
+                                          ) rel
+                                        INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
+                                        WHERE rel.type='hier' OR PARENT_ID is null
+                                        CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
+                                        START WITH rel.CHILD_ID = %s
+                                        ORDER BY LEVEL;''', [self.id], translations=translation)
+
+        descendants = list(descendants)
+
+        if includeSelf is False:
+            del descendants[0]
+
+        return descendants
+
+    def getDescendantCount(self):
+        '''
+            Get count of descendants in hierarchy
+        '''
+        from django.db import connection
+
+        cursor = connection.cursor()
+
+        cursor.execute('''SELECT count(*) - 1
+                            FROM
+                            (
+                                SELECT parent_id, child_id, type
+                                    FROM core_relationship
+                                UNION SELECT NULL, id, null
+                                    FROM core_item i
+                                    WHERE NOT EXISTS
+                                    (
+                                        SELECT *
+                                            FROM core_relationship
+                                            WHERE child_id = i.id AND type='hier'
+                                    )
+                            ) rel
+                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
+                            WHERE rel.type='hier' OR PARENT_ID is null
+                            CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
+                            START WITH rel.CHILD_ID = %s''', [self.pk])
+
+        return cursor.fetchone()[0]
+
+    def getChildren(self):
+        '''
+            Get children in hierarchy
+        '''
+        return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="hier")
+
+    @transaction.atomic
+    def delete(self, using=None, **kwarg):
+        '''
+            Overwrite the delete method for trees structures
+
+            if you are passing a parameter "cut" to the method
+            it will delete object's descendants
+                Example: Item(pk=1).delete(cut=True)
+            otherwise it will squeeze the descendants of the object
+            or will create new root parent/s
+                Example: Item(pk=1).delete()
+                if Item = 1 is root parent all his children will become root parents
+                if Item = 1 is child of Item = 2 all his children will become a children of Item =2
+
+            This method will delete all relations with this object
+            from the relationship model
+        '''
+        descedantsIDs = []
+
+        sid = transaction.savepoint()
+
+        try:
+            for child in self.getDescendants():
+                descedantsIDs.append(child.pk)
+
+            if len(descedantsIDs):
+                if "cut" in kwarg and kwarg['cut'] is True:
+                    Item.objects.filter(pk__in=descedantsIDs).delete()
+                    descedantsIDs.append(self.pk)
+                    Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+                else:
+                    try:
+                        parentID = Item.objects.get(p2c__child_id=self.pk, p2c__type="hier")
+                    except ObjectDoesNotExist:
+                        Relationship.objects.filter(parent=self.pk).delete()
+                    else:
+                        Relationship.objects.filter(parent=self.pk).update(parent=parentID)
+            else:
+                Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+
+            super(Item, self).delete(using)
+        except Exception as e:
+            transaction.savepoint_rollback(sid)
+
+            raise e
+        else:
+            transaction.savepoint_commit(sid)
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
 #----------------------------------------------------------------------------------------------------------
@@ -334,6 +496,10 @@ class Relationship(models.Model):
     title = models.CharField(max_length=128, unique=True)
     parent = models.ForeignKey(Item, related_name='p2c')
     child = models.ForeignKey(Item, related_name='c2p')
+    TYPE_OF_RELATIONSHIP = (
+        ('rel', 'String'),
+        ('hier', 'Hierarchy'),)
+    type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
 
     qty = models.FloatField()
     create_date = models.DateField(auto_now_add=True)
