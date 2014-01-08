@@ -156,6 +156,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'uk': ('ru',),
     'uz': ('ru',),
 }
+
 try:
     from local_settings import *
 except ImportError:
