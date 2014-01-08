@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
-#from PIL import Image
+from PIL import Image
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
@@ -40,7 +40,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
-    #avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
+    avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
     first_name = models.CharField(verbose_name='Name',  max_length=255, blank=True)
     last_name = models.CharField(verbose_name='Surname',  max_length=255, blank=True)
     date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
@@ -128,9 +128,22 @@ class Attribute(models.Model):
     title = models.CharField(max_length=128)
     TYPE_OF_ATTRIBUTES = (
         ('Str', 'String'),
-        ('Dec', 'Decimal'),
-        ('Chr', 'Char'),)
-    type = models.CharField(max_length=10, choices=TYPE_OF_ATTRIBUTES)
+
+        ('Chr', 'Char'),
+        ('Img', 'Image'),
+        ('Bin', 'Boolean'),
+        ("Dat", "Date"),
+        ("Eml", "Email"),
+        ("Fph", 'FilePath'),
+        ("Ffl", "FileField"),
+        ("Flo", "FloatField"),
+        ("Dec", "Integer"),
+        ("Ip", 'IpField'),
+        ("Tm", 'TimeField'),
+        ("Url", "URLField"),
+        ("Sdt", "SplitDateTimeField"))
+    type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
+
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
     start_date = models.DateField(null=True, blank=True)
@@ -501,7 +514,7 @@ class Relationship(models.Model):
         ('hier', 'Hierarchy'),)
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
 
-    qty = models.FloatField()
+    qty = models.FloatField(null=True, blank=True)
     create_date = models.DateField(auto_now_add=True)
     create_user = models.ForeignKey(User)
 
@@ -515,12 +528,12 @@ class Relationship(models.Model):
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
-    title = models.CharField(max_length=1024)
+    title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
 
-    class Meta:
-        unique_together = ("title", "attr", "item")
+    #class Meta:
+        #unique_together = ("title", "attr", "item")
         #db_tablespace = 'TPP_CORE_VALUES'
 
     def __str__(self):

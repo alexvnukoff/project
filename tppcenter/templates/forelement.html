@@ -4,7 +4,11 @@
     <title></title>
 </head>
 <body>
+{% if form.is_multipart %}
+    <form enctype="multipart/form-data" method="post" action="">
+{% else %}
 <form action="" method="post">
+{% endif %}
 {% for field in form %}
         <div class="fieldWrapper">
 
