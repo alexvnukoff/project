@@ -1,6 +1,5 @@
 from django.db import models
 from core.models import Item
-from appl.models import News, Basket, Tpp, Company
 from django.contrib.sites.models import get_current_site
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -29,4 +28,3 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
     attributeValues = (globals()[cls]).getItemsAttributesValues(attr, items)
 
     return attributeValues, page  #Return List Item and Page object of current page
-
