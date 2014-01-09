@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_init
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
@@ -10,6 +10,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
+import hashlib
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -530,10 +531,15 @@ class Value(models.Model):
     title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
+    sha1_code = models.CharField(max_length=40) #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
 
-    #class Meta:
-        #unique_together = ("title", "attr", "item")
+    class Meta:
+        unique_together = ("sha1_code", "attr", "item")
         #db_tablespace = 'TPP_CORE_VALUES'
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.sha1_code = hashlib.sha1(str(self.title).encode()).hexdigest()
+        super(Value, self).save()
 
     def __str__(self):
         return self.title
@@ -545,6 +551,15 @@ class Value(models.Model):
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_save, sender=Item)
+@receiver(pre_init, sender=Value)
 def item_create_callback(sender, **kwargs):
-    print("Item creation: check authority!")
+    '''
+    Generate SHA-1 code for Value.title field and save in Value.sha1_code
+    which participate in constraint
+    '''
+    #sender.sha1_code = hashlib.sha1(bytes(kwargs['instance'])).digest()
+    #kwargs['sha1_code'] = hashlib.sha1(str(kwargs.get('title')).encode()).hexdigest()
+    #m.update(str(kwargs['instance']))
+    #m.hexdigest()
+    #print(sender)
+    #print(kwargs)
