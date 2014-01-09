@@ -356,7 +356,7 @@ class Item(models.Model):
         '''
         translation = {'rev_level': 'level'}
 
-        ancestors = Item.objects.raw('''SELECT PARENT_ID, MAX(LEVEL) OVER () + 1 - LEVEL AS rev_level , item.id as id
+        query = '''SELECT PARENT_ID, MAX(LEVEL) OVER () + 1 - LEVEL AS rev_level , item.id as id
                                 FROM
                               (
                                 SELECT parent_id, child_id, type
@@ -375,7 +375,9 @@ class Item(models.Model):
                             WHERE rel.type='hier' OR PARENT_ID is null
                             CONNECT BY PRIOR  rel.PARENT_ID = rel.CHILD_ID
                             START WITH rel.CHILD_ID = %s
-                            ORDER BY rev_level''', [self.id], translations=translation)
+                            ORDER BY rev_level'''
+
+        ancestors = Item.objects.raw(query, [self.id], translations=translation)
 
         ancestors = list(ancestors)
 
@@ -384,13 +386,13 @@ class Item(models.Model):
 
         return ancestors
 
-    def getDescendants(self, includeSelf = False):
+    def getDescendants(self, includeSelf=False, cls=None):
         '''
             Get descendants in hierarchy
         '''
         translation = {'LEVEL': 'level'}
 
-        descendants = Item.objects.raw('''SELECT PARENT_ID, CHILD_ID, LEVEL, CONNECT_BY_ISLEAF as isLeaf, item.id as id
+        query = '''SELECT PARENT_ID, CHILD_ID, LEVEL, CONNECT_BY_ISLEAF as isLeaf, item.id as id
                                             FROM
                                           (
                                             SELECT parent_id, child_id, type
@@ -409,7 +411,12 @@ class Item(models.Model):
                                         WHERE rel.type='hier' OR PARENT_ID is null
                                         CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
                                         START WITH rel.CHILD_ID = %s
-                                        ORDER BY LEVEL;''', [self.id], translations=translation)
+                                        ORDER BY LEVEL;'''
+
+        if cls in None:
+            descendants = Item.objects.raw(query, [self.id], translations=translation)
+        else:
+            pass
 
         descendants = list(descendants)
 
@@ -451,7 +458,7 @@ class Item(models.Model):
         '''
             Get children in hierarchy
         '''
-        return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="hier")
+        return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="hier")
 
     @transaction.atomic
     def delete(self, using=None, **kwarg):
@@ -483,15 +490,19 @@ class Item(models.Model):
                     Item.objects.filter(pk__in=descedantsIDs).delete()
                     descedantsIDs.append(self.pk)
                     Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+                    Value.objects.filter(item__in=descedantsIDs).delete()
                 else:
                     try:
                         parentID = Item.objects.get(p2c__child_id=self.pk, p2c__type="hier")
                     except ObjectDoesNotExist:
                         Relationship.objects.filter(parent=self.pk).delete()
+                        Value.objects.filter(item=self.pk).delete()
                     else:
-                        Relationship.objects.filter(parent=self.pk).update(parent=parentID)
+                        Relationship.objects.filter(parent=self.pk, type="hier").update(parent=parentID)
+                        Relationship.objects.filter(parent=self.pk).delete()
             else:
-                Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+                Relationship.objects.filter(Q(child=self.pk) | Q(parent=self.pk)).delete()
+                Value.objects.filter(item=self.pk).delete()
 
             super(Item, self).delete(using)
         except Exception as e:
