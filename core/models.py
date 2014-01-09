@@ -166,7 +166,6 @@ class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
     classId = models.ForeignKey(ContentType)
     attrId = models.ForeignKey(Attribute)
-    order = models.IntegerField()
 
     def __str__(self):
         return "Class Name:   " + self.classId.name + "    attribute: " + self.attrId.title
