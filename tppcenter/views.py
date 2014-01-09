@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Basket, Tpp
+from appl.models import News, Basket, Tpp, Company
 from django.http import Http404
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate
+from core.models import Value, Item, Attribute, Dictionary, AttrTemplate ,Relationship
 from appl import func
 from django.core.exceptions import ValidationError
 
@@ -14,6 +14,9 @@ from django.conf import settings
 
 def home(request):
     id = settings.SITE_ID
+    obj = Tpp.objects.get(title="Moscow Tpp")
+    companies = obj.getItemList()
+    i = companies
     return render_to_response("home.html")
 
 def set_news_list(request):
@@ -40,7 +43,7 @@ def set_item_list(request, item):
         raise Http404
     else:
         page = request.GET.get('page', 1)
-        result = func.getItemsListWithPagination(item, "Anons", page=page)
+        result = func.getItemsListWithPagination(item, "Name", page=page)
         itemsList = result[0]
         page = result[1]
     return render_to_response('list.html', locals())
@@ -52,10 +55,17 @@ def get_item_form(request, item):
     if not i:
         form = ItemForm(item)
     else:
-        form = ItemForm(item, values=request.POST)
+        files = request.FILES
+        post = request.POST
+        values = {}
+        values.update(files)
+        values.update(post)
+        form = ItemForm(item, values=values)
         form.clean()
         if form.is_valid():
-            form.save()
+            com = form.save()
+           # obj = Tpp.objects.get(title="Moscow Tpp")
+            #Relationship.objects.create(title=obj.name, parent=obj, child=com, create_user=request.user)
     return render_to_response('forelement.html', locals())
 
 def update_item(request, item, id):
@@ -64,10 +74,17 @@ def update_item(request, item, id):
     if not i:
         form = ItemForm(item, id=id)
     else:
-        form = ItemForm(item, values=request.POST, id=id)
+        files = request.FILES
+        post = request.POST
+        values = {}
+        values.update(files)
+        values.update(post)
+        form = ItemForm(item, values=values, id=id)
         form.clean()
         if form.is_valid():
-            form.save()
+            com = form.save()
+
+
 
 
     return render_to_response('forelement.html', locals())

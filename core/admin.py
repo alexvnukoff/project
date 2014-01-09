@@ -2,7 +2,7 @@ from core.models import Action, ActionPath, Attribute, Item, Relationship, Dicti
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
-
+from django.contrib.contenttypes.models import ContentType
 from core.models import User
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -63,15 +63,52 @@ class UserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+class SlotsInLine(admin.TabularInline):
+    model = Slot
+    extra = 2
+
+class ParentRelationshipInLIne(admin.TabularInline):
+    model = Relationship
+    extra = 1
+    fk_name = "parent"
+
+
+class ChildtRelationshipInLIne(admin.TabularInline):
+    model = Relationship
+    extra = 1
+    fk_name = "child"
+
+class DictioryAdmin(admin.ModelAdmin):
+    fields = ['title']
+    inlines = [SlotsInLine]
+
+class AttributesInline(admin.TabularInline):
+    model = AttrTemplate
+    extra = 5
+
+class ContentAdmin(admin.ModelAdmin):
+    inlines = [AttributesInline]
+
+class ValuesInline(admin.TabularInline):
+    model = Value
+    extra = 5
+
+
+class ItemAdmin(admin.ModelAdmin):
+    inlines = [ParentRelationshipInLIne, ChildtRelationshipInLIne, ValuesInline ]
+
+
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Action)
 admin.site.register(ActionPath)
 admin.site.register(Attribute)
-admin.site.register(Item)
+admin.site.register(ContentType, ContentAdmin)
 admin.site.register(Process)
 admin.site.register(Relationship)
-admin.site.register(Dictionary)
+admin.site.register(Dictionary, DictioryAdmin)
 admin.site.register(State)
-admin.site.register(Slot)
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Value)
-admin.site.register(AttrTemplate)
+#admin.site.register(AttrTemplate)
