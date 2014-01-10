@@ -141,7 +141,8 @@ class Attribute(models.Model):
         ("Ip", 'IpField'),
         ("Tm", 'TimeField'),
         ("Url", "URLField"),
-        ("Sdt", "SplitDateTimeField"))
+        ("Sdt", "SplitDateTimeField"),
+        ("MIm", 'MultiplyImage'))
     type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
 
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
