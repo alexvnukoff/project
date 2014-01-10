@@ -1,16 +1,17 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
-from core.models import AttrTemplate, Dictionary, Item
+from core.models import AttrTemplate, Dictionary, Item ,Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Site, Shipment,Gallery)
+                         Rate, Rating, Review, Service, Site, Shipment, Gallery)
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.forms.models import modelformset_factory
 
 
 class ItemForm(forms.Form):
@@ -227,23 +228,45 @@ class ItemForm(forms.Form):
 
 
 class Test(forms.Form):
-    alo = forms.CharField()
 
 
 
-    def __init__(self, item, values=None, id=None):
+
+    def __init__(self, item, post=None, files=None, id=None, user=None):
         super(Test, self).__init__()
-        item = ItemForm(item, values, id)
-        i = self.fields
-
-        self.fields.update(item.fields)
 
 
-class PhotoGallery(ModelForm):
 
-    class Meta:
-        model = Gallery
-        fields = ('photo',)
+
+
+
+
+class BasePhotoGallery(BaseModelFormSet):
+
+    def __init__(self, *args, parent_id=None, **kwargs):
+        super(BasePhotoGallery, self).__init__(*args, **kwargs)
+
+        self.user = parent_id
+        self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
+    def save(self, parent=None, user=None, commit=True):
+        instances = super(BasePhotoGallery, self).save(commit)
+        instances_pk = [instance.pk for instance in instances]
+        bulkInsert = []
+        item = Item.objects.get(pk=parent)
+
+        for instance in instances:
+            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user))#TODO fix hierarchy
+        if bulkInsert:
+            try:
+               Relationship.objects.bulk_create(bulkInsert)
+            except Exception:
+                pass
+
+
+
+
+
+
 
 
 
