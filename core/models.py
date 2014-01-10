@@ -10,6 +10,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
+from core.hierarchy import hierarchyManager
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -225,6 +226,8 @@ class Item(models.Model):
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site)
 
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
 
     #def __init__(self, name):
     #   title = name
@@ -279,6 +282,18 @@ class Item(models.Model):
     def setAttributeValue(self, attrWithValues):
         '''
             Set values for attributes (mass)
+            Methods set attribute's values for the item
+            The parameter "attrWithValues" should be a dictionary
+             you can pass many values for one attribute by passing list as dictionary value
+                Example:
+                    attr = {
+                            'Name': 'Company Example'
+                            'PhoneNumber': ['123-321-456','789-654-228']
+                    }
+
+                    Company(pk=1).setAttributeValue(attr)
+                    //It will set the value for attribute "Name" of item = [Company=1] to "Company Example"
+                    //and will set many values for attribute "PhoneNumber" item = [Company=1]
         '''
         if not isinstance(attrWithValues, dict) or not attrWithValues :
             raise ValueError
@@ -341,124 +356,41 @@ class Item(models.Model):
 
         return True
 
-    def getSiblings(self):
+    def getSiblings(self, includeSelf=True):
         '''
             Get siblings in hierarchy
+            The method returns hierarchical siblings of the current Item
+            by default it will include the current Item
+                Example: Department(pk=1).getSiblings()
+                    //Returns all siblings of Department = 1 and will include the department itself
+            If you will set the parameter "includeSelf" it will not include the item itself
+                Example: Department(pk=1).getSiblings(False)//will not include Department=1
         '''
-        parent = self.c2p.get(p2c__type="hier")
 
-        return parent.getChildren()
-
-    def getAncestors(self, includeSelf = False):
-        '''
-            Get list of ancestors in hierarchy
-            List contains item objects
-        '''
-        translation = {'rev_level': 'level'}
-
-        query = '''SELECT PARENT_ID, MAX(LEVEL) OVER () + 1 - LEVEL AS rev_level , item.id as id
-                                FROM
-                              (
-                                SELECT parent_id, child_id, type
-                                  FROM core_relationship
-                                UNION
-                                SELECT NULL, id, null
-                                  FROM core_item i
-                                 WHERE NOT EXISTS
-                                (
-                                  SELECT *
-                                    FROM core_relationship
-                                   WHERE child_id = i.id AND type='hier'
-                                )
-                              ) rel
-                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                            WHERE rel.type='hier' OR PARENT_ID is null
-                            CONNECT BY PRIOR  rel.PARENT_ID = rel.CHILD_ID
-                            START WITH rel.CHILD_ID = %s
-                            ORDER BY rev_level'''
-
-        ancestors = Item.objects.raw(query, [self.id], translations=translation)
-
-        ancestors = list(ancestors)
-
-        if includeSelf is False:
-            del ancestors[len(ancestors) - 1]
-
-        return ancestors
-
-    def getDescendants(self, includeSelf=False, cls=None):
-        '''
-            Get descendants in hierarchy
-        '''
-        translation = {'LEVEL': 'level'}
-
-        query = '''SELECT PARENT_ID, CHILD_ID, LEVEL, CONNECT_BY_ISLEAF as isLeaf, item.id as id
-                                            FROM
-                                          (
-                                            SELECT parent_id, child_id, type
-                                              FROM core_relationship
-                                            UNION
-                                            SELECT NULL, id, null
-                                              FROM core_item i
-                                             WHERE NOT EXISTS
-                                            (
-                                              SELECT *
-                                                FROM core_relationship
-                                               WHERE child_id = i.id AND type='hier'
-                                            )
-                                          ) rel
-                                        INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                                        WHERE rel.type='hier' OR PARENT_ID is null
-                                        CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
-                                        START WITH rel.CHILD_ID = %s
-                                        ORDER BY LEVEL;'''
-
-        if cls in None:
-            descendants = Item.objects.raw(query, [self.id], translations=translation)
+        try:
+            parent = Item.hierarchy.getParent(self.pk)
+        except Exception:
+            return False
         else:
-            pass
+            if includeSelf is True:
+                return self._meta.model.hierarchy.getChild(parent)
+            else:
+                return self._meta.model.hierarchy.getChild(parent).exclude(pk=self.pk)
 
-        descendants = list(descendants)
-
-        if includeSelf is False:
-            del descendants[0]
-
-        return descendants
-
-    def getDescendantCount(self):
+    def getRelationChildren(self, getItemInstance=True):
         '''
-            Get count of descendants in hierarchy
+            Returns not hierarchical children,
+            by default the method returns Item instances connected by "relation" type of relationship
+                Example: Company(pk=1).getRelationChildren()
+                    //Returns instances of Item and all types of items (products,  menus etc.)
+            if you will set the parameter "getItemInstance" to False the method
+            will returns only the same type of items
+                Example: Products(pk=1).getRelationChildren(False) //returns only products related to the product
         '''
-        from django.db import connection
-
-        cursor = connection.cursor()
-
-        cursor.execute('''SELECT count(*) - 1
-                            FROM
-                            (
-                                SELECT parent_id, child_id, type
-                                    FROM core_relationship
-                                UNION SELECT NULL, id, null
-                                    FROM core_item i
-                                    WHERE NOT EXISTS
-                                    (
-                                        SELECT *
-                                            FROM core_relationship
-                                            WHERE child_id = i.id AND type='hier'
-                                    )
-                            ) rel
-                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                            WHERE rel.type='hier' OR PARENT_ID is null
-                            CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
-                            START WITH rel.CHILD_ID = %s''', [self.pk])
-
-        return cursor.fetchone()[0]
-
-    def getChildren(self):
-        '''
-            Get children in hierarchy
-        '''
-        return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="hier")
+        if getItemInstance is True:
+            return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
+        else:
+            return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
 
     @transaction.atomic
     def delete(self, using=None, **kwarg):
@@ -476,6 +408,8 @@ class Item(models.Model):
 
             This method will delete all relations with this object
             from the relationship model
+
+            This method will remove all values for each deleted item
         '''
         descedantsIDs = []
 

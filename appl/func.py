@@ -1,5 +1,6 @@
 from django.db import models
 from core.models import Item
+from appl.models import *
 from django.contrib.sites.models import get_current_site
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -28,3 +29,11 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
     attributeValues = (globals()[cls]).getItemsAttributesValues(attr, items)
 
     return attributeValues, page  #Return List Item and Page object of current page
+
+def getSpecificChildren(cls, parent):
+    '''
+        Returns not hierarchical children of specific type
+            Example: getSpecificChildren("Company", 10)
+                //Returns instances of all Companies related with Item=10 by "relation" type of relationship
+    '''
+    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
