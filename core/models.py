@@ -456,7 +456,7 @@ class Relationship(models.Model):
     parent = models.ForeignKey(Item, related_name='p2c')
     child = models.ForeignKey(Item, related_name='c2p')
     TYPE_OF_RELATIONSHIP = (
-        ('rel', 'String'),
+        ('rel', 'Relation'),
         ('hier', 'Hierarchy'),)
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
 
