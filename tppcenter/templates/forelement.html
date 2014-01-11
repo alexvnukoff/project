@@ -5,14 +5,21 @@
 </head>
 <body>
 {% if form.is_multipart %}
-    <form enctype="multipart/form-data" method="post" action="">
+<form enctype="multipart/form-data" method="post" action="">
 {% else %}
 <form action="" method="post">
 {% endif %}
+{{ form.management_form }}
 {% for field in form %}
         <div class="fieldWrapper">
 
-            {{ field.label_tag }} {{ field.as_widget}} {{ field.errors }}
+            {{ field.label_tag }} {{ field}} {{ field.errors }}
+        </div>
+    {% endfor %}
+{% for field in itemform %}
+        <div class="fieldWrapper">
+
+            {{ field.label_tag }} {{ field}} {{ field.errors }}
         </div>
     {% endfor %}
 <input type="submit" name="submit">

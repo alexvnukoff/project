@@ -193,3 +193,8 @@ class Document(Item):
     def __str__(self):
         return self.name
 
+class Gallery(Item):
+      photo = models.ImageField(verbose_name='Avatar',  upload_to='gallery/', blank=True, null=True)
+
+      def __str__(self):
+          return str(self.photo)

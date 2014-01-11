@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'modeltranslation',
-    #'south',
+    'south',
     'core',
     'appl',
 )
@@ -56,12 +56,10 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare'
 )
 
@@ -79,14 +77,23 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.oracle',
 
-        'NAME': 'ORCL',
+#    'default': {
+#       'ENGINE': 'django.db.backends.oracle',
+#        'NAME': 'ORCL',
+#        'USER': 'tpp',
+#        'PASSWORD': 'migirov',
+#        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+#        'PORT': '1521',
+#    }
+
+    'default': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'djdb',
         'USER': 'tpp',
-        'PASSWORD': 'migirov',
-        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
-        'PORT': '1521',
+        'PASSWORD': 'Digemp30061994',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -136,16 +143,16 @@ LANGUAGES = (
     ('ru', gettext('Russia')),
     ('am', gettext('Armenia')),
     ('az', gettext('Azerbaijan')),
-    ('by', gettext('Belarus')),
+    ('be', gettext('Belarus')),
     ('en', gettext('England')),
     ('et', gettext('Estonia')),
-    ('ge', gettext('Georgia')),
-    ('kz', gettext('Kazakhstan')),
+    ('ka', gettext('Georgia')),
+    ('kk', gettext('Kazakhstan')),
     ('kg', gettext('Kyrgyzstan')),
     ('lt', gettext('Lithuania')),
     ('lv', gettext('Latvia')),
-    ('md', gettext('Moldova')),
-    ('tj', gettext('Tajikistan')),
+    ('mo', gettext('Moldova')),
+    ('tg', gettext('Tajikistan')),
     ('tm', gettext('Turkmenistan')),
     ('uk', gettext('Ukrainian')),
     ('uz', gettext('Uzbekistan')),
@@ -154,15 +161,15 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
     'am': ('ru',),
     'az': ('ru',),
-    'by': ('ru',),
+    'be': ('ru',),
     'et': ('ru',),
-    'ge': ('ru',),
-    'kz': ('ru',),
+    'ka': ('ru',),
+    'kk': ('ru',),
     'kg': ('ru',),
     'lt': ('ru',),
     'lv': ('ru',),
-    'md': ('ru',),
-    'tj': ('ru',),
+    'mo': ('ru',),
+    'tg': ('ru',),
     'tm': ('ru',),
     'uk': ('ru',),
     'uz': ('ru',),
