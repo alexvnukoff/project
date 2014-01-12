@@ -2,47 +2,29 @@
 <html>
 <head>
     <title>The books list </title>
+     {% load staticfiles %}
+    <script type="text/javascript" src="{% static "js/jquery-1.10.2.min.js" %}"></script>
+    <script>
+        function items(page){
+           link =  "/items/{{ item }}/showlist/"+page + "/";
+
+          $("#items_table").load(link);
+
+        }
+        $(document).ready(function(){
+            items(1);
+        });
+
+
+    </script>
 </head>
 <body>
 <a href="create/">Create</a>
-<table style="max-width: 850px;">
-
-{% for id,attr  in itemsList.items %}
-
-    {%with attr.Name|first as name  %}
+<div id="items_table"></div>
 
 
 
-  <tr>
-   <td>
-       <span> {{ name }} </span>
-     </td>
-       <td style="vertical-align: top;" >
 
-      <a href="update/{{ id }}/">Update</a>
-
-       </td>
-      <td style="vertical-align: top;" >
-
-       <a href=""></a>
-
-      </td>
- </tr>
-
-        {% endwith %}
-
-    {% empty %}
-   <TR>
-       <td>
-           <span> It's empty</span>
-       </td>
-   </TR>
-
-{% endfor %}
-
-
-</table>
-{% include "Paginator.html" %}
 </body>
 </html>
 

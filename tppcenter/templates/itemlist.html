@@ -1,0 +1,33 @@
+<table  style="max-width: 850px;">
+{% for id,attr  in itemsList.items %}
+
+    {%with attr.Name|first as name  %}
+ <tr>
+   <td>
+       <span> {{ name }} </span>
+     </td>
+       <td style="vertical-align: top;" >
+
+      <a href="update/{{ id }}/">Update</a>
+
+       </td>
+      <td style="vertical-align: top;" >
+
+       <a href=""></a>
+
+      </td>
+ </tr>
+
+        {% endwith %}
+
+    {% empty %}
+   <TR>
+       <td>
+           <span> It's empty</span>
+       </td>
+   </TR>
+
+{% endfor %}
+
+</table>
+{% include "Paginator.html" %}
