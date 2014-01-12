@@ -1,6 +1,6 @@
 from django.db import models
 from django.db import connection
-
+from django.db.models import Q
 
 class hierarchyManager(models.Manager):
     '''
@@ -223,5 +223,31 @@ class hierarchyManager(models.Manager):
                 //Returns instance of department which is hierarchical parent of the Department=5
         '''
         return self.model.objects.get(p2c__child_id=child, p2c__type="hier")
+
+    def deleteTree(self, parents):
+
+        if not isinstance(parents, list) and isinstance(parents, int):
+            parents = [parents]
+
+        if self.model.__name__ != 'Item':
+            raise ValueError
+
+        descendants = [descendant['ID'] for descendant in self.getDescedantsForList(parents)]
+
+        self.model.objects.filter(pk__in=descendants).delete()
+
+
+
+    def getRootParents(self, limit=0):
+        limit = int(limit)
+
+        if limit < 1:
+            return \
+                self.model.objects.filter(p2c__type="hier") \
+                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)
+        else:
+            return \
+                self.model.objects.filter(p2c__type="hier") \
+                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)[limit]
 
 
