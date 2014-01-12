@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import Item
-
+from core.hierarchy import hierarchyManager
 
 class Tpp(Item):
     name = models.CharField(max_length=128, unique=True)
@@ -8,29 +8,34 @@ class Tpp(Item):
     def __str__(self):
         return self.name
 
-    def getItemList(self, cls=None):
-        i = self.c2p
-        if cls:
-            return globals()[cls].objects.filter(c2p__parent_id=self.pk) #TODO fix hiearchy
-        else:
-            return Item.objects.filter(c2p__parent_id=self.pk)
-
 
 class Company(Item):
     name = models.CharField(max_length=128, unique=True)
 
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
     def __str__(self):
         return self.name
 
-    def getItemList(self, cls=None):
-        if cls:
-            return globals()[cls].objects.filter(c2p__parent_id=self.pk) #TODO fix hiearchy
-        else:
-            return Item.objects.filter(c2p__parent_id=self.pk)
+    def getDepartments(self):
+        '''
+            Get dict of departments only for this company
+            this method returns a dictionary that contains a level , id and parent of each member
+             as well as the result dictionary stores the tree structure
 
+             Example: Company(pk=1).getDepartments()
+        '''
+        childs = Department.hierarchy.getChild(self.pk).values('pk')
+        childs = [x['pk'] for x in childs]
+
+        return Department.hierarchy.getDescedantsForList(childs)
 
 class Department(Item):
     name = models.CharField(max_length=128)
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
 
     def __str__(self):
         return self.name

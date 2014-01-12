@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_init
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
@@ -10,6 +10,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
+from core.hierarchy import hierarchyManager
+import hashlib
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -167,7 +169,6 @@ class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
     classId = models.ForeignKey(ContentType)
     attrId = models.ForeignKey(Attribute)
-    order = models.IntegerField()
 
     def __str__(self):
         return "Class Name:   " + self.classId.name + "    attribute: " + self.attrId.title
@@ -226,6 +227,8 @@ class Item(models.Model):
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site)
 
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
 
     #def __init__(self, name):
     #   title = name
@@ -280,6 +283,18 @@ class Item(models.Model):
     def setAttributeValue(self, attrWithValues):
         '''
             Set values for attributes (mass)
+            Methods set attribute's values for the item
+            The parameter "attrWithValues" should be a dictionary
+             you can pass many values for one attribute by passing list as dictionary value
+                Example:
+                    attr = {
+                            'Name': 'Company Example'
+                            'PhoneNumber': ['123-321-456','789-654-228']
+                    }
+
+                    Company(pk=1).setAttributeValue(attr)
+                    //It will set the value for attribute "Name" of item = [Company=1] to "Company Example"
+                    //and will set many values for attribute "PhoneNumber" item = [Company=1]
         '''
         if not isinstance(attrWithValues, dict) or not attrWithValues :
             raise ValueError
@@ -342,117 +357,41 @@ class Item(models.Model):
 
         return True
 
-    def getSiblings(self):
+    def getSiblings(self, includeSelf=True):
         '''
             Get siblings in hierarchy
+            The method returns hierarchical siblings of the current Item
+            by default it will include the current Item
+                Example: Department(pk=1).getSiblings()
+                    //Returns all siblings of Department = 1 and will include the department itself
+            If you will set the parameter "includeSelf" it will not include the item itself
+                Example: Department(pk=1).getSiblings(False)//will not include Department=1
         '''
-        parent = self.c2p.get(p2c__type="hier")
 
-        return parent.getChildren()
+        try:
+            parent = Item.hierarchy.getParent(self.pk)
+        except Exception:
+            return False
+        else:
+            if includeSelf is True:
+                return self._meta.model.hierarchy.getChild(parent)
+            else:
+                return self._meta.model.hierarchy.getChild(parent).exclude(pk=self.pk)
 
-    def getAncestors(self, includeSelf = False):
+    def getRelationChildren(self, getItemInstance=True):
         '''
-            Get list of ancestors in hierarchy
-            List contains item objects
+            Returns not hierarchical children,
+            by default the method returns Item instances connected by "relation" type of relationship
+                Example: Company(pk=1).getRelationChildren()
+                    //Returns instances of Item and all types of items (products,  menus etc.)
+            if you will set the parameter "getItemInstance" to False the method
+            will returns only the same type of items
+                Example: Products(pk=1).getRelationChildren(False) //returns only products related to the product
         '''
-        translation = {'rev_level': 'level'}
-
-        ancestors = Item.objects.raw('''SELECT PARENT_ID, MAX(LEVEL) OVER () + 1 - LEVEL AS rev_level , item.id as id
-                                FROM
-                              (
-                                SELECT parent_id, child_id, type
-                                  FROM core_relationship
-                                UNION
-                                SELECT NULL, id, null
-                                  FROM core_item i
-                                 WHERE NOT EXISTS
-                                (
-                                  SELECT *
-                                    FROM core_relationship
-                                   WHERE child_id = i.id AND type='hier'
-                                )
-                              ) rel
-                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                            WHERE rel.type='hier' OR PARENT_ID is null
-                            CONNECT BY PRIOR  rel.PARENT_ID = rel.CHILD_ID
-                            START WITH rel.CHILD_ID = %s
-                            ORDER BY rev_level''', [self.id], translations=translation)
-
-        ancestors = list(ancestors)
-
-        if includeSelf is False:
-            del ancestors[len(ancestors) - 1]
-
-        return ancestors
-
-    def getDescendants(self, includeSelf = False):
-        '''
-            Get descendants in hierarchy
-        '''
-        translation = {'LEVEL': 'level'}
-
-        descendants = Item.objects.raw('''SELECT PARENT_ID, CHILD_ID, LEVEL, CONNECT_BY_ISLEAF as isLeaf, item.id as id
-                                            FROM
-                                          (
-                                            SELECT parent_id, child_id, type
-                                              FROM core_relationship
-                                            UNION
-                                            SELECT NULL, id, null
-                                              FROM core_item i
-                                             WHERE NOT EXISTS
-                                            (
-                                              SELECT *
-                                                FROM core_relationship
-                                               WHERE child_id = i.id AND type='hier'
-                                            )
-                                          ) rel
-                                        INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                                        WHERE rel.type='hier' OR PARENT_ID is null
-                                        CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
-                                        START WITH rel.CHILD_ID = %s
-                                        ORDER BY LEVEL;''', [self.id], translations=translation)
-
-        descendants = list(descendants)
-
-        if includeSelf is False:
-            del descendants[0]
-
-        return descendants
-
-    def getDescendantCount(self):
-        '''
-            Get count of descendants in hierarchy
-        '''
-        from django.db import connection
-
-        cursor = connection.cursor()
-
-        cursor.execute('''SELECT count(*) - 1
-                            FROM
-                            (
-                                SELECT parent_id, child_id, type
-                                    FROM core_relationship
-                                UNION SELECT NULL, id, null
-                                    FROM core_item i
-                                    WHERE NOT EXISTS
-                                    (
-                                        SELECT *
-                                            FROM core_relationship
-                                            WHERE child_id = i.id AND type='hier'
-                                    )
-                            ) rel
-                            INNER JOIN core_item item ON (rel.CHILD_ID = item.ID)
-                            WHERE rel.type='hier' OR PARENT_ID is null
-                            CONNECT BY PRIOR  rel.CHILD_ID = rel.PARENT_ID
-                            START WITH rel.CHILD_ID = %s''', [self.pk])
-
-        return cursor.fetchone()[0]
-
-    def getChildren(self):
-        '''
-            Get children in hierarchy
-        '''
-        return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="hier")
+        if getItemInstance is True:
+            return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
+        else:
+            return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
 
     @transaction.atomic
     def delete(self, using=None, **kwarg):
@@ -470,6 +409,8 @@ class Item(models.Model):
 
             This method will delete all relations with this object
             from the relationship model
+
+            This method will remove all values for each deleted item
         '''
         descedantsIDs = []
 
@@ -484,15 +425,19 @@ class Item(models.Model):
                     Item.objects.filter(pk__in=descedantsIDs).delete()
                     descedantsIDs.append(self.pk)
                     Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+                    Value.objects.filter(item__in=descedantsIDs).delete()
                 else:
                     try:
                         parentID = Item.objects.get(p2c__child_id=self.pk, p2c__type="hier")
                     except ObjectDoesNotExist:
                         Relationship.objects.filter(parent=self.pk).delete()
+                        Value.objects.filter(item=self.pk).delete()
                     else:
-                        Relationship.objects.filter(parent=self.pk).update(parent=parentID)
+                        Relationship.objects.filter(parent=self.pk, type="hier").update(parent=parentID)
+                        Relationship.objects.filter(parent=self.pk).delete()
             else:
-                Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
+                Relationship.objects.filter(Q(child=self.pk) | Q(parent=self.pk)).delete()
+                Value.objects.filter(item=self.pk).delete()
 
             super(Item, self).delete(using)
         except Exception as e:
@@ -532,10 +477,15 @@ class Value(models.Model):
     title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
+    sha1_code = models.CharField(max_length=40) #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
 
-    #class Meta:
-        #unique_together = ("title", "attr", "item")
+    class Meta:
+        unique_together = ("sha1_code", "attr", "item")
         #db_tablespace = 'TPP_CORE_VALUES'
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.sha1_code = hashlib.sha1(str(self.title).encode()).hexdigest()
+        super(Value, self).save()
 
     def __str__(self):
         return self.title
@@ -547,6 +497,15 @@ class Value(models.Model):
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_save, sender=Item)
+@receiver(pre_init, sender=Value)
 def item_create_callback(sender, **kwargs):
-    print("Item creation: check authority!")
+    '''
+    Generate SHA-1 code for Value.title field and save in Value.sha1_code
+    which participate in constraint
+    '''
+    #sender.sha1_code = hashlib.sha1(bytes(kwargs['instance'])).digest()
+    #kwargs['sha1_code'] = hashlib.sha1(str(kwargs.get('title')).encode()).hexdigest()
+    #m.update(str(kwargs['instance']))
+    #m.hexdigest()
+    #print(sender)
+    #print(kwargs)
