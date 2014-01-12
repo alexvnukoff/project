@@ -1,8 +1,16 @@
 from django.db import models
 from core.models import Item
+from django.contrib.auth.models import Group
+from random import randint
+
+class Organization (Item):
+    name = models.CharField(max_length=128, null=True, blank=True)
+
+    def __init__(self):
+        self.community = Group.objects.create(name='ORG-' + randint(100000, 999999))
 
 
-class Tpp(Item):
+class Tpp(Organization):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
@@ -16,8 +24,8 @@ class Tpp(Item):
             return Item.objects.filter(c2p__parent_id=self.pk)
 
 
-class Company(Item):
-    name = models.CharField(max_length=128, unique=True)
+class Company(Organization):
+    name = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -29,7 +37,7 @@ class Company(Item):
             return Item.objects.filter(c2p__parent_id=self.pk)
 
 
-class Department(Item):
+class Department(Organization):
     name = models.CharField(max_length=128)
 
     def __str__(self):

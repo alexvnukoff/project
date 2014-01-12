@@ -1,6 +1,6 @@
 from django.db import models
-from django.db.models.signals import pre_init
-from django.dispatch import receiver
+#from django.db.models.signals import pre_init
+#from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -219,12 +219,17 @@ class ActionPath(models.Model):
 #             Class Item defines basic primitive for application objects
 #----------------------------------------------------------------------------------------------------------
 class Item(models.Model):
-    title = models.CharField(max_length=128, unique=True)
+    title = models.CharField(max_length=128, null=True, blank=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site)
+    community = models.ForeignKey(Group, null=True, blank=True)
 
+    create_user = models.ForeignKey(User)
+    create_date = models.DateField(auto_now_add=True)
+    update_user = models.ForeignKey(User, null=True, blank=True)
+    update_date = models.DateField(auto_now=True)
 
     #def __init__(self, name):
     #   title = name
@@ -515,8 +520,8 @@ class Relationship(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
 
     qty = models.FloatField(null=True, blank=True)
-    create_date = models.DateField(auto_now_add=True)
     create_user = models.ForeignKey(User)
+    create_date = models.DateField(auto_now_add=True)
 
     class Meta:
         unique_together = ("parent", "child")
@@ -551,12 +556,12 @@ class Value(models.Model):
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_init, sender=Value)
-def item_create_callback(sender, **kwargs):
-    '''
-    Generate SHA-1 code for Value.title field and save in Value.sha1_code
-    which participate in constraint
-    '''
+#@receiver(pre_init, sender=Value)
+#def item_create_callback(sender, **kwargs):
+#    '''
+#    Generate SHA-1 code for Value.title field and save in Value.sha1_code
+#    which participate in constraint
+#    '''
     #sender.sha1_code = hashlib.sha1(bytes(kwargs['instance'])).digest()
     #kwargs['sha1_code'] = hashlib.sha1(str(kwargs.get('title')).encode()).hexdigest()
     #m.update(str(kwargs['instance']))
