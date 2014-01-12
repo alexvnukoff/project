@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 import hashlib
+from core.hierarchy import hierarchyManager
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -228,10 +229,16 @@ class Item(models.Model):
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
-    create_user = models.ForeignKey(User)
+
+    create_user = models.ForeignKey(User, related_name='owner2item')
     create_date = models.DateField(auto_now_add=True)
-    update_user = models.ForeignKey(User, null=True, blank=True)
-    update_date = models.DateField(auto_now=True)
+    update_user = models.ForeignKey(User, null=True, blank=True, related_name='user2item')
+    update_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        permissions = (
+            ("read_item", "Can read item"),
+        )
 
     #def __init__(self, name):
     #   title = name
