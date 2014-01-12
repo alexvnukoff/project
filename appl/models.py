@@ -1,7 +1,6 @@
 from django.db import models
 from core.models import Item
 from core.hierarchy import hierarchyManager
-from appl import func
 
 def getSpecificChildren(cls, parent):
     '''
@@ -9,8 +8,6 @@ def getSpecificChildren(cls, parent):
             Example: getSpecificChildren("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    z=(globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
-    a = (globals()[cls])
     return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
 class Tpp(Item):
@@ -36,7 +33,7 @@ class Company(Item):
         return 'test2'
 
     def getBranches(self):
-        getSpecificChildren("Article", self.pk)
+        return getSpecificChildren("Branch", self.pk)
 
     def getDepartments(self):
         '''
@@ -53,6 +50,24 @@ class Company(Item):
 
 class Department(Item):
     name = models.CharField(max_length=128)
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.name
+
+class Branch(Item):
+    name = models.CharField(max_length=128, unique=True)
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.name
+
+class Category(Item):
+    name = models.CharField(max_length=128, unique=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()

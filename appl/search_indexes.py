@@ -13,7 +13,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
         if branchQuerySet is None:
             return None
         else:
-            return [branch.pk for branch in branchQuerySet.values('pk')]
+            return [branch['pk'] for branch in branchQuerySet.values('pk')]
 
     def get_model(self):
         return Company
