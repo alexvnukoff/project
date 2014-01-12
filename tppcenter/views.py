@@ -37,17 +37,21 @@ def set_items_list(request):
         return render_to_response("items.html", locals())
 
 def set_item_list(request, item):
+
+
+    item = item
+    return render_to_response('list.html', locals())
+
+def showlist(request, item, page):
     i = (globals()[item])
     if not issubclass(i, Item):
         raise Http404
     else:
-        page = request.GET.get('page', 1)
-        result = func.getItemsListWithPagination(item, "Name", page=page)
-        itemsList = result[0]
-        page = result[1]
-    return render_to_response('list.html', locals())
 
-
+      result = func.getItemsListWithPagination(item, "Name", page=page)
+      itemsList = result[0]
+      page = result[1]
+      return render_to_response('itemlist.html', locals())
 
 
 def get_item(request, item):
