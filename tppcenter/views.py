@@ -1,14 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Basket, Tpp, Company
+from appl.models import News, Basket, Tpp, Company, Gallery
 from django.http import Http404
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate ,Relationship
 from appl import func
 from django.core.exceptions import ValidationError
-
-
+from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery
 
 from django.conf import settings
 
@@ -38,22 +37,30 @@ def set_items_list(request):
         return render_to_response("items.html", locals())
 
 def set_item_list(request, item):
+
+
+    item = item
+    return render_to_response('list.html', locals())
+
+def showlist(request, item, page):
     i = (globals()[item])
     if not issubclass(i, Item):
         raise Http404
     else:
-        page = request.GET.get('page', 1)
-        result = func.getItemsListWithPagination(item, "Name", page=page)
-        itemsList = result[0]
-        page = result[1]
-    return render_to_response('list.html', locals())
+
+      result = func.getItemsListWithPagination(item, "Name", page=page)
+      itemsList = result[0]
+      page = result[1]
+      return render_to_response('itemlist.html', locals())
 
 
-def get_item_form(request, item):
+def get_item(request, item):
 
     i = request.POST
     if not i:
         form = ItemForm(item)
+
+
     else:
         files = request.FILES
         post = request.POST
@@ -66,6 +73,30 @@ def get_item_form(request, item):
             com = form.save()
            # obj = Tpp.objects.get(title="Moscow Tpp")
             #Relationship.objects.create(title=obj.name, parent=obj, child=com, create_user=request.user)
+    return render_to_response('forelement.html', locals())
+
+
+def get_item_form(request, item):
+
+
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
+    if not request.POST:
+        form = Photo()
+        itemform = ItemForm(item)
+    else:
+        form = Photo(request.POST, request.FILES)
+        values = {}
+        values.update(request.FILES)
+        values.update(request.POST)
+        itemform = ItemForm(item, values=values)
+        itemform.clean()
+        if form.is_valid():
+            ob = itemform.save()
+            form.save(parent=ob.id, user=request.user)
+
+
+
     return render_to_response('forelement.html', locals())
 
 def update_item(request, item, id):
