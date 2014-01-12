@@ -7,8 +7,12 @@ from appl import func
 from django.conf import settings
 
 def home(request):
-    id = settings.SITE_ID
-    return render_to_response("home.html")
+    newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=4)
+    return render_to_response("index.html", locals())
+
+def about(request):
+
+    return render_to_response("About/About.html")
 
 def set_news_list(request):
     page = request.GET.get('page', 1)

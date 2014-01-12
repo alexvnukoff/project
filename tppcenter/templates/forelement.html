@@ -10,18 +10,14 @@
 <form action="" method="post">
 {% endif %}
 {{ form.management_form }}
+{% csrf_token %}
 {% for field in form %}
         <div class="fieldWrapper">
 
             {{ field.label_tag }} {{ field}} {{ field.errors }}
         </div>
     {% endfor %}
-{% for field in itemform %}
-        <div class="fieldWrapper">
 
-            {{ field.label_tag }} {{ field}} {{ field.errors }}
-        </div>
-    {% endfor %}
 <input type="submit" name="submit">
 </form>
 </body>

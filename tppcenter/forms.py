@@ -31,7 +31,7 @@ class ItemForm(forms.Form):
         # Get id of ContentType of specific Item
         object_id = ContentType.objects.get(name=str(item).lower()).id
         # Get default attributes of Item
-        attributes = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict").order_by('order')
+        attributes = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict")
 
          #IF id parameter isn't null , and we want update form ,need to populate field with initial values
         if self.id:
@@ -64,7 +64,7 @@ class ItemForm(forms.Form):
 
             #FilePath attribute
             if(attr.type == "Fph") and dict is None:
-                self.fields[title] = forms.FilePathField(widget=forms.SelectMultiple, path='%s/%s' % (settings.MEDIA_ROOT, "images/"), required=bool(required))
+                self.fields[title] = forms.FilePathField(widget=forms.SelectMultiple, path='%s/%s' % (settings.MEDIA_ROOT, "pictures/"), required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Boolean
@@ -175,7 +175,7 @@ class ItemForm(forms.Form):
         if object exist its update his attribute
         Return object of Item
         """
-        path_to_images = "images/"
+        path_to_images = "pictures/"
         if not self.is_valid():
             raise ValidationError
         if not self.id:
