@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% extends "index.html" %}
+    {% block meta %}
+        {{ block.super }}
+    {% endblock %}
+    <title>About Centerpokupok.com</title>
+{% block styles %}
+  {{ block.super }}
+    {% endblock %}
+  {% block js %}
+{{ block.super }}
+    {% endblock %}
+</head>
+{% block header %}
+    {{ block.super }}
+{% endblock %}
+
+{% block body %}
+<H1>Ето страница о нас</H1>
+    {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}
+</html>
