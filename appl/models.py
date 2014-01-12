@@ -28,9 +28,9 @@ class Company(Organization):
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
-    def __init__(self):
-        super(Organization, self).__init__()
-        self.status = State.objects.get(state__title='Default Company State')
+    def __init__(self, *args, **kwargs):
+        super(Company, self).__init__(*args, **kwargs)
+        self.status = State.objects.get(title='Default Company State')
 
     def __str__(self):
         return self.name
@@ -53,9 +53,9 @@ class Department(Organization):
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
-    def __init__(self):
-        super(Organization, self).__init__()
-        self.status = State.objects.get(state__title='Default Department State')
+    def __init__(self, *args, **kwargs):
+        super(Department, self).__init__(*args, **kwargs)
+        self.status = State.objects.get(title='Default Department State')
 
     def __str__(self):
         return self.name
