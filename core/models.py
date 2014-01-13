@@ -1,12 +1,10 @@
-from django.db import models
+from django.db import models, transaction
 from django.db.models.signals import pre_init
 from django.dispatch import receiver
 from django.db.models import Q
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
@@ -39,7 +37,7 @@ class UserManager(BaseUserManager):
 #----------------------------------------------------------------------------------------------------------
 #             Class User define a new user for Django system
 #----------------------------------------------------------------------------------------------------------
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
     avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
@@ -245,6 +243,21 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
+
+    def getItemPermissionsList(self, user):
+        '''
+        Returns List of Permissions which define set of operations for given User under given Item's instance
+        '''
+        perm_list=[]
+        if user == self.create_user or user == self.update_user:
+            perm_list = user.get_group_permissions(self.status__perm)
+        else:
+            if user.group.get(name=self.community__name):
+                perm_list = user.get_group_permissions(self.status__perm)
+            else:
+                perm_list = 0
+
+        return perm_list
 
     @staticmethod
     def getItemsAttributesValues(attr, items):
@@ -560,20 +573,3 @@ class Value(models.Model):
 
     def get(self):
         return self.title
-
-#----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
-#             Signal receivers
-#----------------------------------------------------------------------------------------------------------
-@receiver(pre_init, sender=Value)
-def item_create_callback(sender, **kwargs):
-    '''
-    Generate SHA-1 code for Value.title field and save in Value.sha1_code
-    which participate in constraint
-    '''
-    #sender.sha1_code = hashlib.sha1(bytes(kwargs['instance'])).digest()
-    #kwargs['sha1_code'] = hashlib.sha1(str(kwargs.get('title')).encode()).hexdigest()
-    #m.update(str(kwargs['instance']))
-    #m.hexdigest()
-    #print(sender)
-    #print(kwargs)
