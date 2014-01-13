@@ -2,16 +2,14 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.db.models import Q
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
-from core.hierarchy import hierarchyManager
 import hashlib
+from core.hierarchy import hierarchyManager
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -39,7 +37,7 @@ class UserManager(BaseUserManager):
 #----------------------------------------------------------------------------------------------------------
 #             Class User define a new user for Django system
 #----------------------------------------------------------------------------------------------------------
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
     avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
@@ -143,8 +141,7 @@ class Attribute(models.Model):
         ("Ip", 'IpField'),
         ("Tm", 'TimeField'),
         ("Url", "URLField"),
-        ("Sdt", "SplitDateTimeField"),
-        ("MIm", 'MultiplyImage'))
+        ("Sdt", "SplitDateTimeField"))
     type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
 
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
@@ -221,20 +218,46 @@ class ActionPath(models.Model):
 #             Class Item defines basic primitive for application objects
 #----------------------------------------------------------------------------------------------------------
 class Item(models.Model):
-    title = models.CharField(max_length=128, unique=True)
+    title = models.CharField(max_length=128, null=True, blank=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site)
+    community = models.ForeignKey(Group, null=True, blank=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
+
+    create_user = models.ForeignKey(User, related_name='owner2item')
+    create_date = models.DateField(auto_now_add=True)
+    update_user = models.ForeignKey(User, null=True, blank=True, related_name='user2item')
+    update_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        permissions = (
+            ("read_item", "Can read item"),
+        )
 
     #def __init__(self, name):
     #   title = name
 
     def __str__(self):
         return self.title
+
+    def getItemPermissionsList(self, user):
+        '''
+        Returns List of Permissions which define set of operations for given User under given Item's instance
+        '''
+        perm_list=[]
+        if user == self.create_user or user == self.update_user:
+            perm_list = user.get_group_permissions(self.status__perm)
+        else:
+            if user.group.get(name=self.community__name):
+                perm_list = user.get_group_permissions(self.status__perm)
+            else:
+                perm_list = 0
+
+        return perm_list
 
     @staticmethod
     def getItemsAttributesValues(attr, items):
@@ -380,18 +403,10 @@ class Item(models.Model):
 
     def getRelationChildren(self, getItemInstance=True):
         '''
-            Returns not hierarchical children,
-            by default the method returns Item instances connected by "relation" type of relationship
-                Example: Company(pk=1).getRelationChildren()
-                    //Returns instances of Item and all types of items (products,  menus etc.)
-            if you will set the parameter "getItemInstance" to False the method
-            will returns only the same type of items
-                Example: Products(pk=1).getRelationChildren(False) //returns only products related to the product
+            Get list of ancestors in hierarchy
+            List contains item objects
         '''
-        if getItemInstance is True:
-            return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
-        else:
-            return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
+        translation = {'rev_level': 'level'}
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
