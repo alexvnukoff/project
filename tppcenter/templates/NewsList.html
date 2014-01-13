@@ -6,10 +6,11 @@
 <body>
 <table style="max-width: 850px;">
 
-{% for title , attr  in itemsList.items %}
+{% with itemsList.values as attr %}
+
     {% load staticfiles %}
     {% with attr.Text|first as text  %}
-    {% with attr.Image|first as picture  %}
+    {% with attr.Photo|first as picture  %}
     {%with attr.Anons|first as name  %}
 
 
@@ -32,15 +33,15 @@
         {% endwith %}
         {% endwith %}
         {% endwith %}
+        {% endwith %}
 
-    {% empty %}
    <TR>
        <td>
            <span> It's empty</span>
        </td>
    </TR>
 
-{% endfor %}
+
 
 
 </table>
