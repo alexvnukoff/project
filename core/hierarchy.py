@@ -15,13 +15,17 @@ class hierarchyManager(models.Manager):
                                     FROM {relTable}
                                 UNION
                                     SELECT NULL, {pkCol}, null
-                                        FROM {itemTable} i
-                                        WHERE NOT EXISTS
+                                        FROM
                                         (
-                                            SELECT *
-                                                FROM {relTable}
-                                                WHERE child_id = i.{pkCol} AND type='hier'
-                                        )
+                                            SELECT NULL, {pkCol}, null
+                                                FROM {itemTable} i
+                                                WHERE NOT EXISTS
+                                                (
+                                                    SELECT *
+                                                        FROM {relTable}
+                                                        WHERE child_id = i.{pkCol} AND type='hier'
+                                                )
+                                        ) WHERE ROWNUM <= {limitParent}
                             ) rel
                             INNER JOIN {itemTable} model ON (rel.CHILD_ID = model.{pkCol})
                             WHERE rel.type='hier' OR rel.PARENT_ID is null {where}
@@ -40,11 +44,13 @@ class hierarchyManager(models.Manager):
         queryDict['pkCol'] = self.model._meta.pk.column
         queryDict['select'] = 'PARENT_ID, LEVEL, model.{pkCol} as id'.format(pkCol=queryDict['pkCol'])
         queryDict['where'] = ''
-        queryDict['order'] = ''
+        queryDict['where'] = ''
+        queryDict['order'] = 'ORDER BY ROWNUM '
+        queryDict['limit'] = '50'
 
         return queryDict
 
-    def getTree(self):
+    def getTree(self, rootLimit=False):
         '''
             Returns hierarchical structure of some type of Item
             The method returns list of dictionaries that contains the id , level and the parent of each member
@@ -62,6 +68,15 @@ class hierarchyManager(models.Manager):
         queryDict['select'] += ', CONNECT_BY_ISLEAF as isLeaf'
         queryDict['prior'] = 'rel.CHILD_ID = rel.PARENT_ID'
         queryDict['startWith'] = 'rel.PARENT_ID is NULL'
+
+
+        if order is not False:
+            queryDict['order'] += 'DESC'
+
+        if rootLimit is not False:
+            int(rootLimit)
+
+            queryDict['limit'] = str(rootLimit)
 
         finalQuery = self.query.format(**queryDict)
 
@@ -248,6 +263,6 @@ class hierarchyManager(models.Manager):
         else:
             return \
                 self.model.objects.filter(p2c__type="hier") \
-                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)[limit]
+                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)[:limit]
 
 
