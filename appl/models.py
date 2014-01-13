@@ -1,5 +1,7 @@
 from django.db import models
-from core.models import Item
+from core.models import Item, State
+from django.contrib.auth.models import Group
+from random import randint
 from core.hierarchy import hierarchyManager
 
 def getSpecificChildren(cls, parent):
@@ -10,18 +12,33 @@ def getSpecificChildren(cls, parent):
     '''
     return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
-class Tpp(Item):
+class Organization (Item):
+
+    def __init__(self, *args, **kwargs):
+        super(Organization, self).__init__(*args, **kwargs)
+        self.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+        print('Constructor!')
+
+class Tpp(Organization):
     name = models.CharField(max_length=128, unique=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Tpp, self).__init__(*args, **kwargs)
+        self.status = State.objects.get(title='Default TPP State')
+
 
     def __str__(self):
         return self.name
 
-
-class Company(Item):
-    name = models.CharField(max_length=128, unique=True)
+class Company(Organization):
+    name = models.CharField(max_length=128, null=True, blank=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
+
+    def __init__(self, *args, **kwargs):
+        super(Company, self).__init__(*args, **kwargs)
+        self.status = State.objects.get(title='Default Company State')
 
     def __str__(self):
         return self.name
@@ -45,10 +62,9 @@ class Company(Item):
         '''
         childs = Department.hierarchy.getChild(self.pk).values('pk')
         childs = [x['pk'] for x in childs]
-
         return Department.hierarchy.getDescedantsForList(childs)
 
-class Department(Item):
+class Department(Organization):
     name = models.CharField(max_length=128)
 
     objects = models.Manager()
@@ -72,6 +88,10 @@ class Category(Item):
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
+    def __init__(self, *args, **kwargs):
+        super(Department, self).__init__(*args, **kwargs)
+        self.status = State.objects.get(title='Default Department State')
+
     def __str__(self):
         return self.name
 
@@ -81,20 +101,17 @@ class Site(Item):
     def __str__(self):
         return self.name
 
-
 class Product(Item):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
 
-
 class License(Item):
     name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
-
 
 class Service(Item):
     name = models.CharField(max_length=128, unique=True)
