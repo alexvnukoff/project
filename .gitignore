@@ -4,7 +4,8 @@ local_settings.py
 appl/Static
 *.pyc
 *.pyo
-*/migrations/*_initial.py
+*/migrations/
+whoosh_index
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
