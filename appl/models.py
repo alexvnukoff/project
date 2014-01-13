@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import Item, State
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
 
@@ -14,12 +14,22 @@ def getSpecificChildren(cls, parent):
 
 class Organization (Item):
 
+    class Meta:
+        permissions = (
+            ("read_organization", "Can read organization"),
+        )
+
     def __init__(self, *args, **kwargs):
         super(Organization, self).__init__(*args, **kwargs)
         self.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
 
 class Tpp(Organization):
     name = models.CharField(max_length=128, unique=True)
+
+    class Meta:
+        permissions = (
+            ("read_tpp", "Can read tpp"),
+        )
 
     def __init__(self, *args, **kwargs):
         super(Tpp, self).__init__(*args, **kwargs)
@@ -31,6 +41,11 @@ class Tpp(Organization):
 
 class Company(Organization):
     name = models.CharField(max_length=128, null=True, blank=True)
+
+    class Meta:
+        permissions = (
+            ("read_company", "Can read company"),
+        )
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -68,6 +83,11 @@ class Department(Organization):
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
+
+    class Meta:
+        permissions = (
+            ("read_department", "Can read department"),
+        )
 
     def __str__(self):
         return self.name
@@ -249,3 +269,29 @@ class Gallery(Item):
 
       def __str__(self):
           return str(self.photo)
+
+#----------------------------------------------------------------------------------------------------------
+#             Database default objects generation
+#----------------------------------------------------------------------------------------------------------
+#Default Groups with Permissions
+read_item = Permission.objects.get(codename='read_item')
+read_tpp = Permission.objects.get(codename='read_tpp')
+read_company = Permission.objects.get(codename='read_company')
+read_department = Permission.objects.get(codename='read_department')
+
+gr1, created = Group.objects.get_or_create(name='Default TPP Permissions')
+if created:
+    gr1.permissions.add(read_item, read_tpp)
+
+gr2, created=Group.objects.get_or_create(name='Default Company Permissions')
+if created:
+    gr2.permissions.add(read_item, read_company)
+
+gr3, created=Group.objects.get_or_create(name='Default Department Permissions')
+if created:
+    gr3.permissions.add(read_item, read_department)
+
+#Default States
+st1, created=State.objects.get_or_create(title='Default TPP State', perm=gr1)
+st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
+st3, created=State.objects.get_or_create(title='Default Department State', perm=gr3)
