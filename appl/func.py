@@ -46,6 +46,7 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
 
     return attributeValues, page  #Return List Item and Page object of current page
 
+#TODO: Jenya change func name
 def getItemsList(cls,  *attr,  qty=None, site=False):
     '''
     Method  return List of Item of specific class including Pagination
@@ -63,11 +64,3 @@ def getItemsList(cls,  *attr,  qty=None, site=False):
     attributeValues = (globals()[cls]).getItemsAttributesValues(attr, items)
 
     return attributeValues
-
-def getSpecificChildren(cls, parent):
-    '''
-        Returns not hierarchical children of specific type
-            Example: getSpecificChildren("Company", 10)
-                //Returns instances of all Companies related with Item=10 by "relation" type of relationship
-    '''
-    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")

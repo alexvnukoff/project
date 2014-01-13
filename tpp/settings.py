@@ -175,6 +175,15 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'uz': ('ru',),
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 try:
     from local_settings import *
 except ImportError:
