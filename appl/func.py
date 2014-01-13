@@ -8,6 +8,21 @@ from django.http import Http404
 from django.conf import settings
 
 
+
+def getPaginatorRange(page):
+    if page.number - 2 > 0:
+        start = page.number - 2
+    else:
+        start = 1
+    if start + 5 <= page.paginator.num_pages:
+        end = start + 5
+    else:
+        end = page.paginator.num_pages + 1
+
+    paginator_range = range(start, end)
+    return paginator_range
+
+
 def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
     '''
     Method  return List of Item of specific class including Pagination
@@ -20,11 +35,12 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
     else:
         items = (globals()[cls]).objects.all()
 
-    paginator = Paginator(items, 3)
+    paginator = Paginator(items, 10)
     try:
       page = items = paginator.page(page)  #check if page is valid
     except Exception:
       page = items = paginator.page(1)
+
     items = tuple([item.pk for item in page.object_list])
     attributeValues = (globals()[cls]).getItemsAttributesValues(attr, items)
 
@@ -38,9 +54,9 @@ def getItemsList(cls,  *attr,  qty=None, site=False):
     page = number of current page
     '''
     if site:
-        items = (globals()[cls]).objects.filter(sites__id=settings.SITE_ID)[:qty+1]
+        items = (globals()[cls]).objects.filter(sites__id=settings.SITE_ID)[:qty]
     else:
-        items = (globals()[cls]).objects.all()[:qty+1]
+        items = (globals()[cls]).objects.all()[:qty]
 
 
     items = tuple([item.pk for item in items])

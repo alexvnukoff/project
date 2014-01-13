@@ -7,7 +7,7 @@ from appl import func
 from django.conf import settings
 
 def home(request):
-    newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=4)
+    newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=3)
     return render_to_response("index.html", locals())
 
 def about(request):

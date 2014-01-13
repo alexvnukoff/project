@@ -919,14 +919,14 @@ $(function () {
 
                     {%  with attr.Active_From|first as date  %}
 			    <li>
-					<a href="/news/novosti/{{ title }}/" alt="{{ name }}" title="{{ name }}">
+					<a href="/news/{{ title }}/" alt="{{ name }}" title="{{ name }}">
 
 						<img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
 					</a>
 					<p>
 						{{ date }}
 					</p>
-					<p><a href="/news/novosti/{{ title }}/">{{ name }}</a></p>
+					<p><a href="/news/{{ title }}/">{{ name }}</a></p>
 
 	             </li>
 
