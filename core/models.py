@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_init
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import transaction
@@ -393,61 +393,6 @@ class Item(models.Model):
         else:
             return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
 
-    @transaction.atomic
-    def delete(self, using=None, **kwarg):
-        '''
-            Overwrite the delete method for trees structures
-
-            if you are passing a parameter "cut" to the method
-            it will delete object's descendants
-                Example: Item(pk=1).delete(cut=True)
-            otherwise it will squeeze the descendants of the object
-            or will create new root parent/s
-                Example: Item(pk=1).delete()
-                if Item = 1 is root parent all his children will become root parents
-                if Item = 1 is child of Item = 2 all his children will become a children of Item =2
-
-            This method will delete all relations with this object
-            from the relationship model
-
-            This method will remove all values for each deleted item
-        '''
-        descedantsIDs = []
-
-        sid = transaction.savepoint()
-
-        try:
-            for child in self.getDescendants():
-                descedantsIDs.append(child.pk)
-
-            if len(descedantsIDs):
-                if "cut" in kwarg and kwarg['cut'] is True:
-                    Item.objects.filter(pk__in=descedantsIDs).delete()
-                    descedantsIDs.append(self.pk)
-                    Relationship.objects.filter(Q(child__in=descedantsIDs) | Q(parent__in=descedantsIDs)).delete()
-                    Value.objects.filter(item__in=descedantsIDs).delete()
-                else:
-                    try:
-                        parentID = Item.objects.get(p2c__child_id=self.pk, p2c__type="hier")
-                    except ObjectDoesNotExist:
-                        Relationship.objects.filter(parent=self.pk).delete()
-                        Value.objects.filter(item=self.pk).delete()
-                    else:
-                        Relationship.objects.filter(parent=self.pk, type="hier").update(parent=parentID)
-                        Relationship.objects.filter(parent=self.pk).delete()
-            else:
-                Relationship.objects.filter(Q(child=self.pk) | Q(parent=self.pk)).delete()
-                Value.objects.filter(item=self.pk).delete()
-
-            super(Item, self).delete(using)
-        except Exception as e:
-            transaction.savepoint_rollback(sid)
-
-            raise e
-        else:
-            transaction.savepoint_commit(sid)
-
-
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
 #----------------------------------------------------------------------------------------------------------
@@ -456,7 +401,7 @@ class Relationship(models.Model):
     parent = models.ForeignKey(Item, related_name='p2c')
     child = models.ForeignKey(Item, related_name='c2p')
     TYPE_OF_RELATIONSHIP = (
-        ('rel', 'String'),
+        ('rel', 'Relation'),
         ('hier', 'Hierarchy'),)
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
 
@@ -497,15 +442,8 @@ class Value(models.Model):
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_init, sender=Value)
-def item_create_callback(sender, **kwargs):
-    '''
-    Generate SHA-1 code for Value.title field and save in Value.sha1_code
-    which participate in constraint
-    '''
-    #sender.sha1_code = hashlib.sha1(bytes(kwargs['instance'])).digest()
-    #kwargs['sha1_code'] = hashlib.sha1(str(kwargs.get('title')).encode()).hexdigest()
-    #m.update(str(kwargs['instance']))
-    #m.hexdigest()
-    #print(sender)
-    #print(kwargs)
+@receiver(pre_delete, sender=Item)
+def itemPreDelete(instance, **kwargs):
+
+    Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
+    Value.objects.filter(item=instance.pk).delete()
