@@ -453,7 +453,6 @@ class Value(models.Model):
         return self.title
 
 #----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
 @receiver(pre_delete, sender=Item)
@@ -461,3 +460,16 @@ def itemPreDelete(instance, **kwargs):
 
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
+#----------------------------------------------------------------------------------------------------------
+#             Database default objects generation
+#----------------------------------------------------------------------------------------------------------
+#Default Groups with permissions
+gr1, created=Group.objects.get_or_create(name='Default TPP Permissions')
+gr2, created=Group.objects.get_or_create(name='Default Company Permissions')
+gr3, created=Group.objects.get_or_create(name='Default Department Permissions')
+
+#Default States
+st1, created=State.objects.get_or_create(title='Default TPP State', perm=gr1)
+st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
+st3, created=State.objects.get_or_create(title='Default Department State', perm=gr3)

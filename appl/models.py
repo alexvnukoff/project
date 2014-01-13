@@ -17,7 +17,6 @@ class Organization (Item):
     def __init__(self, *args, **kwargs):
         super(Organization, self).__init__(*args, **kwargs)
         self.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
-        print('Constructor!')
 
 class Tpp(Organization):
     name = models.CharField(max_length=128, unique=True)
