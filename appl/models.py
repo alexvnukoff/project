@@ -4,6 +4,14 @@ from django.contrib.auth.models import Group
 from random import randint
 from core.hierarchy import hierarchyManager
 
+def getSpecificChildren(cls, parent):
+    '''
+        Returns not hierarchical children of specific type
+            Example: getSpecificChildren("Company", 10)
+                //Returns instances of all Companies related with Item=10 by "relation" type of relationship
+    '''
+    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
+
 class Organization (Item):
 
     def __init__(self, *args, **kwargs):
@@ -35,6 +43,15 @@ class Company(Organization):
     def __str__(self):
         return self.name
 
+    def getName(self):
+        return 'test1'
+
+    def getDescription(self):
+        return 'test2'
+
+    def getBranches(self):
+        return getSpecificChildren("Branch", self.pk)
+
     def getDepartments(self):
         '''
             Get dict of departments only for this company
@@ -49,6 +66,24 @@ class Company(Organization):
 
 class Department(Organization):
     name = models.CharField(max_length=128)
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.name
+
+class Branch(Item):
+    name = models.CharField(max_length=128, unique=True)
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.name
+
+class Category(Item):
+    name = models.CharField(max_length=128, unique=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()

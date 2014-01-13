@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% extends "index.html" %}
+    {% block meta %}
+        {{ block.super }}
+    {% endblock %}
+    <title>News</title>
+{% block styles %}
+  {{ block.super }}
+    {% endblock %}
+  {% block js %}
+{{ block.super }}
+    {% endblock %}
+</head>
+{% block header %}
+    {{ block.super }}
+{% endblock %}
+
+{% block body %}
+		<div id="main">
+		<div id="sidebar">
+			<ul id="categories">
+				<li class="parent">Обзор товаров</li>
+				<li><a href="#">Новости партнеров</a></li>
+				<li><a href="#">Анонсы магазинов</a></li>
+				<li><a href="#">Полезные статьи</a></li>
+			</ul>
+			<div class="recommended">
+				<div class="items-recm">
+					<h2>Рекомендуем</h2>
+					<ul>
+						<li>
+							<a href="#"><img alt="" src="images/products/pr1.jpg" /></a>
+							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<p class="price">
+								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+							</p>
+							<p><a href="#" class="recm-more">Футболки мужские  &rarr;</a></p>
+						</li>
+						<li>
+							<a href="#"><img alt="" src="images/products/pr1.jpg" /></a>
+							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<p class="price">
+								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+							</p>
+							<p><a href="#" class="recm-more">Футболки мужские  &rarr;</a></p>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<h2>Спеццена</h2>
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Женские босоножки “Осенний туман”</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Осенние ботинки на шнуровке (коричневые)</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="recommended">
+				<div class="items-recm">
+					<h2 class="spacer">Рекомендуем</h2>
+					<ul>
+						<li>
+							<a href="#"><img alt="" src="images/products/pr1.jpg" /></a>
+							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<p class="price">
+								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+							</p>
+							<p><a href="#" class="recm-more">Футболки мужские  &rarr;</a></p>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> спеццена</div>
+							<a href="#"><img alt="" src="images/products/pr8.jpg"></a>
+							<div class="coupon-info">
+								<p><a href="#">Распродажа</a></p>
+								<p>осенней коллекции</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="alldeal"><a href="#">Все спецпредложения &rarr;</a></div>
+		</div>
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Новостные материалы</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Обзоры </a></span>
+				</div>
+			</div>
+			<div class="title-items">
+				<h2>Популярные обзоры</h2>
+			</div>
+			<ul class="popular-reveiew">
+				<li>
+					<a href="#"><img src="images/gallery/review.jpg" alt="" /></a>
+					<p>16 августа 2013</p>
+					<p><a href="#">Обновленный аромат от Moschino появится в продаже уже в сентябре</a></p>
+				</li>
+				<li>
+					<a href="#"><img src="images/gallery/review.jpg" alt="" /></a>
+					<p>16 августа 2013</p>
+					<p><a href="#">Обновленный аромат от Moschino появится в продаже уже в сентябре</a></p>
+				</li>
+				<li>
+					<a href="#"><img src="images/gallery/review.jpg" alt="" /></a>
+					<p>16 августа 2013</p>
+					<p><a href="#">Обновленный аромат от Moschino появится в продаже уже в сентябре</a></p>
+				</li>
+				<li>
+					<a href="#"><img src="images/gallery/review.jpg" alt="" /></a>
+					<p>16 августа 2013</p>
+					<p><a href="#">Обновленный аромат от Moschino появится в продаже уже в сентябре</a></p>
+				</li>
+			</ul>
+			<div class="title-items">
+				<h2>Все обзоры товаров</h2>
+			</div>
+			<div class="topreview">
+				<span>Сортировать </span>
+				<span><a href="#">по популярности</a></span>
+				<span>или </span>
+				<span class="date"><a href="#">дате</a></span>
+				<span>(<a href="#">выбрать дату</a>)</span>
+				<div class="country">
+					<span>Показать товары из </span>
+					<span><a href="#" class="act">всех стран</a><i class="icons arrow-lang"></i></span>
+				</div>
+			</div>
+
+				<ul class="listreviews">
+                    {% for id , attr  in newsList.items %}
+                    {% load staticfiles %}
+                    {% with attr.Name|first as name  %}
+                    {% with attr.Photo|first as picture  %}
+                    {% with attr.Detail_Text|first as content %}
+
+                    {%  with attr.Active_From|first as date  %}
+			    <li>
+
+					<img class="star" alt="" src="images/stars.png">
+					<img width="160px" height="115px" src="{% static picture %}" alt="{{ name }}" class="thumb" />
+					<p class="date">{{ date }}</p>
+					<p><a href="{{ id }}/">{{ name }}</a></p>
+					<p>{{ content|truncatewords:25 }} </p>
+
+
+	             </li>
+                        {% ifequal forloop.counter 4  %}
+                              </ul>
+                              <div class="itembanner"><a href="#"><img src="{% static "images/banner.jpg"%}" alt=""></a></div>
+                              <ul class="listreviews">
+                        {% endifequal %}
+
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                     {% empty %}
+
+                        <span> It's empty</span>
+
+                    {% endfor %}
+
+
+                  </ul>
+
+
+
+
+
+			<div class="panaging">
+             {%  if page.has_previous %}
+			    	<a href="?page={{ page.previous_page_number }}" class="icons prev">Prev</a>
+            {% endif %}
+            <label>Страницы:</label>
+
+
+                {% for i in paginator_range %}
+
+
+                   {% ifequal i page.number %}
+                       <a href="?page={{ page.number }}" class="current">{{ page.number }}</a>
+                          {% else %}
+                       <a href="?page={{ i}}">{{ i }}</a>
+                 {% endifequal %}
+               {% endfor %}
+               {%  if page.has_next %}
+			       	<a href="?page={{ page.next_page_number }}" class="icons next">Next</a>
+               {% endif %}
+			</div>
+
+		</div>
+	</div>
+</div>
+    {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}
+</html>
