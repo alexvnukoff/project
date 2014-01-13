@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from core.models import User
 from core.forms import *
 
-class UserAdmin(UserAdmin):
+class TPPUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
@@ -65,7 +65,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(User, TPPUserAdmin)
 admin.site.register(Action)
 admin.site.register(ActionPath)
 admin.site.register(Attribute)
