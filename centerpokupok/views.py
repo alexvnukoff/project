@@ -8,17 +8,60 @@ from django.conf import settings
 
 def home(request):
     newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=3)
-    menu_categories = Category.hierarchy.getRootParents(9)
-    root_ids = [cat.pk for cat in menu_categories]
-    hierarchyStructure = Category.hierarchy.getDescedantsForList(root_ids)
+    hierarchyStructure = Category.hierarchy.getTree(10)
+
+
     treeObject = [cat['ID'] for cat in hierarchyStructure]
 
-    a = Category.objects.filter(pk__in=treeObject).all()
+    categories_id = Category.objects.filter(pk__in=treeObject).all()
+
+    categories = Item.getItemsAttributesValues(("Name",), categories_id)
+
+
+    sortedHierarchyStructure = []
+    dictToSort = []
+    id = hierarchyStructure[0]['ID']
+    for i in range(0, len(hierarchyStructure)):
+        if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
+            id = hierarchyStructure[i]['ID']
+            sortedHierarchyStructure.extend(_sortDict(dictToSort))
+            dictToSort = []
+
+        dictToSort.append(hierarchyStructure[i])
+
+    if len(dictToSort) > 0:
+       sortedHierarchyStructure.extend(_sortDict(dictToSort))
+
+
+
+    level = 0
+    for node in sortedHierarchyStructure:
+        node['pre_level'] = level
+        node['item'] = categories[node['ID']]
+        node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
+        level = node['LEVEL']
+
+
+
 
 
 
     return render_to_response("index.html", locals())
 
+def _sortDict(dict):
+    sortedDict = []
+    i = 0
+    while i < len(dict):
+        if dict[i]['LEVEL'] > 3:
+            dict.pop(i)
+            i-= 1
+        if dict[i]['ISLEAF'] == 1 and dict[i]["LEVEL"] == 2:
+            sortedDict.append(dict.pop(i))
+            i -= 1
+        i+=1
+
+    dict.extend(sortedDict)
+    return dict
 
 def about(request):
 
