@@ -17,6 +17,12 @@ def getSpecificChildren(cls, parent):
 
 class Organization (Item):
 
+    def addWorker(self, user):
+        '''
+            Adds User into organization's community Group
+        '''
+        pass
+
     class Meta:
         permissions = (
             ("read_organization", "Can read organization"),

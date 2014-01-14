@@ -245,17 +245,14 @@ class Item(models.Model):
 
     def getItemInstPermList(self, user):
         '''
-        Returns List of permitted operations for given User under given Item's instance
+        Returns List of permitted operations for given User for given Item's instance
         '''
-        perm_list=[]
-        if user == self.create_user or user == self.update_user:
-            perm_list = user.get_group_permissions(self.status__perm)
-        else:
-            if user.group.get(name=self.community__name):
-                perm_list = user.get_group_permissions(self.status__perm)
-            else:
-                perm_list = 0
-
+        perm_list = []
+        if user == self.create_user or user == self.update_user or user.groups.filter(name=self.community.name):
+            plist = self.status.perm.permissions.all()
+            for p in plist:
+                perm_list.append(p.codename)
+                
         return perm_list
 
     @staticmethod
