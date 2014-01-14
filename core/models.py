@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db.models import Q
 from PIL import Image
@@ -243,18 +243,17 @@ class Item(models.Model):
     def __str__(self):
         return self.title
 
-    def getItemPermissionsList(self, user):
+    def getItemInstPermList(self, user):
         '''
-        Returns List of Permissions which define set of operations for given User under given Item's instance
+        Returns list of permissions for given User for given Item's instance
+        Example:
+            usr = User.objects.get(pk=21)           # read usr from database
+            comp = Company.objects.get(pk=2)        # read comp from database
+            list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
-        perm_list=[]
-        if user == self.create_user or user == self.update_user:
-            perm_list = user.get_group_permissions(self.status__perm)
-        else:
-            if user.group.get(name=self.community__name):
-                perm_list = user.get_group_permissions(self.status__perm)
-            else:
-                perm_list = 0
+        perm_list = []
+        if user == self.create_user or user == self.update_user or user.groups.filter(name=self.community.name):
+            perm_list = [p.codename for p in self.status.perm.permissions.all()]
 
         return perm_list
 
@@ -453,7 +452,6 @@ class Value(models.Model):
         return self.title
 
 #----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
 @receiver(pre_delete, sender=Item)
@@ -461,3 +459,8 @@ def itemPreDelete(instance, **kwargs):
 
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
+@receiver(post_delete, sender=Item)
+def itemPostDelete(instance, **kwargs):
+    if instance.community:
+        Group.objects.get(pk=instance.community.pk).delete()
