@@ -247,9 +247,9 @@ class Item(models.Model):
         '''
         Returns list of permissions for given User for given Item's instance
         Example:
-            usr = User.objects.get(pk=21)
-            comp = Company.objects.get(pk=2)
-            list = comp.getItemInstPermList(usr)
+            usr = User.objects.get(pk=21)           # read usr from database
+            comp = Company.objects.get(pk=2)        # read comp from database
+            list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
         perm_list = []
         if user == self.create_user or user == self.update_user or user.groups.filter(name=self.community.name):
