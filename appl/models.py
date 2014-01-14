@@ -3,6 +3,9 @@ from core.models import Item, State
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 
 def getSpecificChildren(cls, parent):
     '''
@@ -18,10 +21,6 @@ class Organization (Item):
         permissions = (
             ("read_organization", "Can read organization"),
         )
-
-    def __init__(self, *args, **kwargs):
-        super(Organization, self).__init__(*args, **kwargs)
-        self.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
 
 class Tpp(Organization):
     name = models.CharField(max_length=128, unique=True)
@@ -62,6 +61,9 @@ class Company(Organization):
 
     def getDescription(self):
         return 'test2'
+
+    def getCountry(self):
+        return 100
 
     def getBranches(self):
         return getSpecificChildren("Branch", self.pk)
@@ -271,25 +273,62 @@ class Gallery(Item):
           return str(self.photo)
 
 #----------------------------------------------------------------------------------------------------------
+#             Signal receivers
+#----------------------------------------------------------------------------------------------------------
+@receiver(pre_save, sender=Company)
+def companyCommunity(instance, **kwargs):
+    '''
+       Create community Group for given Company instance
+    '''
+    if not instance.community:
+        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+
+@receiver(pre_save, sender=Tpp)
+def tppCommunity(instance, **kwargs):
+    '''
+       Create community Group for given TPP instance
+    '''
+    if not instance.community:
+        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+
+@receiver(pre_save, sender=Department)
+def departmentCommunity(instance, **kwargs):
+    '''
+       Create community Group for given Department instance
+    '''
+    if not instance.community:
+        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+
+#----------------------------------------------------------------------------------------------------------
 #             Database default objects generation
 #----------------------------------------------------------------------------------------------------------
 #Default Groups with Permissions
 read_item = Permission.objects.get(codename='read_item')
 read_tpp = Permission.objects.get(codename='read_tpp')
 read_company = Permission.objects.get(codename='read_company')
+add_company = Permission.objects.get(codename='add_company')
 read_department = Permission.objects.get(codename='read_department')
 
 gr1, created = Group.objects.get_or_create(name='Default TPP Permissions')
 if created:
-    gr1.permissions.add(read_item, read_tpp)
+    gr1.permissions.add(read_tpp)
 
-gr2, created=Group.objects.get_or_create(name='Default Company Permissions')
+gr2, created = Group.objects.get_or_create(name='Default Company Permissions')
 if created:
-    gr2.permissions.add(read_item, read_company)
+    gr2.permissions.add(read_company)
 
-gr3, created=Group.objects.get_or_create(name='Default Department Permissions')
+gr3, created = Group.objects.get_or_create(name='Default Department Permissions')
 if created:
-    gr3.permissions.add(read_item, read_department)
+    gr3.permissions.add(read_department)
+
+gr4, created = Group.objects.get_or_create(name='Company Creator')
+if created:
+    gr4.permissions.add(add_company, read_company)
+
+gr5, created = Group.objects.get_or_create(name='Owner')
+if created:
+    gr5.permissions.add(read_company, add_company)
+
 
 #Default States
 st1, created=State.objects.get_or_create(title='Default TPP State', perm=gr1)

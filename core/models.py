@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db.models import Q
 from PIL import Image
@@ -243,7 +243,7 @@ class Item(models.Model):
     def __str__(self):
         return self.title
 
-    def getItemInstancePermissionsList(self, user):
+    def getItemInstPermList(self, user):
         '''
         Returns List of permitted operations for given User under given Item's instance
         '''
@@ -460,3 +460,8 @@ def itemPreDelete(instance, **kwargs):
 
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
+@receiver(post_delete, sender=Item)
+def itemPostDelete(instance, **kwargs):
+    if instance.community:
+        Group.objects.get(pk=instance.community.pk).delete()
