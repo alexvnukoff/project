@@ -241,7 +241,7 @@ class Item(models.Model):
     #   title = name
 
     def __str__(self):
-        return self.title
+        return self.title.len() if self.title else '{EMPTY}'
 
     def getItemInstPermList(self, user):
         '''
