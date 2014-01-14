@@ -238,382 +238,100 @@ $(function () {
 	<div id="main">
 		<div id="vartop">
         	<ul id="sidevar">
-                <li class="level1-li sub"><a class="level1-a" href="#url">Одежда и аксессуары<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                                <li class="end"><img src="images/products/submenu1.jpg" alt="" /></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                                <li class="end"><img src="images/products/submenu2.jpg" alt="" /></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                        	<div class="special-pr">
-                            	<img src="images/products/special.jpg" alt="" class="thumb" />
-                                <div class="desc">
-                                	<p>Процедуры омоложения кожи лица на основе косметики Hollyland</p>
-                                    <p><a href="#">Text link demo</a></p>
+
+
+              {% for node  in sortedHierarchyStructure %}
+
+                    {% with node.LEVEL as level  %}
+                    {% with node.ISLEAF as isleaf  %}
+
+                    {% with node.PARENT_ID as parent_id  %}
+                     {% with node.pre_level as previous %}
+                     {% with node.parent_item.Name|first  as parent_name  %}
+                    {% with node.item.Name|first  as name  %}
+                        {% if level == 1 %}
+                            {% if previous == 2 or previous == 3%}
+                                </ul>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Электроника<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                                <li class="end"><img src="images/products/submenu1.jpg" alt="" /></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                                <li class="end"><img src="images/products/submenu2.jpg" alt="" /></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                        	<div class="special-pr">
-                            	<img src="images/products/special.jpg" alt="" class="thumb" />
-                                <div class="desc">
-                                	<p>Процедуры омоложения кожи лица на основе косметики Hollyland</p>
-                                    <p><a href="#">Text link demo</a></p>
+
+                                {% endif %}
+                            {% if previous != 0 %}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Все для авто<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Сумки и обувь<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Бижутерия и часы<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Все для детей<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Красота и здоровье<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Для дома и сада<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
-                <li class="level1-li sub"><a class="level1-a" href="#url">Спорт и развлечения<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                <!--[if lte IE 6]><table><tr><td><![endif]-->
-                    <div class="listHolder col1">
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                        <div class="listCol">
-                            <ul>
-                            	<li><h3>Одежда и аксессуары</h3></li>
-                                <li><a href="#">Одежда и аксессуары</a></li>
-                                <li><a href="#">Электроника</a></li>
-                                <li><a href="#">Все для авто</a></li>
-                                <li><a href="#">Сумки и обувь</a></li>
-                                <li><a href="#">Бижутерия и часы</a></li>
-                                <li><a href="#">Все для детей</a></li>
-                                <li><a href="#">Красота и здоровье</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                </li>
+                                </li>
+                                {% endif %}
+                            <li class="level1-li sub"><a class="level1-a" href="#url">{{ name }}</a>
+                            <div class="listHolder col1">
+                        {% endif %}
+                        {% if level == 2 and isleaf == 0 %}
+
+                            {% if previous == 3 %}
+                                </ul>
+                                </div>
+                                {% endif %}
+
+                               <div class="listCol">
+                                 <ul>
+                                <li><h3>{{ name }}</h3></li>
+
+
+                        {% endif %}
+                        {% if level == 3 %}
+                           <li>{{ name }}</li>
+                        {% endif %}
+                        {% if level == 2 and isleaf == 1 %}
+                            {% if previous == 3 %}
+                                </ul>
+                                </div>
+
+                                 <div class="listCol">
+                                <ul>
+                                <li><h3>{{ parent_name}}</h3></li>
+                                {% endif %}
+                            {% if previous == 1 %}
+
+                                 <div class="listCol">
+                                <ul>
+                                <li><h3>{{ parent_name}}</h3></li>
+                             {% endif %}
+
+                                <li>{{ name }}</li>
+
+
+
+                                {% endif %}
+                            {% if forloop.counter > 6 %}
+                                {% if previous == 1 %}
+                                    </div>
+                                    </li>
+                                    {% endif %}
+                                {% if previous == 2 or previous == 3 %}
+                                    </ul>
+                                    </div>
+                                    </div>
+                                    </li>
+                                    {% endif %}
+
+
+                        {% endif %}
+
+
+
+
+
+
+                                  {% endwith %}
+                                  {% endwith %}
+                                  {% endwith %}
+                                  {% endwith %}
+                                  {% endwith %}
+                                  {% endwith %}
+                                  {% endfor %}
+
+
+
+
+
+
             </ul>
         	<!--<ul class="var-cate">
             	<li><a href="#">Одежда и аксессуары</a></li>
@@ -919,14 +637,14 @@ $(function () {
 
                     {%  with attr.Active_From|first as date  %}
 			    <li>
-					<a href="/news/novosti/{{ title }}/" alt="{{ name }}" title="{{ name }}">
+					<a href="/news/{{ title }}/" alt="{{ name }}" title="{{ name }}">
 
 						<img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
 					</a>
 					<p>
 						{{ date }}
 					</p>
-					<p><a href="/news/novosti/{{ title }}/">{{ name }}</a></p>
+					<p><a href="/news/{{ title }}/">{{ name }}</a></p>
 
 	             </li>
 

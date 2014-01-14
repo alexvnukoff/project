@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!DOCTYPE html>
+<html>
+<head>
+    {% extends "index.html" %}
+    {% block meta %}
+        {{ block.super }}
+    {% endblock %}
+{% load staticfiles %}
+       <title>News Detail</title>
+{% block styles %}
+  {{ block.super }}
+    {% endblock %}
+  {% block js %}
+{{ block.super }}
+    {% endblock %}
+
+{% block header %}
+    {{ block.super }}
+{% endblock %}
+
+
+</head>
+<body>
+{% block body %}
+    <div id="main">
+		<div id="sidebar">
+			<ul id="categories">
+				<li class="parent">Обзор товаров</li>
+				<li><a href="#">Новости партнеров</a></li>
+				<li><a href="#">Анонсы магазинов</a></li>
+				<li><a href="#">Полезные статьи</a></li>
+			</ul>
+			<div class="shopinfo margintop">
+				<span class="title"><a href="#">Посмотреть магазин &rarr;</a></span>
+				<div class="shopinfoin">
+					<label>Автор обзора:</label>
+					<p><font class="white">ООО «Металлопрофиль»</font></p>
+				</div>
+			</div>
+			<ul id="categories" class="margintop">
+				<li><a href="#">О компании</a></li>
+				<li><a href="#">Бизнес предложения</a></li>
+				<li><a href="#">Продукция кампании</a></li>
+				<li><a href="#">Связаться </a></li>
+			</ul>
+
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<h2>Спеццена</h2>
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">5, 10 или 15 посещений подземного соляного грота</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="recommended margintop">
+				<div class="items-recm">
+					<h2>Рекомендуем</h2>
+					<ul>
+						<li>
+							<a href="#"><img src="images/products/pr1.jpg" alt=""></a>
+							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<p class="price">
+								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+							</p>
+							<p><a class="recm-more" href="#">Футболки мужские  →</a></p>
+						</li>
+						<li>
+							<a href="#"><img src="images/products/pr1.jpg" alt=""></a>
+							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<p class="price">
+								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+							</p>
+							<p><a class="recm-more" href="#">Футболки мужские  →</a></p>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> спеццена</div>
+							<a href="#"><img src="images/products/pr8.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Распродажа</a></p>
+								<p>осенней коллекции</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="alldeal"><a href="#">Все спецпредложения →</a></div>
+		</div>
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Новостные материалы </a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Обзоры </a></span>
+				</div>
+			</div>
+
+                      {% with newAttr as  attr   %}
+                    {% with attr.Name|first as name  %}
+                    {% with attr.Photo|first as picture  %}
+                    {% with attr.Detail_Text|first as content %}
+
+                    {%  with attr.Active_From|first as date  %}
+
+
+
+			<div class="article">
+				<h2>{{ name }}</h2>
+				<div class="starvote">
+					<span>{{ date }}</span>
+					<span><img src="images/stars-vote.png" alt="" /></span>
+					<span class="articlelink"><a href="#">Посмотреть магазин &rarr;</a></span>
+				</div>
+				<div class="sortdes">
+					<div class="clumnleft">
+						<img src="{% static picture %}" alt="{{ name }}" />
+
+					</div>
+                <p>{{ content }}</p>
+                </div>
+
+
+
+
+                    {% endwith %}
+                         {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+
+
+
+		</div>
+	</div>
+</div>
+ {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}
+</body>
+</html>
