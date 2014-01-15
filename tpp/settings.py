@@ -78,22 +78,13 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 DATABASES = {
 
-#    'default': {
-#       'ENGINE': 'django.db.backends.oracle',
-#        'NAME': 'ORCL',
-#        'USER': 'tpp',
-#        'PASSWORD': 'migirov',
-#        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
-#        'PORT': '1521',
-#    }
-
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'djdb',
+       'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'ORCL',
         'USER': 'tpp',
-        'PASSWORD': 'Digemp30061994',
-        'HOST': '',
-        'PORT': '',
+        'PASSWORD': 'migirov',
+        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        'PORT': '1521',
     }
 }
 

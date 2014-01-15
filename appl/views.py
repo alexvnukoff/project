@@ -1,6 +1,6 @@
 from itertools import count
 from django.shortcuts import render_to_response
-from appl.models import News
+from appl.models import *
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
 
@@ -10,9 +10,6 @@ def set_news_list(request):
     #dict = Dictionary.objects.get(title="Sex")
     #dict.deleteSlot("Jopa")
     id = settings.SITE_ID
-
-
-
 
     new = News(name='name')
     new.CreateTemplateAttributes()

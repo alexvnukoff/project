@@ -21,9 +21,10 @@ def home(request):
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Anons", "Text", "Image", page=page)
+    result = func.getItemsListWithPagination("News", "Name", "Detail_text", "Photo", page=page)
 
     itemsList = result[0]
+
     page = result[1]
     return render_to_response('NewsList.html', locals())
 
