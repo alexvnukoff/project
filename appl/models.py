@@ -74,9 +74,6 @@ class Tpp(Organization):
 class Company(Organization):
     name = models.CharField(max_length=128, null=True, blank=True)
 
-
-class Company(Item):
-
     class Meta:
         permissions = (
             ("read_company", "Can read company"),
@@ -138,15 +135,11 @@ class Department(Organization):
         super(Department, self).__init__(*args, **kwargs)
         self.status = State.objects.get(title='Default Department State')
 
-
-
-
     def __str__(self):
         return ''
 
 
 class Country(Item):
-
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -156,7 +149,6 @@ class Country(Item):
 
 
 class Comment(Item):
-
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -181,9 +173,6 @@ class Comment(Item):
 
 class Branch(Item):
     name = models.CharField(max_length=128, unique=True)
-
-
-class Branch(Item):
 
     def __str__(self):
         return ''
