@@ -26,7 +26,7 @@ def newsDetail(request, item_id):
         raise Http404
 
     newAttr =  new.getAttributeValues("Name", "Active_From", "Detail_Text", "Photo")
-    newAttr = newAttr[int(item_id)]
+    newAttr = newAttr
     flagList = func.getItemsList("Country", "NAME", "Flag")
 
     return render_to_response("News/detail.html", locals())

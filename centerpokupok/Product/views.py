@@ -47,7 +47,7 @@ def productDetail(request, item_id):
         raise Http404
 
     productValues = product.getAttributeValues("NAME",)
-    productValues = productValues[int(item_id)]            #TODO Jenya remove [id]
+
     #flagList = func.getItemsList("Country", "NAME", "Flag")
     comments = Comment.getCommentOfItem(parent_id=item_id)
     comments = comments.order_by('-pk')

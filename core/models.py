@@ -1,15 +1,24 @@
 from django.db import models, transaction
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
+from django.db.models.signals import pre_delete, post_delete
+from django.dispatch import receiver, Signal
 from django.db.models import Q
+from django.db import IntegrityError, transaction
+from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
 from django.contrib.auth.models import Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
-import hashlib
 from core.hierarchy import hierarchyManager
+
 from random import randint
+
+from haystack.signals import BaseSignalProcessor
+import hashlib
+
+setAttValSignal = Signal()
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -69,7 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        return self.is_admin
+       return self.is_admin
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
@@ -178,7 +187,7 @@ class AttrTemplate(models.Model):
 #----------------------------------------------------------------------------------------------------------
 class State(models.Model):
     title = models.CharField(max_length=128, unique=True)
-    perm = models.ForeignKey(Group, related_name='state')
+    perm = models.ForeignKey(Group, related_name='state', null=True)
 
     def __str__(self):
         return self.title
@@ -242,29 +251,66 @@ class Item(models.Model):
     #   title = name
 
     def __str__(self):
-        return self.title
+        return self.getName()
 
-    def getItemPermissionsList(self, user):
+    def getName(self):
+        name = self.getAttributeValues('NAME')
+        return name[0] if name else '{EMPTY}'
+
+    def getItemInstPermList(self, user, type=True):
         '''
-        Returns List of Permissions which define set of operations for given User under given Item's instance
+        Returns list of permissions for given User for given Item's instance
+        Example:
+            usr = User.objects.get(pk=21)           # read usr from database
+            comp = Company.objects.get(pk=2)        # read comp from database
+            list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
-        perm_list=[]
-        if user == self.create_user or user == self.update_user:
-            perm_list = user.get_group_permissions(self.status__perm)
+
+        perm_list = []
+        if user == self.create_user: # is user object's owner?
+            perm_list = [p.codename for p in Group.objects.get(name='Owner').permissions.all()]
+            perm_list += [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+            if self.status.perm: # is there permissions group for current object's state?
+                perm_list += [p.codename for p in self.status.perm.permissions.all()]
+            else: # no permissions group for current state, read from Staff group
+                perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
         else:
-            if user.group.get(name=self.community__name):
-                perm_list = user.get_group_permissions(self.status__perm)
-            else:
-                perm_list = 0
+            if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
+                if user.is_admin: # has user admin flag?
+                    perm_list = [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+                    if self.status.perm: # is there permissions group for current object's state?
+                        perm_list += [p.codename for p in self.status.perm.permissions.all()]
+                    else: # no permissions group for current state, read from Staff group
+                        perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                else:
+                    if self.status.perm: # is there permissions group for current object's state?
+                        perm_list = [p.codename for p in self.status.perm.permissions.all()]
+                    else: # no permissions group for current state, read from Staff group
+                        perm_list = [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+        perm_list += [p.codename for p in user.user_permissions.all()] # attach user's private permissions
+        obj_type = self.__class__.__name__ # get current object's type
+        lst=[]
+        for p in perm_list:
+            if obj_type.lower() in p:
+                lst.append(p)
 
+        perm_list = list(set(lst)) # remove duplicated keys in permissions list
         return perm_list
 
     @staticmethod
-    def getItemsAttributesValues(attr, items):
+    def getItemsAttributesValues(attr, items): #TODO: Jenya add doc
         '''
            Return values of attribute list in items list
         '''
-        values = Value.objects.filter(attr__title__in=attr, item__in=items)
+
+        if not isinstance(attr, list):
+            attr = [attr]
+
+        if not isinstance(items, list):
+            items = [items]
+
+        values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+
         values = list(values.values("title", "attr__title", "item__title", "item"))
 
         valuesAttribute = {}
@@ -280,27 +326,30 @@ class Item(models.Model):
 
         return valuesAttribute
 
-    def getAttributeValues(self, *attr):
+    def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
         '''
            Return values of attribute list in specific Item
         '''
 
         values = Value.objects.filter(attr__title__in=attr, item=self.id)
-        values = list(values.values("title", "attr__title", "item__title", "item"))
-
+        values = list(values.values("title", "attr__title"))
 
         valuesAttribute = {}
 
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:
-                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
 
-            if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
-                valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+            if valuesDict['attr__title'] not in valuesAttribute:
+                valuesAttribute[valuesDict['attr__title']] = []
 
-            valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+            valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
 
-        return valuesAttribute
+        if len(valuesAttribute) == 0:
+            return False
+
+        if(len(attr) > 1):
+            return valuesAttribute
+        else:
+            return valuesAttribute[attr[0]]
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues):
@@ -366,17 +415,14 @@ class Item(models.Model):
 
                 bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
 
-        sid = transaction.savepoint()
-
         try:
-            Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
-            Value.objects.bulk_create(bulkInsert)
-        except Exception:
-            transaction.savepoint_rollback(sid)
-
+            with transaction.atomic():
+                Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+                Value.objects.bulk_create(bulkInsert)
+        except IntegrityError:
             raise Exception
-        else:
-            transaction.savepoint_commit(sid)
+
+        setAttValSignal.send(self._meta.model, instance=self)
 
         return True
 
@@ -407,6 +453,10 @@ class Item(models.Model):
             List contains item objects
         '''
         translation = {'rev_level': 'level'}
+
+    def getRelatedChildForParent(cls):
+        parent = 0
+        return cls._meta.model.objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
@@ -459,6 +509,31 @@ class Value(models.Model):
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
+#             Indexing signal receivers
+#----------------------------------------------------------------------------------------------------------
+class ItemIndexSignal(BaseSignalProcessor):
+    """
+    Allows for observing when saves/deletes fire & automatically updates the
+    search engine appropriately.
+    """
+    def setup(self):
+        # Naive (listen to all model saves).
+        setAttValSignal.connect(self.handle_save)
+        models.signals.post_delete.connect(self.handle_delete)
+        # Efficient would be going through all backends & collecting all models
+        # being used, then hooking up signals only for those.
+
+    def teardown(self):
+        # Naive (listen to all model saves).
+        setAttValSignal.disconnect(self.handle_save)
+        models.signals.post_delete.disconnect(self.handle_delete)
+        # Efficient would be going through all backends & collecting all models
+        # being used, then disconnecting signals only for those.
+
+
+
+#----------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
 @receiver(pre_delete, sender=Item)
@@ -466,3 +541,9 @@ def itemPreDelete(instance, **kwargs):
 
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
+
+@receiver(post_delete, sender=Item)
+def itemPostDelete(instance, **kwargs):
+    if instance.community:
+        Group.objects.get(pk=instance.community.pk).delete()

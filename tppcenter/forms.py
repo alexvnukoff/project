@@ -3,8 +3,9 @@ from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item ,Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
-                         Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Site, Shipment, Gallery, Country, Comment)
+                         Invoice, News, Order, Payment, Product, Tpp, Tender,
+                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment)
+
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -38,7 +39,7 @@ class ItemForm(forms.Form):
             self.obj = globals()[item].objects.get(id=self.id)
         if self.id and not values:
             attrs = [str(attr.attrId.title) for attr in attributes]
-            values = self.obj.getAttributeValues(*attrs)[int(self.id)]   #TODO modification in method
+            values = self.obj.getAttributeValues(*attrs)
 
 
         # Build form fields , depends on type of attribute
@@ -126,7 +127,7 @@ class ItemForm(forms.Form):
 
                  else:
                      picture = self.obj.getAttributeValues(title) if self.id else ""
-                     value = picture[int(self.id)] if self.id and picture else "" #TODO to Jenya modification in method
+                     value = picture if self.id and picture else ""
 
                      self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[title][0]) if value else ""
 
@@ -260,7 +261,7 @@ class BasePhotoGallery(BaseModelFormSet):
         item = Item.objects.get(pk=parent)
 
         for instance in instances:
-            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user))#TODO fix hierarchy
+            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user ,type = 'rel'))#TODO jenya use method in core
         if bulkInsert:
             try:
                Relationship.objects.bulk_create(bulkInsert)
