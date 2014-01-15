@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        return self.is_admin
+       return self.is_admin
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
@@ -177,7 +177,7 @@ class AttrTemplate(models.Model):
 #----------------------------------------------------------------------------------------------------------
 class State(models.Model):
     title = models.CharField(max_length=128, unique=True)
-    perm = models.ForeignKey(Group, related_name='state')
+    perm = models.ForeignKey(Group, related_name='state', null=True)
 
     def __str__(self):
         return self.title
@@ -241,9 +241,9 @@ class Item(models.Model):
     #   title = name
 
     def __str__(self):
-        return self.title
+        return self.title.len() if self.title else '{EMPTY}'
 
-    def getItemInstPermList(self, user):
+    def getItemInstPermList(self, user, type=True):
         '''
         Returns list of permissions for given User for given Item's instance
         Example:
@@ -251,10 +251,36 @@ class Item(models.Model):
             comp = Company.objects.get(pk=2)        # read comp from database
             list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
-        perm_list = []
-        if user == self.create_user or user == self.update_user or user.groups.filter(name=self.community.name):
-            perm_list = [p.codename for p in self.status.perm.permissions.all()]
 
+        perm_list = []
+        if user == self.create_user: # is user object's owner?
+            perm_list = [p.codename for p in Group.objects.get(name='Owner').permissions.all()]
+            perm_list += [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+            if self.status.perm: # is there permissions group for current object's state?
+                perm_list += [p.codename for p in self.status.perm.permissions.all()]
+            else: # no permissions group for current state, read from Staff group
+                perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+        else:
+            if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
+                if user.is_admin: # has user admin flag?
+                    perm_list = [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+                    if self.status.perm: # is there permissions group for current object's state?
+                        perm_list += [p.codename for p in self.status.perm.permissions.all()]
+                    else: # no permissions group for current state, read from Staff group
+                        perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                else:
+                    if self.status.perm: # is there permissions group for current object's state?
+                        perm_list = [p.codename for p in self.status.perm.permissions.all()]
+                    else: # no permissions group for current state, read from Staff group
+                        perm_list = [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+        perm_list += [p.codename for p in user.user_permissions.all()] # attach user's private permissions
+        obj_type = self.__class__.__name__ # get current object's type
+        lst=[]
+        for p in perm_list:
+            if obj_type.lower() in p:
+                lst.append(p)
+
+        perm_list = list(set(lst)) # remove duplicated keys in permissions list
         return perm_list
 
     @staticmethod
