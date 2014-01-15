@@ -46,7 +46,7 @@ class hierarchyManager(models.Manager):
         queryDict['where'] = ''
         queryDict['where'] = ''
         queryDict['order'] = 'ORDER BY ROWNUM '
-        queryDict['limit'] = '50'
+        queryDict['limitParent'] = '50'
 
         return queryDict
 
@@ -70,13 +70,12 @@ class hierarchyManager(models.Manager):
         queryDict['startWith'] = 'rel.PARENT_ID is NULL'
 
 
-        if order is not False:
-            queryDict['order'] += 'DESC'
+
 
         if rootLimit is not False:
             int(rootLimit)
 
-            queryDict['limit'] = str(rootLimit)
+            queryDict['limitParent'] = str(rootLimit)
 
         finalQuery = self.query.format(**queryDict)
 

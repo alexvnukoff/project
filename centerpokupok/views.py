@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News , Category
+from appl.models import News, Category, Country
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
 
 from django.conf import settings
 
 def home(request):
+
+    if not request.session.get('jenya_sesseion', False):
+        request.session['jenya_sesseion']  = "eto moya sessiya"
+        request.session.set_expiry(100)
+
     newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=3)
     hierarchyStructure = Category.hierarchy.getTree(10)
 
@@ -15,22 +20,10 @@ def home(request):
 
     categories_id = Category.objects.filter(pk__in=treeObject).all()
 
-    categories = Item.getItemsAttributesValues(("Name",), categories_id)
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
 
-    sortedHierarchyStructure = []
-    dictToSort = []
-    id = hierarchyStructure[0]['ID']
-    for i in range(0, len(hierarchyStructure)):
-        if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
-            id = hierarchyStructure[i]['ID']
-            sortedHierarchyStructure.extend(_sortDict(dictToSort))
-            dictToSort = []
-
-        dictToSort.append(hierarchyStructure[i])
-
-    if len(dictToSort) > 0:
-       sortedHierarchyStructure.extend(_sortDict(dictToSort))
+    sortedHierarchyStructure = _sortMenu(hierarchyStructure)
 
 
 
@@ -42,13 +35,45 @@ def home(request):
         level = node['LEVEL']
 
 
-
+    flagList = func.getItemsList("Country", "NAME", "Flag")
 
 
 
     return render_to_response("index.html", locals())
 
-def _sortDict(dict):
+
+
+def about(request):
+
+    return render_to_response("About/About.html")
+
+def set_news_list(request):
+    page = request.GET.get('page', 1)
+    result = func.getItemsListWithPagination("News", "Anons", "Text", "Image", page=page)
+
+    itemsList = result[0]
+    page = result[1]
+    return render_to_response('NewsList.html', locals())
+
+
+def _sortMenu(hierarchyStructure):
+    sortedHierarchyStructure = []
+    dictToSort = []
+    id = hierarchyStructure[0]['ID']
+    for i in range(0, len(hierarchyStructure)):
+        if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
+            id = hierarchyStructure[i]['ID']
+            sortedHierarchyStructure.extend(_sortList(dictToSort))
+            dictToSort = []
+
+        dictToSort.append(hierarchyStructure[i])
+
+    if len(dictToSort) > 0:
+       sortedHierarchyStructure.extend(_sortList(dictToSort))
+
+    return sortedHierarchyStructure
+
+def _sortList(dict):
     sortedDict = []
     i = 0
     while i < len(dict):
@@ -63,15 +88,4 @@ def _sortDict(dict):
     dict.extend(sortedDict)
     return dict
 
-def about(request):
-
-    return render_to_response("About/About.html")
-
-def set_news_list(request):
-    page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Anons", "Text", "Image", page=page)
-
-    itemsList = result[0]
-    page = result[1]
-    return render_to_response('NewsList.html', locals())
 

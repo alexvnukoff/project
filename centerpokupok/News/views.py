@@ -14,6 +14,7 @@ def newsList(request):
     newsList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
+    flagList = func.getItemsList("Country", "NAME", "Flag")
 
     return render_to_response("News/index.html", locals())
 
@@ -26,6 +27,7 @@ def newsDetail(request, item_id):
 
     newAttr =  new.getAttributeValues("Name", "Active_From", "Detail_Text", "Photo")
     newAttr = newAttr[int(item_id)]
+    flagList = func.getItemsList("Country", "NAME", "Flag")
 
     return render_to_response("News/detail.html", locals())
 

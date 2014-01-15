@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item ,Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Site, Shipment, Gallery)
+                         Rate, Rating, Review, Service, Site, Shipment, Gallery, Country, Comment)
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -38,7 +38,7 @@ class ItemForm(forms.Form):
             self.obj = globals()[item].objects.get(id=self.id)
         if self.id and not values:
             attrs = [str(attr.attrId.title) for attr in attributes]
-            values = self.obj.getAttributeValues(*attrs)[int(self.id)]
+            values = self.obj.getAttributeValues(*attrs)[int(self.id)]   #TODO modification in method
 
 
         # Build form fields , depends on type of attribute
@@ -125,7 +125,8 @@ class ItemForm(forms.Form):
                            self.fields[title].initial = value
 
                  else:
-                     value = self.obj.getAttributeValues(title)[int(self.id)] if self.id else ""
+                     picture = self.obj.getAttributeValues(title) if self.id else ""
+                     value = picture[int(self.id)] if self.id and picture else "" #TODO to Jenya modification in method
 
                      self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[title][0]) if value else ""
 
@@ -169,7 +170,7 @@ class ItemForm(forms.Form):
         else:
             return True
 
-    def save(self):
+    def save(self, user):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -180,13 +181,13 @@ class ItemForm(forms.Form):
             raise ValidationError
         if not self.id:
             site = settings.SITE_ID
-            self.obj = globals()[self.item](name=self.fields['Name'].initial, title=self.fields["Name"].initial,) #TODO change ["Name"] to something else
+            self.obj = globals()[self.item](create_user=user)
             self.obj.save()
             self.obj.sites.add(settings.SITE_ID)
         else:
             self.obj = globals()[self.item].objects.get(id=self.id)
-            self.obj.name = self.fields['Name'].initial
-            self.obj.title = self.fields['Name'].initial
+           # self.obj.name = self.fields['NAME'].initial
+            #self.obj.title = self.fields['NAME'].initial
             self.obj.save()
         attrValues = {}
         for title in self.fields:
@@ -219,6 +220,10 @@ class ItemForm(forms.Form):
         filename = str(path) + str(filename)
         self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
         #if file has been saved , update initial value of ImageField
+
+    def setlabels(self, dict):
+        for oldLabel, newLabel in dict.items():
+            self.fields[oldLabel].label = newLabel
 
 
 
