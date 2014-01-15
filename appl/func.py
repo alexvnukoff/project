@@ -23,6 +23,22 @@ def getPaginatorRange(page):
     return paginator_range
 
 
+def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1):
+    paginator = Paginator(items, page_num)
+    try:
+        page = items = paginator.page(page)
+    except Exception:
+        page = items = paginator.page(1)
+    items = tuple([item.pk for item in page.object_list])
+    attributeValues = Item.getItemsAttributesValues(attr, items)
+
+    return attributeValues, page
+
+
+
+
+
+
 def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
     '''
     Method  return List of Item of specific class including Pagination

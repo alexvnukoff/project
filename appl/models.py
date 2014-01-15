@@ -3,9 +3,14 @@ from core.models import Item, State
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
+
+from django.contrib.auth.decorators import login_required
+import datetime
+
 from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+
 
 def getSpecificChildren(cls, parent):
     '''
@@ -122,17 +127,60 @@ class Department(Organization):
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
+
     class Meta:
         permissions = (
             ("read_department", "Can read department"),
         )
 
+
     def __init__(self, *args, **kwargs):
         super(Department, self).__init__(*args, **kwargs)
         self.status = State.objects.get(title='Default Department State')
 
+
+
+
     def __str__(self):
         return ''
+
+
+class Country(Item):
+
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.title
+
+
+class Comment(Item):
+
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.title
+
+    @staticmethod
+    def spamCheck(user=None, parent_id=None):
+        time = datetime.datetime.now() - datetime.timedelta(minutes=1)
+        comments = Comment.objects.filter(create_user=user, c2p__parent_id=parent_id, create_date__gt=time)
+        if len(comments) > 0:
+            return True
+
+
+    @staticmethod
+    def getCommentOfItem(parent_id=None):
+        return  Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
+
+
+
+
+class Branch(Item):
+    name = models.CharField(max_length=128, unique=True)
 
 
 class Branch(Item):
@@ -146,9 +194,6 @@ class Category(Item):
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
-    def __init__(self, *args, **kwargs):
-        super(Department, self).__init__(*args, **kwargs)
-        self.status = State.objects.get(title='Default Department State')
 
     def __str__(self):
         return self.title

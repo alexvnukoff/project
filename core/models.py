@@ -10,10 +10,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 from core.hierarchy import hierarchyManager
+
+from random import randint
+
 from haystack.signals import BaseSignalProcessor
 import hashlib
 
 setAttValSignal = Signal()
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
@@ -234,7 +238,7 @@ class Item(models.Model):
     hierarchy = hierarchyManager()
 
     create_user = models.ForeignKey(User, related_name='owner2item')
-    create_date = models.DateField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     update_user = models.ForeignKey(User, null=True, blank=True, related_name='user2item')
     update_date = models.DateField(null=True, blank=True)
 
@@ -306,6 +310,7 @@ class Item(models.Model):
             items = [items]
 
         values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+
         values = list(values.values("title", "attr__title", "item__title", "item"))
 
         valuesAttribute = {}
@@ -475,6 +480,10 @@ class Relationship(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def setRelRelationship(parent, child, user):
+        Relationship.objects.create(title=randint(10000, 9999999), parent=parent, child=child, create_user=user, type="rel")       #TODO Jenya remove title
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -482,7 +491,7 @@ class Value(models.Model):
     title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
-    sha1_code = models.CharField(max_length=40) #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
+    sha1_code = models.CharField(max_length=40, blank=True) #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")

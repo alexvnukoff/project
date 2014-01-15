@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Basket, Tpp, Company, Gallery
+from appl.models import News, Basket, Tpp, Company, Gallery, Country
 from django.http import Http404
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate ,Relationship
+from core.models import Value, Item, Attribute, Dictionary, AttrTemplate , Relationship
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
@@ -40,7 +40,6 @@ def set_items_list(request):
 
 def set_item_list(request, item):
 
-
     item = item
     return render_to_response('list.html', locals())
 
@@ -49,11 +48,10 @@ def showlist(request, item, page):
     if not issubclass(i, Item):
         raise Http404
     else:
-
-      result = func.getItemsListWithPagination(item, "Name", page=page)
-      itemsList = result[0]
-      page = result[1]
-      return render_to_response('itemlist.html', locals())
+        result = func.getItemsListWithPagination(item, "NAME", page=page)
+        itemsList = result[0]
+        page = result[1]
+    return render_to_response('itemlist.html', locals())
 
 
 def get_item(request, item):
@@ -94,14 +92,14 @@ def get_item_form(request, item):
         form = ItemForm(item, values=values)
         form.clean()
         if form.is_valid():
-            com = form.save()
+            com = form.save(request.user)
 
 
 
 
 
 
-    return render_to_response('forelement.html', locals(), context_instance = RequestContext(request))
+    return render_to_response('forelement.html', locals(), context_instance=RequestContext(request))
 
 def update_item(request, item, id):
 
@@ -117,12 +115,12 @@ def update_item(request, item, id):
         form = ItemForm(item, values=values, id=id)
         form.clean()
         if form.is_valid():
-            com = form.save()
+            com = form.save(request.user)
 
 
 
 
-    return render_to_response('forelement.html', locals())
+    return render_to_response('forelement.html', locals(), context_instance=RequestContext(request))
 
 
 def meth(request):

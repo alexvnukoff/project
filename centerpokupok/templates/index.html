@@ -5,6 +5,7 @@
     {% block  meta%}
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           {% load staticfiles %}
+          {% load i18n %}
     {% endblock %}
 <title>Shopcenter</title>
     {% block styles %}
@@ -192,17 +193,17 @@ $(function () {
 	<div id="homesearch">
 		<div class="bginput">
 			<i class="icon-search imgshop"></i>
-			<input type="text" name="" placeholder="Поиск товара" class="text" />
+			<input type="text" name="" placeholder={% trans "Search Products" %} class="text" />
 			<div class="styled-select">
                 <select name="select">
-                  <option value="1">Выбрать категорию</option>
-                  <option value="2">Выбрать категорию</option>
+                  <option value="1">{% trans "Choose category"%}</option>
+
                 </select>
           	</div>
           	<div class="styled-select">
                 <select name="select">
-                  <option value="1">Выбрать регион</option>
-                  <option value="2">Выбрать регион</option>
+                  <option value="1">{% trans "Choose region" %}</option>
+
                 </select>
           	</div>
 		</div>
@@ -210,27 +211,24 @@ $(function () {
 	</div>
 	<div id="flag-var">
 		<ul>
-			<li><i class="iflag flag1"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag2"></i><a href="#">Латвия</a></li>
-			<li><i class="iflag flag3"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag4"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag5"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag6"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag1"></i><a href="#">Израиль</a></li>
-			<li><i class="iflag flag2"></i><a href="#">Россия</a></li>
-			<li><i class="iflag flag3"></i><a href="#">Эстония</a></li>
-			<li><i class="iflag flag4"></i><a href="#">Россия</a></li>
-			<li><i class="iflag flag5"></i><a href="#">Эстония</a></li>
-			<li><i class="iflag flag6"></i><a href="#">Эстония</a></li>
-			<li><i class="iflag flag1"></i><a href="#">Россия</a></li>
-			<li><i class="iflag flag2"></i><a href="#">Эстония</a></li>
-			<li><i class="iflag flag3"></i><a href="#">Украина</a></li>
-			<li><i class="iflag flag4"></i><a href="#">Беларусь</a></li>
-			<li><i class="iflag flag5"></i><a href="#">Украина</a></li>
-			<li><i class="iflag flag6"></i><a href="#">Беларусь</a></li>
-			<li><i class="iflag flag1"></i><a href="#">Беларусь</a></li>
-			<li><i class="iflag flag2"></i><a href="#">Украина</a></li>
-			<li><i class="iflag flag3"></i><a href="#">Беларусь</a></li>
+
+                 {% for id, flag  in flagList.items %}
+                 {% with flag.NAME|first as name  %}
+                  {% with flag.Flag|first  as flag  %}
+
+
+
+
+			<li>
+                  <i class="iflag">
+                  <img src="{% static flag %}" alt="{{ name }}">
+		        	</i>
+                  <a href="country/{{ id }}/">{{ name }}</a>
+            </li>
+
+            {% endwith %}
+        {% endwith %}
+        {% endfor %}
 		</ul>
 	</div>
     {% endblock %}
@@ -240,99 +238,99 @@ $(function () {
         	<ul id="sidevar">
 
 
-              {% for node  in sortedHierarchyStructure %}
+                {% for node  in sortedHierarchyStructure %}
 
                     {% with node.LEVEL as level  %}
-                    {% with node.ISLEAF as isleaf  %}
+                        {% with node.ISLEAF as isleaf  %}
 
-                    {% with node.PARENT_ID as parent_id  %}
-                     {% with node.pre_level as previous %}
-                     {% with node.parent_item.Name|first  as parent_name  %}
-                    {% with node.item.Name|first  as name  %}
-                        {% if level == 1 %}
-                            {% if previous == 2 or previous == 3%}
-                                </ul>
-                                </div>
+                            {% with node.PARENT_ID as parent_id  %}
+                                {% with node.pre_level as previous %}
+                                    {% with node.parent_item.NAME|first  as parent_name  %}
+                                        {% with node.item.NAME|first  as name  %}
+                                            {% if level == 1 %}
+                                                {% if previous == 2 or previous == 3%}
+                                                    </ul>
+                                                    </div>
 
-                                {% endif %}
-                            {% if previous != 0 %}
-                                </div>
-                                </li>
-                                {% endif %}
-                            <li class="level1-li sub"><a class="level1-a" href="#url">{{ name }}</a>
-                            <div class="listHolder col1">
-                        {% endif %}
-                        {% if level == 2 and isleaf == 0 %}
+                                                {% endif %}
+                                                {% if previous != 0 %}
+                                                    </div>
+                                                    </li>
+                                                {% endif %}
+                                                <li class="level1-li sub"><a class="level1-a" href="#url">{{ name }}</a>
+                                                <div class="listHolder col1">
+                                            {% endif %}
+                                        {% if level == 2 and isleaf == 0 %}
 
-                            {% if previous == 3 %}
-                                </ul>
-                                </div>
-                                {% endif %}
+                                            {% if previous == 3 %}
+                                                </ul>
+                                                </div>
+                                            {% endif %}
 
-                               <div class="listCol">
-                                 <ul>
-                                <li><h3>{{ name }}</h3></li>
-
-
-                        {% endif %}
-                        {% if level == 3 %}
-                           <li>{{ name }}</li>
-                        {% endif %}
-                        {% if level == 2 and isleaf == 1 %}
-                            {% if previous == 3 %}
-                                </ul>
-                                </div>
-
-                                 <div class="listCol">
-                                <ul>
-                                <li><h3>{{ parent_name}}</h3></li>
-                                {% endif %}
-                            {% if previous == 1 %}
-
-                                 <div class="listCol">
-                                <ul>
-                                <li><h3>{{ parent_name}}</h3></li>
-                             {% endif %}
-
-                                <li>{{ name }}</li>
+                                            <div class="listCol">
+                                            <ul>
+                                            <li><h3>{{ name }}</h3></li>
 
 
+                                        {% endif %}
+                                        {% if level == 3 %}
+                                            <li>{{ name }}</li>
+                                        {% endif %}
+                                        {% if level == 2 and isleaf == 1 %}
+                                            {% if previous == 3 %}
+                                                </ul>
+                                                </div>
 
-                                {% endif %}
-                            {% if forloop.counter > 6 %}
-                                {% if previous == 1 %}
-                                    </div>
-                                    </li>
-                                    {% endif %}
-                                {% if previous == 2 or previous == 3 %}
-                                    </ul>
-                                    </div>
-                                    </div>
-                                    </li>
-                                    {% endif %}
+                                                <div class="listCol">
+                                                <ul>
+                                                <li><h3>{{ parent_name}}</h3></li>
+                                            {% endif %}
+                                            {% if previous == 1 %}
 
+                                                <div class="listCol">
+                                                <ul>
+                                                <li><h3>{{ parent_name}}</h3></li>
+                                            {% endif %}
 
-                        {% endif %}
+                                            <li>{{ name }}</li>
 
 
 
+                                        {% endif %}
+                                        {% if forloop.counter > 6 %}
+                                            {% if previous == 1 %}
+                                                </div>
+                                                </li>
+                                            {% endif %}
+                                            {% if previous == 2 or previous == 3 %}
+                                                </ul>
+                                                </div>
+                                                </div>
+                                                </li>
+                                            {% endif %}
 
 
-
-                                  {% endwith %}
-                                  {% endwith %}
-                                  {% endwith %}
-                                  {% endwith %}
-                                  {% endwith %}
-                                  {% endwith %}
-                                  {% endfor %}
+                                        {% endif %}
 
 
 
 
 
 
-            </ul>
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+
+
+
+
+
+
+        </ul>
         	<!--<ul class="var-cate">
             	<li><a href="#">Одежда и аксессуары</a></li>
                 <li><a href="#">Электроника</a></li>
@@ -347,11 +345,10 @@ $(function () {
             </ul>-->
             <div id="slide-var">
             	<ul id="slideimage">
-                	<li><a href="#"><img src="images/article/slide1.jpg" alt="" /></a></li>
-                    <li><a href="#"><img src="images/article/slide2.jpg" alt="" /></a></li>
-                    <li><a href="#"><img src="images/article/slide1.jpg" alt="" /></a></li>
-                    <li><a href="#"><img src="images/article/slide2.jpg" alt="" /></a></li>
-                    <li><a href="#"><img src="images/article/slide1.jpg" alt="" /></a></li>
+                	<li><a href="#"><img src="{% static "images/article/slide1.jpg"%}" alt="" /></a></li>
+                    <li><a href="#"><img src="{% static "images/article/slide2.jpg"%}" alt="" /></a></li>
+                    <li><a href="#"><img src="{% static "images/article/slide1.jpg"%}" alt="" /></a></li>
+                    <li><a href="#"><img src="{% static "images/article/slide2.jpg"%}" alt="" /></a></li>
                 </ul>
             </div>
         </div>
@@ -629,37 +626,37 @@ $(function () {
         		<span class="title"><a title="Новости" alt="Новости" href="/news/">{% trans "News" %} </a></span>
 
 
-              <ul>
+                <ul>
                     {% for title , attr  in newsList.items %}
-                    {% load staticfiles %}
-                    {% with attr.Name|first as name  %}
-                    {% with attr.Photo|first as picture  %}
+                        {% load staticfiles %}
+                        {% with attr.Name|first as name  %}
+                            {% with attr.Photo|first as picture  %}
 
-                    {%  with attr.Active_From|first as date  %}
-			    <li>
-					<a href="/news/{{ title }}/" alt="{{ name }}" title="{{ name }}">
+                                {%  with attr.Active_From|first as date  %}
+                                    <li>
+                                        <a href="/news/{{ title }}/" alt="{{ name }}" title="{{ name }}">
 
-						<img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
-					</a>
-					<p>
-						{{ date }}
-					</p>
-					<p><a href="/news/{{ title }}/">{{ name }}</a></p>
+                                            <img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
+                                        </a>
+                                        <p>
+                                            {{ date }}
+                                        </p>
+                                        <p><a href="/news/{{ title }}/">{{ name }}</a></p>
 
-	             </li>
+                                    </li>
 
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
 
-                     {% empty %}
+                    {% empty %}
 
                         <span> It's empty</span>
 
                     {% endfor %}
 
 
-                  </ul>
+                </ul>
 
 
 
