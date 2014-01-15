@@ -3,8 +3,8 @@ from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item ,Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
-                         Invoice, News, Forum, ForumPost, ForumThread, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Site, Shipment, Gallery)
+                         Invoice, News, Order, Payment, Product, Tpp, Tender,
+                         Rate, Rating, Review, Service, Shipment, Gallery)
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext as _

@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models.signals import pre_delete
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from django.db.models import Q
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
 from django.contrib.auth.models import Group
@@ -12,6 +12,10 @@ from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 from core.hierarchy import hierarchyManager
 import hashlib
+from haystack.signals import BaseSignalProcessor
+
+setAttValSignal = Signal()
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
 #----------------------------------------------------------------------------------------------------------
@@ -234,13 +238,24 @@ class Item(models.Model):
     #   title = name
 
     def __str__(self):
-        return self.title
+        return self.getName()
+
+    def getName(self):
+        name = self.getAttributeValues('NAME')
+        return name[0] if name else '{EMPTY}'
 
     @staticmethod
-    def getItemsAttributesValues(attr, items):
+    def getItemsAttributesValues(attr, items): #TODO: Jenya add doc
         '''
            Return values of attribute list in items list
         '''
+
+        if not isinstance(attr, list):
+            attr = [attr]
+
+        if not isinstance(items, list):
+            items = [items]
+
         values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
         values = list(values.values("title", "attr__title", "item__title", "item"))
 
@@ -257,27 +272,30 @@ class Item(models.Model):
 
         return valuesAttribute
 
-    def getAttributeValues(self, *attr):
+    def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
         '''
            Return values of attribute list in specific Item
         '''
 
         values = Value.objects.filter(attr__title__in=attr, item=self.id)
-        values = list(values.values("title", "attr__title", "item__title", "item"))
-
+        values = list(values.values("title", "attr__title"))
 
         valuesAttribute = {}
 
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:
-                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
 
-            if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
-                valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+            if valuesDict['attr__title'] not in valuesAttribute:
+                valuesAttribute[valuesDict['attr__title']] = []
 
-            valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+            valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
 
-        return valuesAttribute
+        if len(valuesAttribute) == 0:
+            return False
+
+        if(len(attr) > 1):
+            return valuesAttribute
+        else:
+            return valuesAttribute[attr[0]]
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues):
@@ -343,17 +361,14 @@ class Item(models.Model):
 
                 bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
 
-        sid = transaction.savepoint()
-
         try:
-            Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
-            Value.objects.bulk_create(bulkInsert)
-        except Exception:
-            transaction.savepoint_rollback(sid)
-
+            with transaction.atomic():
+                Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+                Value.objects.bulk_create(bulkInsert)
+        except IntegrityError:
             raise Exception
-        else:
-            transaction.savepoint_commit(sid)
+
+        setAttValSignal.send(self._meta.model, instance=self)
 
         return True
 
@@ -392,6 +407,10 @@ class Item(models.Model):
             return Item.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
         else:
             return self._meta.model.objects.filter(c2p__parent_id=self.pk, c2p__type="rel")
+
+    def getRelatedChildForParent(cls):
+        parent = 0
+        return cls._meta.model.objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
@@ -440,6 +459,31 @@ class Value(models.Model):
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
+#             Indexing signal receivers
+#----------------------------------------------------------------------------------------------------------
+class ItemIndexSignal(BaseSignalProcessor):
+    """
+    Allows for observing when saves/deletes fire & automatically updates the
+    search engine appropriately.
+    """
+    def setup(self):
+        # Naive (listen to all model saves).
+        setAttValSignal.connect(self.handle_save)
+        models.signals.post_delete.connect(self.handle_delete)
+        # Efficient would be going through all backends & collecting all models
+        # being used, then hooking up signals only for those.
+
+    def teardown(self):
+        # Naive (listen to all model saves).
+        setAttValSignal.disconnect(self.handle_save)
+        models.signals.post_delete.disconnect(self.handle_delete)
+        # Efficient would be going through all backends & collecting all models
+        # being used, then disconnecting signals only for those.
+
+
+
+#----------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
 @receiver(pre_delete, sender=Item)
@@ -447,3 +491,5 @@ def itemPreDelete(instance, **kwargs):
 
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
+

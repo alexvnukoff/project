@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import Item
 from core.hierarchy import hierarchyManager
+from django.template.defaultfilters import slugify
 
 def getSpecificChildren(cls, parent):
     '''
@@ -10,30 +11,54 @@ def getSpecificChildren(cls, parent):
     '''
     return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
+def getSpecificParent(cls, child):
+    '''
+        Returns not hierarchical children of specific type
+            Example: getSpecificChildren("Company", 10)
+                //Returns instances of all Companies related with Item=10 by "relation" type of relationship
+    '''
+    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="rel")
+
+def createItemSlug(string):
+    nonDig = ''.join([i for i in string if not i.isdigit()])
+
+    if not nonDig:
+        return False
+
+    slug = slugify(nonDig)
+
+    if not slug:
+        return False
+
+    return slugify(string)
+
 class Tpp(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Company(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
     def __str__(self):
-        return self.name
-
+        return self.getName()
+    #TODO: Jenya change attr titles to NAME and DETAIL_TEXT
     def getName(self):
-        return 'test1'
+        name = self.getAttributeValues('NAME')
+        return name[0] if name else '{EMPTY}'
 
     def getDescription(self):
-        return 'test2'
+        desc = self.getAttributeValues('DETAIL_TEXT')
+        return desc[0] if desc else ''
 
     def getBranches(self):
         return getSpecificChildren("Branch", self.pk)
+
+    def getCountry(self):
+        return 1
 
     def getDepartments(self):
         '''
@@ -48,185 +73,137 @@ class Company(Item):
 
         return Department.hierarchy.getDescedantsForList(childs)
 
+
 class Department(Item):
-    name = models.CharField(max_length=128)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
     def __str__(self):
-        return self.name
+        return ''
+
 
 class Branch(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    objects = models.Manager()
-    hierarchy = hierarchyManager()
 
     def __str__(self):
-        return self.name
+        return ''
+
 
 class Category(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
     def __str__(self):
-        return self.name
-
-class Site(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return self.name
+        return self.title
 
 
 class Product(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class License(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Service(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Invoice(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class News(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Article(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Announce(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Review(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Rating(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Payment(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Shipment(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Tender(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Advertising(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Rate(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
-
-
-class Forum(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
-class ForumThread(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
-class ForumPost(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return self.name
-
+        return ''
 
 class Order(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Basket(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Cabinet(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
 
 
 class Document(Item):
-    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
-        return self.name
+        return ''
+
 
 class Gallery(Item):
       photo = models.ImageField(verbose_name='Avatar',  upload_to='gallery/', blank=True, null=True)
