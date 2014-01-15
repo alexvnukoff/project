@@ -25,7 +25,7 @@ class hierarchyManager(models.Manager):
                                                         FROM {relTable}
                                                         WHERE child_id = i.{pkCol} AND type='hier'
                                                 )
-                                        ) WHERE ROWNUM <= {limitParent}
+                                        ) WHERE ROWNUM <= {limitRoot}
                             ) rel
                             INNER JOIN {itemTable} model ON (rel.CHILD_ID = model.{pkCol})
                             WHERE rel.type='hier' OR rel.PARENT_ID is null {where}
@@ -46,7 +46,7 @@ class hierarchyManager(models.Manager):
         queryDict['where'] = ''
         queryDict['where'] = ''
         queryDict['order'] = 'ORDER BY ROWNUM '
-        queryDict['limit'] = '50'
+        queryDict['limitRoot'] = '50'
 
         return queryDict
 
@@ -69,14 +69,10 @@ class hierarchyManager(models.Manager):
         queryDict['prior'] = 'rel.CHILD_ID = rel.PARENT_ID'
         queryDict['startWith'] = 'rel.PARENT_ID is NULL'
 
-
-        if order is not False:
-            queryDict['order'] += 'DESC'
-
         if rootLimit is not False:
             int(rootLimit)
 
-            queryDict['limit'] = str(rootLimit)
+            queryDict['limitRoot'] = str(rootLimit)
 
         finalQuery = self.query.format(**queryDict)
 
@@ -257,12 +253,11 @@ class hierarchyManager(models.Manager):
         limit = int(limit)
 
         if limit < 1:
-            return \
-                self.model.objects.filter(p2c__type="hier") \
-                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)
+            return self.model.objects\
+                .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True))
         else:
             return \
-                self.model.objects.filter(p2c__type="hier") \
-                    .filter(c2p__parent_id__isnull=True, c2p__type__isnull=True)[:limit]
+                self.model.objects \
+                    .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True))[:limit]
 
 
