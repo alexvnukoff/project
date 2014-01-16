@@ -257,44 +257,44 @@ class Item(models.Model):
         name = self.getAttributeValues('NAME')
         return name[0] if name else '{EMPTY}'
 
-    def getItemInstPermList(self, user, type=True):
+    def getItemInstPermList(self, user):
         '''
-        Returns list of permissions for given User for given Item's instance
-        Example:
-            usr = User.objects.get(pk=21)           # read usr from database
-            comp = Company.objects.get(pk=2)        # read comp from database
-            list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
+            Returns list of permissions for given User for given Item's instance
+            Example:
+                usr = User.objects.get(pk=21)           # read usr from database
+                comp = Company.objects.get(pk=2)        # read comp from database
+                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
 
-        perm_list = []
+        group_list = []
         if user == self.create_user: # is user object's owner?
-            perm_list = [p.codename for p in Group.objects.get(name='Owner').permissions.all()]
-            perm_list += [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+            group_list.append('Owner')
+            group_list.append('Admin')
             if self.status.perm: # is there permissions group for current object's state?
-                perm_list += [p.codename for p in self.status.perm.permissions.all()]
-            else: # no permissions group for current state, read from Staff group
-                perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                group_list.append(self.status.perm.name)
+            else: # no permissions group for current state, attach Staff group
+                group_list.append('Staff')
         else:
             if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
                 if user.is_admin: # has user admin flag?
-                    perm_list = [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+                    group_list.append('Admin')
                     if self.status.perm: # is there permissions group for current object's state?
-                        perm_list += [p.codename for p in self.status.perm.permissions.all()]
-                    else: # no permissions group for current state, read from Staff group
-                        perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                        group_list.append(self.status.perm.name)
+                    else: # no permissions group for current state, attach Staff group
+                        group_list.append('Staff')
                 else:
                     if self.status.perm: # is there permissions group for current object's state?
-                        perm_list = [p.codename for p in self.status.perm.permissions.all()]
-                    else: # no permissions group for current state, read from Staff group
-                        perm_list = [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
-        perm_list += [p.codename for p in user.user_permissions.all()] # attach user's private permissions
+                        group_list.append(self.status.perm.name)
+                    else: # no permissions group for current state, attach Staff group
+                        group_list.append('Staff')
+        # get all permissions from all related groups for current type of item
         obj_type = self.__class__.__name__ # get current object's type
-        lst=[]
-        for p in perm_list:
-            if obj_type.lower() in p:
-                lst.append(p)
-
-        perm_list = list(set(lst)) # remove duplicated keys in permissions list
+        obj_type = obj_type.lower()
+        perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
+                    permissions__codename__contains=obj_type).values('permissions__codename')]
+        # attach user's private permissions
+        perm_list += [p.codename for p in user.user_permissions.filter(codename__contains=obj_type).all()]
+        perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
         return perm_list
 
     @staticmethod
