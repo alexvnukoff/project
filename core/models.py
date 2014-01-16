@@ -329,6 +329,8 @@ class Item(models.Model):
     def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
         '''
            Return values of attribute list in specific Item
+           Example item = News.getAttributeValues("NAME", "DETAIL_TEXT)
+           will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 
         values = Value.objects.filter(attr__title__in=attr, item=self.id)
