@@ -12,13 +12,13 @@ def home(request):
         request.session['jenya_sesseion']  = "eto moya sessiya"
         request.session.set_expiry(100)
 
-    newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=3)
+    newsList = func.getItemsList("News", "NAME", "IMAGE", "Photo", qty=3)
     hierarchyStructure = Category.hierarchy.getTree(10)
 
 
-    treeObject = [cat['ID'] for cat in hierarchyStructure]
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
 
-    categories_id = Category.objects.filter(pk__in=treeObject).all()
+
 
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
@@ -49,7 +49,7 @@ def about(request):
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Anons", "Text", "Image", page=page)
+    result = func.getItemsListWithPagination("News", "Anons", "DETAIL_TEXT", "IMAGE", page=page)
 
     itemsList = result[0]
     page = result[1]

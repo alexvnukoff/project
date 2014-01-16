@@ -1,4 +1,6 @@
 from django import forms
+import os
+import uuid
 from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item ,Relationship
@@ -23,10 +25,14 @@ class ItemForm(forms.Form):
         parameters:
         item = class Name of Item (News, Company)
         values = Dict that contain values to forms field (Post)
+
         id = pk, of specific item , if needs update of values
+        Example :
+        form = Form("News" , values = request.POST, id = 4)(Update News with id 4 by values)
         '''
         self.item = item
         self.id = id
+        self.file_to_delete = ""
 
         super(ItemForm, self).__init__()
         # Get id of ContentType of specific Item
@@ -119,17 +125,22 @@ class ItemForm(forms.Form):
             if(attr.type == "Img") and dict is None:
                  self.fields[title] = forms.ImageField(required=bool(required))
                  value = value[0] if value and isinstance(value, list) else value
+
                  if value:
                     if not isinstance(value, InMemoryUploadedFile):
                            self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=value)
                     else:
                            self.fields[title].initial = value
+                    if self.id and self.obj:
+                         picture = self.obj.getAttributeValues(title) if self.id else ""
+                         self.file_to_delete = picture
+
 
                  else:
                      picture = self.obj.getAttributeValues(title) if self.id else ""
                      value = picture if self.id and picture else ""
 
-                     self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[title][0]) if value else ""
+                     self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[0]) if value else ""
 
             #Text field (input type= "text")
             if(attr.type == "Chr") and dict is None:
@@ -175,6 +186,8 @@ class ItemForm(forms.Form):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
+        user = request.user
+        Example: form.update(request.user)
         Return object of Item
         """
         path_to_images = "pictures/"
@@ -207,19 +220,28 @@ class ItemForm(forms.Form):
 
     def _save_file(self, file, title, path=''):
         """
-        Method that save file
+        Method that save new file , and delete old file if exist
         parameters:
         file = self.fields[title].initial (object of InMemoryUploadedFile)
         title = title of the field
         path = path to file
+        It's internal method of ItemForm class , to save files
         """
+
+
         filename = file._get_name()
+        ext = filename.split('.')[-1]
+        filename = "%s.%s" % (uuid.uuid4(), ext)
         fd = open('%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename)), 'wb')
         for chunk in file.chunks():
             fd.write(chunk)
         fd.close()
         filename = str(path) + str(filename)
         self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
+        if self.file_to_delete:
+           filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
+           if os.path.isfile(filename):
+               os.remove(filename)
         #if file has been saved , update initial value of ImageField
 
     def setlabels(self, dict):
@@ -233,7 +255,7 @@ class ItemForm(forms.Form):
 
 
 
-class Test(forms.Form):
+class Test(forms.Form):#its TEST , not for documentation
 
 
 
@@ -248,20 +270,39 @@ class Test(forms.Form):
 
 
 class BasePhotoGallery(BaseModelFormSet):
+    """
+    Class that define formset  of photogallery
+    Example of usage:
+     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
+     form = Photo()
+    Gallery its model that contain field ImageField
+    extra its extra field
+    fieds its fields that will be desplayed
+
+    """
 
     def __init__(self, *args, parent_id=None, **kwargs):
+        """
+        __init__ of BasePhotoGallery
+        parent_id = items that in relationship with Gallery
+        """
         super(BasePhotoGallery, self).__init__(*args, **kwargs)
 
         self.user = parent_id
         self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
     def save(self, parent=None, user=None, commit=True):
+        """
+        Method that create new Gallery , and set relationship with parent object
+        Example :
+        form.save(parent = 34 , user = request.user, commit =True)
+        """
         instances = super(BasePhotoGallery, self).save(commit)
         instances_pk = [instance.pk for instance in instances]
         bulkInsert = []
         item = Item.objects.get(pk=parent)
 
         for instance in instances:
-            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user ,type = 'rel'))#TODO jenya use method in core
+            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type = 'rel'))#TODO jenya use method in core
         if bulkInsert:
             try:
                Relationship.objects.bulk_create(bulkInsert)

@@ -10,6 +10,16 @@ from django.conf import settings
 
 
 def getPaginatorRange(page):
+    '''
+    Method that get page object and return paginotorRange ,
+    help to  display properly pagination
+    Example
+    result = func.getItemsListWithPagination("News", "NAME", "Active_From", "DETAIL_TEXT", "IMAGE", page=4)
+    newsList = result[0]
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page) Pass this object to template
+
+    '''
     if page.number - 2 > 0:
         start = page.number - 2
     else:
@@ -24,6 +34,13 @@ def getPaginatorRange(page):
 
 
 def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1):
+    '''
+    Method  return List of Values of items and  Pagination
+    items = Quryset of items
+    attr = (list of item's attributes)
+    page = number of current page
+    page_num = num element per page
+    '''
     paginator = Paginator(items, page_num)
     try:
         page = items = paginator.page(page)
@@ -32,7 +49,7 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1):
     items = tuple([item.pk for item in page.object_list])
     attributeValues = Item.getItemsAttributesValues(attr, items)
 
-    return attributeValues, page
+    return attributeValues, page #Return List Item and Page object of current page
 
 
 

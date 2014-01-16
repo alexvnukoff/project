@@ -8,8 +8,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', centerpokupok.Product.views.productList),
-     url(r'^([0-9]+)/$', centerpokupok.Product.views.productDetail),
+     url(r'^$', centerpokupok.Product.views.productList, name='list'),
+     url(r'^([0-9]+)/$', centerpokupok.Product.views.productDetail, name="detail"),
+     url(r'^comment/([0-9]+)/$', centerpokupok.Product.views.addComment, name="addComment"),
 
     # url(r'^blog/', include('blog.urls')),
 
