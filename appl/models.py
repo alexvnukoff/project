@@ -190,47 +190,47 @@ class Category(Item):
 class Product(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 class License(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 class Service(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Invoice(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class News(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Article(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Announce(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Review(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Rating(Item):
