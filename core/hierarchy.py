@@ -57,7 +57,8 @@ class hierarchyManager(models.Manager):
             Returns hierarchical structure of some type of Item
             The method returns list of dictionaries that contains the id , level and the parent of each member
             also ordered in hierarchical order
-                Example: Department.hierarchy.getTree() //Returns all root departments and its children
+                Example: Department.hierarchy.getTree() #Returns all root departments and its children
+                Example: Department.hierarchy.getTree(5) #Returns the tree of first 5 parents
 
             It will works only for submodels of the Item model (Department, Company etc.)
         '''
@@ -92,11 +93,11 @@ class hierarchyManager(models.Manager):
     def getDescedantsForList(self, startList):
         '''
             Returns hierarchical structure of Descendants of list of Items
-            you should pass a list of Primary Keys of Items
+            you should pass a list of Items
             The method returns list of dictionaries that contains the id , level and the parent of each member
             also ordered in hierarchical order
                 Example: Department.hierarchy.getDescedantsForList(startList=[1,2,3])
-                //Returns descendants of each Item(1,2,3)
+                #Returns descendants of each Item(1,2,3)
         '''
 
         if not startList:
@@ -124,21 +125,18 @@ class hierarchyManager(models.Manager):
     def getChild(self, parent):
         '''
             Returns hierarchical children's instances of parent Item
-            you should passthe parent Primary Key to parent parameter
-                Example: Department.hierarchy.getChildren(1)
-                //Returns instances of children departments hierarchical related to the company with pk = 1
-
+            you should pass the parent PK to "parent" parameter
                 Example: Item.hierarchy.getChildren(parent=1)
-                //Returns children instances of all types of Item hierarchical related to the company with pk = 1
+                #Returns children hierarchical related to the company with pk = 1
         '''
         return self.model.objects.filter(c2p__parent_id=parent, c2p__type="hier")
 
     def getDescendantCount(self, parent):
         '''
             Get count of descendants in hierarchy
-            this method return a integer value
+            this method return an integer value
                 Example: count = Item.getDescendantCount(parent=1)
-                //Returns number of descendants hierarchical related tho the Item = 1
+                #Returns number of descendants hierarchical related tho the Item = 1
         '''
         cursor = connection.cursor()
         queryDict = self._getQueryDict()
@@ -154,14 +152,13 @@ class hierarchyManager(models.Manager):
 
     def getAncestors(self, descendant, includeSelf=False):
         '''
-            Returns hierarchical structure of some type of Item
+            Returns hierarchical ancestors of some Item
             The method returns list of ancestors that contains the id , level and the parent of each member
-            also ordered in hierarchical order
-            You should pass the Primary Key of the descendant to a "descendant" parameter
-                Example: Department.hierarchy.getAncestors(parent=10) //Returns ancestors of the Departments
-            also you can pass "True" to the "includeSelf" then it will include itself
-                Example: Department.hierarchy.getAncestors(descendant=10, includeSelf=True)
-                //Returns ancestors of the Departments include itself
+            also ordered in hierarchical order.
+            You should pass the descendant PK to a "descendant" parameter
+                Example: Department.hierarchy.getAncestors(parent=10) #Returns ancestors of the Department
+            By default it will NOT include the department itself, but it can be changed by passing `True`
+            to the "includeSelf" parameter.
         '''
         cursor = connection.cursor()
         resultDict = {}
@@ -196,14 +193,12 @@ class hierarchyManager(models.Manager):
 
     def getDescendants(self, parent, includeSelf=False):
         '''
-            Returns hierarchical structure of some type of Item
+            Returns hierarchical descendants of Item
             The method returns list of descendants that contains the id , level and the parent of each member
-            also ordered in hierarchical order
-            You should pass the Primary Key of the parent to a "parent" parameter
-                Example: Department.hierarchy.getAncestors(parent=1) //Returns descendants of the Departments
-            also you can pass "True" to the "includeSelf" then it will include itself
-                Example: Department.hierarchy.getAncestors(descendant=10, includeSelf=True)
-                //Returns descendants of the Departments include itself
+            also ordered in hierarchical order.
+            You should pass the PK of the parent to the "parent" parameter.
+                Example: Department.hierarchy.getAncestors(parent=1) #Returns descendants of the Department
+            also you can pass "True" to the "includeSelf" then it will include the parent itself
         '''
         cursor = connection.cursor()
         queryDict = self._getQueryDict()
@@ -233,14 +228,20 @@ class hierarchyManager(models.Manager):
 
     def getParent(self, child):
         '''
-            Returns instance of the hierarchical parent of some hierarchical child passed to "child" parameter
+            Returns instance of the hierarchical parent for some Item passed to "child" parameter
                 Example: Department.hierarchy.getParent(child=5)
-                //Returns instance of department which is hierarchical parent of the Department=5
+                #Returns instance of department which is hierarchical parent of the Department=5
         '''
         return self.model.objects.get(p2c__child_id=child, p2c__type="hier")
 
     def deleteTree(self, parents):
+        '''
+            Used to call delete method to all hierarchical child of parents passed to argument "parent"
+                Example: Item.hierarchy.deleteTree(6)
+                Example: Item.hierarchy.deleteTree([1,2,3])
 
+            IMPORTANT: shoul be called from Item
+        '''
         if not isinstance(parents, list) and isinstance(parents, int):
             parents = [parents]
 
@@ -254,6 +255,13 @@ class hierarchyManager(models.Manager):
 
 
     def getRootParents(self, limit=0):
+        '''
+            Returns limited number of instances of root parents for some Type of Item
+            by default it not limit the number of root parents and will return all them
+                Example: Companies.hierarchy.getRootParents(5)
+                Example: Companies.hierarchy.getRootParents()
+        '''
+
         limit = int(limit)
 
         if limit < 1:
