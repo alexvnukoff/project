@@ -10,7 +10,7 @@ from django.conf import settings
 
 def newsList(request):
     page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Name", "Active_From", "Detail_Text", "Photo", page=page)
+    result = func.getItemsListWithPagination("News", "NAME", "Active_From", "DETAIL_TEXT", "IMAGE", page=page)
     newsList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)

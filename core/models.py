@@ -303,11 +303,11 @@ class Item(models.Model):
            Return values of attribute list in items list
         '''
 
-        if not isinstance(attr, list):
-            attr = [attr]
+        if not isinstance(attr, tuple):
+            attr = tuple(attr)
 
-        if not isinstance(items, list):
-            items = [items]
+        if not isinstance(items, tuple):
+            items = tuple(items)
 
         values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
 

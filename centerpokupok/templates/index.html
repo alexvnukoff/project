@@ -623,25 +623,25 @@ $(function () {
             </div>
             <div class="review-clumn2">
 
-        		<span class="title"><a title="Новости" alt="Новости" href="/news/">{% trans "News" %} </a></span>
+        		<span class="title"><a title="Новости" alt="Новости" href="{% url "news:list" %}">{% trans "News" %} </a></span>
 
 
                 <ul>
-                    {% for title , attr  in newsList.items %}
+                    {% for id , attr  in newsList.items %}
                         {% load staticfiles %}
-                        {% with attr.Name|first as name  %}
-                            {% with attr.Photo|first as picture  %}
+                        {% with attr.NAME|first as name  %}
+                            {% with attr.IMAGE|first as picture  %}
 
-                                {%  with attr.Active_From|first as date  %}
+                                {%  with attr.ACTIVE_FROM|first as date  %}
                                     <li>
-                                        <a href="/news/{{ title }}/" alt="{{ name }}" title="{{ name }}">
+                                        <a href="{% url "news:detail"  id  %}" alt="{{ name }}" title="{{ name }}">
 
                                             <img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
                                         </a>
                                         <p>
                                             {{ date }}
                                         </p>
-                                        <p><a href="/news/{{ title }}/">{{ name }}</a></p>
+                                        <p><a href="{% url "news:detail"  id  %}">{{ name }}</a></p>
 
                                     </li>
 
