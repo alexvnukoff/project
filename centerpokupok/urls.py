@@ -15,8 +15,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^about/$', centerpokupok.views.about),
-    url(r'^news/', include("centerpokupok.News.urls")),
-    url(r'^products/', include("centerpokupok.Product.urls")),
+    url(r'^news/', include("centerpokupok.News.urls", namespace="news")),
+    url(r'^products/', include("centerpokupok.Product.urls", namespace="products")),
 
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

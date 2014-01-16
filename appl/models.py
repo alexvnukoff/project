@@ -158,6 +158,11 @@ class Comment(Item):
 
     @staticmethod
     def spamCheck(user=None, parent_id=None):
+        '''
+        Method check if current user , sended comment less than one minute ago
+        user = request.user
+        parent_id = id , of Item element that related to comment(News for example)
+        '''
         time = datetime.datetime.now() - datetime.timedelta(minutes=1)
         comments = Comment.objects.filter(create_user=user, c2p__parent_id=parent_id, create_date__gt=time)
         if len(comments) > 0:
@@ -166,6 +171,9 @@ class Comment(Item):
 
     @staticmethod
     def getCommentOfItem(parent_id=None):
+        """
+        Return quryset of comments that related to item
+        """
         return  Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
 
 

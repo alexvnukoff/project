@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
-from appl.models import News, Product , Comment
+from django.shortcuts import render_to_response , get_object_or_404
+from appl.models import News, Product, Comment
 from core.models import Value, Item, Attribute, Dictionary, Relationship
 from appl import func
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
 from django.template import RequestContext
+from django.http import HttpResponseRedirect
 
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
@@ -25,6 +27,37 @@ def productList(request):
 
 def productDetail(request, item_id):
     if request.POST.get('subCom', False):
+        form = addComment(request, item_id)
+        if isinstance(form, HttpResponseRedirect):
+            return form
+
+    else:
+        form = ItemForm("Comment")
+    page = request.GET.get('page', 1)
+
+
+    product = get_object_or_404(Product, pk=item_id)
+
+
+    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT')
+
+    #flagList = func.getItemsList("Country", "NAME", "Flag")
+
+    result = _getComment(item_id, page)
+    commentsList  = result[0]
+    paginator_range = result[1]
+    page = result[2]
+
+    dictionaryLabels = {"DETAIL_TEXT": "Comment"}
+    form.setlabels(dictionaryLabels)
+
+
+
+    return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
+
+
+def addComment(request, item_id):
+
         form = ItemForm("Comment", values=request.POST)
         form.clean()
         spam = Comment.spamCheck(user=request.user, parent_id=item_id)
@@ -36,20 +69,22 @@ def productDetail(request, item_id):
             comment = form.save(request.user)
             parent = Product.objects.get(pk=item_id)
             Relationship.setRelRelationship(parent, comment, request.user)
+            return HttpResponseRedirect(reverse("products:detail", args=(item_id)))
 
-        page = 1
-    else:
-       form = ItemForm("Comment")
-       page = request.GET.get('page', 1)
-    try:
-        product = Product.objects.get(pk=item_id)
-    except ObjectDoesNotExist:
-        raise Http404
+        else:
+            return form
 
-    productValues = product.getAttributeValues("NAME",)
 
-    #flagList = func.getItemsList("Country", "NAME", "Flag")
-    comments = Comment.getCommentOfItem(parent_id=item_id)
+
+
+
+
+
+
+
+
+def _getComment(parent_id, page):
+    comments = Comment.getCommentOfItem(parent_id=parent_id)
     comments = comments.order_by('-pk')
     result =  func.setPaginationForItemsWithValues(comments, "DETAIL_TEXT", page_num=3, page=page)
     commentsList = result[0]
@@ -63,10 +98,8 @@ def productDetail(request, item_id):
     paginator_range = func.getPaginatorRange(page)
     commentsList = OrderedDict(sorted(commentsList.items(), reverse=True))
 
-    dictionaryLabels = {"DETAIL_TEXT": "Comment"}
-    form.setlabels(dictionaryLabels)
+    return commentsList , paginator_range , page
 
 
-    return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
 

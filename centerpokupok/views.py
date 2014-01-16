@@ -7,7 +7,6 @@ from appl import func
 from django.conf import settings
 
 def home(request):
-
     newsList = func.getItemsList("News", "Name", "Active_From", "Photo", qty=3)
     hierarchyStructure = Category.hierarchy.getTree(10)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
@@ -39,7 +38,7 @@ def about(request):
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Anons", "Text", "Image", page=page)
+    result = func.getItemsListWithPagination("News", "Anons", "DETAIL_TEXT", "IMAGE", page=page)
 
     itemsList = result[0]
     page = result[1]
