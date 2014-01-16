@@ -77,21 +77,19 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
 DATABASES = {
-
     'default': {
-       'ENGINE': 'django.db.backends.oracle',
+        'ENGINE': 'django.db.backends.oracle',
         'NAME': 'ORCL',
         'USER': 'tpp',
         'PASSWORD': 'migirov',
         'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
         'PORT': '1521',
+        #Section for Oracle
+        'OPTIONS': {
+            'threaded': True,
+            'use_returning_into': False,
+        },
     }
-}
-
-#Section for Oracle
-OPTIONS = {
-    'threaded': True,
-    'use_returning_into': False,
 }
 
 # Internationalization
