@@ -1,0 +1,28 @@
+{% load staticfiles %}
+{% load i18n %}
+<div class="review-clumn1">
+        			<span class="title"><a title="Обзоры товаров " alt="Обзоры товаров " href="{% url "reviews:list" %}">{% trans "Products reviews" %} </a></span>
+
+              <ul>
+                    {% for id , attr  in reviewList.items %}
+                        {% load staticfiles %}
+                        {% with attr.NAME|first as name  %}
+                            {% with attr.IMAGE|first as picture  %}
+                                {%  with attr.ACTIVE_FROM|first as date  %}
+                                    <li>
+                                        <a href="{% url "reviews:detail"  id  %}" alt="{{ name }}" title="{{ name }}">
+                                            <img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
+                                        </a>
+                                        <p>
+                                            {{ date }}
+                                        </p>
+                                        <p><a href="{% url "reviews:detail"  id  %}">{{ name }}</a></p>
+                                    </li>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% empty %}
+                        <span> It's empty</span>
+                    {% endfor %}
+                </ul>
+            </div>

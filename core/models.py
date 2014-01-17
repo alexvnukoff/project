@@ -257,52 +257,67 @@ class Item(models.Model):
         name = self.getAttributeValues('NAME')
         return name[0] if name else '{EMPTY}'
 
-    def getItemInstPermList(self, user, type=True):
+    def getItemInstPermList(self, user):
         '''
-        Returns list of permissions for given User for given Item's instance
-        Example:
-            usr = User.objects.get(pk=21)           # read usr from database
-            comp = Company.objects.get(pk=2)        # read comp from database
-            list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
+            Returns list of permissions for given User for given Item's instance
+            Example:
+                usr = User.objects.get(pk=21)           # read usr from database
+                comp = Company.objects.get(pk=2)        # read comp from database
+                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
         '''
 
-        perm_list = []
+        group_list = []
         if user == self.create_user: # is user object's owner?
-            perm_list = [p.codename for p in Group.objects.get(name='Owner').permissions.all()]
-            perm_list += [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+            group_list.append('Owner')
+            group_list.append('Admin')
             if self.status.perm: # is there permissions group for current object's state?
-                perm_list += [p.codename for p in self.status.perm.permissions.all()]
-            else: # no permissions group for current state, read from Staff group
-                perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                group_list.append(self.status.perm.name)
+            else: # no permissions group for current state, attach Staff group
+                group_list.append('Staff')
         else:
             if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
                 if user.is_admin: # has user admin flag?
-                    perm_list = [p.codename for p in Group.objects.get(name='Admin').permissions.all()]
+                    group_list.append('Admin')
                     if self.status.perm: # is there permissions group for current object's state?
-                        perm_list += [p.codename for p in self.status.perm.permissions.all()]
-                    else: # no permissions group for current state, read from Staff group
-                        perm_list += [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
+                        group_list.append(self.status.perm.name)
+                    else: # no permissions group for current state, attach Staff group
+                        group_list.append('Staff')
                 else:
                     if self.status.perm: # is there permissions group for current object's state?
-                        perm_list = [p.codename for p in self.status.perm.permissions.all()]
-                    else: # no permissions group for current state, read from Staff group
-                        perm_list = [p.codename for p in Group.objects.get(name='Staff').permissions.all()]
-        perm_list += [p.codename for p in user.user_permissions.all()] # attach user's private permissions
+                        group_list.append(self.status.perm.name)
+                    else: # no permissions group for current state, attach Staff group
+                        group_list.append('Staff')
+        # get all permissions from all related groups for current type of item
         obj_type = self.__class__.__name__ # get current object's type
-        lst=[]
-        for p in perm_list:
-            if obj_type.lower() in p:
-                lst.append(p)
-
-        perm_list = list(set(lst)) # remove duplicated keys in permissions list
+        obj_type = obj_type.lower()
+        perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
+                    permissions__codename__contains=obj_type).values('permissions__codename')]
+        # attach user's private permissions
+        perm_list += [p['codename'] for p in user.user_permissions.filter(codename__contains=obj_type).values('codename')]
+        perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
         return perm_list
 
     @staticmethod
     def getItemsAttributesValues(attr, items): #TODO: Jenya add doc
         '''
-           Return values of attribute list in items list
+           Return values of attribute list for items list
+           Example item = News.getAttributeValues(("NAME", "DETAIL_TEXT", "TAGS"), (1,2))
+           will return :
+                {
+                    '1':
+                        {
+                            'NAME': ['news title']
+                            'DETAIL_TEXT': ['Text of the news']
+                            'TAGS': ['TAG1', 'TAG2']
+                        }
+                    '2':
+                        {
+                            'NAME': ['news title2']
+                            'DETAIL_TEXT': ['Text of the news2']
+                            'TAGS': ['TAG3']
+                        }
+                }
         '''
-
         if not isinstance(attr, tuple):
             attr = tuple(attr)
 
@@ -328,8 +343,8 @@ class Item(models.Model):
 
     def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
         '''
-           Return values of attribute list in specific Item
-           Example item = News.getAttributeValues("NAME", "DETAIL_TEXT)
+           Return values of attribute list for specific Item
+           Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 
@@ -356,8 +371,7 @@ class Item(models.Model):
     @transaction.atomic
     def setAttributeValue(self, attrWithValues):
         '''
-            Set values for attributes (mass)
-            Methods set attribute's values for the item
+            Set values for list of attributes
             The parameter "attrWithValues" should be a dictionary
              you can pass many values for one attribute by passing list as dictionary value
                 Example:
@@ -365,10 +379,7 @@ class Item(models.Model):
                             'Name': 'Company Example'
                             'PhoneNumber': ['123-321-456','789-654-228']
                     }
-
                     Company(pk=1).setAttributeValue(attr)
-                    //It will set the value for attribute "Name" of item = [Company=1] to "Company Example"
-                    //and will set many values for attribute "PhoneNumber" item = [Company=1]
         '''
         if not isinstance(attrWithValues, dict) or not attrWithValues :
             raise ValueError
@@ -423,7 +434,7 @@ class Item(models.Model):
                 Value.objects.bulk_create(bulkInsert)
         except IntegrityError:
             raise Exception
-
+        #send signal to search frontend
         setAttValSignal.send(self._meta.model, instance=self)
 
         return True
@@ -431,12 +442,12 @@ class Item(models.Model):
     def getSiblings(self, includeSelf=True):
         '''
             Get siblings in hierarchy
-            The method returns hierarchical siblings of the current Item
+            The method returns hierarchical siblings of the Item
             by default it will include the current Item
-                Example: Department(pk=1).getSiblings()
-                    //Returns all siblings of Department = 1 and will include the department itself
-            If you will set the parameter "includeSelf" it will not include the item itself
-                Example: Department(pk=1).getSiblings(False)//will not include Department=1
+                Example: Dep = Department.objects.get(pk=3)
+                         Dep.getSiblings()
+                    #Returns all siblings of Department = 1 and will include the department itself
+            If you will set the parameter "includeSelf"  to `False` it will not include the item itself
         '''
 
         try:
@@ -448,17 +459,6 @@ class Item(models.Model):
                 return self._meta.model.hierarchy.getChild(parent)
             else:
                 return self._meta.model.hierarchy.getChild(parent).exclude(pk=self.pk)
-
-    def getRelationChildren(self, getItemInstance=True):
-        '''
-            Get list of ancestors in hierarchy
-            List contains item objects
-        '''
-        translation = {'rev_level': 'level'}
-
-    def getRelatedChildForParent(cls):
-        parent = 0
-        return cls._meta.model.objects.filter(c2p__parent_id=parent, c2p__type="rel")
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items

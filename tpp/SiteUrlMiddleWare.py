@@ -15,6 +15,7 @@ class SiteUrlMiddleWare:
 
             settings.SITE_ID = site.pk
             settings.ROOT_URLCONF = str(site.name)+".urls"
+            request.urlconf = str(site.name)+".urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
         except Site.DoesNotExist:

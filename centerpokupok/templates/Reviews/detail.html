@@ -1,29 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <!DOCTYPE html>
-<html>
-<head>
-    {% extends "index.html" %}
-    {% block meta %}
-        {{ block.super }}
-    {% endblock %}
+{% extends "base.html" %}
 {% load staticfiles %}
-       <title>News Detail</title>
-{% block styles %}
-  {{ block.super }}
-    {% endblock %}
-  {% block js %}
-{{ block.super }}
-    {% endblock %}
+{% load i18n %}
+<html>
+<head>
 
-{% block header %}
+               <title>{% block title %}News Detail{% endblock %}</title>
+
+
+{{% block styles %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
 {% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+{% endblock %}
+
+
 
 
 </head>
 <body>
+{% block header %}
+{% include "header_big.html" %}
+{% endblock %}
 {% block body %}
     <div id="main">
 		<div id="sidebar">

@@ -88,11 +88,8 @@ class Company(Organization):
 
     def __str__(self):
         return self.getName()
-    #TODO: Jenya change attr titles to NAME and DETAIL_TEXT
-    def getName(self):
-        name = self.getAttributeValues('NAME')
-        return name[0] if name else '{EMPTY}'
 
+    #TODO: Jenya change attr titles to NAME and DETAIL_TEXT
     def getDescription(self):
         desc = self.getAttributeValues('DETAIL_TEXT')
         return desc[0] if desc else ''
@@ -102,9 +99,6 @@ class Company(Organization):
 
     def getBranches(self):
         return getSpecificChildren("Branch", self.pk)
-
-    def getCountry(self):
-        return 1
 
     def getDepartments(self):
         '''
@@ -198,47 +192,47 @@ class Category(Item):
 class Product(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 class License(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 class Service(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Invoice(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class News(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Article(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Announce(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Review(Item):
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Rating(Item):
