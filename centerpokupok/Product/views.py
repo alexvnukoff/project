@@ -69,7 +69,7 @@ def addComment(request, item_id):
             comment = form.save(request.user)
             parent = Product.objects.get(pk=item_id)
             Relationship.setRelRelationship(parent, comment, request.user)
-            return HttpResponseRedirect(reverse("products:detail", args=(item_id)))
+            return HttpResponseRedirect(reverse("products:detail", args=[item_id]))
 
         else:
             return form

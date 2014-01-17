@@ -159,13 +159,13 @@
 			</div>
 
 				<ul class="listreviews">
-                    {% for id , attr  in newsList.items %}
+                    {% for id , attr  in reviewList.items %}
                     {% load staticfiles %}
                     {% with attr.NAME|first as name  %}
                     {% with attr.IMAGE|first as picture  %}
                     {% with attr.DETAIL_TEXT|first as content %}
 
-                    {%  with attr.Active_From|first as date  %}
+                    {%  with attr.ACTIVE_FROM|first as date  %}
 			    <li>
 
 					<img class="star" alt="" src="images/stars.png">

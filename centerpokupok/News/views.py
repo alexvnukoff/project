@@ -25,7 +25,7 @@ def newsDetail(request, item_id):
     except ObjectDoesNotExist:
         raise Http404
 
-    newAttr =  new.getAttributeValues("Name", "Active_From", "Detail_Text", "Photo")
+    newAttr =  new.getAttributeValues("NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE")
     newAttr = newAttr
     flagList = func.getItemsList("Country", "NAME", "Flag")
 

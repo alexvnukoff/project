@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Category, Country
+from appl.models import News, Category, Country, Tpp, Review
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
 
@@ -9,7 +9,7 @@ from django.conf import settings
 def home(request):
 
     if not request.session.get('jenya_sesseion', False):
-        request.session['jenya_sesseion']  = "eto moya sessiya"
+        request.session['jenya_sesseion'] = "eto moya sessiya"
         request.session.set_expiry(100)
 
     newsList = func.getItemsList("News", "NAME", "IMAGE", "Photo", qty=3)
@@ -23,9 +23,11 @@ def home(request):
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
 
-    sortedHierarchyStructure = _sortMenu(hierarchyStructure)
+    sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
 
+    tppList = func.getItemsList("Tpp", "NAME", "IMAGE")
 
+    reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
 
     level = 0
     for node in sortedHierarchyStructure:

@@ -602,23 +602,29 @@ $(function () {
         </div>
         <div id="productreview">
         	<div class="review-clumn1">
-        		<span class="title">Обзоры товаров</span>
-                <ul>
-                	<li>
-                    	<a href="#"><img src="images/products/pr14.jpg" class="thumb" alt="" /></a>
-                        <p>16 августа</p>
-                        <p><a href="#">Новый ультратонкий ноутбук от Samsung S150</a></p>
-                    </li>
-                    <li>
-                    	<a href="#"><img src="images/products/pr14.jpg" class="thumb" alt="" /></a>
-                        <p>16 августа</p>
-                        <p><a href="#">Что ожидать от осенней коллекции 2013</a></p>
-                    </li>
-                    <li>
-                    	<a href="#"><img src="images/products/pr14.jpg" class="thumb" alt="" /></a>
-                        <p>16 августа</p>
-                        <p><a href="#">Обновленный аромат от Moschino появится в продаже уже в сентябре</a></p>
-                    </li>
+        			<span class="title"><a title="Обзоры товаров " alt="Обзоры товаров " href="{% url "reviews:list" %}">{% trans "Products reviews" %} </a></span>
+
+              <ul>
+                    {% for id , attr  in reviewList.items %}
+                        {% load staticfiles %}
+                        {% with attr.NAME|first as name  %}
+                            {% with attr.IMAGE|first as picture  %}
+                                {%  with attr.ACTIVE_FROM|first as date  %}
+                                    <li>
+                                        <a href="{% url "reviews:detail"  id  %}" alt="{{ name }}" title="{{ name }}">
+                                            <img style=" width: 90px; height: 90px;" src="{% static picture %} " class="thumb" alt="{{ name }}" title="{{ name }}">
+                                        </a>
+                                        <p>
+                                            {{ date }}
+                                        </p>
+                                        <p><a href="{% url "reviews:detail"  id  %}">{{ name }}</a></p>
+                                    </li>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% empty %}
+                        <span> It's empty</span>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="review-clumn2">
@@ -678,98 +684,35 @@ $(function () {
         </div>
 
         <div id="partner">
-            <span class="title">Партнеры</span>
+            <span class="title">{% trans "Partner" %}</span>
             <ul id="slider1">
-                <li>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn1.jpg" alt=""></a>
-                        <p><a href="#">ТТП РФ</a></p>
+
+                 {% for id , attr  in tppList.items %}
+
+                        {% with attr.NAME|first as name  %}
+                        {% with attr.IMAGE|first as picture  %}
+                           {% if  forloop.counter == 1 %}
+                                  <li>
+                                {% endif %}
+                             <div class="itempartner">
+                        <a href="#"><img src="{% static picture %}" alt=""></a>
+                        <p><a href="#">{{ name }}</a></p>
                     </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn2.jpg" alt=""></a>
-                        <p><a href="#">Московская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn3.jpg" alt=""></a>
-                        <p><a href="#">Гильдия российских адвокатов</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn4.jpg" alt=""></a>
-                        <p><a href="#">ТПП Татарстана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn5.jpg" alt=""></a>
-                        <p><a href="#">Белорусская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn6.jpg" alt=""></a>
-                        <p><a href="#">ТТП Узбекистана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn7.jpg" alt=""></a>
-                        <p><a href="#">Фундация Адвокатов Украины</a></p>
-                    </div>
-                </li>
-                <li>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn1.jpg" alt=""></a>
-                        <p><a href="#">ТТП РФ</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn2.jpg" alt=""></a>
-                        <p><a href="#">Московская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn3.jpg" alt=""></a>
-                        <p><a href="#">Гильдия российских адвокатов</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn4.jpg" alt=""></a>
-                        <p><a href="#">ТПП Татарстана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn5.jpg" alt=""></a>
-                        <p><a href="#">Белорусская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn6.jpg" alt=""></a>
-                        <p><a href="#">ТТП Узбекистана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn7.jpg" alt=""></a>
-                        <p><a href="#">Фундация Адвокатов Украины</a></p>
-                    </div>
-                </li>
-                <li>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn1.jpg" alt=""></a>
-                        <p><a href="#">ТТП РФ</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn2.jpg" alt=""></a>
-                        <p><a href="#">Московская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn3.jpg" alt=""></a>
-                        <p><a href="#">Гильдия российских адвокатов</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn4.jpg" alt=""></a>
-                        <p><a href="#">ТПП Татарстана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn5.jpg" alt=""></a>
-                        <p><a href="#">Белорусская ТТП</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn6.jpg" alt=""></a>
-                        <p><a href="#">ТТП Узбекистана</a></p>
-                    </div>
-                    <div class="itempartner">
-                        <a href="#"><img src="images/products/pn7.jpg" alt=""></a>
-                        <p><a href="#">Фундация Адвокатов Украины</a></p>
-                    </div>
-                </li>
+                             {% if forloop.counter|divisibleby:"6" and   forloop.counter != forloop.last  %}
+                                  </li>
+                                 <li>
+                                {% endif %}
+                            {% if  forloop.counter == forloop.last %}
+                            </li>
+                            {% endif %}
+
+
+                {% endwith %}
+               {% endwith %}
+            {% endfor %}
+
+
+
             </ul>
         </div>
 
