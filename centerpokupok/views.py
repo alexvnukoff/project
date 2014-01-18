@@ -9,42 +9,62 @@ from appl import func
 from django.conf import settings
 
 def home(request):
-
-
-    if not request.session.get('jenya_sesseion', False):
-        request.session['jenya_sesseion'] = "eto moya sessiya"
-        request.session.set_expiry(100)
-
     newsList = func.getItemsList("News", "NAME", "IMAGE", "Photo", qty=3)
 
     hierarchyStructure = Category.hierarchy.getTree(10)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
-
-
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
-
-
-    tppList = func.getItemsList("Tpp", "NAME", "IMAGE")
-
-    reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
-
     level = 0
+
     for node in sortedHierarchyStructure:
         node['pre_level'] = level
         node['item'] = categories[node['ID']]
         node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
         level = node['LEVEL']
 
+    #TODO Jenya: Указывай более явно параметры
+    tppList = func.getItemsList("Tpp", "NAME", "IMAGE")
+
+    reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
+    #get 3 active coupons ordered by end date
+    couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3].all()
+    coupons = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE"), couponsObj,
+                                               fullAttrVal=True)
+
+    coupons = _setCouponsStructure(coupons)
+
 
     flagList = func.getItemsList("Country", "NAME", "Flag")
 
-
-
     return render_to_response("index.html", locals())
 
+def _setCouponsStructure(couponsDict):
 
+    newDict = {}
+
+    for item, attrs in couponsDict.items():
+
+        newDict[item] = {}
+
+        for attr, values in attrs.items():
+            if attr == 'title':
+                continue
+
+            if attr == "DISCOUNT":
+                for discount in values:
+                    if discount['end_date']:
+                        newDict[item]['DISCOUNT_END_DATE'] = discount['end_date']
+                        price = float(couponsDict[item]['COST'][0]['value'])
+                        newDict[item]['DISCOUNT_COST'] = price - (price * int(discount['value'])) / 100
+                        newDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(newDict[item]['DISCOUNT_COST'])
+                        newDict[item][attr] = discount['value']
+                        break
+            else:
+                newDict[item][attr] = values[0]['value']
+
+    return newDict
 
 def about(request):
 
