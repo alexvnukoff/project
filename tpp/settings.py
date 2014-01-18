@@ -171,7 +171,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-HAYSTACK_SIGNAL_PROCESSOR = 'core.models.ItemIndexSignal'
+HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
 try:
     from local_settings import *

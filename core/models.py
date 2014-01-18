@@ -13,7 +13,7 @@ from core.hierarchy import hierarchyManager
 
 from random import randint
 
-from haystack.signals import BaseSignalProcessor
+
 import hashlib
 
 setAttValSignal = Signal()
@@ -559,30 +559,6 @@ class Value(models.Model):
 
     def get(self):
         return self.title
-
-#----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
-#             Indexing signal receivers
-#----------------------------------------------------------------------------------------------------------
-class ItemIndexSignal(BaseSignalProcessor):
-    """
-    Allows for observing when saves/deletes fire & automatically updates the
-    search engine appropriately.
-    """
-    def setup(self):
-        # Naive (listen to all model saves).
-        setAttValSignal.connect(self.handle_save)
-        models.signals.post_delete.connect(self.handle_delete)
-        # Efficient would be going through all backends & collecting all models
-        # being used, then hooking up signals only for those.
-
-    def teardown(self):
-        # Naive (listen to all model saves).
-        setAttValSignal.disconnect(self.handle_save)
-        models.signals.post_delete.disconnect(self.handle_delete)
-        # Efficient would be going through all backends & collecting all models
-        # being used, then disconnecting signals only for those.
-
 
 
 #----------------------------------------------------------------------------------------------------------
