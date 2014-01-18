@@ -53,15 +53,17 @@
 
             if(bigCoupon.length > 0)
             {
-                var until = bigCoupon.data('countdown');
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
                 bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
             }
         })
         $(function () {
-                var austDay = new Date();
-                austDay = new Date(austDay.getFullYear() + 1, 1 - 1, 26);
-                $('#compactLayout').countdown({until: austDay, compact: true,
-                layout: '{hnn}{sep}{mnn}{sep}{snn} {desc}'});
+            $('.countdowntext').each(function() {
+                var until = parseInt($(this).data('until')) * 1000;
+                now = +new Date();
+                var lay = ((untill - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
+                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
+            });
         });
     </script>
 {% endblock %}

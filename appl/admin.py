@@ -2,7 +2,7 @@ from appl.models import (Advertising, Announce, Article, Basket, Company, Cabine
 
 
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Shipment, Gallery, Branch,  Category, Country, Comment)
+                         Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment)
 
 
 from django.contrib import admin
@@ -28,7 +28,6 @@ admin.site.register(Review)
 admin.site.register(Service)
 admin.site.register(Shipment)
 admin.site.register(Gallery)
-admin.site.register(Branch)
 admin.site.register(Category)
 admin.site.register(Country)
 admin.site.register(Comment)

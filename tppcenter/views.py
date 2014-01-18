@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Basket, Tpp, Company, Gallery, Country
+from appl.models import *
 from django.http import Http404
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate , Relationship
 from appl import func
