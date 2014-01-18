@@ -1,6 +1,6 @@
 from django.db import models, transaction
 from django.db.models.signals import pre_delete, post_delete
-from django.dispatch import receiver, Signal
+from django.dispatch import receiver
 from django.db.models import Q
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,7 +16,7 @@ from random import randint
 
 import hashlib
 
-setAttValSignal = Signal()
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship

@@ -1,5 +1,9 @@
 __author__ = 'Art'
 from haystack.signals import BaseSignalProcessor
+from django.dispatch import Signal
+from django.db import models
+
+setAttValSignal = Signal()
 
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------
