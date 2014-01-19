@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Item, State, Relationship
+from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
@@ -285,10 +285,12 @@ class Basket(Item):
         return ''
 
 
-class Cabinet(Item):
+class Cabinet(User, Item):
+    title = models.CharField(max_length=120, unique=True)
+    owner = models.ForeignKey(User, related_name='cabinet')
 
     def __str__(self):
-        return ''
+        return self.title + '' + self.owner.username
 
 
 class Document(Item):
