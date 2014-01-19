@@ -2,13 +2,13 @@
 {% load i18n %}
 <div class="title-discount">
     <span class="left">
-        <label>Купоны</label>
-        <a href="#">еще</a>
+        <label>{% trans "Coupons" %}</label>
+        <a href="#">{% trans "More" %}</a>
     </span>
     <span class="right">
-         <a href="#">Новые</a>
-         <a href="#">Популярные</a>
-         <a href="#">По категориям</a>
+         <a href="#">{% trans "New" %}</a>
+         <a href="#">{% trans "Popular" %}</a>
+         <a href="#">{% trans "By categories" %}</a>
     </span>
 </div>
 
@@ -33,7 +33,7 @@
                 <div class="couponinfo">
                     <a title="{{ name }}" href="#">{{ name }}</a>
                     <div class="clock">
-                        <p>Осталось времени</p>
+                        <p>{% trans "Remaining time" %}</p>
                         <div data-countdown="{{ end_date|date:"U" }}" id="topCountdown"></div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             <p><font class="price1">{{ currency }} {{ discount_cost }}</font></p>
                         </span>
                     </div>
-                    <a class="btnbuy" href="#">Купить</a>
+                    <a class="btnbuy" href="#">{% trans "Buy" %}</a>
                 </div>
             </div>
 

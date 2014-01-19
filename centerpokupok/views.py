@@ -33,38 +33,13 @@ def home(request):
     coupons = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE"), couponsObj,
                                                fullAttrVal=True)
 
-    coupons = _setCouponsStructure(coupons)
+    coupons = func._setCouponsStructure(coupons)
 
 
     flagList = func.getItemsList("Country", "NAME", "Flag")
 
     return render_to_response("index.html", locals())
 
-def _setCouponsStructure(couponsDict):
-
-    newDict = {}
-
-    for item, attrs in couponsDict.items():
-
-        newDict[item] = {}
-
-        for attr, values in attrs.items():
-            if attr == 'title':
-                continue
-
-            if attr == "DISCOUNT":
-                for discount in values:
-                    if discount['end_date']:
-                        newDict[item]['DISCOUNT_END_DATE'] = discount['end_date']
-                        price = float(couponsDict[item]['COST'][0]['value'])
-                        newDict[item]['DISCOUNT_COST'] = price - (price * int(discount['value'])) / 100
-                        newDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(newDict[item]['DISCOUNT_COST'])
-                        newDict[item][attr] = discount['value']
-                        break
-            else:
-                newDict[item][attr] = values[0]['value']
-
-    return newDict
 
 def about(request):
 
