@@ -44,7 +44,6 @@ class hierarchyManager(models.Manager):
         queryDict['pkCol'] = self.model._meta.pk.column
         queryDict['select'] = 'PARENT_ID, LEVEL, model.{pkCol} as id'.format(pkCol=queryDict['pkCol'])
         queryDict['where'] = ''
-        queryDict['where'] = ''
         queryDict['order'] = 'ORDER BY ROWNUM '
 
         queryDict['limitRoot'] = '50'
@@ -75,13 +74,16 @@ class hierarchyManager(models.Manager):
 
         if rootLimit is not False:
             int(rootLimit)
+            rootLimit = str(rootLimit)
+        else:
+            rootLimit = 50
 
-            queryDict['limitRoot'] = str(rootLimit)
+        queryDict['limitRoot'] = '%s'
 
 
         finalQuery = self.query.format(**queryDict)
 
-        cursor.execute(finalQuery)
+        cursor.execute(finalQuery, [rootLimit])
 
         desc = cursor.description
 
@@ -271,5 +273,6 @@ class hierarchyManager(models.Manager):
             return \
                 self.model.objects \
                     .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True))[:limit]
+
 
 

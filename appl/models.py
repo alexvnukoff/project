@@ -1,17 +1,21 @@
 from django.db import models
-from core.models import Item, State
+from core.models import Item, State, Relationship
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
-
+from django.db import IntegrityError, transaction
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
 import datetime
 
 from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-
+#----------------------------------------------------------------------------------------------------------
+#             Model Functions
+#----------------------------------------------------------------------------------------------------------
 def getSpecificChildren(cls, parent):
     '''
         Returns not hierarchical children of specific type
@@ -56,7 +60,6 @@ class Organization (Item):
         )
 
 class Tpp(Organization):
-    name = models.CharField(max_length=128, unique=True)
 
     class Meta:
         permissions = (
@@ -72,7 +75,6 @@ class Tpp(Organization):
         return ''
 
 class Company(Organization):
-    name = models.CharField(max_length=128, null=True, blank=True)
 
     class Meta:
         permissions = (
@@ -98,7 +100,7 @@ class Company(Organization):
         return 100
 
     def getBranches(self):
-        return getSpecificChildren("Branch", self.pk)
+        return 1
 
     def getDepartments(self):
         '''
@@ -113,7 +115,6 @@ class Company(Organization):
         return Department.hierarchy.getDescedantsForList(childs)
 
 class Department(Organization):
-    name = models.CharField(max_length=128)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -157,7 +158,7 @@ class Comment(Item):
         user = request.user
         parent_id = id , of Item element that related to comment(News for example)
         '''
-        time = datetime.datetime.now() - datetime.timedelta(minutes=1)
+        time = now() - datetime.timedelta(minutes=1)
         comments = Comment.objects.filter(create_user=user, c2p__parent_id=parent_id, create_date__gt=time)
         if len(comments) > 0:
             return True
@@ -169,16 +170,6 @@ class Comment(Item):
         Return quryset of comments that related to item
         """
         return  Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
-
-
-
-
-class Branch(Item):
-    name = models.CharField(max_length=128, unique=True)
-
-    def __str__(self):
-        return ''
-
 
 class Category(Item):
 
@@ -193,6 +184,18 @@ class Product(Item):
 
     def __str__(self):
         return self.getName()
+
+    @staticmethod
+    def getCoupons(querySet=False):
+
+        timeNow = now()
+
+        if querySet is not False:
+            return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                   item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
+        else:
+            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                          item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
 
 class License(Item):
 
