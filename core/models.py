@@ -298,7 +298,7 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
-    def getItemsAttributesValues(attr, items): #TODO: Jenya add doc
+    def getItemsAttributesValues(attr, items):
         '''
            Return values of attribute list for items list
            Example item = News.getAttributeValues(("NAME", "DETAIL_TEXT", "TAGS"), (1,2))
@@ -341,7 +341,7 @@ class Item(models.Model):
 
         return valuesAttribute
 
-    def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
+    def getAttributeValues(self, *attr):
         '''
            Return values of attribute list for specific Item
            Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")

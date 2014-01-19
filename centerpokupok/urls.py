@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^reviews/', include("centerpokupok.Reviews.urls", namespace="reviews")),
 
 
+
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
 
