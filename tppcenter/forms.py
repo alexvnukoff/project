@@ -73,7 +73,7 @@ class ItemForm(forms.Form):
 
             #FilePath attribute
             if(attr.type == "Fph") and dictr is None:
-                self.fields[title] = forms.FilePathField(widget=forms.SelectMultiple, path='%s/%s' % (settings.MEDIA_ROOT, "pictures/"), required=bool(required))
+                self.fields[title] = forms.FilePathField(widget=forms.SelectMultiple, path='%s/%s' % (settings.MEDIA_ROOT, "upload/"), required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Boolean
@@ -192,7 +192,7 @@ class ItemForm(forms.Form):
         Example: form.update(request.user)
         Return object of Item
         """
-        path_to_images = "pictures/"
+        path_to_images = "upload/"
         if not self.is_valid():
             raise ValidationError
         if not self.id:
