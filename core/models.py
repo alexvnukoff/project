@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.db.models.signals import pre_delete, post_delete
+from django.db.models.signals import pre_delete, post_delete, pre_save
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import IntegrityError, transaction
@@ -297,7 +297,7 @@ class Item(models.Model):
             Example:
                 usr = User.objects.get(pk=21)           # read usr from database
                 comp = Company.objects.get(pk=2)        # read comp from database
-                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
+                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
 
         group_list = []
@@ -550,10 +550,6 @@ class Value(models.Model):
         unique_together = ("sha1_code", "attr", "item")
         #db_tablespace = 'TPP_CORE_VALUES'
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.sha1_code = hashlib.sha1(str(self.title).encode()).hexdigest()
-        super(Value, self).save()
-
     def __str__(self):
         return self.title
 
@@ -576,3 +572,8 @@ def itemPreDelete(instance, **kwargs):
 def itemPostDelete(instance, **kwargs):
     if instance.community:
         Group.objects.get(pk=instance.community.pk).delete()
+
+@receiver(pre_save, sender=Value)
+def valueSaveHashCode(instance, **kwargs):
+    print(kwargs)
+    instance.sha1_code = hashlib.sha1(str(instance.title).encode()).hexdigest()
