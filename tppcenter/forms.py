@@ -243,7 +243,7 @@ class ItemForm(forms.Form):
         if self.file_to_delete:
            filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
            if os.path.isfile(filename):
-               os.remove(filename)
+                os.remove(filename)
         #if file has been saved , update initial value of ImageField
 
     def setlabels(self, dict):
