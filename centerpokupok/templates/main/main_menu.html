@@ -70,11 +70,12 @@
                                                     <li>{{ name }}</li>
                                                 {% endif %}
 
-                                                {% if forloop.counter > sortedHierarchyStructure|length %}
+                                                {% if forloop.counter == sortedHierarchyStructure|length %}
 
                                                     {% if previous == 1 %}
-                                                            </div>
                                                         </li>
+                                                        
+
                                                     {% endif %}
 
                                                     {% if previous == 2 or previous == 3 %}
@@ -86,6 +87,7 @@
 
                                                 {% endif %}
 
+
                                                 {% endwith %}
                                             {% endwith %}
                                         {% endwith %}
@@ -95,7 +97,7 @@
                         {% endfor %}
 
 
-
+   <li class="level1-li sub"><a class="level1-a" href="{% url "categories:list" %}">{% trans "All categories" %}</a></li>
 
 
 

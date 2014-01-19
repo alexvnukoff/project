@@ -50,7 +50,7 @@ class ItemForm(forms.Form):
 
         # Build form fields , depends on type of attribute
         for attribute in attributes:
-            dict = attribute.attrId.dict
+            dictr = attribute.attrId.dict
             attr = attribute.attrId
             required = attribute.required
             title = str(attr.title)
@@ -64,65 +64,67 @@ class ItemForm(forms.Form):
 
             # Check , what type of attribute , and choose appropriate field
             #Dictionary attribute
-            if dict is not None:
-                slots = tuple(dict.getSlotsList().values_list("id", "title"))
+            if dictr is not None:
+                slots = tuple(dictr.getSlotsList().values_list("id", "title"))
                 self.fields[title] = forms.ChoiceField(widget=forms.Select, choices=slots)
-                self.fields[title].initial = value[0] if value and isinstance(value, list) else value
+
+                slotDict = dict([(v, k) for k, v in dict(slots).items()])
+                self.fields[title].initial = slotDict.get(value[0], value[0]) if value and isinstance(value, list) else value
 
             #FilePath attribute
-            if(attr.type == "Fph") and dict is None:
+            if(attr.type == "Fph") and dictr is None:
                 self.fields[title] = forms.FilePathField(widget=forms.SelectMultiple, path='%s/%s' % (settings.MEDIA_ROOT, "pictures/"), required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Boolean
-            if(attr.type == "Bin") and dict is None:
+            if(attr.type == "Bin") and dictr is None:
                 self.fields[title] = forms.BooleanField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Date
-            if(attr.type == "Dat") and dict is None:
+            if(attr.type == "Dat") and dictr is None:
                 self.fields[title] = forms.DateField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Email
-            if(attr.type == "Eml") and dict is None:
+            if(attr.type == "Eml") and dictr is None:
                 self.fields[title] = forms.EmailField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
 
             #Float
-            if(attr.type == "Flo") and dict is None:
+            if(attr.type == "Flo") and dictr is None:
                 self.fields[title] = forms.FloatField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #IpAdress
-            if(attr.type == "Ip") and dict is None:
+            if(attr.type == "Ip") and dictr is None:
                 self.fields[title] = forms.IPAddressField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Time
-            if(attr.type == "Tm") and dict is None:
+            if(attr.type == "Tm") and dictr is None:
                 self.fields[title] = forms.TimeField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Url
-            if(attr.type == "Url") and dict is None:
+            if(attr.type == "Url") and dictr is None:
                 self.fields[title] = forms.URLField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
 
             #SplitDateTime
-            if(attr.type == "Sdt") and dict is None:
+            if(attr.type == "Sdt") and dictr is None:
                 self.fields[title] = forms.SplitDateTimeField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #String (text area)
-            if(attr.type == "Str") and dict is None:
+            if(attr.type == "Str") and dictr is None:
                 self.fields[title] = forms.CharField(widget=forms.Textarea, required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #ImageField
-            if(attr.type == "Img") and dict is None:
+            if(attr.type == "Img") and dictr is None:
                  self.fields[title] = forms.ImageField(required=bool(required))
                  value = value[0] if value and isinstance(value, list) else value
 
@@ -143,7 +145,7 @@ class ItemForm(forms.Form):
                      self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[0]) if value else ""
 
             #Text field (input type= "text")
-            if(attr.type == "Chr") and dict is None:
+            if(attr.type == "Chr") and dictr is None:
                 self.fields[title] = forms.CharField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
@@ -212,7 +214,7 @@ class ItemForm(forms.Form):
 
             attrValues[title] = self.fields[title].initial
 
-        self.obj.setAttributeValue(attrValues)
+        self.obj.setAttributeValue(attrValues, user)
 
         return self.obj
 
@@ -302,7 +304,7 @@ class BasePhotoGallery(BaseModelFormSet):
         item = Item.objects.get(pk=parent)
 
         for instance in instances:
-            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type = 'rel'))#TODO jenya use method in core
+            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='rel'))#TODO jenya use method in core
         if bulkInsert:
             try:
                Relationship.objects.bulk_create(bulkInsert)
