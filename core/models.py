@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.db.models.signals import pre_delete, post_delete
+from django.db.models.signals import pre_delete, post_delete, pre_save
 from django.dispatch import receiver
 from django.db.models import Q
 from django.db import IntegrityError, transaction
@@ -10,12 +10,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 from core.hierarchy import hierarchyManager
-
+from copy import copy
 from random import randint
 
 
 import hashlib
 
+def createHash(string):
+    return hashlib.sha1(str(string).encode()).hexdigest()
 
 
 #----------------------------------------------------------------------------------------------------------
@@ -297,7 +299,7 @@ class Item(models.Model):
             Example:
                 usr = User.objects.get(pk=21)           # read usr from database
                 comp = Company.objects.get(pk=2)        # read comp from database
-                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp
+                list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
 
         group_list = []
@@ -370,7 +372,7 @@ class Item(models.Model):
         valuesAttribute = {}
 
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:
+            if valuesDict['item'] not in valuesAttribute:#TODO: Jenya remove item title
                 valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
@@ -416,24 +418,35 @@ class Item(models.Model):
             return valuesAttribute[attr[0]]
 
     @transaction.atomic
-    def setAttributeValue(self, attrWithValues):
+    def setAttributeValue(self, attrWithValues, user):
+        #TODO: Jenya new set
         '''
             Set values for list of attributes
             The parameter "attrWithValues" should be a dictionary
+            and you should pass the user object
              you can pass many values for one attribute by passing list as dictionary value
                 Example:
                     attr = {
-                            'Name': 'Company Example'
-                            'PhoneNumber': ['123-321-456','789-654-228']
-                    }
-                    Company(pk=1).setAttributeValue(attr)
+                                'NAME': 'bla',
+                                'DISCOUNT': [95,
+                                    {
+                                        'end_date': now(),
+                                        'title': 50,
+                                        'create_user': request.user #not required
+                                    }
+                                ]
+                            }
+                    Company(pk=1).setAttributeValue(attr, request.user)
         '''
         if not isinstance(attrWithValues, dict) or not attrWithValues :
             raise ValueError
 
         queries = []
         bulkInsert = []
-        attributes = attrWithValues.keys()
+        attributes = copy(attrWithValues).keys()
+        uniqDict = {}
+
+        #get all passed attributes
         existsAttributes = Attribute.objects.filter(title__in=attributes).all()
 
         if len(existsAttributes) != len(attrWithValues):
@@ -442,7 +455,6 @@ class Item(models.Model):
         for attr in attributes:
             attributeObj = existsAttributes.get(title=attr)
             dictID = attributeObj.dict_id
-            attr = attributeObj.title
             values = attrWithValues[attr]
 
             if not isinstance(values, list):
@@ -450,30 +462,76 @@ class Item(models.Model):
 
             for value in values:
 
+                if isinstance(value, dict) and "title" not in value:
+                    raise ValueError('Value is missing')
+
                 if dictID is None:
-                    bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
+
+                    if attr in attrWithValues:
+                        del attrWithValues[attr]
+
+                    if isinstance(value, dict):
+                        if 'create_user' not in value:
+                            value['create_user'] = user
+
+                        value['sha1_code'] = createHash(value['title'])
+
+                        bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                    else:
+                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                                                create_user=user, sha1_code=createHash(value)))
                 else:
                     #security
                     dictID = int(dictID)
-                    valueID = int(value)
 
-                    #check if dictionary slot exists for this dictionary - creating conditions
-                    queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
+                    if isinstance(value, dict):
+                        valueID = int(value['title'])
+                    else:
+                        valueID = int(value)
+
+                    if dictID not in uniqDict:
+                        uniqDict[dictID] = {}
+
+                    if valueID in uniqDict[dictID]:
+                        continue
+                    else:
+                        uniqDict[dictID][valueID] = ''
+                        #check if dictionary slot exists for this dictionary - creating conditions
+                        queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
         if len(queries) > 0:
             #check if dictionary slot exists for this dictionary - using conditions
             filter_or = ' | '.join(queries)
-            attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__attr__title','title','dict__attr__id')
+            attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__pk','title','pk')
 
             if len(attributesValue) < len(queries):
                 raise ValueError('Wrong number of dict values')
 
-            for attribute in attributesValue:
-                value = attribute['title']
-                attrID = attribute['dict__attr__id']
-                attributeObj = existsAttributes.get(pk=attrID)
+            for value in attributesValue:
+                uniqDict[value['dict__pk']][value['pk']] = value['title']
 
-                bulkInsert.append(Value(title=value, item=self, attr=attributeObj))
+            for attribute in attrWithValues.keys():
+                values = attrWithValues[attribute]
+                attributeObj = existsAttributes.get(title=attribute)
+                dictID = attributeObj.dict_id
+
+                if not isinstance(values, list):
+                    values = [values]
+
+                for value in values:
+                    if isinstance(value, dict):
+                        value['title'] = uniqDict[dictID][value['title']]
+
+                        if 'create_user' not in value:
+                            value['create_user'] = user
+
+                        value['sha1_code'] = createHash(value['title'])
+
+                        bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                    else:
+                        value = uniqDict[dictID][value]
+                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                                                create_user=user, sha1_code=createHash(value)))
 
         try:
             with transaction.atomic():
@@ -482,6 +540,7 @@ class Item(models.Model):
         except IntegrityError as e:
             raise e
         #send signal to search frontend
+        from core.signals import setAttValSignal
         setAttValSignal.send(self._meta.model, instance=self)
 
         return True
@@ -552,10 +611,6 @@ class Value(models.Model):
         unique_together = ("sha1_code", "attr", "item")
         #db_tablespace = 'TPP_CORE_VALUES'
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.sha1_code = hashlib.sha1(str(self.title).encode()).hexdigest()
-        super(Value, self).save()
-
     def __str__(self):
         return self.title
 
@@ -578,3 +633,7 @@ def itemPreDelete(instance, **kwargs):
 def itemPostDelete(instance, **kwargs):
     if instance.community:
         Group.objects.get(pk=instance.community.pk).delete()
+
+@receiver(pre_save, sender=Value)
+def valueSaveHashCode(instance, **kwargs):
+    instance.sha1_code = createHash(instance.title)
