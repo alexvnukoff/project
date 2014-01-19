@@ -21,7 +21,7 @@ def createHash(string):
 
 
 #----------------------------------------------------------------------------------------------------------
-#             Class Value defines value for particular Attribute-Item relationship
+#             Class UserManager defines manager for user
 #----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     def has_perm(self, perm, obj=None):
@@ -575,7 +575,8 @@ class Relationship(models.Model):
     child = models.ForeignKey(Item, related_name='c2p')
     TYPE_OF_RELATIONSHIP = (
         ('rel', 'Relation'),
-        ('hier', 'Hierarchy'),)
+        ('hier', 'Hierarchy'),
+    )
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
@@ -606,6 +607,8 @@ class Value(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
+    update_date = models.DateTimeField(auto_now=True)
+    update_user = models.ForeignKey(User)
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")
