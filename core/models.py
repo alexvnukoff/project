@@ -1,6 +1,6 @@
 from django.db import models, transaction
 from django.db.models.signals import pre_delete, post_delete
-from django.dispatch import receiver, Signal
+from django.dispatch import receiver
 from django.db.models import Q
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,10 +13,9 @@ from core.hierarchy import hierarchyManager
 
 from random import randint
 
-from haystack.signals import BaseSignalProcessor
+
 import hashlib
 
-setAttValSignal = Signal()
 
 
 #----------------------------------------------------------------------------------------------------------
@@ -155,9 +154,6 @@ class Attribute(models.Model):
 
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
 
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
@@ -257,6 +253,44 @@ class Item(models.Model):
         name = self.getAttributeValues('NAME')
         return name[0] if name else '{EMPTY}'
 
+    @staticmethod
+    @transaction.atomic
+    def setHierarchy(parent, child): #TODO: Artur, Maybe create a static method
+        '''
+            Set hierarchical relationship between parent and list of child
+            you should pass an instance of a parent object to a "parent" parameter
+                Example: comp = Company.objects.get(pk=1)
+                            Departments.hierarchy.setHierarchy(comp, [3,2,4,5])
+                It will create an hierarchical relation between Company = 1
+                and Departments pk__in=[3,2,4,5]
+        '''
+
+        if not isinstance(parent, Item):
+            raise ValueError("Parent is not Item instance")
+
+        if not isinstance(child, list):
+            child = list(child)
+
+        num = Item.objects.filter(~Q(c2p__parent_id=parent, c2p__type="hier", p2c__child_id=parent), pk__in=child).count()
+
+        if num != len(child):
+            raise ValueError('Wrong child count')
+
+        bulkInsert = []
+
+        for item in child:
+            title = [str(parent.pk),'hier',str(item)]
+            bulkInsert.append(Relationship(title='-'.join(title), parent_id=parent.pk,
+                                           child_id=item, type="hier", create_user_id=1))
+
+        try:
+            with transaction.atomic():
+                Relationship.objects.bulk_create(bulkInsert)
+        except IntegrityError as e:
+            raise e
+
+        return True
+
     def getItemInstPermList(self, user):
         '''
             Returns list of permissions for given User for given Item's instance
@@ -298,7 +332,9 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
-    def getItemsAttributesValues(attr, items):
+
+    def getItemsAttributesValues(attr, items, fullAttrVal=False): #TODO: Jenya add doc
+
         '''
            Return values of attribute list for items list
            Example item = News.getAttributeValues(("NAME", "DETAIL_TEXT", "TAGS"), (1,2))
@@ -324,10 +360,13 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
-        values = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+        getList = ["title", "attr__title", "item__title", "item"]
 
-        values = list(values.values("title", "attr__title", "item__title", "item"))
+        if fullAttrVal:
+            getList += ['start_date','end_date']
 
+        values = list(valuesObj.values(*getList))
         valuesAttribute = {}
 
         for valuesDict in values:
@@ -337,7 +376,15 @@ class Item(models.Model):
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
                 valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
 
-            valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+            if fullAttrVal:
+                attrValDict = {
+                    'start_date': valuesDict['start_date'],
+                    'end_date': valuesDict['end_date'],
+                    'value': valuesDict['title']
+                }
+                valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(attrValDict)
+            else:
+                valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
 
         return valuesAttribute
 
@@ -390,7 +437,7 @@ class Item(models.Model):
         existsAttributes = Attribute.objects.filter(title__in=attributes).all()
 
         if len(existsAttributes) != len(attrWithValues):
-            raise ValueError
+            raise ValueError("Attribute does not exists")
 
         for attr in attributes:
             attributeObj = existsAttributes.get(title=attr)
@@ -419,7 +466,7 @@ class Item(models.Model):
             attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__attr__title','title','dict__attr__id')
 
             if len(attributesValue) < len(queries):
-                raise ValueError
+                raise ValueError('Wrong number of dict values')
 
             for attribute in attributesValue:
                 value = attribute['title']
@@ -432,8 +479,8 @@ class Item(models.Model):
             with transaction.atomic():
                 Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
                 Value.objects.bulk_create(bulkInsert)
-        except IntegrityError:
-            raise Exception
+        except IntegrityError as e:
+            raise e
         #send signal to search frontend
         setAttValSignal.send(self._meta.model, instance=self)
 
@@ -470,7 +517,7 @@ class Relationship(models.Model):
     TYPE_OF_RELATIONSHIP = (
         ('rel', 'Relation'),
         ('hier', 'Hierarchy'),)
-    type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP)
+    type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
     create_date = models.DateField(auto_now_add=True)
@@ -493,7 +540,13 @@ class Value(models.Model):
     title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
-    sha1_code = models.CharField(max_length=40, blank=True) #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
+    #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
+    sha1_code = models.CharField(max_length=40, blank=True)
+
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    create_user = models.ForeignKey(User)
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")
@@ -508,30 +561,6 @@ class Value(models.Model):
 
     def get(self):
         return self.title
-
-#----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
-#             Indexing signal receivers
-#----------------------------------------------------------------------------------------------------------
-class ItemIndexSignal(BaseSignalProcessor):
-    """
-    Allows for observing when saves/deletes fire & automatically updates the
-    search engine appropriately.
-    """
-    def setup(self):
-        # Naive (listen to all model saves).
-        setAttValSignal.connect(self.handle_save)
-        models.signals.post_delete.connect(self.handle_delete)
-        # Efficient would be going through all backends & collecting all models
-        # being used, then hooking up signals only for those.
-
-    def teardown(self):
-        # Naive (listen to all model saves).
-        setAttValSignal.disconnect(self.handle_save)
-        models.signals.post_delete.disconnect(self.handle_delete)
-        # Efficient would be going through all backends & collecting all models
-        # being used, then disconnecting signals only for those.
-
 
 
 #----------------------------------------------------------------------------------------------------------

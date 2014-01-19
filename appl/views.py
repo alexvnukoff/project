@@ -11,16 +11,3 @@ def set_news_list(request):
     #dict.deleteSlot("Jopa")
     id = settings.SITE_ID
 
-    new = News(name='name')
-    new.CreateTemplateAttributes()
-
-
-
-
-
-    page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Detail_Text", "Detail_Picture","Anonce_Text", page=page)
-
-    itemsList = result[0]
-    page = result[1]
-    return render_to_response('NewsList.html',locals())

@@ -1,67 +1,84 @@
 {% load staticfiles %}
 {% load i18n %}
 <div class="title-discount">
-                    <span class="left">
-                        <label>Купоны</label>
-                        <a href="#">еще</a>
-                    </span>
-                    <span class="right">
-                        <a href="#">Новые</a>
-                        <a href="#">Популярные</a>
-                        <a href="#">По категориям</a>
-                    </span>
+    <span class="left">
+        <label>Купоны</label>
+        <a href="#">еще</a>
+    </span>
+    <span class="right">
+         <a href="#">Новые</a>
+         <a href="#">Популярные</a>
+         <a href="#">По категориям</a>
+    </span>
+</div>
+
+<div class="best-cp">
+
+    {% for id, attr in coupons.items %}
+        {% with attr.NAME as name  %}
+        {% with attr.DISCOUNT as discount  %}
+        {% with attr.IMAGE as picture  %}
+        {% with attr.DISCOUNT_COST as discount_cost  %}
+        {% with attr.CURRENCY as currency  %}
+        {% with attr.DISCOUNT_END_DATE as end_date  %}
+
+        {% if forloop.counter == 1 %}
+
+            <div class="best-cp-l">
+
+                <div class="thumb-cp">
+                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                    <a title="{{ name }}" href="#"><img width="225" height="225" alt="{{ name }}" src="{% static picture %}"></a>
                 </div>
-                <div class="best-cp">
-                    <div class="best-cp-l">
-                        <div class="thumb-cp">
-                            <div class="discount"><i class="icons i-after"></i> -50%</div>
-                            <a href="#"><img alt="" src="images/products/pr5.jpg"></a>
-                        </div>
-                        <div class="couponinfo">
-                            <a href="#">Процедуры омоложения кожи лица на основе косметики Hollyland</a>
-                            <div class="clock">
-                                <p>Осталось времени</p>
-                                <div data-countdown="1422223200000" id="topCountdown"></div>
-                            </div>
-                        </div>
-                        <div class="bottom-cp">
-                            <div class="price-cp">
-                                <span>
-                                    <p><font class="price1">$ 120.<sub>00</sub></font></p>
-                                    <p>Осталось 10 купонов</p>
-                                </span>
-                            </div>
-                            <a class="btnbuy" href="#">Купить</a>
-                        </div>
+                <div class="couponinfo">
+                    <a title="{{ name }}" href="#">{{ name }}</a>
+                    <div class="clock">
+                        <p>Осталось времени</p>
+                        <div data-countdown="{{ end_date|date:"U" }}" id="topCountdown"></div>
                     </div>
-                    <ul class="best-cp-r">
-                        <li>
-                            <div class="thumb">
-                                <a href="#"><img alt="" src="images/products/pr6.jpg"></a>
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                            </div>
-                            <div class="discountinfo">
-                                <a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a>
-                                <p>
-                                    <font class="number">$ 13.80</font>
-                                    <br />
-                                    Осталось 10 купонов
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="thumb">
-                                <a href="#"><img alt="" src="images/products/pr6.jpg"></a>
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                            </div>
-                            <div class="discountinfo">
-                                <a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a>
-                                <p>
-                                    <font class="number">$ 13.80</font>
-                                    <br />
-                                    Осталось 10 купонов
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
+                <div class="bottom-cp">
+                    <div class="price-cp">
+                        <span>
+                            <p><font class="price1">{{ currency }} {{ discount_cost }}</font></p>
+                        </span>
+                    </div>
+                    <a class="btnbuy" href="#">Купить</a>
+                </div>
+            </div>
+
+        {% else %}
+            {% if forloop.counter == 2 %}
+                <ul class="best-cp-r">
+            {% endif %}
+
+                <li>
+                    <div class="thumb">
+                        <a title="{{ name }}" href="#">
+                            <img width="140" height="100" alt="{{ name }}" src="{% static picture %}">
+                        </a>
+                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                    </div>
+                    <div class="discountinfo">
+                        <a title="{{ name }}" href="#">{{ name }}</a>
+                        <p>
+                            <font class="number">{{ currency }} {{ discount_cost }}</font><br />
+                        </p>
+                    </div>
+                </li>
+
+            {% if forloop.counter == 3 %}
+                </ul>
+            {% endif %}
+
+        {% endif %}
+
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    {% endfor %}
+
+</div>
