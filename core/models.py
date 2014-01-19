@@ -360,7 +360,7 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
-        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
 
         if fullAttrVal:
