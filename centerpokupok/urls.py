@@ -4,6 +4,7 @@ import centerpokupok.views
 import centerpokupok.News.urls
 import centerpokupok.Product.urls
 import centerpokupok.Reviews.urls
+import centerpokupok.Categories.urls
 from django.contrib import admin
 admin.autodiscover()
 
@@ -18,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^news/', include("centerpokupok.News.urls", namespace="news")),
     url(r'^products/', include("centerpokupok.Product.urls", namespace="products")),
     url(r'^reviews/', include("centerpokupok.Reviews.urls", namespace="reviews")),
+    url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
+
 
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
