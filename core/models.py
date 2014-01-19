@@ -16,6 +16,8 @@ from random import randint
 
 import hashlib
 
+def createHash(string):
+    return hashlib.sha1(str(string).encode()).hexdigest()
 
 
 #----------------------------------------------------------------------------------------------------------
@@ -368,7 +370,7 @@ class Item(models.Model):
         valuesAttribute = {}
 
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:
+            if valuesDict['item'] not in valuesAttribute:#TODO: Jenya remove item title
                 valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
@@ -469,9 +471,13 @@ class Item(models.Model):
                     if isinstance(value, dict):
                         if 'create_user' not in value:
                             value['create_user'] = user
+
+                        value['sha1_code'] = createHash(value['title'])
+
                         bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                     else:
-                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj, create_user=user))
+                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                                                create_user=user, sha1_code=createHash(value)))
                 else:
                     #security
                     dictID = int(dictID)
@@ -517,10 +523,13 @@ class Item(models.Model):
                         if 'create_user' not in value:
                             value['create_user'] = user
 
+                        value['sha1_code'] = createHash(value['title'])
+
                         bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                     else:
                         value = uniqDict[dictID][value]
-                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj, create_user=user))
+                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                                                create_user=user, sha1_code=createHash(value)))
 
         try:
             with transaction.atomic():
@@ -625,5 +634,4 @@ def itemPostDelete(instance, **kwargs):
 
 @receiver(pre_save, sender=Value)
 def valueSaveHashCode(instance, **kwargs):
-    print(kwargs)
-    instance.sha1_code = hashlib.sha1(str(instance.title).encode()).hexdigest()
+    instance.sha1_code = createHash(instance.title)
