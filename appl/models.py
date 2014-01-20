@@ -91,7 +91,7 @@ class Company(Organization):
     def __str__(self):
         return self.getName()
 
-    #TODO: Jenya change attr titles to NAME and DETAIL_TEXT
+
     def getDescription(self):
         desc = self.getAttributeValues('DETAIL_TEXT')
         return desc[0] if desc else ''
