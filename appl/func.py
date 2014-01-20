@@ -130,3 +130,47 @@ def _setCouponsStructure(couponsDict):
                 newDict[item][attr] = values[0]['value']
 
     return newDict
+
+def setStructureForHiearhy(dictinory, items):
+    '''
+      Method get hierarchy tree and list items with attribute NAME
+      and build structure of object
+      Example of usage:
+       hierarchyStructure = Category.hierarchy.getTree(10)
+       categories_id = [cat['ID'] for cat in hierarchyStructure]
+       categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+       dictStructured = func.setStructureForHiearhy(hierarchyStructure, categories)
+       will return :
+      {
+          {PARENT1}:
+                  {PARENT1:item,
+                  Child1:item},
+           {PARENT2}:
+                  {PARENT2:item,
+                  Child1:item,
+                  Child2:item},
+      }
+
+
+    '''
+    level = 0
+    dictStructured = {}
+    for node in dictinory:
+        if node['LEVEL'] == 1:
+            i = items[node['ID']]['NAME'][0]
+            nameOfList = items[node['ID']]['NAME'][0]
+            dictStructured[nameOfList] = {}
+            node['item'] = items[node['ID']]
+            dictStructured[nameOfList]['Parent'] = node
+
+
+
+
+        else:
+            node['pre_level'] = level
+            node['item'] = items[node['ID']]
+            node['parent_item'] = items[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
+            level = node['LEVEL']
+            dictStructured[nameOfList][items[node['ID']]['NAME'][0]] = node
+
+    return dictStructured
