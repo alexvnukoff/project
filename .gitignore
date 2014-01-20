@@ -1,7 +1,7 @@
 .idea/
 locale/
 local_settings.py
-appl/Static
+appl/Static/upload
 *.pyc
 *.pyo
 */migrations/

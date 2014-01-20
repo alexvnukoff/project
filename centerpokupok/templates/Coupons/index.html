@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}Coupons{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.countdowntext').each(function() {
+                var until = parseInt($(this).data('countdown')) * 1000;
+
+                now = +new Date();
+                var lay = ((until - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
+                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
+            });
+        });
+    </script>
+{% endblock %}
+{% block header %}
+    {% include "header_small.html" %}
+{% endblock %}
+{% block body %}
+    <div id="main">
+            <div id="sidebar">
+                <h3>Related Categories</h3>
+                <ul id="categories">
+                    <li class="parent">Men</li>
+                    <li><a href="#">Accessories </a>(165510)</li>
+                    <li><a href="#">Coats &amp; Jackets </a>(165510)</li>
+                    <li><a href="#">Hoodies &amp; Sweatshirts </a>(165510)</li>
+                    <li><a href="#">Jeans </a>(165510)</li>
+                    <li><a href="#">Pants </a>(165510)</li>
+                    <li><a href="#">Shirts </a>(165510)</li>
+                    <li><a href="#">Shorts </a>(165510)</li>
+                    <li><a href="#">Sleep &amp; Lounge </a>(165510)</li>
+                    <li><a href="#">Socks </a>(165510)</li>
+                    <li><a href="#">Suits &amp; Blazers </a>(165510)</li>
+                    <li><a href="#">Sweaters </a>(165510)</li>
+                    <li><a href="#">Swimwear </a>(165510)</li>
+                    <li><a href="#">Tops &amp; Tees </a>(165510)</li>
+                    <li><a href="#">Underwear </a>(165510)</li>
+                </ul>
+                <div class="bestbuy">
+                    <div class="items-coupon">
+                        <h3>Самые выгодные купоны</h3>
+                        <ul>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> -30%</div>
+                                <a href="#"><img alt="" src="images/products/pr4.jpg"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> -30%</div>
+                                <a href="#"><img alt="" src="images/products/pr4.jpg"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">5, 10 или 15 посещений подземного соляного грота</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="title-filter">
+                    Вы смотрели
+                </div>
+                <div id="gallery">
+                    <ul id="slider">
+                        <li>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -80%</div>
+                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
+                            </div>
+                            <div class="items">
+                                <div class="discount"><i class="icons i-after"></i> -35%</div>
+                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="main-r">
+                <div class="breadcrumbs">
+                    <div xmlns="http://rdf.data-vocabulary.org/#">
+                        <span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
+                        <span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Купоны</a> &rarr;</span>
+                        <span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Для мужчин</a></span>
+                    </div>
+                </div>
+                <div class="title-items">
+                    Купоны  <i>/</i> Для мужчин
+                </div>
+
+            {% for id, attr in coupons.items %}
+
+                {% with attr.NAME as name  %}
+                {% with attr.DISCOUNT as discount  %}
+                {% with attr.IMAGE as picture  %}
+                {% with attr.DISCOUNT_COST as discount_cost  %}
+                {% with attr.CURRENCY as currency  %}
+                {% with attr.DISCOUNT_END_DATE as end_date  %}
+                {% with attr.COST as cost  %}
+
+                {% if forloop.counter == 1 %}
+                <div class="coupontop">
+                    <div class="thumb-cp">
+                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        <a href="#" title="{{ name }}">
+                            <img width="300" height="225" alt="{{ name }}" src="{% static picture %}" />
+                        </a>
+                    </div>
+                    <div class="couponinfo">
+                        <a href="#">{{ name }}</a>
+                        <div class="clock">
+                            <p>До завершения осталось времени</p>
+                            <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
+                        </div>
+                    </div>
+                    <div class="bottom-cp">
+                        <div class="price-cp">
+                            <span>
+                                <p><font class="price1">{{ currency }} {{ discount_cost }}</font></p>
+                                <p>Осталось 10 купонов</p>
+                            </span>
+                            <span class="small">
+                                <p>Ваша экономия</p>
+                                <p><font class="price2">$ 120.00</font></p>
+                            </span>
+                        </div>
+                        <a href="#" class="btnbuy">Купить</a>
+                    </div>
+                </div>
+
+                <div class="topitems">
+                    <label>Сортировать по</label>
+                    <span id="sortby">
+                        <a href="#nogo" class="pricefilter">Цене </a>
+                        <div class="sortprice">
+                            <ul>
+                                <li><a href="#nogo">$100 ~ $200</a></li>
+                                <li><a href="#nogo">$200 ~ $300</a></li>
+                                <li><a href="#nogo">$300 ~ $400</a></li>
+                                <li><a href="#nogo">$400 ~ $500</a></li>
+                                <li><a href="#nogo">$500 ~ $600</a></li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span>
+                        <a href="#" class="dc">Скидке</a>
+                    </span>
+                    <div class="right">
+                        <label>Все действующие </label>
+                        <a href="#">Сегодняшние </a>
+                        <a href="#">На этой неделе</a>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                {% if forloop.counter == 1 %}
+                <ul id="listcoupon">
+                {% endif %}
+                    <li>
+                        <div class="thumb">
+                            <a href="#" title="{{ name }}">
+                                <img width="140" height="100" src="{% static picture %}" alt="{{ name }}" />
+                            </a>
+                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        </div>
+                        <div class="discountinfo">
+                            <a href="" title="{{ name }}">{{ name }}</a>
+                            <div class="rows">
+                                <font class="old">{{ currency }} {{ cost }}</font>
+                                <font class="number">{{ currency }} {{ discount_cost }}</font>
+                            </div>
+                            <div class="rows">
+                                <i class="icons i-clock"></i>
+                                <label>До завершения:</label>
+                                <div class="countdowntext"  data-countdown="{{ end_date|date:"U" }}"></div>
+                            </div>
+                        </div>
+                    </li>
+                {% if forloop.last %}
+                </ul>
+                {% endif %}
+
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
+                {% include "paginator.html" %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

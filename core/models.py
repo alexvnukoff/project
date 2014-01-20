@@ -21,7 +21,7 @@ def createHash(string):
 
 
 #----------------------------------------------------------------------------------------------------------
-#             Class Value defines value for particular Attribute-Item relationship
+#             Class UserManager defines manager for user
 #----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email
 
     def has_perm(self, perm, obj=None):
@@ -334,7 +334,9 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
+
     def getItemsAttributesValues(attr, items, fullAttrVal=False): #TODO: Jenya add doc
+
         '''
            Return values of attribute list for items list
            Example item = News.getAttributeValues(("NAME", "DETAIL_TEXT", "TAGS"), (1,2))
@@ -360,7 +362,7 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
-        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items).order_by("item")
+        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
 
         if fullAttrVal:
@@ -388,7 +390,7 @@ class Item(models.Model):
 
         return valuesAttribute
 
-    def getAttributeValues(self, *attr): #TODO: Jenya add doc, and chang usage
+    def getAttributeValues(self, *attr):
         '''
            Return values of attribute list for specific Item
            Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")
@@ -436,7 +438,7 @@ class Item(models.Model):
                             }
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
-        if not isinstance(attrWithValues, dict) or not attrWithValues :
+        if not isinstance(attrWithValues, dict) or not attrWithValues:
             raise ValueError
 
         queries = []
@@ -493,7 +495,7 @@ class Item(models.Model):
                     if valueID in uniqDict[dictID]:
                         continue
                     else:
-                        uniqDict[dictID][valueID] = ''
+                        uniqDict[dictID][str(valueID)] = ''
                         #check if dictionary slot exists for this dictionary - creating conditions
                         queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
@@ -518,7 +520,7 @@ class Item(models.Model):
 
                 for value in values:
                     if isinstance(value, dict):
-                        value['title'] = uniqDict[dictID][value['title']]
+                        value['title'] = uniqDict[dictID][int(value['title'])]
 
                         if 'create_user' not in value:
                             value['create_user'] = user
@@ -527,7 +529,7 @@ class Item(models.Model):
 
                         bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                     else:
-                        value = uniqDict[dictID][value]
+                        value = uniqDict[dictID][int(value)]
                         bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
                                                 create_user=user, sha1_code=createHash(value)))
 
@@ -573,7 +575,8 @@ class Relationship(models.Model):
     child = models.ForeignKey(Item, related_name='c2p')
     TYPE_OF_RELATIONSHIP = (
         ('rel', 'Relation'),
-        ('hier', 'Hierarchy'),)
+        ('hier', 'Hierarchy'),
+    )
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
@@ -604,6 +607,8 @@ class Value(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
+    update_date = models.DateTimeField(auto_now=True)
+    update_user = models.ForeignKey(User)
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")
