@@ -33,7 +33,7 @@ def getPaginatorRange(page):
     return paginator_range
 
 
-def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1):
+def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
     '''
     Method  return List of Values of items and  Pagination
     items = Quryset of items
@@ -47,7 +47,7 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1):
     except Exception:
         page = items = paginator.page(1)
     items = tuple([item.pk for item in page.object_list])
-    attributeValues = Item.getItemsAttributesValues(attr, items)
+    attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
     return attributeValues, page #Return List Item and Page object of current page
 
@@ -104,3 +104,29 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     attributeValues = clsObj.getItemsAttributesValues(attr, items, fullAttrVal=fullAttrVal)
 
     return attributeValues
+
+def _setCouponsStructure(couponsDict):
+
+    newDict = {}
+
+    for item, attrs in couponsDict.items():
+
+        newDict[item] = {}
+
+        for attr, values in attrs.items():
+            if attr == 'title':
+                continue
+
+            if attr == "DISCOUNT":
+                for discount in values:
+                    if discount['end_date']:
+                        newDict[item]['DISCOUNT_END_DATE'] = discount['end_date']
+                        price = float(couponsDict[item]['COST'][0]['value'])
+                        newDict[item]['DISCOUNT_COST'] = price - (price * int(discount['value'])) / 100
+                        newDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(newDict[item]['DISCOUNT_COST'])
+                        newDict[item][attr] = discount['value']
+                        break
+            else:
+                newDict[item][attr] = values[0]['value']
+
+    return newDict

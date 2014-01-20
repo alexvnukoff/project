@@ -495,7 +495,7 @@ class Item(models.Model):
                     if valueID in uniqDict[dictID]:
                         continue
                     else:
-                        uniqDict[dictID][valueID] = ''
+                        uniqDict[dictID][str(valueID)] = ''
                         #check if dictionary slot exists for this dictionary - creating conditions
                         queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
