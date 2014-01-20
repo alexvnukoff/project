@@ -23,7 +23,8 @@ def set_var(parser, token):
     """
     parts = token.split_contents()
     if len(parts) < 4:
-        raise template.TemplateSyntaxError("'set' tag must be of the form:  {% set <var_name>  = <var_value> %}")
+        raise template.TemplateSyntaxError('%s/%s' % (token.split_contents()[0],
+                                                      "tag must be of the form:{% set var_name  = value %}"))
     return SetVarNode(parts[1], parts[3])
 
 

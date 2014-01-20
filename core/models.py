@@ -335,7 +335,7 @@ class Item(models.Model):
 
     @staticmethod
 
-    def getItemsAttributesValues(attr, items, fullAttrVal=False): #TODO: Jenya add doc
+    def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
            Return values of attribute list for items list
@@ -382,7 +382,9 @@ class Item(models.Model):
         valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
         for valuesDict in values:
+
             if not isinstance(valuesAttribute[valuesDict['item']], dict):
+
                 valuesAttribute[valuesDict['item']] = {}
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
@@ -429,7 +431,7 @@ class Item(models.Model):
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
-        #TODO: Jenya new set
+
         '''
             Set values for list of attributes
             The parameter "attrWithValues" should be a dictionary
