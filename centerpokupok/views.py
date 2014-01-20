@@ -29,8 +29,10 @@ def home(request):
 
     reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
     #get 3 active coupons ordered by end date
-    couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3].all()
-    coupons = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE"), couponsObj,
+    couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+    coupons_ids = [cat.pk for cat in couponsObj]
+
+    coupons = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
                                                fullAttrVal=True)
 
     coupons = func._setCouponsStructure(coupons)

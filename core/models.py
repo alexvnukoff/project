@@ -12,8 +12,8 @@ from django.contrib.sites.managers import CurrentSiteManager
 from core.hierarchy import hierarchyManager
 from copy import copy
 from random import randint
-
-
+from collections import OrderedDict
+from operator import itemgetter
 import hashlib
 
 def createHash(string):
@@ -362,6 +362,8 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
+        items = tuple(set(items))
+
         valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
 
@@ -369,11 +371,19 @@ class Item(models.Model):
             getList += ['start_date','end_date']
 
         values = list(valuesObj.values(*getList))
+
         valuesAttribute = {}
 
+
+
+        for key in range(0, len(items)):
+            valuesAttribute[items[key]]= key
+
+        valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
+
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:#TODO: Jenya remove item title
-                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
+            if not isinstance(valuesAttribute[valuesDict['item']], dict):
+                valuesAttribute[valuesDict['item']] = {}
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
                 valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
