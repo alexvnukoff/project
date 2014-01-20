@@ -2,7 +2,7 @@ from django.db import models
 from core.models import Item
 from appl.models import *
 from django.contrib.sites.models import get_current_site
-
+from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.conf import settings
@@ -105,6 +105,32 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
 
     return attributeValues
 
+def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
+    '''
+        Order Items by attribute
+        cls: class name instance of Item
+        attribute: Attribute name
+        order: Order direction DESC / ASC
+        type: Sorting type str/int
+            Example: qSet = sortByAtt("Product", "NAME")
+            Example: qSet = sortByAtt("Product", "NAME", "DESC", "int")
+    '''
+
+    clsObj = (globals()[cls])
+
+    if not issubclass(clsObj, Item):
+        raise ValueError("Wrong object type")
+
+    if type != "str":
+        case = 'TO_NUMBER("CORE_VALUE"."TITLE", \'999999999.999\')'
+    else:
+        case = 'CAST("CORE_VALUE"."TITLE" AS VARCHAR(100))'
+
+    if order != "ASC":
+        case = '-' + case
+
+    return clsObj.objects.filter(item2value__attr__title=attribute).extra(order_by=[case])
+
 def _setCouponsStructure(couponsDict):
 
     newDict = {}
@@ -130,3 +156,32 @@ def _setCouponsStructure(couponsDict):
                 newDict[item][attr] = values[0]['value']
 
     return newDict
+
+
+def getCountofSepecificRelatedItems(childCls, list, parentCls):
+    '''
+        Get count of some type of child for list of some type of parents parents
+            "childCls" - Type / Class of child objects
+            "list" - iterable list of parent ids
+            "parentCls" Type / Class of parent objects
+
+                Example: getCountofSepecificRelatedItems("Product", [1, 2], "Category")
+                #will return number of products in categories with id 1 and 2
+
+                returns: [{
+                    'p2c_parent': 1,
+                    'childCount': 4
+                }, {
+                    'p2c_parent': 2,
+                    'childCount': 2
+                }]
+    '''
+    parentObj = (globals()[parentCls])
+    clsObj = (globals()[childCls])
+
+    where = '"{0}"."{1}" = "CORE_RELATIONSHIP"."CHILD_ID"'.format(clsObj._meta.db_table, clsObj._meta.pk.column)
+    table = '"{0}"'.format(clsObj._meta.db_table)
+
+    return parentObj.objects.filter(p2c__parent_id__in=list, p2c__type="rel", p2c__child_id__isnull=False)\
+                                    .values('p2c__parent').annotate(childCount=Count('p2c__parent'))\
+                                    .extra(tables=[table], where=[where.upper()])
