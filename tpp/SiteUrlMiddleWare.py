@@ -20,6 +20,7 @@ class SiteUrlMiddleWare:
                      os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
         except Site.DoesNotExist:
             settings.SITE_ID = 1
+            request.urlconf = "tppcenter.urls"
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..','tppcenter/templates').replace('\\', '/'), )
