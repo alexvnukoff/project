@@ -3,26 +3,35 @@ from django.shortcuts import render_to_response
 
 from appl.models import News, Category, Country, Tpp, Review ,Product
 
-from core.models import Value, Item, Attribute, Dictionary
+from core.models import Value, Item, Attribute, Dictionary , Relationship
+from django.db.models import Count
 from appl import func
 
 from django.conf import settings
 
 def home(request):
-    newsList = func.getItemsList("News", "NAME", "IMAGE", "Photo", qty=3)
 
-    hierarchyStructure = Category.hierarchy.getTree(10)
+    newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
+
+    hierarchyStructure = Category.hierarchy.getTree()
+
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
+    hierarchyStructure = hierarchyStructure[:10]
+
+    countryList = func.getItemsList("Country", "NAME")
+
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
-
     for node in sortedHierarchyStructure:
         node['pre_level'] = level
         node['item'] = categories[node['ID']]
         node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
         level = node['LEVEL']
+
+
 
     #TODO Jenya: Указывай более явно параметры
     tppList = func.getItemsList("Tpp", "NAME", "IMAGE")
@@ -36,7 +45,7 @@ def home(request):
     coupons = func._setCouponsStructure(coupons)
 
 
-    flagList = func.getItemsList("Country", "NAME", "Flag")
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     return render_to_response("index.html", locals())
 

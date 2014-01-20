@@ -14,7 +14,7 @@ def reviewList(request):
     reviewList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-    flagList = func.getItemsList("Country", "NAME", "Flag")
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     return render_to_response("Reviews/index.html", locals())
 
@@ -25,7 +25,7 @@ def reviewDetail(request, item_id):
 
     reviewAttr = review.getAttributeValues("NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE")
 
-    flagList = func.getItemsList("Country", "NAME", "Flag")
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
 
     return render_to_response("Reviews/detail.html", locals())
