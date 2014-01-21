@@ -11,7 +11,7 @@ from django.conf import settings
 
 def getPaginatorRange(page):
     '''
-    Method that get page object and return paginotorRange ,
+    Method that get page object and return paginatorRange ,
     help to  display properly pagination
     Example
     result = func.getItemsListWithPagination("News", "NAME", "Active_From", "DETAIL_TEXT", "IMAGE", page=4)
@@ -258,4 +258,5 @@ def getCountofSepecificRelatedItems(childCls, list, parentCls):
     return parentObj.objects.filter(p2c__parent_id__in=list, p2c__type="rel", p2c__child_id__isnull=False)\
                                     .values('p2c__parent').annotate(childCount=Count('p2c__parent'))\
                                     .extra(tables=[table], where=[where.upper()])
+
 

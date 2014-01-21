@@ -8,30 +8,36 @@
                             </span>
                         </div>
                         <ul class="listnew">
+                    {% for id , attr  in newProducrList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.CURRENCY|first as currency %}
+                        {% with attr.COST|first as cost  %}
+                        {% with attr.CATEGORY_NAME as category_name  %}
+                        {% with attr.CATEGORY_ID as category_id  %}
                             <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
+                               <div class="img_gallery">
+					        	<div class="shadow"></div>
+					            	<div class="img_block">
+                                      <a href="{% url "products:detail" id %}"><img style="height: 100px;width: 100px;" src="{% static picture %}" alt="{{ name }}" /></a>
+                                    </div>
+					          </div>
+                                <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                <p><font class="number">{{ cost }}</font> {{ currency }}</p>
+                                <p><a href="{% url "products:category" category_id %}" class="viewall">{{ category_name }} &rarr;</a></p>
                             </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
+
+
+
+
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                    {% endfor %}
+
                         </ul>
                     </div>
                     <div class="prd-new">
@@ -42,29 +48,35 @@
                             </span>
                         </div>
                         <ul class="listnew">
+                        {% for id , attr  in topPoductList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.CURRENCY|first as currency %}
+                        {% with attr.COST|first as cost  %}
+                        {% with attr.CATEGORY_NAME as category_name  %}
+                        {% with attr.CATEGORY_ID as category_id  %}
                             <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
+                              <div class="img_gallery">
+					        	<div class="shadow"></div>
+					            	<div class="img_block">
+                                      <a href="{% url "products:detail" id %}"><img style="height: 100px;width: 100px;" src="{% static picture %}" alt="{{ name }}" /></a>
+                                    </div>
+					          </div>
+
+                                <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                <p><font class="number">{{ cost }}</font> {{ currency }}</p>
+                                <p><a href="{% url "products:category" category_id %}" class="viewall">{{ category_name }} &rarr;</a></p>
                             </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
-                            <li>
-                                <a href="#"><img src="images/products/pr1.jpg" alt="" /></a>
-                                <p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-                                <p><font class="number">$3.80</font> / шт.</p>
-                                <p><a href="#" class="viewall">Футболки мужские &rarr;</a></p>
-                            </li>
+
+
+
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                       {% endwith %}
+                    {% endfor %}
+
                         </ul>
                     </div>

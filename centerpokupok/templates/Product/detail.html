@@ -19,6 +19,11 @@
     <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+    <script>
+    $(document).ready(function () {
+                    $('#slider2').anythingSlider({hashTags: false});
+    })
+    </script>
 {% endblock %}
 
 
@@ -179,37 +184,37 @@
 			<div class="title-items">
 				<a href="#" class="btnback">&larr; Вернуться в каталог</a>
 			</div>
-              {% with productValues as  attr   %}
+                    {% with productValues as  attr   %}
                     {% with attr.NAME|first as name  %}
+                    {% with attr.IMAGE|first as picture  %}
+                    {% with attr.ANONS|first as anons  %}
+                    {% with attr.DETAIL_TEXT|first as content  %}
+                    {% with attr.CURRENCY|first as currency  %}
+                    {% with attr.COST|first as cost  %}
 			<div class="titleproduct">{{ name }}</div>
-			  {% endwith %}
-            {% endwith %}
+
             <div id="details-prd">
 				<div class="galleryprd">
-					<p><font class="id">Product ID: 1215014453</font></p>
+
 					<div class="imagelib">
 						<div class="imgout">
 							<a href="#" class="bzoom"><i class="icons i-zoom"></i></a>
 							<div id="imagebig">
-								<img src="images/products/img-big1.jpg" border="0" />
+								<img style="height: 200px;width: 200px;" src="{% static picture %}" border="0" />
 							</div>
 						</div>
 						<ul class="allthumb">
 							<li><a href="#nogo" rel="images/products/img-big1.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
-							<li><a href="#nogo" rel="images/products/img-big2.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
-							<li><a href="#nogo" rel="images/products/img-big1.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
-							<li><a href="#nogo" rel="images/products/img-big2.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
-							<li><a href="#nogo" rel="images/products/img-big1.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
-							<li><a href="#nogo" rel="images/products/img-big2.jpg" class="image"><img src="images/products/img-small.jpg" class="imagesmall" border="0"/></a></li>
+
 						</ul>
 					</div>
 				</div>
 				<div class="infodetails">
 					<div class="pricedt">
-						<p><font class="price1">US $42.25 / коробка</font></p>
-						<p><font class="price2">US $33.25 </font>/ коробка</p>
-						<p><font class="price3">20 шт. / коробка,  $1.66 / шт.</font></p>
-						<span class="pr-rate"><img class="star" alt="" src="images/stars.png"></span>
+
+						<p><font class="price2">{{ currency|lower  }} {{ cost }}  </font></p>
+
+
 					</div>
 					<div class="fees">
 						<i class="icons i-ship"></i>
@@ -242,7 +247,7 @@
 								</div>
 							</li>
 							<li>
-								<label>Количество коробок (20 шт/коробка):</label>
+
 								<div class="numberof">
 									<div class="numbers-row">
 							        	<input type="text" name="french-hens" id="french-hens" value="1">
@@ -252,75 +257,45 @@
 						</ul>
 					</div>
 					<div class="details-action">
-						<a href="#" class="bigbuy">Купить</a>
+						<a href="#" class="bigbuy">{% trans "Buy" %}</a>
 						<div class="wl">
 							<i class="icons i-wl"></i>
 							<p><a href="#" class="wish">В избранное</a></p>
 						</div>
 					</div>
 					<div class="socialplugin">
-						<div><img src="images/fb.gif"></div>
-						<div><img src="images/tw.gif"></div>
-						<div><img src="images/pin.gif"></div>
+						<div><img src="{% static "images/fb.gif" %}"></div>
+						<div><img src="{% static "images/tw.gif" %}"></div>
+						<div><img src="{% static "images/pin.gif" %}"></div>
 					</div>
 				</div>
 				<div class="ship">
 					<div class="shiptitle">
-						Описание товара
+						{% trans "Description" %}
 						<span><a href="#">Способы доставки</a></span> <span><a href="#">Условия возврата</a></span>
 					</div>
 					<div class="configuration">
 						<ul>
 							<li>
-								<span class="left">Процессор:</span>
-								<span class="right">Intel Core i7-3517U 1900 МГц</span>
+								<span class="left">{% trans "Short description" %}:</span>
+								<span class="right">{{ anons }}</span>
 							</li>
 							<li>
-								<span class="left">Оперативная память:</span>
-								<span class="right">4 ГБ DDR3 1600 МГц</span>
+								<span class="left">{% trans "Complete description" %}</span>
+								<span class="right">{{ content }}</span>
 							</li>
-							<li>
-								<span class="left">Хранение информации:	</span>
-								<span class="right">500 ГБ HDD 5400 rpm SATA II</span>
-							</li>
-							<li>
-								<span class="left">Дисплей:</span>
-								<span class="right">15.6" 1366x768 WXGA LED, глянцевый</span>
-							</li>
-							<li>
-								<span class="left">Видеокарта:</span>
-								<span class="right">Intel HD Graphics 4000, NVIDIA GeForce GT 635M 2048 МБ GDDR3</span>
-							</li>
-							<li>
-								<span class="left">Привод:</span>
-								<span class="right">DVD-RW</span>
-							</li>
-							<li>
-								<span class="left">Беспроводная связь:</span>
-								<span class="right">Wi-Fi 802.11n, Bluetooth 4.0</span>
-							</li>
-						</ul>
-					</div>
-					<div class="desc">
-						<p>Freeshipping 20pc a lot The Hobbit ring Lord of the Rings Tbranduil PIN Of Air Blue Zircon retro elegant brooch XFH022 </p>
-						<p>A we make photo my ourself,the items as showing on piture<br>
-                            B 20pcs a lot,opp bag packing,if more than 200pcs ,freeshipping by DHL EMS or Fedex.</p>
-							<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							  <tr>
-							    <td><img src="images/products/pr9.jpg" alt=""></td>
-							    <td>
-							    	<p>Freeshipping 20pc a lot The Hobbit ring Lord of the Rings Tbranduil PIN Of Air Blue Zircon retro elegant brooch XFH022 </p>
 
-									<p>A we make photo my ourself,the items as showing on piture
-									B 20pcs a lot,opp bag packing,if more than 200pcs ,freeshipping by DHL EMS or Fedex.</p>
-							    </td>
-							  </tr>
-							  <tr>
-							    <td><img src="images/products/pr9.jpg" alt=""></td>
-							    <td>&nbsp;</td>
-							  </tr>
-							</table>
+						</ul>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+
 					</div>
+
 					<div class="feedback">
 						<h3>Transaction History & Feedback</h3>
                      {% for id , attr  in commentsList.items %}
@@ -379,183 +354,54 @@
                 </form>
 				</div>
 			</div>
+            {% if sameProducts %}
 			<div class="otherprd">
-				<h1>Похожие товары</h1>
+				<h1>{% trans "Similar products" %} </h1>
+            {% endif %}
 				<ul id="slider2">
-					<li>
+				  {% for id , attr  in sameProducts.items %}
+
+                    {% with attr.NAME|first as name  %}
+                    {% with attr.COST|first as cost  %}
+                    {% with attr.CURRENCY|first as currency  %}
+                    {% with attr.IMAGE|first as picture  %}
+
+                     {% if  forloop.counter == 1 %}
+                                  <li>
+                               {% endif %}
+
+
+
+
+
+
 						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
+                        	<div class="img_prod_slider">
+                                <div class="shadow"></div>
+                                <div class="img_block">
+							<img src="{% static picture %}" alt="{{ name }}">
+
+                                </div>
+                            </div>
 							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
+								<p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+								<p><font class="number">{{ currency }} {{ cost }}</font></p>
+
 							</div>
 						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<div class="itemspp">
-							<img src="images/products/pr1.jpg" alt="">
-							<div class="infopeople">
-								<p><a href="#">Футболка мужская с принтом Чарли-Чаплин...</a></p>
-								<p><font class="number">$3.80</font> / шт.</p>
-								<div><img class="star" alt="" src="images/stars.png">
-									<div class="comment">
-										<i class="icons icon-cmt"></i>
-										<label><a href="#">512</a></label>
-									</div>
-									<a href="#"><i class="icons icon-heart"></i></a>
-								</div>
-							</div>
-						</div>
-					</li>
+				  {% if forloop.counter|divisibleby:"4" and   forloop.counter != forloop.last  %}
+                                  </li>
+                                 <li>
+                                {% endif %}
+                            {% if  forloop.counter == forloop.last %}
+                            </li>
+                            {% endif %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                  {% endfor %}
+
 				</ul>
 			</div>
 		</div>

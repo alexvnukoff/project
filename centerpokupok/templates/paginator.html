@@ -1,6 +1,8 @@
-<div class="panaging">
+{% if page.paginator.num_pages > 1 %}
+       <div class="panaging">
              {%  if page.has_previous %}
-			    	<a href="?page={{ page.previous_page_number }}" class="icons prev">Prev</a>
+                    <a href="?page=1" >начало</a>
+			    	<a href="?page={{ page.previous_page_number }}" >«</a>
             {% endif %}
             <label>Страницы:</label>
 
@@ -15,6 +17,8 @@
                  {% endifequal %}
                {% endfor %}
                {%  if page.has_next %}
-			       	<a href="?page={{ page.next_page_number }}" class="icons next">Next</a>
+			       	<a href="?page={{ page.next_page_number }}" >»</a>
+                   <a href="?page={{ page.paginator.num_pages }}" >конец </a>
                {% endif %}
 			</div>
+{% endif %}

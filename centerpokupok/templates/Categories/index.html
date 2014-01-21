@@ -88,18 +88,20 @@
 
 
                  {%  for name , item in  dict|sort%}
+                     {% with item.ID as id %}
                     {% if name == "Parent" %}
                        {% if  parent_name|first !=  a|first or forloop.parentloop.counter == 1  %}
                              <div class="letters">{{ parent_name|first }}</div>
                           {% endif %}
-                           <div class="cateparent">{{ item.item.NAME|first }}</div>
+                           <div class="cateparent"><a style="color: #000000;" href="{% url "products:category" id %}">{{ item.item.NAME|first }}</a></div>
                                            <ul class="subcate">
                              {% else %}
 
 
 
-                      	<li><a href="#">{{ name }}</a></li>
+                      	<li><a href="{% url "products:category" id %}">{{ name }}</a></li>
                      {% endif %}
+                     {% endwith %}
                       {% endfor %}
                    </ul>
 

@@ -12,6 +12,7 @@
                                         {% with node.pre_level as previous %}
                                             {% with node.parent_item.NAME|first  as parent_name  %}
                                                 {% with node.item.NAME|first  as name  %}
+                                                    {% with node.ID as id %}
 
                                                     {% if level == 1 %}
 
@@ -25,7 +26,7 @@
                                                             </li>
                                                         {% endif %}
 
-                                                        <li class="level1-li sub"><a class="level1-a" href="#url">{{ name }}</a>
+                                                        <li class="level1-li sub"><a class="level1-a" href="{% url "products:category" id %}  ">{{ name }}</a>
 
                                                         {% if isleaf == 0 %}
                                                             <div class="listHolder col1">
@@ -42,7 +43,7 @@
 
                                                     <div class="listCol">
                                                         <ul>
-                                                            <li><h3>{{ name }}</h3></li>
+                                                            <li><h3><a href="{% url "products:category" id %}"> {{ name }}</a></h3></li>
                                                 {% endif %}
 
                                                 {% if level == 3 %}
@@ -67,7 +68,7 @@
                                                                 <li><h3>{{ parent_name}}</h3></li>
                                                     {% endif %}
 
-                                                    <li>{{ name }}</li>
+                                                    <li><a href="{% url "products:category" id %}" >{{ name }}</a></li>
                                                 {% endif %}
 
                                                 {% if forloop.counter == sortedHierarchyStructure|length %}
@@ -89,6 +90,7 @@
 
 
                                                 {% endwith %}
+                                                     {% endwith %}
                                             {% endwith %}
                                         {% endwith %}
                                     {% endwith %}
