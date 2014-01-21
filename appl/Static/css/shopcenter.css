@@ -33,18 +33,19 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 .bginput{ position: relative; float: left; width: 860px; height: 38px; margin:8px 0 0 8px; display: inline; background-color: #FFF}
 .icon-search{ position: absolute; width: 24px; height: 25px; background-position: -288px -48px; left: 7px; top: 6px;}
 .bginput input.text{ float: left; font-size: 14px; color: #999999; height: 34px; line-height: 34px; width: 55%; border: 0; margin-left: 45px; display: inline;}
-.btns{ position: relative; float: left; background-color: #383838; color: #FFF; font-size: 16px; padding: 8px 25px 9px 25px; margin: 8px 0 0 10px; display: inline; border-radius: 3px;}
+.btns{ position: relative; float: left; background-color: #383838; color: #FFF; font-size: 16px; padding: 8px 25px 9px 25px; margin: 8px 0 0 10px; display: inline; border-radius: 0px; border: 0px;}
 .btns:hover{ background-color: #000; transition-duration:1s; color: #FFF; text-decoration: none;}
 #flag{ position: relative; float: left; width: 100%; height: 32px; background-color: #EEE;}
 #flag ul li{ position: relative; float: left; padding: 5px 5px; cursor: pointer; border-top: 1px #FFF solid;}
 #flag ul li:hover, #flag ul li.active{ background-color:#e85c41; padding: 5px 5px 9px 5px; border-color: #e85c41;}
-.iflag{ display: inline-block; width: 25px; height: 20px; background: url(../images/flag.png) no-repeat;}
-.flag1{ background-position: 0px 0px;}
+.iflag{ display: inline-block; width: 25px; height: 20px;/*background: url(../images/flag.png) no-repeat;*/}
+/*.flag1{ background-position: 0px 0px;}
 .flag2{ background-position: 0px -20px;}
 .flag3{ background-position: 0px -40px;}
 .flag4{ background-position: 0px -60px;}
 .flag5{ background-position: 0px -80px;}
 .flag6{ background-position: 0px -100px;}
+*/
 #main{ position: relative; float: left; width: 100%; margin: 25px 0 0 0;}
 #sidebar{ position: relative; float: left; width: 210px; font-weight: 300;}
 #sidebar h3{ font-size: 16px; font-weight: 300; padding-bottom: 10px;}
@@ -88,7 +89,7 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 .styled-select select option{background-color:#FFF; padding: 3px 0;}
 #othersl .styled-select{ width: 190px; background:#EEE url(../images/arrowb.png) no-repeat right center; margin-left: 12px;}
 #othersl .styled-select select{ width: 220px;}
-.topitems{ position: relative; float: left; margin-top: 20px; width: 100%; padding: 14px 0; background-color: #EEE; border-top: 1px #FFF solid;}
+.topitems{ position: relative; float: left; width: 100%; padding: 14px 0; background-color: #EEE; border-top: 1px #FFF solid;}
 .topitems label{ float: left; color: #555; padding: 0 12px; font-weight: bold;}
 .topitems span{ position: relative; float: left; margin-right: 24px; display: inline; color: #666; font-size: 11px;}
 .topitems span input.checkbox, .topitems span font, .topitems span i{ float: left;}
@@ -110,6 +111,7 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 #listitems li .price{position: absolute; width: 100%; top:210px; left:0px; color: #999;}
 #listitems li .price font.num{ font-size: 16px; color: #ca4228;}
 #listitems li .price font.price-old{ text-decoration: line-through;}
+#listitems li p a{word-wrap: word-break;}
 .discount{ position: absolute; height: 35px; background-color: #e85c41; line-height: 35px; padding: 0 8px; font-size: 16px; color: #FFF; text-align: center; right: 8px; top: -8px; z-index: 9;}
 .discount .i-after{ position: absolute; width: 8px; height: 8px; background-position: 0px -176px; top: 0px; left: -8px;}
 .freeship{ position: absolute; right: 0; top: 5px;}
@@ -172,7 +174,7 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 .icon-social:hover{ opacity: 0.5; transition-duration:1s;}
 
 .bginput .styled-select{ float: right; width: 160px; height:38px; background: url(../images/arrowb.png) no-repeat right #EEE; margin: 0 0 0 1px;}
-.bginput .styled-select select{ width: 180px; padding:8px 0 7px 5px; height: 38px; font-size: 12px;}
+.bginput .styled-select select{ width: 125px; padding:8px 0 7px 5px; height: 38px; font-size: 12px;}
 .salepopup{ position: absolute; width: 300px; border: 12px #EEE solid; background-color: #FFF; padding: 15px; top: 35px; left: 50%; margin-left: -177px; display: none; z-index: 9999;}
 .salepopup .avatar{ position: relative; float: left; width: 80px; margin-right: 30px; display: inline;}
 .salepopup .infosale{ position: relative; float: left; width: 160px; color: #999;}
@@ -215,8 +217,8 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .cartmini ul li .descart font.number{ font-size: 16px; color: #ca4228; padding-left: 15px;}
 .cartmini ul li.total{ border-bottom: 0; text-align: right; margin-top: 5px; font-size: 14px;}
 .cartmini ul li.total div{ position:relative; float: left; width: 100%;}
-.cartmini ul li.total div label.left{ float: left; width: 70%; padding-right: 5px; font-size: 12px; color: #999; line-height: 20px;}
-.cartmini ul li.total div label.right{ float: right; width: 28%; text-align: left;}
+.cartmini ul li.total div label.left{ float: left;  padding-right: 5px; font-size: 12px; color: #999; line-height: 20px;}
+.cartmini ul li.total div label.right{ float: right;  text-align: left;}
 .cartmini ul li.total div.price{ color: #ca4228;}
 .cartmini ul li.total div:last-child{ padding-top: 10px;}
 .cartmini:after{
@@ -227,7 +229,7 @@ top:-67px;
 z-index:0;pointer-events: none; 
 width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255, 0); border-bottom-color: #EEE;border-width: 30px;
 }
-.i-delete{position: absolute; width: 15px; height: 16px; text-indent: -9999px; background-position: 0px -235px; right: 0; top: 15px;}
+.i-delete{position: absolute; width: 15px; height: 16px; text-indent: -9999px; background-position: 0px -235px; right: 11px; top: 15px;}
 /*---------------coupon-------------*/
 .bestbuy{ position: relative; float: left; width: 100%;}
 .bestbuy .items-coupon{ width: 210px;}
@@ -237,7 +239,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .thumb-cp img{ position: relative; float: left; width: 100%;}
 .thumb-cp .discount{ right:0px; top: 2px;}
 .couponinfo{ position: relative; float: left; width: 360px; margin: 15px 0 0 10px; display: inline; font-size: 14px; color: #999;}
-.couponinfo a{ font-size: 16px; line-height: 20px;}
+.couponinfo a{ font-size: 14px; line-height: 20px;}
 .couponinfo .clock{ width: 100%; padding-top: 20px;}
 .couponinfo .clock p{ line-height: 20px;}
 .bottom-cp{ position: absolute; width: 100%; height: 75px; bottom: 0px; background-color: #383838;}
@@ -271,7 +273,7 @@ span.lesssort a.pricefilter{ background: url(../images/arrowc.png) no-repeat rig
 .shopinfo .title{ float:left; width: 100%; font-size: 15px; font-weight: 400; color: #FFF; text-align: center; line-height: 40px; background-color: #e85c41;}
 .shopinfoin{ position: relative; float: left; width: 185px; margin: 12px 0 0 18px; padding-bottom: 20px; display: inline;}
 .shopinfoin label{ float: left; width: 100%; color: #b2b2b2;}
-.shopinfoin .feedbackinfo{ position: relative; float:left; width: 100%; margin: 15px 0 0 ; font-size: 14px; color: #FFF;}
+.shopinfoin .feedbackinfo{ position: relative; float:left; width: 100%; margin: 25px 0 0 ; font-size: 14px; color: #FFF;}
 .shopinfoin .feedbackinfo p{ padding: 5px 0 0 0;}
 .shopinfoin .feedbackinfo p.end{ font-size: 12px;}
 .shopinfoin:after{
@@ -354,18 +356,22 @@ width: 0; height: 0; border: 106px solid transparent;border-color: rgba(255, 255
   text-align: center;
   background: url(../images/buttons.png) no-repeat;
 }
+
+.itm {
+float:left;
+}
 .dec {background-position: 0 -28px; left: 0;}
 .inc {right: 0;}
 #french-hens{ position: relative; float: left; width: 50px; height: 26px; text-align: center; line-height: 26px; border: 0; margin-left: 28px;}
 .details-action{ position: relative; float: left; width: 100%; margin: 20px 0 0 0;}
-.bigbuy{ position: relative; float: left; background-color: #e85c41; font-size: 36px; color: #FFF; font-weight: 300; border-radius: 3px; padding: 8px 45px 10px 45px;}
+.bigbuy{ position: relative; float: left; background-color: #e85c41; font-size: 34px; color: #FFF; font-weight: 300; border-radius: 3px; padding: 8px 45px 10px 45px;}
 .bigbuy:hover{ color: #FFF; text-decoration: none; background-color: #fc6f54; transition-duration:1s;}
 .wl{ position: relative; float: left; width: 90px; text-align: center; margin: 10px 0 0 45px; display: inline;}
 .wl a.wish{ font-size: 14px; border-bottom: 1px #4b89b5 dotted; padding: 5px 0 0 0;}
 .wl a.wish:hover{ text-decoration:none;}
 .i-wl{ display: inline-block; width: 27px; height: 24px; background-position: 0px -350px;}
-.socialplugin{ position: relative; float: left; width: 100%; margin: 25px 0 0 0;}
-.socialplugin div{ float: left; margin: 0 15px 0 0;}
+.socialplugin{ position: relative; float: left; width: 102%; margin: 25px 0 0 0;}
+.socialplugin div{ float: left; margin: 0 0px 0 0;}
 .ship{ position: relative; float: left; width: 100%; margin: 40px 0 0 0;}
 .shiptitle{ position: relative; float: left; width: 100%; font-size: 22px; font-weight: 300;}
 .shiptitle span{ padding: 0 12px;}
@@ -645,7 +651,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .couponslide-bottom h1{ font-size:26px; font-weight:300;}
 
 #flag-var{ position: relative; float: left; width: 100%; background-color: #EEE; padding:10px 0;}
-#flag-var ul li{ float:left; width:120px; margin:8px 0 0 20px; display:inline;}
+#flag-var ul li{ float:left; width:125px; margin:8px 0 0 20px; display:inline;}
 #flag-var ul li:nth-child(7n){ margin-right:0;}
 #flag-var ul li i, #flag-var ul li a{ display:inline-block; vertical-align:middle;}
 #flag-var ul li a{ padding-left:8px; vertical-align:middle; font-size:13px; font-weight:300;}
@@ -663,7 +669,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .title-discount .left label, .title-discount .left a{ display:inline-block; vertical-align:middle;}
 .title-discount .right{ float:right; line-height:30px;}
 .title-discount .right a{ font-size:14px; padding-left:20px;}
-.best-cp{ position:relative; float:left; width:940px; margin:25px 0 0 0; background:#EEE; padding:20px;}
+.best-cp{ position:relative; float:left; width: 940px; margin:25px 0 0 0; background:#EEE; padding:20px;}
 .best-cp-l{ position:relative; float:left; width:550px; height:246px; background-color:#FFF;}
 .best-cp .couponinfo{ width:210px; margin:5px 0 0 10px;}
 .best-cp .couponinfo .clock{ padding-top:15px;}
@@ -711,8 +717,8 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 #sidevar li.sub a.level1-a {}
 #sidevar table {border-collapse:collapse; width:0; height:0; position:absolute; right:0; top:0;}
 #sidevar div.listHolder {position:absolute; left:-9999px; margin-top: 8px; padding-bottom:30px; box-shadow:0px 1px 2px #888;}
-#sidevar div.col1 {width:716px; border:12px #EEE solid; z-index:9999; background-color:#FFF;}
-#sidevar div.listCol {width:200px; float:left; margin:22px 15px 0 22px; display:inline;}
+#sidevar div.col1 {width: auto; border:12px #EEE solid; z-index:9999; background-color:#FFF;}
+#sidevar div.listCol {width:250px; float:left; margin:22px 15px 0 22px; display:inline;}
 #sidevar div.listCol ul {padding:0; margin:0; list-style:none;}
 #sidevar div.listCol ul li{ margin-top:5px;}
 #sidevar div.listCol ul li h3{ font-size:14px; font-weight:300px; color:#383838; padding-bottom:12px; text-transform:uppercase;}
@@ -729,3 +735,34 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .special-pr .desc{ float:left; width:164px; padding:0px 18px 18px 18px; font-size:14px; color:#FFF;}
 .special-pr .desc p{ padding-top:12px;}
 .special-pr .desc p a{ color:#f98971;}
+
+#jcart-tooltip { font-size:12px; }
+#jcart-tooltip { display:none; position:absolute; padding:3px 7px 3px 25px; background:url(../images/checkmark.png) 3px center no-repeat #fdfdfd; border:1px solid #a6c9e2; z-index:9999; }
+
+
+.scroool::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+.scroool::-webkit-scrollbar
+{
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.scroool::-webkit-scrollbar-thumb
+{
+    background-color: #AD9D9D;
+}
+.scroool {overflow-y:scroll; max-height: 227px; width: 320px}
+
+.talk_supplier {
+    z-index: 400; position: absolute;
+
+    -webkit-box-shadow: 0px 0px 12px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 12px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 12px rgba(50, 50, 50, 0.75);
+
+}
