@@ -287,11 +287,9 @@ class Basket(Item):
 
 
 class Cabinet(User, Item):
-    title = models.CharField(max_length=120)
-    owner = models.ForeignKey(User, related_name='cabinet')
 
     def __str__(self):
-        return self.title + '-' + self.owner.username
+        return self.title + '-' + self.username
 
 
 class Document(Item):

@@ -6,14 +6,17 @@ from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
 from django.contrib.auth.models import Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 from core.hierarchy import hierarchyManager
 from copy import copy
 from random import randint
-
-
+from django.core.mail import send_mail
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+import warnings
 import hashlib
 
 def createHash(string):
@@ -47,6 +50,9 @@ class UserManager(BaseUserManager):
 #----------------------------------------------------------------------------------------------------------
 #             Class User define a new user for Django system
 #----------------------------------------------------------------------------------------------------------
+class SiteProfileNotAvailable(Exception):
+    pass
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
     username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
@@ -56,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = UserManager()
 
@@ -81,6 +88,44 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
        return self.is_admin
 
+    def email_user(self, subject, message, from_email=None):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email])
+
+    def get_profile(self):
+        """
+        Returns site-specific profile for this user. Raises
+        SiteProfileNotAvailable if this site does not allow profiles.
+        """
+        warnings.warn("The use of AUTH_PROFILE_MODULE to define user profiles has been deprecated.",
+            DeprecationWarning, stacklevel=2)
+        if not hasattr(self, '_profile_cache'):
+            from django.conf import settings
+            if not getattr(settings, 'AUTH_PROFILE_MODULE', False):
+                raise SiteProfileNotAvailable(
+                    'You need to set AUTH_PROFILE_MODULE in your project '
+                    'settings')
+            try:
+                app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
+            except ValueError:
+                raise SiteProfileNotAvailable(
+                    'app_label and model_name should be separated by a dot in '
+                    'the AUTH_PROFILE_MODULE setting')
+            try:
+                model = models.get_model(app_label, model_name)
+                if model is None:
+                    raise SiteProfileNotAvailable(
+                        'Unable to load the profile model, check '
+                        'AUTH_PROFILE_MODULE in your project settings')
+                self._profile_cache = model._default_manager.using(
+                                   self._state.db).get(user__id__exact=self.id)
+                self._profile_cache.user = self
+            except (ImportError, ImproperlyConfigured):
+                raise SiteProfileNotAvailable
+        return self._profile_cache
+
 #----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
 #----------------------------------------------------------------------------------------------------------
@@ -104,18 +149,18 @@ class Dictionary(models.Model):
         slot = Slot(title=title, dict=self)
         slot.save()
 
-    def updateSlot(self,oldTitle,newTitle):
+    def updateSlot(self, oldTitle, newTitle):
         '''
         Update Slot
         '''
         Slot.objects.filter(dict__id=self.id, title=oldTitle).update(title=newTitle)
 
 
-    def deleteSlot(self,slotTitle):
+    def deleteSlot(self, slotTitle):
         '''
         Delete slot
         '''
-        slot = Slot.objects.get(dict=self.id,title=slotTitle)
+        slot = Slot.objects.get(dict=self.id, title=slotTitle)
         slot.delete()
 
 #----------------------------------------------------------------------------------------------------------
@@ -606,9 +651,9 @@ class Value(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
-    create_user = models.ForeignKey(User)
+    create_user = models.ForeignKey(User, related_name='creator')
     update_date = models.DateTimeField(auto_now=True)
-    update_user = models.ForeignKey(User)
+    update_user = models.ForeignKey(User, related_name='updater')
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")

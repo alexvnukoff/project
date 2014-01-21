@@ -46,12 +46,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'registration',
     'modeltranslation',
     'south',
     'core',
     'appl',
 )
 
+ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
+REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,6 +129,12 @@ MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').repla
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
+#Email backend for production
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Email backend for debugging
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_PORT = 1025
+DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 
 gettext = lambda s: s
 LANGUAGES = (

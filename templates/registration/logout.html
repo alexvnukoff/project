@@ -1,0 +1,11 @@
+{% extends "registration/registration_base.html" %}
+{% block title %}Выход{% endblock %}
+{% block body %}
+
+<span> Вы покинули свой личный кабинет! </span>
+
+<br/><br/>
+
+Для повторного входа нажмите, пожалуйста, <a href={% url auth_login %}> здесь </a>.
+
+{% endblock %}
