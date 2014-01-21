@@ -140,7 +140,7 @@ class Country(Item):
     hierarchy = hierarchyManager()
 
     def __str__(self):
-        return self.title
+        return self.getName()
 
 
 class Comment(Item):
@@ -196,6 +196,25 @@ class Product(Item):
         else:
             return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
+
+    @staticmethod
+    def getCategoryOfPRoducts(productQuerySet, attr):
+        products_id = [product.id for product in productQuerySet]
+        categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
+        categories_id = [category['id'] for category in categories]
+        products = Item.getItemsAttributesValues(attr, products_id)
+        category = Item.getItemsAttributesValues(("NAME",), categories_id)
+        cat = {}
+        for item in categories:
+            cat[item['p2c__child_id']] = item['id']
+
+        for key, product in products.items():
+            product.update({"CATEGORY_NAME": category[cat[key]]['NAME'][0]})
+            product.update({"CATEGORY_ID": cat[key]})
+
+        return products
+
+
 
 class License(Item):
 

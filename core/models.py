@@ -362,7 +362,7 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
-        items = tuple(set(items))
+        #items = tuple(set(items))
 
         valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
