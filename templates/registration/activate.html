@@ -1,11 +1,10 @@
 {% extends "registration/registration_base.html" %}
-{% block title %}{% if account %}Регистрация завершена.{% else %}Activation problem{% endif %}{% endblock %}
+{% block title %}{% if account %}Регистрация завершена{% else %}Activation problem{% endif %}{% endblock %}
 {% block body %}
-{% if account %}
-Спасибо, {{ account }}! Ваша регистрация на портале завершена!  Вы можете войти в\
-    <a href='{% url auth_login %}'>личный кабинет</a>, используя имя и пароль, указанные при регистрации.
-{% else %}
-Извините, но Ваш ключ активации неверен! Проверьте, пожалуйста, Вашу ссылку.
-{% endif %}
+    {% if account %}
+        Спасибо, {{ account }}! Ваша регистрация на портале завершена!  Вы можете войти в <a href='{% url auth_login %}'>личный кабинет</a>, используя имя и пароль, указанные при регистрации.
+    {% else %}
+        Извините, но Ваш ключ активации неверен! Проверьте, пожалуйста, Вашу ссылку.
+    {% endif %}
 {% endblock %}
 
