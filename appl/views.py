@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from appl.models import *
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
+from datetime import timedelta, datetime
 
 from django.conf import settings
 
@@ -17,4 +18,8 @@ def cabinet(request):
         owner = request.user.first_name + ' ' + request.user.last_name
     else:
         owner = request.user.username
-    return render_to_response('appl/cabinet_main.html', {'owner': owner,})
+    start = datetime.today()
+    days=6
+    end = start + timedelta(days)
+    events = Item.objects.filter(create_date__range=[start, end])
+    return render_to_response('appl/cabinet_main.html', {'owner': owner, 'events_array': events, 'period': days},)
