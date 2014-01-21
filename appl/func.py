@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Item
+from core.models import *
 from appl.models import *
 from django.contrib.sites.models import get_current_site
 from django.db.models import Count
@@ -133,29 +133,57 @@ def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be ca
 
 def _setCouponsStructure(couponsDict):
 
-    newDict = {}
-
     for item, attrs in couponsDict.items():
 
-        newDict[item] = {}
+        if 'COST' not in attrs or 'COUPON_DISCOUNT' not in attrs:
+            raise ValueError('Attributes COST and COUPON_DISCOUNT are required')
 
-        for attr, values in attrs.items():
+        newDict = copy(attrs)
+
+        for attr, values in newDict.items():
+            if attr == 'title':
+                continue
+
+            if attr == "COUPON_DISCOUNT":
+                discount = values[0]
+
+                if not isinstance(discount, dict):
+                    raise ValueError('You should pass full attribute data')
+
+                couponsDict[item][attr + '_END_DATE'] = discount['end_date']
+                price = float(newDict['COST'][0]['title'])
+                couponsDict[item][attr + '_COST'] = price - (price * int(discount['title'])) / 100
+                couponsDict[item][attr + '_COST'] = '{0:,.2f}'.format(couponsDict[item][attr + '_COST'])
+                couponsDict[item][attr] = discount['title']
+            else:
+                couponsDict[item][attr] = values[0]['title']
+
+    return couponsDict
+
+def _setProductStructure(prodDict):
+
+    for item, attrs in prodDict.items():
+
+        if 'COST' not in attrs or 'DISCOUNT' not in attrs:
+            raise ValueError('Attributes COST and DISCOUNT are required')
+
+        newDict = copy(attrs)
+
+        for attr, values in newDict.items():
             if attr == 'title':
                 continue
 
             if attr == "DISCOUNT":
-                for discount in values:
-                    if discount['end_date']:
-                        newDict[item]['DISCOUNT_END_DATE'] = discount['end_date']
-                        price = float(couponsDict[item]['COST'][0]['value'])
-                        newDict[item]['DISCOUNT_COST'] = price - (price * int(discount['value'])) / 100
-                        newDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(newDict[item]['DISCOUNT_COST'])
-                        newDict[item][attr] = discount['value']
-                        break
-            else:
-                newDict[item][attr] = values[0]['value']
+                discount = values[0]
 
-    return newDict
+                price = float(newDict['COST'][0])
+                prodDict[item]['DISCOUNT_COST'] = price - (price * float(discount)) / 100
+                prodDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(prodDict[item]['DISCOUNT_COST'])
+                prodDict[item][attr] = discount
+            else:
+                prodDict[item][attr] = values[0]
+
+    return prodDict
 
 
 def getCountofSepecificRelatedItems(childCls, list, parentCls):
