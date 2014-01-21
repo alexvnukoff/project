@@ -230,11 +230,11 @@
             {% for id, attr in coupons.items %}
 
                 {% with attr.NAME as name  %}
-                {% with attr.DISCOUNT as discount  %}
+                {% with attr.COUPON_DISCOUNT as discount  %}
                 {% with attr.IMAGE as picture  %}
-                {% with attr.DISCOUNT_COST as discount_cost  %}
+                {% with attr.COUPON_DISCOUNT_COST as discount_cost  %}
                 {% with attr.CURRENCY as currency  %}
-                {% with attr.DISCOUNT_END_DATE as end_date  %}
+                {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
                 {% with attr.COST as cost  %}
 
                 {% if forloop.counter == 1 %}

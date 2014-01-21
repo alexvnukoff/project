@@ -7,8 +7,8 @@ def couponsList(request):
     page = request.GET.get('page', 1)
     couponsObj = Product.getCoupons().order_by('item2value__end_date')
 
-    attr = ("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE")
-    result = func.setPaginationForItemsWithValues(couponsObj, page=page, page_num=17, fullAttrVal=True, *attr)
+    attr = ("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE")
+    result = func.setPaginationForItemsWithValues(couponsObj, page=page, page_num=16, fullAttrVal=True, *attr)
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
     coupons = func._setCouponsStructure(result[0])

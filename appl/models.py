@@ -192,11 +192,23 @@ class Product(Item):
         timeNow = now()
 
         if querySet is not False:
-            return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return querySet.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return Product.objects.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
+
+    @staticmethod
+    def getProdWithDiscount(querySet=False):
+
+        timeNow = now()
+
+        if querySet is not False:
+            return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                   item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
+        else:
+            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                          item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
 class License(Item):
 

@@ -14,11 +14,10 @@
                         <a href="#"><img src="{% static picture %}" alt=""></a>
                         <p><a href="#">{{ name }}</a></p>
                     </div>
-                             {% if forloop.counter|divisibleby:"6" and   forloop.counter != forloop.last  %}
+                             {% if forloop.counter|divisibleby:"6" and not forloop.last  %}
                                   </li>
                                  <li>
-                                {% endif %}
-                            {% if  forloop.counter == forloop.last %}
+                            {% elif forloop.last %}
                             </li>
                             {% endif %}
 

@@ -304,7 +304,7 @@ class Item(models.Model):
 
     @staticmethod
     @transaction.atomic
-    def setHierarchy(parent, child): #TODO: Artur, Maybe create a static method
+    def setHierarchy(parent, child):
         '''
             Set hierarchical relationship between parent and list of child
             you should pass an instance of a parent object to a "parent" parameter
@@ -404,12 +404,10 @@ class Item(models.Model):
                 }
         '''
         if not isinstance(attr, tuple):
-            attr = tuple(attr)
+            attr = (attr,)
 
         if not isinstance(items, tuple):
             items = tuple(items)
-
-        items = tuple(set(items))
 
         valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
@@ -422,9 +420,11 @@ class Item(models.Model):
         valuesAttribute = {}
 
 
-
         for key in range(0, len(items)):
-            valuesAttribute[items[key]]= key
+            if items[key] in valuesAttribute:
+                continue
+
+            valuesAttribute[items[key]] = key
 
         valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
@@ -441,7 +441,7 @@ class Item(models.Model):
                 attrValDict = {
                     'start_date': valuesDict['start_date'],
                     'end_date': valuesDict['end_date'],
-                    'value': valuesDict['title']
+                    'title': valuesDict['title']
                 }
                 valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(attrValDict)
             else:
@@ -449,7 +449,7 @@ class Item(models.Model):
 
         return valuesAttribute
 
-    def getAttributeValues(self, *attr):
+    def getAttributeValues(self, *attr, fullAttrVal=False):
         '''
            Return values of attribute list for specific Item
            Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")
@@ -457,7 +457,12 @@ class Item(models.Model):
         '''
 
         values = Value.objects.filter(attr__title__in=attr, item=self.id)
-        values = list(values.values("title", "attr__title"))
+        getList = ["title", "attr__title"]
+
+        if fullAttrVal:
+            getList += ['start_date','end_date']
+
+        values = list(values.values(*getList))
 
         valuesAttribute = {}
 
@@ -466,7 +471,15 @@ class Item(models.Model):
             if valuesDict['attr__title'] not in valuesAttribute:
                 valuesAttribute[valuesDict['attr__title']] = []
 
-            valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
+            if fullAttrVal:
+                attrValDict = {
+                    'start_date': valuesDict['start_date'],
+                    'end_date': valuesDict['end_date'],
+                    'title': valuesDict['title']
+                }
+                valuesAttribute[valuesDict['attr__title']].append(attrValDict)
+            else:
+                valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
 
         if len(valuesAttribute) == 0:
             return False

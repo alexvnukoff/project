@@ -1,88 +1,34 @@
 {% load staticfiles %}
 {% load i18n %}
 <div id="bestprice">
-                    <h3>Выгодные предложения</h3>
+                    <h3>{% trans "Best proposals" %}</h3>
                     <ul id="bestproduct">
-                        <li>
+                        {% for id, attr in productsSale.items %}
+                            {% with attr.NAME as name  %}
+                            {% with attr.DISCOUNT as discount  %}
+                            {% with attr.IMAGE as picture  %}
+
+                            {% if  forloop.counter == 1 %}
+                                <li>
+                            {% endif %}
                             <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
+                                <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                <a href="#">
+                                    <img width="180" height="135" alt="{{ name }}" src="{% static picture %}" class="thumb" />
+                                </a>
+                                <a href="#" class="name">{{ name }}</a>
                             </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 30%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Лесть из кожи Ликвидация! Торопитесь!</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 30%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Лесть из кожи Ликвидация! Торопитесь!</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 30%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Лесть из кожи Ликвидация! Торопитесь!</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr13.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <a href="#"><img src="images/products/pr12.jpg" alt="" class="thumb" /></a>
-                                <a href="#" class="name">Кожанные сумки Скидки от 20%</a>
-                            </div>
-                        </li>
+
+                             {% if forloop.counter|divisibleby:"5" and not forloop.last  %}
+                                 </li>
+                                 <li>
+                             {% elif forloop.last %}
+                                </li>
+                             {% endif %}
+
+                             {% endwith %}
+                             {% endwith %}
+                             {% endwith %}
+                        {% endfor %}
                     </ul>
                 </div>
