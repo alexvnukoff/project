@@ -1,8 +1,9 @@
 from django.db import models
-from core.models import Item, State, Relationship
+from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
+from core.models import User
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -191,13 +192,14 @@ class Product(Item):
         timeNow = now()
 
         if querySet is not False:
-            return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return querySet.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return Product.objects.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
 
     @staticmethod
+
     def getCategoryOfPRoducts(productQuerySet, attr):
         products_id = [product.id for product in productQuerySet]
         categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
@@ -214,6 +216,18 @@ class Product(Item):
 
         return products
 
+
+
+    def getProdWithDiscount(querySet=False):
+
+        timeNow = now()
+
+        if querySet is not False:
+            return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                   item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
+        else:
+            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+                                          item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
 
 class License(Item):
@@ -304,10 +318,10 @@ class Basket(Item):
         return ''
 
 
-class Cabinet(Item):
+class Cabinet(User, Item):
 
     def __str__(self):
-        return ''
+        return self.title + '-' + self.username
 
 
 class Document(Item):

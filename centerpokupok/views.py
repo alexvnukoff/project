@@ -52,11 +52,24 @@ def home(request):
     #---------COUPONS----------#
     couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
     coupons_ids = [cat.pk for cat in couponsObj]
-    coupons = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
+
+
+    coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
+
                                                fullAttrVal=True)
     coupons = func._setCouponsStructure(coupons)
 
-    #---------FLAGS IN HEADER----------#
+
+
+
+    productsSale = func.sortByAttr("Product", "DISCOUNT", "DESC", "int")
+    productsSale = Product.getProdWithDiscount(productsSale)[:15]
+
+    productsSale_ids = [prod.pk for prod in productsSale]
+    productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
+    productsSale = func._setProductStructure(productsSale)
+
+ #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     return render_to_response("index.html", {'newsList': newsList, 'sortedHierarchyStructure': sortedHierarchyStructure,
