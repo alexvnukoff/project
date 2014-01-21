@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response , get_object_or_404
-from appl.models import News, Product, Comment
+from django.shortcuts import render_to_response, get_object_or_404
+from appl.models import News, Product, Comment, Category
 from core.models import Value, Item, Attribute, Dictionary, Relationship
 from appl import func
 from django.http import Http404
@@ -37,14 +37,20 @@ def productDetail(request, item_id):
 
 
     product = get_object_or_404(Product, pk=item_id)
+    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY')
+
+    category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
+    sameProducts = Product.objects.filter(c2p__parent_id__in=category).exclude(pk=item_id)
+    product_id = [prod.id for prod in sameProducts]
+    sameProducts = Item.getItemsAttributesValues(("NAME", "IMAGE", "CURRENCY", "COST"), product_id)
 
 
-    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT')
 
-    flagList = func.getItemsList("Country", "NAME", "Flag")
+
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     result = _getComment(item_id, page)
-    commentsList  = result[0]
+    commentsList = result[0]
     paginator_range = result[1]
     page = result[2]
 
