@@ -1,8 +1,9 @@
 from django.db import models
-from core.models import Item, State, Relationship
+from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
+from core.models import User
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -285,10 +286,10 @@ class Basket(Item):
         return ''
 
 
-class Cabinet(Item):
+class Cabinet(User, Item):
 
     def __str__(self):
-        return ''
+        return self.title + '-' + self.username
 
 
 class Document(Item):
