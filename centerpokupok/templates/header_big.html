@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
             <div id="mainpage">
                 <div id="top">
                     <div class="container">
@@ -144,13 +145,48 @@
                         <input type="text" name="" placeholder={% trans "Search Products" %} class="text" />
                         <div class="styled-select">
                             <select name="select">
-                              <option value="1">{% trans "Choose category"%}</option>
+                              <option value="">{% trans "Choose category"%}</option>
+                              {% for parent_name , dict  in categotySelect|sort  %}
+
+
+
+
+                             {%  for name , item in  dict|sort%}
+                                   {% with  item.ID as id%}
+                                   {% with  item.LEVEL as  level %}
+
+
+                                {% if name == "Parent" %}
+                                         <option value="{{ id }}">{{ parent_name }}</option>
+
+                                 {% endif %}
+                                  {% if level == 2 %}
+                                         <option value="{{ id }}">-{{name}}</option>
+
+                                 {% endif %}
+                                 {% if level == 3 %}
+                                         <option value="{{ id }}">--{{name}}</option>
+
+                                 {% endif %}
+                                 {% endwith %}
+                                 {% endwith %}
+                      {% endfor %}
+
+               {% endfor %}
 
                             </select>
                         </div>
                         <div class="styled-select">
+
+
+
                             <select name="select">
                               <option value="1">{% trans "Choose region" %}</option>
+                                     {% for id ,  country  in countryList.items %}
+                                       {% with  country.NAME|first as name %}
+                                          <option value="{{ id }}">{{ name }}</option> countryList
+                                       {% endwith %}
+                                     {% endfor %}
 
                             </select>
                         </div>
@@ -162,7 +198,7 @@
 
                              {% for id, flag  in flagList.items %}
                              {% with flag.NAME|first as name  %}
-                              {% with flag.Flag|first  as flag  %}
+                              {% with flag.FLAG|first  as flag  %}
 
 
 

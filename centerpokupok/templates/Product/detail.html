@@ -356,27 +356,7 @@
                        {% endwith %}
                        {% endwith %}
                     {% endfor %}
-						<div class="panaging">
-
-             {%  if page.has_previous %}
-			    	<a href="?page={{ page.previous_page_number }}" class="icons prev">Prev</a>
-            {% endif %}
-            <label>Страницы:</label>
-
-
-                {% for i in paginator_range %}
-
-
-                   {% ifequal i page.number %}
-                       <a href="?page={{ page.number }}" class="current">{{ page.number }}</a>
-                          {% else %}
-                       <a href="?page={{ i}}">{{ i }}</a>
-                 {% endifequal %}
-               {% endfor %}
-               {%  if page.has_next %}
-			       	<a href="?page={{ page.next_page_number }}" class="icons next">Next</a>
-               {% endif %}
-			</div>
+					 {% include "paginator.html" %}
                     {% if form.is_multipart %}
                       <form enctype="multipart/form-data" method="post" action="">
                     {% else %}
