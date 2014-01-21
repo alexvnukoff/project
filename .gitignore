@@ -1,9 +1,11 @@
 .idea/
-locale/
+
 local_settings.py
+
 appl/Static/upload
-*.pyc
+
 *.pyo
+
 */migrations/
 whoosh_index
 

@@ -20,7 +20,7 @@ def productList(request):
     newsList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-    flagList = func.getItemsList("Country", "NAME", "Flag")
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     return render_to_response("Product/index.html", locals())
 
@@ -41,7 +41,7 @@ def productDetail(request, item_id):
 
     productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT')
 
-    #flagList = func.getItemsList("Country", "NAME", "Flag")
+    flagList = func.getItemsList("Country", "NAME", "Flag")
 
     result = _getComment(item_id, page)
     commentsList  = result[0]
@@ -86,7 +86,7 @@ def addComment(request, item_id):
 def _getComment(parent_id, page):
     comments = Comment.getCommentOfItem(parent_id=parent_id)
     comments = comments.order_by('-pk')
-    result =  func.setPaginationForItemsWithValues(comments, "DETAIL_TEXT", page_num=3, page=page)
+    result = func.setPaginationForItemsWithValues(comments, "DETAIL_TEXT", page_num=3, page=page)
     commentsList = result[0]
 
     for id ,comment in commentsList.items():
@@ -98,7 +98,7 @@ def _getComment(parent_id, page):
     paginator_range = func.getPaginatorRange(page)
     commentsList = OrderedDict(sorted(commentsList.items(), reverse=True))
 
-    return commentsList , paginator_range , page
+    return commentsList, paginator_range , page
 
 
 

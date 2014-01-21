@@ -17,6 +17,8 @@ from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 import warnings
+from collections import OrderedDict
+from operator import itemgetter
 import hashlib
 
 def createHash(string):
@@ -380,7 +382,7 @@ class Item(models.Model):
 
     @staticmethod
 
-    def getItemsAttributesValues(attr, items, fullAttrVal=False): #TODO: Jenya add doc
+    def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
            Return values of attribute list for items list
@@ -407,6 +409,8 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
+        items = tuple(set(items))
+
         valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
 
@@ -414,11 +418,21 @@ class Item(models.Model):
             getList += ['start_date','end_date']
 
         values = list(valuesObj.values(*getList))
+
         valuesAttribute = {}
 
+
+
+        for key in range(0, len(items)):
+            valuesAttribute[items[key]]= key
+
+        valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
+
         for valuesDict in values:
-            if valuesDict['item'] not in valuesAttribute:#TODO: Jenya remove item title
-                valuesAttribute[valuesDict['item']] = {'title': [valuesDict['item__title']]}
+
+            if not isinstance(valuesAttribute[valuesDict['item']], dict):
+
+                valuesAttribute[valuesDict['item']] = {}
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
                 valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
@@ -464,7 +478,7 @@ class Item(models.Model):
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
-        #TODO: Jenya new set
+
         '''
             Set values for list of attributes
             The parameter "attrWithValues" should be a dictionary
