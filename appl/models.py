@@ -60,6 +60,10 @@ class Organization (Item):
             ("read_organization", "Can read organization"),
         )
 
+    def __str__(self):
+        return self.getName()
+
+
 class Tpp(Organization):
 
     class Meta:
@@ -155,7 +159,7 @@ class Comment(Item):
     @staticmethod
     def spamCheck(user=None, parent_id=None):
         '''
-        Method check if current user , sended comment less than one minute ago
+        Method check if current user, sent comment less than one minute ago
         user = request.user
         parent_id = id , of Item element that related to comment(News for example)
         '''
@@ -166,11 +170,11 @@ class Comment(Item):
 
 
     @staticmethod
-    def getCommentOfItem(parent_id=None):
+    def getCommentOfItem(parent_id):
         """
-        Return quryset of comments that related to item
+        Return QuerySet of comments that related to item
         """
-        return  Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
+        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
 
 class Category(Item):
 
