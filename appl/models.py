@@ -28,8 +28,8 @@ def getSpecificChildren(cls, parent):
 
 def getSpecificParent(cls, child):
     '''
-        Returns not hierarchical children of specific type
-            Example: getSpecificChildren("Company", 10)
+        Returns not hierarchical parents of specific type
+            Example: getSpecificParent("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
     return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="rel")
