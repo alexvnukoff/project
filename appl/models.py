@@ -215,8 +215,10 @@ class Product(Item):
             cat[item['p2c__child_id']] = item['id']
 
         for key, product in products.items():
-            product.update({"CATEGORY_NAME": category[cat[key]]['NAME'][0]})
-            product.update({"CATEGORY_ID": cat[key]})
+            cat_name = category[cat[key]]['NAME'][0] if cat.get(key, "") else ""
+
+            product.update({"CATEGORY_NAME": cat_name})
+            product.update({"CATEGORY_ID": cat.get(key, "")})
 
         return products
 
