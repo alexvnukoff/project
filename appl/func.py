@@ -36,7 +36,7 @@ def getPaginatorRange(page):
 def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
     '''
     Method  return List of Values of items and  Pagination
-    items = Quryset of items
+    items = QuerySet of items
     attr = (list of item's attributes)
     page = number of current page
     page_num = num element per page
