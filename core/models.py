@@ -682,8 +682,7 @@ class Value(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User, related_name='creator')
-    update_date = models.DateTimeField(auto_now=True)
-    update_user = models.ForeignKey(User, related_name='updater')
+
 
     class Meta:
         unique_together = ("sha1_code", "attr", "item")
