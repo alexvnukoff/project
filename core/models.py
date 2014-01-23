@@ -759,4 +759,5 @@ def valueSaveHashCode(instance, **kwargs):
 
 @receiver(pre_save, sender=Relationship)
 def generateTitleField(instance, **kwargs):
+    assert instance.parent.pk != instance.child.pk, 'You cannot create an relationship for class instance with itself!'
     instance.title = 'RS_' + str(instance.type).upper() + '_PARENT:' + str(instance.parent.pk) + '_CHILD:'+ str(instance.child.pk)
