@@ -2,7 +2,7 @@ from django.db import models
 from core.models import *
 from appl.models import *
 from django.contrib.sites.models import get_current_site
-from django.db.models import Count
+from django.db.models import Count, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.conf import settings
@@ -105,6 +105,7 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
 
     return attributeValues
 
+#Deprecated
 def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
     '''
         Order Items by attribute
@@ -131,6 +132,36 @@ def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be ca
 
     return clsObj.objects.filter(item2value__attr__title=attribute).extra(order_by=[case])
 
+def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
+    '''
+        Order Items by attribute
+        cls: class name instance of Item
+        attribute: Attribute name
+        order: Order direction DESC / ASC
+        type: Sorting type str/int
+            Example: qSet = sortByAtt("Product", "NAME")
+            Example: qSet = sortByAtt("Product", "NAME", "DESC", "int")
+    '''
+
+    if type != "str":
+        case = 'TO_NUMBER("CORE_VALUE"."TITLE", \'999999999.999\')'
+    else:
+        case = 'CAST("CORE_VALUE"."TITLE" AS VARCHAR(100))'
+
+    if order != "ASC":
+        case = '-' + case
+
+    return queryset.model.objects.filter(pk__in=queryset, item2value__attr__title=attribute).extra(order_by=[case])
+
+def currencySymbol(currency):
+    symbols = {
+        'EUR': '€',
+        'USD': '$',
+        'NIS': '₪',
+    }
+
+    return symbols.get(currency.upper(), currency)
+
 def _setCouponsStructure(couponsDict):
 
     for item, attrs in couponsDict.items():
@@ -153,8 +184,15 @@ def _setCouponsStructure(couponsDict):
                 couponsDict[item][attr + '_END_DATE'] = discount['end_date']
                 price = float(newDict['COST'][0]['title'])
                 couponsDict[item][attr + '_COST'] = price - (price * int(discount['title'])) / 100
+                couponsDict[item]['COST_DIFFERENCE'] = price - couponsDict[item][attr + '_COST']
+                couponsDict[item]['COST_DIFFERENCE'] = '{0:,.0f}'.format(couponsDict[item]['COST_DIFFERENCE'])
                 couponsDict[item][attr + '_COST'] = '{0:,.2f}'.format(couponsDict[item][attr + '_COST'])
                 couponsDict[item][attr] = discount['title']
+            elif attr == "CURRENCY":
+                couponsDict[item][attr] = values[0]['title']
+                couponsDict[item][attr + '_SYMBOL'] = currencySymbol(couponsDict[item][attr])
+            elif attr == "COST":
+                couponsDict[item]['COST'] = '{0:,.2f}'.format(float(newDict['COST'][0]['title']))
             else:
                 couponsDict[item][attr] = values[0]['title']
 
@@ -178,8 +216,15 @@ def _setProductStructure(prodDict):
 
                 price = float(newDict['COST'][0])
                 prodDict[item]['DISCOUNT_COST'] = price - (price * float(discount)) / 100
+                prodDict[item]['COST_DIFFERENCE'] = price - prodDict[item]['DISCOUNT_COST']
+                prodDict[item]['COST_DIFFERENCE'] = '{0:,.0f}'.format(prodDict[item]['COST_DIFFERENCE'])
                 prodDict[item]['DISCOUNT_COST'] = '{0:,.2f}'.format(prodDict[item]['DISCOUNT_COST'])
                 prodDict[item][attr] = discount
+            elif attr == "COST":
+                prodDict[item]['COST'] = '{0:,.2f}'.format(float(newDict['COST'][0]))
+            elif attr == "CURRENCY":
+                prodDict[item][attr] = values[0]['title']
+                prodDict[item][attr + '_SYMBOL'] = currencySymbol(prodDict[item][attr])
             else:
                 prodDict[item][attr] = values[0]
 
@@ -210,6 +255,7 @@ def setStructureForHiearhy(dictinory, items):
     '''
     level = 0
     dictStructured = {}
+
     for node in dictinory:
         if node['LEVEL'] == 1:
             i = items[node['ID']]['NAME'][0]
@@ -217,10 +263,6 @@ def setStructureForHiearhy(dictinory, items):
             dictStructured[nameOfList] = {}
             node['item'] = items[node['ID']]
             dictStructured[nameOfList]['Parent'] = node
-
-
-
-
         else:
             node['pre_level'] = level
             node['item'] = items[node['ID']]
@@ -231,32 +273,29 @@ def setStructureForHiearhy(dictinory, items):
     return dictStructured
 
 
-def getCountofSepecificRelatedItems(childCls, list, parentCls):
+def getCountofSepecificItemsRelated(childCls, list, filterdChild = None):
     '''
         Get count of some type of child for list of some type of parents parents
             "childCls" - Type / Class of child objects
             "list" - iterable list of parent ids
-            "parentCls" Type / Class of parent objects
 
                 Example: getCountofSepecificRelatedItems("Product", [1, 2], "Category")
                 #will return number of products in categories with id 1 and 2
 
                 returns: [{
-                    'p2c_parent': 1,
+                    'parent': 1,
                     'childCount': 4
                 }, {
-                    'p2c_parent': 2,
+                    'parent': 2,
                     'childCount': 2
                 }]
     '''
-    parentObj = (globals()[parentCls])
     clsObj = (globals()[childCls])
 
-    where = '"{0}"."{1}" = "CORE_RELATIONSHIP"."CHILD_ID"'.format(clsObj._meta.db_table, clsObj._meta.pk.column)
-    table = '"{0}"'.format(clsObj._meta.db_table)
+    if filterdChild is None:
+        filterdChild = F("product")
 
-    return parentObj.objects.filter(p2c__parent_id__in=list, p2c__type="rel", p2c__child_id__isnull=False)\
-                                    .values('p2c__parent').annotate(childCount=Count('p2c__parent'))\
-                                    .extra(tables=[table], where=[where.upper()])
+    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterdChild, c2p__type="rel")\
+                                .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 
