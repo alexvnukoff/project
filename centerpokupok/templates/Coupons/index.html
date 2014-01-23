@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% block title %}Coupons{% endblock %}
+{% block title %}{% trans "Coupons" %}{% endblock %}
 
 {% block styles %}
     {{ block.super }}
@@ -34,24 +34,7 @@
 {% block body %}
     <div id="main">
             <div id="sidebar">
-                <h3>Related Categories</h3>
-                <ul id="categories">
-                    <li class="parent">Men</li>
-                    <li><a href="#">Accessories </a>(165510)</li>
-                    <li><a href="#">Coats &amp; Jackets </a>(165510)</li>
-                    <li><a href="#">Hoodies &amp; Sweatshirts </a>(165510)</li>
-                    <li><a href="#">Jeans </a>(165510)</li>
-                    <li><a href="#">Pants </a>(165510)</li>
-                    <li><a href="#">Shirts </a>(165510)</li>
-                    <li><a href="#">Shorts </a>(165510)</li>
-                    <li><a href="#">Sleep &amp; Lounge </a>(165510)</li>
-                    <li><a href="#">Socks </a>(165510)</li>
-                    <li><a href="#">Suits &amp; Blazers </a>(165510)</li>
-                    <li><a href="#">Sweaters </a>(165510)</li>
-                    <li><a href="#">Swimwear </a>(165510)</li>
-                    <li><a href="#">Tops &amp; Tees </a>(165510)</li>
-                    <li><a href="#">Underwear </a>(165510)</li>
-                </ul>
+                {% include "related_categories.html" %}
                 <div class="bestbuy">
                     <div class="items-coupon">
                         <h3>Самые выгодные купоны</h3>
@@ -81,150 +64,31 @@
                         </ul>
                     </div>
                 </div>
-                <div class="title-filter">
-                    Вы смотрели
-                </div>
-                <div id="gallery">
-                    <ul id="slider">
-                        <li>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -80%</div>
-                                <a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a>
-                            </div>
-                            <div class="items">
-                                <div class="discount"><i class="icons i-after"></i> -35%</div>
-                                <a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div id="main-r">
                 <div class="breadcrumbs">
                     <div xmlns="http://rdf.data-vocabulary.org/#">
-                        <span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
-                        <span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Купоны</a> &rarr;</span>
-                        <span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Для мужчин</a></span>
+                        <span typeof="v:Breadcrum">
+                            <a property="v:title" rel="v:url" href="{% url "main" %}">{% trans "Main" %}</a> &rarr;
+                        </span>
+                        <span typeof="v:Breadcrum">
+                            <a href="{% url "coupons:list" %}" property="v:title" rel="v:url">{% trans "Coupons" %}</a>
+                        </span>
+                        {% for id, crumb in breadCrumbs.items %}
+                            {% with crumb.NAME|first as name %}
+                            &rarr;
+                            <span typeof="v:Breadcrum">
+                                <a href="{% url "coupons:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
+                            </span>
+                            {% endwith %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="title-items">
-                    Купоны  <i>/</i> Для мужчин
+                    {% trans "Coupons" %}
+                    {% if currentCat %}
+                        <i>/</i> {{ currentCat }}
+                    {% endif %}
                 </div>
 
             {% for id, attr in coupons.items %}
@@ -233,11 +97,12 @@
                 {% with attr.COUPON_DISCOUNT as discount  %}
                 {% with attr.IMAGE as picture  %}
                 {% with attr.COUPON_DISCOUNT_COST as discount_cost  %}
-                {% with attr.CURRENCY as currency  %}
+                {% with attr.CURRENCY_SYMBOL as currency  %}
                 {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
                 {% with attr.COST as cost  %}
+                {% with attr.COST_DIFFERENCE as cost_diff %}
 
-                {% if forloop.counter == 1 %}
+                {% if forloop.first %}
                 <div class="coupontop">
                     <div class="thumb-cp">
                         <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
@@ -248,7 +113,7 @@
                     <div class="couponinfo">
                         <a href="#">{{ name }}</a>
                         <div class="clock">
-                            <p>До завершения осталось времени</p>
+                            <p>{% trans "Time till the end" %}</p>
                             <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
                         </div>
                     </div>
@@ -259,42 +124,33 @@
                                 <p>Осталось 10 купонов</p>
                             </span>
                             <span class="small">
-                                <p>Ваша экономия</p>
-                                <p><font class="price2">$ 120.00</font></p>
+                                <p>{% trans "You save" %}</p>
+                                <p><font class="price2">{{ currency }} {{ cost_diff }}</font></p>
                             </span>
                         </div>
-                        <a href="#" class="btnbuy">Купить</a>
+                        <a href="#" class="btnbuy">{% trans "Buy" %}</a>
                     </div>
                 </div>
+                {% else %}
 
-                <div class="topitems">
-                    <label>Сортировать по</label>
-                    <span id="sortby">
-                        <a href="#nogo" class="pricefilter">Цене </a>
-                        <div class="sortprice">
-                            <ul>
-                                <li><a href="#nogo">$100 ~ $200</a></li>
-                                <li><a href="#nogo">$200 ~ $300</a></li>
-                                <li><a href="#nogo">$300 ~ $400</a></li>
-                                <li><a href="#nogo">$400 ~ $500</a></li>
-                                <li><a href="#nogo">$500 ~ $600</a></li>
-                            </ul>
+                {% if forloop.counter == 2 %}
+                    <div class="topitems" style="margin-top: 20px;">
+                        <label>{% trans "Sort By" %}</label>
+                        <span>
+                            <a href="#" class="dc">{% trans "Price" %}</a>
+                        </span>
+                        <span>
+                            <a href="#" class="dc">{% trans "Discount" %}</a>
+                        </span>
+                        <div class="right">
+                            <label>{% trans "All " %} </label>
+                            <a href="#">{% trans "Expire today " %} </a>
+                            <a href="#">{% trans "Expire this week " %}</a>
                         </div>
-                    </span>
-                    <span>
-                        <a href="#" class="dc">Скидке</a>
-                    </span>
-                    <div class="right">
-                        <label>Все действующие </label>
-                        <a href="#">Сегодняшние </a>
-                        <a href="#">На этой неделе</a>
                     </div>
-                </div>
 
-                {% endif %}
 
-                {% if forloop.counter == 1 %}
-                <ul id="listcoupon">
+                    <ul id="listcoupon">
                 {% endif %}
                     <li>
                         <div class="thumb">
@@ -319,7 +175,8 @@
                 {% if forloop.last %}
                 </ul>
                 {% endif %}
-
+                {% endif %}
+                {% endwith %}
                 {% endwith %}
                 {% endwith %}
                 {% endwith %}
