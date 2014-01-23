@@ -13,10 +13,10 @@
                             {% endif %}
                             <div class="clumn-best">
                                 <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                                <a href="#">
+                                <a href="{% url "products:detail" id %}">
                                     <img width="180" height="135" alt="{{ name }}" src="{% static picture %}" class="thumb" />
                                 </a>
-                                <a href="#" class="name">{{ name }}</a>
+                                <a href="{% url "products:detail" id %}" class="name">{{ name }}</a>
                             </div>
 
                              {% if forloop.counter|divisibleby:"5" and not forloop.last  %}

@@ -411,7 +411,7 @@ class Item(models.Model):
 
 
 
-
+        #TODO: Jenya maybe change items to queryset
         valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
         getList = ["title", "attr__title", "item__title", "item"]
 
