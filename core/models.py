@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.db.models.signals import pre_delete, post_delete, pre_save
 from django.dispatch import receiver
-from django.db.models import Q
+from django.db.models import Q, F
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
@@ -756,3 +756,7 @@ def itemPostDelete(instance, **kwargs):
 @receiver(pre_save, sender=Value)
 def valueSaveHashCode(instance, **kwargs):
     instance.sha1_code = createHash(instance.title)
+
+@receiver(pre_save, sender=Relationship)
+def generateTitleField(instance, **kwargs):
+    instance.title = 'RS_' + str(instance.type).upper() + '_PARENT:' + str(instance.parent.pk) + '_CHILD:'+ str(instance.child.pk)
