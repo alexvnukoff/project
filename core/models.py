@@ -83,6 +83,49 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         return True
 
+    def has_perms(self, perm_list, obj=None):
+        """
+        Returns True if the user has each of the specified permissions. If
+        object is passed, it checks if the user has all required perms for this
+        object.
+        """
+        if obj is None:
+            return PermissionsMixin.has_perms(self, perm_list)
+        else:
+            group_list = []
+            if self == obj.create_user: # is user object's owner?
+                group_list.append('Owner')
+                group_list.append('Admin')
+                if obj.status.perm: # is there permissions group for current object's state?
+                    group_list.append(obj.status.perm.name)
+                else: # no permissions group for current state, attach Staff group
+                    group_list.append('Staff')
+            else:
+                if self == obj.update_user or self.groups.filter(name=obj.community.name): # is user community member?
+                    if self.is_admin: # has user admin flag?
+                        group_list.append('Admin')
+                        if obj.status.perm: # is there permissions group for current object's state?
+                            group_list.append(obj.status.perm.name)
+                        else: # no permissions group for current state, attach Staff group
+                            group_list.append('Staff')
+                    else:
+                        if obj.status.perm: # is there permissions group for current object's state?
+                            group_list.append(obj.status.perm.name)
+                        else: # no permissions group for current state, attach Staff group
+                            group_list.append('Staff')
+            # get all permissions from all related groups for current type of item
+            obj_type = obj.__class__.__name__ # get current object's type
+            obj_type = obj_type.lower()
+            p_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
+                            permissions__codename__contains=obj_type).values('permissions__codename')]
+            # attach user's private permissions
+            p_list += [p['codename'] for p in self.user_permissions.filter(codename__contains=obj_type).values('codename')]
+            p_list = list(set(p_list)) #remove duplicated keys in permissions list
+            for i in perm_list:
+                if i not in p_list:
+                    return False
+            return True
+
     def has_module_perms(self, app_label):
         return True
 
