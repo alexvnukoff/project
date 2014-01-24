@@ -119,49 +119,7 @@
 					<input type="checkbox" name="" class="checkcolor">
 				</li>
 			</ul>
-			<div class="title-filter">
-				Вы смотрели
-			</div>
-			<div id="gallery">
-				<ul id="slider">
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-				</ul>
-			</div>
+			
 		</div>
 		<div id="main-r">
 			<div class="breadcrumbs">
@@ -175,15 +133,15 @@
 			<div class="title-items">
 				Одежда и аксессуары  <i>/</i>  Одежда для мужчин
 			</div>
-			<div class="items-select">
-				<label>Продавец из</label>
+			  <div class="items-select">
+				<label>{% trans "Seller from" %}</label>
 				<div class="styled-select">
 	                <select name="select">
 	                  <option value="1">Израиль, Иерусалим</option>
 	                  <option value="2">Израиль, Иерусалим</option>
 	                </select>
               	</div>
-              	<label>Доставка в</label>
+              	<label>{% trans "Shipping to" %}</label>
               	<div class="styled-select">
 	                <select name="select">
 	                  <option value="1">Израиль, Иерусалим</option>
@@ -199,32 +157,30 @@
 	              	</div>
               </div>
 			</div>
+
 			<div class="topitems">
-				<label>Показать только</label>
+				<label>{% trans "Show only" %}</label>
 				<span>
 					<input type="checkbox" name="" class="checkbox">
 					<i class="icons icon-display1"></i>
-					<font>продавец онлайн</font>
+					<font>{% trans "Salesman online" %}</font>
 				</span>
 				<span>
 					<input type="checkbox" name="" class="checkbox">
 					<i class="icons icon-display2"></i>
-					<font>высокий рейтинг</font>
+					<font>{% trans "High raiting" %}</font>
 				</span>
 				<span>
 					<input type="checkbox" name="" class="checkbox">
 					<i class="icons icon-display3"></i>
-					<font>бесплатная доставка</font>
+					<font>{% trans "Free shipping" %}</font>
 				</span>
-				<span>
-					<input type="checkbox" name="" class="checkbox">
-					<font>продажа поштучно</font>
-				</span>
+
 			</div>
 			<div class="topitems">
-				<label>Сортировать по</label>
+				<label>{% trans "Sort by" %}</label>
 				<span id="sortby">
-					<a href="#nogo" class="pricefilter">Цене </a>
+					<a href="#nogo" class="pricefilter">{% trans "Price" %} </a>
 					<div class="sortprice">
 						<ul>
 							<li><a href="#">$100 ~ $200</a></li>
@@ -236,11 +192,9 @@
 					</div>
 				</span>
 				<span>
-					<a href="#">Рейтингу</a>
+					<a href="#">{% trans "Raiting" %}</a>
 				</span>
-				<span>
-					<a href="#">По кол-ву заказов</a>
-				</span>
+
 			</div>
 			<ul id="listitems">
                 {% for id , product in products_list.items %}
@@ -253,7 +207,7 @@
                      {% with product.COUNTRY_NAME|first as country %}
 				<li>
 
-					<a href="#">
+					<a href="{% url "products:detail" id %}">
                    <div class="img_gallery">
 						<div class="shadow"></div>
 						<div class="img_block">
@@ -262,7 +216,7 @@
 						</div>
 					</div>
 				</a>
-                    <p><a href="#">{{ name }}</a></p>
+                    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
 					<div class="price">
 
 						<font class="num">{{ currency }} {{ price }}</font>
@@ -350,7 +304,7 @@
 			<div class="itembanner"><a href="#"><img src="{% static "images/banner.jpg" %}" alt=""></a></div>
 			{% include "paginator.html" %}
 			<div class="salepeople">
-				<h1>Продавцы</h1>
+				<h1>{% trans "Sellers" %}</h1>
 				<ul id="slider1">
 					{% for id , attr in companyList.items %}
                         {% with attr.COMPANY_NAME|first as name %}
@@ -360,15 +314,20 @@
                   {% if  forloop.counter == 1 %}
                                   <li>
                                 {% endif %}
-						<div class="itemspp">
-							<img src="{% static picture %}" alt="">
+                      <div class="itemspp">
+						<div class="img_slider">
+                        <div class="shadow"></div>
+                        <div class="img_block">
+							<img  src="{% static picture %}" alt="">
+                            </div>
+			            </div>
 							<div class="infopeople">
 								<i class="icons icon-status status-online"></i>
 								<p><a href="#">{{ name }}</a></p>
 								<p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
 								<p>{{ country }}</p>
 							</div>
-						</div>
+					</div>
 
 					  {% if forloop.counter|divisibleby:"7" and not forloop.last  %}
 
