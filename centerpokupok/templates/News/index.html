@@ -183,7 +183,7 @@
 					<img class="star" alt="" src="images/stars.png">
 					<img width="160px" height="115px" src="{% static picture %}" alt="{{ name }}" class="thumb" />
 					<p class="date">{{ date }}</p>
-					<p><a href="{{ id }}/">{{ name }}</a></p>
+					<p><a href="{% url "news:detail" id %}">{{ name }}</a></p>
 					<p>{{ content|truncatewords:25 }} </p>
 
 

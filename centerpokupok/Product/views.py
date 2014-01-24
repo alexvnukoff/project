@@ -25,7 +25,7 @@ def productList(request):
     return render_to_response("Product/index.html", locals())
 
 
-def productDetail(request, item_id):
+def productDetail(request, item_id, page=1):
     if request.POST.get('subCom', False):
         form = addComment(request, item_id)
         if isinstance(form, HttpResponseRedirect):
@@ -33,7 +33,7 @@ def productDetail(request, item_id):
 
     else:
         form = ItemForm("Comment")
-    page = request.GET.get('page', 1)
+
 
 
     product = get_object_or_404(Product, pk=item_id)
@@ -44,8 +44,11 @@ def productDetail(request, item_id):
     product_id = [prod.id for prod in sameProducts]
     sameProducts = Item.getItemsAttributesValues(("NAME", "IMAGE", "CURRENCY", "COST"), product_id)
 
-
-
+    try:
+        company = Company.objects.get(p2c__child_id=item_id)
+        company = company.getAttributeValues("NAME")
+    except ObjectDoesNotExist:
+        pass
 
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
@@ -56,6 +59,9 @@ def productDetail(request, item_id):
 
     dictionaryLabels = {"DETAIL_TEXT": "Comment"}
     form.setlabels(dictionaryLabels)
+
+    url_paginator = "products:paginator"
+    url_parameter = [item_id]
 
 
 
@@ -82,13 +88,13 @@ def addComment(request, item_id):
 
 
 
-def getCategoryProduct(request, category_id):
+def getCategoryProduct(request, category_id, page=1):
 
-    page = request.GET.get("page", 1)
+
 
     products = Product.objects.filter(c2p__parent_id=category_id, c2p__type='rel', sites=settings.SITE_ID).order_by("-pk")
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                         page_num=12, page=1)
+                                         page_num=12, page=page)
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
@@ -120,6 +126,8 @@ def getCategoryProduct(request, category_id):
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
+    url_paginator = "products:cat_pagination"
+    url_parameter = [category_id]
 
 
 
@@ -133,6 +141,46 @@ def getCategoryProduct(request, category_id):
 
 
 
+
+def getAllNewProducts(request, page=1):
+
+
+    products = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")
+    result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
+                                         page_num=15, page=page)
+    products_list = result[0]
+    products_ids = [key for key, value in products_list.items()]
+    companies = Company.objects.filter(p2c__child_id__in=products_ids)
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
+                                 p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
+                                                                                 'p2c__child__p2c__child', 'pk')
+    items_id =[]
+    for item in items:
+        items_id.append(item['pk'])
+        items_id.append(item['p2c__child_id'])
+
+    items_id = set(items_id)
+    itemsWithAttribute = Item.getItemsAttributesValues(("NAME", "IMAGE"), items_id)
+
+    for item in items:
+        products_list[item['p2c__child__p2c__child']].update({'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']})
+        products_list[item['p2c__child__p2c__child']].update({'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']})
+        products_list[item['p2c__child__p2c__child']].update({'COMPANY_ID': item['p2c__child_id']})
+        products_list[item['p2c__child__p2c__child']].update({'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']})
+        products_list[item['p2c__child__p2c__child']].update({'COUNTRY_ID': item['pk']})
+
+
+
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "products:products_paginator"
+
+
+
+
+    return render_to_response("Product/new.html", {'products_list': products_list, 'page':page,
+                                                   'paginator_range':paginator_range, 'url_paginator': url_paginator})
 
 
 

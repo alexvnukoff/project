@@ -3,8 +3,11 @@
 <div class="prd-new">
                         <div class="title-discount">
                             <span class="left">
+
+
                                 <label>{% trans "Latest" %}</label>
-                                <a href="#">{% trans "more" %}</a>
+                                <a href="{% url "products:list" %}">{% trans "more" %}</a>
+
                             </span>
                         </div>
                         <ul class="listnew">
@@ -43,8 +46,10 @@
                     <div class="prd-new">
                         <div class="title-discount">
                             <span class="left">
+
                                 <label>{% trans "Top sales" %}</label>
-                                <a href="#">{% trans "more" %}</a>
+                                  <a href="{% url "products:list" %}">{% trans "more" %}</a>
+
                             </span>
                         </div>
                         <ul class="listnew">

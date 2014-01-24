@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+
 import appl.views
 import centerpokupok.views
 import centerpokupok.News.urls
@@ -22,6 +23,8 @@ urlpatterns = patterns('',
     url(r'^reviews/', include("centerpokupok.Reviews.urls", namespace="reviews")),
     url(r'^coupons/', include("centerpokupok.Coupons.urls", namespace="coupons")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
+
+
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
