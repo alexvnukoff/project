@@ -53,6 +53,7 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
 	position: relative;
 }
 .img_gallery .img_block img {
+max-width: 130px;
 position: absolute;
 margin: auto;
 left: 0;
@@ -92,6 +93,7 @@ bottom: 0;
 	position: relative;
 }
 .img_slider .img_block img {
+max-width: 70px;
 position: absolute;
 margin: auto;
 left: 2px;
@@ -168,7 +170,7 @@ bottom: 2px;
 #s_listitems li{ position: relative; float: left; width: 150px; min-height: 242px; height: 242px; margin: 40px 30px 0 0; display: inline;}
 #s_listitems li img.thumb{ float: left; padding-bottom: 10px;}
 #s_listitems li h3{ font-size: 13px; font-weight: normal; line-height: 16px;}
-#s_listitems li .price{position: absolute; width: 100%; top:210px; left:0px; color: #999;}
+#s_listitems li .price{position: absolute; width: 100%;  left:0px; color: #999;}
 #s_listitems li .price font.num{ font-size: 16px; color: #ca4228;}
 #s_listitems li .price font.price-old{ text-decoration: line-through;}
 #s_listitems li p a{word-wrap: word-break;}
