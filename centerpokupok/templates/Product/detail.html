@@ -38,19 +38,23 @@
    	<div id="main">
 		<div id="sidebar">
 			<div class="shopinfo">
-				<span class="title">Dian chou bracelet's store</span>
+                {% with company|first as company %}
+
+				<span class="title">{{ company }}</span>
 				<div class="shopinfoin">
 					<div class="badge">
 						<i class="icons i-badge"></i>
 						<i class="icons i-badge"></i>
 						<i class="icons i-badge"></i>
 					</div>
-					<label>Store No.202435</label>
+
 					<div class="feedbackinfo">
 						<p>Израиль, Иерусалим</p>
 						<p class="end"><i class="icons icon-cmt"></i> 96.3% <a href="#">positive feedback</a></p>
 					</div>
 				</div>
+
+            {% endwith %}
 			</div>
 			<div class="sale-left">
 				<img src="images/gallery/p1.png" alt="" class="avatar" />
@@ -127,49 +131,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="title-filter">
-				Вы смотрели
-			</div>
-			<div id="gallery">
-				<ul id="slider">
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-					<li>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl3.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl4.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl1.jpg" alt=""></a></div>
-						<div class="items"><a href-"#"><img src="images/gallery/gl2.jpg" alt=""></a></div>
-					</li>
-				</ul>
-			</div>
+
 		</div>
 		<div id="main-r">
 			<div class="breadcrumbs">
