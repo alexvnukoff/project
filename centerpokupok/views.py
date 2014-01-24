@@ -53,18 +53,13 @@ def home(request):
     couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
     coupons_ids = [cat.pk for cat in couponsObj]
 
-
     coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
-
                                                fullAttrVal=True)
     coupons = func._setCouponsStructure(coupons)
 
-
-
-
-    productsSale = func.sortByAttr("Product", "DISCOUNT", "DESC", "int")
-    productsSale = Product.getProdWithDiscount(productsSale)[:15]
-
+    #----------- Products with discount -------------#
+    productsSale = Product.getProdWithDiscount()
+    productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
     productsSale_ids = [prod.pk for prod in productsSale]
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
     productsSale = func._setProductStructure(productsSale)
@@ -75,7 +70,8 @@ def home(request):
     return render_to_response("index.html", {'newsList': newsList, 'sortedHierarchyStructure': sortedHierarchyStructure,
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
                                              'tppList': tppList, 'countryList': countryList,
-                                             "newProducrList": newProducrList, "topPoductList": topPoductList})
+                                             "newProducrList": newProducrList, "topPoductList": topPoductList,
+                                             "productsSale": productsSale})
 
 
 def about(request):
