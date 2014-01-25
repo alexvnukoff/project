@@ -85,22 +85,30 @@
 				<div class="items-recm">
 					<h2>Рекомендуем</h2>
 					<ul>
+
+                    {% for id , attr  in newProducrList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.CURRENCY|first as currency %}
+                        {% with attr.COST|first as cost  %}
+                        {% with attr.CATEGORY_NAME as category_name  %}
+                        {% with attr.CATEGORY_ID as category_id  %}
 						<li>
-							<a href="#"><img src="images/products/pr1.jpg" alt=""></a>
-							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
+							<a href="{% url "products:detail" id %}"><img src="{% static picture %}" alt=""></a>
+							<p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
 							<p class="price">
-								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
+								<font class="number">{{ currency }} {{ cost }}</font><font class="dv"></font>
 							</p>
-							<p><a class="recm-more" href="#">Футболки мужские  →</a></p>
+							<p><a class="recm-more" href="{% url "products:category" category_id %}">{{ category_name }} →</a></p>
 						</li>
-						<li>
-							<a href="#"><img src="images/products/pr1.jpg" alt=""></a>
-							<p><a href="#">Футболка мужская с принтом Чарли-Чаплина...</a></p>
-							<p class="price">
-								<font class="number">$3.80 </font><font class="dv">/ шт.</font>
-							</p>
-							<p><a class="recm-more" href="#">Футболки мужские  →</a></p>
-						</li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+						{% endfor %}
+
 					</ul>
 				</div>
 			</div>

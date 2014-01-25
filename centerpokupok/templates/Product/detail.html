@@ -88,34 +88,25 @@
 				<li><a href="#">Women Shirt </a>(16)</li>
 			</ul>
 			<div class="title-filter">
-				Самые популярные товары
+				{% trans "Most popular products" %}
 			</div>
 			<ul class="bestreview">
+                {% for id , attr in productsPopularList.items %}
+                    {% with attr.NAME|first as name %}
+                    {% with attr.IMAGE|first as picture %}
+                    {% with attr.CURRENCY|first as currency %}
+                    {% with attr.COST|first as price %}
 				<li>
-					<a href="#"><img src="images/products/pr7.jpg" alt="" class="thumb" /></a>
-					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-					<p><font class="number">$3.80</font> / шт.</p>
+
+					<a href="{% url "products:detail" id %}"><img src="{% static picture %}" alt="{{ name }}" class="thumb" /></a>
+					<a href="{% url "products:detail" id %}">{{ name }}</a>
+					<p><font class="number">{{ price }}</font> {{ currency }}</p>
 				</li>
-				<li>
-					<a href="#"><img src="images/products/pr7.jpg" alt="" class="thumb" /></a>
-					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-					<p><font class="number">$3.80</font> / шт.</p>
-				</li>
-				<li>
-					<a href="#"><img src="images/products/pr7.jpg" alt="" class="thumb" /></a>
-					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-					<p><font class="number">$3.80</font> / шт.</p>
-				</li>
-				<li>
-					<a href="#"><img src="images/products/pr7.jpg" alt="" class="thumb" /></a>
-					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-					<p><font class="number">$3.80</font> / шт.</p>
-				</li>
-				<li>
-					<a href="#"><img src="images/products/pr7.jpg" alt="" class="thumb" /></a>
-					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-					<p><font class="number">$3.80</font> / шт.</p>
-				</li>
+                    {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                {% endfor %}
 			</ul>
 			<div class="bestbuy">
 				<div class="items-coupon">
