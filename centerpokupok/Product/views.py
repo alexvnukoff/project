@@ -22,6 +22,8 @@ def productList(request):
     paginator_range = func.getPaginatorRange(page)
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
+
+
     return render_to_response("Product/index.html", locals())
 
 
@@ -62,6 +64,20 @@ def productDetail(request, item_id, page=1):
 
     url_paginator = "products:paginator"
     url_parameter = [item_id]
+
+    productsPopular = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:5]
+    product_id = [prod.id for prod in productsPopular]
+    productsPopularList = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE"), product_id)
+
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id  = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
 
 
@@ -131,9 +147,23 @@ def getCategoryProduct(request, category_id, page=1):
 
 
 
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+
+
 
     return render_to_response("Product/index.html", {'products_list': products_list,'companyList': companyList,
-                                                      'page': page, 'paginator_range': paginator_range})
+                                                      'page': page, 'paginator_range': paginator_range,
+                                                      'url_paginator': url_paginator, 'url_parameter':url_parameter,
+                                                      'categotySelect':categotySelect, 'countryList':countryList })
 
 
 
@@ -177,10 +207,22 @@ def getAllNewProducts(request, page=1):
     url_paginator = "products:products_paginator"
 
 
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+
 
 
     return render_to_response("Product/new.html", {'products_list': products_list, 'page':page,
-                                                   'paginator_range':paginator_range, 'url_paginator': url_paginator})
+                                                   'paginator_range':paginator_range, 'url_paginator': url_paginator,
+                                                   'categotySelect': categotySelect, 'countryList': countryList})
 
 
 
