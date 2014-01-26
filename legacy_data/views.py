@@ -10,8 +10,8 @@ def usersUpload(request):
     time1 = datetime.datetime.now()
 
     #Upload from CSV file into buffer table
-    with open('c:\\data\\users_legacy.csv', 'r') as f:
-    #with open('c:\\data\\test.csv', 'r') as f:
+    #with open('c:\\data\\users_legacy.csv', 'r') as f:
+    with open('c:\\data\\test.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
@@ -32,12 +32,12 @@ def usersUpload(request):
         btx_id = data[i][7]
 
         if not len(data[i][6]):
-            update_date = None
+            last_visit_date = None
         else:
             last_visit_date = datetime.datetime.strptime(data[i][6], "%d.%m.%Y %H:%M")
 
         if not len(data[i][8]):
-            update_date = None
+            reg_date = None
         else:
             reg_date = datetime.datetime.strptime(data[i][8], "%d.%m.%Y %H:%M")
 
@@ -51,13 +51,7 @@ def usersUpload(request):
                                     last_visit_date = last_visit_date,\
                                     reg_date = reg_date)
 
-        if not i%200:
-            print(i)
-    #print(data)
-    #print(len(data))
-    #L_User.objects.create()
-    usr = L_User.objects.all()
-    print('Количество пользователей:', usr.count())
+    print('Количество пользователей:', L_User.objects.all().count())
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Время обработки:', time)
