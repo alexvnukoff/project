@@ -1,0 +1,6 @@
+{% extends "legacy_data/base.html" %}
+{% block title %}Загрузка данных{% endblock %}
+{% block body %}
+    Данные загружены. Всего обработано {{ total_qty }}. Ошибок - {{ errors }}.
+    Время выполнения процесса - {{ elapsed_time }}.
+{% endblock %}
