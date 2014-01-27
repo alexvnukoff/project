@@ -1,5 +1,7 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
+from threading import local
+from threading import current_thread
 import os
 
 
@@ -24,4 +26,31 @@ class SiteUrlMiddleWare:
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..','tppcenter/templates').replace('\\', '/'), )
+
+
+
+class GlobalRequest(object):
+    _requests = {}
+
+    @staticmethod
+    def get_request():
+        try:
+                return GlobalRequest._requests[current_thread()]
+        except KeyError:
+                return None
+
+    def process_request(self, request):
+        GlobalRequest._requests[current_thread()] = request
+
+    def process_response(self, request, response):
+        # Cleanup
+        thread = current_thread()
+        try:
+            del GlobalRequest._requests[thread]
+        except KeyError:
+            pass
+        return response
+
+def get_request():
+    return GlobalRequest.get_request()
 
