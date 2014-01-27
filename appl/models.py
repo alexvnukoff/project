@@ -77,7 +77,7 @@ class Tpp(Organization):
 
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 class Company(Organization):
 
@@ -136,7 +136,7 @@ class Department(Organization):
         self.status = State.objects.get(title='Default Department State')
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Country(Item):
