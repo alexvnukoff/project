@@ -19,7 +19,12 @@ from django.utils import timezone
 import warnings
 from collections import OrderedDict
 from operator import itemgetter
+
+from django.utils.timezone import now
+import datetime
 import hashlib
+from django.shortcuts import render_to_response
+from tpp.SiteUrlMiddleWare import get_request
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
@@ -30,12 +35,18 @@ def createHash(string):
 #----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
+        request = get_request()
+        ip = request.META['REMOTE_ADDR']
+        time = now() - datetime.timedelta(minutes=1)
+        users = User.objects.filter(ip=ip, date_joined__gt=time)
+        if users:
+            raise ValueError("Bot")
         if not email:
             raise ValueError('Users must have an email address')
 
         user = self.model(
             email=UserManager.normalize_email(email),
-            username=username)
+            username=username, ip=ip)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -65,6 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    ip = models.GenericIPAddressField()
 
     objects = UserManager()
 
