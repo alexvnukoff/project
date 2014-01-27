@@ -1,15 +1,16 @@
 from django.conf.urls import patterns, include, url
-import appl.views
+import centerpokupok.Cabinet.views
 
 from django.contrib import admin
 admin.autodiscover()
 
+
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', appl.views.set_news_list),
+    url(r'^$', centerpokupok.Cabinet.views.get_profile, name="main"),
+
+
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^news/$', appl.views.set_news_list),
-)
 
+)

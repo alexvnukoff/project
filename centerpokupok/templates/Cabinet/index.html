@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+<html>
+<head>
+
+               <title>{% block title %}News Detail{% endblock %}</title>
+
+
+{{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+{% endblock %}
+
+
+
+
+</head>
+<body>
+{% block header %}
+{% include "header_big.html" %}
+{% endblock %}
+{% block body %}
+
+
+
+    {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}
+</body>
+</html>
