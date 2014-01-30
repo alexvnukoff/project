@@ -2,8 +2,9 @@ from django import template
 from collections import OrderedDict
 from django.core.urlresolvers import reverse
 from copy import copy
-register = template.Library()
+from appl.func import currencySymbol
 
+register = template.Library()
 
 
 @register.filter(name='sort')
@@ -14,6 +15,40 @@ def sort(value):
     else:
         return ""
 
+@register.filter(name='discountDiff')
+def discountDiff(value, discount):
+    try:
+        value = float(value)
+        discount = float(discount)
+        price = '{0:.2f}'.format(value - (value - (value * discount) / 100))
+        return '{0:,}'.format(float(price))
+    except Exception:
+        return 0
+
+@register.filter(name='discountPrice')
+def discountPrice(value, discount):
+    try:
+        value = float(value)
+        discount = float(discount)
+        price = '{0:.2f}'.format(value - (value * discount) / 100)
+        return '{0:,}'.format(float(price))
+
+    except Exception:
+        return 0
+
+@register.filter(name='formatPrice')
+def formatPrice(value):
+    try:
+        value = float(value)
+        price = '{0:.2f}'.format(value)
+        return '{0:,}'.format(float(price))
+    except Exception:
+        return 0
+
+@register.filter(name='getSymbol')
+def getSymbol(value):
+
+    return currencySymbol(value)
 
 class DynUrlNode(template.Node):
     def __init__(self, *args):
@@ -40,5 +75,3 @@ class DynUrlNode(template.Node):
 def dynurl(parser, token):
     args = token.split_contents()
     return DynUrlNode(*args[1:])
-
-

@@ -182,17 +182,7 @@ def _setCouponsStructure(couponsDict):
                     raise ValueError('You should pass full attribute data')
 
                 couponsDict[item][attr + '_END_DATE'] = discount['end_date']
-                price = float(newDict['COST'][0]['title'])
-                couponsDict[item][attr + '_COST'] = price - (price * int(discount['title'])) / 100
-                couponsDict[item]['COST_DIFFERENCE'] = price - couponsDict[item][attr + '_COST']
-                couponsDict[item]['COST_DIFFERENCE'] = '{0:,.0f}'.format(couponsDict[item]['COST_DIFFERENCE'])
-                couponsDict[item][attr + '_COST'] = '{0:,.2f}'.format(couponsDict[item][attr + '_COST'])
                 couponsDict[item][attr] = discount['title']
-            elif attr == "CURRENCY":
-                couponsDict[item][attr] = values[0]['title']
-                couponsDict[item][attr + '_SYMBOL'] = currencySymbol(couponsDict[item][attr])
-            elif attr == "COST":
-                couponsDict[item]['COST'] = '{0:,.2f}'.format(float(newDict['COST'][0]['title']))
             else:
                 couponsDict[item][attr] = values[0]['title']
 
@@ -273,7 +263,7 @@ def setStructureForHiearhy(dictinory, items):
     return dictStructured
 
 
-def getCountofSepecificItemsRelated(childCls, list, filterdChild = None):
+def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     '''
         Get count of some type of child for list of some type of parents parents
             "childCls" - Type / Class of child objects
@@ -292,10 +282,41 @@ def getCountofSepecificItemsRelated(childCls, list, filterdChild = None):
     '''
     clsObj = (globals()[childCls])
 
-    if filterdChild is None:
-        filterdChild = F("product")
+    if filterChild is None:
+        filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterdChild, c2p__type="rel")\
+    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterChild, c2p__type="rel")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
+def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
+
+    elCount = {}
+    parent = 0
+
+    if len(listCount) == 0:
+        return {}
+
+    keys = list(listCount[0].keys())
+
+    parentKey = keys[1]
+    childKey = keys[0]
+
+    if needed is not None:
+        for cat in catWithAttr:
+            if cat not in needed:
+                del catWithAttr[cat]
+
+    for dictCount in listCount:
+        elCount[dictCount[parentKey]] = dictCount[childKey]
+
+    for cat in categories:
+        if cat['LEVEL'] == categories[0]['LEVEL']:
+            parent = cat['ID']
+
+        if 'count' not in catWithAttr[parent]:
+            catWithAttr[parent]['count'] = elCount.get(cat['ID'], 0)
+        else:
+            catWithAttr[parent]['count'] += elCount.get(cat['ID'], 0)
+
+    return catWithAttr
 
