@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', centerpokupok.Product.views.getAllNewProducts, name='list'),
+     url(r'^$', centerpokupok.Product.views.getCategoryProduct, name='list'),
      url(r'^page/([0-9]+)/$', centerpokupok.Product.views.getAllNewProducts, name='products_paginator'),
      url(r'^([0-9]+)/$', centerpokupok.Product.views.productDetail, name="detail"),
      url(r'^([0-9]+)/page/([0-9]+)/$', centerpokupok.Product.views.productDetail, name="paginator"),

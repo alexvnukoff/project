@@ -7,32 +7,15 @@
 
 {% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
     <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
 
     <script type="text/javascript">
-        function getFormat(until)
-        {
-            now = +new Date();
-
-            month = 60 * 60 * 24 * 30 * 1000
-            day = 60 * 60 * 24 * 1000
-
-            if(until - now >= month)
-                return 'ODH'
-            else if(until - now >= day)
-                return 'DHM'
-            else
-                return 'HMS'
-        }
         $(document).ready(function () {
                     $('#slider').anythingSlider({hashTags: false});
                     $('#slider1').anythingSlider({hashTags: false});

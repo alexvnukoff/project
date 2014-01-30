@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^reviews/', include("centerpokupok.Reviews.urls", namespace="reviews")),
     url(r'^coupons/', include("centerpokupok.Coupons.urls", namespace="coupons")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
+    url(r'^Company/', include("centerpokupok.Company.urls", namespace="companies")),
 
 
 

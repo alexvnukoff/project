@@ -1,14 +1,10 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="title-discount">
     <span class="left">
         <label>{% trans "Coupons" %}</label>
         <a href="{% url "coupons:list" %}">{% trans "More" %}</a>
-    </span>
-    <span class="right">
-         <a href="{% url "coupons:list" %}">{% trans "New" %}</a>
-         <a href="{% url "coupons:popular" %}">{% trans "Popular" %}</a>
-         <a href="{% url "coupons:categories" %}">{% trans "By categories" %}</a>
     </span>
 </div>
 
@@ -18,8 +14,8 @@
         {% with attr.NAME as name  %}
         {% with attr.COUPON_DISCOUNT as discount  %}
         {% with attr.IMAGE as picture  %}
-        {% with attr.COUPON_DISCOUNT_COST as discount_cost  %}
-        {% with attr.CURRENCY_SYMBOL as currency  %}
+        {% with attr.COST as price  %}
+        {% with attr.CURRENCY as currency  %}
         {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
 
         {% if forloop.counter == 1 %}
@@ -28,12 +24,12 @@
 
                 <div class="thumb-cp">
                     <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                    <a title="{{ name }}" href="{% url "coupons:detail" id %}">
+                    <a title="{{ name }}" href="{% url "products:detail" id %}">
                         <img width="225" height="225" alt="{{ name }}" src="{% static picture %}">
                     </a>
                 </div>
                 <div class="couponinfo">
-                    <a title="{{ name }}" href="{% url "coupons:detail" id %}">{{ name }}</a>
+                    <a title="{{ name }}" href="{% url "products:detail" id %}">{{ name }}</a>
                     <div class="clock">
                         <p>{% trans "Remaining time" %}</p>
                         <div data-countdown="{{ end_date|date:"U" }}" id="topCountdown"></div>
@@ -42,10 +38,12 @@
                 <div class="bottom-cp">
                     <div class="price-cp">
                         <span>
-                            <p><font class="price1">{{ currency }} {{ discount_cost }}</font></p>
+                            <p>
+                                <font class="price1">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                            </p>
                         </span>
                     </div>
-                    <a class="btnbuy" href="{% url "coupons:detail" id %}">{% trans "Buy" %}</a>
+                    <a class="btnbuy" href="{% url "products:detail" id %}">{% trans "Buy" %}</a>
                 </div>
             </div>
 
@@ -56,15 +54,16 @@
 
                 <li>
                     <div class="thumb">
-                        <a title="{{ name }}" href="{% url "coupons:detail" id %}">
+                        <a title="{{ name }}" href="{% url "products:detail" id %}">
                             <img width="140" height="100" alt="{{ name }}" src="{% static picture %}">
                         </a>
                         <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
                     </div>
                     <div class="discountinfo">
-                        <a title="{{ name }}" href="{% url "coupons:detail" id %}">{{ name }}</a>
+                        <a title="{{ name }}" href="{% url "products:detail" id %}">{{ name }}</a>
                         <p>
-                            <font class="number">{{ currency }} {{ discount_cost }}</font><br />
+                            <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                            <br />
                         </p>
                     </div>
                 </li>

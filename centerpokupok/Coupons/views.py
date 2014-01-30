@@ -2,38 +2,30 @@ __author__ = 'user'
 from django.shortcuts import render_to_response
 from appl import func
 from appl.models import Product, Category
-
-def _categoryStructure(categories,  listCount, catWithAttr):
-
-    elCount = {}
-    parent = 0
-
-    for dictCount in listCount:
-        elCount[dictCount['c2p__parent']] = dictCount['childCount']
-
-    for cat in categories:
-        if cat['LEVEL'] == categories[0]['LEVEL']:
-            parent = cat['ID']
-
-        if 'count' not in catWithAttr[parent]:
-            catWithAttr[parent]['count'] = elCount.get(cat['ID'], 0)
-        else:
-            catWithAttr[parent]['count'] += elCount.get(cat['ID'], 0)
-
-    return catWithAttr
-
+from django.template import RequestContext
+from django.utils.timezone import now
+from datetime import timedelta
 
 def couponsList(request, currentCat = None):
     page = request.GET.get('page', 1)
+    sort = request.GET.get('sort', 'ed-date')
+    order = request.GET.get('order', 'ASC')
+    expire = request.GET.get('expire', None)
+    orderSymb = ''
 
     if currentCat == None:#not filtered list
+
+        #Getting related categories
         categories = Category.hierarchy.getTree(15)
         category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 1]
+
         breadCrumbs = None
     else:
+        #Getting related categories
         currentCat = int(currentCat)
         categories = Category.hierarchy.getDescendants(currentCat)
         category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 2][:15]
+
         #creating bread crumbs
         ancestors = Category.hierarchy.getAncestors(currentCat)
         ancestors_ids = [cat['ID'] for cat in ancestors]
@@ -41,6 +33,7 @@ def couponsList(request, currentCat = None):
 
 
     category_ids = [cat['ID'] for cat in categories]
+
     #sort categories
     rootCats = Category.objects.filter(pk__in=category_root_ids)
     sortedRootCat = func.sortQuerySetByAttr(rootCats, "NAME", "ASC", "str")
@@ -51,6 +44,13 @@ def couponsList(request, currentCat = None):
         category_root_ids.insert(0, currentCat)
 
     couponsObj = Product.getCoupons()
+
+    if expire is not None:
+        expire = int(expire)
+        time = now() + timedelta(days=expire)
+        couponsObj = couponsObj.filter(item2value__end_date__lte=time)
+
+
     prodInCat = func.getCountofSepecificItemsRelated('Product', category_ids, couponsObj)
     categoriesWithAttr = Product.getItemsAttributesValues(("NAME",), category_root_ids)
 
@@ -61,9 +61,23 @@ def couponsList(request, currentCat = None):
     else:
         currentCatName = None
 
-    categories = _categoryStructure(categories, prodInCat, categoriesWithAttr)
+    categories = func._categoryStructure(categories, prodInCat, categoriesWithAttr)
 
-    couponsObj = couponsObj.filter(c2p__parent_id__in=category_ids).order_by('item2value__end_date')
+    if currentCat is not None:
+        couponsObj = couponsObj.filter(c2p__parent_id__in=category_ids)
+
+
+    if order != 'ASC':
+        orderSymb = '-'
+
+    if sort == 'ed-date':
+        couponsObj = couponsObj.order_by(orderSymb + 'item2value__end_date')
+    elif sort == 'st-date':
+        couponsObj = couponsObj.order_by(orderSymb + 'item2value__start_date')
+    elif sort == 'coupon-discount':
+        couponsObj = func.sortQuerySetByAttr(couponsObj, "COUPON_DISCOUNT", order, "int")
+    else:
+        couponsObj = func.sortQuerySetByAttr(couponsObj, "COST", order, "int")
 
     attr = ("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE")
     result = func.setPaginationForItemsWithValues(couponsObj, page=page, page_num=16, fullAttrVal=True, *attr)
@@ -71,11 +85,16 @@ def couponsList(request, currentCat = None):
     paginator_range = func.getPaginatorRange(page)
     coupons = func._setCouponsStructure(result[0])
 
-
+    if order == 'ASC':
+        order = 'DESC'
+    else:
+        order = 'ASC'
 
     return render_to_response("Coupons/index.html", {'coupons': coupons, 'paginator_range': paginator_range,
                                                      'categories': categories, 'currentCat': currentCatName,
-                                                     'breadCrumbs': breadCrumbs})
+                                                     'breadCrumbs': breadCrumbs, 'nameSpace': 'coupons:category',
+                                                     'order': order, 'sort': sort, 'expire': expire},
+                                                     context_instance=RequestContext(request))
 
 def couponsDetail(request):
     pass

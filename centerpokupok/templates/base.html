@@ -14,12 +14,14 @@
                 <link href='http://fonts.googleapis.com/css?family=Roboto:100,300,700,400&subset=latin,latin-ext,cyrillic-ext' rel='stylesheet' type='text/css'>
                 <link rel="stylesheet" type="text/css" href="{% static "css/reset.css" %}">
                 <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
+                    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
                 <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
             {% endblock %}
 
             {% block js %}
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
                 <script type="text/javascript" src="{% static "js/base.js" %}"></script>
+                <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
             {% endblock %}
         {% endblock %}
     </head>

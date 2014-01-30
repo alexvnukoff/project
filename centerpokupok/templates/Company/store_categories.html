@@ -1,0 +1,15 @@
+{% load staticfiles %}
+{% load i18n %}
+<h3 class="spacer">{% trans "Store Categories" %}</h3>
+
+			<ul id="categories">
+                {% for id, attr in storeCategories.items %}
+                    {% with attr.NAME|first as name %}
+                    {% with attr.count as count %}
+                        {% if count > 0 %}
+                            <li><a href="{% url "companies:category" companyID id %}">{{ name }}</a>({{ count }})</li>
+                        {% endif %}
+                    {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+			</ul>
