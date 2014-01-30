@@ -333,10 +333,11 @@ class Basket(Item):
         return ''
 
 
-class Cabinet(User, Item):
+class Cabinet(Item):
+    user = models.ForeignKey(User)
 
     def __str__(self):
-        return self.title + '-' + self.username
+        return self.title + '-' + self.user.username
 
 
 class Document(Item):

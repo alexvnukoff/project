@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+<html>
+<head>
+
+               <title>{% block title %}News Detail{% endblock %}</title>
+
+
+{{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+{% endblock %}
+
+
+
+</head>
+<body>
+{% block header %}
+{% include "header_big.html" %}
+{% endblock %}
+{% block body %}
+
+    <div id="main">
+		<div id="sidebar">
+			<div class="reginfo-rows">
+				На 20 августа на сайте
+				зарегистрировано
+				<p><font class="number">120 352</font> покупателя</p>
+			</div>
+			<div class="reginfo-rows margintop">
+				Мы защищаем интересы наших покупателей, поэтому на сайте есть система <a href="#">Защиты потребителя:</a>
+			</div>
+			<ul class="policy">
+				<li>
+					<i class="icons i-plc icon-plc1"></i>
+					Гарантированная доставка до 30 дней
+				</li>
+				<li>
+					<i class="icons i-plc icon-plc2"></i>
+					Условия возврата товара и предоставления гарантии
+				</li>
+				<li>
+					<i class="icons i-plc icon-plc3"></i>
+					Заморозка средств продавца до подтверждения получения товара покупателем
+				</li>
+				<li class="end"><a href="#" class="btnback">Задать нам вопрос</a></li>
+			</ul>
+		</div>
+<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Регистрация </a></span>
+				</div>
+			</div>
+    {% include "registration/registration_form.html" %}
+
+
+				<div class="reg-right">
+					<span class="title">Нет, я - продавец</span>
+{% include "registration/login.html" %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+ {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}
+</body>
+</html>

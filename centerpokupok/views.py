@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-
+from django.template import RequestContext
 from appl.models import News, Category, Country, Tpp, Review, Product
-
-from core.models import Value, Item, Attribute, Dictionary, Relationship
+from registration.backends.default.views import RegistrationView
+from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
+from registration.forms import RegistrationFormUniqueEmail
 from appl import func
+from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
+
 
 
 from django.conf import settings
@@ -69,11 +74,15 @@ def home(request):
  #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
+
+
+    user = request.user
+
     return render_to_response("index.html", {'newsList': newsList, 'sortedHierarchyStructure': sortedHierarchyStructure,
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale})
+                                             "productsSale": productsSale, 'user': user})
 
 
 def about(request):
@@ -120,5 +129,54 @@ def _sortList(dict):
 
     dict.extend(sortedDict)
     return dict
+
+
+def registration(request, form, auth_form):
+   if request.user.is_authenticated():
+      return HttpResponseRedirect("/")
+
+   if request.POST.get('Register', None):
+     form = RegistrationFormUniqueEmail(request.POST)
+     if form.is_valid() and request.POST.get('tos', None):
+        cleaned = form.cleaned_data
+        reg_view = RegistrationView()
+        try:
+            reg_view.register(request, **cleaned)
+            return render_to_response("registration/registration_complete.html")
+        except ValueError:
+            return render_to_response("registration/registration_closed.html")
+     else:
+          if not request.POST.get('tos', None):
+             form.errors.update({"rules": " Soglasen s pravilami obyazatel'no"})
+
+
+   if request.POST.get('Login', None):
+       auth_form = AuthenticationForm(request, data=request.POST)
+       if auth_form.is_valid():
+          user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
+          login(request, user)
+          return HttpResponseRedirect("/")
+
+   return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
+
+
+
+
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+
+
+
+
+
+
+
+
+
+
 
 
