@@ -11,8 +11,8 @@ def users_reload_CSV_DB(request):
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load user data from CSV file into buffer table...')
-    #with open('c:\\data\\users_legacy.csv', 'r') as f:
-    with open('c:\\data\\test.csv', 'r') as f:
+    with open('c:\\data\\users_legacy.csv', 'r') as f:
+    #with open('c:\\data\\test.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
