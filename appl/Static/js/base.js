@@ -120,11 +120,19 @@ $(document).ready(function () {
 
 	$(function() {
         $(".image").click(function() {
-            var image = $(this).attr("rel");
-        $('#imagebig').hide();
-        $('#imagebig').fadeIn('slow');
-        $('#imagebig').html('<img src="' + image + '"/>');
-        return false;
+            var index = $(".image").index(this);
+            var image = $(this).data("big");
+            $('#imagebig').hide();
+            $('#imagebig').fadeIn('slow');
+            $('#imagebig').find('img').attr('src', image);
+            $('#imagebig').find('.bzoom').data('index', index);
+            return false;
+        });
+
+        $('#imagebig .bzoom').click(function() {
+            var index = parseInt($(this).data('index'))
+            $(".fancybox").eq(index).trigger('click');
+            return false;
         });
 
         $(".show_tips").mouseover(function(){

@@ -23,6 +23,7 @@ from operator import itemgetter
 from django.utils.timezone import now
 import datetime
 import hashlib
+from django.utils.timezone import now
 from django.shortcuts import render_to_response
 from tpp.SiteUrlMiddleWare import get_request
 
@@ -467,7 +468,10 @@ class Item(models.Model):
 
 
         #TODO: Jenya maybe change items to queryset
-        valuesObj = Value.objects.filter(attr__title__in=attr, item__in=items)
+        valuesObj = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
+                                         Q(start_date__lte=now()) | Q(start_date__isnull=True),
+                                         attr__title__in=attr, item__in=items)
+
         getList = ["title", "attr__title", "item__title", "item"]
 
         if fullAttrVal:
@@ -514,7 +518,9 @@ class Item(models.Model):
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 
-        values = Value.objects.filter(attr__title__in=attr, item=self.id)
+        values = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
+                                      Q(start_date__lte=now()) | Q(start_date__isnull=True),
+                                      attr__title__in=attr, item=self.id)
         getList = ["title", "attr__title"]
 
         if fullAttrVal:
@@ -540,7 +546,7 @@ class Item(models.Model):
                 valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
 
         if len(valuesAttribute) == 0:
-            return False
+            return []
 
         if(len(attr) > 1):
             return valuesAttribute

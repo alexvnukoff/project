@@ -8,7 +8,7 @@
     {% for id, category in categories.items %}
         {% with category.NAME|first as name %}
         {% with category.count as products %}
-            <li><a href="{% url "coupons:category" id %}" >{{ name }}</a> ({{ products }})</li>
+            <li><a href="{% url nameSpace id %}" >{{ name }}</a> ({{ products }})</li>
         {% endwith %}
         {% endwith %}
     {% endfor %}

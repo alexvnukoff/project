@@ -129,7 +129,7 @@ class hierarchyManager(models.Manager):
             Returns hierarchical children's instances of parent Item
             you should pass the parent PK to "parent" parameter
                 Example: Item.hierarchy.getChildren(parent=1)
-                #Returns children hierarchical related to the company with pk = 1
+                #Returns children hierarchical related to the Company with pk = 1
         '''
         return self.model.objects.filter(c2p__parent_id=parent, c2p__type="hier")
 

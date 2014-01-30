@@ -308,8 +308,11 @@ width: 0; height: 0; border: 106px solid transparent;border-color: rgba(255, 255
 .galleryprd{ position:relative; float: left; width: 320px;}
 .galleryprd p font.id{ color: #999;}
 .imagelib{ position: relative; float: left; width: 100%;}
-.imgout{ position: relative;: relative; height:320px;width:320px;}
-#imagebig{height:320px;width:320px;}
+.imgout{ position: relative;: relative; max-height:320px;width:320px;}
+#imgout:after { content: ""; display: block; clear: both; }
+#imagebig {max-height:320px; max-width:320px; position: relative; float: left;}
+#imagebig img {max-height:320px; max-width:320px;}
+#imagebig:after { content: ""; display: block; clear: both; }
 .imagesmall{float:left; width:70px;}
 .allthumb{ position: relative; float: left; width: 100%;}
 .allthumb li{position: relative; float: left; width: 70px; margin:10px 13px 0 0; display: inline;}
@@ -323,6 +326,12 @@ width: 0; height: 0; border: 106px solid transparent;border-color: rgba(255, 255
 .pricedt .price2{ font-size: 30px; color: #ca4228;}
 .pricedt .price3{ font-size: 14px; color: #383838;}
 .pr-rate{ position: absolute; right: 0; top: 35px;}
+.discountinfo{ position: relative; float: left; width: 90%; margin: 20px 0 0 0; color: #999; padding-left: 0;}
+.discountinfo .rows label { float: left; margin-right: 10px; }
+.discountinfo .rows{ position: relative; width: 100%; padding-top: 5px; display: inline-block; padding-left: 20px;}
+.discountinfo .rows .i-clock{ position: absolute; width: 16px; height: 16px; background-position: 0px -252px; left: -4px; top: 5px;}
+.discountinfo .rows .countdowntext{ float: left; font-size: 14px; letter-spacing: -1px; padding-right: 10px; line-height: 16px; }
+.discountinfo .rows:after { content: ""; display: block; clear: both; }
 .fees{ position: relative; float: left; width: 90%; margin: 20px 0 0 0; color: #999; padding-left: 20px;}
 .fees .feesname{ color: #5d9f4b;}
 .fees p.linkmail{position:relative; width: 100%; padding-bottom: 4px;}
@@ -684,7 +693,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .best-cp-r li:nth-child(2n){ margin-top:5px;}
 .var-main{ position:relative; float:left; width:100%; border-bottom:#d7d7d7 1px solid; padding-bottom:40px;}
 .prd-new{ position:relative; float:left; width:360px; margin:0 20px 0 0; display:inline;}
-.listnew li{ position:relative; float:left; width:165px; margin:30px 15px 0 0; display:inline;}
+.listnew li{ position:relative; float:left; width:150px; margin:30px 15px 0 0; display:inline;}
 .listnew li p{ padding-top:8px; color:#999;}
 .listnew li font.number{ font-size:16px; font-weight:bold; color:#ca4228;}
 .listnew li .viewall{ color:#9a9a9a;}
