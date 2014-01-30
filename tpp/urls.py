@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^accounts/profile/', appl.views.cabinet),
 
-    url(r'^legacy/user/$', leg_v.usersUpload),
-
+    url(r'^legacy/user/csvdb$', leg_v.users_reload_CSV_DB),
+    url(r'^legacy/user/dbdb$', leg_v.users_reload_DB_DB),
+    url(r'^legacy/user/email$', leg_v.users_reload_email_sent),
 )
