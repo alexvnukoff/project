@@ -212,7 +212,9 @@ class Dictionary(models.Model):
         '''
         Slot.objects.filter(dict__id=self.id, title=oldTitle).update(title=newTitle)
 
-
+    def getSlotID(self, title):
+        slot = Slot.objects.get(dict=self.id, title=title)
+        return self.id
     def deleteSlot(self, slotTitle):
         '''
         Delete slot
