@@ -1,0 +1,15 @@
+{% load i18n %}
+    <ul id="categories">
+				<li {% if curr_url == "favorite" %} class="parent" {% endif %}>
+                    <a href="#">{% trans "My favorite products" %}</a>
+                </li>
+				<li {% if curr_url == "main" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:main" %}">{% trans "Personal data" %}</a>
+                </li>
+				<li {% if curr_url == "shipping_address" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:shipping_address" %}">{% trans "Shipment address" %}</a>
+                </li>
+				<li {% if curr_url == "order_history" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:order_history" %}">{% trans "Order History" %}</a>
+                </li>
+    </ul>

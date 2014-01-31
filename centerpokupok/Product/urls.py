@@ -15,6 +15,8 @@ urlpatterns = patterns('',
      url(r'^comment/([0-9]+)/$', centerpokupok.Product.views.addComment, name="addComment"),
      url(r'^category/([0-9]+)/$', centerpokupok.Product.views.getCategoryProduct, name="category"),
      url(r'^category/([0-9]+)/page/([0-9]+)/$', centerpokupok.Product.views.getCategoryProduct, name="cat_pagination"),
+     url(r'^order/step/(1|2|3)/$', centerpokupok.Product.views.orderProduct, name="order"),
+
 
     # url(r'^blog/', include('blog.urls')),
 

@@ -4,9 +4,9 @@
             <div id="mainpage">
                 <div id="top">
                     <div class="container">
-                        <span><a href="/">Главная</a></span>
-                        <span><i class="icons i-questinon"></i><a href="#">Задать вопрос</a></span>
-                        <span><i class="icons i-customer"></i><a href="#">Защита потребителя</a></span>
+                        <span><a href="/">{% trans 'Home page' %}</a></span>
+                        <span><i class="icons i-questinon"></i><a href="#">{% trans 'Ask a question' %}</a></span>
+                        <span><i class="icons i-customer"></i><a href="#">{% trans 'Comsumer protection' %}</a></span>
                         {% if user.id > 0  %}
                                 <span class="reg"><i class="icons i-reg"></i><a href="{% url "profile:main" %}"> {{ user.email }}</a> <a href="{% url "logout" %}"> , {% trans  "sign out"%}</a></span>
                          {% else %}
@@ -86,63 +86,11 @@
                         </div>
                     </div>
                     <div class="regacc">
-                        <p>Зарегистрируйтесь прямо сейчас</p>
-                        <a href="#" class="btnreg">Я — продавец</a>
-                        <a href="#" class="btnreg">Я — покупатель</a>
+                        <p>{% trans "Sign up now" %}</p>
+                        <a href="#" class="btnreg">{% trans 'Seller' %}</a>
+                        <a href="{% url "register" %}" class="btnreg">{%  trans 'Customer' %}</a>
                     </div>
-                    <div class="cart">
-                        <div class="clearfix">
-                            <i class="icart imgshop"></i>
-                            <div class="cartitem">
-                                <p><a href="#" id="linkcart">3 товара</a></p>
-                                <p>на  <strong>$ 320.60</strong></p>
-                                <div class="cartmini">
-                                    <ul>
-                                        <li>
-                                            <img src="images/products/thumb.jpg" alt="" class="thumb">
-                                            <div class="descart">
-                                                <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
-                                                <p>x 1 <font class="number">$3.80</font></p>
-                                                <a href="#" class="icons i-delete">Delete</a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <img src="images/products/thumb.jpg" alt="" class="thumb">
-                                            <div class="descart">
-                                                <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
-                                                <p>x 1 <font class="number">$3.80</font></p>
-                                                <a href="#" class="icons i-delete">Delete</a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <img src="images/products/thumb.jpg" alt="" class="thumb">
-                                            <div class="descart">
-                                                <a href="#">Сумка мужская коричневая в стиле хайтек, кожезаменитель</a>
-                                                <p>x 1 <font class="number">$3.80</font></p>
-                                                <a href="#" class="icons i-delete">Delete</a>
-                                            </div>
-                                        </li>
-                                        <li class="total">
-                                            <div>
-                                                <label class="left">Общая сумма:</label>
-                                                <label class="right">$ 220.03</label>
-                                            </div>
-                                            <div>
-                                                <label class="left">Стоимость доставки:</label>
-                                                <label class="right">бесплатная</label>
-                                            </div>
-                                            <div class="price">
-                                                <label class="left">Всего:</label>
-                                                <label class="right">$ 220.03</label>
-                                            </div>
-                                            <div><a class="btnreg" href="#">Оформить заказ</a></div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="viewcart"><a href="#">Оформить заказ</a></div>
-                    </div>
+
                 </div>
                 <div id="homesearch">
                     <div class="bginput">

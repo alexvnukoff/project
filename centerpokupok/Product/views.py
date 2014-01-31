@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import News, Product, Comment, Category, Company, Country
-from core.models import Value, Item, Attribute, Dictionary, Relationship
+from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order
+from core.models import Value, Item, Attribute, Dictionary, Relationship, Slot
 from appl import func
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
@@ -13,6 +13,10 @@ from django.db.models import Q
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.contrib.auth.decorators import login_required
+from centerpokupok.forms import OrderForm
+from django.db import transaction
 
 def productList(request):
     page = request.GET.get('page', 1)
@@ -83,7 +87,7 @@ def productDetail(request, item_id, page=1):
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
-
+@login_required(login_url="/registration/")
 def addComment(request, item_id):
 
         form = ItemForm("Comment", values=request.POST)
@@ -220,7 +224,7 @@ def getAllNewProducts(request, page=1):
 
 
 
-    return render_to_response("Product/new.html", {'products_list': products_list, 'page':page,
+    return render_to_response("Product/new.html", {'products_list': products_list, 'page': page,
                                                    'paginator_range':paginator_range, 'url_paginator': url_paginator,
                                                    'categotySelect': categotySelect, 'countryList': countryList})
 
@@ -243,6 +247,107 @@ def _getComment(parent_id, page):
     commentsList = OrderedDict(sorted(commentsList.items(), reverse=True))
 
     return commentsList, paginator_range , page
+
+@transaction.atomic
+@login_required(login_url="/products/")
+def orderProduct(request, step=1):
+    curr_url = 'order'
+    if step == '1':
+        orderForm = ""
+        user = request.user
+        if not request.session.get('product_id', False) or request.POST.get('product', False):
+            request.session['product_id'] = request.POST.get('product', "")
+            request.session['qty'] = request.POST.get('french-hens', "")
+            if request.session.get("order", False):
+                del request.session['order']
+
+
+        cabinet = Cabinet.objects.get(user=user)
+        if request.POST.get('product', False) or not request.session.get("order", False):
+             address = cabinet.getAttributeValues("CITY", "COUNTRY", "ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
+        else:
+            session = request.session.get("order", False)
+            if session:
+                address = {"CITY": [session.get("city", "")], "COUNTRY": [session.get("country", "")],
+                           "ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
+                           "TELEPHONE_NUMBER": [session.get("telephone_number", "")],
+                           "SHIPPING_NAME": [session.get("recipient_name", "")]}
+
+
+        if request.POST.get("Continue", False):
+            orderForm = OrderForm(request.POST)
+            if orderForm.is_valid():
+                if request.POST.get("delivery", False):
+                    request.session['order'] = request.POST
+                    return HttpResponseRedirect(reverse("products:order", args=['2']))
+
+                else:
+                    orderForm.errors.update({"delivery": "Required deleviry method"})
+        product = get_object_or_404(Product, pk=request.session.get("product_id", " "))
+        productValues = product.getAttributeValues("NAME", "IMAGE", "CURRENCY", "COST")
+        totalCost = int(request.session.get('qty', 1)) * int(productValues['COST'][0])
+        return render_to_response("Product/orderStepOne.html", {'address': address, 'user': user, "orderForm": orderForm,
+                                                                'productValues': productValues ,'totalCost': totalCost,
+                                                                'curr_url': curr_url},
+                                                                 context_instance=RequestContext(request))
+
+    elif step == '2':
+        product_id = request.session.get('product_id', False)
+        qty = request.session.get('qty', False)
+        product = get_object_or_404(Product, pk=product_id)
+        productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY')
+        orderDetails = {}
+        session = request.session.get("order", " ")
+        orderDetails['city'] = session['city']
+        orderDetails['country'] = session['country']
+        orderDetails['address'] = session['address']
+        totalSum = int(productValues['COST'][0]) * int(qty)
+        user = request.user
+
+        return render_to_response("Product/orderStepTwo.html", {'qty': qty, 'productValues': productValues,
+                                                                'orderDetails': orderDetails, 'totalSum': totalSum,
+                                                                "user": user,'curr_url': curr_url})
+    else:
+        if request.session.get("order", False):
+            product = get_object_or_404(Product, pk=request.session.get('product_id'))
+            productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY', 'IMAGE')
+            qty = request.session.get('qty', False)
+            dict = Dictionary.objects.get(title='CURRENCY')
+            slot_id = dict.getSlotID(productValues['CURRENCY'][0])
+            productValues['CURRENCY'][0] = slot_id
+            session = request.session['order']
+            address = {"CITY": [session.get("city", "")], "COUNTRY": [session.get("country", "")],
+                       "ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
+                       "TELEPHONE_NUMBER": [session.get("telephone_number", "")],
+                       "DETAIL_TEXT": [session.get("comment", "")], "SHIPPING_NAME": [session.get("recipient_name", "")]}
+            productValues['COST'][0] = int(productValues['COST'][0]) * int(qty)
+            with transaction.atomic():
+                order = Order(create_user=request.user)
+                order.save()
+                orderDict = {}
+                orderDict.update(productValues)
+                orderDict.update(address)
+                orderDict.update({"QUANTITY": qty})
+                order.setAttributeValue(orderDict, request.user)
+                cabinet = Cabinet.objects.get(user=request.user)
+                Relationship.setRelRelationship(cabinet, order, request.user)
+            del request.session['product_id']
+            del request.session['qty']
+            del request.session['order']
+        else:
+            return HttpResponseRedirect("/")
+
+        return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url})
+
+
+
+
+
+
+
+
+
+
 
 
 

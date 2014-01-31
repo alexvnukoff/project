@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+               {% block title %}Order Step Two{% endblock %}
+
+
+
+
+
+
+
+
+{% block header %}
+{% include "header_big.html" %}
+{% endblock %}
+{% block body %}
+
+<div id="main">
+		<div id="sidebar">
+			{% include "main/cabinet_menu.html" %}
+			<div class="support">
+				<img src="images/gallery/sp.jpg" alt="" class="avatar" />
+				<div class="infosupport">
+					<p class="namesp">Eva </p>
+					<p class="agent">Virtual Agent</p>
+					<p>
+						24 Hour <br>
+						Smart Response
+					</p>
+				</div>
+			</div>
+			<div class="bchat">
+				<textarea name="" placeholder="Напишите свой вопрос" cols="30" rows="5"></textarea>
+				<div class="btnsubmit"><a class="btnreg" href="#">{% trans "Start chat" %}</a></div>
+			</div>
+		</div>
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#"></div>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
+
+
+                </div>
+                <div style="margin-top:50px;font-size: 20px;"><span> {% trans "Thank you for  shopping on our site," %} <a href="#">{% trans "here" %} </a>  {% trans 'you can view your order history' %}</span></div>
+        </div>
+</div>
+ {% endblock %}
