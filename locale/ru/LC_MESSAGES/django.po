@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-15 16:33+0200\n"
+"POT-Creation-Date: 2014-01-30 16:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,71 +18,341 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: .\centerpokupok\Product\views.py:32
+#: .\centerpokupok\forms.py:6
+msgid "Recipient name"
+msgstr ""
+
+#: .\centerpokupok\forms.py:7
+#: .\centerpokupok\templates\Product\orderStepOne.html:94
+msgid "City"
+msgstr ""
+
+#: .\centerpokupok\forms.py:8
+#: .\centerpokupok\templates\Product\orderStepOne.html:108
+msgid "Country"
+msgstr ""
+
+#: .\centerpokupok\forms.py:9
+#: .\centerpokupok\templates\Product\orderStepOne.html:101
+msgid "Zipcode"
+msgstr ""
+
+#: .\centerpokupok\forms.py:10
+msgid "Address"
+msgstr ""
+
+#: .\centerpokupok\forms.py:11
+msgid "Telephone"
+msgstr ""
+
+#: .\centerpokupok\forms.py:20
+msgid "Fisrt name"
+msgstr ""
+
+#: .\centerpokupok\forms.py:22
+msgid "Last name"
+msgstr ""
+
+#: .\centerpokupok\forms.py:24
+msgid "Birthday"
+msgstr ""
+
+#: .\centerpokupok\Cabinet\views.py:28 .\centerpokupok\Cabinet\views.py:53
+msgid "was successfully saved "
+msgstr ""
+
+#: .\centerpokupok\Product\views.py:97
 msgid "You can send one comment per minute"
 msgstr "Вы можете оставлять только один комментарий в минуту"
 
-#: .\tpp\settings.py:134
-msgid "Russia"
+#: .\centerpokupok\templates\related_categories.html:3
+msgid "Related Categories"
 msgstr ""
 
-#: .\tpp\settings.py:135
-msgid "Armenia"
+#: .\centerpokupok\templates\Cabinet\index.html:27
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:37
+#: .\centerpokupok\templates\Product\orderStepOne.html:29
+#: .\centerpokupok\templates\Product\orderStepThree.html:36
+#: .\centerpokupok\templates\Product\orderStepTwo.html:36
+msgid "Start chat"
 msgstr ""
 
-#: .\tpp\settings.py:136
-msgid "Azerbaijan"
+#: .\centerpokupok\templates\Cabinet\index.html:33
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:43
+#: .\centerpokupok\templates\Product\orderStepThree.html:42
+msgid "Home page"
 msgstr ""
 
-#: .\tpp\settings.py:137
-msgid "Belarus"
+#: .\centerpokupok\templates\Cabinet\index.html:37
+msgid "My profile"
 msgstr ""
 
-#: .\tpp\settings.py:138
-msgid "England"
+#: .\centerpokupok\templates\Cabinet\index.html:39
+msgid "User details "
 msgstr ""
 
-#: .\tpp\settings.py:139
-msgid "Estonia"
+#: .\centerpokupok\templates\Cabinet\index.html:56
+msgid "Save"
 msgstr ""
 
-#: .\tpp\settings.py:140
-msgid "Georgia"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:6
+msgid "Shipping Address"
 msgstr ""
 
-#: .\tpp\settings.py:141
-msgid "Kazakhstan"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:51
+#: .\centerpokupok\templates\Product\orderStepOne.html:80
+msgid "Shipping Addres"
 msgstr ""
 
-#: .\tpp\settings.py:142
-msgid "Kyrgyzstan"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:55
+msgid "Shipping Addres "
 msgstr ""
 
-#: .\tpp\settings.py:143
-msgid "Lithuania"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:56
+#: .\centerpokupok\templates\Product\orderStepOne.html:81
+msgid "Required fields"
+msgstr ""
+
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:71
+#: .\centerpokupok\templates\Product\orderStepOne.html:164
+msgid "Continue"
+msgstr ""
+
+#: .\centerpokupok\templates\Categories\index.html:6
+msgid "Categories"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:6
+msgid "Order step one"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:28
+msgid "Ask question"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:35
+msgid "Start page"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:42
+msgid "Ordering"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:87
+msgid "Recipient Name"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:115
+msgid "Adress"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:122
+msgid "Telephone number"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:130
+#: .\centerpokupok\templates\Product\orderStepTwo.html:66
+msgid "Delivery method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:133
+msgid "Choose delivery method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:149
+msgid "Comment to your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:152
+msgid "Comment"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:156
+msgid "Payment method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:46
+msgid "Thank you for  shopping on our site,"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:46
+msgid "here"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:46
+msgid "you can view your order history"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:42
+msgid "Home Page"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:43
+msgid "Step One"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:55
+msgid "Your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:73
+msgid "Payment"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:79
+msgid "The total amount of your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:87
+msgid "Make changes to your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:88
+msgid "Confirm order"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:4
+msgid "My favorite products"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:7
+msgid "Personal data"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:10
+msgid "Shipment address"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:13
+msgid "Order History"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:5
+msgid "Coupons"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:6
+msgid "More"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:9
+msgid "New"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:10
+msgid "Popular"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:11
+msgid "By categories"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:38
+msgid "Remaining time"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:48
+msgid "Buy"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_menu.html:102
+msgid "All categories"
+msgstr ""
+
+#: .\centerpokupok\templates\main\news.html:5
+msgid "News"
+msgstr ""
+
+#: .\centerpokupok\templates\main\partner.html:3
+msgid "Partner"
+msgstr ""
+
+#: .\centerpokupok\templates\main\products.html:8
+msgid "Latest"
+msgstr ""
+
+#: .\centerpokupok\templates\main\products.html:9
+#: .\centerpokupok\templates\main\products.html:51
+msgid "more"
+msgstr ""
+
+#: .\centerpokupok\templates\main\products.html:50
+msgid "Top sales"
+msgstr ""
+
+#: .\centerpokupok\templates\main\products_discount.html:4
+msgid "Best proposals"
+msgstr ""
+
+#: .\centerpokupok\templates\main\reviews.html:4
+msgid "Products reviews"
+msgstr ""
+
+#: .\core\models.py:78
+msgid "date joined"
 msgstr ""
 
 #: .\tpp\settings.py:144
-msgid "Latvia"
+msgid "Russia"
 msgstr ""
 
 #: .\tpp\settings.py:145
-msgid "Moldova"
+msgid "Armenia"
 msgstr ""
 
 #: .\tpp\settings.py:146
-msgid "Tajikistan"
+msgid "Azerbaijan"
 msgstr ""
 
 #: .\tpp\settings.py:147
-msgid "Turkmenistan"
+msgid "Belarus"
 msgstr ""
 
 #: .\tpp\settings.py:148
-msgid "Ukrainian"
+msgid "England"
 msgstr ""
 
 #: .\tpp\settings.py:149
+msgid "Estonia"
+msgstr ""
+
+#: .\tpp\settings.py:150
+msgid "Georgia"
+msgstr ""
+
+#: .\tpp\settings.py:151
+msgid "Kazakhstan"
+msgstr ""
+
+#: .\tpp\settings.py:152
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: .\tpp\settings.py:153
+msgid "Lithuania"
+msgstr ""
+
+#: .\tpp\settings.py:154
+msgid "Latvia"
+msgstr ""
+
+#: .\tpp\settings.py:155
+msgid "Moldova"
+msgstr ""
+
+#: .\tpp\settings.py:156
+msgid "Tajikistan"
+msgstr ""
+
+#: .\tpp\settings.py:157
+msgid "Turkmenistan"
+msgstr ""
+
+#: .\tpp\settings.py:158
+msgid "Ukrainian"
+msgstr ""
+
+#: .\tpp\settings.py:159
 msgid "Uzbekistan"
 msgstr ""
 
