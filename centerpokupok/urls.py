@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^profile/', include("centerpokupok.Cabinet.urls", namespace="profile")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
 
-    url(r'^Company/', include("centerpokupok.Company.urls", namespace="companies")),
+    url(r'^Company/', include("centerpokupok.company.urls", namespace="companies")),
 
     url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
     url(r'^accounts/password/change/done/$', auth_views.password_change_done, name='password_change_done'),

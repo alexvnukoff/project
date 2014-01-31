@@ -33,41 +33,40 @@
     <div id="main">
 		<div id="sidebar">
 			<div class="reginfo-rows">
-				На 20 августа на сайте
-				зарегистрировано
-				<p><font class="number">120 352</font> покупателя</p>
+				{% trans "On August 20 at the website registered" %}
+				<p><font class="number">120 352</font> customers</p>
 			</div>
 			<div class="reginfo-rows margintop">
-				Мы защищаем интересы наших покупателей, поэтому на сайте есть система <a href="#">Защиты потребителя:</a>
+			{% trans "We protect the interests of our customers, so the site has a system" %} <a href="#">{% trans "Consumer protection" %}</a>
 			</div>
 			<ul class="policy">
 				<li>
 					<i class="icons i-plc icon-plc1"></i>
-					Гарантированная доставка до 30 дней
+					{% trans "The guaranteed delivery within 30 days" %}
 				</li>
 				<li>
 					<i class="icons i-plc icon-plc2"></i>
-					Условия возврата товара и предоставления гарантии
+					{% trans "Return policy and warranty" %}
 				</li>
 				<li>
 					<i class="icons i-plc icon-plc3"></i>
-					Заморозка средств продавца до подтверждения получения товара покупателем
+					{% trans "Freezing of seller's funds till then buyer  confirm receipt of the goods" %}
 				</li>
-				<li class="end"><a href="#" class="btnback">Задать нам вопрос</a></li>
+				<li class="end"><a href="#" class="btnback">{% trans "Ask us a question" %}</a></li>
 			</ul>
 		</div>
 <div id="main-r">
 			<div class="breadcrumbs">
 				<div xmlns="http://rdf.data-vocabulary.org/#">
-					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
-					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Регистрация </a></span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">{% trans "Registration" %} </a></span>
 				</div>
 			</div>
     {% include "registration/registration_form.html" %}
 
 
 				<div class="reg-right">
-					<span class="title">Нет, я - продавец</span>
+					<span class="title">{% trans 'No, I am seller' %}</span>
 {% include "registration/login.html" %}
 				</div>
 			</div>

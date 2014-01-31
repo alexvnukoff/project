@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product
+from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet
 from registration.backends.default.views import RegistrationView
 from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
@@ -10,6 +10,8 @@ from appl import func
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 
 
 
@@ -147,7 +149,7 @@ def registration(request, form, auth_form):
             return render_to_response("registration/registration_closed.html")
      else:
           if not request.POST.get('tos', None):
-             form.errors.update({"rules": " Soglasen s pravilami obyazatel'no"})
+             form.errors.update({"rules": _("Agreement with terms is required")})
 
 
    if request.POST.get('Login', None):
@@ -155,6 +157,12 @@ def registration(request, form, auth_form):
        if auth_form.is_valid():
           user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
           login(request, user)
+          try:
+            cabinet = Cabinet.objects.get(user=user.pk)
+          except ObjectDoesNotExist:
+            cabinet = Cabinet(user=user, create_user=user)
+            cabinet.save()
+
           return HttpResponseRedirect("/")
 
    return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))

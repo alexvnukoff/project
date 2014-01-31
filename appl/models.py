@@ -255,6 +255,10 @@ class Service(Item):
     def __str__(self):
         return self.getName()
 
+class Favorite(Item):
+
+    def __str__(self):
+        return self.getName()
 
 class Invoice(Item):
 
@@ -328,13 +332,17 @@ class Order(Item):
 
 
 class Basket(Item):
+    class Meta:
+        permissions = (
+            ("read_basket", "Can read basket"),
+        )
 
     def __str__(self):
         return ''
 
 
 class Cabinet(Item):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="cabinet")
 
     def __str__(self):
         return self.title + '-' + self.user.username

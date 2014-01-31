@@ -19,6 +19,7 @@
     <script type="text/javascript" src="{% static "js/incrementing.js" %}"></script>
     <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 
+
     <script>
     $(document).ready(function () {
                     $('#slider2').anythingSlider({hashTags: false});
@@ -72,6 +73,7 @@
 {% endblock %}
 
 {% block body %}
+    <div id='jcart-tooltip'></div>
    	<div id="main">
 		<div id="sidebar">
 			<div class="shopinfo">
@@ -234,9 +236,15 @@
                         </div>
                     {% endif %}
 					<div class="option">
+                        <form action="{% url "products:order" 1 %}" method="post">
+                            {% csrf_token %}
 						<ul>
 							<li>
+
+                          <input type="hidden" name="product" value="{{ item_id }}">
+
                                 <label>{% trans "Quantity" %}</label>
+
 								<div class="numberof">
 									<div class="numbers-row">
 							        	<input type="text" name="french-hens" id="french-hens" value="1">
@@ -247,10 +255,11 @@
 					</div>
 
 					<div class="details-action">
-						<a href="#" class="bigbuy">{% trans "Buy" %}</a>
+						<input type="submit" class="bigbuy" value="{% trans "Buy" %}">
+                        </form>
 						<div class="wl">
 							<i class="icons i-wl"></i>
-							<p><a href="#" class="wish">В избранное</a></p>
+							<p><a href="#"  class="wish" data-gid="{{ item_id }} ">В избранное</a></p>
 						</div>
 					</div>
 					<div class="socialplugin">
