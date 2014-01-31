@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
                {% block title %}{% trans "Order history" %}{% endblock %}
@@ -77,7 +78,7 @@
 
 
 						</div>
-						<div class="price">{{ currency }} {{ price }}</div>
+						<div class="price">{{ currency|getSymbol }} {{ price }}</div>
 
 					</li>
                          {% endwith %}

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
                {% block title %}{% trans "Order step one" %}{% endblock %}
@@ -64,11 +65,11 @@
 							<p><font class="grey">Цвет:</font> красный</p>
 						</div>
 						<div class="numberoder">
-							<p><font class="number">{{ product_currency }} {{ product_cost }}</font></p>
+							<p><font class="number">{{ product_currency|getSymbol }} {{ product_cost }}</font></p>
 
 
 						</div>
-						<div class="price">{{ product_currency }} {{ totalCost }}</div>
+						<div class="price">{{ product_currency|getSymbol }} {{ totalCost }}</div>
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}

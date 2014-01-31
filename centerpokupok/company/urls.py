@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
-import centerpokupok.Company.views
+import centerpokupok.company.views
+import centerpokupok.Reviews.views
 
 from django.contrib import admin
 admin.autodiscover()
@@ -8,7 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^([0-9]+)/$', centerpokupok.Company.views.storeMain, name="main"),
+     url(r'^([0-9]+)/$', centerpokupok.company.views.storeMain, name="main"),
      url(r'^([0-9]+)/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="category"),
      url(r'^([0-9]+)/products/$', centerpokupok.Reviews.views.reviewDetail, name="products"),
      url(r'^([0-9]+)/products/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="product_category"),

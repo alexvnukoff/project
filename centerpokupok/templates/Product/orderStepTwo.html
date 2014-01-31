@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
                {% block title %}Order Step Two{% endblock %}
@@ -57,7 +58,7 @@
 				<div class="order-row1">
 					<span class="clumn1">{{ name }}</span>
 					<span class="clumn2"><strong>x{{ qty }}</strong></span>
-					<span class="clumn2" style="width: 70px;"><strong>{{ currency }} {{ cost }} </strong></span>
+					<span class="clumn2" style="width: 70px;"><strong>{{ currency|getSymbol }} {{ cost }} </strong></span>
 				</div>
 
 
@@ -66,7 +67,7 @@
 						<strong>{% trans "Delivery method" %}</strong> — Priority Mail (1-3 days)
 						<p><font class="note">{{ orderDetails.country }}, {{ orderDetails.city }},  {{ orderDetails.address }}</font></p>
 					</span>
-					<span class="clumn2"style="width: 70px;"><strong>{{ currency }} 11.60 </strong></span>
+					<span class="clumn2"style="width: 70px;"><strong>{{ currency|getSymbol }} 11.60 </strong></span>
 				</div>
 				<div class="order-row2">
 					<span class="clumn1">
@@ -78,7 +79,7 @@
 					<span class="clumn1">
 						<strong>{% trans "The total amount of your order" %}</strong>
 					</span>
-					<span class="clumn2"><strong>{{ currency }} {{ totalSum }} </strong></span>
+					<span class="clumn2"><strong>{{ currency|getSymbol }} {{ totalSum }} </strong></span>
 				</div>
                 {% endwith %}
                 {% endwith %}
