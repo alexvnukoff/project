@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
-
+from django.db.models import Count, F
 from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -83,7 +83,7 @@ class Company(Organization):
 
     class Meta:
         permissions = (
-            ("read_company", "Can read company"),
+            ("read_company", "Can read Company"),
         )
 
     objects = models.Manager()
@@ -109,7 +109,7 @@ class Company(Organization):
 
     def getDepartments(self):
         '''
-            Get dict of departments only for this company
+            Get dict of departments only for this Company
             this method returns a dictionary that contains a level , id and parent of each member
              as well as the result dictionary stores the tree structure
 
@@ -118,6 +118,11 @@ class Company(Organization):
         childs = Department.hierarchy.getChild(self.pk).values('pk')
         childs = [x['pk'] for x in childs]
         return Department.hierarchy.getDescedantsForList(childs)
+
+    def getStoreCategories(self):
+        products = Product.objects.all()
+        return Category.objects.filter(p2c__child__c2p__parent=self.pk, p2c__child__in=products)\
+            .values('pk').annotate(childCount=Count('pk'))
 
 class Department(Organization):
 
@@ -203,7 +208,6 @@ class Product(Item):
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
 
     @staticmethod
-
     def getCategoryOfPRoducts(productQuerySet, attr):
         products_id = [product.id for product in productQuerySet]
         categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
@@ -222,8 +226,6 @@ class Product(Item):
 
         return products
 
-
-
     def getProdWithDiscount(querySet=False):
 
         timeNow = now()
@@ -235,6 +237,13 @@ class Product(Item):
             return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
+    @staticmethod
+    def getNew():
+        return Product.objects.order_by('-pk')
+
+    @staticmethod
+    def getTopSales():#TODO: Jenya need to fill
+        pass
 
 class License(Item):
 

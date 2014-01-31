@@ -1,34 +1,25 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-<html>
-<head>
 
-               <title>{% block title %}News Detail{% endblock %}</title>
+{% block title %}News Detail{% endblock %}
 
 
 {{% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
 {% endblock %}
 
-
-
-
-</head>
-<body>
 {% block header %}
-{% include "header_big.html" %}
+    {% include "header_big.html" %}
 {% endblock %}
+
 {% block body %}
     <div id="main">
 		<div id="sidebar">
@@ -112,6 +103,7 @@
 					</ul>
 				</div>
 			</div>
+
 			<div class="bestbuy">
 				<div class="items-coupon">
 					<ul>
@@ -128,6 +120,7 @@
 			</div>
 			<div class="alldeal"><a href="#">Все спецпредложения →</a></div>
 		</div>
+
 		<div id="main-r">
 			<div class="breadcrumbs">
 				<div xmlns="http://rdf.data-vocabulary.org/#">
@@ -137,14 +130,11 @@
 				</div>
 			</div>
 
-                      {% with newAttr as  attr   %}
-                    {% with attr.NAME|first as name  %}
-                    {% with attr.IMAGE|first as picture  %}
-                    {% with attr.DETAIL_TEXT|first as content %}
-
-                    {%  with attr.Active_From|first as date  %}
-
-
+            {% with newAttr as  attr   %}
+            {% with attr.NAME|first as name  %}
+            {% with attr.IMAGE|first as picture  %}
+            {% with attr.DETAIL_TEXT|first as content %}
+            {%  with attr.Active_From|first as date  %}
 
 			<div class="article">
 				<h2>{{ name }}</h2>
@@ -156,28 +146,15 @@
 				<div class="sortdes">
 					<div class="clumnleft">
 						<img src="{% static picture %}" alt="{{ name }}" />
-
 					</div>
-                <p>{{ content }}</p>
+                    <p>{{ content }}</p>
                 </div>
-
-
-
-
-                    {% endwith %}
-                         {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-
-
-
-		</div>
-	</div>
-</div>
- {% endblock %}
-{% block footer %}
-{{ block.super }}
-    {% endblock %}
-</body>
-</html>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}

@@ -3,124 +3,55 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load set_var %}
+
 {% block title %}{% trans "Categories" %}{% endblock %}
 
-
-
-{% block styles %}
-    {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/shopcenter.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/anythingslider.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
-{% endblock %}
-
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static "js/jquery.anythingslider.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
-
-    <script type="text/javascript">
-        function getFormat(until)
-        {
-            now = +new Date();
-
-            month = 60 * 60 * 24 * 30 * 1000
-            day = 60 * 60 * 24 * 1000
-
-            if(until - now >= month)
-                return 'ODH'
-            else if(until - now >= day)
-                return 'DHM'
-            else
-                return 'HMS'
-        }
-        $(document).ready(function () {
-                    $('#slider').anythingSlider({hashTags: false});
-                    $('#slider1').anythingSlider({hashTags: false});
-                    $('#slideimage').anythingSlider({
-                        buildNavigation     : true,
-                        buildArrows         : false,
-                        autoPlay            : true,
-                        hashTags			: false
-                    });
-
-                    $('#bestproduct').anythingSlider({hashTags: false});
-        })
-    </script>
-
-    <script type="text/javascript">
-        $(function () {
-            bigCoupon = $('#topCountdown');
-
-            if(bigCoupon.length > 0)
-            {
-                var until = parseInt(bigCoupon.data('countdown')) * 1000;
-                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
-            }
-        })
-        $(function () {
-            $('.countdowntext').each(function() {
-                var until = parseInt($(this).data('until')) * 1000;
-                now = +new Date();
-                var lay = ((untill - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
-                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
-            });
-        });
-    </script>
-{% endblock %}
 {% block header %}
-{% include "header_big.html" %}
+    {% include "header_big.html" %}
 {% endblock %}
-        {% block body %}
-           <div id="main">
+
+{% block body %}
+    <div id="main">
 		<div class="breadcrumbs">
 			<div xmlns="http://rdf.data-vocabulary.org/#">
-				<span typeof="v:Breadcrum"><a href="#" rel="v:url" property="v:title">Главная</a> →</span>
-				<span typeof="v:Breadcrum"><a href="#" rel="v:url" property="v:title"> Все категории </a></span>
+				<span typeof="v:Breadcrum">
+                    <a href="{% url "main" %}" rel="v:url" property="v:title">
+                        {% trans "Main" %}
+                    </a> &rarr;
+                </span>
+				<span typeof="v:Breadcrum">
+                    <a href="{% url "categories:list" %}" rel="v:url" property="v:title">
+                        {% trans "All categories" %}
+                    </a>
+                </span>
 			</div>
 		</div>
 
 
-               {% for parent_name , dict  in dictStructured|sort  %}
+        {% for parent_name , dict  in dictStructured|sort  %}
 
+            {%  for name , item in  dict|sort%}
 
+            {% with item.ID as id %}
 
+                {% if name == "Parent" %}
 
-                 {%  for name , item in  dict|sort%}
-                     {% with item.ID as id %}
-                    {% if name == "Parent" %}
-                       {% if  parent_name|first !=  a|first or forloop.parentloop.counter == 1  %}
-                             <div class="letters">{{ parent_name|first }}</div>
-                          {% endif %}
-                           <div class="cateparent"><a style="color: #000000;" href="{% url "products:category" id %}">{{ item.item.NAME|first }}</a></div>
-                                           <ul class="subcate">
-                             {% else %}
+                    {% if  parent_name|first !=  a|first or forloop.parentloop.counter == 1  %}
+                        <div class="letters">{{ parent_name|first }}</div>
+                    {% endif %}
 
+                    <div class="cateparent"><a style="color: #000000;" href="{% url "products:category" id %}">{{ item.item.NAME|first }}</a></div>
+                    <ul class="subcate">
+                {% else %}
+                    <li><a href="{% url "products:category" id %}">{{ name }}</a></li>
+                {% endif %}
 
+            {% endwith %}
+            {% endfor %}
 
-                      	<li><a href="{% url "products:category" id %}">{{ name }}</a></li>
-                     {% endif %}
-                     {% endwith %}
-                      {% endfor %}
-                   </ul>
-
-
-             {% set a =  parent_name  %}
-
-
-               {% endfor %}
-
-
-
-
-
-
-
-
-
-	</div>
-</div>
-
-
-        {% endblock %}
+            </ul>
+            {% set a =  parent_name  %}
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

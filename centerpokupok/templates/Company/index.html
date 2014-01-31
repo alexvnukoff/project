@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block title %}Company Name{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#slider').anythingSlider({hashTags: false});
+            $('#slider1').anythingSlider({hashTags: false});
+            $('#slideimage').anythingSlider({
+                buildNavigation     : true,
+                hashTags            : false,
+                buildArrows         : false,
+                autoPlay            : true
+            });
+            $('#bestproduct').anythingSlider({hashTags: false});
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            bigCoupon = $('#topCountdown');
+
+            if(bigCoupon.length > 0)
+            {
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
+                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
+            }
+        })
+        $(function () {
+            $('.countdowntext').each(function() {
+                var until = parseInt($(this).data('until')) * 1000;
+                now = +new Date();
+                var lay = ((untill - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
+                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
+            });
+        });
+    </script>
+
+
+{% endblock %}
+
+{% block header %}
+    {% include "Company/header.html" %}
+{% endblock %}
+
+{% block body %}
+	<div id="main">
+    	<div id="sidebar">
+        	{% include "Company/store_categories.html" %}
+            <div class="title-filter">
+				Самые популярные товары
+			</div>
+            <ul class="bestreview">
+				<li>
+					<a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+					<p><font class="number">$3.80</font> / шт.</p>
+				</li>
+				<li>
+					<a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+					<p><font class="number">$3.80</font> / шт.</p>
+				</li>
+				<li>
+					<a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+					<p><font class="number">$3.80</font> / шт.</p>
+				</li>
+				<li>
+					<a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+					<p><font class="number">$3.80</font> / шт.</p>
+				</li>
+				<li>
+					<a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+					<a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+					<p><font class="number">$3.80</font> / шт.</p>
+				</li>
+			</ul>
+            <div class="bestbuy">
+				<div class="items-coupon">
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> спеццена</div>
+							<a href="#"><img alt="" src="{% static "images/products/pr8.jpg" %}"></a>
+							<div class="coupon-info">
+								<p><a href="#">Распродажа</a></p>
+								<p>осенней коллекции</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+            <ul id="subscribe">
+                <li class="top">
+                    <i class="imgshop i-subs"></i>Подписаться на рассылку
+                </li>
+                <li>Получайте каждую неделю наши анонсы и обзоры новинок</li>
+                <li><input type="text" class="text" placeholder="Ваш E-mail" name=""></li>
+                <li><a href="#" class="btnreg">Подписаться</a></li>
+            </ul>
+        </div>
+		<div id="main-r">
+        	<div id="slide-var">
+            	<ul id="slideimage">
+                	<li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
+                    <li><a href="#"><img src="{%  static "images/article/slide2.jpg" %}" alt="" /></a></li>
+                    <li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
+                    <li><a href="#"><img src="{%  static "images/article/slide2.jpg" %}" alt="" /></a></li>
+                    <li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
+                </ul>
+            </div>
+            <div class="title-discount">
+                <span class="left">
+                    <label>{% trans "Coupons" %}</label>
+                    <a href="{% url "companies:coupons" companyID %}">еще</a>
+                </span>
+            </div>
+            {% for id, attr in coupons.items %}
+                {% with attr.NAME as name  %}
+                {% with attr.COUPON_DISCOUNT as discount  %}
+                {% with attr.IMAGE as picture  %}
+                {% with attr.COST as price  %}
+                {% with attr.CURRENCY as currency  %}
+                {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
+                {% if forloop.first %}
+
+                    <div class="coupontop">
+                            <div class="thumb-cp">
+                                <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                <a href="{% url "products:detail" id %}">
+                                    <img alt="{{ name }}" src="{%  static picture %}">
+                                </a>
+                            </div>
+                        <div class="couponinfo">
+                            <a href="{% url "products:detail" id %}">{{ name }}</a>
+                            <div class="clock">
+                                <p>{% trans "Time till the end" %}</p>
+                                <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
+                            </div>
+                        </div>
+                        <div class="bottom-cp">
+                            <div class="price-cp">
+                                <span>
+                                    <p>
+                                        <font class="price1">
+                                            {{ currency|getSymbol }} {{ price|discountPrice:discount }}
+                                        </font>
+                                    </p>
+                                </span>
+                                <span class="small">
+                                    <p>{% trans "You are saving" %}</p>
+                                    <p>
+                                        <font class="price2">
+                                            {{ currency|getSymbol }} {{ price|discountDiff:discount }}
+                                        </font>
+                                    </p>
+                                </span>
+                            </div>
+                            <a class="btnbuy" href="{% url "products:detail" id %}">{% trans "Buy" %}</a>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    {% if forloop.counter == 2 %}
+                        <ul id="listcoupon">
+                    {% endif %}
+
+                    <li>
+                        <div class="thumb">
+                            <a href="#"><img alt="" src="{% static "images/products/pr6.jpg" %}"></a>
+                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        </div>
+                        <div class="discountinfo">
+                            <a href="{% url "products:detail" id %}">{{ name }}</a>
+                            <div class="rows">
+                                <font class="old">{{ currency|getSymbol }} {{ price }}</font>
+                                <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                            </div>
+                            <div class="rows">
+                                <i class="icons i-clock"></i>
+                                <label>{% trans "Time till the end" %}:</label>
+                                <div data-countdown="{{ end_date|date:"U" }}" class="countdowntext hasCountdown compactLayout"></div>
+                            </div>
+                        </div>
+                    </li>
+
+                    {% if forloop.last %}
+			            </ul>
+                    {% endif %}
+
+                {% endif %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
+            <div class="var-main">
+                {% if newProducrList %}
+                    <div class="prd-new">
+                        <div class="title-discount">
+                            <span class="left">
+                                <label>{% trans "Latest" %}</label>
+                                <a href="{% url "companies:products" companyID %}">еще</a>
+                            </span>
+                        </div>
+                        <ul class="listnew">
+                            {% for id , attr  in newProducrList.items %}
+                                {% with attr.NAME|first as name %}
+                                {% with attr.IMAGE|first as picture %}
+                                {% with attr.CURRENCY|first as currency %}
+                                {% with attr.COST|first as cost  %}
+                                {% with attr.CATEGORY_NAME as category_name  %}
+                                {% with attr.CATEGORY_ID as category_id  %}
+                                {% with attr.DISCOUNT|first as discount  %}
+                                {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+                                    <li>
+                                        {% if coupon_discount %}
+                                            <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                                        {% elif discount %}
+                                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                        {% endif %}
+                                       <div class="img_gallery">
+                                        <div class="shadow"></div>
+                                            <div class="img_block">
+                                              <a href="{% url "products:detail" id %}"><img
+                                                      src="{% static picture %}" alt="{{ name }}" />
+                                              </a>
+                                            </div>
+                                      </div>
+                                        <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                        <p>
+                                            <font class="number"> {{ currency|getSymbol }}
+                                                {% if coupon_discount %}
+                                                    {{ cost|discountPrice:coupon_discount }}
+                                                {% elif discount %}
+                                                    {{ cost|discountPrice:discount }}
+                                                {% else %}
+                                                    {{ cost|formatPrice }}
+                                                {% endif %}
+                                            </font>
+                                        </p>
+                                        <p>
+                                            <a class="viewall" href="{% url "companies:product_category" companyID category_id %}">
+                                                {{ category_name }}
+                                            </a>
+                                        </p>
+                                    </li>
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if topPoductList %}
+                    <div class="prd-new">
+                        <div class="title-discount">
+                            <span class="left">
+                                <label>{% trans "Top sales" %}</label>
+                                <a href="{% url "companies:products" companyID %}">{% trans "More" %}</a>
+                            </span>
+                        </div>
+                        <ul class="listnew">
+                            {% for id , attr  in topPoductList.items %}
+                                {% with attr.NAME|first as name %}
+                                {% with attr.IMAGE|first as picture %}
+                                {% with attr.CURRENCY|first as currency %}
+                                {% with attr.COST|first as cost  %}
+                                {% with attr.CATEGORY_NAME as category_name  %}
+                                {% with attr.CATEGORY_ID as category_id  %}
+                                {% with attr.DISCOUNT|first as discount  %}
+                                {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+                                <li>
+                                    {% if coupon_discount %}
+                                        <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                                    {% elif discount %}
+                                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                    {% endif %}
+                                    <div class="img_gallery">
+                                        <div class="shadow"></div>
+                                        <div class="img_block">
+                                            <a href="{% url "products:detail" id %}">
+                                                <img src="{% static picture %}" alt="{{ name }}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                    <p>
+                                        <font class="number"> {{ currency|getSymbol }}
+                                            {% if coupon_discount %}
+                                                {{ cost|discountPrice:coupon_discount }}
+                                            {% elif discount %}
+                                                {{ cost|discountPrice:discount }}
+                                            {% else %}
+                                                {{ cost|formatPrice }}
+                                            {% endif %}
+                                        </font>
+                                    </p>
+                                    <p>
+                                        <a class="viewall" href="{% url "companies:product_category" companyID category_id %}">
+                                            {{ category_name }}
+                                        </a>
+                                    </p>
+                                </li>
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                               {% endwith %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            </div>
+            <div id="bestprice-cpn">
+            	<div id="bestprice">
+                    <h3>Выгодные предложения</h3>
+                    <ul id="bestproduct">
+                        {% for id, attr in productsSale.items %}
+                            {% with attr.NAME as name  %}
+                            {% with attr.DISCOUNT as discount  %}
+                            {% with attr.IMAGE as picture  %}
+
+                            {% if  forloop.counter == 1 %}
+                                <li>
+                            {% endif %}
+                            <div class="clumn-best">
+                                <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                <a href="{% url "products:detail" id %}">
+                                    <img height="180" width="135" src="{% static picture %}" alt="" class="thumb" />
+                                </a>
+                                <a href="{% url "products:detail" id %}" class="name">{{ name }}</a>
+                            </div>
+                             {% if forloop.counter|divisibleby:"4" and not forloop.last  %}
+                                 </li>
+                                 <li>
+                             {% elif forloop.last %}
+                                </li>
+                             {% endif %}
+
+                             {% endwith %}
+                             {% endwith %}
+                             {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+{% endblock %}

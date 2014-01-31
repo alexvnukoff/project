@@ -21,12 +21,14 @@ def home(request):
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
-    products = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:4]
-    newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE"))
+    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
+                                                              "COUPON_DISCOUNT"))
 
     #----NEW PRODUCT LIST -----#
-    products = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[4:8]
-    topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE"))
+    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[4:8]
+    topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
+                                                              "COUPON_DISCOUNT"))
 
      #----MAIN MENU AND CATEGORIES IN HEADER ------#
     hierarchyStructure = Category.hierarchy.getTree()

@@ -7,6 +7,7 @@
 .i-cart{ width: 27px; height: 25px; background-position: 0px -460px; display:inline-block; margin:8px 5px 0 0!important;}
 #company-header{ position:relative; float:left; width:100%; padding:20px 0;}
 #company-logo{ float:left; width:92px; height:92px;}
+#company-logo img {max-width: 92px; max-height: 92px;}
 #company-info{ position:relative; float:left; width:375px; margin:0 0 0 20px; display:inline; color:#999;}
 #company-info .company-name{ font-size:24px; font-weight:400; color:#383838;}
 #company-info .cpn-no{ font-size:14px; padding-bottom:5px; display:inline-block;}
@@ -36,3 +37,4 @@ border-color: transparent transparent #FFF;
 #sidebar #subscribe li input.text{ width:95%;}
 #main-r .var-main .prd-new:nth-child(2){ float:right; margin-right:0;}
 #bestprice-cpn{ position:relative; float:left; width:100%;}
+#sidebar h3.spacer {padding-top: 0}

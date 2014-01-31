@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="prd-new">
                         <div class="title-discount">
                             <span class="left">
@@ -18,21 +19,43 @@
                         {% with attr.COST|first as cost  %}
                         {% with attr.CATEGORY_NAME as category_name  %}
                         {% with attr.CATEGORY_ID as category_id  %}
+                        {% with attr.DISCOUNT|first as discount  %}
+                        {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+
                             <li>
+                                {% if coupon_discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                                {% elif discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                {% endif %}
                                <div class="img_gallery">
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
-                                      <a href="{% url "products:detail" id %}"><img style="height: 100px;width: 100px;" src="{% static picture %}" alt="{{ name }}" /></a>
+                                      <a href="{% url "products:detail" id %}">
+                                          <img src="{% static picture %}" alt="{{ name }}" />
+                                      </a>
                                     </div>
 					          </div>
                                 <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
-                                <p><font class="number">{{ cost }}</font> {{ currency }}</p>
-                                <p><a href="{% url "products:category" category_id %}" class="viewall">{{ category_name }} &rarr;</a></p>
+                                <p>
+                                    <font class="number"> {{ currency|getSymbol }}
+                                        {% if coupon_discount %}
+                                            {{ cost|discountPrice:coupon_discount }}
+                                        {% elif discount %}
+                                            {{ cost|discountPrice:discount }}
+                                        {% else %}
+                                            {{ cost|formatPrice }}
+                                        {% endif %}
+                                    </font>
+                                </p>
+                                <p>
+                                    <a href="{% url "products:category" category_id %}" class="viewall">
+                                        {{ category_name }}
+                                    </a>
+                                </p>
                             </li>
-
-
-
-
+                       {% endwith %}
+                       {% endwith %}
                        {% endwith %}
                        {% endwith %}
                        {% endwith %}
@@ -60,21 +83,46 @@
                         {% with attr.COST|first as cost  %}
                         {% with attr.CATEGORY_NAME as category_name  %}
                         {% with attr.CATEGORY_ID as category_id  %}
+                        {% with attr.DISCOUNT|first as discount  %}
+                        {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
                             <li>
+                                {% if coupon_discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                                {% elif discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                {% endif %}
                               <div class="img_gallery">
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
-                                      <a href="{% url "products:detail" id %}"><img style="height: 100px;width: 100px;" src="{% static picture %}" alt="{{ name }}" /></a>
+                                      <a href="{% url "products:detail" id %}">
+                                          <img src="{% static picture %}" alt="{{ name }}" />
+                                      </a>
                                     </div>
 					          </div>
 
                                 <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
-                                <p><font class="number">{{ cost }}</font> {{ currency }}</p>
-                                <p><a href="{% url "products:category" category_id %}" class="viewall">{{ category_name }} &rarr;</a></p>
+                                <p>
+                                    <font class="number"> {{ currency|getSymbol }}
+                                        {% if coupon_discount %}
+                                            {{ cost|discountPrice:coupon_discount }}
+                                        {% elif discount %}
+                                            {{ cost|discountPrice:discount }}
+                                        {% else %}
+                                            {{ cost|formatPrice }}
+                                        {% endif %}
+                                    </font>
+                                </p>
+                                <p>
+                                    <a href="{% url "products:category" category_id %}" class="viewall">
+                                        {{ category_name }}
+                                    </a>
+                                </p>
                             </li>
 
 
 
+                       {% endwith %}
+                       {% endwith %}
                        {% endwith %}
                        {% endwith %}
                        {% endwith %}

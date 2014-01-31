@@ -18,19 +18,6 @@ from django.contrib.auth.decorators import login_required
 from centerpokupok.forms import OrderForm
 from django.db import transaction
 
-def productList(request):
-    page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Name", "Active_From", "Detail_Text", "Photo", page=page)
-    newsList = result[0]
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
-
-
-
-    return render_to_response("Product/index.html", locals())
-
-
 def productDetail(request, item_id, page=1):
     if request.POST.get('subCom', False):
         form = addComment(request, item_id)
@@ -43,7 +30,8 @@ def productDetail(request, item_id, page=1):
 
 
     product = get_object_or_404(Product, pk=item_id)
-    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY')
+    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT')
+    productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
 
     category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
     sameProducts = Product.objects.filter(c2p__parent_id__in=category).exclude(pk=item_id)
@@ -52,6 +40,8 @@ def productDetail(request, item_id, page=1):
 
     try:
         company = Company.objects.get(p2c__child_id=item_id)
+        storeCategories = company.getStoreCategories()
+        companyID = company.pk
         company = company.getAttributeValues("NAME")
     except ObjectDoesNotExist:
         pass
@@ -78,12 +68,12 @@ def productDetail(request, item_id, page=1):
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
+    root_cats = [cat['ID'] for cat in hierarchyStructure if cat['LEVEL'] == 1]
+    storeCategories = func._categoryStructure(hierarchyStructure, storeCategories, categories, root_cats)
 
     contrySorted = func.sortByAttr("Country", "NAME")
     sorted_id  = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
-
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
@@ -108,13 +98,78 @@ def addComment(request, item_id):
 
 
 
-def getCategoryProduct(request, category_id, page=1):
+def getCategoryProduct(request, category_id=None, page=1):
+
+    hierarchyStructure = Category.hierarchy.getTree()
+
+    if category_id is None: #Not filtered by category
+
+        #Get related categories
+        #categories = Category.hierarchy.getTree(15)
+        categories = hierarchyStructure
+        category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 1]
+
+        #Main Page
+        breadCrumbs = None
+
+        #Paginator
+        url_parameter = []
+        url_paginator = "products:products_paginator"
+    else:
+        #Get related categories
+        category_id = int(category_id)
+        categories = Category.hierarchy.getDescendants(category_id)
+        category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 2][:15]
+
+        #creating bread crumbs
+        ancestors = Category.hierarchy.getAncestors(category_id)
+        ancestors_ids = [cat['ID'] for cat in ancestors]
+        breadCrumbs = Product.getItemsAttributesValues(("NAME",), ancestors_ids)
+
+        #Paginator
+        url_parameter = [category_id]
+        url_paginator = "products:cat_pagination"
+
+    #Products filtered by site
+    products = Product.objects.filter(sites=settings.SITE_ID)
+
+    #Main search by categories
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categoriesAttr = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categoriesAttr)
+
+    #Related categories list with descendants
+    category_ids = [cat['ID'] for cat in categories]
+
+    #sort categories
+    rootCats = Category.objects.filter(pk__in=category_root_ids)
+    sortedRootCat = func.sortQuerySetByAttr(rootCats, "NAME", "ASC", "str")
+
+    #Related categories list without descendants
+    category_root_ids = [cat.pk for cat in sortedRootCat]
 
 
+    #Get categories attributes & count
+    if category_id is not None:
+        category_root_ids.insert(0, category_id)
 
-    products = Product.objects.filter(c2p__parent_id=category_id, c2p__type='rel', sites=settings.SITE_ID).order_by("-pk")
+    prodInCat = func.getCountofSepecificItemsRelated('Product', category_ids, products)
+
+    if category_id is not None:
+        currentCatName = categoriesAttr[category_id]['NAME'][0]
+        category_ids.append(category_id)
+        del categoriesAttr[category_id]
+    else:
+        currentCatName = None
+
+    categories = func._categoryStructure(categories, prodInCat, categoriesAttr, category_root_ids)
+
+    if category_id is not None:
+        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='rel', sites=settings.SITE_ID)\
+            .order_by("-pk")
+
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                         page_num=12, page=page)
+                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
@@ -146,16 +201,6 @@ def getCategoryProduct(request, category_id, page=1):
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-    url_paginator = "products:cat_pagination"
-    url_parameter = [category_id]
-
-
-
-    hierarchyStructure = Category.hierarchy.getTree()
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
 
     contrySorted = func.sortByAttr("Country", "NAME")
     sorted_id = [coun.id for coun in contrySorted]
@@ -167,7 +212,9 @@ def getCategoryProduct(request, category_id, page=1):
     return render_to_response("Product/index.html", {'products_list': products_list,'companyList': companyList,
                                                       'page': page, 'paginator_range': paginator_range,
                                                       'url_paginator': url_paginator, 'url_parameter':url_parameter,
-                                                      'categotySelect':categotySelect, 'countryList':countryList })
+                                                      'categotySelect':categotySelect, 'countryList':countryList,
+                                                      'categories': categories, 'currentCat': currentCatName,
+                                                     'breadCrumbs': breadCrumbs, 'nameSpace': 'products:category'})
 
 
 
