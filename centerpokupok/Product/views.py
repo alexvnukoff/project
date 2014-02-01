@@ -169,7 +169,8 @@ def getCategoryProduct(request, category_id=None, page=1):
             .order_by("-pk")
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+                                                 'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+    #Product list , with companies and countries
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
@@ -198,10 +199,11 @@ def getCategoryProduct(request, category_id=None, page=1):
             companyList[item['p2c__child_id']].update({'COUNTRY_ID': item['pk']})
 
 
-
+    #Paginator
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
+    #Country list in header
     contrySorted = func.sortByAttr("Country", "NAME")
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
@@ -298,8 +300,20 @@ def _getComment(parent_id, page):
 @transaction.atomic
 @login_required(login_url="/products/")
 def orderProduct(request, step=1):
+#------ Order of products in threee step ----#
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
     curr_url = 'order'
     if step == '1':
+        #-----Step One , form of shipping addres plus deleviry method ---#
         orderForm = ""
         user = request.user
         if not request.session.get('product_id', False) or request.POST.get('product', False):
@@ -335,10 +349,12 @@ def orderProduct(request, step=1):
         totalCost = int(request.session.get('qty', 1)) * int(productValues['COST'][0])
         return render_to_response("Product/orderStepOne.html", {'address': address, 'user': user, "orderForm": orderForm,
                                                                 'productValues': productValues ,'totalCost': totalCost,
-                                                                'curr_url': curr_url},
+                                                                'curr_url': curr_url, 'categotySelect': categotySelect,
+                                                                'countryList': countryList},
                                                                  context_instance=RequestContext(request))
 
     elif step == '2':
+        #----Step two , checkout , and conformation  of order----#
         product_id = request.session.get('product_id', False)
         qty = request.session.get('qty', False)
         product = get_object_or_404(Product, pk=product_id)
@@ -353,8 +369,11 @@ def orderProduct(request, step=1):
 
         return render_to_response("Product/orderStepTwo.html", {'qty': qty, 'productValues': productValues,
                                                                 'orderDetails': orderDetails, 'totalSum': totalSum,
-                                                                "user": user,'curr_url': curr_url})
+                                                                "user": user,'curr_url': curr_url,
+                                                                'categotySelect': categotySelect,
+                                                                'countryList': countryList})
     else:
+        #-----Step three , cleaning of sessions , and creatin of new order object that related to cabinet of user ---#
         if request.session.get("order", False):
             product = get_object_or_404(Product, pk=request.session.get('product_id'))
             productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY', 'IMAGE')
@@ -384,7 +403,9 @@ def orderProduct(request, step=1):
         else:
             return HttpResponseRedirect("/")
 
-        return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url})
+        return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url,
+                                                                  'categotySelect': categotySelect,
+                                                                  'countryList': countryList})
 
 
 
