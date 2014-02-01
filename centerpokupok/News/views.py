@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import News, Category, Country, Product
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 def newsList(request, page=1):
+    user = request.user
+
     page = page
     result = func.getItemsListWithPagination("News", "NAME", "Active_From", "DETAIL_TEXT", "IMAGE", page=page)
     newsList = result[0]
@@ -32,10 +34,9 @@ def newsList(request, page=1):
 
 
 def newsDetail(request, item_id):
-    try:
-      new = News.objects.get(pk=item_id)
-    except ObjectDoesNotExist:
-        raise Http404
+
+    new = get_object_or_404(News, pk=item_id)
+    user = request.user
 
     newAttr =  new.getAttributeValues("NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE")
     newAttr = newAttr

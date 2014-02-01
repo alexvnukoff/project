@@ -15,7 +15,20 @@ from django.utils.translation import ugettext as _
 
 @login_required(login_url=("/registration/"))
 def get_profile(request):
+    #Categories list in header
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+    #Counrty list in header
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+   #---Form for main data of ptofile ------#
+
     user = request.user
+    #-------current url for Profile menu ----#
     curr_url = "main"
     succsefull_save = ""
     if request.POST:
@@ -25,6 +38,7 @@ def get_profile(request):
             user.last_name = user_form.cleaned_data['last_name']
             user.date_of_birth = user_form.cleaned_data['birthday']
             user.save()
+            #----shown when prfile data successfully saved ------#
             succsefull_save = _("was successfully saved ")
     else:
         user_form = UserDetail(initial={"first_name": user.first_name, 'last_name': user.last_name,
@@ -32,13 +46,26 @@ def get_profile(request):
 
 
     return render_to_response("Cabinet/index.html", {'user_form': user_form, 'user': user,
-                                                     'succsefull_save': succsefull_save, 'curr_url': curr_url},
+                                                     'succsefull_save': succsefull_save, 'curr_url': curr_url,
+                                                     'categotySelect': categotySelect, 'countryList': countryList},
                                                       context_instance=RequestContext(request))
 
 @login_required(login_url=("/registration/"))
 def get_shipping_detail(request):
+     #Categories list in header
+    hierarchyStructure = Category.hierarchy.getTree()
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+    #Counrty list in header
+    contrySorted = func.sortByAttr("Country", "NAME")
+    sorted_id = [coun.id for coun in contrySorted]
+    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+    #----form for shipping data in profile -----#
     user = request.user
     succsefull_save = ""
+  #-------current url for Profile menu ----#
     curr_url = "shipping_address"
     if request.POST:
         order_form = OrderForm(request.POST)
@@ -50,6 +77,7 @@ def get_shipping_detail(request):
                                        'ADDRESS': [order_form.cleaned_data['address']],
                                        'TELEPHONE_NUMBER': [order_form.cleaned_data['telephone_number']],
                                        'SHIPPING_NAME': [order_form.cleaned_data['recipient_name']]}, user)
+           #----shown when prfile data successfully saved ------#
             succsefull_save = _("was successfully saved ")
 
     else:
@@ -67,17 +95,21 @@ def get_shipping_detail(request):
 
 
     return render_to_response("Cabinet/shippingAddress.html", {'order_form': order_form, 'user': user,
-                                                               'succsefull_save': succsefull_save, 'curr_url': curr_url},
+                                                               'succsefull_save': succsefull_save, 'curr_url': curr_url,
+                                                               'categotySelect': categotySelect,
+                                                               'countryList': countryList},
                                                                 context_instance=RequestContext(request))
 
 def get_order_history(request, page=1):
+    #------order history of user with pagination-----#
 
+    #Categories list in header
     hierarchyStructure = Category.hierarchy.getTree()
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
-
+    #Counrty list in header
     contrySorted = func.sortByAttr("Country", "NAME")
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
@@ -90,9 +122,9 @@ def get_order_history(request, page=1):
     attr = ("IMAGE", 'NAME', 'CURRENCY', 'COST', 'QUANTITY', 'CITY', 'COUNTRY', 'ADDRESS')
     result = func.setPaginationForItemsWithValues(orders, *attr, page_num=5, page=page)
     orderList = result[0]
+    #Paginator
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-
     url_paginator = "profile:paginator"
 
     return render_to_response("Cabinet/orderHistory.html", {"user": user, 'curr_url': curr_url,

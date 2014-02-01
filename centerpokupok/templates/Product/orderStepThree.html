@@ -43,7 +43,7 @@
 
 
                 </div>
-                <div style="margin-top:50px;font-size: 20px;"><span> {% trans "Thank you for  shopping on our site," %} <a href="#">{% trans "here" %} </a>  {% trans 'you can view your order history' %}</span></div>
+                <div style="margin-top:50px;font-size: 20px;"><span> {% trans "Thank you for  shopping on our site," %} <a href="{% url 'profile:order_history' %}">{% trans "here" %} </a>  {% trans 'you can view your order history' %}</span></div>
         </div>
 </div>
  {% endblock %}

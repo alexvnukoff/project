@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 def categoryList(request):
+    user = request.user
     hierarchyStructure = Category.hierarchy.getTree(10)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
