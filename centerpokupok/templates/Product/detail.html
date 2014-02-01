@@ -73,7 +73,6 @@
 {% endblock %}
 
 {% block body %}
-    <div id='jcart-tooltip'></div>
    	<div id="main">
 		<div id="sidebar">
 			<div class="shopinfo">
@@ -235,33 +234,35 @@
                             </div>
                         </div>
                     {% endif %}
-					<div class="option">
-                        <form action="{% url "products:order" 1 %}" method="post">
-                            {% csrf_token %}
-						<ul>
-							<li>
+                    <form action="{% url "products:order" 1 %}" method="post">
+                        <div class="option">
 
-                          <input type="hidden" name="product" value="{{ item_id }}">
+                                {% csrf_token %}
+                            <ul>
+                                <li>
 
-                                <label>{% trans "Quantity" %}</label>
+                              <input type="hidden" name="product" value="{{ item_id }}">
 
-								<div class="numberof">
-									<div class="numbers-row">
-							        	<input type="text" name="french-hens" id="french-hens" value="1">
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
+                                    <label>{% trans "Quantity" %}</label>
 
-					<div class="details-action">
-						<input type="submit" class="bigbuy" value="{% trans "Buy" %}">
-                        </form>
-						<div class="wl">
-							<i class="icons i-wl"></i>
-							<p><a href="#"  class="wish" data-gid="{{ item_id }} ">В избранное</a></p>
-						</div>
-					</div>
+                                    <div class="numberof">
+                                        <div class="numbers-row">
+                                            <input type="text" name="french-hens" id="french-hens" value="1">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="details-action">
+                            <input type="submit" class="bigbuy" value="{% trans "Buy" %}">
+
+                            <div class="wl">
+                                <i class="icons i-wl"></i>
+                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">В избранное</a></p>
+                            </div>
+                        </div>
+                    </form>
 					<div class="socialplugin">
 						<div><img src="{% static "images/fb.gif" %}"></div>
 						<div><img src="{% static "images/tw.gif" %}"></div>
@@ -345,79 +346,79 @@
                       <form action="" method="post">
                     {% endif %}
 
-                    {{ form.management_form }}
+                        {{ form.management_form }}
 
-                    {% csrf_token %}
-						<ul class="bgform">
-					        <li>
-						        <div class="control-left">
-                                    {{ form.DETAIL_TEXT.label_tag }}
-                                </div>
-                                <div class="control" style="font-weight: bolder;color: red">
-                                    {{  form.DETAIL_TEXT.errors }}
-                                </div>
-						        <div class="control">
-                                    <textarea cols="70" name="DETAIL_TEXT" rows="7"></textarea>
-                                </div>
-					        </li>
-				        </ul>
-				        <div class="rows-check">
-                            <input type="submit" name = "subCom" class="btnreg" value="Сохранить">
-                        </div>
-                    </form>
-				</div>
-			</div>
-
-            {% if sameProducts %}
-			    <div class="otherprd">
-				    <h1>{% trans "Similar products" %} </h1>
-            {% endif %}
-
-				<ul id="slider2">
-				  {% for id , attr  in sameProducts.items %}
-
-                    {% with attr.NAME|first as name  %}
-                    {% with attr.COST|first as cost  %}
-                    {% with attr.CURRENCY|first as currency  %}
-                    {% with attr.IMAGE|first as picture  %}
-
-                    {% if  forloop.counter == 1 %}
-                        <li>
-                    {% endif %}
-
-                    <div class="itemspp">
-                        <div class="img_prod_slider">
-                            <div class="shadow"></div>
-                            <div class="img_block">
-							    <img src="{% static picture %}" alt="{{ name }}">
-
+                        {% csrf_token %}
+                            <ul class="bgform">
+                                <li>
+                                    <div class="control-left">
+                                        {{ form.DETAIL_TEXT.label_tag }}
+                                    </div>
+                                    <div class="control" style="font-weight: bolder;color: red">
+                                        {{  form.DETAIL_TEXT.errors }}
+                                    </div>
+                                    <div class="control">
+                                        <textarea cols="70" name="DETAIL_TEXT" rows="7"></textarea>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="rows-check">
+                                <input type="submit" name = "subCom" class="btnreg" value="Сохранить">
                             </div>
-                        </div>
+                        </form>
+                    </div>
+                </div>
 
-                        <div class="infopeople">
-					        <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
-							<p><font class="number">{{ currency|getSymbol }} {{ cost|formatPrice }}</font></p>
-                        </div>
-					</div>
+                {% if sameProducts %}
+                    <div class="otherprd">
+                        <h1>{% trans "Similar products" %} </h1>
 
-				    {% if forloop.counter|divisibleby:"4" and   forloop.counter != forloop.last  %}
-                        </li>
-                        <li>
-                    {% endif %}
+                        <ul id="slider2">
+                          {% for id , attr  in sameProducts.items %}
 
-                    {% if  forloop.counter == forloop.last %}
-                        </li>
-                    {% endif %}
+                            {% with attr.NAME|first as name  %}
+                            {% with attr.COST|first as cost  %}
+                            {% with attr.CURRENCY|first as currency  %}
+                            {% with attr.IMAGE|first as picture  %}
 
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                  {% endfor %}
+                            {% if  forloop.counter == 1 %}
+                                <li>
+                            {% endif %}
 
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+                            <div class="itemspp">
+                                <div class="img_prod_slider">
+                                    <div class="shadow"></div>
+                                    <div class="img_block">
+                                        <img src="{% static picture %}" alt="{{ name }}">
+
+                                    </div>
+                                </div>
+
+                                <div class="infopeople">
+                                    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                    <p><font class="number">{{ currency|getSymbol }} {{ cost|formatPrice }}</font></p>
+                                </div>
+                            </div>
+
+                            {% if forloop.counter|divisibleby:"4" and   forloop.counter != forloop.last  %}
+                                </li>
+                                <li>
+                            {% endif %}
+
+                            {% if  forloop.counter == forloop.last %}
+                                </li>
+                            {% endif %}
+
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                          {% endfor %}
+
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

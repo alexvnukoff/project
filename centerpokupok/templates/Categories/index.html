@@ -30,13 +30,13 @@
 
         {% for parent_name , dict  in dictStructured|sort  %}
 
-            {%  for name , item in  dict|sort%}
+            {%  for name , item in  dict|sort %}
 
             {% with item.ID as id %}
 
                 {% if name == "Parent" %}
 
-                    {% if  parent_name|first !=  a|first or forloop.parentloop.counter == 1  %}
+                    {% if  parent_name|first !=  a|first or forloop.parentloop.first  %}
                         <div class="letters">{{ parent_name|first }}</div>
                     {% endif %}
 
