@@ -136,6 +136,15 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
+   hierarchyStructure = Category.hierarchy.getTree()
+   categories_id = [cat['ID'] for cat in hierarchyStructure]
+   categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+   categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+   contrySorted = func.sortByAttr("Country", "NAME")
+   sorted_id = [coun.id for coun in contrySorted]
+   countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
    if request.POST.get('Register', None):
      form = RegistrationFormUniqueEmail(request.POST)
@@ -144,7 +153,7 @@ def registration(request, form, auth_form):
         reg_view = RegistrationView()
         try:
             reg_view.register(request, **cleaned)
-            return render_to_response("registration/registration_complete.html")
+            return render_to_response("registration/registration_complete.html", locals())
         except ValueError:
             return render_to_response("registration/registration_closed.html")
      else:
