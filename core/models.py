@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.db.models.signals import pre_delete, post_delete, pre_save
 from django.dispatch import receiver
-from django.db.models import Q, F
+from django.db.models import Q
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from PIL import Image
