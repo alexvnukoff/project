@@ -19,12 +19,13 @@ class hierarchyManager(models.Manager):
                                         (
                                             SELECT NULL, {pkCol}, null
                                                 FROM {itemTable} i
+                                                {unionJoin}
                                                 WHERE NOT EXISTS
                                                 (
                                                     SELECT *
                                                         FROM {relTable}
                                                         WHERE child_id = i.{pkCol} AND type='hier'
-                                                )
+                                                ) {unionWhere}
                                         ) WHERE ROWNUM <= {limitRoot}
                             ) rel
                             INNER JOIN {itemTable} model ON (rel.CHILD_ID = model.{pkCol})
@@ -45,13 +46,14 @@ class hierarchyManager(models.Manager):
         queryDict['select'] = 'PARENT_ID, LEVEL, model.{pkCol} as id'.format(pkCol=queryDict['pkCol'])
         queryDict['where'] = ''
         queryDict['order'] = 'ORDER BY ROWNUM '
-
+        queryDict['unionWhere'] = ''
+        queryDict['unionJoin'] = ''
         queryDict['limitRoot'] = '50'
 
 
         return queryDict
 
-    def getTree(self, rootLimit=False):
+    def getTree(self, rootLimit=False, siteID = False):
         '''
             Returns hierarchical structure of some type of Item
             The method returns list of dictionaries that contains the id , level and the parent of each member
@@ -70,6 +72,12 @@ class hierarchyManager(models.Manager):
         queryDict['select'] += ', CONNECT_BY_ISLEAF as isLeaf'
         queryDict['prior'] = 'rel.CHILD_ID = rel.PARENT_ID'
         queryDict['startWith'] = 'rel.PARENT_ID is NULL'
+
+
+        if siteID:
+            queryDict['unionJoin'] = 'INNER JOIN "CORE_ITEM_SITES" ON ( i.%s = "CORE_ITEM_SITES"."ITEM_ID")' \
+                                        % self.model._meta.pk.column
+            queryDict['unionWhere'] = ' AND "CORE_ITEM_SITES"."SITE_ID" = %s' % siteID
 
 
         if rootLimit is not False:
@@ -256,7 +264,7 @@ class hierarchyManager(models.Manager):
 
 
 
-    def getRootParents(self, limit=0):
+    def getRootParents(self, limit=0, siteID=False):
         '''
             Returns limited number of instances of root parents for some Type of Item
             by default it not limit the number of root parents and will return all them
@@ -266,13 +274,19 @@ class hierarchyManager(models.Manager):
 
         limit = int(limit)
 
+        filter = {}
+
+        if siteID:
+            filter['sites'] = siteID
+
         if limit < 1:
             return self.model.objects\
-                .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True))
+                .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True), **filter)
         else:
             return \
                 self.model.objects \
-                    .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True))[:limit]
+                    .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),
+                              c2p__parent_id__isnull=True), **filter)[:limit]
 
 
 

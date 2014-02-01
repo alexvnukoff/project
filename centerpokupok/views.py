@@ -35,7 +35,7 @@ def home(request):
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
-    hierarchyStructure = hierarchyStructure[:10]
+    hierarchyStructure = hierarchyStructure[:10] #TODO: Jenya, this is a bug
 
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
@@ -73,7 +73,7 @@ def home(request):
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
     productsSale = func._setProductStructure(productsSale)
 
- #---------FLAGS IN HEADER----------#
+    #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
 
