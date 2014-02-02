@@ -34,7 +34,7 @@
 
             {% with item.ID as id %}
 
-                {% if name == "Parent" %}
+                {% if name == "@Parent" %}
 
                     {% if  parent_name|first !=  a|first or forloop.parentloop.counter == 1  %}
                         <div class="letters">{{ parent_name|first }}</div>

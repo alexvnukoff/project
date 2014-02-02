@@ -35,7 +35,7 @@ def home(request):
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
-    hierarchyStructure = hierarchyStructure[:10]
+    hierarchyStructure = hierarchyStructure
 
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
@@ -101,14 +101,18 @@ def set_news_list(request):
 
 
 def _sortMenu(hierarchyStructure):
+    count = 0
     sortedHierarchyStructure = []
     dictToSort = []
     id = hierarchyStructure[0]['ID']
     for i in range(0, len(hierarchyStructure)):
         if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
+            if count == 9:
+                break
             id = hierarchyStructure[i]['ID']
             sortedHierarchyStructure.extend(_sortList(dictToSort))
             dictToSort = []
+            count += 1
 
         dictToSort.append(hierarchyStructure[i])
 
