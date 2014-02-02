@@ -36,8 +36,14 @@ def createHash(string):
 #----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
+
         request = get_request()
-        ip = request.META['REMOTE_ADDR']
+
+        if request:
+            ip = request.META['REMOTE_ADDR']
+        else: # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
+            ip = '0.'+str(randint(0, 255))+'.'+str(randint(0, 255))+'.'+str(randint(0, 255))
+
         time = now() - datetime.timedelta(minutes=1)
         users = User.objects.filter(ip=ip, date_joined__gt=time)
         if users:
@@ -243,7 +249,6 @@ class Attribute(models.Model):
     title = models.CharField(max_length=128)
     TYPE_OF_ATTRIBUTES = (
         ('Str', 'String'),
-
         ('Chr', 'Char'),
         ('Img', 'Image'),
         ('Bin', 'Boolean'),
@@ -258,9 +263,10 @@ class Attribute(models.Model):
         ("Url", "URLField"),
         ("Sdt", "SplitDateTimeField"))
     type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
-
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
-
+    f_order = models.BooleanField(default=False)# set in True if attribute participate in sort list of the fields in
+                                                # setup view form in User's Cabinet
+    f_cache = models.BooleanField(default=False)# reserved field for fast access to item's main attributes
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
