@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'south',
     'core',
     'appl',
+    'legacy_data',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period

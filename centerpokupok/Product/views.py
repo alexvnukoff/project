@@ -23,13 +23,11 @@ def productDetail(request, item_id, page=1):
         form = addComment(request, item_id)
         if isinstance(form, HttpResponseRedirect):
             return form
-
     else:
         form = ItemForm("Comment")
 
-
-
     product = get_object_or_404(Product, pk=item_id)
+
     productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT')
     productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
 
@@ -48,32 +46,38 @@ def productDetail(request, item_id, page=1):
 
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
-    result = _getComment(item_id, page)
-    commentsList = result[0]
-    paginator_range = result[1]
-    page = result[2]
-
-    dictionaryLabels = {"DETAIL_TEXT": "Comment"}
-    form.setlabels(dictionaryLabels)
-
-    url_paginator = "products:paginator"
-    url_parameter = [item_id]
-
+    #----------- Popular Products ----------------#
     productsPopular = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:5]
     product_id = [prod.id for prod in productsPopular]
     productsPopularList = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE"), product_id)
 
+    #----------- Category Hierarchy ----------------#
     hierarchyStructure = Category.hierarchy.getTree()
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
+
+    #----------- Store Categories ----------------#
     root_cats = [cat['ID'] for cat in hierarchyStructure if cat['LEVEL'] == 1]
     storeCategories = func._categoryStructure(hierarchyStructure, storeCategories, categories, root_cats)
 
+    #----------- Country List ----------------#
     contrySorted = func.sortByAttr("Country", "NAME")
     sorted_id  = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+    #-------- Comments ----------------#
+    result = _getComment(item_id, page)
+    commentsList = result[0]
+    paginator_range = result[1]
+    page = result[2]
+
+    dictionaryLabels = {"DETAIL_TEXT": _("Comment")}
+    form.setlabels(dictionaryLabels)
+
+    url_paginator = "products:paginator"
+    url_parameter = [item_id]
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
@@ -185,15 +189,33 @@ def getCategoryProduct(request, category_id=None, page=1):
     items_id = set(items_id)
     itemsWithAttribute = Item.getItemsAttributesValues(("NAME", "IMAGE"), items_id)
     companyList = {}
-    for item in items:
-        products_list[item['p2c__child__p2c__child']].update({'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']})
-        products_list[item['p2c__child__p2c__child']].update({'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']})
-        products_list[item['p2c__child__p2c__child']].update({'COMPANY_ID': item['p2c__child_id']})
-        products_list[item['p2c__child__p2c__child']].update({'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']})
-        products_list[item['p2c__child__p2c__child']].update({'COUNTRY_ID': item['pk']})
+
+    for item in items: #TODO: Jenya maybe it's possible to do it more beautifoul
+        products_list[item['p2c__child__p2c__child']].update({
+            'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']
+        })
+
+        products_list[item['p2c__child__p2c__child']].update(
+            {
+                'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']
+            })
+        products_list[item['p2c__child__p2c__child']].update(
+            {
+                'COMPANY_ID': item['p2c__child_id']
+            })
+        products_list[item['p2c__child__p2c__child']].update(
+            {
+                'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']
+            })
+        products_list[item['p2c__child__p2c__child']].update(
+            {
+                'COUNTRY_ID': item['pk']
+            })
+
         if item["p2c__child_id"] not in companyList:
             companyList[item["p2c__child_id"]] = {}
-            companyList[item["p2c__child_id"]].update({"COMPANY_NAME": itemsWithAttribute[item['p2c__child_id']]['NAME']})
+            companyList[item["p2c__child_id"]].update(
+                {"COMPANY_NAME": itemsWithAttribute[item['p2c__child_id']]['NAME']})
             companyList[item["p2c__child_id"]].update({"COMPANY_IMAGE": itemsWithAttribute[item['p2c__child_id']]['IMAGE']})
             companyList[item["p2c__child_id"]].update({"COUNTRY_NAME": itemsWithAttribute[item['pk']]['NAME']})
             companyList[item['p2c__child_id']].update({'COUNTRY_ID': item['pk']})
@@ -217,12 +239,6 @@ def getCategoryProduct(request, category_id=None, page=1):
                                                       'categotySelect':categotySelect, 'countryList':countryList,
                                                       'categories': categories, 'currentCat': currentCatName,
                                                      'breadCrumbs': breadCrumbs, 'nameSpace': 'products:category'})
-
-
-
-
-
-
 
 
 def getAllNewProducts(request, page=1):

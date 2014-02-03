@@ -245,11 +245,10 @@ def setStructureForHiearhy(dictinory, items):
     '''
     level = 0
     dictStructured = {}
-
+    #TODO: Parent not always be first because of sorting
     for node in dictinory:
         if node['LEVEL'] == 1:
-            i = items[node['ID']]['NAME'][0]
-            nameOfList = items[node['ID']]['NAME'][0]
+            nameOfList = items[node['ID']]['NAME'][0].strip()
             dictStructured[nameOfList] = {}
             node['item'] = items[node['ID']]
             dictStructured[nameOfList]['@Parent'] = node
@@ -258,7 +257,7 @@ def setStructureForHiearhy(dictinory, items):
             node['item'] = items[node['ID']]
             node['parent_item'] = items[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
             level = node['LEVEL']
-            dictStructured[nameOfList][items[node['ID']]['NAME'][0]] = node
+            dictStructured[nameOfList][items[node['ID']]['NAME'][0].strip()] = node
 
     return dictStructured
 

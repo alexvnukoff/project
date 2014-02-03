@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet
+from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order
 from registration.backends.default.views import RegistrationView
 from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
@@ -17,7 +17,7 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-def home(request):
+def home(request, country=None):
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
@@ -26,16 +26,20 @@ def home(request):
                                                               "COUPON_DISCOUNT"))
 
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[4:8]
+
+    products = Product.getTopSales(Product.objects.all())[:4]
+
     topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 
      #----MAIN MENU AND CATEGORIES IN HEADER ------#
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
+
     hierarchyStructure = hierarchyStructure
+
 
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
@@ -73,8 +77,11 @@ def home(request):
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
     productsSale = func._setProductStructure(productsSale)
 
- #---------FLAGS IN HEADER----------#
+    #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+    url_country = "home_country"
+
 
 
 
@@ -84,7 +91,7 @@ def home(request):
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale, 'user': user})
+                                             "productsSale": productsSale, 'user': user, 'url_country': url_country})
 
 
 def about(request):
@@ -140,7 +147,7 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
-   hierarchyStructure = Category.hierarchy.getTree()
+   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
    categories_id = [cat['ID'] for cat in hierarchyStructure]
    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -176,7 +183,10 @@ def registration(request, form, auth_form):
             cabinet = Cabinet(user=user, create_user=user)
             cabinet.save()
 
-          return HttpResponseRedirect("/")
+
+
+
+          return HttpResponseRedirect(request.GET.get('next', '/'))
 
    return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
 
