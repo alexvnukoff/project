@@ -1,5 +1,19 @@
-$(document).ready(function () {
+function getFormat(until)
+{
+    now = +new Date();
 
+    month = 60 * 60 * 24 * 30 * 1000
+    day = 60 * 60 * 24 * 1000
+
+    if(until - now >= month)
+        return 'ODH'
+    else if(until - now >= day)
+        return 'DHM'
+    else
+        return 'HMS'
+}
+
+$(document).ready(function () {
 
 	$('.checkbox').change(function(){
    	if($(this).is(':checked')) 

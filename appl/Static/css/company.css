@@ -25,7 +25,7 @@
 #nav-company li a:hover:after, #nav-company li a.current:after{
 content:'';
 position:absolute;
-left: 50%; margin-left:-5px;
+left: 50%; margin-left:-10px;
 bottom: 0px;
 width: 0px;
 height: 0px;

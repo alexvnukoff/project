@@ -622,7 +622,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .protection li{float: left; width: 100%; margin: 8px 0 0 0; font-size: 13px;}
 .protection li a{ border-bottom: 1px #4b89b5 dotted;}
 .protection li a:hover{ text-decoration: none;}
-.pagetext{ position: relative; float: left; width: 100%; margin: 140px 0 0 0; font-size: 13px; line-height: 18px;}
+.pagetext{ position: relative; float: left; width: 100%; margin: 20px 0 0 0; font-size: 13px; line-height: 18px;}
 .pagetext h4{ float: left; font-size: 20px; font-weight: 300; padding-top: 20px;}
 .pagetext p{ float: left;  font-weight: normal; padding-top: 20px;}
 .linetext li{ float: left; width: 90%; padding-left: 20px; margin: 20px 0 0 0;}
