@@ -39,9 +39,9 @@
         </div>
     </div>
     <ul id="nav-company">
-    	<li><a href="#" class="current">Главная магазина</a></li>
-        <li><a href="#">О компании</a></li>
-        <li><a href="#">Продукты</a></li>
-        <li><a href="#">Купоны</a></li>
-        <li><a href="#">Связаться</a></li>
+    	<li><a href="{% url "companies:main" companyID %}" {% if menu == 'main' %}class="current"{% endif %}>{% trans "Store main page" %}</a></li>
+        <li><a href="{% url "companies:about" companyID %}" {% if menu == 'about' %}class="current"{% endif %}>{% trans "About" %}</a></li>
+        <li><a href="{% url "companies:products" companyID %}" {% if menu == 'products' %}class="current"{% endif %}>{% trans "Products" %}</a></li>
+        <li><a href="{% url "companies:coupons" companyID %}" {% if menu == 'coupons' %}class="current"{% endif %}>{% trans "Coupons" %}</a></li>
+        <li><a href="{% url "companies:contact" companyID %}" {% if menu == 'contacs' %}class="current"{% endif %}>{% trans "Contacts" %}</a></li>
     </ul>

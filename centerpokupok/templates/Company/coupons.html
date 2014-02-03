@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load i18n %}
+
+{% block title %}{% trans "Coupons" %}{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
+    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            bigCoupon = $('#topCountdown');
+
+            if(bigCoupon.length > 0)
+            {
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
+                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
+            }
+        })
+        $(function () {
+            $('.countdowntext').each(function() {
+                var until = parseInt($(this).data('countdown')) * 1000;
+
+                now = +new Date();
+                var lay = ((until - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
+                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block header %}
+    {% include "Company/header.html" %}
+{% endblock %}
+
+{% block body %}
+    <div id="main">
+            <div id="sidebar">
+
+                {% include "Company/store_categories.html" %}
+
+                <div class="bestbuy">
+                    <div class="items-coupon">
+                        <h3>Самые выгодные купоны</h3>
+                        <ul>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> -30%</div>
+                                <a href="#"><img alt="" src="images/products/pr4.jpg"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> -30%</div>
+                                <a href="#"><img alt="" src="images/products/pr4.jpg"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">5, 10 или 15 посещений подземного соляного грота</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="main-r">
+
+            {% for id, attr in coupons.items %}
+
+                {% with attr.NAME as name  %}
+                {% with attr.COUPON_DISCOUNT as discount  %}
+                {% with attr.IMAGE as picture  %}
+                {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
+                {% with attr.COST as price  %}
+                {% with attr.CURRENCY as currency  %}
+
+                {% if forloop.first %}
+                <div class="coupontop">
+                    <div class="thumb-cp">
+                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        <a href="{% url "products:detail" id %}" title="{{ name }}">
+                            <img width="300" height="225" alt="{{ name }}" src="{% static picture %}" />
+                        </a>
+                    </div>
+                    <div class="couponinfo">
+                        <a href="{% url "products:detail" id %}">{{ name }}</a>
+                        <div class="clock">
+                            <p>{% trans "Time till the end" %}</p>
+                            <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
+                        </div>
+                    </div>
+                    <div class="bottom-cp">
+                        <div class="price-cp">
+                            <span>
+                                <p>
+                                    <font class="price1">
+                                        {{ currency|getSymbol }} {{ price|discountPrice:discount }}
+                                    </font>
+                                </p>
+                            </span>
+                            <span class="small">
+                                <p>{% trans "You save" %}</p>
+                                <p>
+                                    <font class="price2">
+                                        {{ currency|getSymbol }} {{  price|discountDiff:discount }}
+                                    </font>
+                                </p>
+                            </span>
+                        </div>
+                        <a href="{% url "products:detail" id %}" class="btnbuy">{% trans "Buy" %}</a>
+                    </div>
+                </div>
+                {% else %}
+
+                {% if forloop.counter == 2 %}
+                    <ul id="listcoupon">
+                {% endif %}
+                    <li>
+                        <div class="thumb">
+                            <a href="{% url "products:detail" id %}" title="{{ name }}">
+                                <img width="140" height="100" src="{% static picture %}" alt="{{ name }}" />
+                            </a>
+                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        </div>
+                        <div class="discountinfo">
+                            <a href="{% url "products:detail" id %}" title="{{ name }}">{{ name }}</a>
+                            <div class="rows">
+                                <font class="old">{{ currency|getSymbol }} {{ price|formatPrice }}</font>
+                                <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                            </div>
+                            <div class="rows">
+                                <i class="icons i-clock"></i>
+                                <label>{% trans "Till the end" %}:</label>
+                                <div class="countdowntext"  data-countdown="{{ end_date|date:"U" }}"></div>
+                            </div>
+                        </div>
+                    </li>
+                {% if forloop.last %}
+                </ul>
+                {% endif %}
+                {% endif %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
+
+            {% include "paginator.html" %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
