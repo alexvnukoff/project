@@ -1,3 +1,18 @@
+function getFormat(until)
+{
+    now = +new Date();
+
+    month = 60 * 60 * 24 * 30 * 1000
+    day = 60 * 60 * 24 * 1000
+
+    if(until - now >= month)
+        return 'ODH'
+    else if(until - now >= day)
+        return 'DHM'
+    else
+        return 'HMS'
+}
+
 $(document).ready(function () {
 
 
@@ -146,30 +161,11 @@ $(document).ready(function () {
 });
 });
 
-tip = $('#jcart-tooltip');
 
 
-    // Tooltip is added to the DOM on mouseenter, but displayed only after a successful Ajax request
-$('.bigbuy').mouseenter(
-   function(e) {
-     var x = e.pageY + 25,
-     y = e.pageX + -10;
-     $('body').append(tip);
-         tip.css({top: y + 'px', left: x + 'px'});
-     }
-)
-.mousemove(
-    function(e) {
-            var y = e.pageY + 25,
-                x = e.pageX + -10;
-            tip.css({top: y + 'px', left: x + 'px'});
-    }
-)
-.mouseleave(
-        function() {
-            tip.hide();
-        }
-    );
+
+
+
 
 function getCookie(name) {
     var cookieValue = null;
@@ -218,218 +214,15 @@ $.ajaxSetup({
 });
 
 // добавление в корзину на ajax
-    $(".bigbuyn").click(function(){
-        var gid = parseInt( $(this).data("gid") );
-
-        if(!gid) return false;
-
-        var count = $('input[name="french-hens"]').val();
-        var dataPost = {"ID":gid, "count":count };
-
-        $(this).fadeTo(10, 0.5);
-
-        $button = $(this);
-
-        function callback_add(data, textStatus)
-        {
-            if (!data["BASKET_OUTPUT"] || !data["RESULT"] || !data["RESULT"]["TYPE"] || !data["RESULT"]["MESS"])
-            {
-				
-                tip.text(data["RESULT"]["MESS"]);
-
-            } else {
-                if (data["RESULT"]["TYPE"] == "OK") {
-                    if( $.trim(data["BASKET_OUTPUT"]) != "" )
-                    {
-                        $("#basket_line_block").replaceWith( data["BASKET_OUTPUT"] );
-
-                    }
-                    tip.text('Товар добавлен в корзину');
-                    updateBasket();
-                } else {
-                    tip.text(data["RESULT"]["MESS"]) ;
-                }
-            }
 
 
-
-            $button.fadeTo(0, 1);
-            tip.fadeIn('100').delay('700').fadeOut('100');
-
-            window.setTimeout(function(){
-                $(".to_delete", $(this).parent()).remove();
-            }, 1500);
-        };
-
-        if (gid > 0) {
-            var a = $.ajax({
-                type: "POST",
-                url: "/products/basket/addtobasket/",
-                data: dataPost,
-                dataType: "json",
-                success: callback_add
-            });
-        }
-
-        return false;
-    });
+})
 
 
 
 
-
-
-    $(document).on('click','.inc',function(){
-            var item = $(this).parents("li.product_id");
-
-            var pricePerOne = parseFloat(item.find("font.number").text());
-
-            var quantity = parseFloat(item.find("input#french-hens").val());
-
-            var price = pricePerOne*quantity;
-            item.find("input#french-hens").val(quantity);
-            item.find("div.price").text(price);
-            var allprice = pricePerOne + parseFloat($("input.sumMoney").val());
-
-            $("input.sumMoney").val(allprice);
-            allprice = allprice.toFixed(2).replace('.',',').replace(/(\d)(?=(\d{3})+\,)/g,"$1 ");
-            $("span.right.sumMoney strong").text(allprice);
-
-
-            var gid = parseInt(item.data("gid"))
-            var dataPost = {"ID":gid, "count":quantity};
-            var a =  $.ajax({
-                type: "POST",
-                url: "/bitrix/templates/b2c/ajax_php/cart.php",
-                data: dataPost,
-                dataType: "json",
-                success: callback
-
-            });
-
-        }
-    );
-
-
-    $(document).on('click','.dec',function(){
-            var item = $(this).parents("li.product_id");
-
-            var pricePerOne = parseFloat(item.find("font.number").text());
-
-            var quantity = parseFloat(item.find("input#french-hens").val());
-            if (quantity == 0)
-            {
-                item.find("input#french-hens").val(0);
-                item.find("div.price").text(0);
-                $("span.right.sumMoney strong ").text(0);
-                $("input.sumMoney").val(0)
-                deleteElement(item);
-                return;
-
-            }
-
-
-
-
-            var price = pricePerOne*quantity;
-            item.find("input#french-hens").val(quantity);
-            item.find("div.price").text(price);
-            var allprice =parseFloat($("input.sumMoney").val()) - pricePerOne  ;
-
-            $("input.sumMoney").val(allprice);
-            allprice = allprice.toFixed(2).replace('.',',').replace(/(\d)(?=(\d{3})+\,)/g,"$1 ");
-            $("span.right.sumMoney strong ").text(allprice);
-
-            var gid = parseInt(item.data("gid"));
-            var dataPost = {"ID":gid, "count":quantity};
-            $.ajax({
-                type: "POST",
-                url: "/bitrix/templates/b2c/ajax_php/cart.php",
-                data: dataPost,
-                dataType: "json",
-                success: callback
-            });
-
-        }
-    );
-
-
-    $(document).on('click', ".icons.i-delete",function() { deleteElement($(this).parents("li.product_id")) });
-        function  deleteElement(item) {
-
-            var money =  parseFloat(item.find("div.price").text());
-            var allprice =parseFloat($("input.sumMoney").val()) - money  ;
-            if(allprice==0)
-            {
-                $("li.total").remove();
-                $("ul#itemcart").html("<span style='color: red'>Корзина пуста</span>");
-            }
-
-            $("input.sumMoney").val(allprice);
-            allprice = allprice.toFixed(2).replace('.',',').replace(/(\d)(?=(\d{3})+\,)/g,"$1 ");
-            $("span.right.sumMoney strong ").text(allprice);
-
-
-            var gid = parseInt(item.data("gid"));
-            var dataPost = {"ID":gid, "count":0};
-            $.ajax({
-                type: "POST",
-                url: "/bitrix/templates/b2c/ajax_php/cart.php",
-                data: dataPost,
-                dataType: "json",
-                success: callback
-            });
-
-
-           item.remove();
-			updateBasket();
-			
-           
-
-            return false;
-
-    }
-    function callback(data, textStatus)
-    {
-      
-
-        if (!data["BASKET_OUTPUT"] || !data["RESULT"] || !data["RESULT"]["TYPE"] || !data["RESULT"]["MESS"])
-        {
-            tip.text('Ошибка добавления в корзину');
-
-        } else {
-            if (data["RESULT"]["TYPE"] == "OK") {
-                if( $.trim(data["BASKET_OUTPUT"]) != "" )
-                {
-                    $("#basket_line_block").empty().html( data["BASKET_OUTPUT"] );
-                }
-
-            } else {
-                tip.text(data["RESULT"]["MESS"]) ;
-            }
-        }
-
-    };
-
-
-});
 
 
 
 ////////
 
-
-function updateBasket()
-{
-    $.ajax({
-        url: "/ajax.handler.php",
-        type: "POST",
-        dataType: "html",
-        data: "PAGE=BASKET",
-        success: function(data){
-            $('.cartmini').empty();
-            $('.cartmini').html(data)
-        }
-    });
-
-}

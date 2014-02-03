@@ -3,13 +3,12 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load set_var %}
+{% block title %}{% trans "All Categories" %}{% endblock %}
 
-{% block title %}{% trans "Categories" %}{% endblock %}
-
+{% trans "Categories" %}
 {% block header %}
     {% include "header_big.html" %}
 {% endblock %}
-
 {% block body %}
     <div id="main">
 		<div class="breadcrumbs">
@@ -26,29 +25,20 @@
                 </span>
 			</div>
 		</div>
-
-
         {% for parent_name , dict  in dictStructured|sort  %}
-
             {%  for name , item in  dict|sort %}
-
             {% with item.ID as id %}
-
-                {% if name == "Parent" %}
-
+                {% if name == "@Parent" %}
                     {% if  parent_name|first !=  a|first or forloop.parentloop.first  %}
                         <div class="letters">{{ parent_name|first }}</div>
                     {% endif %}
-
                     <div class="cateparent"><a style="color: #000000;" href="{% url "products:category" id %}">{{ item.item.NAME|first }}</a></div>
                     <ul class="subcate">
                 {% else %}
                     <li><a href="{% url "products:category" id %}">{{ name }}</a></li>
                 {% endif %}
-
             {% endwith %}
             {% endfor %}
-
             </ul>
             {% set a =  parent_name  %}
         {% endfor %}

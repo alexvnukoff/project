@@ -2,10 +2,9 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-<html>
-<head>
 
-               <title>{% block title %}News Detail{% endblock %}</title>
+
+              {% block title %}News Detail{% endblock %}
 
 
 {{% block styles %}
@@ -27,8 +26,6 @@
 
 
 
-</head>
-<body>
 {% block header %}
 {% include "header_big.html" %}
 {% endblock %}
@@ -306,5 +303,3 @@
 {% block footer %}
 {{ block.super }}
     {% endblock %}
-</body>
-</html>

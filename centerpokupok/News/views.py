@@ -20,7 +20,7 @@ def newsList(request, page=1):
     flagList = func.getItemsList("Country", "NAME", "FLAG")
     url_paginator = "news:paginator"
 
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -43,7 +43,7 @@ def newsDetail(request, item_id):
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
 
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
