@@ -80,7 +80,7 @@ def home(request, country=None):
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     url_country = "home_country"
-    url_country_parametr = []
+
 
 
 
@@ -92,7 +92,7 @@ def home(request, country=None):
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
                                              "productsSale": productsSale, 'user': user, 'url_country': url_country,
-                                             'url_country_parametr': url_country_parametr})
+                                             })
 
 
 def about(request):

@@ -44,7 +44,7 @@
 				<div class="order-row1">
 					<span class="clumn1">{{ name }}</span>
 					<span class="clumn2"><strong>x{{ qty }}</strong></span>
-					<span class="clumn2" style="width: 70px;"><strong>{{ currency|getSymbol }} {{ cost }} </strong></span>
+					<span class="clumn2" style="width: 70px;"><strong>{{ currency|getSymbol }} {{ cost|formatPrice }} </strong></span>
 				</div>
 
 
@@ -65,7 +65,7 @@
 					<span class="clumn1">
 						<strong>{% trans "The total amount of your order" %}</strong>
 					</span>
-					<span class="clumn2"><strong>{{ currency|getSymbol }} {{ totalSum }} </strong></span>
+					<span class="clumn2"><strong>{{ currency|getSymbol }} {{ totalSum|formatPrice }} </strong></span>
 				</div>
                 {% endwith %}
                 {% endwith %}

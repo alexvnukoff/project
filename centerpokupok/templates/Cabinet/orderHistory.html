@@ -47,7 +47,7 @@
 						<div class="numberoder">
 							<p><font class="grey">{% trans "Quantity" %}:</font> {{ qty }}</p>
 						</div>
-						<div class="price">{{ currency|getSymbol }} {{ price }}</div>
+						<div class="price">{{ currency|getSymbol }} {{ price|formatPrice }}</div>
 					</li>
                          {% endwith %}
                          {% endwith %}
