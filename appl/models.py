@@ -119,8 +119,11 @@ class Company(Organization):
         childs = [x['pk'] for x in childs]
         return Department.hierarchy.getDescedantsForList(childs)
 
-    def getStoreCategories(self):
-        products = Product.objects.all()
+    def getStoreCategories(self, products=None):
+
+        if products is None:
+            products = Product.objects.all()
+
         return Category.objects.filter(p2c__child__c2p__parent=self.pk, p2c__child__in=products)\
             .values('pk').annotate(childCount=Count('pk'))
 

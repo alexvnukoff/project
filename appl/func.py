@@ -8,7 +8,6 @@ from django.http import Http404
 from django.conf import settings
 
 
-
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -188,6 +187,7 @@ def _setCouponsStructure(couponsDict):
 
     return couponsDict
 
+#Deprecated
 def _setProductStructure(prodDict):
 
     for item, attrs in prodDict.items():
@@ -296,9 +296,12 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
         return {}
 
     keys = list(listCount[0].keys())
+    childKey = 'childCount'
 
     parentKey = keys[1]
-    childKey = keys[0]
+
+    if childKey == parentKey:
+        parentKey = keys[0]
 
     if needed is not None:
         for cat in catWithAttr:
@@ -308,7 +311,9 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
     for dictCount in listCount:
         elCount[dictCount[parentKey]] = dictCount[childKey]
 
+
     for cat in categories:
+
         if cat['LEVEL'] == categories[0]['LEVEL']:
             parent = cat['ID']
 
