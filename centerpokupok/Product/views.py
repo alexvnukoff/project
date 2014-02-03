@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.db.models import Q ,F
+from django.db.models import Q, F
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -28,7 +28,7 @@ def productDetail(request, item_id, page=1):
 
     product = get_object_or_404(Product, pk=item_id)
 
-    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT')
+    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT', 'ANONS')
     productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
 
     category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
@@ -216,7 +216,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
-    items_id =[]
+    items_id = []
     for item in items:
         items_id.append(item['pk'])
         items_id.append(item['p2c__child_id'])
