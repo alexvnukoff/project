@@ -78,6 +78,7 @@ def productDetail(request, item_id, page=1):
 
     url_paginator = "products:paginator"
     url_parameter = [item_id]
+    store_url = 'companies:products_category'
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
