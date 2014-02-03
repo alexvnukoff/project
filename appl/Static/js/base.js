@@ -15,7 +15,6 @@ function getFormat(until)
 
 $(document).ready(function () {
 
-
 	$('.checkbox').change(function(){
    	if($(this).is(':checked')) 
        $(this).parent().addClass('active'); 
@@ -213,16 +212,4 @@ $.ajaxSetup({
     }
 });
 
-// добавление в корзину на ajax
-
-
 })
-
-
-
-
-
-
-
-////////
-

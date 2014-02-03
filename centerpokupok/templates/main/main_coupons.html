@@ -1,85 +1,88 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-<div class="title-discount">
-    <span class="left">
-        <label>{% trans "Coupons" %}</label>
-        <a href="{% url "coupons:list" %}">{% trans "More" %}</a>
-    </span>
-</div>
 
-<div class="best-cp">
+{% if coupons %}
+    <div class="title-discount">
+        <span class="left">
+            <label>{% trans "Coupons" %}</label>
+            <a href="{% url "coupons:list" %}">{% trans "More" %}</a>
+        </span>
+    </div>
 
-    {% for id, attr in coupons.items %}
-        {% with attr.NAME as name  %}
-        {% with attr.COUPON_DISCOUNT as discount  %}
-        {% with attr.IMAGE as picture  %}
-        {% with attr.COST as price  %}
-        {% with attr.CURRENCY as currency  %}
-        {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
+    <div class="best-cp">
 
-        {% if forloop.counter == 1 %}
+        {% for id, attr in coupons.items %}
+            {% with attr.NAME as name  %}
+            {% with attr.COUPON_DISCOUNT as discount  %}
+            {% with attr.IMAGE as picture  %}
+            {% with attr.COST as price  %}
+            {% with attr.CURRENCY as currency  %}
+            {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
 
-            <div class="best-cp-l">
+            {% if forloop.counter == 1 %}
 
-                <div class="thumb-cp">
-                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                    <a title="{{ name }}" href="{% url "products:detail" id %}">
-                        <img width="225" height="225" alt="{{ name }}" src="{% static picture %}">
-                    </a>
-                </div>
-                <div class="couponinfo">
-                    <a title="{{ name }}" href="{% url "products:detail" id %}">{{ name }}</a>
-                    <div class="clock">
-                        <p>{% trans "Remaining time" %}</p>
-                        <div data-countdown="{{ end_date|date:"U" }}" id="topCountdown"></div>
-                    </div>
-                </div>
-                <div class="bottom-cp">
-                    <div class="price-cp">
-                        <span>
-                            <p>
-                                <font class="price1">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
-                            </p>
-                        </span>
-                    </div>
-                    <a class="btnbuy" href="{% url "products:detail" id %}">{% trans "Buy" %}</a>
-                </div>
-            </div>
+                <div class="best-cp-l">
 
-        {% else %}
-            {% if forloop.counter == 2 %}
-                <ul class="best-cp-r">
-            {% endif %}
-
-                <li>
-                    <div class="thumb">
-                        <a title="{{ name }}" href="{% url "products:detail" id %}">
-                            <img width="140" height="100" alt="{{ name }}" src="{% static picture %}">
-                        </a>
+                    <div class="thumb-cp">
                         <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        <a title="{{ name }}" href="{% url "products:detail" id %}">
+                            <img width="225" height="225" alt="{{ name }}" src="{% static picture %}">
+                        </a>
                     </div>
-                    <div class="discountinfo">
+                    <div class="couponinfo">
                         <a title="{{ name }}" href="{% url "products:detail" id %}">{{ name }}</a>
-                        <p>
-                            <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
-                            <br />
-                        </p>
+                        <div class="clock">
+                            <p>{% trans "Remaining time" %}</p>
+                            <div data-countdown="{{ end_date|date:"U" }}" id="topCountdown"></div>
+                        </div>
                     </div>
-                </li>
+                    <div class="bottom-cp">
+                        <div class="price-cp">
+                            <span>
+                                <p>
+                                    <font class="price1">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                                </p>
+                            </span>
+                        </div>
+                        <a class="btnbuy" href="{% url "products:detail" id %}">{% trans "Buy" %}</a>
+                    </div>
+                </div>
 
-            {% if forloop.counter == 3 %}
-                </ul>
+            {% else %}
+                {% if forloop.counter == 2 %}
+                    <ul class="best-cp-r">
+                {% endif %}
+
+                    <li>
+                        <div class="thumb">
+                            <a title="{{ name }}" href="{% url "products:detail" id %}">
+                                <img width="140" height="100" alt="{{ name }}" src="{% static picture %}">
+                            </a>
+                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        </div>
+                        <div class="discountinfo">
+                            <a title="{{ name }}" href="{% url "products:detail" id %}">{{ name }}</a>
+                            <p>
+                                <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                                <br />
+                            </p>
+                        </div>
+                    </li>
+
+                {% if forloop.counter == 3 %}
+                    </ul>
+                {% endif %}
+
             {% endif %}
 
-        {% endif %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% endfor %}
 
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-    {% endfor %}
-
-</div>
+    </div>
+{% endif %}
