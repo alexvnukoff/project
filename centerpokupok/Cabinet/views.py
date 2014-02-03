@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 @login_required(login_url=("/registration/"))
 def get_profile(request):
     #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -53,7 +53,7 @@ def get_profile(request):
 @login_required(login_url=("/registration/"))
 def get_shipping_detail(request):
      #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -80,6 +80,7 @@ def get_shipping_detail(request):
            #----shown when prfile data successfully saved ------#
             succsefull_save = _("was successfully saved ")
 
+
     else:
         cabinet = get_object_or_404(Cabinet, user=user.pk)
         address = cabinet.getAttributeValues("CITY", "COUNTRY", "ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
@@ -99,12 +100,12 @@ def get_shipping_detail(request):
                                                                'categotySelect': categotySelect,
                                                                'countryList': countryList},
                                                                 context_instance=RequestContext(request))
-
+@login_required(login_url=("/registration/"))
 def get_order_history(request, page=1):
     #------order history of user with pagination-----#
 
     #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)

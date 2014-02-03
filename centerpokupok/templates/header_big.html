@@ -86,9 +86,15 @@
                         </div>
                     </div>
                     <div class="regacc">
+                      {% if user.id > 0  %}
+                        <p>{% trans "Your workplace" %}</p>
+                        <a href="{% url "profile:main" %}" class="btnreg">{% trans 'Workplace' %}</a>
+                        <a href="{% url "logout" %}" class="btnreg">{%  trans 'Sign out' %}</a>
+                          {% else %}
                         <p>{% trans "Sign up now" %}</p>
                         <a href="#" class="btnreg">{% trans 'Seller' %}</a>
                         <a href="{% url "register" %}" class="btnreg">{%  trans 'Customer' %}</a>
+                      {% endif %}
                     </div>
 
                 </div>
@@ -109,7 +115,7 @@
                                    {% with  item.LEVEL as  level %}
 
 
-                                {% if name == "Parent" %}
+                                {% if name == "@Parent" %}
                                          <option value="{{ id }}">{{ parent_name }}</option>
 
                                  {% endif %}
@@ -146,7 +152,7 @@
                     </div>
                     <a href="#" class="btns">Поиск</a>
                 </div>
-                <div id="flag-var">
+               {% if country %}<div id="flag">{% else %}<div id="flag-var">{% endif %}
                     <ul>
 
                              {% for id, flag  in flagList.items %}
@@ -155,12 +161,12 @@
 
 
 
+                     <li {% if country == id|slugify %} class="active"{% endif %}>
 
-                        <li>
                               <i class="iflag">
-                              <img src="{% static flag %}" alt="{{ name }}">
+                             <a href="{% dynurl url_country url_country_parametr id %}"> <img src="{% static flag %}" alt="{{ name }}"></a>
                                 </i>
-                              <a href="country/{{ id }}/">{{ name }}</a>
+                         {% if not country %} <a href="{% dynurl url_country url_country_parametr id %}">{{ name }}</a>{% endif %}
                         </li>
 
                         {% endwith %}

@@ -25,7 +25,7 @@ def storeMain(request, company, category=None):
 
     #-------------- Store Categories ---------------#
     storeCategories = companyObj.getStoreCategories()
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     root_cats = [cat['ID'] for cat in hierarchyStructure if cat['LEVEL'] == 1]
     categories = Item.getItemsAttributesValues(("NAME",), root_cats)
 
