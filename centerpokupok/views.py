@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet
+from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order
 from registration.backends.default.views import RegistrationView
 from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
@@ -17,7 +17,7 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-def home(request):
+def home(request, country=None):
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
@@ -26,16 +26,20 @@ def home(request):
                                                               "COUPON_DISCOUNT"))
 
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[4:8]
+
+    products = Product.getTopSales(Product.objects.all())[:4]
+
     topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 
      #----MAIN MENU AND CATEGORIES IN HEADER ------#
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
-    hierarchyStructure = hierarchyStructure[:10] #TODO: Jenya, this is a bug
+
+    hierarchyStructure = hierarchyStructure
+
 
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
@@ -75,6 +79,10 @@ def home(request):
     #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
 
+    url_country = "home_country"
+    url_country_parametr = []
+
+
 
 
     user = request.user
@@ -83,7 +91,8 @@ def home(request):
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale, 'user': user})
+                                             "productsSale": productsSale, 'user': user, 'url_country': url_country,
+                                             'url_country_parametr': url_country_parametr})
 
 
 def about(request):
@@ -100,14 +109,18 @@ def set_news_list(request):
 
 
 def _sortMenu(hierarchyStructure):
+    count = 0
     sortedHierarchyStructure = []
     dictToSort = []
     id = hierarchyStructure[0]['ID']
     for i in range(0, len(hierarchyStructure)):
         if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
+            if count == 9:
+                break
             id = hierarchyStructure[i]['ID']
             sortedHierarchyStructure.extend(_sortList(dictToSort))
             dictToSort = []
+            count += 1
 
         dictToSort.append(hierarchyStructure[i])
 
@@ -135,7 +148,7 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
-   hierarchyStructure = Category.hierarchy.getTree()
+   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
    categories_id = [cat['ID'] for cat in hierarchyStructure]
    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -171,7 +184,10 @@ def registration(request, form, auth_form):
             cabinet = Cabinet(user=user, create_user=user)
             cabinet.save()
 
-          return HttpResponseRedirect("/")
+
+
+
+          return HttpResponseRedirect(request.GET.get('next', '/'))
 
    return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
 

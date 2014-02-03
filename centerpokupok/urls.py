@@ -27,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^profile/', include("centerpokupok.Cabinet.urls", namespace="profile")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
     url(r'^company/(?P<company>[0-9]+)/', include("centerpokupok.Company.urls", namespace="companies")),
+    url(r'^country/(?P<country>[0-9]+)/$', centerpokupok.views.home, name="home_country"),
+
 
     url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
     url(r'^accounts/password/change/done/$', auth_views.password_change_done, name='password_change_done'),
@@ -38,9 +40,6 @@ urlpatterns = patterns('',
 
     url(r'^registration/', centerpokupok.views.registration, {'form': RegistrationForm(), 'auth_form': AuthenticationForm()}, name="register"),
     url(r'^logout/', centerpokupok.views.user_logout,  name="logout"),
-
-
-
 
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

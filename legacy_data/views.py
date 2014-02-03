@@ -6,8 +6,13 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings
 import datetime
 import csv
+from tpp.SiteUrlMiddleWare import get_request
 
 def users_reload_CSV_DB(request):
+    '''
+        Reload user's data from prepared CSV file named users_legacy.csv
+        into buffer DB table LEGACY_DATA_L_USER
+    '''
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load user data from CSV file into buffer table...')
@@ -56,7 +61,7 @@ def users_reload_CSV_DB(request):
             reg_date = datetime.datetime.strptime(data[i][8], "%d.%m.%Y %H:%M")
 
         try:
-            usr = L_User.objects.get_or_create(username = username,\
+            L_User.objects.get_or_create(username = username,\
                                     is_active = is_active,\
                                     first_name = first_name,\
                                     last_name = last_name,\
@@ -79,6 +84,10 @@ def users_reload_CSV_DB(request):
     return HttpResponse('Users were migrated from CSV into DB!')
 
 def users_reload_DB_DB(request):
+    '''
+        Reload user's data from buffer DB table LEGACY_DATA_L_USER
+        into TPP User objects (CORE_USER table)
+    '''
     time1 = datetime.datetime.now()
     # Move users from buffer table into original tables
     print('Reload users from buffer DB into TPP DB...')
@@ -87,15 +96,20 @@ def users_reload_DB_DB(request):
     user_lst = L_User.objects.filter(completed=False).all()
     i=1
     for usr in user_lst:
+        request = get_request()
+        # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
+        request.META['REMOTE_ADDR'] = '0.'+str(randint(0, 255))+'.'+str(randint(0, 255))+'.'+str(randint(0, 255))
         try:
             new_user = User.objects.create_user(username=usr.username, email=usr.email, password=str(randint(1000000, 9999999)))
         except:
             return HttpResponse('Migration process from buffer DB into TPP DB was interrupted!\
-                                Possible reason is duplicated data (e-mail field).')
+                                Possible reason is duplicated data.')
         new_user.first_name=usr.first_name
         new_user.last_name=usr.last_name
         new_user.is_active = True
         new_user.save()
+
+        usr.tpp_id=new_user.pk
         usr.completed = True
         usr.save()
 
@@ -111,6 +125,10 @@ def users_reload_DB_DB(request):
     return HttpResponse('Users were migrated from buffer DB into TPP DB!')
 
 def users_reload_email_sent(request):
+    '''
+        For users which were reloaded from prepared CSV file named users_legacy.csv
+        send e-mail with url for password change notification.
+    '''
     time1 = datetime.datetime.now()
     # Move users from buffer table into original tables
     print('Sending notifications to users about password changing.')

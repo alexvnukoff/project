@@ -13,10 +13,10 @@ from django.template import RequestContext
 from django.conf import settings
 
 def home(request):
-    id = settings.SITE_ID
-    obj = Tpp.objects.get(title="Moscow Tpp")
-    companies = obj.getItemList()
-    i = companies
+#    id = settings.SITE_ID
+#    obj = Tpp.objects.get(title="Moscow Tpp")
+#    companies = obj.getItemList()
+#    i = companies
     return render_to_response("home.html")
 
 def set_news_list(request):

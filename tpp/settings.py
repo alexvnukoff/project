@@ -136,9 +136,7 @@ AUTHENTICATION_BACKENDS = (
 #Email backend for production
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # Email backend for debugging
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_PORT = 1025
-DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
+
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -187,6 +185,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
 )
+
 
 HAYSTACK_CONNECTIONS = {
     'default': {

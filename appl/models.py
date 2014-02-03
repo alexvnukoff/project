@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
@@ -13,6 +14,8 @@ from django.db.models import Count, F
 from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from itertools import chain
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
@@ -212,7 +215,10 @@ class Product(Item):
 
     @staticmethod
     def getCategoryOfPRoducts(productQuerySet, attr):
-        products_id = [product.id for product in productQuerySet]
+        if isinstance(productQuerySet, QuerySet):
+              products_id = [product.pk for product in productQuerySet]
+        else:
+              products_id = productQuerySet
         categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
         categories_id = [category['id'] for category in categories]
         products = Item.getItemsAttributesValues(attr, products_id)
@@ -245,8 +251,19 @@ class Product(Item):
         return Product.objects.order_by('-pk')
 
     @staticmethod
-    def getTopSales():#TODO: Jenya need to fill
-        pass
+    def getTopSales(productQuery):
+        extra = '''nvl((SELECT COUNT({prodTable}.{prodPK})
+                FROM {relTable}
+                INNER JOIN {orderTable} ON ({orderTable}.{orderPK} = {relTable}.parent_id)
+                WHERE {relTable}.child_id = {prodTable}.{prodPK}
+                GROUP BY {relTable}.child_id), 0)'''.format(orderTable=Order._meta.db_table,
+                                                                   orderPK=Order._meta.pk.column,
+                                                                   prodTable=Product._meta.db_table,
+                                                                   prodPK=Product._meta.pk.column,
+                                                                   relTable=Relationship._meta.db_table)
+        products = productQuery.extra(select={'popular': extra}).order_by('-popular')
+
+        return products
 
 class License(Item):
 
@@ -329,6 +346,7 @@ class Rate(Item):
         return ''
 
 class Order(Item):
+
 
     def __str__(self):
         return ''

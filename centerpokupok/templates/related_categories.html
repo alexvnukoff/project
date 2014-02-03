@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 <h3>{% trans "Related Categories" %}</h3>
 <ul id="categories">
     {% if currentCat %}
@@ -8,7 +9,7 @@
     {% for id, category in categories.items %}
         {% with category.NAME|first as name %}
         {% with category.count as products %}
-            <li><a href="{% url nameSpace id %}" >{{ name }}</a> ({{ products }})</li>
+            <li><a href="{% dynurl category_url category_parameters id %}" >{{ name }}</a> ({{ products }})</li>
         {% endwith %}
         {% endwith %}
     {% endfor %}

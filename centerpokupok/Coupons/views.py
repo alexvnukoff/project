@@ -5,6 +5,7 @@ from appl.models import Product, Category, Company
 from django.template import RequestContext
 from django.utils.timezone import now
 from datetime import timedelta
+from django.conf import settings
 
 def couponsList(request, currentCat = None, page=1, country=None):
     sort = request.GET.get('sort', 'ed-date')
@@ -15,7 +16,7 @@ def couponsList(request, currentCat = None, page=1, country=None):
     if currentCat == None:#not filtered list
 
         #Getting related categories
-        categories = Category.hierarchy.getTree(15)
+        categories = Category.hierarchy.getTree(15, siteID=settings.SITE_ID)
         category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 1]
 
         breadCrumbs = None

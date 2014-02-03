@@ -2,19 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-
-
                {% block title %}{% trans "Order history" %}{% endblock %}
-
-
-
-
-
-
-
-
-
-
 {% block header %}
 {% include "header_big.html" %}
 {% endblock %}
@@ -22,27 +10,11 @@
 <div id="main">
 		<div id="sidebar">
 			{% include "main/cabinet_menu.html" %}
-			<div class="support">
-				<img src="images/gallery/sp.jpg" alt="" class="avatar" />
-				<div class="infosupport">
-					<p class="namesp">Eva </p>
-					<p class="agent">Virtual Agent</p>
-					<p>
-						24 Hour <br>
-						Smart Response
-					</p>
-				</div>
-			</div>
-			<div class="bchat">
-				<textarea name="" placeholder="Напишите свой вопрос" cols="30" rows="5"></textarea>
-				<div class="btnsubmit"><a class="btnreg" href="#">{% trans "Start chat" %}</a></div>
-			</div>
 		</div>
 		<div id="main-r">
 			<div class="breadcrumbs">
 				<div xmlns="http://rdf.data-vocabulary.org/#">
 					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
-
 				</div>
 			</div>
         <div class="listitemcart">
@@ -59,7 +31,6 @@
                         {% with order.ADDRESS|first as address %}
 					<li>
 						<div class="thumb">
-
 							<img src="{% static picture %}" alt="{{ name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
@@ -75,11 +46,8 @@
 						</div>
 						<div class="numberoder">
 							<p><font class="grey">{% trans "Quantity" %}:</font> {{ qty }}</p>
-
-
 						</div>
 						<div class="price">{{ currency|getSymbol }} {{ price }}</div>
-
 					</li>
                          {% endwith %}
                          {% endwith %}
@@ -91,11 +59,8 @@
                          {% endwith %}
                {% endfor %}
 				</ul>
-
 			</div>
              {% include "paginator.html" %}
 		</div>
 	</div>
-
-
  {% endblock %}

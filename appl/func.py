@@ -251,7 +251,7 @@ def setStructureForHiearhy(dictinory, items):
             nameOfList = items[node['ID']]['NAME'][0].strip()
             dictStructured[nameOfList] = {}
             node['item'] = items[node['ID']]
-            dictStructured[nameOfList]['Parent'] = node
+            dictStructured[nameOfList]['@Parent'] = node
         else:
             node['pre_level'] = level
             node['item'] = items[node['ID']]
