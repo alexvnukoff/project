@@ -216,7 +216,6 @@ class hierarchyManager(models.Manager):
                                 .format(pkCol=queryDict['pkCol'])
         queryDict['prior'] = 'rel.CHILD_ID = rel.PARENT_ID'
         queryDict['startWith'] = 'rel.CHILD_ID = %s'
-        queryDict['order'] = 'ORDER BY LEVEL'
 
         finalQuery = self.query.format(**queryDict)
 
@@ -280,13 +279,10 @@ class hierarchyManager(models.Manager):
             filter['sites'] = siteID
 
         if limit < 1:
-            return self.model.objects\
-                .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),c2p__parent_id__isnull=True), **filter)
+            return self.model.objects.filter(Q(Q(c2p__type="hier"),c2p__parent_id__isnull=True), **filter)
         else:
             return \
-                self.model.objects \
-                    .filter(Q(Q(c2p__type="hier") | Q(c2p__type__isnull=True),
-                              c2p__parent_id__isnull=True), **filter)[:limit]
+                self.model.objects.filter(Q(Q(c2p__type="hier"), c2p__parent_id__isnull=True), **filter)[:limit]
 
 
 

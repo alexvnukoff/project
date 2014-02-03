@@ -2,20 +2,10 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-<html>
-<head>
 
-               <title>{% block title %}News Detail{% endblock %}</title>
-
-
-{{% block styles %}
-    {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/anythingslider/1.9.1/anythingslider.min.css">
-{% endblock %}
-
+{% block title %}News Detail{% endblock %}
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/anythingslider/1.9.1/jquery.anythingslider.min.js"></script>
     <script>
      $(document).ready(function () {
 
@@ -24,14 +14,10 @@
     </script>
 {% endblock %}
 
-
-
-
-</head>
-<body>
 {% block header %}
-{% include "header_big.html" %}
+    {% include "header_big.html" %}
 {% endblock %}
+
 {% block body %}
 		<div id="main">
 		<div id="sidebar">
@@ -303,8 +289,3 @@
 	</div>
 </div>
     {% endblock %}
-{% block footer %}
-{{ block.super }}
-    {% endblock %}
-</body>
-</html>

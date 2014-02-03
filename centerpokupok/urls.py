@@ -26,8 +26,7 @@ urlpatterns = patterns('',
     url(r'^coupons/', include("centerpokupok.Coupons.urls", namespace="coupons")),
     url(r'^profile/', include("centerpokupok.Cabinet.urls", namespace="profile")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
-
-    url(r'^Company/', include("centerpokupok.company.urls", namespace="companies")),
+    url(r'^company/(?P<company>[0-9]+)/', include("centerpokupok.Company.urls", namespace="companies")),
 
     url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
     url(r'^accounts/password/change/done/$', auth_views.password_change_done, name='password_change_done'),

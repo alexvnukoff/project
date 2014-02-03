@@ -18,6 +18,15 @@
 
     <script type="text/javascript">
         $(function () {
+            bigCoupon = $('#topCountdown');
+
+            if(bigCoupon.length > 0)
+            {
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
+                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
+            }
+        })
+        $(function () {
             $('.countdowntext').each(function() {
                 var until = parseInt($(this).data('countdown')) * 1000;
 

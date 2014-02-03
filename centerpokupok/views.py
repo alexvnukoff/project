@@ -71,7 +71,6 @@ def home(request):
     productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
     productsSale_ids = [prod.pk for prod in productsSale]
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
-    productsSale = func._setProductStructure(productsSale)
 
     #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
