@@ -7,6 +7,7 @@ class L_User(models.Model):
     last_name = models.CharField(max_length=1024)
     email = models.CharField(max_length=1024, unique=True)
     btx_id = models.CharField(max_length=10, unique=True)
+    tpp_id = models.CharField(max_length=10, unique=True) #save generated id in TPP DB
     update_date = models.DateField(null=True, blank=True)
     last_visit_date = models.DateField(null=True, blank=True)
     reg_date = models.DateField(null=True, blank=True)
