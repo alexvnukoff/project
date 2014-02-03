@@ -260,7 +260,7 @@
 
                             <div class="wl">
                                 <i class="icons i-wl"></i>
-                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">В избранное</a></p>
+                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">{% trans 'Add to favorite' %}</a></p>
                             </div>
                         </div>
                     </form>
@@ -274,7 +274,7 @@
 				<div class="ship">
 					<div class="shiptitle">
 						{% trans "Description" %}
-						<span><a href="#">Способы доставки</a></span> <span><a href="#">Условия возврата</a></span>
+						<span><a href="#">{% trans 'Delivery method' %}</a></span> <span><a href="#">{% trans 'Return policy' %}</a></span>
 					</div>
 					<div class="configuration">
 						<ul>
@@ -312,23 +312,16 @@
 
                                     <div class="name">
                                         {{ user }}
-                                        <p><font class="location">Израиль</font></p>
+
                                     </div>
 
                                     <div class="date">
                                         {{ date }}
-                                        <p><font class="number">US $12.00</font> x 1 piece</p>
+
                                     </div>
 
                                     <div class="cmt">
-                                        <div class="topcmt">
-                                            <img src="{% static "images/stars.png" %}" alt="" class="star">
-                                            <div class="vote">
-                                                Is this feedback helpful for you?
-                                                <span><a href="#" class="yes">Yes</a> <font>(1)</font></span>
-                                                <span><a href="#" class="no">No</a> <font class="numberno">(5)</font></span>
-                                            </div>
-                                        </div>
+
                                         <p>{{ content }}</p>
                                     </div>
 
@@ -364,7 +357,7 @@
                                 </li>
                             </ul>
                             <div class="rows-check">
-                                <input type="submit" name = "subCom" class="btnreg" value="Сохранить">
+                                <input type="submit" name = "subCom" class="btnreg" value="{% trans 'Post' %}">
                             </div>
                         </form>
                     </div>

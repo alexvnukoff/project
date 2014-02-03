@@ -51,11 +51,11 @@
 							<p><font class="grey">Цвет:</font> красный</p>
 						</div>
 						<div class="numberoder">
-							<p><font class="number">{{ product_currency|getSymbol }} {{ product_cost }}</font></p>
+							<p><font class="number">{{ product_currency|getSymbol }} {{ product_cost|formatPrice}}</font></p>
 
 
 						</div>
-						<div class="price">{{ product_currency|getSymbol }} {{ totalCost }}</div>
+						<div class="price">{{ product_currency|getSymbol }} {{ totalCost|formatPrice }}</div>
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}
