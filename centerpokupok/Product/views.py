@@ -148,7 +148,8 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
         breadCrumbs = Product.getItemsAttributesValues(("NAME",), ancestors_ids)
 
         #Paginator
-
+        url_country = "products:category_country"
+        url_country_parametr = [category_id]
         if country:
             category_url = "products:category_country"
             category_parameters = [country]
@@ -159,6 +160,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
             category_parameters = []
             url_parameter = [category_id]
             url_paginator = "products:cat_pagination"
+
 
 
 
@@ -206,7 +208,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
             .order_by("-pk")
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                                 'DISCOUNT', 'COUPON_DISCOUNT', page_num=1, page=page)
+                                                 'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
     #Product list , with companies and countries
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]

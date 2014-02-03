@@ -63,10 +63,22 @@ class DynUrlNode(template.Node):
             parametrs = copy(template.Variable(self.parametrs).resolve(context))
         except Exception:
             parametrs = []
+        if not isinstance(parametrs, list):
+            l = list()
+            l.append(parametrs)
+            parametrs = copy(l)
+
+        try:
+            new_parametr = copy(template.Variable(self.new_parametr).resolve(context))
+            if not isinstance(new_parametr, list):
+                l = list()
+                l.append(new_parametr)
+                new_parametr = copy(l)
+            parametrs.extend(new_parametr)
+        except Exception:
+            pass
 
 
-        new_parametr = template.Variable(self.new_parametr).resolve(context)
-        parametrs.append(new_parametr)
 
 
         return reverse(name, args=parametrs)
