@@ -5,6 +5,13 @@
 
 {% block title %}News Detail{% endblock %}
 
+
+{{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+{% endblock %}
+
 {% block js %}
     {{ block.super }}
     <script>
@@ -16,13 +23,13 @@
 {% endblock %}
 
 {% block header %}
-    {% include "header_big.html" %}
+    {% include "Company/header.html" %}
 {% endblock %}
 
 {% block body %}
 		<div id="main">
             <div id="sidebar">
-                {% include "related_categories.html" %}
+                {% include "Company/store_categories.html" %}
                     <div class="bestbuy">
                         <div class="items-coupon">
                             <h3>Самые выгодные купоны</h3>
@@ -54,78 +61,13 @@
                     </div>
             </div>
             <div id="main-r">
-                <div class="breadcrumbs">
-                    <div xmlns="http://rdf.data-vocabulary.org/#">
-                        <span typeof="v:Breadcrum">
-                            <a property="v:title" rel="v:url" href="{% url "main" %}">{% trans "Main" %}</a> &rarr;
-                        </span>
-                        <span typeof="v:Breadcrum">
-                            <a href="{% url "products:list" %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
-                        </span>
-                        {% for id, crumb in breadCrumbs.items %}
-                            {% with crumb.NAME|first as name %}
-                                &rarr;
-                                <span typeof="v:Breadcrum">
-                                    <a href="{% url "products:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
-                                </span>
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="title-items">
-                    {% trans "Products" %}
-                    {% if currentCat %}
-                        <i>/</i>  {{ currentCat }}
-                    {% endif %}
-                </div>
 
-                <div class="topitems" style="margin-top: 20px">
-                    <label>{% trans "Show only" %}</label>
-                    <span>
-                        <input type="checkbox" name="" class="checkbox">
-                        <i class="icons icon-display1"></i>
-                        <font>{% trans "Salesman online" %}</font>
-                    </span>
-                    <span>
-                        <input type="checkbox" name="" class="checkbox">
-                        <i class="icons icon-display2"></i>
-                        <font>{% trans "High raiting" %}</font>
-                    </span>
-                    <span>
-                        <input type="checkbox" name="" class="checkbox">
-                        <i class="icons icon-display3"></i>
-                        <font>{% trans "Free shipping" %}</font>
-                    </span>
-
-                </div>
-                <div class="topitems">
-                    <label>{% trans "Sort by" %}</label>
-                    <span id="sortby">
-                        <a href="#nogo" class="pricefilter">{% trans "Price" %} </a>
-                        <div class="sortprice">
-                            <ul>
-                                <li><a href="#">$100 ~ $200</a></li>
-                                <li><a href="#">$200 ~ $300</a></li>
-                                <li><a href="#">$300 ~ $400</a></li>
-                                <li><a href="#">$400 ~ $500</a></li>
-                                <li><a href="#">$500 ~ $600</a></li>
-                            </ul>
-                        </div>
-                    </span>
-                    <span>
-                        <a href="#">{% trans "Raiting" %}</a>
-                    </span>
-
-                </div>
                 <ul id="listitems">
-                    {% for id , product in products_list.items %}
+                    {% for id , product in products.items %}
                          {% with product.NAME|first as name %}
                          {% with product.IMAGE|first as picture %}
                          {% with product.COST|first as price %}
                          {% with product.CURRENCY|first as currency %}
-                         {% with product.COMPANY_NAME|first as company %}
-                         {% with product.COMPANY_IMAGE|first as company_image %}
-                         {% with product.COUNTRY_NAME|first as country %}
                          {% with product.DISCOUNT|first as discount %}
                          {% with product.COUPON_DISCOUNT|first as coupon_discount %}
                     <li>
@@ -164,28 +106,7 @@
                             </div>
                             <a href="#"><i class="icons icon-heart"></i></a>
                         </div>
-                        <div class="bgname">
-                            <a href="#" class="offline">
-                                <i class="icons i-name"></i>
-                                <b>{{ company }}</b>
-                                <i class="icons icon-chat"></i>
-                            </a>
-                            <div class="salepopup">
-                                <img src="{% static company_image %}" class="avatar" alt="{{ company }}" />
-                                <div class="infosale">
-                                    <i class="icons icon-status status-online"></i>
-                                    <a href="#">{{ company }}</a>
-                                    <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
-                                    <p>{{ country }}</p>
-                                    <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">positive feedback</a></p>
-                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>Написать продавцу </a></p>
-                                </div>
-                            </div>
-                        </div>
                     </li>
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
                           {% endwith %}
                           {% endwith %}
                           {% endwith %}
@@ -244,48 +165,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="itembanner"><a href="#"><img src="{% static "images/banner.jpg" %}" alt=""></a></div>
                 {% include "paginator.html" %}
-                <div class="salepeople">
-                    <h1>{% trans "Sellers" %}</h1>
-                    <ul id="slider1">
-                        {% for id , attr in companyList.items %}
-                            {% with attr.COMPANY_NAME|first as name %}
-                            {% with attr.COMPANY_IMAGE|first as picture %}
-                            {% with attr.COUNTRY_NAME|first as country %}
-                            {% with attr.COMPANY_ID|first as country_id %}
-                      {% if  forloop.counter == 1 %}
-                                      <li>
-                                    {% endif %}
-                          <div class="itemspp">
-                            <div class="img_slider">
-                            <div class="shadow"></div>
-                            <div class="img_block">
-                                <img  src="{% static picture %}" alt="{{ name }}">
-                                </div>
-                            </div>
-                                <div class="infopeople">
-                                    <i class="icons icon-status status-online"></i>
-                                    <p><a href="#">{{ name }}</a></p>
-                                    <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
-                                    <p>{{ country }}</p>
-                                </div>
-                        </div>
-
-                          {% if forloop.counter|divisibleby:"7" and not forloop.last  %}
-
-                                      </li>
-                                     <li>
-                                {% elif forloop.last %}
-                                </li>
-                                {% endif %}
-                            {% endwith %}
-                             {% endwith %}
-                             {% endwith %}
-                             {% endwith %}
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

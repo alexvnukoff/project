@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}About{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+{% endblock %}
+
+{% block header %}
+    {% include "Company/header.html" %}
+{% endblock %}
+
+{% block body %}
+    <div id="main">
+            <div id="sidebar">
+                <div class="title-filter">
+                    Самые популярные товары
+                </div>
+                <ul class="bestreview">
+                    <li>
+                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+                        <p><font class="number">$3.80</font> / шт.</p>
+                    </li>
+                    <li>
+                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+                        <p><font class="number">$3.80</font> / шт.</p>
+                    </li>
+                    <li>
+                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+                        <p><font class="number">$3.80</font> / шт.</p>
+                    </li>
+                    <li>
+                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+                        <p><font class="number">$3.80</font> / шт.</p>
+                    </li>
+                    <li>
+                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
+                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
+                        <p><font class="number">$3.80</font> / шт.</p>
+                    </li>
+                </ul>
+                <div class="bestbuy">
+                    <div class="items-coupon">
+                        <ul>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> спеццена</div>
+                                <a href="#"><img alt="" src="{% static "images/products/pr8.jpg" %}"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">Распродажа</a></p>
+                                    <p>осенней коллекции</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul id="subscribe">
+                    <li class="top">
+                        <i class="imgshop i-subs"></i>Подписаться на рассылку
+                    </li>
+                    <li>Получайте каждую неделю наши анонсы и обзоры новинок</li>
+                    <li><input type="text" class="text" placeholder="Ваш E-mail" name=""></li>
+                    <li><a href="#" class="btnreg">Подписаться</a></li>
+                </ul>
+            </div>
+            <div id="main-r">
+            <div class="textright">
+                <div class="title-items">
+                    <h2>{{ name }}</h2>
+                </div>
+                <div class="pagetext">{{ detail_text }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load addParameter %}
 {% load CustomFilters %}
 {% load i18n %}
 
@@ -8,7 +7,10 @@
 
 {% block styles %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
 {% endblock %}
 
 {% block js %}
@@ -39,14 +41,14 @@
 {% endblock %}
 
 {% block header %}
-    {% include "header_small.html" %}
+    {% include "Company/header.html" %}
 {% endblock %}
 
 {% block body %}
     <div id="main">
             <div id="sidebar">
 
-                {% include "related_categories.html" %}
+                {% include "Company/store_categories.html" %}
 
                 <div class="bestbuy">
                     <div class="items-coupon">
@@ -79,33 +81,6 @@
                 </div>
             </div>
             <div id="main-r">
-                <div class="breadcrumbs">
-                    <div xmlns="http://rdf.data-vocabulary.org/#">
-                        <span typeof="v:Breadcrum">
-                            <a property="v:title" rel="v:url" href="{% url "main" %}">{% trans "Main" %}</a> &rarr;
-                        </span>
-                        <span typeof="v:Breadcrum">
-                            <a href="{% url "coupons:list" %}" property="v:title" rel="v:url">{% trans "Coupons" %}</a>
-                        </span>
-
-                        {% for id, crumb in breadCrumbs.items %}
-                            {% with crumb.NAME|first as name %}
-                            &rarr;
-                            <span typeof="v:Breadcrum">
-                                <a href="{% url "coupons:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
-                            </span>
-                            {% endwith %}
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <div class="title-items">
-                    {% trans "Coupons" %}
-                    {% if currentCat %}
-                        <i>/</i> {{ currentCat }}
-                    {% endif %}
-                </div>
 
             {% for id, attr in coupons.items %}
 
@@ -155,75 +130,6 @@
                 {% else %}
 
                 {% if forloop.counter == 2 %}
-                    <div class="topitems" style="margin-top: 20px;">
-                        <label>{% trans "Sort By" %}</label>
-                        <span>
-                            {% if sort == 'coupon-discount' %}
-                                <a href="{% query_string 'sort=coupon-discount&order=order' '' %}" class="dc">
-                                    {% trans "Discount" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=coupon-discount' 'order' %}" class="dc">
-                                    {% trans "Discount" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'ed-date' %}
-                                <a href="{% query_string 'sort=ed-date&order=order' '' %}" class="dc">
-                                    {% trans "End Date" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=ed-date' 'order' %}" class="dc">
-                                    {% trans "End Date" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'st-date' %}
-                                <a href="{% query_string 'sort=st-date&order=order' '' %}" class="dc">
-                                    {% trans "Create Date" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=st-date' 'order' %}" class="dc">
-                                    {% trans "Create Date" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'org-price' %}
-                                <a href="{% query_string 'sort=org-price&order=order' '' %}" class="dc">
-                                    {% trans "Price" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=org-price' 'order' %}" class="dc">
-                                    {% trans "Price" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <div class="right">
-                            {% if not expire %}
-                                <label style="float: none;">{% trans "All " %} </label>
-                            {% else %}
-                                <a href="{% query_string '' 'expire' %}">{% trans "All" %} </a>
-                            {% endif %}
-
-                            {% if expire == 1 %}
-                                <label style="float: none;">{% trans "Expire in 24 hours" %} </label>
-                            {% else %}
-                                <a href="{% query_string 'expire=1' '' %}">{% trans "Expire in 24 hours" %} </a>
-                            {% endif %}
-
-                            {% if expire and expire != 1 %}
-                                <label style="float: none;">{% trans "Expire in 7 days" %}</label>
-                            {% else %}
-                                <a href="{% query_string 'expire=7' '' %}">{% trans "Expire in 7 days" %}</a>
-                            {% endif %}
-
-                        </div>
-                    </div>
-
-
                     <ul id="listcoupon">
                 {% endif %}
                     <li>
