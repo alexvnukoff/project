@@ -6,6 +6,7 @@ import centerpokupok.News.urls
 import centerpokupok.Product.urls
 import centerpokupok.Reviews.urls
 import centerpokupok.Coupons.urls
+import centerpokupok.Company.urls
 
 from registration.forms import RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
