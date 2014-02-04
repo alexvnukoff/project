@@ -128,6 +128,7 @@
                          {% with product.COUNTRY_NAME|first as country %}
                          {% with product.DISCOUNT|first as discount %}
                          {% with product.COUPON_DISCOUNT|first as coupon_discount %}
+                         {% with product.COMMENTS as comment %}
                     <li>
                         {% if coupon_discount %}
                             <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
@@ -160,9 +161,9 @@
                             <img src="images/stars.png" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
-                                <label><a href="{% url "products:detail" id %}">512</a></label>
+                                <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>
                             </div>
-                            <a href="#"><i class="icons icon-heart"></i></a>
+                            <a href="#" class="wish" data-gid="{{ id }}"><i class="icons icon-heart"></i></a>
                         </div>
                         <div class="bgname">
                             <a href="#" class="offline">
@@ -183,6 +184,7 @@
                             </div>
                         </div>
                     </li>
+                          {% endwith %}
                           {% endwith %}
                           {% endwith %}
                           {% endwith %}

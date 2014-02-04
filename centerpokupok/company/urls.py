@@ -9,6 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
+     url(r'^$', centerpokupok.company.views.storeMain, name="main"),
      url(r'^([0-9]+)/$', centerpokupok.company.views.storeMain, name="main"),
      url(r'^([0-9]+)/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="category"),
      url(r'^([0-9]+)/products/$', centerpokupok.Reviews.views.reviewDetail, name="products"),

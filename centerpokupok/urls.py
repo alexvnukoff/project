@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     url(r'^coupons/', include("centerpokupok.Coupons.urls", namespace="coupons")),
     url(r'^profile/', include("centerpokupok.Cabinet.urls", namespace="profile")),
     url(r'^categories/', include("centerpokupok.Categories.urls", namespace="categories")),
-    url(r'^company/(?P<company>[0-9]+)/', include("centerpokupok.Company.urls", namespace="companies")),
+    url(r'^company/(?P<company>[0-9]+)/', include("centerpokupok.company.urls", namespace="companies")),
     url(r'^country/(?P<country>[0-9]+)/$', centerpokupok.views.home, name="home_country"),
 
 

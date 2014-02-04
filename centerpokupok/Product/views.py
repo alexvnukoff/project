@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.db.models import Q, F
+from django.db.models import Q, F, Count
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -17,6 +17,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
 from centerpokupok.forms import OrderForm
 from django.db import transaction
+import json
 
 def productDetail(request, item_id, page=1):
     if request.POST.get('subCom', False):
@@ -210,43 +211,42 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+
     #Product list , with companies and countries
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
+
+    comments = Comment.objects.filter(c2p__parent__in=products_ids).values("c2p__parent").annotate(num_comments=Count("c2p__parent"))
+    comment_dict = {}
+    for comment in comments:
+        comment_dict[comment['c2p__parent']] = comment['num_comments']
+
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
     items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
-                                 p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
-                                                                                 'p2c__child__p2c__child', 'pk')
+                                p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
+                                                                                'p2c__child__p2c__child', 'pk')
+
     items_id = []
     for item in items:
         items_id.append(item['pk'])
         items_id.append(item['p2c__child_id'])
 
+
     items_id = set(items_id)
     itemsWithAttribute = Item.getItemsAttributesValues(("NAME", "IMAGE"), items_id)
     companyList = {}
 
-    for item in items: #TODO: Jenya maybe it's possible to do it more beautifoul
-        products_list[item['p2c__child__p2c__child']].update({
-            'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']
-        })
+    for item in items:
+        toUpdate = {'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME'],
+                    'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE'],
+                    'COMPANY_ID': item['p2c__child_id'],
+                    'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME'],
+                    'COUNTRY_ID': item['pk'],
+                    'COMMENTS': comment_dict.get(item['p2c__child__p2c__child'], 0)}
+        products_list[item['p2c__child__p2c__child']].update(toUpdate)
 
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_ID': item['p2c__child_id']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_ID': item['pk']
-            })
+
+
 
 
 
@@ -496,6 +496,15 @@ def _getRealCost(productValues):
      return  totalCost
 
 
+@ensure_csrf_cookie
+def addFavorite(request):
+    if request.is_ajax():
+        product_id = str(request.POST.get('ID'))
+        username = str(request.user.username)
+        raise ObjectDoesNotExist(username + " " + product_id)
+    result = {"RESULT": {"TYPE": "ERROR", "MESS": "ERROR"}, "BASKET_OUTPUT": ""}
+
+    return HttpResponse(json.dumps(result))
 
 
 

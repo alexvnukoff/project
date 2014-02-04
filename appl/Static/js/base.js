@@ -212,4 +212,61 @@ $.ajaxSetup({
     }
 });
 
+    $(".wish").click(function(){
+        var gid = parseInt( $(this).data("gid") );
+
+        if(!gid) return false;
+
+
+        var dataPost = {"ID":gid};
+
+        $(this).fadeTo(10, 0.5);
+
+        $button = $(this);
+
+        function callback_add(data, textStatus)
+        {
+            if (!data["BASKET_OUTPUT"] || !data["RESULT"] || !data["RESULT"]["TYPE"] || !data["RESULT"]["MESS"])
+            {
+
+                tip.text('Ошибка добавления в корзину');
+
+            } else {
+                if (data["RESULT"]["TYPE"] == "OK") {
+                    if( $.trim(data["BASKET_OUTPUT"]) != "" )
+                    {
+                        $("#basket_line_block").replaceWith( data["BASKET_OUTPUT"] );
+
+                    }
+                    tip.text('Товар добавлен в корзину');
+
+                } else {
+                    tip.text(data["RESULT"]["MESS"]) ;
+                }
+            }
+
+
+
+            $button.fadeTo(0, 1);
+            tip.fadeIn('100').delay('700').fadeOut('100');
+
+            window.setTimeout(function(){
+                $(".to_delete", $(this).parent()).remove();
+            }, 1500);
+        };
+
+        if (gid > 0) {
+            var a = $.ajax({
+                type: "POST",
+                url: "/products/addToFavorite/",
+                data: dataPost,
+                dataType: "json",
+                success: callback_add
+            });
+        }
+
+        return false;
+    });
+
+
 })
