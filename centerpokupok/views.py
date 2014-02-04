@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order
+from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order, Company
 from registration.backends.default.views import RegistrationView
 from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
@@ -21,13 +21,20 @@ def home(request, country=None):
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    if country:
+        productQuery = Product.objects.filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
+    if not country:
+        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    else:
+        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 
     #----NEW PRODUCT LIST -----#
-
-    products = Product.getTopSales(Product.objects.all())[:4]
+    if not country:
+        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    else:
+        products = Product.getTopSales(productQuery)[:4]
 
     topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
@@ -63,7 +70,10 @@ def home(request, country=None):
     reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
-    couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+    if not country:
+         couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+    else:
+        couponsObj = Product.getCoupons(querySet=productQuery).order_by('item2value__end_date')[:3]
     coupons_ids = [cat.pk for cat in couponsObj]
 
     coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
@@ -71,7 +81,11 @@ def home(request, country=None):
     coupons = func._setCouponsStructure(coupons)
 
     #----------- Products with discount -------------#
-    productsSale = Product.getProdWithDiscount()
+    if not country:
+          productsSale = Product.getProdWithDiscount()
+    else:
+          productsSale = Product.getProdWithDiscount(productQuery)
+
     productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
     productsSale_ids = [prod.pk for prod in productsSale]
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
@@ -92,7 +106,7 @@ def home(request, country=None):
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
                                              "productsSale": productsSale, 'user': user, 'url_country': url_country,
-                                             })
+                                             'country': country})
 
 
 def about(request):
