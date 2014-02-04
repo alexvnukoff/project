@@ -247,8 +247,11 @@ class Product(Item):
                                           item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
     @staticmethod
-    def getNew():
-        return Product.objects.order_by('-pk')
+    def getNew(productQuery=False):
+        if not productQuery:
+            return Product.objects.order_by('-pk')
+        else:
+            return productQuery.order_by('-pk')
 
     @staticmethod
     def getTopSales(productQuery):
