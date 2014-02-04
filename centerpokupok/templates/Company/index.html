@@ -59,37 +59,7 @@
 {% block body %}
         <div id="main">
             <div id="sidebar">
-                {% include "Company/store_categories.html" %}
-                <div class="title-filter">
-                    Самые популярные товары
-                </div>
-                <ul class="bestreview">
-                    <li>
-                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
-                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-                        <p><font class="number">$3.80</font> / шт.</p>
-                    </li>
-                    <li>
-                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
-                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-                        <p><font class="number">$3.80</font> / шт.</p>
-                    </li>
-                    <li>
-                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
-                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-                        <p><font class="number">$3.80</font> / шт.</p>
-                    </li>
-                    <li>
-                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
-                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-                        <p><font class="number">$3.80</font> / шт.</p>
-                    </li>
-                    <li>
-                        <a href="#"><img class="thumb" alt="" src="{% static "images/products/pr7.jpg" %}"></a>
-                        <a href="#">Футболка мужская с принтом Чарли-Чаплина...</a>
-                        <p><font class="number">$3.80</font> / шт.</p>
-                    </li>
-                </ul>
+                {% include "popular.html" %}
                 <div class="bestbuy">
                     <div class="items-coupon">
                         <ul>
@@ -332,9 +302,9 @@
                         <h3>Выгодные предложения</h3>
                         <ul id="bestproduct">
                             {% for id, attr in productsSale.items %}
-                                {% with attr.NAME as name  %}
-                                {% with attr.DISCOUNT as discount  %}
-                                {% with attr.IMAGE as picture  %}
+                                {% with attr.NAME|first as name  %}
+                                {% with attr.DISCOUNT|first as discount  %}
+                                {% with attr.IMAGE|first as picture  %}
 
                                 {% if  forloop.counter == 1 %}
                                     <li>
