@@ -1,0 +1,40 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+<div class="title-filter">
+                    {% trans "Most popular products" %}
+                </div>
+                <ul class="bestreview">
+                    {% for id, attr in popular.items %}
+                        {% with attr.NAME|first as name  %}
+                        {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+                        {% with attr.DISCOUNT|first as discount  %}
+                        {% with attr.IMAGE|first as picture  %}
+                        {% with attr.COST|first as price  %}
+                        {% with attr.CURRENCY|first as currency  %}
+                        <li>
+                            <a href="{% url "products:detail" id %}">
+                                <img class="thumb" width="80" height="80" alt="{{ name }}" src="{% static picture %}">
+                            </a>
+                            <a href="{% url "products:detail" id %}">{{ name }}</a>
+                            <p>
+                                <font class="number">
+                                    {{ currency|getSymbol }}
+                                    {% if coupon_discount %}
+                                        {{ price|discountPrice:coupon_discount }}
+                                    {% elif discount %}
+                                        {{ price|discountPrice:discount }}
+                                    {% else %}
+                                        {{ price|formatPrice }}
+                                    {% endif %}
+                                </font>
+                            </p>
+                        </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                    {% endfor %}
+                </ul>

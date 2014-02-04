@@ -1,24 +1,24 @@
 from django.conf.urls import patterns, include, url
 
-import centerpokupok.company.views
-import centerpokupok.Reviews.views
+import centerpokupok.Company.views
 
 from django.contrib import admin
 admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    # Examples:
-     url(r'^$', centerpokupok.company.views.storeMain, name="main"),
-     url(r'^([0-9]+)/$', centerpokupok.company.views.storeMain, name="main"),
-     url(r'^([0-9]+)/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="category"),
-     url(r'^([0-9]+)/products/$', centerpokupok.Reviews.views.reviewDetail, name="products"),
-     url(r'^([0-9]+)/products/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="product_category"),
-     url(r'^([0-9]+)/coupons/$', centerpokupok.Reviews.views.reviewDetail, name="coupons"),
-     url(r'^([0-9]+)/coupons/category/([0-9]+)/$', centerpokupok.Reviews.views.reviewDetail, name="coupons_category"),
-     url(r'^([0-9]+)/about/$', centerpokupok.Reviews.views.reviewDetail, name="about"),
-     url(r'^([0-9]+)/contact/$', centerpokupok.Reviews.views.reviewDetail, name="contact"),
-    # url(r'^blog/', include('blog.urls')),
-
-
+     url(r'^$', centerpokupok.Company.views.storeMain, name="main"),
+     url(r'^category/(?P<category>[0-9]+)/$', centerpokupok.Company.views.storeMain, name="category"),
+     url(r'^products/$', centerpokupok.Company.views.products, name="products"),
+     url(r'^products/page/(?P<page>[0-9]+)/$', centerpokupok.Company.views.products, name="products_paged"),
+     url(r'^products/category/(?P<category>[0-9]+)/$', centerpokupok.Company.views.products, name="products_category"),
+     url(r'^products/category/(?P<category>[0-9]+)/page/(?P<page>[0-9]+)/$',
+         centerpokupok.Company.views.products, name="products_category_paged"),
+     url(r'^coupons/$', centerpokupok.Company.views.coupons, name="coupons"),
+     url(r'^coupons/page/(?P<page>[0-9]+)/$', centerpokupok.Company.views.coupons, name="coupons_paged"),
+     url(r'^coupons/category/(?P<category>[0-9]+)/$', centerpokupok.Company.views.coupons, name="coupons_category"),
+     url(r'^coupons/category/(?P<category>[0-9]+)/page/(?P<page>[0-9]+)/$',
+         centerpokupok.Company.views.coupons, name="coupons_category_paged"),
+     url(r'^about/$', centerpokupok.Company.views.about, name="about"),
+     url(r'^contact/$', centerpokupok.Company.views.contact, name="contact"),
 )

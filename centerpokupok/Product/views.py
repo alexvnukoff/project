@@ -40,8 +40,13 @@ def productDetail(request, item_id, page=1):
     try:
         company = Company.objects.get(p2c__child_id=item_id)
         storeCategories = company.getStoreCategories()
+
+
+        attr = company.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
+
+        name = attr['NAME'][0]
+        picture = attr['IMAGE'][0]
         companyID = company.pk
-        company = company.getAttributeValues("NAME")
     except ObjectDoesNotExist:
         pass
 
@@ -50,9 +55,10 @@ def productDetail(request, item_id, page=1):
     #----------- Popular Products ----------------#
 
 
-    productsPopular = Product.getTopSales(Product.objects.all())[:5]
-    product_id = [product.pk for product in productsPopular]
-    productsPopularList = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE"), product_id)
+    popular = Product.getTopSales(Product.objects.all())[:4]
+    product_id = [product.pk for product in popular]
+    popular = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'DISCOUNT',
+                                                         'COUPON_DISCOUNT'), product_id)
 
     #----------- Category Hierarchy ----------------#
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)

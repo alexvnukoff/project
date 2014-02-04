@@ -10,6 +10,9 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}" />
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
 {% endblock %}
 
 {% block js %}
@@ -70,73 +73,15 @@
 {% endblock %}
 
 {% block header %}
-    {% include "header_big.html" %}
+    {% include "Company/header.html" %}
 {% endblock %}
 
 {% block body %}
    	<div id="main">
 		<div id="sidebar">
-			<div class="shopinfo">
-                {% with company|first as company %}
-
-				<a href="{% url "companies:main" companyID %}"> <span class="title">{{ company }}</span> </a>
-
-				<div class="shopinfoin">
-					<div class="badge">
-						<i class="icons i-badge"></i>
-						<i class="icons i-badge"></i>
-						<i class="icons i-badge"></i>
-					</div>
-
-					<div class="feedbackinfo">
-						<p>Израиль</p>
-					</div>
-				</div>
-
-                {% endwith %}
-			</div>
-
-			<div class="sale-left">
-				<img src="images/gallery/p1.png" alt="" class="avatar" />
-				<div class="saleinfo">
-					<i class="icons icon-status status-online"></i>
-					<p>Продавец в сети</p>
-					<p><a href="#">Juliy Juliy</a></p>
-					<p><a href="#" class="btnreg"><i class="icons i-cm"></i>Написать</a></p>
-				</div>
-			</div>
-
-			<div id="searchleft">
-				<input type="text" name="" placeholder="Поиск в магазине" class="text" />
-				<a href="#" class="icons btnsl"></a>
-			</div>
-
 			{% include "Company/store_categories.html" %}
 
-			<div class="title-filter">
-				{% trans "Most popular products" %}
-			</div>
-
-			<ul class="bestreview">
-                {% for id , attr in productsPopularList.items %}
-                    {% with attr.NAME|first as name %}
-                    {% with attr.IMAGE|first as picture %}
-                    {% with attr.CURRENCY|first as currency %}
-                    {% with attr.COST|first as price %}
-				<li>
-
-					<a href="{% url "products:detail" id %}">
-                        <img src="{% static picture %}" alt="{{ name }}" class="thumb" />
-                    </a>
-					<a href="{% url "products:detail" id %}">{{ name }}</a>
-					<p><font class="number">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
-				</li>
-                    {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                {% endfor %}
-			</ul>
+			{% include "popular.html" %}
 
 			<div class="bestbuy">
 				<div class="items-coupon">
@@ -162,9 +107,16 @@
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "products:list" %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
+                        <a href="{% url "companies:main" companyID %}" property="v:title" rel="v:url">{{ name }}</a>
+                        &rarr;
+                    </span>
+					<span typeof="v:Breadcrum">
+                        <a href="{% url "companies:products" companyID %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                     </span>
 				</div>
+			</div>
+            <div class="title-items">
+				<a href="javascript:history.back()" class="btnback">← {% trans "Back to catalog" %}</a>
 			</div>
                     {% with productValues as  attr   %}
                     {% with attr.NAME|first as name  %}
@@ -260,7 +212,7 @@
 
                             <div class="wl">
                                 <i class="icons i-wl"></i>
-                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">{% trans 'Add to favorite' %}</a></p>
+                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">{% trans 'Favorite' %}</a></p>
                             </div>
                         </div>
                     </form>

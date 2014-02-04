@@ -254,7 +254,8 @@ class Product(Item):
             return productQuery.order_by('-pk')
 
     @staticmethod
-    def getTopSales(productQuery):
+    def getTopSales(productQuery=False):
+
         extra = '''nvl((SELECT COUNT({prodTable}.{prodPK})
                 FROM {relTable}
                 INNER JOIN {orderTable} ON ({orderTable}.{orderPK} = {relTable}.parent_id)
@@ -264,9 +265,11 @@ class Product(Item):
                                                                    prodTable=Product._meta.db_table,
                                                                    prodPK=Product._meta.pk.column,
                                                                    relTable=Relationship._meta.db_table)
-        products = productQuery.extra(select={'popular': extra}).order_by('-popular')
 
-        return products
+        if not productQuery:
+            return Product.objects.extra(select={'popular': extra}).order_by('-popular')
+        else:
+            return productQuery.extra(select={'popular': extra}).order_by('-popular')
 
 class License(Item):
 
