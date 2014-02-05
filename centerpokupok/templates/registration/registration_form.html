@@ -10,6 +10,13 @@
 
 						<ul class="bgreg">
                             <li>
+                                  <div class="control" >
+                                  {% for key, value in form.errors.items %}
+                                        {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
+                                     {% endfor %}
+                                  </div>
+                            </li>
+                            <li>
 								<label class="control-left" for="id_email">{% trans "E-mail"  %}</label>
 								<div class="control">
                                    <p style="color: red;max-width: 230px;">{{ form.email.errors.as_text }}</p>

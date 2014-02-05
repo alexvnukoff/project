@@ -122,7 +122,10 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 .comment{ float: right;margin-right: 25px; display: inline;}
 .comment label{ float: left;}
 .icon-cmt{ float: left; width: 15px; height: 14px; background-position: 0px -115px; margin: 3px 3px 0 0; display: inline;}
-.icon-heart{ position: absolute; right: 0; width: 15px; height: 14px; background-position: 0px -130px; margin: 3px 0 0 0;}
+.bvote .icon-heart{ position: absolute; right: 0; width: 15px; height: 14px; background-position: 0px -130px; margin: 3px 0 0 0;}
+.bvote .loader{ position: absolute; right: 0; width: 15px; height: 16px;  margin: 3px 0 0 0;background: url(../images/ajax-loader.gif);}
+
+.bvote .icon-colored-heart{ position: absolute; right: 0; width: 15px; height: 14px; background-position: 0px -83px; margin: 3px 0 0 0;}
 .bgname{ position: absolute; width: 100%; height: 25px; background: #EEE; line-height: 22px; bottom: 0;}
 .bgname a{ font-size: 11px;}
 .bgname a .i-name{ float: left; width: 13px; height: 13px; margin: 6px 3px 0 6px; display: inline;}
@@ -378,7 +381,9 @@ float:left;
 .wl{ position: relative; float: left; width: 90px; text-align: center; margin: 10px 0 0 45px; display: inline;}
 .wl a.wish{ font-size: 14px; border-bottom: 1px #4b89b5 dotted; padding: 5px 0 0 0;}
 .wl a.wish:hover{ text-decoration:none;}
-.i-wl{ display: inline-block; width: 27px; height: 24px; background-position: 0px -350px;}
+.wl .icon-heart{ display: inline-block; width: 27px; height: 24px; background-position: 0px -350px;}
+.wl .loader{ display: inline-block; width: 23px; height: 24px;background: url(../images/big_loader.GIF)}
+.wl .icon-colored-heart{ display: inline-block; width: 27px; height: 24px; background-position: 0px -324px;}
 .socialplugin{ position: relative; float: left; width: 102%; margin: 25px 0 0 0;}
 .socialplugin div{ float: left; margin: 0 0px 0 0;}
 .ship{ position: relative; float: left; width: 100%; margin: 40px 0 0 0;}

@@ -210,9 +210,9 @@
                         <div class="details-action">
                             <a href="javascript:void(0);" onclick="$(this).closest('form').submit();" class="bigbuy">{% trans "Buy" %}</a>
 
-                            <div class="wl">
-                                <i class="icons i-wl"></i>
-                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">{% trans 'Favorite' %}</a></p>
+                            <div class="wl favorite">
+                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ item_id }}" ></i>
+                                <p><a href="#"  class="wish">{% trans 'Favorite' %}</a></p>
                             </div>
                         </div>
                     </form>
