@@ -71,6 +71,8 @@
                          {% with product.CURRENCY|first as currency %}
                          {% with product.DISCOUNT|first as discount %}
                          {% with product.COUPON_DISCOUNT|first as coupon_discount %}
+                         {% with product.COMMENTS as comment %}
+                         {% with product.FAVORITE as favorite %}
                     <li>
                         {% if coupon_discount %}
                             <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
@@ -103,11 +105,15 @@
                             <img src="images/stars.png" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
-                                <label><a href="{% url "products:detail" id %}">512</a></label>
+                                <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>
                             </div>
-                            <a href="#"><i class="icons icon-heart"></i></a>
+                             <a href="#" class="favorite" >
+                                <i class="icons {% if favorite == 1%}icon-colored-heart {% else %}icon-heart{% endif %}" data-gid="{{ id }}"></i>
+                            </a>
                         </div>
                     </li>
+                          {% endwith %}
+                          {% endwith %}
                           {% endwith %}
                           {% endwith %}
                           {% endwith %}

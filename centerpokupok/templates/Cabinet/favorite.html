@@ -19,46 +19,58 @@
 			</div>
         <div class="listitemcart">
 				<span class="title">{% trans "Order history" %}</span>
-				<ul id="itemcart">
-                    {% for id , order in orderList.items %}
+			<form action="" method="post" name="delete">
+            {% csrf_token %}
+                 <ul id="itemcart">
+                        {% for id , order in favoriteList.items %}
                         {% with order.COST|first as price %}
                         {% with order.CURRENCY|first as currency %}
                         {% with order.IMAGE|first as picture %}
                         {% with order.NAME|first as name %}
-                        {% with order.QUANTITY|first as qty %}
-                        {% with order.CITY|first as city %}
-                        {% with order.COUNTRY|first as country %}
-                        {% with order.ADDRESS|first as address %}
+                        {% with order.AFTER_DISCOUNT as real_cost %}
+
 					<li>
 						<div class="thumb">
 							<img src="{% static picture %}" alt="{{ name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
-							<p>{{ name }}</p>
+						    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
 							<p class="id">Product ID: {{ id }}</p>
-							<p>
-                              <font class="note"> {{ city }}, {{ country }}, {{ address }}</font>
-							</p>
+
 						</div>
 						<div class="code">
 							<p><font class="grey">Размер:</font> XS</p>
 							<p><font class="grey">Цвет:</font> красный</p>
 						</div>
 						<div class="numberoder">
-							<p><font class="grey">{% trans "Quantity" %}:</font> {{ qty }}</p>
-						</div>
-						<div class="price">{{ currency|getSymbol }} {{ price|formatPrice }}</div>
-					</li>
+                            {% if real_cost > 0 %}
+							<p><font class="number">{{ currency|getSymbol }}  {{ real_cost|formatPrice }}</font> </p>
+                            <p class="old">{{ currency|getSymbol }}  {{ price|formatPrice }} </p>
+                                {% else %}
+                            <p><font class="number">{{ currency|getSymbol }}  {{ price|formatPrice }}</font> </p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="checkbox" name="del[]" value="{{ id }}">
+                        </div>
+
+
+
+
+					 </li>
                          {% endwith %}
                          {% endwith %}
                          {% endwith %}
                          {% endwith %}
                          {% endwith %}
-                         {% endwith %}
-                         {% endwith %}
-                         {% endwith %}
+
                {% endfor %}
+
 				</ul>
+              <div class="rows-check">
+                  <a href="javascript:void(0);" onclick="$(this).closest('form').submit();" class="btnreg">{% trans "Delete" %}</a>
+              </div>
+            </form>
 			</div>
              {% include "paginator.html" %}
 		</div>

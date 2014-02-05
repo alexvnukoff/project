@@ -4,10 +4,16 @@
 <div id="mainpage">
 	<div id="top">
 		<div class="container">
-			<span><i class="icons i-company"></i><a href="#" class="company">Центр покупок</a></span>
+			<span><i class="icons i-company"></i><a href="/" class="company">Центр покупок</a></span>
 			<span><i class="icons i-questinon"></i><a href="#">Задать вопрос</a></span>
 			<span><i class="icons i-customer"></i><a href="#">Защита потребителя</a></span>
-			<span class="reg"><i class="icons i-reg"></i><a href="#">Войти на сайт</a> <font>|</font><a href="#">Войти на сайт</a></span>
+            {% if user.id > 0  %}
+                                <span class="reg"><i class="icons i-reg"></i><a href="{% url "profile:main" %}"> {{ user.email }}</a> <a href="{% url "logout" %}"> , {% trans  "sign out"%}</a></span>
+                         {% else %}
+                                <span class="reg"><i class="icons i-reg"></i><a href="{% url "register" %}">{% trans "Sign in" %}</a></span>
+
+            {% endif %}
+
 		</div>
 	</div>
 </div>
