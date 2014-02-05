@@ -19,7 +19,7 @@ from django.utils import timezone
 import warnings
 from collections import OrderedDict
 from operator import itemgetter
-
+from django.conf import settings
 from django.utils.timezone import now
 import datetime
 import hashlib
@@ -351,6 +351,9 @@ class Item(models.Model):
     update_user = models.ForeignKey(User, null=True, blank=True, related_name='user2item')
     update_date = models.DateField(null=True, blank=True)
 
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         permissions = (
             ("read_item", "Can read item"),
@@ -358,6 +361,44 @@ class Item(models.Model):
 
     #def __init__(self, name):
     #   title = name
+
+    @staticmethod
+    def _deactivateRelation(itemList, eDate, sDate=None):
+        rel = Relationship.objects.filter(parent__in=itemList, type="dependence")
+
+        if not rel.exists():
+            return False
+
+        parents = rel.values_list('child')
+        parents = [parent[0] for parent in parents]
+
+        fields = {'end_date': eDate}
+
+        if sDate is not None:
+            fields['start_date'] = sDate
+
+        rel.update(**fields)
+
+        Item._deactivateRelation(parents, eDate, sDate)
+
+
+
+
+    @staticmethod
+    def deactivate(itemList, eDate, sDate=None):
+        if not isinstance(itemList, list) and isinstance(itemList, int):
+            itemList = [itemList]
+
+        fields = {'end_date': eDate}
+
+        if sDate is not None:
+            fields['start_date'] = sDate
+
+        Item.objects.filter(pk__in=itemList).update(**fields)
+
+        Item._deactivateRelation(itemList, eDate, sDate)
+
+
 
     def __str__(self):
         return self.getName()
@@ -384,7 +425,7 @@ class Item(models.Model):
         if not isinstance(child, list):
             child = list(child)
 
-        num = Item.objects.filter(~Q(c2p__parent_id=parent, c2p__type="hier", p2c__child_id=parent), pk__in=child).count()
+        num = Item.objects.filter(~Q(c2p__parent_id=parent, c2p__type="hierarchy", p2c__child_id=parent), pk__in=child).count()
 
         if num != len(child):
             raise ValueError('Wrong child count')
@@ -392,9 +433,9 @@ class Item(models.Model):
         bulkInsert = []
 
         for item in child:
-            title = [str(parent.pk),'hier',str(item)]
+            title = [str(parent.pk),'hierarchy',str(item)]
             bulkInsert.append(Relationship(title='-'.join(title), parent_id=parent.pk,
-                                           child_id=item, type="hier", create_user_id=1))
+                                           child_id=item, type="hierarchy", create_user_id=1))
 
         try:
             with transaction.atomic():
@@ -624,7 +665,7 @@ class Item(models.Model):
                     else:
                         bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
                                                 create_user=user, sha1_code=createHash(value)))
-                else:
+                else: #Dictionary value
                     #security
                     dictID = int(dictID)
 
@@ -646,13 +687,30 @@ class Item(models.Model):
         if len(queries) > 0:
             #check if dictionary slot exists for this dictionary - using conditions
             filter_or = ' | '.join(queries)
-            attributesValue = Slot.objects.filter(eval(filter_or)).values('dict__pk','title','pk')
+
+
+            valueFileds = ['title']
+
+            #get value for all languages
+            for lang in settings.LANGUAGES:
+                valueFileds.append(valueFileds[0] + '_' + lang[0])
+
+            params = valueFileds + ['dict__pk', 'pk']
+
+            attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
 
             if len(attributesValue) < len(queries):
                 raise ValueError('Wrong number of dict values')
 
             for value in attributesValue:
-                uniqDict[value['dict__pk']][value['pk']] = value['title']
+
+                uniqDict[value['dict__pk']][value['pk']] = {
+                    'title': value['title']
+                }
+
+                for langDict in valueFileds: #set value for all languages
+                    uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
+
 
             for attribute in attrWithValues.keys():
                 values = attrWithValues[attribute]
@@ -664,18 +722,21 @@ class Item(models.Model):
 
                 for value in values:
                     if isinstance(value, dict):
-                        value['title'] = uniqDict[dictID][int(value['title'])]
+                        value.update(uniqDict[dictID][int(value['title'])])
 
                         if 'create_user' not in value:
                             value['create_user'] = user
 
                         value['sha1_code'] = createHash(value['title'])
 
+
+
                         bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                     else:
                         value = uniqDict[dictID][int(value)]
-                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
-                                                create_user=user, sha1_code=createHash(value)))
+
+                        bulkInsert.append(Value(item=self, attr=attributeObj, create_user=user,
+                                                sha1_code=createHash(value), **value))
 
         try:
             with transaction.atomic():
@@ -718,14 +779,17 @@ class Relationship(models.Model):
     parent = models.ForeignKey(Item, related_name='p2c')
     child = models.ForeignKey(Item, related_name='c2p')
     TYPE_OF_RELATIONSHIP = (
-        ('rel', 'Relation'),
-        ('hier', 'Hierarchy'),
+        ('relation', 'Relation'),
+        ('hierarchy', 'Hierarchy'),
+        ('dependence', 'Depended relation' )
     )
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
     create_date = models.DateField(auto_now_add=True)
     create_user = models.ForeignKey(User)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ("parent", "child")
@@ -734,8 +798,8 @@ class Relationship(models.Model):
         return self.title
 
     @staticmethod
-    def setRelRelationship(parent, child, user):
-        Relationship.objects.create(title=randint(10000, 9999999), parent=parent, child=child, create_user=user, type="rel")       #TODO Jenya remove title
+    def setRelRelationship(parent, child, user, type="relation"):
+        Relationship.objects.create(parent=parent, child=child, create_user=user, type=type)
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
@@ -770,6 +834,7 @@ class Value(models.Model):
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
 
+    Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence").delete()
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
 
@@ -787,3 +852,23 @@ def valueSaveHashCode(instance, **kwargs):
 def generateTitleField(instance, **kwargs):
     assert instance.parent.pk != instance.child.pk, 'You cannot create an relationship for class instance with itself!'
     instance.title = 'RS_' + str(instance.type).upper() + '_PARENT:' + str(instance.parent.pk) + '_CHILD:'+ str(instance.child.pk)
+
+@receiver(pre_save, sender=Slot)
+def slotUpdateAttr(instance, **kwargs):
+    attrID = Attribute.objects.filter(dict=instance.dict).values_list('pk')
+    attrID = [id[0] for id in attrID]
+
+
+    old = Slot.objects.get(pk=instance.pk)
+
+    if old.title:
+        key = 'title'
+
+        valueFileds = {}
+
+        #get value for all languages
+        for lang in settings.LANGUAGES:
+            valueFileds.update({key + '_' + lang[0]: getattr(instance, key + '_' + lang[0], '')})
+
+        Value.objects.filter(attr__in=attrID, title=old.title).update(**valueFileds)
+

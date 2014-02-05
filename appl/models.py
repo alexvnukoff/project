@@ -26,7 +26,7 @@ def getSpecificChildren(cls, parent):
             Example: getSpecificChildren("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
+    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="relation")
 
 
 def getSpecificParent(cls, child):
@@ -35,7 +35,7 @@ def getSpecificParent(cls, child):
             Example: getSpecificParent("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="rel")
+    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="relation")
 
 def createItemSlug(string):
     nonDig = ''.join([i for i in string if not i.isdigit()])
@@ -185,7 +185,7 @@ class Comment(Item):
         """
         Return QuerySet of comments that related to item
         """
-        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
+        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="relation")
 
 class Category(Item):
 

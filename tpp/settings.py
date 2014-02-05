@@ -156,6 +156,7 @@ LANGUAGES = (
     ('tm', gettext('Turkmenistan')),
     ('uk', gettext('Ukrainian')),
     ('uz', gettext('Uzbekistan')),
+    ('he', gettext('Israel')),
 )
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
