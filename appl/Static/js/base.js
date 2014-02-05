@@ -212,48 +212,36 @@ $.ajaxSetup({
     }
 });
 
-    $(".wish").click(function(){
-        var gid = parseInt( $(this).data("gid") );
+    $(".favorite").click(function(){
+
+        if($(this).hasClass('icons'))
+        {
+            el = $(this)
+        } else {
+            el = $(this).find('i.icons')
+        }
+
+        var gid = parseInt(el.data("gid") );
 
         if(!gid) return false;
 
-
         var dataPost = {"ID":gid};
 
-        $(this).fadeTo(10, 0.5);
 
-        $button = $(this);
-
-        function callback_add(data, textStatus)
+        if (el.hasClass('icon-heart'))
         {
-            if (!data["BASKET_OUTPUT"] || !data["RESULT"] || !data["RESULT"]["TYPE"] || !data["RESULT"]["MESS"])
-            {
-
-                tip.text('Ошибка добавления в корзину');
-
-            } else {
-                if (data["RESULT"]["TYPE"] == "OK") {
-                    if( $.trim(data["BASKET_OUTPUT"]) != "" )
-                    {
-                        $("#basket_line_block").replaceWith( data["BASKET_OUTPUT"] );
-
-                    }
-                    tip.text('Товар добавлен в корзину');
-
-                } else {
-                    tip.text(data["RESULT"]["MESS"]) ;
-                }
-            }
+             removed = "icon-heart";
+             toAdd = "icon-colored-heart";
+        }
+        else
+        {
+            removed = "icon-colored-heart";
+            toAdd = "icon-heart";
+        }
+        el.removeClass(removed);
+        el.addClass("loader");
 
 
-
-            $button.fadeTo(0, 1);
-            tip.fadeIn('100').delay('700').fadeOut('100');
-
-            window.setTimeout(function(){
-                $(".to_delete", $(this).parent()).remove();
-            }, 1500);
-        };
 
         if (gid > 0) {
             var a = $.ajax({
@@ -261,7 +249,13 @@ $.ajaxSetup({
                 url: "/products/addToFavorite/",
                 data: dataPost,
                 dataType: "json",
-                success: callback_add
+                success: function(data) {
+                     el.removeClass("loader");
+
+                     el.addClass(toAdd)
+
+
+                }
             });
         }
 

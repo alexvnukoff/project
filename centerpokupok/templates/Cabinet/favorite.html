@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+               {% block title %}{% trans "Order history" %}{% endblock %}
+{% block header %}
+{% include "header_big.html" %}
+{% endblock %}
+{% block body %}
+<div id="main">
+		<div id="sidebar">
+			{% include "main/cabinet_menu.html" %}
+		</div>
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
+				</div>
+			</div>
+        <div class="listitemcart">
+				<span class="title">{% trans "Order history" %}</span>
+				<ul id="itemcart">
+                    {% for id , order in orderList.items %}
+                        {% with order.COST|first as price %}
+                        {% with order.CURRENCY|first as currency %}
+                        {% with order.IMAGE|first as picture %}
+                        {% with order.NAME|first as name %}
+                        {% with order.QUANTITY|first as qty %}
+                        {% with order.CITY|first as city %}
+                        {% with order.COUNTRY|first as country %}
+                        {% with order.ADDRESS|first as address %}
+					<li>
+						<div class="thumb">
+							<img src="{% static picture %}" alt="{{ name }}" class="thumb" />
+						</div>
+						<div class="infoproduct">
+							<p>{{ name }}</p>
+							<p class="id">Product ID: {{ id }}</p>
+							<p>
+                              <font class="note"> {{ city }}, {{ country }}, {{ address }}</font>
+							</p>
+						</div>
+						<div class="code">
+							<p><font class="grey">Размер:</font> XS</p>
+							<p><font class="grey">Цвет:</font> красный</p>
+						</div>
+						<div class="numberoder">
+							<p><font class="grey">{% trans "Quantity" %}:</font> {{ qty }}</p>
+						</div>
+						<div class="price">{{ currency|getSymbol }} {{ price|formatPrice }}</div>
+					</li>
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+               {% endfor %}
+				</ul>
+			</div>
+             {% include "paginator.html" %}
+		</div>
+	</div>
+ {% endblock %}
