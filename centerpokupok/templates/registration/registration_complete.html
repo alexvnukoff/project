@@ -46,13 +46,11 @@
 			<div class="breadcrumbs">
 				<div xmlns="http://rdf.data-vocabulary.org/#">
 					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
-					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">{% trans "Registration" %} </a></span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="{% url 'register' %}">{% trans "Registration" %} </a></span>
 				</div>
 			</div>
 
-          <span style="font-size: 20px;"> Сообщение по e-mail Вам отправлено.
-              Пожалуйста, проверьте свою почту и
-              нажмите на полученную ссылку для активации Вашей записи.</span>
+          <span style="font-size: 20px;"> {% trans "We sent you message. Please check you email and click on the  link to activate your account. " %}</span>
 
 
 			</div>

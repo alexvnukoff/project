@@ -23,10 +23,11 @@ def home(request, country=None):
     #----NEW PRODUCT LIST -----#
     if country:
         productQuery = Product.objects.filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
+        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
     if not country:
         products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
-    else:
-        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+
+
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 

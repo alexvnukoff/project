@@ -1,13 +1,10 @@
+{% load i18n %}
+{% trans "You joined to the site" %}  {{ site.domain }}.
+{% trans "If you have received this message in error, ignore it." %}
 
-You joined to the site {{ site.domain }}.
-If you have received this message in error, ignore it.
 
-
-In order to activate your account on the site, go,
-on the following link for {{ expiration_days }} days:
+{% trans "In order to activate your account on the site, go, on the following link for " %} {{ expiration_days }}{% trans " days:" %}
 
 http://{{site.domain}}/accounts/activate/{{ activation_key }}
 
-Sincerely,
-
-Administration of ,  {{ site.domain }}
+{% trans "Sincerely, Administration of, " %}{{ site.domain }}
