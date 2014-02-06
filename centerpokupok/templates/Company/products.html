@@ -8,7 +8,7 @@
 
 {{% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/company.css" %}">
     <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
 {% endblock %}
 
@@ -102,7 +102,7 @@
 
                         </div>
                         <div class="bvote">
-                            <img src="images/stars.png" alt="" class="star">
+                            <img src="{% static "centerpokupok/images/stars.png"  %}" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
                                 <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>

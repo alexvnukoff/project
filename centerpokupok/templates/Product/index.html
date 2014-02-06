@@ -160,7 +160,7 @@
 
                         </div>
                         <div class="bvote">
-                            <img src="images/stars.png" alt="" class="star">
+                            <img src="{% static "centerpokupok/images/stars.png" %}" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
                                 <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>
@@ -253,7 +253,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="itembanner"><a href="#"><img src="{% static "images/banner.jpg" %}" alt=""></a></div>
+                <div class="itembanner"><a href="#"><img src="{% static "centerpokupok/images/banner.jpg" %}" alt=""></a></div>
                 {% include "paginator.html" %}
                 <div class="salepeople">
                     <h1>{% trans "Sellers" %}</h1>

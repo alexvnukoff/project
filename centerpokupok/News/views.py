@@ -17,7 +17,7 @@ def newsList(request, page=1):
     newsList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
     url_paginator = "news:paginator"
 
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
@@ -40,7 +40,7 @@ def newsDetail(request, item_id):
 
     newAttr =  new.getAttributeValues("NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE")
     newAttr = newAttr
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
 
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
