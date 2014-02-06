@@ -17,7 +17,7 @@ def home(request):
 #    obj = Tpp.objects.get(title="Moscow Tpp")
 #    companies = obj.getItemList()
 #    i = companies
-    return render_to_response("home.html")
+    return render_to_response("index.html")
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
