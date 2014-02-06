@@ -17,6 +17,7 @@ from django.dispatch import receiver
 from itertools import chain
 
 
+
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
 #----------------------------------------------------------------------------------------------------------
@@ -248,7 +249,7 @@ class Product(Item):
 
     @staticmethod
     def getNew(productQuery=False):
-        if not productQuery:
+        if not productQuery and not isinstance(productQuery, QuerySet):
             return Product.objects.order_by('-pk')
         else:
             return productQuery.order_by('-pk')
@@ -266,7 +267,7 @@ class Product(Item):
                                                                    prodPK=Product._meta.pk.column,
                                                                    relTable=Relationship._meta.db_table)
 
-        if not productQuery:
+        if not productQuery and not isinstance(productQuery, QuerySet):
             return Product.objects.extra(select={'popular': extra}).order_by('-popular')
         else:
             return productQuery.extra(select={'popular': extra}).order_by('-popular')
