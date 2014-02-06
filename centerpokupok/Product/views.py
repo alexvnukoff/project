@@ -218,7 +218,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     categories = func._categoryStructure(categories, prodInCat, categoriesAttr, category_root_ids)
 
     if category_id is not None:
-        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='rel', sites=settings.SITE_ID)\
+        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='relation', sites=settings.SITE_ID)\
             .order_by("-pk")
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
@@ -240,10 +240,9 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
         comment_dict[comment['c2p__parent']] = comment['num_comments']
 
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
-                                p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
-                                                                                'p2c__child__p2c__child', 'pk')
-
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="relation", pk__in=Country.objects.all(),
+                                 p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
+                                                                                 'p2c__child__p2c__child', 'pk')
     items_id = []
     for item in items:
         items_id.append(item['pk'])
@@ -313,7 +312,7 @@ def getAllNewProducts(request, page=1):
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="relation", pk__in=Country.objects.all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
     items_id =[]

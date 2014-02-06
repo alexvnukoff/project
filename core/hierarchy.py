@@ -24,12 +24,12 @@ class hierarchyManager(models.Manager):
                                                 (
                                                     SELECT *
                                                         FROM {relTable}
-                                                        WHERE child_id = i.{pkCol} AND type='hier'
+                                                        WHERE child_id = i.{pkCol} AND type='hierarchy'
                                                 ) {unionWhere}
                                         ) WHERE ROWNUM <= {limitRoot}
                             ) rel
                             INNER JOIN {itemTable} model ON (rel.CHILD_ID = model.{pkCol})
-                            WHERE rel.type='hier' OR rel.PARENT_ID is null {where}
+                            WHERE rel.type='hierarchy' OR rel.PARENT_ID is null {where}
                             CONNECT BY PRIOR  {prior}
                             START WITH {startWith}
                             {order};'''
@@ -139,7 +139,7 @@ class hierarchyManager(models.Manager):
                 Example: Item.hierarchy.getChildren(parent=1)
                 #Returns children hierarchical related to the Company with pk = 1
         '''
-        return self.model.objects.filter(c2p__parent_id=parent, c2p__type="hier")
+        return self.model.objects.filter(c2p__parent_id=parent, c2p__type="hierarchy")
 
     def getDescendantCount(self, parent):
         '''
@@ -241,7 +241,7 @@ class hierarchyManager(models.Manager):
                 Example: Department.hierarchy.getParent(child=5)
                 #Returns instance of department which is hierarchical parent of the Department=5
         '''
-        return self.model.objects.get(p2c__child_id=child, p2c__type="hier")
+        return self.model.objects.get(p2c__child_id=child, p2c__type="hierarchy")
 
     def deleteTree(self, parents):
         '''
@@ -279,10 +279,10 @@ class hierarchyManager(models.Manager):
             filter['sites'] = siteID
 
         if limit < 1:
-            return self.model.objects.filter(Q(Q(c2p__type="hier"),c2p__parent_id__isnull=True), **filter)
+            return self.model.objects.filter(Q(Q(c2p__type="hierarchy"),c2p__parent_id__isnull=True), **filter)
         else:
             return \
-                self.model.objects.filter(Q(Q(c2p__type="hier"), c2p__parent_id__isnull=True), **filter)[:limit]
+                self.model.objects.filter(Q(Q(c2p__type="hierarchy"), c2p__parent_id__isnull=True), **filter)[:limit]
 
 
 

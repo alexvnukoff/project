@@ -12,9 +12,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
-
-
-
 from django.conf import settings
 
 def home(request, country=None):
