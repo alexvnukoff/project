@@ -1,10 +1,11 @@
 __author__ = 'user'
 from core.models import Item
-from appl.models import Company, Category, Product
+from appl.models import Company, Category, Product, Comment, Cabinet, Favorite
 from django.shortcuts import render_to_response, get_object_or_404
 from appl import func
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.db.models import Count
 
 
 def storeMain(request, company, category=None):
@@ -19,7 +20,7 @@ def storeMain(request, company, category=None):
     #----NEW PRODUCT LIST -----#
     products = Product.getNew().filter(sites=settings.SITE_ID, c2p__parent_id=company).filter(**filter)[:4]
     products = [prd.pk for prd in products]
-    newProducrList = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT','DISCOUNT'),
+    newProducrList = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT', 'DISCOUNT'),
                                                       products)
 
     #----NEW PRODUCT LIST -----#
@@ -61,7 +62,8 @@ def storeMain(request, company, category=None):
     return render_to_response("Company/index.html", {'companyID': company, 'name': name, 'picture': picture,
                                                      'coupons': coupons,'productsSale': productsSale,
                                                      'newProducrList': newProducrList, 'topPoductList': topPoductList,
-                                                     'popular': popular, 'menu': 'main','store_url': 'companies:category'})
+                                                     'popular': popular, 'menu': 'main',
+                                                     'store_url': 'companies:category', 'user': request.user})
 
 def about(request, company):
     companyObj = get_object_or_404(Company, pk=company)
@@ -80,7 +82,8 @@ def about(request, company):
 
 
     return render_to_response("Company/about.html", {'companyID': company, 'name': name, 'picture': picture,
-                                                     'menu': 'about', 'detail_text': detail_text, 'popular': popular})
+                                                     'menu': 'about', 'detail_text': detail_text, 'popular': popular,
+                                                     'user': request.user})
 
 def contact(request, company):
     companyObj = get_object_or_404(Company, pk=company)
@@ -91,7 +94,7 @@ def contact(request, company):
     picture = attr['IMAGE'][0]
 
     return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'picture': picture,
-                                                       'menu': 'contact'})
+                                                       'menu': 'contact', 'user': request.user})
 
 def products(request, company, category=None, page=1):
     companyObj = get_object_or_404(Company, pk=company)
@@ -127,7 +130,23 @@ def products(request, company, category=None, page=1):
                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
     #Product list , with companies and countries
     products = result[0]
+    products_ids = [key for key, value in products.items()]
+    favorites_dict = {}
+    if request.user.is_authenticated():
+        favorites = Favorite.objects.filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
+        for favorite in favorites:
+            favorites_dict[favorite['p2c__child']] = 1
 
+
+    comments = Comment.objects.filter(c2p__parent__in=products_ids).values("c2p__parent").annotate(num_comments=Count("c2p__parent"))
+    comment_dict = {}
+    for comment in comments:
+        comment_dict[comment['c2p__parent']] = comment['num_comments']
+
+    for id, product in products.items():
+        toUpdate = {'COMMENTS': comment_dict.get(id, 0),
+                    'FAVORITE': favorites_dict.get(id, 0)}
+        product.update(toUpdate)
     #Paginator
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -144,7 +163,7 @@ def products(request, company, category=None, page=1):
                                                         'menu': 'products','store_url': 'companies:products_category',
                                                         'page': page, 'paginator_range': paginator_range,
                                                         'url_paginator': url_paginator, 'url_parameter':url_parameter,
-                                                        'popular': popular})
+                                                        'popular': popular, 'user': request.user})
 
 
 def coupons(request, company, category=None, page=1):
@@ -202,4 +221,4 @@ def coupons(request, company, category=None, page=1):
                                                        'store_url': 'companies:coupons_category', 'page': page,
                                                        'paginator_range': paginator_range, 'url_paginator':url_paginator,
                                                        'url_parameter': url_parameter, 'coupons': coupons,
-                                                       'popular': popular})
+                                                       'popular': popular, 'user': request.user})

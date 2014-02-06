@@ -212,4 +212,55 @@ $.ajaxSetup({
     }
 });
 
+    $(".favorite").click(function(){
+
+        if($(this).hasClass('icons'))
+        {
+            el = $(this)
+        } else {
+            el = $(this).find('i.icons')
+        }
+
+        var gid = parseInt(el.data("gid") );
+
+        if(!gid) return false;
+
+        var dataPost = {"ID":gid};
+
+
+        if (el.hasClass('icon-heart'))
+        {
+             removed = "icon-heart";
+             toAdd = "icon-colored-heart";
+        }
+        else
+        {
+            removed = "icon-colored-heart";
+            toAdd = "icon-heart";
+        }
+        el.removeClass(removed);
+        el.addClass("loader");
+
+
+
+        if (gid > 0) {
+            var a = $.ajax({
+                type: "POST",
+                url: "/products/addToFavorite/",
+                data: dataPost,
+                dataType: "json",
+                success: function(data) {
+                     el.removeClass("loader");
+
+                     el.addClass(toAdd)
+
+
+                }
+            });
+        }
+
+        return false;
+    });
+
+
 })

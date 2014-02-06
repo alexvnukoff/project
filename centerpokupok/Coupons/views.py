@@ -47,7 +47,7 @@ def couponsList(request, currentCat = None, page=1, country=None):
 
     if country:
         companies = Company.objects.filter(c2p__parent_id=country)
-        couponsObj = Product.filter(c2p__parent__in=companies)
+        couponsObj = Product.objects.filter(c2p__parent__in=companies)
 
     if expire is not None:
         expire = int(expire)
@@ -129,6 +129,9 @@ def couponsList(request, currentCat = None, page=1, country=None):
         url_country = 'coupons:category_country'
         url_country_parametr = [currentCat]
 
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+
     return render_to_response("Coupons/index.html", {'coupons': coupons, 'paginator_range': paginator_range,
                                                      'categories': categories, 'currentCat': currentCatName,
                                                      'breadCrumbs': breadCrumbs, 'nameSpace': 'coupons:category',
@@ -137,5 +140,5 @@ def couponsList(request, currentCat = None, page=1, country=None):
                                                      'url_country': url_country,
                                                      'url_country_parametr':url_country_parametr,
                                                      'category_url': category_url,
-                                                     'category_parameters':category_parameters},
+                                                     'category_parameters': category_parameters, 'flagList': flagList},
                                                      context_instance=RequestContext(request))

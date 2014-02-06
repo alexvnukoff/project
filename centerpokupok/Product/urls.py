@@ -20,6 +20,8 @@ urlpatterns = patterns('',
      url(r'^country/(?P<country>[0-9]+)/category/(?P<category_id>[0-9]+)/page/(?P<page>[0-9]+)/$', centerpokupok.Product.views.getCategoryProduct, name="category_country_paginator"),
      url(r'^category/(?P<category_id>[0-9]+)/page/(?P<page>[0-9]+)/$', centerpokupok.Product.views.getCategoryProduct, name="cat_pagination"),
      url(r'^order/step/(1|2|3)/$', centerpokupok.Product.views.orderProduct, name="order"),
+     url(r'^addToFavorite/$', centerpokupok.Product.views.addFavorite, name="favorite"),
+
 
 
     # url(r'^blog/', include('blog.urls')),

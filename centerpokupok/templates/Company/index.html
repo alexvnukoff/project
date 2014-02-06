@@ -6,8 +6,8 @@
 
 {% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/company.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/company.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
 
     <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
 {% endblock %}
@@ -15,7 +15,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#slider').anythingSlider({hashTags: false});
@@ -65,7 +65,7 @@
                         <ul>
                             <li>
                                 <div class="discount"><i class="icons i-after"></i> спеццена</div>
-                                <a href="#"><img alt="" src="{% static "images/products/pr8.jpg" %}"></a>
+                                <a href="#"><img alt="" src="{% static "centerpokupok/images/products/pr8.jpg" %}"></a>
                                 <div class="coupon-info">
                                     <p><a href="#">Распродажа</a></p>
                                     <p>осенней коллекции</p>
@@ -86,11 +86,11 @@
             <div id="main-r">
                 <div id="slide-var">
                     <ul id="slideimage">
-                        <li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
-                        <li><a href="#"><img src="{%  static "images/article/slide2.jpg" %}" alt="" /></a></li>
-                        <li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
-                        <li><a href="#"><img src="{%  static "images/article/slide2.jpg" %}" alt="" /></a></li>
-                        <li><a href="#"><img src="{%  static "images/article/slide1.jpg" %}" alt="" /></a></li>
+                        <li><a href="#"><img src="{%  static "centerpokupok/images/article/slide1.jpg" %}" alt="" /></a></li>
+                        <li><a href="#"><img src="{%  static "centerpokupok/images/article/slide2.jpg" %}" alt="" /></a></li>
+                        <li><a href="#"><img src="{%  static "centerpokupok/images/article/slide1.jpg" %}" alt="" /></a></li>
+                        <li><a href="#"><img src="{%  static "centerpokupok/images/article/slide2.jpg" %}" alt="" /></a></li>
+                        <li><a href="#"><img src="{%  static "centerpokupok/images/article/slide1.jpg" %}" alt="" /></a></li>
                     </ul>
                 </div>
                 {% if coupons %}
@@ -153,7 +153,7 @@
 
                             <li>
                                 <div class="thumb">
-                                    <a href="#"><img alt="" src="{% static "images/products/pr6.jpg" %}"></a>
+                                    <a href="#"><img alt="" src="{% static "centerpokupok/images/products/pr6.jpg" %}"></a>
                                     <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
                                 </div>
                                 <div class="discountinfo">

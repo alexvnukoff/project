@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order
+from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order, Favorite
 from core.models import Value, Item, Attribute, Dictionary, Relationship, Slot
 from appl import func
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.db.models import Q, F
+from django.db.models import Q, F, Count
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -17,6 +17,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
 from centerpokupok.forms import OrderForm
 from django.db import transaction
+import json
 
 def productDetail(request, item_id, page=1):
     if request.POST.get('subCom', False):
@@ -87,6 +88,12 @@ def productDetail(request, item_id, page=1):
     url_paginator = "products:paginator"
     url_parameter = [item_id]
     store_url = 'companies:products_category'
+
+    if request.user.is_authenticated():
+        try:
+            favorite = Favorite.objects.get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
+        except ObjectDoesNotExist:
+            favorite = 0
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
@@ -216,9 +223,22 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+
     #Product list , with companies and countries
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
+    favorites_dict = {}
+    if request.user.is_authenticated():
+        favorites = Favorite.objects.filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
+        for favorite in favorites:
+            favorites_dict[favorite['p2c__child']] = 1
+
+
+    comments = Comment.objects.filter(c2p__parent__in=products_ids).values("c2p__parent").annotate(num_comments=Count("c2p__parent"))
+    comment_dict = {}
+    for comment in comments:
+        comment_dict[comment['c2p__parent']] = comment['num_comments']
+
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
     items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="relation", pk__in=Country.objects.all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
@@ -228,31 +248,23 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
         items_id.append(item['pk'])
         items_id.append(item['p2c__child_id'])
 
+
     items_id = set(items_id)
     itemsWithAttribute = Item.getItemsAttributesValues(("NAME", "IMAGE"), items_id)
     companyList = {}
 
-    for item in items: #TODO: Jenya maybe it's possible to do it more beautifoul
-        products_list[item['p2c__child__p2c__child']].update({
-            'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']
-        })
+    for item in items:
+        toUpdate = {'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME'],
+                    'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE'],
+                    'COMPANY_ID': item['p2c__child_id'],
+                    'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME'],
+                    'COUNTRY_ID': item['pk'],
+                    'COMMENTS': comment_dict.get(item['p2c__child__p2c__child'], 0),
+                    'FAVORITE': favorites_dict.get(item['p2c__child__p2c__child'], 0)}
+        products_list[item['p2c__child__p2c__child']].update(toUpdate)
 
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_ID': item['p2c__child_id']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_ID': item['pk']
-            })
+
+
 
 
 
@@ -287,7 +299,8 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
                                                      'breadCrumbs': breadCrumbs, 'category_url': category_url,
                                                      'flagList': flagList, 'url_country': url_country,
                                                      'url_country_parametr': url_country_parametr,
-                                                     'category_parameters': category_parameters, 'country': country})
+                                                     'category_parameters': category_parameters, 'country': country,
+                                                     'user': request.user})
 
 
 def getAllNewProducts(request, page=1):
@@ -344,7 +357,7 @@ def getAllNewProducts(request, page=1):
     return render_to_response("Product/new.html", {'products_list': products_list, 'page': page,
                                                    'paginator_range':paginator_range, 'url_paginator': url_paginator,
                                                    'categotySelect': categotySelect, 'countryList': countryList,
-                                                   'flagList': flagList})
+                                                   'flagList': flagList, 'user': request.user})
 
 
 
@@ -367,7 +380,6 @@ def _getComment(parent_id, page):
     return commentsList, paginator_range, page
 
 @transaction.atomic
-
 def orderProduct(request, step=1):
 #------ Order of products in threee step ----#
     if not request.user.is_authenticated():
@@ -501,6 +513,32 @@ def _getRealCost(productValues):
 
      return  totalCost
 
+@transaction.atomic
+@ensure_csrf_cookie
+def addFavorite(request):
+    if request.is_ajax():
+        result = {"RESULT": {"TYPE": "ERROR", "MESS": "ERROR"}}
+        product_id = int(request.POST.get('ID'))
+        user = request.user
+        try:
+            favProduct = Favorite.objects.get(p2c__child_id=product_id, c2p__parent__cabinet__user=user)
+            favProduct.delete()
+            result = {"RESULT": {"TYPE": "OK", "MESS": "DELETE"}}
+        except ObjectDoesNotExist:
+            with transaction.atomic():
+                favProduct = Favorite(create_user=user)
+                favProduct.save()
+                cabinet = get_object_or_404(Cabinet, user=user)
+                product = get_object_or_404(Product, pk=product_id)
+                Relationship.setRelRelationship(favProduct, product, user)
+                Relationship.setRelRelationship(cabinet, favProduct, user)
+                result = {"RESULT": {"TYPE": "OK", "MESS": "ADD"}}
+
+
+
+        return HttpResponse(json.dumps(result))
+    else:
+        raise Http404
 
 
 

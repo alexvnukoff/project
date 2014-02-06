@@ -10,7 +10,14 @@
 
           $("#items_table").load(link);
 
+
         }
+        $(document).ajaxStart(function( event, xhr, settings ){
+         $("#load").show();
+        });
+        $(document).ajaxComplete(function( event, xhr, settings ){
+         $("#load").hide();
+        });
         $(document).ready(function(){
             items(1);
         });
@@ -20,7 +27,9 @@
 </head>
 <body>
 <a href="create/">Create</a>
+
 <div id="items_table"></div>
+<div id ='load'><img src="{% static "images/loading.gif" %}"></div>
 
 
 
