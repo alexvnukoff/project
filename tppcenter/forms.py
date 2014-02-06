@@ -304,7 +304,7 @@ class BasePhotoGallery(BaseModelFormSet):
         item = Item.objects.get(pk=parent)
 
         for instance in instances:
-            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='rel'))
+            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
         if bulkInsert:
             try:
                Relationship.objects.bulk_create(bulkInsert)
