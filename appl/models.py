@@ -4,7 +4,7 @@ from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
-from core.models import User
+from core.models import User, ItemManager
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,7 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from itertools import chain
+
 
 
 
@@ -52,6 +53,8 @@ def createItemSlug(string):
     return slugify(string)
 
 class Organization (Item):
+    active = ItemManager()
+    objects = models.Manager()
 
     def addWorker(self, user):
         '''
@@ -69,6 +72,8 @@ class Organization (Item):
 
 
 class Tpp(Organization):
+    active = ItemManager()
+    objects = models.Manager()
 
     class Meta:
         permissions = (
@@ -89,7 +94,7 @@ class Company(Organization):
         permissions = (
             ("read_company", "Can read Company"),
         )
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -133,6 +138,7 @@ class Company(Organization):
 
 class Department(Organization):
 
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -153,6 +159,7 @@ class Department(Organization):
 
 class Country(Item):
 
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -161,7 +168,7 @@ class Country(Item):
 
 
 class Comment(Item):
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -189,7 +196,7 @@ class Comment(Item):
         return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="relation")
 
 class Category(Item):
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -198,6 +205,9 @@ class Category(Item):
         return self.title
 
 class Product(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -211,7 +221,7 @@ class Product(Item):
             return querySet.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
+            return Product.active.get_active_related().filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
 
     @staticmethod
@@ -244,13 +254,13 @@ class Product(Item):
             return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return Product.active.get_active_related().filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
     @staticmethod
     def getNew(productQuery=False):
         if not productQuery and not isinstance(productQuery, QuerySet):
-            return Product.objects.order_by('-pk')
+            return Product.active.get_active_related().order_by('-pk')
         else:
             return productQuery.order_by('-pk')
 
@@ -268,26 +278,46 @@ class Product(Item):
                                                                    relTable=Relationship._meta.db_table)
 
         if not productQuery and not isinstance(productQuery, QuerySet):
-            return Product.objects.extra(select={'popular': extra}).order_by('-popular')
+            return Product.active.get_active_related().extra(select={'popular': extra}).order_by('-popular')
         else:
             return productQuery.extra(select={'popular': extra}).order_by('-popular')
 
 class License(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
+class Greeting(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
 class Service(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
 
 class Favorite(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 class Invoice(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -295,11 +325,17 @@ class Invoice(Item):
 
 class News(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 
 class Article(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -307,11 +343,17 @@ class Article(Item):
 
 class Announce(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 
 class Review(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -319,11 +361,17 @@ class Review(Item):
 
 class Rating(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Payment(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
@@ -331,11 +379,17 @@ class Payment(Item):
 
 class Shipment(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Tender(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
@@ -343,16 +397,25 @@ class Tender(Item):
 
 class Advertising(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Rate(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 class Order(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
 
     def __str__(self):
@@ -360,6 +423,8 @@ class Order(Item):
 
 
 class Basket(Item):
+    active = ItemManager()
+    objects = models.Manager()
     class Meta:
         permissions = (
             ("read_basket", "Can read basket"),
@@ -370,6 +435,8 @@ class Basket(Item):
 
 
 class Cabinet(Item):
+    active = ItemManager()
+    objects = models.Manager()
     user = models.ForeignKey(User, related_name="cabinet")
 
     def __str__(self):
@@ -377,12 +444,16 @@ class Cabinet(Item):
 
 
 class Document(Item):
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
 
 
 class Gallery(Item):
+      active = ItemManager()
+      objects = models.Manager()
       photo = models.ImageField(verbose_name='Avatar',  upload_to='gallery/', blank=True, null=True)
 
       def __str__(self):

@@ -66,9 +66,9 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
         raise ValueError("Wrong object type")
 
     if site:
-        items = clsObj.objects.filter(sites__id=settings.SITE_ID)
+        items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)
     else:
-        items = clsObj.objects.all()
+        items = clsObj.active.get_active().all()
 
     paginator = Paginator(items, 10)
     try:
@@ -95,9 +95,10 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
         raise ValueError("Wrong object type")
 
     if site:
-        items = clsObj.objects.filter(sites__id=settings.SITE_ID)[:qty]
+
+        items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)[:qty]
     else:
-        items = clsObj.objects.all()[:qty]
+        items = clsObj.active.get_active().all()[:qty]
 
 
     items = tuple([item.pk for item in items])
@@ -130,7 +131,7 @@ def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be ca
     if order != "ASC":
         case = '-' + case
 
-    return clsObj.objects.filter(item2value__attr__title=attribute).extra(order_by=[case])
+    return clsObj.active.get_active().filter(item2value__attr__title=attribute).extra(order_by=[case])
 
 def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
     '''
