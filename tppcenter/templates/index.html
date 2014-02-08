@@ -55,31 +55,28 @@
             	<span class="title">Международные сообщества</span>
                 <div class="slide-comm">
                     <ul class="bxslider">
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif" %} " alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag2.gif" %} " alt="" /></a>
-                            <a href="#" class="items"><img src="{%  static "tppcenter/img/flag3.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif" %}" alt="" /></a>
-                        </li>
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif"%} " alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag2.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag3.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif" %}" alt="" /></a>
-                        </li>
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag2.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag3.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag1.gif" %}" alt="" /></a>
-                        </li>
+                        {% for id,attr in organizationsList.items %}
+                            {% with attr.NAME|first as name %}
+                            {% with attr.FLAG|first as flag %}
+                                 {% if forloop.counter|divisibleby:"4" or forloop.counter0 == 0 %}
+                                    <li>
+                                 {% endif %}
+                                 <a href="#" class="items"><img src="{% static flag %}" alt="" /></a>
+                            	 {% if forloop.counter|divisibleby:"4" %}
+                                    </li>
+                                 {% endif %}
+                             {% endwith %}
+                             {% endwith %}
+                        {% endfor %}
+
+
                     </ul>
                 </div>
             </div>
             <ul class="services">
             	<li>
                     <div class="imgmain imgservice sv1"></div>
-                    <div class="nameservice"><a href="#">Товары иуслуги</a></div>
+                    <div class="nameservice"><a href="#">Товары и услуги</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv2"></div>
@@ -112,64 +109,23 @@
             	<span class="title">Страны-участники (более 25 стран)</span>
                 <div class="slide-comm">
                 	<ul class="bxslider">
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
+                      {% for id,attr in countriesList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.FLAG|first as flag %}
+                           {% if forloop.counter|divisibleby:"25" or forloop.counter0 == 0 %}
+                                <li>
+                            {% endif %}
+                            	<a href="#" class="items"><img src="{% static flag %}" alt="{{ name }}" /></a>
+                             {% if forloop.counter|divisibleby:"25" %}
+                                </li>
+                            {% endif %}
 
-                        </li>
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                        </li>
-                        <li>
-                        	<a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag6.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag4.gif" %}" alt="" /></a>
-                            <a href="#" class="items"><img src="{% static "tppcenter/img/flag5.gif" %}" alt="" /></a>
-                        </li>
+
+                        {% endwith %}
+                       {% endwith %}
+                      {% endfor %}
+
+
                     </ul>
                 </div>
             </div>
@@ -243,27 +199,27 @@
             <div class="content-l">
             	<span class="best-title">Лучшие предложения</span>
                 <ul class="pr-best-price">
-                	<li>
-                    	<a href="#"><img src="img/prd/img1.jpg" alt="" class="thumb" /></a>
-                        <div class="location">
-                        	<img src="img/flag1.gif" width="18" height="12" class="flag" />
-                            <a href="#">Босоножки Mango на высоком каблуке, полосатые, все разм..</a>
-                        </div>
-                    </li>
+                	{% for id,attr in productsList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.COUNTRY_ID|first as country_id %}
+                        {% with attr.COUNTRY_NAME|first as country_name %}
+                        {% with attr.COUNTRY_FLAG|first as flag %}
                     <li>
-                    	<a href="#"><img src="img/prd/img2.jpg" alt="" class="thumb" /></a>
+                    	<a href="#"><div class="thumb"> <img src="{% static picture %}" alt="{{ name }}" /></div></a>
                         <div class="location">
-                        	<img src="img/flag2.gif" width="18" height="12" class="flag" />
-                            <a href="#">Рюкзак NIKE CLASSIC TURF BP, Nike</a>
+
+                        	<img src="{% static flag %}" alt="{{ country_name }}" width="18" height="12" class="flag" />
+                            <a href="#">{{ name }}</a>
                         </div>
                     </li>
-                    <li>
-                    	<a href="#"><img src="img/prd/img3.jpg" alt="" class="thumb" /></a>
-                        <div class="location">
-                        	<img src="img/flag3.gif" width="18" height="12" class="flag" />
-                            <a href="#">Наручные часы WeiQin для женщин</a>
-                        </div>
-                    </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                    {% endfor %}
+
                 </ul>
                 <div class="review">
                 	<div class="review-l">
@@ -305,36 +261,32 @@
                     <div class="review-l review-r">
                     	<h3>Бизнес-предложения</h3>
                         <ul class="listcm">
+                      {% for id,attr in serviceList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.COUNTRY_ID as country_id %}
+                        {% with attr.COUNTRY_NAME|first as country_name %}
+                        {% with attr.COUNTRY_FLAG|first as flag %}
+                        {% with attr.COMPANY_NAME|first as company_name %}
+                        {% with attr.COMPANY_ID as company_id %}
+
                         	<li>
                             	<div class="topcm">
-                                	<img src="img/flag1.gif" width="18" height="12" class="flag" />
+                                	<img src="{% static flag %}" width="18" height="12" class="flag" />
                                     <div class="date">
-                                        <p><b>Узбекистан, Ташкент</b></p>
-                                        <p>ООО “АндорЪ”</p>
+                                        <p><b>{{ country_name }}</b></p>
+                                        <p>{{ company_name }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="#">Финансовый консалтинг (полный спектр услуг)</a></p>
+                                <p class="linkcm"><a href="#">{{ name }}</a></p>
                             </li>
-                            <li>
-                            	<div class="topcm">
-                                	<img src="img/flag2.gif" width="18" height="12" class="flag" />
-                                    <div class="date">
-                                        <p><b>Россия, Брянск</b></p>
-                                        <p>ООО “Альфа-газ”</p>
-                                    </div>
-                                </div>
-                                <p class="linkcm"><a href="#">Строительство котельных</a></p>
-                            </li>
-                            <li>
-                            	<div class="topcm">
-                                	<img src="img/flag3.gif" width="18" height="12" class="flag" />
-                                    <div class="date">
-                                        <p><b>Россия, Новосибирск</b></p>
-                                        <p>Иванов Владимир</p>
-                                    </div>
-                                </div>
-                                <p class="linkcm"><a href="#">Комплекс услуг по автосервису и тюнингу автомобилей</a></p>
-                            </li>
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+
                         </ul>
                         <a href="#" class="btnview">Все бизнес-предложения &rarr;</a>
                     </div>
@@ -365,192 +317,36 @@
     	<span class="title">Приветствия</span>
         <div class="people-slide">
         	<ul class="greetings">
-                <li>
+               {% for id,attr in greetingsList.items %}
+                  {% with attr.IMAGE|first as image %}
+                  {% with attr.TPP|first as tpp %}
+                  {% with attr.AUTHOR_NAME|first as name %}
+                  {% with attr.POSITION|first as position %}
+                  {% if forloop.counter|divisibleby:"7" or forloop.counter0 == 0 %}
+                          <li>
+                   {% endif %}
+
+
                     <div class="items">
                     	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
+                        	<div class="textin">{{ tpp }}</div>
                         </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
+                    	<a href="#"><img src="{% static image %}" alt="{{ name }}" class="avatar" /></a>
                         <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
+                        	<a href="#">{{ name }}</a>
+                            {{ position }}
                         </div>
                     </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Фундация адвокатов Украины</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p2.jpg"%}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Сергей Сергеевич Веприцкий</a>
-                            Председатель
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт - Центр</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p3.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Ген. директор
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Деловой центр СНГ-Беларусь</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p4.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Валерий Коваленко</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт </div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p3.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Фундация адвокатов Украины</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p2.jpg"%}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Сергей Сергеевич Веприцкий</a>
-                            Председатель
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт - Центр</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p3.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Ген. директор
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Деловой центр СНГ-Беларусь</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p4.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Валерий Коваленко</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт </div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p4.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Президент
-                        </div>
-                    </div>
-                   <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Фундация адвокатов Украины</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p2.jpg"%}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Сергей Сергеевич Веприцкий</a>
-                            Председатель
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт - Центр</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p3.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Ген. директор
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Деловой центр СНГ-Беларусь</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p4.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Валерий Коваленко</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">Эксперт </div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p3.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Мигиров Валерий Александрович</a>
-                            Президент
-                        </div>
-                    </div>
-                    <div class="items">
-                    	<div class="bgtitle">
-                        	<div class="textin">УСПП</div>
-                        </div>
-                    	<a href="#"><img src="{% static "tppcenter/img/p1.jpg" %}" alt="" class="avatar" /></a>
-                        <div class="name">
-                        	<a href="#">Анатолий Кинах</a>
-                            Президент
-                        </div>
-                    </div>
-                </li>
+
+                  {% if forloop.counter|divisibleby:"6" %}
+                       </li>
+                  {% endif %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+               {% endfor %}
+
             </ul>
         </div>
     </div>
