@@ -53,7 +53,7 @@ def newsDetail(request, item_id):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
-    products = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:2]
+    products = Product.active.get_active_related().filter(sites=settings.SITE_ID).order_by("-pk")[:2]
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE"))
 
     return render_to_response("News/detail.html", locals())
