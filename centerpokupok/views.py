@@ -19,7 +19,7 @@ def home(request, country=None):
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
     if country:
-        productQuery = Product.objects.filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
+        productQuery = Product.active.get_active_related().filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
         products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
     if not country:
         products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]

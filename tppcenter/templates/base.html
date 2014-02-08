@@ -1,0 +1,79 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {% block head %}
+            {% block  meta%}
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                {% load i18n %}
+            {% endblock %}
+        <title>{% block title %}{% endblock %}</title>
+ {% block styles %}
+            <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
+            <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
+            <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}" />
+
+            <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
+ {% endblock %}
+{% block js %}
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="{% static "tppcenter/js/jquery-1.10.2.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
+        <script type="text/javascript" src="{% static "tppcenter/js/jquery.anythingslider.js"%}"></script>
+  {% endblock %}
+
+
+ {% endblock %}
+</head>
+
+<body>
+    {% block header %}
+
+    {% endblock %}
+
+    {% block body %}
+    {% endblock %}
+
+
+{% block footer %}
+    <div class="wrapper">
+        <div class="linkbottom">
+            <ul class="clumn">
+                <li>О проекте</li>
+                <li><a href="#">О проекте</a></li>
+                <li><a href="#">Как работает система</a></li>
+                <li><a href="#">Правила пользования</a></li>
+                <li><a href="#">Конфеденциальность</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>О проекте</li>
+                <li><a href="#">Создать интернет-магазин</a></li>
+                <li><a href="#">Разместить анонс мероприятия</a></li>
+                <li><a href="#">Добавить бизнес-предложение</a></li>
+                <li><a href="#">Найти бизнес-партнеров</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>О проекте</li>
+                <li><a href="#">Связаться с нами</a></li>
+                <li><a href="#">Спросить у сообщества</a></li>
+                <li><a href="#">Частозадаваемые вопросы</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>
+                    <a href="#"><i class="imgmain iconsocial i-blog"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-face"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-tweet"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-video"></i></a>
+                </li>
+                <li><a href="#"><i class="icons i-stastic"></i>Статистика посещаемости</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="wrapper">
+            © 2010–2014 ТПП-Центр — центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.
+        </div>
+    </div>
+ {% endblock %}
+</body>
+</html>

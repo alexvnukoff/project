@@ -33,12 +33,12 @@ def productDetail(request, item_id, page=1):
     productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
 
     category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
-    sameProducts = Product.objects.filter(c2p__parent_id__in=category).exclude(pk=item_id)
+    sameProducts = Product.active.get_active_related().filter(c2p__parent_id__in=category).exclude(pk=item_id)
     product_id = [prod.id for prod in sameProducts]
     sameProducts = Item.getItemsAttributesValues(("NAME", "IMAGE", "CURRENCY", "COST"), product_id)
 
     try:
-        company = Company.objects.get(p2c__child_id=item_id)
+        company = Company.active.get_active_related().get(p2c__child_id=item_id)
         storeCategories = company.getStoreCategories()
 
 
@@ -55,7 +55,7 @@ def productDetail(request, item_id, page=1):
     #----------- Popular Products ----------------#
 
 
-    popular = Product.getTopSales(Product.objects.all())[:4]
+    popular = Product.getTopSales(Product.active.get_active_related())[:4]
     product_id = [product.pk for product in popular]
     popular = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'DISCOUNT',
                                                          'COUPON_DISCOUNT'), product_id)
@@ -91,7 +91,7 @@ def productDetail(request, item_id, page=1):
 
     if request.user.is_authenticated():
         try:
-            favorite = Favorite.objects.get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
+            favorite = Favorite.active.get_active_related().get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
         except ObjectDoesNotExist:
             favorite = 0
 
@@ -180,9 +180,9 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
 
     #Products filtered by site
     if country is None:
-        products = Product.objects.filter(sites=settings.SITE_ID)
+        products = Product.active.get_active_related().filter(sites=settings.SITE_ID)
     else:
-        products = Product.objects.filter(sites=settings.SITE_ID).filter(c2p__parent_id__in=Company.objects.filter(c2p__parent_id=country))
+        products = Product.active.get_active_related().filter(sites=settings.SITE_ID).filter(c2p__parent_id__in=Company.objects.filter(c2p__parent_id=country))
 
 
 
@@ -229,7 +229,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     products_ids = [key for key, value in products_list.items()]
     favorites_dict = {}
     if request.user.is_authenticated():
-        favorites = Favorite.objects.filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
+        favorites = Favorite.active.get_active_related().filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
         for favorite in favorites:
             favorites_dict[favorite['p2c__child']] = 1
 
@@ -239,8 +239,8 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     for comment in comments:
         comment_dict[comment['c2p__parent']] = comment['num_comments']
 
-    companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="relation", pk__in=Country.objects.all(),
+    companies = Company.active.get_active_related().filter(p2c__child_id__in=products_ids)
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="dependence", pk__in=Country.active.get_active().all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
     items_id = []
@@ -312,7 +312,7 @@ def getAllNewProducts(request, page=1):
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="relation", pk__in=Country.objects.all(),
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="dependence", pk__in=Country.objects.all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
     items_id =[]
@@ -531,7 +531,7 @@ def addFavorite(request):
                 cabinet = get_object_or_404(Cabinet, user=user)
                 product = get_object_or_404(Product, pk=product_id)
                 Relationship.setRelRelationship(favProduct, product, user)
-                Relationship.setRelRelationship(cabinet, favProduct, user)
+                Relationship.setRelRelationship(cabinet, favProduct, user, type='dependence')
                 result = {"RESULT": {"TYPE": "OK", "MESS": "ADD"}}
 
 

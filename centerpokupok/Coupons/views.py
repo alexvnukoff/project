@@ -46,8 +46,8 @@ def couponsList(request, currentCat = None, page=1, country=None):
     couponsObj = Product.getCoupons()
 
     if country:
-        companies = Company.objects.filter(c2p__parent_id=country)
-        couponsObj = Product.objects.filter(c2p__parent__in=companies)
+        companies = Company.active.get_active_related().filter(c2p__parent_id=country)
+        couponsObj = Product.active.get_active_related().filter(c2p__parent__in=companies)
 
     if expire is not None:
         expire = int(expire)

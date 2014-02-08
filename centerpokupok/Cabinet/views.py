@@ -154,8 +154,8 @@ def get_favorite(request, page=1):
     user = request.user
     curr_url = "favorite"
     cabinet = Cabinet.objects.filter(user=user)
-    favorites = Favorite.objects.filter(c2p__parent=cabinet).order_by('-create_date')
-    products = Product.objects.filter(c2p__parent__c2p__parent=cabinet, c2p__parent=favorites).order_by("-c2p__parent__create_date")
+    favorites = Favorite.active.get_active_related().filter(c2p__parent=cabinet).order_by('-create_date')
+    products = Product.active.get_active_related().filter(c2p__parent__c2p__parent=cabinet, c2p__parent=favorites).order_by("-c2p__parent__create_date")
 
     attr = ("IMAGE", 'NAME', 'CURRENCY', 'COST', 'COUPON_DISCOUNT', 'DISCOUNT')
 

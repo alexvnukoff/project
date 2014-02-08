@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+        {% block title %}Tppcenter{% endblock %}
+
+        {% block js %}
+             {{  block.super }}
+            <script type="text/javascript">
+                $(document).ready(function(){
+                  $('.bxslider').bxSlider();
+                  $('.homeslide').bxSlider({
+                        pager: true,
+                        controls: false,
+                        auto: true
+                  });
+                  $('.greetings').bxSlider();
+                   });
+            </script>
+        {% endblock %}
+
+
+    {% block header %}
+        {% include "main_header.html" %}
+    {% endblock %}
+
+{% block body %}
+<div class="wrapper">
+	<a href="#"><i class="imgmain" id="logo"></i></a>
+    <div id="search">
+        <div class="styled-select">
+            <select name="select">
+              <option value="1">–  Страна</option>
+              <option value="2">–  Страна</option>
+            </select>
+        </div>
+        <div class="styled-select">
+            <select name="select">
+              <option value="1">–  Категория/отрасль</option>
+              <option value="2">–  Страна</option>
+            </select>
+        </div>
+        <div class="styled-select">
+            <select name="select">
+              <option value="1">–  Раздел</option>
+              <option value="2">–  Страна</option>
+            </select>
+        </div>
+        <input type="text" class="inputsearch" placeholder="Поиск по сайту" />
+        <a href="#" class="btns"><i class="i-search icons"></i>Найти</a>
+    </div>
+    <div class="main">
+    	<div class="sideleft">
+        	<div class="community">
+            	<span class="title">Международные сообщества</span>
+                <div class="slide-comm">
+                    <ul class="bxslider">
+                        {% for id,attr in organizationsList.items %}
+                            {% with attr.NAME|first as name %}
+                            {% with attr.FLAG|first as flag %}
+                                 {% if forloop.counter|divisibleby:"4" or forloop.counter0 == 0 %}
+                                    <li>
+                                 {% endif %}
+                                 <a href="#" class="items"><img src="{% static flag %}" alt="" /></a>
+                            	 {% if forloop.counter|divisibleby:"4" %}
+                                    </li>
+                                 {% endif %}
+                             {% endwith %}
+                             {% endwith %}
+                        {% endfor %}
+
+
+                    </ul>
+                </div>
+            </div>
+            <ul class="services">
+            	<li>
+                    <div class="imgmain imgservice sv1"></div>
+                    <div class="nameservice"><a href="#">Товары и услуги</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv2"></div>
+                    <div class="nameservice"><a href="#">Участники</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv3"></div>
+                    <div class="nameservice"><a href="#">Партнеры</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv4"></div>
+                    <div class="nameservice"><a href="#">Тендеры</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv5"></div>
+                    <div class="nameservice"><a href="#">Инновационные проекты</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv6"></div>
+                    <div class="nameservice"><a href="#">Вакансии</a></div>
+                </li>
+                <li>
+                    <div class="imgmain imgservice sv7"></div>
+                    <div class="nameservice"><a href="#">Новости</a></div>
+                </li>
+            </ul>
+        </div>
+        <div class="mainright">
+        	<div class="community">
+            	<span class="title">Страны-участники (более 25 стран)</span>
+                <div class="slide-comm">
+                	<ul class="bxslider">
+                      {% for id,attr in countriesList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.FLAG|first as flag %}
+                           {% if forloop.counter|divisibleby:"25" or forloop.counter0 == 0 %}
+                                <li>
+                            {% endif %}
+                            	<a href="#" class="items"><img src="{% static flag %}" alt="{{ name }}" /></a>
+                             {% if forloop.counter|divisibleby:"25" %}
+                                </li>
+                            {% endif %}
+
+
+                        {% endwith %}
+                       {% endwith %}
+                      {% endfor %}
+
+
+                    </ul>
+                </div>
+            </div>
+            <div class="homeslider">
+            	<ul class="homeslide">
+                    <li>
+                       <div class="slide1">
+                       		<div class="desc">
+                            	<h2>Зарегистрируйтесь на портале –</h2>
+                                <span class="text">и получите доступ  к портфелю инструментов  для ведения бизнеса</span>
+                            </div>
+                       </div>
+                    </li>
+                    <li>
+                       <div class="slide2">
+                       		<div class="desc">
+                            	<h2>Регистрация</h2>
+                                <h3>на портале позволит Вам</h3>
+                                <ul class="list">
+                                	<li>вести бизнес от лица компании  (B2B, B2C)</li>
+                                    <li>покупать товары как частному лицу (B2C)</li>
+                                    <li>привлечь внимание к своим проектам (BANKIP)</li>
+                                </ul>
+                            </div>
+                       </div>
+                    </li>
+                    <li>
+                       <div class="slide3">
+                       		<div class="desc">
+                            	<h2>Зарегистрируйтесь</h2>
+                                <h3>на сайте, и Вы сможете</h3>
+                                <ul class="list">
+                                	<li>создать свой интернет-магазин</li>
+                                    <li>представлять свои товары и услуги</li>
+                                    <li>общаться с потенциальными клиентами</li>
+                                </ul>
+                            </div>
+                       </div>
+                    </li>
+                    <li>
+                       <div class="slide4">
+                       		<div class="desc">
+                            	<h2>Зарегистрированные</h2>
+                                <h3>пользователи портала могут</h3>
+                                <ul class="list">
+                                	<li>создавать собственные сайты</li>
+                                    <li>выставлять рекламу на портале</li>
+                                    <li>создавать свои сообщества по интересам</li>
+                                </ul>
+                            </div>
+                       </div>
+                    </li>
+                </ul>
+                <div class="register">
+                	<div class="title">
+                    	<p><b>Зарегистрируйтесь</b></p>
+                        прямо сейчас
+                    </div>
+                    <ul class="formregister">
+                    	<li><input type="text" name="" class="text" placeholder="E-mail" /></li>
+                        <li><input type="text" name="" class="text" placeholder="Пароль" /></li>
+                        <li><input type="text" name="" class="text" placeholder="Повторите пароль" /></li>
+                        <li>
+                        	<input type="checkbox" name="" class="check" />
+                            Я ознакомлен и принимаю <a href="#">правила пользования</a>
+                        </li>
+                        <li class="end"><a href="#" class="btnreg">Зарегистрироваться</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content-l">
+            	<span class="best-title">Лучшие предложения</span>
+                <ul class="pr-best-price">
+                	{% for id,attr in productsList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.COUNTRY_ID|first as country_id %}
+                        {% with attr.COUNTRY_NAME|first as country_name %}
+                        {% with attr.COUNTRY_FLAG|first as flag %}
+                    <li>
+                    	<a href="#"><div class="thumb"> <img src="{% static picture %}" alt="{{ name }}" /></div></a>
+                        <div class="location">
+
+                        	<img src="{% static flag %}" alt="{{ country_name }}" width="18" height="12" class="flag" />
+                            <a href="#">{{ name }}</a>
+                        </div>
+                    </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                    {% endfor %}
+
+                </ul>
+                <div class="review">
+                	<div class="review-l">
+                    	<h3>Афиша</h3>
+                        <ul class="listcm">
+                        	<li>
+                            	<div class="topcm">
+                                	<img src="img/flag1.gif" width="18" height="12" class="flag" />
+                                    <div class="date">
+                                        <p><b>25-28 февраля, 2014</b></p>
+                                        <p>Узбекистан, Ташкент</p>
+                                    </div>
+                                </div>
+                                <p class="linkcm"><a href="#">15-я Международная выставка - UzBuild 2014</a></p>
+                            </li>
+                            <li>
+                            	<div class="topcm">
+                                	<img src="img/flag2.gif" width="18" height="12" class="flag" />
+                                    <div class="date">
+                                        <p><b>14 марта, 2014</b></p>
+                                        <p>Россия, Москва</p>
+                                    </div>
+                                </div>
+                                <p class="linkcm"><a href="#">Форум лидеров бизнеса СНГ 2014</a></p>
+                            </li>
+                            <li>
+                            	<div class="topcm">
+                                	<img src="img/flag3.gif" width="18" height="12" class="flag" />
+                                    <div class="date">
+                                        <p><b>14 марта, 2014</b></p>
+                                        <p>Киргизия, Бишкек</p>
+                                    </div>
+                                </div>
+                                <p class="linkcm"><a href="#">Выставка натуральных Турецких товаров «КЫТИАД» </a></p>
+                            </li>
+                        </ul>
+                        <a href="#" class="btnview">Все выставки и форумы &rarr;</a>
+                    </div>
+                    <div class="review-l review-r">
+                    	<h3>Бизнес-предложения</h3>
+                        <ul class="listcm">
+                      {% for id,attr in serviceList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.COUNTRY_ID as country_id %}
+                        {% with attr.COUNTRY_NAME|first as country_name %}
+                        {% with attr.COUNTRY_FLAG|first as flag %}
+                        {% with attr.COMPANY_NAME|first as company_name %}
+                        {% with attr.COMPANY_ID as company_id %}
+
+                        	<li>
+                            	<div class="topcm">
+                                	<img src="{% static flag %}" width="18" height="12" class="flag" />
+                                    <div class="date">
+                                        <p><b>{{ country_name }}</b></p>
+                                        <p>{{ company_name }}</p>
+                                    </div>
+                                </div>
+                                <p class="linkcm"><a href="#">{{ name }}</a></p>
+                            </li>
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+
+                        </ul>
+                        <a href="#" class="btnview">Все бизнес-предложения &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="content-r">
+            	<span class="titlevideo">Видеообращение В.Мигирова</span>
+                <div class="media"><img src="img/video.jpg" /></div>
+                <div class="testimonials">
+                	<i class="icons i-bullet"></i>
+                	Вы получите собственный интернет-сайт, возможность представление своих бизнес-предложений, продуктов, сервисов, без ограничений.
+                </div>
+                <span class="titlevideo">Гид по сайту ТПП-Центра</span>
+                <div class="media"><img src="img/video.jpg" /></div>
+                <div class="pdfdownload">
+                	<img src="img/pdf.png" alt="" />
+                    <span class="fileinfo">
+                    	<a href="#">Скачать путеводитель по сайту </a>
+                        <p>(pdf-документ, 320 Кб)</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="peoples">
+	<div class="wrapper">
+    	<span class="title">Приветствия</span>
+        <div class="people-slide">
+        	<ul class="greetings">
+               {% for id,attr in greetingsList.items %}
+                  {% with attr.IMAGE|first as image %}
+                  {% with attr.TPP|first as tpp %}
+                  {% with attr.AUTHOR_NAME|first as name %}
+                  {% with attr.POSITION|first as position %}
+                  {% if forloop.counter|divisibleby:"7" or forloop.counter0 == 0 %}
+                          <li>
+                   {% endif %}
+
+
+                    <div class="items">
+                    	<div class="bgtitle">
+                        	<div class="textin">{{ tpp }}</div>
+                        </div>
+                    	<a href="#"><img src="{% static image %}" alt="{{ name }}" class="avatar" /></a>
+                        <div class="name">
+                        	<a href="#">{{ name }}</a>
+                            {{ position }}
+                        </div>
+                    </div>
+
+                  {% if forloop.counter|divisibleby:"6" %}
+                       </li>
+                  {% endif %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+                  {% endwith %}
+               {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

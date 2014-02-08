@@ -26,6 +26,7 @@ import hashlib
 from django.utils.timezone import now
 from django.shortcuts import render_to_response
 from tpp.SiteUrlMiddleWare import get_request
+from django.db.models.query import QuerySet
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
@@ -335,6 +336,15 @@ class ActionPath(models.Model):
 #----------------------------------------------------------------------------------------------------------
 #             Class Item defines basic primitive for application objects
 #----------------------------------------------------------------------------------------------------------
+class ItemManager(models.Manager):
+    def get_active_related(self):
+        return self.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now()).\
+            filter(Q(c2p__end_date__gt=now()) | Q(c2p__end_date__isnull=True), c2p__start_date__lte=now(),
+                               c2p__type='dependence')
+    def get_active(self):
+        return self.filter(Q( end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now())
+
+
 class Item(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
@@ -345,6 +355,7 @@ class Item(models.Model):
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
+    active = ItemManager()
 
     create_user = models.ForeignKey(User, related_name='owner2item')
     create_date = models.DateTimeField(auto_now_add=True)
@@ -381,8 +392,9 @@ class Item(models.Model):
 
         Item._deactivateRelation(parents, eDate, sDate)
 
-
-
+    @staticmethod
+    def getactive():
+        return
 
     @staticmethod
     def deactivate(itemList, eDate, sDate=None):
@@ -516,7 +528,7 @@ class Item(models.Model):
 
 
 
-        #TODO: Jenya maybe change items to queryset
+
         valuesObj = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
                                          Q(start_date__lte=now()) | Q(start_date__isnull=True),
                                          attr__title__in=attr, item__in=items)

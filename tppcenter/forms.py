@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item, Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category)
+                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category, Greeting)
 
 from django.core.exceptions import ValidationError
 from django.conf import settings

@@ -2,22 +2,78 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
 from django.http import Http404
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate , Relationship
+from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery
 from django.template import RequestContext
+from datetime import datetime
+from django.utils.timezone import now
 
 from django.conf import settings
 
 def home(request):
-#    id = settings.SITE_ID
-#    obj = Tpp.objects.get(title="Moscow Tpp")
-#    companies = obj.getItemList()
-#    i = companies
-    return render_to_response("home.html")
+    countries = Country.active.get_active()
+    countries_id = [country.pk for country in countries]
+
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
+    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+    organizations_id = [organization.pk for organization in organizations]
+
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
+
+    products = Product.active.get_active_related()[:3]
+    products = products.values('c2p__parent__organization__c2p__parent__country', "pk")
+    country_dict = {}
+    for product in products:
+        country_dict[product['pk']] = product['c2p__parent__organization__c2p__parent__country']
+
+
+    products_id = [product['pk'] for product in products]
+    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE'), products_id)
+
+    for id, product in productsList.items():
+        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]]['NAME'],
+                   'COUNTRY_ID:': country_dict[id],
+                   'COUNTRY_FLAG': countriesList[country_dict[id]]['FLAG']}
+        product.update(toUpdate)
+
+
+    services = Service.active.get_active_related()[:3]
+    services = services.values('c2p__parent__organization__c2p__parent__country', 'c2p__parent__organization', "pk")
+    services_dict = {}
+    for service in services:
+        services_dict[service['pk']] = {}
+        services_dict[service['pk']]['country'] = service['c2p__parent__organization__c2p__parent__country']
+        services_dict[service['pk']]['company'] = service['c2p__parent__organization']
+
+    services_id = [service['pk'] for service in services]
+    serviceList = Item.getItemsAttributesValues(("NAME",), services_id)
+    companies_id = [service['c2p__parent__organization'] for service in services]
+    companyList = Item.getItemsAttributesValues(("NAME",), companies_id)
+
+    for id, service in serviceList.items():
+        toUpdate = {'COUNTRY_NAME': countriesList[services_dict[id]['country']]['NAME'],
+                   'COUNTRY_ID':  services_dict[id]['country'],
+                   'COUNTRY_FLAG':  countriesList[services_dict[id]['country']]['FLAG'],
+                   'COMPANY_NAME': companyList[services_dict[id]['company']]['NAME'],
+                   'COMPANY_ID': services_dict[id]['company']}
+        service.update(toUpdate)
+
+    greetings = Greeting.active.get_active().all()
+    greetings_id = [greeting.id for greeting in greetings]
+    greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
+
+
+
+
+
+    return render_to_response("index.html", {"countriesList": countriesList, 'organizationsList': organizationsList,
+                                             'productsList': productsList, 'serviceList': serviceList,
+                                             'greetingsList': greetingsList})
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
