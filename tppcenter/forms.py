@@ -6,13 +6,14 @@ from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item, Relationship
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category, Greeting)
+                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category, Greeting,
+                         Exhibition)
 
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.db.models.fields.files import ImageFieldFile, FileField
+from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import modelformset_factory
 
@@ -84,6 +85,7 @@ class ItemForm(forms.Form):
             #Date
             if(attr.type == "Dat") and dictr is None:
                 self.fields[title] = forms.DateField(required=bool(required))
+                self.fields[title].widget.input_type = 'date'
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
             #Email
@@ -123,6 +125,29 @@ class ItemForm(forms.Form):
                 self.fields[title] = forms.CharField(widget=forms.Textarea, required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
+            #FileField
+            if(attr.type == "Ffl") and dictr is None:
+                self.fields[title] = forms.FileField(required=bool(required))
+                self.fields[title].initial = value[0] if value and isinstance(value, list) else value
+                if isinstance(value, list):
+                    value = value[0]
+                if value:
+
+                    if not isinstance(value, InMemoryUploadedFile):
+                           self.fields[title].initial = FieldFile(instance=None, field=FileField(), name=value)
+                    else:
+                           self.fields[title].initial = value
+                    if self.id and self.obj:
+                         file = self.obj.getAttributeValues(title) if self.id else ""
+                         self.file_to_delete = file
+
+
+                else:
+                     file = self.obj.getAttributeValues(title) if self.id else ""
+                     value = file[0] if self.id and file else ""
+
+                     self.fields[title].initial = FieldFile(instance=None, field=FileField(), name=value) if value else ""
+
             #ImageField
             if(attr.type == "Img") and dictr is None:
                  self.fields[title] = forms.ImageField(required=bool(required))
@@ -130,7 +155,7 @@ class ItemForm(forms.Form):
 
                  if value:
                     if not isinstance(value, InMemoryUploadedFile):
-                           self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=value)
+                           self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value)
                     else:
                            self.fields[title].initial = value
                     if self.id and self.obj:
@@ -168,8 +193,9 @@ class ItemForm(forms.Form):
         self._errors = {}
         for title in self.fields:
             try:
-                if (isinstance(self.fields[title], forms.ImageField) and not isinstance(self.fields[title].initial, InMemoryUploadedFile)
-                      and self.fields[title].initial):
+                if ((isinstance(self.fields[title], forms.ImageField) or isinstance(self.fields[title], forms.FileField))
+                    and not isinstance(self.fields[title].initial, InMemoryUploadedFile) and self.fields[title].initial):
+
                     continue
                 self.fields[title].clean(self.fields[title].initial)
             except Exception as e:
@@ -207,8 +233,8 @@ class ItemForm(forms.Form):
             self.obj.save()
         attrValues = {}
         for title in self.fields:
-            if (isinstance(self.fields[title], forms.ImageField) and self.fields[title].initial and
-                                    isinstance(self.fields[title].initial, InMemoryUploadedFile)):
+            if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
+                    and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
                 self._save_file(self.fields[title].initial, title, path_to_images)
                 # If Field is Image that call save_file method
 
@@ -239,7 +265,10 @@ class ItemForm(forms.Form):
             fd.write(chunk)
         fd.close()
         filename = str(path) + str(filename)
-        self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
+        if isinstance(self.fields[title],forms.ImageField):
+            self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
+        if isinstance(self.fields[title],forms.FileField):
+            self.fields[title].initial = FieldFile(instance=None, field=FileField(),  name=filename)
         if self.file_to_delete:
            filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
            if os.path.isfile(filename):

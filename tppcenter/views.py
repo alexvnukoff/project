@@ -67,13 +67,29 @@ def home(request):
     greetings_id = [greeting.id for greeting in greetings]
     greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
 
+    exhibitions = Exhibition.active.get_active_related()[:3]
+    exhibitions = exhibitions.values('c2p__parent__organization', "pk")
+    exhibitions_id = [exhibition['pk'] for exhibition in exhibitions]
+    exhibitions_dict = {}
+    for exhibition in exhibitions:
+        exhibitions_dict[exhibition['pk']] = exhibition['c2p__parent__organization']
+
+    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "EVENT_DATE"), exhibitions_id)
+
+    for id, exhibition in exhibitionsList.items():
+        toUpdate = {'ORG_NAME': organizationsList[exhibitions_dict[id]]['NAME'],
+                    'ORG_FLAG': organizationsList[exhibitions_dict[id]]['FLAG'],
+                    'ORG_ID': exhibitions_dict[id]}
+        exhibition.update(toUpdate)
+
+
 
 
 
 
     return render_to_response("index.html", {"countriesList": countriesList, 'organizationsList': organizationsList,
                                              'productsList': productsList, 'serviceList': serviceList,
-                                             'greetingsList': greetingsList})
+                                             'greetingsList': greetingsList, 'exhibitionsList': exhibitionsList})
 
 def set_news_list(request):
     page = request.GET.get('page', 1)

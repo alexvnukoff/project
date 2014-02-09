@@ -1,10 +1,11 @@
+{% load i18n %}
 <div class="tophead">
 	<div class="wrapper">
     	<div class="tophead-l">
-        	<a href="#" title="">О проекте</a> | <a href="#" title="">Вопросы и ответы</a> | <a href="#" title="">Услуги портала</a> | <a href="#" title="">Контакты</a>
+        	<a href="#" title="">{% trans 'About project' %}</a> | <a href="#" title="">{% trans 'FAQ' %}</a> | <a href="#" title="">{% trans "Portal services" %}</a> | <a href="#" title="">{% trans 'Contacts' %}</a>
         </div>
         <div class="tophead-r">
-        	<a href="#" title=""><i class="icons i-lock"></i><font>Войти</font></a> | <a href="#" title=""><font>Зарегистрироваться</font></a>
+        	<a href="#" title=""><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="#" title=""><font>{% trans 'Sign up' %}</font></a>
         </div>
     </div>
 </div>

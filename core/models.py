@@ -338,10 +338,20 @@ class ActionPath(models.Model):
 #----------------------------------------------------------------------------------------------------------
 class ItemManager(models.Manager):
     def get_active_related(self):
+        '''
+        Method filter active items that related to other items with dependense relationship
+        example of usage :
+        item = Item.active.get_active_related()
+        '''
         return self.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now()).\
             filter(Q(c2p__end_date__gt=now()) | Q(c2p__end_date__isnull=True), c2p__start_date__lte=now(),
                                c2p__type='dependence')
     def get_active(self):
+        '''
+        Method return active items without relatiopnship:
+        Example of usage:
+        item = Item.active.get_active()
+        '''
         return self.filter(Q( end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now())
 
 
@@ -392,9 +402,7 @@ class Item(models.Model):
 
         Item._deactivateRelation(parents, eDate, sDate)
 
-    @staticmethod
-    def getactive():
-        return
+
 
     @staticmethod
     def deactivate(itemList, eDate, sDate=None):
