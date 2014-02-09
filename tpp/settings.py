@@ -213,10 +213,10 @@ HAYSTACK_CONNECTIONS = {
 }
 
 for lang in LANGUAGES:
-    HAYSTACK_CONNECTIONS['default' + '_' + lang] = {
+    HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {
         'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
         'URL': HAYSTACK_CONNECTIONS['default']['URL'],
-        'INDEX_NAME': 'lang-' + lang,
+        'INDEX_NAME': 'lang-' + lang[0],
     }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
