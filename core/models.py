@@ -723,7 +723,7 @@ class Item(models.Model):
                 for langDict in valueFileds: #set value for all languages
                     uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
 
-
+            #Insert dict slot
             for attribute in attrWithValues.keys():
                 values = attrWithValues[attribute]
                 attributeObj = existsAttributes.get(title=attribute)
@@ -870,17 +870,21 @@ def slotUpdateAttr(instance, **kwargs):
     attrID = Attribute.objects.filter(dict=instance.dict).values_list('pk')
     attrID = [id[0] for id in attrID]
 
+    try:
+        if getattr(instance, 'pk', None):
 
-    old = Slot.objects.get(pk=instance.pk)
+            old = Slot.objects.get(pk=instance.pk)
 
-    if old.title:
-        key = 'title'
+            if old.title:
+                key = 'title'
 
-        valueFileds = {}
+                valueFileds = {}
 
-        #get value for all languages
-        for lang in settings.LANGUAGES:
-            valueFileds.update({key + '_' + lang[0]: getattr(instance, key + '_' + lang[0], '')})
+                #get value for all languages
+                for lang in settings.LANGUAGES:
+                    valueFileds.update({key + '_' + lang[0]: getattr(instance, key + '_' + lang[0], '')})
 
-        Value.objects.filter(attr__in=attrID, title=old.title).update(**valueFileds)
+                Value.objects.filter(attr__in=attrID, title=old.title).update(**valueFileds)
+    except Exception:
+        return False
 

@@ -20,7 +20,11 @@ EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
 EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 
+ADMINS = (
+    ('Artur', 'artur@tppcenter.com'),
+)
 
+MANAGERS = ADMINS
 
 
 # Quick-start development settings - unsuitable for production
@@ -54,7 +58,10 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'legacy_data',
+    'djcelery'
 )
+
+
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
@@ -187,15 +194,36 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-
+'''
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+'''
+
+HAYSTACK_CONNECTIONS = {
+    'default':{
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200',
+        'INDEX_NAME': 'lang-en',
     },
 }
 
+for lang in LANGUAGES:
+    HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {
+        'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
+        'URL': HAYSTACK_CONNECTIONS['default']['URL'],
+        'INDEX_NAME': 'lang-' + lang[0],
+    }
+
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
+
+AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
+AWS_SECRET = '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'
+BUCKET = 'uploadstg'
 
 try:
     from local_settings import *
