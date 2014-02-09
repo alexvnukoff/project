@@ -187,13 +187,29 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-
+'''
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+'''
+
+HAYSTACK_CONNECTIONS = {
+    'default':{
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200',
+        'INDEX_NAME': 'lang-en',
+    },
+}
+
+for lang in LANGUAGES:
+    HAYSTACK_CONNECTIONS['default' + '_' + lang] = {
+        'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
+        'URL': HAYSTACK_CONNECTIONS['default']['URL'],
+        'INDEX_NAME': 'lang-' + lang,
+    }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
