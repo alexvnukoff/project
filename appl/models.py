@@ -459,6 +459,15 @@ class Gallery(Item):
       def __str__(self):
           return str(self.photo)
 
+
+class Exhibition(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
