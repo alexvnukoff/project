@@ -711,7 +711,7 @@ class Item(models.Model):
                 for langDict in valueFileds: #set value for all languages
                     uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
 
-
+            #Insert dict slot
             for attribute in attrWithValues.keys():
                 values = attrWithValues[attribute]
                 attributeObj = existsAttributes.get(title=attribute)
