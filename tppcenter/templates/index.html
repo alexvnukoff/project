@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load i18n %}
 
 
         {% block title %}Tppcenter{% endblock %}
@@ -46,19 +47,19 @@
               <option value="2">–  Страна</option>
             </select>
         </div>
-        <input type="text" class="inputsearch" placeholder="Поиск по сайту" />
-        <a href="#" class="btns"><i class="i-search icons"></i>Найти</a>
+        <input type="text" class="inputsearch" placeholder="{% trans 'Site search' %}" />
+        <a href="#" class="btns"><i class="i-search icons"></i>{% trans 'search' %}</a>
     </div>
     <div class="main">
     	<div class="sideleft">
         	<div class="community">
-            	<span class="title">Международные сообщества</span>
+            	<span class="title">{% trans 'International community' %}</span>
                 <div class="slide-comm">
                     <ul class="bxslider">
                         {% for id,attr in organizationsList.items %}
                             {% with attr.NAME|first as name %}
                             {% with attr.FLAG|first as flag %}
-                                 {% if forloop.counter|divisibleby:"4" or forloop.counter0 == 0 %}
+                                 {% if forloop.counter|divisibleby:"5" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
                                  <a href="#" class="items"><img src="{% static flag %}" alt="" /></a>
@@ -68,51 +69,49 @@
                              {% endwith %}
                              {% endwith %}
                         {% endfor %}
-
-
                     </ul>
                 </div>
             </div>
             <ul class="services">
             	<li>
                     <div class="imgmain imgservice sv1"></div>
-                    <div class="nameservice"><a href="#">Товары и услуги</a></div>
+                    <div class="nameservice"><a href="#">{% trans 'Producst and services' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv2"></div>
-                    <div class="nameservice"><a href="#">Участники</a></div>
+                    <div class="nameservice"><a href="#">{% trans 'Members' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv3"></div>
-                    <div class="nameservice"><a href="#">Партнеры</a></div>
+                    <div class="nameservice"><a href="#">{% trans "Partners" %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv4"></div>
-                    <div class="nameservice"><a href="#">Тендеры</a></div>
+                    <div class="nameservice"><a href="#">{% trans 'Tenders' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv5"></div>
-                    <div class="nameservice"><a href="#">Инновационные проекты</a></div>
+                    <div class="nameservice"><a href="#">{% trans 'Innovative projects' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv6"></div>
-                    <div class="nameservice"><a href="#">Вакансии</a></div>
+                    <div class="nameservice"><a href="#">{% trans 'Jobs' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv7"></div>
-                    <div class="nameservice"><a href="#">Новости</a></div>
+                    <div class="nameservice"><a href="#">{% trans "News" %}</a></div>
                 </li>
             </ul>
         </div>
         <div class="mainright">
         	<div class="community">
-            	<span class="title">Страны-участники (более 25 стран)</span>
+            	<span class="title">{% trans 'Participating countries (more than 25 countries)' %} </span>
                 <div class="slide-comm">
                 	<ul class="bxslider">
                       {% for id,attr in countriesList.items %}
                         {% with attr.NAME|first as name %}
                         {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|divisibleby:"25" or forloop.counter0 == 0 %}
+                           {% if forloop.counter|divisibleby:"26" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
                             	<a href="#" class="items"><img src="{% static flag %}" alt="{{ name }}" /></a>
@@ -134,20 +133,20 @@
                     <li>
                        <div class="slide1">
                        		<div class="desc">
-                            	<h2>Зарегистрируйтесь на портале –</h2>
-                                <span class="text">и получите доступ  к портфелю инструментов  для ведения бизнеса</span>
+                            	<h2>{% trans 'Sign up' %}</h2>
+                                <span class="text">{% trans 'and get tools for business' %}</span>
                             </div>
                        </div>
                     </li>
                     <li>
                        <div class="slide2">
                        		<div class="desc">
-                            	<h2>Регистрация</h2>
-                                <h3>на портале позволит Вам</h3>
+                            	<h2>{% trans 'Registration' %}</h2>
+                                <h3>{% trans 'on the portal will allow you to' %}</h3>
                                 <ul class="list">
-                                	<li>вести бизнес от лица компании  (B2B, B2C)</li>
-                                    <li>покупать товары как частному лицу (B2C)</li>
-                                    <li>привлечь внимание к своим проектам (BANKIP)</li>
+                                	<li>{% trans 'run a business behalf of the company' %}  (B2B, B2C)</li>
+                                    <li>{% trans 'to buy goods as a private person' %}(B2C)</li>
+                                    <li>{% trans 'draw attention toward your projects' %}(BANKIP)</li>
                                 </ul>
                             </div>
                        </div>
@@ -155,12 +154,12 @@
                     <li>
                        <div class="slide3">
                        		<div class="desc">
-                            	<h2>Зарегистрируйтесь</h2>
-                                <h3>на сайте, и Вы сможете</h3>
+                            	<h2>{% trans 'Sign up' %}</h2>
+                                <h3>{% trans 'and you will be able' %}</h3>
                                 <ul class="list">
-                                	<li>создать свой интернет-магазин</li>
-                                    <li>представлять свои товары и услуги</li>
-                                    <li>общаться с потенциальными клиентами</li>
+                                	<li>{% trans 'create your own online shop' %}</li>
+                                    <li>{% trans 'to represent your products and services' %}</li>
+                                    <li>{% trans 'communicate with potential customers' %}</li>
                                 </ul>
                             </div>
                        </div>
@@ -168,12 +167,12 @@
                     <li>
                        <div class="slide4">
                        		<div class="desc">
-                            	<h2>Зарегистрированные</h2>
-                                <h3>пользователи портала могут</h3>
+                            	<h2>{% trans 'Registred' %}</h2>
+                                <h3>{% trans 'users can' %}</h3>
                                 <ul class="list">
-                                	<li>создавать собственные сайты</li>
-                                    <li>выставлять рекламу на портале</li>
-                                    <li>создавать свои сообщества по интересам</li>
+                                	<li>{% trans 'create their own websites' %}</li>
+                                    <li>{% trans 'puts advertising on the portal' %}</li>
+                                    <li>{% trans 'create their own communities of interest' %}</li>
                                 </ul>
                             </div>
                        </div>
@@ -181,23 +180,23 @@
                 </ul>
                 <div class="register">
                 	<div class="title">
-                    	<p><b>Зарегистрируйтесь</b></p>
-                        прямо сейчас
+                    	<p><b>{% trans 'Sign up' %}</b></p>
+                        {% trans 'right now' %}
                     </div>
                     <ul class="formregister">
                     	<li><input type="text" name="" class="text" placeholder="E-mail" /></li>
-                        <li><input type="text" name="" class="text" placeholder="Пароль" /></li>
-                        <li><input type="text" name="" class="text" placeholder="Повторите пароль" /></li>
+                        <li><input type="text" name="" class="text" placeholder="{% trans 'Password' %}" /></li>
+                        <li><input type="text" name="" class="text" placeholder="{% trans 'Confirm password' %}" /></li>
                         <li>
                         	<input type="checkbox" name="" class="check" />
-                            Я ознакомлен и принимаю <a href="#">правила пользования</a>
+                            {% trans 'I have read and accept' %} <a href="#">{% trans 'the term of use' %}</a>
                         </li>
-                        <li class="end"><a href="#" class="btnreg">Зарегистрироваться</a></li>
+                        <li class="end"><a href="#" class="btnreg">{% trans 'Sign up' %}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="content-l">
-            	<span class="best-title">Лучшие предложения</span>
+            	<span class="best-title">{% trans 'Best deals' %}</span>
                 <ul class="pr-best-price">
                 	{% for id,attr in productsList.items %}
                         {% with attr.NAME|first as name %}
@@ -223,43 +222,40 @@
                 </ul>
                 <div class="review">
                 	<div class="review-l">
-                    	<h3>Афиша</h3>
+                    	<h3>{% trans "Affiche" %}</h3>
                         <ul class="listcm">
+                      {% for id,attr in exhibitionsList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.COUNTRY|first as country %}
+                        {% with attr.CITY|first as city %}
+                        {% with attr.EVENT_DATE|first as date_event %}
+                        {% with attr.ORG_FLAG|first as org_flag %}
+                        {% with attr.ORG_NAME|first as org_name %}
+                        {% with attr.ORG_ID as org_id %}
                         	<li>
                             	<div class="topcm">
-                                	<img src="img/flag1.gif" width="18" height="12" class="flag" />
+                                	<img src="{% static org_flag %}" alt="{{ org_name }}" width="18" height="12" class="flag" />
                                     <div class="date">
-                                        <p><b>25-28 февраля, 2014</b></p>
-                                        <p>Узбекистан, Ташкент</p>
+                                        <p><b>{{ date_event}}</b></p>
+                                        <p>{{ country }}, {{ city }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="#">15-я Международная выставка - UzBuild 2014</a></p>
+                                <p class="linkcm"><a href="#">{{ name }}</a></p>
                             </li>
-                            <li>
-                            	<div class="topcm">
-                                	<img src="img/flag2.gif" width="18" height="12" class="flag" />
-                                    <div class="date">
-                                        <p><b>14 марта, 2014</b></p>
-                                        <p>Россия, Москва</p>
-                                    </div>
-                                </div>
-                                <p class="linkcm"><a href="#">Форум лидеров бизнеса СНГ 2014</a></p>
-                            </li>
-                            <li>
-                            	<div class="topcm">
-                                	<img src="img/flag3.gif" width="18" height="12" class="flag" />
-                                    <div class="date">
-                                        <p><b>14 марта, 2014</b></p>
-                                        <p>Киргизия, Бишкек</p>
-                                    </div>
-                                </div>
-                                <p class="linkcm"><a href="#">Выставка натуральных Турецких товаров «КЫТИАД» </a></p>
-                            </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                      {% endfor %}
+
                         </ul>
-                        <a href="#" class="btnview">Все выставки и форумы &rarr;</a>
+                        <a href="#" class="btnview">{% trans "All exhibitions and forums" %} &rarr;</a>
                     </div>
                     <div class="review-l review-r">
-                    	<h3>Бизнес-предложения</h3>
+                    	<h3>{% trans "Business offers" %}</h3>
                         <ul class="listcm">
                       {% for id,attr in serviceList.items %}
                         {% with attr.NAME|first as name %}
@@ -288,23 +284,23 @@
                         {% endfor %}
 
                         </ul>
-                        <a href="#" class="btnview">Все бизнес-предложения &rarr;</a>
+                        <a href="#" class="btnview">{% trans "All business offers" %} &rarr;</a>
                     </div>
                 </div>
             </div>
             <div class="content-r">
-            	<span class="titlevideo">Видеообращение В.Мигирова</span>
+            	<span class="titlevideo">{% trans 'Videoreference of V.Migirov' %} </span>
                 <div class="media"><img src="img/video.jpg" /></div>
                 <div class="testimonials">
                 	<i class="icons i-bullet"></i>
-                	Вы получите собственный интернет-сайт, возможность представление своих бизнес-предложений, продуктов, сервисов, без ограничений.
+                	 {% trans 'You get your own web site,opportunity to presentation of its of business proposals,products, services, without restrictions.' %}
                 </div>
-                <span class="titlevideo">Гид по сайту ТПП-Центра</span>
+                <span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
                 <div class="media"><img src="img/video.jpg" /></div>
                 <div class="pdfdownload">
                 	<img src="img/pdf.png" alt="" />
                     <span class="fileinfo">
-                    	<a href="#">Скачать путеводитель по сайту </a>
+                    	<a href="#">{% trans 'Download Guide Site' %} </a>
                         <p>(pdf-документ, 320 Кб)</p>
                     </span>
                 </div>
@@ -314,7 +310,7 @@
 </div>
 <div class="peoples">
 	<div class="wrapper">
-    	<span class="title">Приветствия</span>
+    	<span class="title">{% trans 'Greetings' %}</span>
         <div class="people-slide">
         	<ul class="greetings">
                {% for id,attr in greetingsList.items %}
