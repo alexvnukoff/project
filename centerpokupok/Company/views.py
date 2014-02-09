@@ -76,9 +76,9 @@ def about(request, company):
 
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
-    name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
-    detail_text = attr['DETAIL_TEXT'][0]
+    name = attr.get('NAME', [''])[0]
+    picture = attr.get('IMAGE', [''])[0]
+    detail_text = attr.get('DETAIL_TEXT', [""])[0]
 
 
     return render_to_response("Company/about.html", {'companyID': company, 'name': name, 'picture': picture,

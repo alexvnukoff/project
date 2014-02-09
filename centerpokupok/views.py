@@ -14,7 +14,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
+
 def home(request, country=None):
+
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
