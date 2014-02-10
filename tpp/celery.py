@@ -9,7 +9,7 @@ from django.conf import settings
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tpp.settings')
 
-app = Celery('tpp',  broker='redis://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:6379',backend='djcelery.backends.database:DatabaseBackend')
+app = Celery('tpp',  broker='redis://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:6379')
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.

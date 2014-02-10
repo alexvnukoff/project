@@ -13,6 +13,8 @@ urlpatterns = patterns('',
      url(r'^$', tppcenter.views.home),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^test/', tppcenter.views.test),
+    url(r'^test2/', tppcenter.views.test2),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^news/$', tppcenter.views.set_news_list),
     url(r'^items/$', tppcenter.views.set_items_list),
