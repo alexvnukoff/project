@@ -10,6 +10,7 @@ from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery
 from django.template import RequestContext
 from datetime import datetime
+from django.views.decorators.cache import cache_page
 from django.utils.timezone import now
 
 from django.conf import settings
@@ -20,7 +21,7 @@ def home(request):
 
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+    organizations = Tpp.active.get_active().filter(c2p__parent__in=Country.objects.all()).distinct()
     organizations_id = [organization.pk for organization in organizations]
 
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
