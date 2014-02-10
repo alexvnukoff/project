@@ -5,6 +5,8 @@
 
         {% block title %}Tppcenter{% endblock %}
 
+
+
         {% block js %}
              {{  block.super }}
             <script type="text/javascript">
@@ -30,25 +32,74 @@
 	<a href="#"><i class="imgmain" id="logo"></i></a>
     <div id="search">
         <div class="styled-select">
-            <select name="select">
-              <option value="1">–  Страна</option>
-              <option value="2">–  Страна</option>
-            </select>
+            <span class="textfilter" id="country">- Страна</span>
+            <div class="country-list">
+            	<ul>
+                	<li>Все страны</li>
+                	<li><a href="#">Азербайджан</a></li>
+                    <li><a href="#">Армения</a></li>
+                    <li><a href="#">Беларусь</a></li>
+                    <li><a href="#">Грузия</a></li>
+                    <li><a href="#">Израиль</a></li>
+                    <li><a href="#">Казахстан</a></li>
+                    <li><a href="#">Киргизия</a></li>
+                    <li><a href="#">Латвия</a></li>
+                    <li><a href="#">Литва</a></li>
+                    <li><a href="#">Молдова</a></li>
+                    <li><a href="#">Россия</a></li>
+                    <li><a href="#">Таджикистан</a></li>
+                    <li><a href="#">Туркмения</a></li>
+                    <li><a href="#">Узбекистан</a></li>
+                    <li><a href="#">Украина</a></li>
+                    <li><a href="#">Эстония</a></li>
+                </ul>
+            </div>
         </div>
         <div class="styled-select">
-            <select name="select">
-              <option value="1">–  Категория/отрасль</option>
-              <option value="2">–  Страна</option>
-            </select>
+        	<span class="texttype" id="type">–  Категория/отрасль</span>
+            <div class="type-list">
+            	<ul>
+                	<li><input type="checkbox" name="" class="check" /><label>Все категории</label></li>
+                	<li><input type="checkbox" name="" class="check" /><label>Прицепы самосвальные</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Спецоборудование</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Средства защиты</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Все для авто</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Низкорамные тралы</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Аксессуары</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Запорная арматура</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Охранное оборудование</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Насосы</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Сауны</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Материалы для антикоррозионной защиты</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Путешествие и туризм</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Битовая Техниока</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Прицепы</label></li>
+                </ul>
+                <ul>
+                	<li><input type="checkbox" name="" class="check" /><label>Все отрасли</label></li>
+                	<li><input type="checkbox" name="" class="check" /><label>Искусство и развлечения</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Юридические услуги</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Горнодобывающая промышленность и разработка карьеров</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Ремонт моторных транспортных средств</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Грузовые перевозки</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Обрабатывающая промышленность</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Услуги для домашних хозяйств, деятельность домашних хозяйств, нанимающих прислугу и производящих товары и услуги для собственного потребления</label></li>
+                    <li><input type="checkbox" name="" class="check" /><label>Полиграфия</label></li>
+                </ul>
+                <div class="bottom-type">
+                	<a href="#" class="btntype2">Сбросить</a>
+                	<a href="#" class="btntype1">Сбросить</a>
+                </div>
+            </div>
         </div>
-        <div class="styled-select">
+        <div class="styled-select2">
             <select name="select">
               <option value="1">–  Раздел</option>
               <option value="2">–  Страна</option>
             </select>
         </div>
-        <input type="text" class="inputsearch" placeholder="{% trans 'Site search' %}" />
-        <a href="#" class="btns"><i class="i-search icons"></i>{% trans 'search' %}</a>
+        <input type="text" class="inputsearch" placeholder="Поиск по сайту" />
+        <a href="#" class="btns"><i class="i-search icons"></i>Найти</a>
     </div>
     <div class="main">
     	<div class="sideleft">

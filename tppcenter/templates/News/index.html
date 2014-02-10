@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+   {% block title %}News{% endblock %}
+
+
+
+    {% block header %}
+        {% include "login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+    {% endblock %}
+
+    {% block js %}
+        {{  block.super }}
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript">
+            $(function() {
+	            $( "#tabs" ).tabs();
+                });
+        </script>
+    {% endblock %}
+
+{% block body %}
+<div class="news-main">
+        <div class="news-left">
+            <div class="categories-news" id="tabs">
+                <div class="tab-cate">
+                    <ul>
+                        <li><a href="#tabs-1">ТПП-Центр</a></li>
+                        <li><a href="#tabs-2">Мои</a></li>
+                    </ul>
+                </div>
+                <div id="tabs-1">
+                    <ul class="tab1-cate">
+                    	<li><a href="#">Новости</a></li>
+                        <li><a href="#">Товары</a></li>
+                        <li><a href="#">Услуги</a></li>
+                        <li><a href="#">ТПП</a></li>
+                        <li><a href="#">Компании</a></li>
+                        <li><a href="#">Инновационные проекты</a></li>
+                        <li><a href="#">Бизнес-предложения</a></li>
+                        <li><a href="#">Тендеры</a></li>
+                        <li><a href="#">Афиша</a></li>
+                        <li><a href="#">Купоны</a></li>
+                        <li><a href="#">ТПП ТВ </a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стена</a></li>
+                    </ul>
+                </div>
+                <div id="tabs-2">
+                    <ul class="tab1-cate">
+                    	<li><a href="#">Новости</a></li>
+                        <li><a href="#">Товары</a></li>
+                        <li><a href="#">Услуги</a></li>
+                        <li><a href="#">ТПП</a></li>
+                        <li><a href="#">Компании</a></li>
+                        <li><a href="#">Инновационные проекты</a></li>
+                        <li><a href="#">Бизнес-предложения</a></li>
+                        <li><a href="#">Тендеры</a></li>
+                        <li><a href="#">Афиша</a></li>
+                        <li><a href="#">Купоны</a></li>
+                        <li><a href="#">ТПП ТВ </a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стена</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b1.jpg' %}" alt="" /></a></div>
+            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b2.jpg' %}" alt="" /></a></div>
+            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b3.jpg' %}" alt="" /></a></div>
+        </div>
+        <div class="news-center">
+        	<div class="keyword">
+            	<i class="icon-key imgnews"></i>
+                <ul class="list-key">
+                	<li><a href="#">ООО "Колобок"</a> <a href="#"><i class="i-close imgnews"></i></a></li>
+                    <li><a href="#">Новости</a> <a href="#"><i class="i-close imgnews"></i></a></li>
+                    <li><a href="#">Новости</a> <a href="#"><i class="i-close imgnews"></i></a></li>
+                    <li><a href="#">Только мои сообщества</a> <a href="#"><i class="i-close imgnews"></i></a></li>
+                </ul>
+                <div class="search-key">
+                	<input type="text" name="" placeholder="Поиск…" class="text" />
+                    <input type="submit" name="" value="" class="i-search imgnews" />
+                </div>
+            </div>
+           {% include "main/paginator.html" %}
+            <ul class="listnews">
+                {% for id , attr in newsList.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.IMAGE.0 as image %}
+                    {% with attr.DETAIL_TEXT.0 as content %}
+                    {% with attr.CREATE_DATE.0 as date%}
+                    {% with attr.COUNTRY_NAME|first as country_name %}
+                    {% with attr.COUNTRY_FLAG|first as flag %}
+                    {% with attr.COUNTRY_ID as country_id %}
+                    <li>
+                        <div class="thumb shadow"><a href="#"><img src="{% static image %}" alt="{{ name }}" /></a></div>
+                        <div class="infoprd">
+                            <a href="#" class="name">{{ name }}</a>
+                            <p class="date">{% if flag != 0  %}<img src="{% static flag %}" />{% endif %} {{ date|date:'d M Y' }}</p>
+                            <p>{{ content|truncatewords:"30" }} </p>
+                            <a href="#" class="more">Подробнее...</a>
+                        </div>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+
+            </ul>
+           {% include "main/paginator.html" %}
+        </div>
+        <div class="newsright">
+        	<div class="bannerleft nomargin"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
+            <div class="news-ads">
+            	<div class="title">Платные объявления</div>
+                <span class="titlesub">Название раздела</span>
+                <ul class="list-ads">
+                	<li>
+                    	<div class="top">
+                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                        </div>
+                        <div class="infoads">
+                        	<a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
+                            предназначен для технического оснащения воинских частей...
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="top">
+                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                        </div>
+                        <div class="infoads">
+                           предназначен для технического оснащения воинских частей...
+                        </div>
+                    </li>
+                </ul>
+                <span class="titlesub">Название раздела</span>
+                <ul class="list-ads">
+                	<li>
+                    	<div class="top">
+                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                        </div>
+                        <div class="infoads">
+                           предназначен для технического оснащения воинских частей...
+                        </div>
+                    </li>
+                	<li>
+                    	<div class="top">
+                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                        </div>
+                        <div class="infoads">
+                        	<a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
+                            предназначен для технического оснащения воинских частей...
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
+            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r3.jpg' %}" alt="" /></a></div>
+        </div>
+    </div>
+{% endblock %}
+
