@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from copy import copy
 from appl.func import currencySymbol
 
+from urllib.parse import urlencode
+
 register = template.Library()
 
 
@@ -55,6 +57,7 @@ class DynUrlNode(template.Node):
         self.name_var = args[0]
         self.parametrs = args[1]
         self.new_parametr = args[2]
+        self.query_string = args[3]
 
     def render(self, context):
         name = template.Variable(self.name_var).resolve(context)
@@ -78,12 +81,30 @@ class DynUrlNode(template.Node):
         except Exception:
             pass
 
+        try:
+            query_string = copy(template.Variable(self.query_string).resolve(context))
+            query_string = urlencode(query_string)
+        except Exception:
+            query_string = None
 
 
 
-        return reverse(name, args=parametrs)
+        url = reverse(name, args=parametrs) + '?' + query_string if query_string else reverse(name, args=parametrs)
+        return url
 
 @register.tag
 def dynurl(parser, token):
     args = token.split_contents()
     return DynUrlNode(*args[1:])
+
+
+@register.assignment_tag()
+def resolve(lookup, target):
+    try:
+        if isinstance(lookup, list):
+            return lookup[int(target)]
+        else:
+            return lookup[target]
+
+    except Exception as e:
+        return None

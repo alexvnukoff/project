@@ -16,6 +16,7 @@ from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import modelformset_factory
+from django.db import transaction
 
 
 class ItemForm(forms.Form):
@@ -317,28 +318,56 @@ class BasePhotoGallery(BaseModelFormSet):
         __init__ of BasePhotoGallery
         parent_id = items that in relationship with Gallery
         """
+        self.toDelete = []
         super(BasePhotoGallery, self).__init__(*args, **kwargs)
+        post = args[0] if args else False
+        files = args[1] if args and len(args) > 0 else False
+        if post and post.getlist("del[]"):
+            self.toDelete.extend(post.getlist("del[]"))
+        if post and files:
+            for i in range(0, int(post['form-TOTAL_FORMS'])):
+
+                if post.get('form-'+str(i), False) and files.get('form-'+str(i)+'-photo', False):
+                    item = post['form-'+str(i)]
+                    self.toDelete.append(item)
+
+
+
 
         self.user = parent_id
+
         self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
-    def save(self, parent=None, user=None, commit=True):
+    @transaction.atomic
+    def save(self, parent=None, user=None,  commit=False):
         """
         Method that create new Gallery , and set relationship with parent object
         Example :
         form.save(parent = 34 , user = request.user, commit =True)
         """
+        self.user = user
         instances = super(BasePhotoGallery, self).save(commit)
+        for instance in instances:
+            instance.create_user = self.user
+            instance.save()
+
         instances_pk = [instance.pk for instance in instances]
         bulkInsert = []
         item = Item.objects.get(pk=parent)
+        with transaction.atomic():
+            for instance in instances:
+                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
+            if bulkInsert:
+                   Relationship.objects.bulk_create(bulkInsert)
 
-        for instance in instances:
-            bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
-        if bulkInsert:
-            try:
-               Relationship.objects.bulk_create(bulkInsert)
-            except Exception:
-                pass
+            if self.toDelete:
+                items = Gallery.objects.filter(pk__in=self.toDelete)
+                for item in items:
+                    file = '%s/%s' % (settings.MEDIA_ROOT, item.photo.name)
+                    if os.path.isfile(file):
+                        os.remove(file)
+                items.delete()
+
+
 
 
 

@@ -352,7 +352,9 @@ class ItemManager(models.Manager):
         Example of usage:
         item = Item.active.get_active()
         '''
-        return self.filter(Q( end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now())
+        return self.filter(Q(Q( end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now())
+        | Q(Q(c2p__end_date__gt=now()) | Q(c2p__end_date__isnull=True), c2p__start_date__lte=now(),
+                               c2p__type='dependence'))
 
 
 class Item(models.Model):
@@ -507,7 +509,7 @@ class Item(models.Model):
 
     @staticmethod
 
-    def getItemsAttributesValues(attr, items, fullAttrVal=False):
+    def getItemsAttributesValues(attr, items, fullAttrVal=False,createDate=False):
 
         '''
            Return values of attribute list for items list
@@ -537,14 +539,18 @@ class Item(models.Model):
 
 
 
+
         valuesObj = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
                                          Q(start_date__lte=now()) | Q(start_date__isnull=True),
                                          attr__title__in=attr, item__in=items)
 
-        getList = ["title", "attr__title", "item__title", "item"]
+        getList = ["title", "attr__title", "item__title", "item", 'item__create_date']
 
         if fullAttrVal:
-            getList += ['start_date','end_date']
+            getList += ['start_date', 'end_date']
+
+
+
 
         values = list(valuesObj.values(*getList))
 
@@ -564,9 +570,24 @@ class Item(models.Model):
             if not isinstance(valuesAttribute[valuesDict['item']], dict):
 
                 valuesAttribute[valuesDict['item']] = {}
+                if fullAttrVal:
+                     valuesAttribute[valuesDict['item']]['CREATE_DATE'] = [{
+                    'start_date': None,
+                    'end_date': None,
+                    'title': valuesDict['item__create_date']}]
+
+                     valuesAttribute[valuesDict['item']]['TITLE'] = [{
+                    'start_date': None,
+                    'end_date': None,
+                    'title': valuesDict['item__title']}]
+                else:
+                     valuesAttribute[valuesDict['item']]['CREATE_DATE'] = [valuesDict['item__create_date']]
+                     valuesAttribute[valuesDict['item']]['TITLE'] = [valuesDict['item__title']]
+
 
             if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
                 valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+
 
             if fullAttrVal:
                 attrValDict = {
@@ -590,7 +611,7 @@ class Item(models.Model):
         values = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
                                       Q(start_date__lte=now()) | Q(start_date__isnull=True),
                                       attr__title__in=attr, item=self.id)
-        getList = ["title", "attr__title"]
+        getList = ["title", "attr__title", 'item__create_date', 'item__title']
 
         if fullAttrVal:
             getList += ['start_date','end_date']
@@ -600,9 +621,32 @@ class Item(models.Model):
         valuesAttribute = {}
 
         for valuesDict in values:
+            if 'CREATE_DATE' not in valuesAttribute:
+                if fullAttrVal:
+                    attrValDict = {
+                    'start_date': None,
+                    'end_date': None,
+                    'title': valuesDict['item__create_date']}
+                    valuesAttribute['CREATE_DATE'] = [attrValDict]
+                else:
+                    valuesAttribute['CREATE_DATE'] = [valuesDict['item__create_date']]
+
+
+            if 'TITLE' not in valuesAttribute:
+                 if fullAttrVal:
+                    attrValDict = {
+                    'start_date': None,
+                    'end_date': None,
+                    'title': valuesDict['item__create_date']}
+                    valuesAttribute['TITLE'] = [attrValDict]
+                 else:
+                    valuesAttribute['TITLE'] = [valuesDict['item__create_date']]
+
+
 
             if valuesDict['attr__title'] not in valuesAttribute:
                 valuesAttribute[valuesDict['attr__title']] = []
+
 
             if fullAttrVal:
                 attrValDict = {

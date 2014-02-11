@@ -75,6 +75,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
+
+
 )
 
 
@@ -87,8 +89,13 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 
-
-
+#TODO Artur change LOCATION to elastic cash ip and port
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 DATABASES = {
     'default': {

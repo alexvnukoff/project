@@ -2,8 +2,8 @@
 {% if page.paginator.num_pages > 1 %}
        <div class="panaging">
              {%  if page.has_previous %}
-                    <a href="{% dynurl url_paginator url_parameter "1" %}" >начало</a>
-                                    <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >«</a>
+                    <a href="{% dynurl url_paginator url_parameter "1" query_string %}" >начало</a>
+                                    <a href="{% dynurl url_paginator url_parameter  page.previous_page_number query_string %}" >«</a>
             {% endif %}
             <label>Страницы:</label>
 
@@ -12,14 +12,14 @@
 
 
                    {% ifequal i page.number %}
-                       <a href="{% dynurl url_paginator url_parameter page.number %}" class="current">{{ page.number }}</a>
+                       <a href="{% dynurl url_paginator url_parameter page.number query_string %}" class="current">{{ page.number }}</a>
                           {% else %}
-                       <a href="{% dynurl url_paginator url_parameter i %}">{{ i }}</a>
+                       <a href="{% dynurl url_paginator url_parameter i  query_string%}">{{ i }}</a>
                  {% endifequal %}
                {% endfor %}
                {%  if page.has_next %}
-                                       <a href="{% dynurl url_paginator url_parameter page.next_page_number %}" >»</a>
-                   <a href="{% dynurl url_paginator url_parameter  page.paginator.num_pages %}" >конец </a>
+                                       <a href="{% dynurl url_paginator url_parameter page.next_page_number query_string %}" >»</a>
+                   <a href="{% dynurl url_paginator url_parameter  page.paginator.num_pages query_string%}" >конец </a>
                {% endif %}
                         </div>
 {% endif %}
