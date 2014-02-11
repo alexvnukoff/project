@@ -10,7 +10,7 @@ from django.conf import settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tpp.settings')
 
 ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
-ORDERS_REDIS_PORT = getattr(settings, 'ORDERS_REDIS_PORT', 6379)
+ORDERS_REDIS_PORT = str(getattr(settings, 'ORDERS_REDIS_PORT', 6379))
 
 app = Celery('tpp',  broker='redis://' + ORDERS_REDIS_HOST + ':' + ORDERS_REDIS_PORT)
 

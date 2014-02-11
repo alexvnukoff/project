@@ -219,46 +219,8 @@ def test(request):
 
 def test2(request):
 
-    import redis
-    from django.conf import settings
-    import json
-    from django.http import HttpResponse
 
-    ORDERS_FREE_LOCK_TIME = getattr(settings, 'ORDERS_FREE_LOCK_TIME', 0)
-    ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
-    ORDERS_REDIS_PORT = getattr(settings, 'ORDERS_REDIS_PORT', 6379)
-    ORDERS_REDIS_PASSWORD = getattr(settings, 'ORDERS_REDIS_PASSWORD', None)
-    ORDERS_REDIS_DB = getattr(settings, 'ORDERS_REDIS_DB', 0)
-
-    # опять удобства
-    service_queue = redis.StrictRedis(
-        host=ORDERS_REDIS_HOST,
-        port=ORDERS_REDIS_PORT,
-        db=ORDERS_REDIS_DB,
-        password=ORDERS_REDIS_PASSWORD
-    ).publish
-
-    def lock():
-        """
-        Закрепление заказа
-        """
-        service_queue('order_lock', json.dumps({
-            'user': 1,
-            'order': 1,
-        }))
-
-    def done():
-        """
-        Завершение заказа
-        """
-
-        service_queue('order_done', json.dumps({
-                'user': 1,
-                'order': 1,
-        }))
-    #lock()
-    done()
-    return HttpResponse("Here's the text of the Web page.")
+    return HttpResponse(z)
 
 
 
