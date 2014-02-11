@@ -363,3 +363,39 @@ def resize(img, box, fit, out):
 
         #save it into a file-like object
         img.save(out, "JPEG", quality=75)
+
+def findKeywords(tosearch):
+    import string
+    import difflib
+
+    exclude = set(string.punctuation)
+    exclude.remove('-')
+    tosearch = ''.join(ch for ch in tosearch if ch not in exclude and (ch.strip() != '' or ch == ' '))
+    words = [word.lower() for word in tosearch.split(" ") if 3 <= len(word) <= 20 and word.isdigit() is False][:30]
+
+    length = len(words)
+    keywords = []
+
+    for word in words:
+        if len(difflib.get_close_matches(word, keywords)) > 0:
+            continue
+
+        count = len(difflib.get_close_matches(word, words))
+
+        precent = (count * length) / 100
+
+        if 2.5 <= precent <= 3:
+            keywords.append(word)
+
+        if len(keywords) > 5:
+            break
+
+    if len(keywords) < 3:
+        for word in words:
+            if len(difflib.get_close_matches(word, keywords)) == 0:
+                keywords.append(word)
+
+                if len(keywords) == 3:
+                    break
+
+    return ' '.join(keywords)

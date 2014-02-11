@@ -232,6 +232,14 @@ AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
 
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+
+ORDERS_REDIS_HOST = 'testredis.rhhy9l.0001.usw2.cache.amazonaws.com'
+
+import djcelery
+djcelery.setup_loader()
+
+
 try:
     from local_settings import *
 except ImportError:

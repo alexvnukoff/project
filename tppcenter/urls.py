@@ -15,6 +15,8 @@ urlpatterns = patterns('',
      url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^test/', tppcenter.views.test),
+    url(r'^test2/', tppcenter.views.test2),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^items/$', tppcenter.views.set_items_list),
