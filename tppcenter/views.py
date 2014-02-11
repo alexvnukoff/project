@@ -212,9 +212,31 @@ def meth(request):
             form.save(parent=ob.id, user=request.user)
     return False
 
+def test(request):
+    '''
+        import uuid
+        from django.utils.timezone import now
+        a = Company(create_user=request.user)
+        a.save()
+
+        from core.tasks import add
+        i = now()
+        name = uuid.uuid4()
+        tnow = "%s/%s/%s" % (i.day, i.month, i.year)
+
+        add.delay(a.pk, request.user, {'NAME': 'Company Test'},
+                    'C:\\Users\\user\\PycharmProjects\\tpp\\appl\Static\pr5.jpg')
+    '''
 
 
 
+    return render_to_response('test.html', locals(), context_instance=RequestContext(request))
+
+
+def test2(request):
+
+
+    return HttpResponse(z)
 
 
 
