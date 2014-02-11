@@ -9,7 +9,10 @@ from django.conf import settings
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tpp.settings')
 
-app = Celery('tpp',  broker='redis://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:6379')
+ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
+ORDERS_REDIS_PORT = getattr(settings, 'ORDERS_REDIS_PORT', 6379)
+
+app = Celery('tpp',  broker='redis://' + ORDERS_REDIS_HOST + ':' + ORDERS_REDIS_PORT)
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
