@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery
-from django.template import RequestContext
+from django.template import RequestContext, loader
 from datetime import datetime
 from django.utils.timezone import now
+from django.core.urlresolvers import reverse
+
 
 from django.conf import settings
 
@@ -23,8 +25,17 @@ def get_news_list(request, page=1):
 
     current_section = "News"
 
+    newsPage = _newsContent(request, page)
 
 
+
+
+
+
+    return render_to_response("News/index.html", {'user_name': user_name, 'current_section':current_section, 'newsPage': newsPage})
+
+
+def _newsContent(request, page=1):
     news = News.active.get_active().order_by('-pk')
 
 
@@ -47,16 +58,72 @@ def get_news_list(request, page=1):
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
+    query_string = {'next': 23, 'alo': 45, 'privet': 34}
 
 
     url_paginator = "news:paginator"
+    template = loader.get_template('News/contentPage.html')
+    context = RequestContext(request, {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
+                                                  'url_paginator': url_paginator, 'query_string': query_string})
+    return template.render(context)
 
 
-    return render_to_response("News/index.html", {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator, 'user_name': user_name,
-                                                  'current_section': current_section})
 
 
+
+
+def addNews(request):
+    form = None
+
+    if request.POST:
+
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        gallery = Photo()
+        gallery = Photo(request.POST, request.FILES)
+        values = {}
+        values['NAME'] = request.POST.get('NAME', "")
+        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
+        values['IMAGE'] = request.FILES.get('IMAGE', "")
+        form = ItemForm('News', values=values)
+        form.clean()
+        if form.is_valid() and gallery.is_valid():
+            new = form.save(request.user)
+            gallery.save(parent=new.id, user=request.user)
+            return HttpResponseRedirect(reverse('news:main'))
+
+
+
+
+
+    return render_to_response('News/addForm.html', {'form': form}, context_instance=RequestContext(request))
+
+
+
+def updateNew(request, item_id):
+    if request.POST:
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
+
+        values = {}
+        values['NAME'] = request.POST.get('NAME', "")
+        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
+        values['IMAGE'] = request.FILES.get('IMAGE', "")
+        form = ItemForm('News', values=values, id=item_id)
+        form.clean()
+        if gallery.is_valid() and form.is_valid():
+             gallery.save(parent=item_id, user=request.user)
+             form.save(request.user)
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+    if gallery.queryset:
+        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+    form = ItemForm('News', id=item_id)
+
+
+
+    return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form}, context_instance=RequestContext(request))
 
 
 
