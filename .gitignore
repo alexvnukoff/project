@@ -3,6 +3,7 @@
 local_settings.py
 
 appl/Static/upload
+appl/Static/gallery
 
 *.pyo
 
