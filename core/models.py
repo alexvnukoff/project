@@ -27,6 +27,7 @@ from django.utils.timezone import now
 from django.shortcuts import render_to_response
 from tpp.SiteUrlMiddleWare import get_request
 from django.db.models.query import QuerySet
+from django.template.defaultfilters import slugify
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
@@ -666,6 +667,20 @@ class Item(models.Model):
         else:
             return valuesAttribute[attr[0]]
 
+    @staticmethod
+    def createItemSlug(string, pk):
+        nonDig = ''.join([i for i in string if not i.isdigit()])
+
+        if not nonDig:
+            return pk
+
+        slug = slugify(nonDig)
+
+        if not slug:
+            return pk
+
+        return slugify(string) + '-' + pk
+
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
 
@@ -687,8 +702,25 @@ class Item(models.Model):
                             }
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
+
+        #check if valid dictionary given
         if not isinstance(attrWithValues, dict) or not attrWithValues:
             raise ValueError
+
+        #generate slug
+        if 'NAME' in attrWithValues:
+
+            if isinstance(attrWithValues['NAME'], dict) and len(attrWithValues['NAME']) > 0:
+                attrWithValues['SLUG'] = {}
+
+                for attrTitle, attrValue in attrWithValues['NAME'].items():
+
+                    if attrTitle[:5] == 'title':
+                        attrWithValues['SLUG'][attrTitle] = Item.createItemSlug(attrValue, self.pk)
+
+            elif isinstance(attrWithValues['NAME'], str):
+                attrWithValues['SLUG'] = Item.createItemSlug(attrWithValues['NAME'], self.pk)
+
 
         queries = []
         bulkInsert = []
@@ -706,6 +738,7 @@ class Item(models.Model):
             dictID = attributeObj.dict_id
             values = attrWithValues[attr]
 
+            #value should be a list of values
             if not isinstance(values, list):
                 values = [values]
 
@@ -729,7 +762,8 @@ class Item(models.Model):
                     else:
                         bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
                                                 create_user=user, sha1_code=createHash(value)))
-                else: #Dictionary value
+                #Dictionary value
+                else:
                     #security
                     dictID = int(dictID)
 
@@ -745,6 +779,7 @@ class Item(models.Model):
                         continue
                     else:
                         uniqDict[dictID][str(valueID)] = ''
+
                         #check if dictionary slot exists for this dictionary - creating conditions
                         queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
@@ -752,15 +787,15 @@ class Item(models.Model):
             #check if dictionary slot exists for this dictionary - using conditions
             filter_or = ' | '.join(queries)
 
-
             valueFileds = ['title']
 
-            #get value for all languages
+            #get slot value for all languages
             for lang in settings.LANGUAGES:
                 valueFileds.append(valueFileds[0] + '_' + lang[0])
 
             params = valueFileds + ['dict__pk', 'pk']
 
+            #apply filter to get values
             attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
 
             if len(attributesValue) < len(queries):
@@ -808,6 +843,7 @@ class Item(models.Model):
                 Value.objects.bulk_create(bulkInsert)
         except IntegrityError as e:
             raise e
+
         #send signal to search frontend
         from core.signals import setAttValSignal
         setAttValSignal.send(self._meta.model, instance=self)

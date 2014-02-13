@@ -12,7 +12,7 @@ class Command(BaseCommand):
         tornado.ioloop.IOLoop.instance().add_callback(self.shutdown)
 
     def handle(self, *args, **options):
-        router = SockJSRouter(Connection, '/orders')  # sockjs не захотел работать с корнем :(
+        router = SockJSRouter(Connection, '/orders')  # sockjs пҐп╣ пЇп╟я┘п╬я┌п╣п╩ я─п╟п╠п╬я┌п╟я┌я▄ я│ п╨п╬я─пҐп╣п╪ :(
         app = tornado.web.Application(router.urls)
         app.listen(9999)
 
@@ -26,5 +26,6 @@ class Command(BaseCommand):
 
     def shutdown(self):
 
+        #Connection.close()
         io_loop = tornado.ioloop.IOLoop.instance()
         io_loop.add_timeout(time.time() + 2, io_loop.stop)
