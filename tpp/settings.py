@@ -140,10 +140,6 @@ MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').repla
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
-#Email backend for production
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# Email backend for debugging
-
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -194,15 +190,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-'''
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200/',
-        'INDEX_NAME': 'haystack',
-    },
-}
-'''
+
+######################## Haystack settings ###############################
 
 HAYSTACK_CONNECTIONS = {
     'default':{
@@ -221,18 +210,22 @@ for lang in LANGUAGES:
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
+############################# AWS settings ################################
+
 AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
 
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-
 ORDERS_REDIS_HOST = 'testredis.rhhy9l.0001.usw2.cache.amazonaws.com'
 
+
+##################### Celery settings ####################################
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 import djcelery
 djcelery.setup_loader()
 
 
+###################### Custom settings ###################################
 try:
     from local_settings import *
 except ImportError:
