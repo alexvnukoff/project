@@ -99,7 +99,7 @@ CACHES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
+        'ENGINE': 'oraclepool',
         'NAME': 'ORCL',
         'USER': 'tpp',
         'PASSWORD': 'migirov',
@@ -112,6 +112,8 @@ DATABASES = {
         },
     }
 }
+
+SOUTH_DATABASE_ADAPTERS = { 'default': "south.db.oracle" }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
