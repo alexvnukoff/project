@@ -226,13 +226,13 @@ def meth(request):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
     if not request.POST:
         form = Photo()
-        itemform = ItemForm(item)
+        itemform = ItemForm(Item)
     else:
         form = Photo(request.POST, request.FILES)
         values = {}
         values.update(request.FILES)
         values.update(request.POST)
-        itemform = ItemForm(item, values=values)
+        itemform = ItemForm(Item, values=values)
         itemform.clean()
         if form.is_valid():
             ob = itemform.save()
@@ -260,18 +260,11 @@ def test(request):
     return render_to_response('test.html', locals(), context_instance=RequestContext(request))
 
 
-def test2(request):
+def ping(request):
     from django.http import StreamingHttpResponse
-    from appl.analytic.analytic import get_results
-    '''
-    import subprocess
-    import feedparser
-    a = subprocess.check_output(['C:\\Python27\\python.exe', 'C:\\Users\\user\\PycharmProjects\\tpp\\py2analytic.py','ga:dimension1==aaaa'], shell=True)
-    z = feedparser.parse(a)
-    '''
-    z = func.getAnalytic()
 
-    return StreamingHttpResponse(z)
+
+    return StreamingHttpResponse('pong')
 
 
 
