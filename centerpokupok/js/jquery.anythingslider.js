@@ -1,5 +1,5 @@
 /*!
-	AnythingSlider v1.9.4
+	AnythingSlider v1.9.2
 	Original by Chris Coyier: http://css-tricks.com
 	Get the latest version: https://github.com/CSS-Tricks/AnythingSlider
 
@@ -51,7 +51,7 @@
 			base.$controls = $('<div class="anythingControls"></div>');
 			base.$nav = $('<ul class="thumbNav"><li><a><span></span></a></li></ul>');
 			base.$startStop = $('<a href="#" class="start-stop"></a>');
-
+			
 			if (o.buildStartStop || o.buildNavigation) {
 				base.$controls.appendTo( (o.appendControlsTo && $(o.appendControlsTo).length) ? $(o.appendControlsTo) : base.$wrapper);
 			}
@@ -98,22 +98,6 @@
 			if (o.buildArrows) { base.buildNextBackButtons(); }
 
 			base.$lastPage = base.$targetPage = base.$currentPage;
-
-			// Initialize o.aspectRatio
-			if (o.expand) {
-				if (o.aspectRatio === true){
-					// if aspectRatio = true calculate it
-					o.aspectRatio = base.$el.width() / base.$el.height();
-				} else if (typeof o.aspectRatio === 'string' && o.aspectRatio.indexOf(':') !== -1){
-					// Calculate and set a float from a string e.g. '680:317'
-					var f = o.aspectRatio.split(':');
-					o.aspectRatio = f[0] / f[1];
-				}
-				// Adjust the aspectRatio according to showMultiple i.e. the more panels shown the wider the slider gets
-				if (o.aspectRatio > 0 && o.showMultiple > 1) {
-					o.aspectRatio = o.aspectRatio * o.showMultiple;
-				}
-			}
 
 			base.updateSlider();
 
@@ -246,7 +230,7 @@
 				} else {
 					base.$el.append( base.$items.filter(':first').clone().addClass('cloned') );
 				}
-				base.$el.find('').each(function(){
+				base.$el.find('.cloned').each(function(){
 					// disable all focusable elements in cloned panels to prevent shifting the panels by tabbing
 					$(this).find('a,input,textarea,select,button,area,form').attr({ disabled : 'disabled', name : '' });
 					$(this).find('[id]')[ $.fn.addBack ? 'addBack' : 'andSelf' ]().removeAttr('id');
@@ -284,8 +268,7 @@
 				t = base.$items.eq(base.currentPage-1);
 				if (o.resumeOnVisible) {
 					// prevent display: none;
-					t.css({ opacity: 1, visibility: 'visible' })
-						.siblings().css({ opacity: 0, visibility: 'hidden' });
+					t.css({ opacity: 1 }).siblings().css({ opacity: 0 });
 				} else {
 					// allow display: none; - resets video
 					base.$items.css('opacity',1);
@@ -440,7 +423,7 @@
 
 		// Adjust slider dimensions on parent element resize
 		base.checkResize = function(stopTimer){
-			// checking document visibility
+			// checking document visibility - 
 			var vis = !!(doc.hidden || doc.webkitHidden || doc.mozHidden || doc.msHidden);
 			clearTimeout(base.resizeTimer);
 			base.resizeTimer = setTimeout(function(){
@@ -449,18 +432,18 @@
 				// base.width = width of one panel, so multiply by # of panels; outerPad is padding added for arrows.
 				// ignore changes if window hidden
 				if (!vis && (base.lastDim[0] !== w || base.lastDim[1] !== h)) {
-
+					
 					base.setDimensions(); // adjust panel sizes
-
+					
 					//callback for slider resize
 					base.$el.trigger('slideshow_resized', base);
-
+					
 					// make sure page is lined up (use -1 animation time, so we can differeniate it from when animationTime = 0)
 					base.gotoPage(base.currentPage, base.playing, null, -1);
-
+					
 				}
 				if (typeof(stopTimer) === 'undefined'){ base.checkResize(); }
-
+				
 				// increase time if page is hidden; but don't stop it completely
 			}, vis ? 2000 : 500);
 		};
@@ -482,23 +465,6 @@
 				base.lastDim = [ base.$outer.width(), base.$outer.height() ];
 				w = base.lastDim[0] - base.outerPad[0];
 				h = base.lastDim[1] - base.outerPad[1];
-
-				// Rescale according to the aspectRatio if not null
-				// We have already insured that (in init) o.aspectRatio contains a float.
-				// make sure aspectRatio isn't infinity (divided by zero; so must be less than width, 3 might be a better number)
-				if (o.aspectRatio && o.aspectRatio < base.width){
-					var arW = h * o.aspectRatio;
-					// Really: only one of these should be adjusted therefor the else ... if
-					if (arW < w){
-						w = arW;
-					} else {
-						var arH = w / o.aspectRatio;
-						if (arH < h){
-							h = arH;
-						}
-					}
-				}
-
 				base.$wrapper.add(base.$window).css({ width: w, height: h });
 				base.height = h = (o.showMultiple > 1 && o.mode === 'vertical') ? ph : h;
 				base.width = pw = (o.showMultiple > 1 && o.mode === 'horizontal') ? w/o.showMultiple : w;
@@ -623,7 +589,7 @@
 			// don't trigger events when time < 0 - to prevent FX from firing multiple times on page resize
 			if (time >= 0) { base.$el.trigger('slide_init', base); }
 			// toggle arrows/controls only if there is time to see it - fix issue #317
-			if (time > 0 && o.toggleControls === true ) { base.slideControls(true); }
+			if (time > 0) { base.slideControls(true); }
 
 			// Set visual
 			if (o.buildNavigation){
@@ -711,22 +677,11 @@
 		};
 
 		base.fadeIt = function(el, toOpacity, time, callback){
-			var f = el.filter(':not(:animated)'),
-				t = time < 0 ? 0 : time;
+			var t = time < 0 ? 0 : time;
 			if (o.resumeOnVisible) {
-				if (toOpacity === 1) {
-					f.css('visibility', 'visible');
-				}
-				f.fadeTo(t, toOpacity, function(){
-					if (toOpacity === 0) {
-						f.css('visibility', 'hidden');
-					}
-					if ($.isFunction(callback)) {
-						callback();
-					}
-				});
+				el.filter(':not(:animated)').fadeTo(t, toOpacity, callback);
 			} else {
-				f[ toOpacity === 0 ? 'fadeOut' : 'fadeIn' ](t, callback);
+				el.filter(':not(:animated)')[ toOpacity === 0 ? 'fadeOut' : 'fadeIn' ](t, callback);
 			}
 		};
 
@@ -884,9 +839,6 @@
 		mode                : "horiz",   // Set mode to "horizontal", "vertical" or "fade" (only first letter needed); replaces vertical option
 		expand              : false,     // If true, the entire slider will expand to fit the parent element
 		resizeContents      : true,      // If true, solitary images/objects in the panel will expand to fit the viewport
-		// commented out as this will reduce the size of the minified version
-		//aspectRatio       : null,      // Valid values: null, true, a float e.g. 1.5 (or as 3/2) or a ratio in a string e.g. '3:2'
-		// If true calculate it from original width/height for slider element, if it is a number/ratio use that value
 		showMultiple        : false,     // Set this value to a number and it will show that many slides at once
 		easing              : "swing",   // Anything other than "linear" or "swing" requires the easing plugin or jQuery UI
 
@@ -894,14 +846,13 @@
 		buildNavigation     : false,      // If true, builds a list of anchor links to link to each panel
 		buildStartStop      : false,      // ** If true, builds the start/stop button
 
-/*
-		// commented out as this will reduce the size of the minified version
+		//commented out as this will reduce the size of the minified version
 		appendForwardTo     : null,      // Append forward arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
 		appendBackTo        : null,      // Append back arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
 		appendControlsTo    : null,      // Append controls (navigation + start-stop) to a HTML element (jQuery Object, selector or HTMLNode), if not null
 		appendNavigationTo  : null,      // Append navigation buttons to a HTML element (jQuery Object, selector or HTMLNode), if not null
 		appendStartStopTo   : null,      // Append start-stop button to a HTML element (jQuery Object, selector or HTMLNode), if not null
-*/
+
 
 		toggleArrows        : false,     // If true, side navigation arrows will slide out on hovering & hide @ other times
 		toggleControls      : false,     // if true, slide in controls (navigation + play/stop button) on hover and slide change, hide @ other times
@@ -915,7 +866,7 @@
 		// Function
 		enableArrows        : true,      // if false, arrows will be visible, but not clickable.
 		enableNavigation    : true,      // if false, navigation links will still be visible, but not clickable.
-		enableStartStop     : true,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
+		enableStartStop     : false,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
 		enableKeyboard      : true,      // if false, keyboard arrow keys will not work for this slider.
 
 		// Navigation
@@ -940,7 +891,7 @@
 		animationTime       : 600,       // How long the slideshow transition takes (in milliseconds)
 		delayBeforeAnimate  : 0,         // How long to pause slide animation before going to the desired slide (used if you want your "out" FX to show).
 
-/*
+
 		// Callbacks - commented out to reduce size of the minified version - they still work
 		onSliderResize      : function(e, slider) {}, // Callback when slider resizes
 		onBeforeInitialize  : function(e, slider) {}, // Callback before the plugin initializes
@@ -952,7 +903,7 @@
 		onSlideInit         : function(e, slider) {}, // Callback when slide initiates, before control animation
 		onSlideBegin        : function(e, slider) {}, // Callback before slide animates
 		onSlideComplete     : function(slider) {},    // Callback when slide completes - no event variable!
-*/
+
 
 		// Interactivity
 		clickForwardArrow   : "click",         // Event used to activate forward arrow functionality (e.g. add jQuery mobile's "swiperight")
