@@ -510,7 +510,7 @@ class Item(models.Model):
 
     @staticmethod
 
-    def getItemsAttributesValues(attr, items, fullAttrVal=False,createDate=False):
+    def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
            Return values of attribute list for items list

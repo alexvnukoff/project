@@ -50,8 +50,9 @@ class Connection(SockJSConnection):
         self.redis_client.connect()
 
         yield tornado.gen.Task(self.redis_client.subscribe, [
-            'order_lock',
-            'order_done'
+            'notification',
+            'private_massage',
+            'partner'
         ])
         self.redis_client.listen(self.on_redis_queue)  # при получении сообщения
                            #  вызываем self.on_redis_queue
@@ -65,16 +66,15 @@ class Connection(SockJSConnection):
                 'data': message,
             }))
 
-    def on_open(self, info):
+    def on_open(self, request):
         """
         Определяем сессию django.
         """
-        self.django_session = get_session(info.get_cookie('sessionid').value)
+        self.django_session = get_session(request.get_cookie('sessionid').value)
         self.user = get_user(self.django_session)
-        self.is_client = self.user.has_perm('order.lock')
-        self.is_moder = self.user.has_perm('order.delete')
 
-    def on_message(self):
+
+    def on_message(self, msg):
         """
         Обязательный метод.
         """
@@ -90,37 +90,25 @@ class Connection(SockJSConnection):
                                    #  поняли я передаю данные в JSON
 
             # в зависимости от канала получения распределяем сообщения
-            if message.channel == 'order_lock':
-                self.on_lock(message_body)
+            if message.channel == 'notification':
+                self.sendNoification(message_body)
 
-            if message.channel == 'order_done':
-                self.on_done(message_body)
 
-    def on_lock(self, message):
-        """
-        Заказ закреплён
-        """
-        if message['user'] == self.user.pk:  # юзеру-источнику действия сообщать о нём не надо
-            self.send('lock', message)
 
-    def on_done(self, message):
-        """
-        Заказ выполнен
-        """
+    def sendNoification(self, message):
+
         if message['user'] == self.user.pk:
-            if self.is_client:
-                message['action'] = 'hide'
-            else:
-                message['action'] = 'highlight'
+            self.send('notification', message)
 
-            self.send('done', message)
+
 
     def on_close(self):
         """
         При закрытии соединения отписываемся от сообщений
         """
         self.redis_client.unsubscribe([
-            'order_lock',
-            'order_done'
+           'notification',
+           'private_massage',
+           'partner'
         ])
         self.redis_client.disconnect()

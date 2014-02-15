@@ -24,5 +24,7 @@ urlpatterns = patterns('',
     url(r'^items/([a-zA-Z]+)/create/$', tppcenter.views.get_item_form),
     url(r'^items/([a-zA-Z]+)/update/([0-9]+)/$', tppcenter.views.update_item),
     url(r'^items/([a-zA-Z]+)/showlist/([0-9]+)/$', tppcenter.views.showlist),
+    url(r'^notification/get/$', tppcenter.views.getNotifList),
+
 
 )

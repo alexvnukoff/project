@@ -5,10 +5,14 @@
 
         {% block title %}Tppcenter{% endblock %}
 
-
+         {% block styles %}
+             {{ block.super }}
+             <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}" >
+         {% endblock %}
 
         {% block js %}
              {{  block.super }}
+            <script type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
             <script type="text/javascript">
                 $(document).ready(function(){
                   $('.bxslider').bxSlider();
@@ -256,7 +260,7 @@
                         {% with attr.COUNTRY_NAME|first as country_name %}
                         {% with attr.COUNTRY_FLAG|first as flag %}
                     <li>
-                    	<a href="#"><div class="thumb"> <img src="{% static picture %}" alt="{{ name }}" /></div></a>
+                    	<a href="#"><div class="thumb"> <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" /></div></a>
                         <div class="location">
 
                         	<img src="{% static flag %}" alt="{{ country_name }}" width="18" height="12" class="flag" />
