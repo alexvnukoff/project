@@ -119,7 +119,7 @@ class DjangoLoader(BaseLoader):
     def on_worker_init(self):
         """Called when the worker starts.
 
-        Automatically discovers any ``tasks.py`` files in the applications
+        Automatically discovers any ``amazonMethods.py`` files in the applications
         listed in ``INSTALLED_APPS``.
 
         """
