@@ -3,6 +3,7 @@ from collections import OrderedDict
 from django.core.urlresolvers import reverse
 from copy import copy
 from appl.func import currencySymbol
+from tpp.SiteUrlMiddleWare import get_request
 
 from urllib.parse import urlencode
 
@@ -57,7 +58,7 @@ class DynUrlNode(template.Node):
         self.name_var = args[0]
         self.parametrs = args[1]
         self.new_parametr = args[2]
-        self.query_string = args[3]
+
 
     def render(self, context):
         name = template.Variable(self.name_var).resolve(context)
@@ -81,15 +82,15 @@ class DynUrlNode(template.Node):
         except Exception:
             pass
 
-        try:
-            query_string = copy(template.Variable(self.query_string).resolve(context))
-            query_string = urlencode(query_string)
-        except Exception:
-            query_string = None
 
 
+        request = get_request()
+        query_set = None
+        if len(request.GET) > 0:
+            query_set = urlencode(request.GET)
 
-        url = reverse(name, args=parametrs) + '?' + query_string if query_string else reverse(name, args=parametrs)
+
+        url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)
         return url
 
 @register.tag

@@ -3,7 +3,8 @@ __author__ = 'Root'
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
-from core.models import State
+from appl.models import SystemMessages
+from core.models import State, Attribute, Value
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -63,5 +64,10 @@ def databaseInitialization(sender, **kwargs):
     st1, created=State.objects.get_or_create(title='Default TPP State', perm=gr1)
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
+
+
+
+
+
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)

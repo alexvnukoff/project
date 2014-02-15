@@ -12,8 +12,10 @@ from django.template import RequestContext, loader
 from datetime import datetime
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse
+from tpp.SiteUrlMiddleWare import get_request
+from celery import shared_task, task
 
-
+from core.tasks import addNewsAttrubute
 from django.conf import settings
 
 def get_news_list(request, page=1):
@@ -27,12 +29,14 @@ def get_news_list(request, page=1):
 
     newsPage = _newsContent(request, page)
 
+    notification = len(Notification.objects.filter(user=request.user, read=False))
 
 
 
 
-
-    return render_to_response("News/index.html", {'user_name': user_name, 'current_section':current_section, 'newsPage': newsPage})
+    return render_to_response("News/index.html", {'user_name': user_name, 'current_section': current_section,
+                                                  'newsPage': newsPage, 'notification': notification},
+                              context_instance=RequestContext(request))
 
 
 def _newsContent(request, page=1):
@@ -76,20 +80,14 @@ def addNews(request):
     form = None
 
     if request.POST:
+        func.notify("item_creating", 'notification', user=request.user)
 
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo()
-        gallery = Photo(request.POST, request.FILES)
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        form = ItemForm('News', values=values)
-        form.clean()
-        if form.is_valid() and gallery.is_valid():
-            new = form.save(request.user)
-            gallery.save(parent=new.id, user=request.user)
-            return HttpResponseRedirect(reverse('news:main'))
+        post = request.POST
+        files = request.FILES
+        user = request.user
+        site_id = settings.SITE_ID
+        addNewsAttrubute.delay(post, files, user, site_id)
+        return HttpResponseRedirect(reverse('news:main'))
 
 
 
@@ -101,18 +99,15 @@ def addNews(request):
 
 def updateNew(request, item_id):
     if request.POST:
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
+        post = request.POST
+        files = request.FILES
+        user = request.user
+        site_id = settings.SITE_ID
+        addNewsAttrubute.delay(post, files, user, site_id, item_id)
+        return HttpResponseRedirect(reverse('news:main'))
 
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        form = ItemForm('News', values=values, id=item_id)
-        form.clean()
-        if gallery.is_valid() and form.is_valid():
-             gallery.save(parent=item_id, user=request.user)
-             form.save(request.user)
+
+
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -124,10 +119,6 @@ def updateNew(request, item_id):
 
 
     return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form}, context_instance=RequestContext(request))
-
-
-
-
 
 
 
