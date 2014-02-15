@@ -27,4 +27,5 @@ urlpatterns = patterns('',
     url(r'^legacy/user/csvdb$', leg_v.users_reload_CSV_DB),
     url(r'^legacy/user/dbdb$', leg_v.users_reload_DB_DB),
     url(r'^legacy/user/email$', leg_v.users_reload_email_sent),
+    url(r'^legacy/company/csvdb$', leg_v.company_reload_CSV_DB),
 )
