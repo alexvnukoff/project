@@ -331,7 +331,7 @@ def resize(img, box, fit, out):
         '''Downsample the image.
         @param img: Image -  an Image-object
         @param box: tuple(x, y) - the bounding box of the result image
-        @param fix: boolean - crop the image to fill the box
+        @param fit: boolean - crop the image to fill the box
         @param out: file-like-object - save the image into the output stream
         '''
         #preresize image with factor 2, 4, 8 and fast algorithm
@@ -363,6 +363,8 @@ def resize(img, box, fit, out):
 
         #save it into a file-like object
         img.save(out, "JPEG", quality=75)
+
+
 
 def findKeywords(tosearch):
     import string
@@ -399,3 +401,36 @@ def findKeywords(tosearch):
                     break
 
     return ' '.join(keywords)
+
+def notify(message_type, notificationtype, **params):
+    user = params['user']
+    params['user'] = user.pk
+    message = SystemMessages.objects.get(type=message_type)
+    notif = Notification(user=user, message=message, create_user=user)
+    notif.save()
+
+
+    sendTask(notificationtype, **params)
+
+
+def sendTask(type, **params):
+    import redis
+    from django.conf import settings
+    import json
+    from django.http import HttpResponse
+
+    ORDERS_FREE_LOCK_TIME = getattr(settings, 'ORDERS_FREE_LOCK_TIME', 0)
+    ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
+    ORDERS_REDIS_PORT = getattr(settings, 'ORDERS_REDIS_PORT', 6379)
+    ORDERS_REDIS_PASSWORD = getattr(settings, 'ORDERS_REDIS_PASSWORD', None)
+    ORDERS_REDIS_DB = getattr(settings, 'ORDERS_REDIS_DB', 0)
+
+    # опять удобства
+    service_queue = redis.StrictRedis(
+        host=ORDERS_REDIS_HOST,
+        port=ORDERS_REDIS_PORT,
+        db=ORDERS_REDIS_DB,
+        password=ORDERS_REDIS_PASSWORD
+    ).publish
+
+    service_queue(type, json.dumps(params))
