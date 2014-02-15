@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
 from django.db.models import Count, F
-from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from itertools import chain
@@ -38,19 +37,6 @@ def getSpecificParent(cls, child):
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
     return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="relation")
-
-def createItemSlug(string):
-    nonDig = ''.join([i for i in string if not i.isdigit()])
-
-    if not nonDig:
-        return False
-
-    slug = slugify(nonDig)
-
-    if not slug:
-        return False
-
-    return slugify(string)
 
 class Organization (Item):
     active = ItemManager()

@@ -261,9 +261,17 @@ def test(request):
 
 
 def test2(request):
+    from django.http import StreamingHttpResponse
+    from appl.analytic.analytic import get_results
+    '''
+    import subprocess
+    import feedparser
+    a = subprocess.check_output(['C:\\Python27\\python.exe', 'C:\\Users\\user\\PycharmProjects\\tpp\\py2analytic.py','ga:dimension1==aaaa'], shell=True)
+    z = feedparser.parse(a)
+    '''
+    z = func.getAnalytic()
 
-
-    return HttpResponse(z)
+    return StreamingHttpResponse(z)
 
 
 

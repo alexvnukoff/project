@@ -402,6 +402,7 @@ def findKeywords(tosearch):
 
     return ' '.join(keywords)
 
+
 def notify(message_type, notificationtype, **params):
     user = params['user']
     params['user'] = user.pk
@@ -434,3 +435,19 @@ def sendTask(type, **params):
     ).publish
 
     service_queue(type, json.dumps(params))
+
+
+def getAnalytic(params = None):
+
+    from appl.analytic.analytic import get_results
+
+    if not isinstance(params, dict):
+        raise ValueError('Filter required')
+
+    if 'end_date' not in params:
+        params['end_date'] = '2050-01-01'
+    if 'start_date' not in params:
+        params['start_date'] = '2014-01-01'
+
+    return get_results(**params)
+
