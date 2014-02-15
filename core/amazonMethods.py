@@ -16,7 +16,7 @@ from celery import shared_task
 
 
 
-def add(imageFile=None, toDelete=None):
+def add(imageFile=None):
 
     sizes = {
         'big': {'box': (500, 500), 'fit': False},
@@ -53,17 +53,11 @@ def add(imageFile=None, toDelete=None):
                 # Uploading a single file
                 #f = open('some_file.zip','rb')
                 requests.append(pool.upload(path, f, close=True))
-                if isinstance(toDelete, list):
-                    for delete in toDelete:
-                        filename = type + '/' + delete
-                        requests.append(pool.delete(filename)) if toDelete else ''
+
 
 
             f = open(imageFile, 'rb')
-            if isinstance(toDelete, list):
-                    for delete in toDelete:
-                        filename = delete
-                        requests.append(pool.delete(filename)) if toDelete else ''
+
 
             requests.append(pool.upload(folder + '/' + name + '.jpg', f, close=True))
             pool.all_completed(requests)
@@ -83,10 +77,40 @@ def add(imageFile=None, toDelete=None):
 
 
         except Exception as e:
-            raise e
+            return False
 
 
     return folder + '/' + name + '.jpg'
+
+
+def addFile(file=None):
+    ext = file.split('.')[-1]
+    name = "%s.%s" % (uuid.uuid4(), ext)
+    i = now()
+    folder = "%s/%s/%s" % (i.day, i.month, i.year)
+
+
+
+    #time.sleep(60)
+
+    if file:
+        try:
+            requests = []
+            # Creating a pool connection
+            pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
+                                         endpoint='s3.amazonaws.com')
+
+            path = '/' + folder + '/' + name
+            f = open(file, 'rb')
+            requests.append(pool.upload(path, f, close=True))
+            pool.all_completed(requests)
+            filename = file
+            if os.path.isfile(filename):
+                    os.remove(filename)
+        except Exception as e:
+            return False
+
+    return folder + '/' + name
 
 
 def delete(toDelete=None):

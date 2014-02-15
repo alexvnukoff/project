@@ -63,6 +63,7 @@ INSTALLED_APPS = (
 
 
 
+
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 
@@ -132,6 +133,7 @@ LOCALE_PATHS = ("locale",)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+
 STATIC_URL = '/static/'
 
 
@@ -139,11 +141,20 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
 
 
+
+
+
+
+
+
 #Were added by Expert Center -----------------------------------------------------
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
+
+MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )

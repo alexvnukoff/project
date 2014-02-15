@@ -195,6 +195,29 @@ class Comment(Item):
         """
         return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="relation")
 
+class SystemMessages(Item):
+     MESSAGE_TYPE = (
+        ('item_creating', 'Creating item in process'),
+        ('item_updating', 'Update item in process'),
+        ('item_created', 'Item created'),
+        ('item_updated', 'Item Updated'),
+        ("error_creating", "Error in creating"))
+     type = models.CharField(max_length=200, choices=MESSAGE_TYPE)
+
+     def __str__(self):
+        return self.getName()
+
+
+
+class Notification(Item):
+    user = models.ForeignKey(User, related_name="user2notif")
+    message = models.ForeignKey(SystemMessages, related_name="mess2notif")
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.getName()
+
+
 class Category(Item):
     active = ItemManager()
     objects = models.Manager()
