@@ -10,16 +10,18 @@
         <title>{% block title %}{% endblock %}</title>
  {% block styles %}
             <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
+            <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
             <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
-            <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}" />
+
 
             <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
  {% endblock %}
 {% block js %}
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src="{% static "tppcenter/js/jquery-1.10.2.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
-        <script type="text/javascript" src="{% static "tppcenter/js/jquery.anythingslider.js"%}"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+
+
         <script type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
 
   {% endblock %}
@@ -78,6 +80,7 @@
         </div>
     </div>
 
+ <div class="black_overlay" id="fade-profile"></div>
  {% endblock %}
 </body>
 </html>
