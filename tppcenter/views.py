@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery
-from django.template import RequestContext
+from django.template import RequestContext, loader
+from django.views.decorators.csrf import ensure_csrf_cookie
 from datetime import datetime
 from django.views.decorators.cache import cache_page
 from django.utils.timezone import now
@@ -90,7 +91,32 @@ def home(request):
 
     return render_to_response("index.html", {"countriesList": countriesList, 'organizationsList': organizationsList,
                                              'productsList': productsList, 'serviceList': serviceList,
-                                             'greetingsList': greetingsList, 'exhibitionsList': exhibitionsList})
+                                             'greetingsList': greetingsList, 'exhibitionsList': exhibitionsList},
+
+                              context_instance=RequestContext(request))
+@ensure_csrf_cookie
+def getNotifList(request):
+    if request.is_ajax():
+        notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
+        notifications_id = [notification.message.pk for notification in notifications]
+
+
+
+
+        notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), notifications_id)
+        notifDict = {}
+
+        for notification in notifications:
+            notifDict[notification.pk] = notificationsValues[notification.message.pk]
+
+        template = loader.get_template('main/notoficationlist.html')
+        context = RequestContext(request, {'notifDict': notifDict})
+
+        return HttpResponse(template.render(context))
+
+
+
+
 
 def set_news_list(request):
     page = request.GET.get('page', 1)
@@ -200,13 +226,13 @@ def meth(request):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
     if not request.POST:
         form = Photo()
-        itemform = ItemForm(item)
+        itemform = ItemForm(Item)
     else:
         form = Photo(request.POST, request.FILES)
         values = {}
         values.update(request.FILES)
         values.update(request.POST)
-        itemform = ItemForm(item, values=values)
+        itemform = ItemForm(Item, values=values)
         itemform.clean()
         if form.is_valid():
             ob = itemform.save()
@@ -234,18 +260,11 @@ def test(request):
     return render_to_response('test.html', locals(), context_instance=RequestContext(request))
 
 
-def test2(request):
+def ping(request):
     from django.http import StreamingHttpResponse
-    from appl.analytic.analytic import get_results
-    '''
-    import subprocess
-    import feedparser
-    a = subprocess.check_output(['C:\\Python27\\python.exe', 'C:\\Users\\user\\PycharmProjects\\tpp\\py2analytic.py','ga:dimension1==aaaa'], shell=True)
-    z = feedparser.parse(a)
-    '''
-    z = func.getAnalytic()
 
-    return StreamingHttpResponse(z)
+
+    return StreamingHttpResponse('pong')
 
 
 

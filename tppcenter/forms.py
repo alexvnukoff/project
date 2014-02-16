@@ -17,6 +17,8 @@ from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import modelformset_factory
 from django.db import transaction
+from core.amazonMethods import add, delete, addFile
+from appl import func
 
 
 class ItemForm(forms.Form):
@@ -32,6 +34,7 @@ class ItemForm(forms.Form):
         Example :
         form = Form("News" , values = request.POST, id = 4)(Update News with id 4 by values)
         '''
+        self.to_delete_if_exception = []
         self.item = item
         self.id = id
         self.file_to_delete = ""
@@ -211,7 +214,8 @@ class ItemForm(forms.Form):
         else:
             return True
 
-    def save(self, user):
+    @transaction.atomic
+    def save(self, user, site_id):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -222,32 +226,48 @@ class ItemForm(forms.Form):
         path_to_images = "upload/"
         if not self.is_valid():
             raise ValidationError
-        if not self.id:
-            site = settings.SITE_ID
-            self.obj = globals()[self.item](create_user=user)
-            self.obj.save()
-            self.obj.sites.add(settings.SITE_ID)
+        sid = transaction.savepoint()
+        try:
+            if not self.id:
+                site = site_id
+                self.obj = globals()[self.item](create_user=user)
+                self.obj.save()
+                self.obj.sites.add(site_id)
+            else:
+                self.obj = globals()[self.item].objects.get(id=self.id)
+               # self.obj.name = self.fields['NAME'].initial
+                #self.obj.title = self.fields['NAME'].initial
+                self.obj.save()
+            attrValues = {}
+            for title in self.fields:
+                if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
+                        and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
+                    self._save_file(self.fields[title].initial, title, user, path_to_images)
+                    # If Field is Image that call save_file method
+
+                attrValues[title] = self.fields[title].initial
+
+            self.obj.setAttributeValue(attrValues, user)
+
+
+        except Exception:
+            func.notify("error_creating", 'notification', user=user)
+            if len(self.to_delete_if_exception) > 0:
+                 delete(self.to_delete_if_exception)
+            transaction.savepoint_rollback(sid)
         else:
-            self.obj = globals()[self.item].objects.get(id=self.id)
-           # self.obj.name = self.fields['NAME'].initial
-            #self.obj.title = self.fields['NAME'].initial
-            self.obj.save()
-        attrValues = {}
-        for title in self.fields:
-            if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
-                    and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
-                self._save_file(self.fields[title].initial, title, path_to_images)
-                # If Field is Image that call save_file method
+            transaction.savepoint_commit(sid)
 
-            attrValues[title] = self.fields[title].initial
 
-        self.obj.setAttributeValue(attrValues, user)
+        if self.file_to_delete:
+            delete(self.file_to_delete)
+
 
         return self.obj
 
 
 
-    def _save_file(self, file, title, path=''):
+    def _save_file(self, file, title, user, path=''):
         """
         Method that save new file , and delete old file if exist
         parameters:
@@ -262,18 +282,26 @@ class ItemForm(forms.Form):
         ext = filename.split('.')[-1]
         filename = "%s.%s" % (uuid.uuid4(), ext)
         fd = open('%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename)), 'wb')
+
         for chunk in file.chunks():
             fd.write(chunk)
         fd.close()
-        filename = str(path) + str(filename)
-        if isinstance(self.fields[title],forms.ImageField):
+
+        file = '%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename))
+
+        if isinstance(self.fields[title], forms.ImageField):
+            filename = add(imageFile=file)
+            self.to_delete_if_exception.append(filename)
             self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
-        if isinstance(self.fields[title],forms.FileField):
+
+        if isinstance(self.fields[title], forms.FileField) and not isinstance(self.fields[title], forms.ImageField):
+            filename = addFile(file=file)
+            self.to_delete_if_exception.append(filename)
             self.fields[title].initial = FieldFile(instance=None, field=FileField(),  name=filename)
-        if self.file_to_delete:
-           filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
-           if os.path.isfile(filename):
-                os.remove(filename)
+        #if self.file_to_delete:
+         #  filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
+          # if os.path.isfile(filename):
+           #     os.remove(filename)
         #if file has been saved , update initial value of ImageField
 
     def setlabels(self, dict):
@@ -319,17 +347,25 @@ class BasePhotoGallery(BaseModelFormSet):
         parent_id = items that in relationship with Gallery
         """
         self.toDelete = []
+        self.files_to_delete = []
         super(BasePhotoGallery, self).__init__(*args, **kwargs)
         post = args[0] if args else False
         files = args[1] if args and len(args) > 0 else False
+
         if post and post.getlist("del[]"):
             self.toDelete.extend(post.getlist("del[]"))
+
         if post and files:
             for i in range(0, int(post['form-TOTAL_FORMS'])):
 
                 if post.get('form-'+str(i), False) and files.get('form-'+str(i)+'-photo', False):
                     item = post['form-'+str(i)]
                     self.toDelete.append(item)
+
+        if self.toDelete:
+            items = Gallery.objects.filter(pk__in=self.toDelete).distinct()
+            self.toDelete = [item.photo.name for item in items]
+            items.delete()
 
 
 
@@ -345,27 +381,43 @@ class BasePhotoGallery(BaseModelFormSet):
         form.save(parent = 34 , user = request.user, commit =True)
         """
         self.user = user
-        instances = super(BasePhotoGallery, self).save(commit)
-        for instance in instances:
-            instance.create_user = self.user
-            instance.save()
+        sid = transaction.savepoint()
+        try:
+            instances = super(BasePhotoGallery, self).save(commit)
+            for instance in instances:
+                instance.create_user = self.user
+                instance.save()
 
-        instances_pk = [instance.pk for instance in instances]
-        bulkInsert = []
-        item = Item.objects.get(pk=parent)
-        with transaction.atomic():
+            for instance in instances:
+                name = instance.photo.file.name
+                instance.photo.close()
+                file = add(imageFile=name)
+                self.files_to_delete.append(file)
+                instance.photo = file
+                instance.save()
+
+
+
+            instances_pk = [instance.pk for instance in instances]
+            bulkInsert = []
+            item = Item.objects.get(pk=parent)
             for instance in instances:
                 bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
             if bulkInsert:
-                   Relationship.objects.bulk_create(bulkInsert)
+                Relationship.objects.bulk_create(bulkInsert)
+        except Exception:
+            func.notify("error_creating", 'notification', user=user)
+            if len(self.files_to_delete) > 0:
+               delete(self.files_to_delete)
+            transaction.savepoint_rollback(sid)
+        else:
+            transaction.savepoint_commit(sid)
 
-            if self.toDelete:
-                items = Gallery.objects.filter(pk__in=self.toDelete)
-                for item in items:
-                    file = '%s/%s' % (settings.MEDIA_ROOT, item.photo.name)
-                    if os.path.isfile(file):
-                        os.remove(file)
-                items.delete()
+
+
+        if self.toDelete:
+                delete(self.toDelete)
+
 
 
 

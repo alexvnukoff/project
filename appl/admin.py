@@ -3,10 +3,13 @@ from appl.models import (Advertising, Announce, Article, Basket, Company, Cabine
 
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment, Favorite,
-                         Greeting, Exhibition)
+                         Greeting, Exhibition, SystemMessages, Notification)
 
 
 from django.contrib import admin
+
+
+
 
 admin.site.register(Advertising)
 admin.site.register(Announce)
@@ -35,3 +38,5 @@ admin.site.register(Comment)
 admin.site.register(Favorite)
 admin.site.register(Exhibition)
 admin.site.register(Greeting)
+admin.site.register(Notification)
+admin.site.register(SystemMessages)

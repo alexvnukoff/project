@@ -63,6 +63,7 @@ INSTALLED_APPS = (
 
 
 
+
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 
@@ -93,17 +94,18 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
     }
 }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'ORCL',
-        'USER': 'tpp',
-        'PASSWORD': 'migirov',
-        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        'ENGINE': 'oraclepool',
+        #'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'TPPDB',
+        'USER': 'tppProduction',
+        'PASSWORD': 'TrQwE123$%^;',
+        'HOST': 'tpp-production-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
         'PORT': '1521',
         #Section for Oracle
         'OPTIONS': {
@@ -112,6 +114,8 @@ DATABASES = {
         },
     }
 }
+
+SOUTH_DATABASE_ADAPTERS = { 'default': "south.db.oracle" }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -132,6 +136,7 @@ LOCALE_PATHS = ("locale",)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+
 STATIC_URL = '/static/'
 
 
@@ -139,11 +144,20 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
 
 
+
+
+
+
+
+
 #Were added by Expert Center -----------------------------------------------------
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
+
+MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
@@ -203,7 +217,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200',
+        'URL': 'http://ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
@@ -223,7 +237,7 @@ AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
 
-ORDERS_REDIS_HOST = 'testredis.rhhy9l.0001.usw2.cache.amazonaws.com'
+ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
 
 
 ##################### Celery settings ####################################

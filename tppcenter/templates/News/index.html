@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static from staticfiles %}
 {% load i18n %}
+
 
    {% block title %}News{% endblock %}
 
@@ -17,12 +18,15 @@
 
     {% block js %}
         {{  block.super }}
-        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript">
             $(function() {
 	            $( "#tabs" ).tabs();
+                $( ".tabfilter" ).tabs();
                 });
+
+
         </script>
+
     {% endblock %}
 
 {% block body %}
@@ -76,7 +80,9 @@
         </div>
       {{ newsPage }}
         <div class="newsright">
-        	<div class="bannerleft nomargin"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
+
+        	<div class="bannerleft nomargin"><a href="#"><img src="{{ MEDIA_URL }}big/9/2/2014/4d433f82-e3f5-4a23-bfa7-8362b7b05634.jpg" alt="" /></a></div>
+
             <div class="news-ads">
             	<div class="title">Платные объявления</div>
                 <span class="titlesub">Название раздела</span>
