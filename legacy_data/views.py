@@ -161,8 +161,7 @@ def company_reload_CSV_DB(request):
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load company data from CSV file into buffer table...')
-    #with open('c:\\data\\companies_legacy.csv', 'r') as f:
-    with open('c:\\data\\test_companies.csv', 'r', encoding='utf8') as f:
+    with open('c:\\data\\companies_legacy.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
@@ -175,13 +174,13 @@ def company_reload_CSV_DB(request):
             data[i][k] = base64.standard_b64decode(data[i][k])
 
         if sz1 == 0:
-            print('The row# ', i, ' is wrong!')
+            print('The row# ', i+1, ' is wrong!')
             bad_count += 1
             continue
-            #break
 
         btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
-        short_name = bytearray(data[i][1]).decode(encoding='utf-8')
+        short_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
         detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
         detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
 
@@ -192,7 +191,11 @@ def company_reload_CSV_DB(request):
 
         tpp_name = bytearray(data[i][5]).decode(encoding='utf-8')
         moderator = bytearray(data[i][6]).decode(encoding='utf-8')
-        full_name = bytearray(data[i][7]).decode(encoding='utf-8')
+        if len(data[i][7]):
+            full_name = bytearray(data[i][7]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", '').strip()
+        else:
+            full_name = short_name
         ur_address = bytearray(data[i][8]).decode(encoding='utf-8')
         fact_address = bytearray(data[i][9]).decode(encoding='utf-8')
         tel = bytearray(data[i][10]).decode(encoding='utf-8')
@@ -225,7 +228,8 @@ def company_reload_CSV_DB(request):
         else:
             is_deleted = False
 
-        keywords = bytearray(data[i][30]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][30]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
 
         try:
             L_Company.objects.get_or_create(
@@ -262,14 +266,11 @@ def company_reload_CSV_DB(request):
                                             keywords = keywords)
             count += 1
         except:
-            #if not i%200:
-            print('Milestone: ', i)
-            print(btx_id, '##', short_name, '##', ' Count: ', i)
+            print('Milestone: ', i+1)
+            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
             continue
-            #break
 
-        #if not i%200:
-        print('Milestone: ', i)
+        print('Milestone: ', i+1)
 
     print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
     time2 = datetime.datetime.now()
