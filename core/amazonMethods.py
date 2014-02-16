@@ -59,7 +59,7 @@ def add(imageFile=None):
             f = open(imageFile, 'rb')
 
 
-            requests.append(pool.upload(folder + '/' + name + '.jpg', f, close=True))
+            requests.append(pool.upload('/original/' + folder + '/' + name + '.jpg', f, close=True))
             pool.all_completed(requests)
 
 
@@ -124,7 +124,7 @@ def delete(toDelete=None):
      try:
          for delete in toDelete:
             filename = delete
-            requests.append(pool.delete(filename))
+            requests.append(pool.delete('/original/' + filename))
          for size in sizes:
             for delete in toDelete:
                 filename = size + '/' + delete

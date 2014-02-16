@@ -679,7 +679,7 @@ class Item(models.Model):
         if not slug:
             return pk
 
-        return slugify(string) + '-' + pk
+        return slugify(string) + '-' + str(pk)
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
