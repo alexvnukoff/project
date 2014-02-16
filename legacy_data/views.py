@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from legacy_data.models import L_User, L_Company
+from legacy_data.models import L_User, L_Company, L_Product, L_TPP
 from core.models import User
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
@@ -277,3 +277,170 @@ def company_reload_CSV_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Companies were migrated from CSV into DB!')
+
+def product_reload_CSV_DB(request):
+    '''
+        Reload products' data from prepared CSV file named product_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PRODUCT
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load product data from CSV file into buffer table...')
+    with open('c:\\data\\product_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        prod_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+
+        if not len(data[i][4]):
+            create_date = None
+        else:
+            create_date = datetime.datetime.strptime(bytearray(data[i][4]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        company_id = bytearray(data[i][5]).decode(encoding='utf-8')
+        photos1 = bytearray(data[i][6]).decode(encoding='utf-8')
+        discount = bytearray(data[i][7]).decode(encoding='utf-8')
+        add_pages = bytearray(data[i][8]).decode(encoding='utf-8')
+        tpp = bytearray(data[i][9]).decode(encoding='utf-8')
+        direction = bytearray(data[i][10]).decode(encoding='utf-8')
+        if (data[i][11] == 'Да'):
+            is_deleted = True
+        else:
+            is_deleted = False
+        photos2 = bytearray(data[i][12]).decode(encoding='utf-8')
+        file = bytearray(data[i][13]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][14]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
+
+        try:
+            L_Product.objects.get_or_create(
+                                            btx_id = btx_id,\
+                                            prod_name = prod_name,\
+                                            detail_page_url = detail_page_url,\
+                                            detail_picture = detail_picture,\
+                                            create_date = create_date,\
+                                            company_id = company_id,\
+                                            photos1 = photos1,\
+                                            discount = discount,\
+                                            add_pages = add_pages,\
+                                            tpp = tpp,\
+                                            direction = direction,\
+                                            is_deleted = is_deleted,\
+                                            photos2 = photos2,\
+                                            file = file,\
+                                            keywords = keywords)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Products were migrated from CSV into DB!')
+
+def tpp_reload_CSV_DB(request):
+    '''
+        Reload TPPs' data from prepared CSV file named product_legacy.csv
+        into buffer DB table LEGACY_DATA_L_TPP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load product data from CSV file into buffer table...')
+    with open('c:\\data\\tpp_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        tpp_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+
+        if not len(data[i][4]):
+            create_date = None
+        else:
+            create_date = datetime.datetime.strptime(bytearray(data[i][4]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        country = bytearray(data[i][5]).decode(encoding='utf-8')
+        moderator = bytearray(data[i][6]).decode(encoding='utf-8')
+        head_pic = bytearray(data[i][7]).decode(encoding='utf-8')
+        logo = bytearray(data[i][8]).decode(encoding='utf-8')
+        domain = bytearray(data[i][9]).decode(encoding='utf-8')
+        header_letter = bytearray(data[i][10]).decode(encoding='utf-8')
+        member_letter = bytearray(data[i][11]).decode(encoding='utf-8')
+        address = bytearray(data[i][12]).decode(encoding='utf-8')
+        email = bytearray(data[i][13]).decode(encoding='utf-8')
+        fax = bytearray(data[i][14]).decode(encoding='utf-8')
+        map = bytearray(data[i][15]).decode(encoding='utf-8')
+        tpp_parent = bytearray(data[i][16]).decode(encoding='utf-8')
+        phone = bytearray(data[i][17]).decode(encoding='utf-8')
+        extra = bytearray(data[i][18]).decode(encoding='utf-8')
+
+        try:
+            L_TPP.objects.get_or_create(btx_id = btx_id,\
+                                        tpp_name = tpp_name,\
+                                        detail_page_url = detail_page_url,\
+                                        detail_picture = detail_picture,\
+                                        create_date = create_date,\
+                                        country = country,\
+                                        moderator = moderator,\
+                                        head_pic = head_pic,\
+                                        logo = logo,\
+                                        domain = domain,\
+                                        header_letter = header_letter,\
+                                        member_letter = member_letter,\
+                                        address = address,\
+                                        email = email,\
+                                        fax = fax,\
+                                        map = map,\
+                                        tpp_parent = tpp_parent,\
+                                        phone = phone,\
+                                        extra = extra)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            print(btx_id, '##', tpp_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPPs were migrated from CSV into DB!')
