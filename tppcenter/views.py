@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -13,10 +13,22 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from datetime import datetime
 from django.views.decorators.cache import cache_page
 from django.utils.timezone import now
+from registration.forms import RegistrationFormUniqueEmail
+from django.contrib.auth.forms import AuthenticationForm
+from registration.backends.default.views import RegistrationView
+from django.utils.translation import ugettext as _
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
 
 from django.conf import settings
 
 def home(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('news:main'))
+
+    if request.POST.get('Register', None):
+        return registration(request)
+
     countries = Country.active.get_active()
     countries_id = [country.pk for country in countries]
 
@@ -27,7 +39,7 @@ def home(request):
 
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
 
-    products = Product.active.get_active_related()[:3]
+    products = Product.active.get_active_related().order_by('-pk')[:3]
     products = products.values('c2p__parent__organization__c2p__parent__country', "pk")
     country_dict = {}
     for product in products:
@@ -89,6 +101,10 @@ def home(request):
 
 
 
+
+
+
+
     return render_to_response("index.html", {"countriesList": countriesList, 'organizationsList': organizationsList,
                                              'productsList': productsList, 'serviceList': serviceList,
                                              'greetingsList': greetingsList, 'exhibitionsList': exhibitionsList},
@@ -98,21 +114,76 @@ def home(request):
 def getNotifList(request):
     if request.is_ajax():
         notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
-        notifications_id = [notification.message.pk for notification in notifications]
+        messages_id = [notification.message.pk for notification in notifications]
+        notifications_id = [notification.pk for notification in notifications]
 
 
 
 
-        notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), notifications_id)
+
+        notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
         notifDict = {}
 
         for notification in notifications:
             notifDict[notification.pk] = notificationsValues[notification.message.pk]
 
+        Notification.objects.filter(pk__in=notifications_id)  .update(read=True)
+
+
         template = loader.get_template('main/notoficationlist.html')
         context = RequestContext(request, {'notifDict': notifDict})
 
         return HttpResponse(template.render(context))
+
+
+def user_login(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('news:main'))
+
+    form = None
+    if request.POST.get('Login', None):
+       form = AuthenticationForm(request, data=request.POST)
+       if form.is_valid():
+          user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
+          login(request, user)
+          return HttpResponseRedirect(reverse('news:main'))
+
+    return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
+
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+def registration(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('news:main'))
+
+    if request.POST.get('Register', None):
+         form = RegistrationFormUniqueEmail(request.POST)
+         if form.is_valid() and request.POST.get('tos', None):
+            cleaned = form.cleaned_data
+            reg_view = RegistrationView()
+            try:
+                reg_view.register(request, **cleaned)
+                return render_to_response("registration/registration_complete.html", locals())
+            except ValueError:
+                return render_to_response("registration/registration_closed.html")
+         else:
+              if not request.POST.get('tos', None):
+                 form.errors.update({"rules": _("Agreement with terms is required")})
+              return render_to_response('registration/registration.html', {'form': form, 'user': request.user}, context_instance=RequestContext(request))
+
+    return render_to_response('registration/registration.html', {'user': request.user}, context_instance=RequestContext(request))
+
+
+
+
+
+
+
+
 
 
 
@@ -169,7 +240,7 @@ def get_item(request, item):
         form = ItemForm(item, values=values)
         form.clean()
         if form.is_valid():
-            com = form.save()
+            com = form.save(request.user, settings.SITE_ID)
            # obj = Tpp.objects.get(title="Moscow Tpp")
             #Relationship.objects.create(title=obj.name, parent=obj, child=com, create_user=request.user)
     return render_to_response('forelement.html', locals())
@@ -191,7 +262,7 @@ def get_item_form(request, item):
         form = ItemForm(item, values=values)
         form.clean()
         if form.is_valid():
-            com = form.save(request.user)
+            com = form.save(request.user, settings.SITE_ID)
 
 
 
@@ -214,7 +285,7 @@ def update_item(request, item, id):
         form = ItemForm(item, values=values, id=id)
         form.clean()
         if form.is_valid():
-            com = form.save(request.user)
+            com = form.save(request.user, settings.SITE_ID)
 
 
 

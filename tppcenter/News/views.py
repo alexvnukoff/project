@@ -81,13 +81,22 @@ def addNews(request):
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
-
-        post = request.POST
-        files = request.FILES
         user = request.user
-        site_id = settings.SITE_ID
-        addNewsAttrubute.delay(post, files, user, site_id)
-        return HttpResponseRedirect(reverse('news:main'))
+        user = request.user
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
+
+        values = {}
+        values['NAME'] = request.POST.get('NAME', "")
+        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
+        values['IMAGE'] = request.FILES.get('IMAGE', "")
+
+        form = ItemForm('News', values=values)
+        form.clean()
+
+        if gallery.is_valid() and form.is_valid():
+            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID)
+            return HttpResponseRedirect(reverse('news:main'))
 
 
 
@@ -98,23 +107,37 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
-    if request.POST:
-        post = request.POST
-        files = request.FILES
-        user = request.user
-        site_id = settings.SITE_ID
-        addNewsAttrubute.delay(post, files, user, site_id, item_id)
-        return HttpResponseRedirect(reverse('news:main'))
-
-
-
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(parent_id=item_id)
     photos = ""
+
     if gallery.queryset:
         photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
     form = ItemForm('News', id=item_id)
+
+    if request.POST:
+        func.notify("item_creating", 'notification', user=request.user)
+
+        user = request.user
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
+
+        values = {}
+        values['NAME'] = request.POST.get('NAME', "")
+        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
+        values['IMAGE'] = request.FILES.get('IMAGE', "")
+
+        form = ItemForm('News', values=values, id=item_id)
+        form.clean()
+
+        if gallery.is_valid() and form.is_valid():
+            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id)
+            return HttpResponseRedirect(reverse('news:main'))
+
+
+
+
 
 
 
