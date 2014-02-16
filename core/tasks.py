@@ -23,8 +23,8 @@ def addNewsAttrubute(post, files, user, site_id, item_id=None):
     form = ItemForm('News', values=values, id=item_id)
     form.clean()
 
-    if gallery.is_valid() and form.is_valid():
-        new = form.save(user, site_id)
+    new = form.save(user, site_id)
+    if new:
         gallery.save(parent=new.id, user=user)
         func.notify("item_created", 'notification', user=user)
 

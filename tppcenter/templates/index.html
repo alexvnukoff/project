@@ -108,7 +108,7 @@
     <div class="main">
     	<div class="sideleft">
         	<div class="community">
-            	<span class="title">{% trans 'International community' %}</span>
+            	<span class="title">{% trans 'Community' %}</span>
                 <div class="slide-comm">
                     <ul class="bxslider">
                         {% for id,attr in organizationsList.items %}
@@ -117,7 +117,7 @@
                                  {% if forloop.counter|divisibleby:"5" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
-                                 <a href="#" class="items"><img src="{% static flag %}" alt="" /></a>
+                                 <a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
                             	 {% if forloop.counter|divisibleby:"4" %}
                                     </li>
                                  {% endif %}
@@ -169,7 +169,7 @@
                            {% if forloop.counter|divisibleby:"26" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
-                            	<a href="#" class="items"><img src="{% static flag %}" alt="{{ name }}" /></a>
+                            	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
                              {% if forloop.counter|divisibleby:"25" %}
                                 </li>
                             {% endif %}
@@ -238,16 +238,22 @@
                     	<p><b>{% trans 'Sign up' %}</b></p>
                         {% trans 'right now' %}
                     </div>
-                    <ul class="formregister">
-                    	<li><input type="text" name="" class="text" placeholder="E-mail" /></li>
-                        <li><input type="text" name="" class="text" placeholder="{% trans 'Password' %}" /></li>
-                        <li><input type="text" name="" class="text" placeholder="{% trans 'Confirm password' %}" /></li>
+
+                    <form method='post' action=''>
+                     {% csrf_token %}
+                     <ul class="formregister">
+                    	<li><input id="id_email"  class="text"  name="email" type="email" placeholder="E-mail"/></li>
+                        <li> <input id="id_password1" type="password"  class="text "  name="password1" placeholder="{% trans 'Password' %}"/></li>
+                        <li><input id="id_password2" type="password"  class="text"  name="password2" placeholder="{% trans 'Confirm password' %}"/></li>
                         <li>
-                        	<input type="checkbox" name="" class="check" />
-                            {% trans 'I have read and accept' %} <a href="#">{% trans 'the term of use' %}</a>
+                        	<input type="checkbox" name="tos" />
+                            {% trans 'I agree to' %} <a href="#">{% trans 'the term' %}</a>
                         </li>
-                        <li class="end"><a href="#" class="btnreg">{% trans 'Sign up' %}</a></li>
+
+                        <li class="end"><input type="submit" name="Register" class="btnreg" value="{% trans "Sign up" %}"></li>
                     </ul>
+                   </form>
+
                 </div>
             </div>
             <div class="content-l">
@@ -263,7 +269,7 @@
                     	<a href="#"><div class="thumb"> <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" /></div></a>
                         <div class="location">
 
-                        	<img src="{% static flag %}" alt="{{ country_name }}" width="18" height="12" class="flag" />
+                        	<img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ country_name }}" width="18" height="12" class="flag" />
                             <a href="#">{{ name }}</a>
                         </div>
                     </li>
@@ -289,7 +295,7 @@
                         {% with attr.ORG_ID as org_id %}
                         	<li>
                             	<div class="topcm">
-                                	<img src="{% static org_flag %}" alt="{{ org_name }}" width="18" height="12" class="flag" />
+                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" alt="{{ org_name }}" width="18" height="12" class="flag" />
                                     <div class="date">
                                         <p><b>{{ date_event}}</b></p>
                                         <p>{{ country }}, {{ city }}</p>
@@ -322,7 +328,7 @@
 
                         	<li>
                             	<div class="topcm">
-                                	<img src="{% static flag %}" width="18" height="12" class="flag" />
+                                	<img src="{{ MEDIA_URL }}small/{{flag  }} " width="18" height="12" class="flag" />
                                     <div class="date">
                                         <p><b>{{ country_name }}</b></p>
                                         <p>{{ company_name }}</p>
@@ -382,7 +388,7 @@
                     	<div class="bgtitle">
                         	<div class="textin">{{ tpp }}</div>
                         </div>
-                    	<a href="#"><img src="{% static image %}" alt="{{ name }}" class="avatar" /></a>
+                    	<a href="#"><img src="{{ MEDIA_URL }}big/{{image}} " alt="{{ name }}" class="avatar" /></a>
                         <div class="name">
                         	<a href="#">{{ name }}</a>
                             {{ position }}

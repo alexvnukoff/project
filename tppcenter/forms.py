@@ -249,21 +249,25 @@ class ItemForm(forms.Form):
 
             self.obj.setAttributeValue(attrValues, user)
 
+            if self.file_to_delete:
+               delete(self.file_to_delete)
 
-        except Exception:
+        except Exception as e:
+            transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)
             if len(self.to_delete_if_exception) > 0:
                  delete(self.to_delete_if_exception)
-            transaction.savepoint_rollback(sid)
+            return False
+
         else:
             transaction.savepoint_commit(sid)
+            return self.obj
 
 
-        if self.file_to_delete:
-            delete(self.file_to_delete)
 
 
-        return self.obj
+
+
 
 
 
@@ -406,17 +410,19 @@ class BasePhotoGallery(BaseModelFormSet):
             if bulkInsert:
                 Relationship.objects.bulk_create(bulkInsert)
         except Exception:
+            transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)
             if len(self.files_to_delete) > 0:
                delete(self.files_to_delete)
-            transaction.savepoint_rollback(sid)
+
         else:
             transaction.savepoint_commit(sid)
-
-
-
-        if self.toDelete:
+            if self.toDelete:
                 delete(self.toDelete)
+
+
+
+
 
 
 
