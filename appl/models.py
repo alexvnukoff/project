@@ -1,18 +1,22 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from core.models import Item, State, Relationship, User
 from django.contrib.auth.models import Group, Permission
 from random import randint
 from core.hierarchy import hierarchyManager
-from core.models import User
+from core.models import User, ItemManager
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
 from django.db.models import Count, F
-from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from itertools import chain
+
+
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
@@ -23,7 +27,7 @@ def getSpecificChildren(cls, parent):
             Example: getSpecificChildren("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="rel")
+    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="relation")
 
 
 def getSpecificParent(cls, child):
@@ -32,22 +36,11 @@ def getSpecificParent(cls, child):
             Example: getSpecificParent("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="rel")
-
-def createItemSlug(string):
-    nonDig = ''.join([i for i in string if not i.isdigit()])
-
-    if not nonDig:
-        return False
-
-    slug = slugify(nonDig)
-
-    if not slug:
-        return False
-
-    return slugify(string)
+    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="relation")
 
 class Organization (Item):
+    active = ItemManager()
+    objects = models.Manager()
 
     def addWorker(self, user):
         '''
@@ -65,6 +58,8 @@ class Organization (Item):
 
 
 class Tpp(Organization):
+    active = ItemManager()
+    objects = models.Manager()
 
     class Meta:
         permissions = (
@@ -85,7 +80,7 @@ class Company(Organization):
         permissions = (
             ("read_company", "Can read Company"),
         )
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -119,13 +114,17 @@ class Company(Organization):
         childs = [x['pk'] for x in childs]
         return Department.hierarchy.getDescedantsForList(childs)
 
-    def getStoreCategories(self):
-        products = Product.objects.all()
+    def getStoreCategories(self, products=None):
+
+        if products is None:
+            products = Product.objects.all()
+
         return Category.objects.filter(p2c__child__c2p__parent=self.pk, p2c__child__in=products)\
             .values('pk').annotate(childCount=Count('pk'))
 
 class Department(Organization):
 
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -146,6 +145,7 @@ class Department(Organization):
 
 class Country(Item):
 
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -154,7 +154,7 @@ class Country(Item):
 
 
 class Comment(Item):
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -179,10 +179,33 @@ class Comment(Item):
         """
         Return QuerySet of comments that related to item
         """
-        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="rel")
+        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="relation")
+
+class SystemMessages(Item):
+     MESSAGE_TYPE = (
+        ('item_creating', 'Creating item in process'),
+        ('item_updating', 'Update item in process'),
+        ('item_created', 'Item created'),
+        ('item_updated', 'Item Updated'),
+        ("error_creating", "Error in creating"))
+     type = models.CharField(max_length=200, choices=MESSAGE_TYPE)
+
+     def __str__(self):
+        return self.getName()
+
+
+
+class Notification(Item):
+    user = models.ForeignKey(User, related_name="user2notif")
+    message = models.ForeignKey(SystemMessages, related_name="mess2notif")
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.getName()
+
 
 class Category(Item):
-
+    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
 
@@ -191,6 +214,9 @@ class Category(Item):
         return self.title
 
 class Product(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -204,12 +230,15 @@ class Product(Item):
             return querySet.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
+            return Product.active.get_active_related().filter(item2value__attr__title="COUPON_DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__gt=now, item2value__start_date__lte=timeNow)
 
     @staticmethod
     def getCategoryOfPRoducts(productQuerySet, attr):
-        products_id = [product.id for product in productQuerySet]
+        if isinstance(productQuerySet, QuerySet):
+              products_id = [product.pk for product in productQuerySet]
+        else:
+              products_id = productQuerySet
         categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
         categories_id = [category['id'] for category in categories]
         products = Item.getItemsAttributesValues(attr, products_id)
@@ -234,33 +263,70 @@ class Product(Item):
             return querySet.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                    item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
         else:
-            return Product.objects.filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
+            return Product.active.get_active_related().filter(item2value__attr__title="DISCOUNT", item2value__title__gt=0,
                                           item2value__end_date__isnull=True, item2value__start_date__lte=timeNow)
 
     @staticmethod
-    def getNew():
-        return Product.objects.order_by('-pk')
+    def getNew(productQuery=False):
+        if not productQuery and not isinstance(productQuery, QuerySet):
+            return Product.active.get_active_related().order_by('-pk')
+        else:
+            return productQuery.order_by('-pk')
 
     @staticmethod
-    def getTopSales():#TODO: Jenya need to fill
-        pass
+    def getTopSales(productQuery=False):
+
+        extra = '''nvl((SELECT COUNT({prodTable}.{prodPK})
+                FROM {relTable}
+                INNER JOIN {orderTable} ON ({orderTable}.{orderPK} = {relTable}.parent_id)
+                WHERE {relTable}.child_id = {prodTable}.{prodPK}
+                GROUP BY {relTable}.child_id), 0)'''.format(orderTable=Order._meta.db_table,
+                                                                   orderPK=Order._meta.pk.column,
+                                                                   prodTable=Product._meta.db_table,
+                                                                   prodPK=Product._meta.pk.column,
+                                                                   relTable=Relationship._meta.db_table)
+
+        if not productQuery and not isinstance(productQuery, QuerySet):
+            return Product.active.get_active_related().extra(select={'popular': extra}).order_by('-popular')
+        else:
+            return productQuery.extra(select={'popular': extra}).order_by('-popular')
 
 class License(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
 
+class Greeting(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
 class Service(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
 
 class Favorite(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 class Invoice(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -268,11 +334,17 @@ class Invoice(Item):
 
 class News(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 
 class Article(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -280,11 +352,17 @@ class Article(Item):
 
 class Announce(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return self.getName()
 
 
 class Review(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.getName()
@@ -292,11 +370,17 @@ class Review(Item):
 
 class Rating(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Payment(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
@@ -304,11 +388,17 @@ class Payment(Item):
 
 class Shipment(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Tender(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
@@ -316,22 +406,34 @@ class Tender(Item):
 
 class Advertising(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 
 class Rate(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     def __str__(self):
         return ''
 
 class Order(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
 
     def __str__(self):
         return ''
 
 
 class Basket(Item):
+    active = ItemManager()
+    objects = models.Manager()
     class Meta:
         permissions = (
             ("read_basket", "Can read basket"),
@@ -342,6 +444,8 @@ class Basket(Item):
 
 
 class Cabinet(Item):
+    active = ItemManager()
+    objects = models.Manager()
     user = models.ForeignKey(User, related_name="cabinet")
 
     def __str__(self):
@@ -349,16 +453,29 @@ class Cabinet(Item):
 
 
 class Document(Item):
+    active = ItemManager()
+    objects = models.Manager()
 
     def __str__(self):
         return ''
 
 
 class Gallery(Item):
+      active = ItemManager()
+      objects = models.Manager()
       photo = models.ImageField(verbose_name='Avatar',  upload_to='gallery/', blank=True, null=True)
 
       def __str__(self):
           return str(self.photo)
+
+
+class Exhibition(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers

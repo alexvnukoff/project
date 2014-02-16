@@ -1,13 +1,13 @@
 __author__ = 'user'
 from django.shortcuts import render_to_response
 from appl import func
-from appl.models import Product, Category
+from appl.models import Product, Category, Company
 from django.template import RequestContext
 from django.utils.timezone import now
 from datetime import timedelta
+from django.conf import settings
 
-def couponsList(request, currentCat = None):
-    page = request.GET.get('page', 1)
+def couponsList(request, currentCat = None, page=1, country=None):
     sort = request.GET.get('sort', 'ed-date')
     order = request.GET.get('order', 'ASC')
     expire = request.GET.get('expire', None)
@@ -16,7 +16,7 @@ def couponsList(request, currentCat = None):
     if currentCat == None:#not filtered list
 
         #Getting related categories
-        categories = Category.hierarchy.getTree(15)
+        categories = Category.hierarchy.getTree(15, siteID=settings.SITE_ID)
         category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 1]
 
         breadCrumbs = None
@@ -45,6 +45,10 @@ def couponsList(request, currentCat = None):
 
     couponsObj = Product.getCoupons()
 
+    if country:
+        companies = Company.active.get_active_related().filter(c2p__parent_id=country)
+        couponsObj = couponsObj.filter(c2p__parent__in=companies)
+
     if expire is not None:
         expire = int(expire)
         time = now() + timedelta(days=expire)
@@ -66,7 +70,7 @@ def couponsList(request, currentCat = None):
     if currentCat is not None:
         couponsObj = couponsObj.filter(c2p__parent_id__in=category_ids)
 
-
+    #----------- Sorting --------#
     if order != 'ASC':
         orderSymb = '-'
 
@@ -79,6 +83,7 @@ def couponsList(request, currentCat = None):
     else:
         couponsObj = func.sortQuerySetByAttr(couponsObj, "COST", order, "int")
 
+
     attr = ("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE")
     result = func.setPaginationForItemsWithValues(couponsObj, page=page, page_num=16, fullAttrVal=True, *attr)
     page = result[1]
@@ -90,11 +95,50 @@ def couponsList(request, currentCat = None):
     else:
         order = 'ASC'
 
+
+    #Setting urls name
+    url_country = 'coupons:list_country'
+    url_country_parametr = []
+
+    url_paginator = "coupons:list_paged"
+    url_parameter = []
+
+    category_url = 'coupons:category'
+    category_parameters = []
+
+    if country and currentCat:
+        url_paginator = "coupons:category_country_paged"
+        url_parameter = [country, currentCat]
+
+        url_country = 'coupons:category_country'
+        url_country_parametr = [currentCat]
+
+        category_url = 'coupons:category_country'
+        category_parameters = [country]
+    elif country:
+        url_paginator = "coupons:list_country_paged"
+        url_parameter = [country]
+
+        category_url = 'coupons:category_country'
+        category_parameters = [country]
+
+    elif currentCat:
+        url_paginator = "coupons:category_paged"
+        url_parameter = [currentCat]
+
+        url_country = 'coupons:category_country'
+        url_country_parametr = [currentCat]
+
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+
     return render_to_response("Coupons/index.html", {'coupons': coupons, 'paginator_range': paginator_range,
                                                      'categories': categories, 'currentCat': currentCatName,
                                                      'breadCrumbs': breadCrumbs, 'nameSpace': 'coupons:category',
-                                                     'order': order, 'sort': sort, 'expire': expire},
+                                                     'order': order, 'sort': sort, 'expire': expire, 'country': country,
+                                                     'url_paginator': url_paginator, 'url_parameter': url_parameter,
+                                                     'url_country': url_country,
+                                                     'url_country_parametr':url_country_parametr,
+                                                     'category_url': category_url,
+                                                     'category_parameters': category_parameters, 'flagList': flagList},
                                                      context_instance=RequestContext(request))
-
-def couponsDetail(request):
-    pass

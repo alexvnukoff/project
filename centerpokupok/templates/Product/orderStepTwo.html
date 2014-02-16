@@ -21,21 +21,7 @@
 <div id="main">
 		<div id="sidebar">
 			{% include "main/cabinet_menu.html" %}
-			<div class="support">
-				<img src="images/gallery/sp.jpg" alt="" class="avatar" />
-				<div class="infosupport">
-					<p class="namesp">Eva </p>
-					<p class="agent">Virtual Agent</p>
-					<p>
-						24 Hour <br>
-						Smart Response
-					</p>
-				</div>
-			</div>
-			<div class="bchat">
-				<textarea name="" placeholder="Напишите свой вопрос" cols="30" rows="5"></textarea>
-				<div class="btnsubmit"><a class="btnreg" href="#">{% trans 'Start chat' %}</a></div>
-			</div>
+
 		</div>
 		<div id="main-r">
 			<div class="breadcrumbs">
@@ -58,7 +44,7 @@
 				<div class="order-row1">
 					<span class="clumn1">{{ name }}</span>
 					<span class="clumn2"><strong>x{{ qty }}</strong></span>
-					<span class="clumn2" style="width: 70px;"><strong>{{ currency|getSymbol }} {{ cost }} </strong></span>
+					<span class="clumn2" style="width: 70px;"><strong>{{ currency|getSymbol }} {{ cost|formatPrice }} </strong></span>
 				</div>
 
 
@@ -79,7 +65,7 @@
 					<span class="clumn1">
 						<strong>{% trans "The total amount of your order" %}</strong>
 					</span>
-					<span class="clumn2"><strong>{{ currency|getSymbol }} {{ totalSum }} </strong></span>
+					<span class="clumn2"><strong>{{ currency|getSymbol }} {{ totalSum|formatPrice }} </strong></span>
 				</div>
                 {% endwith %}
                 {% endwith %}

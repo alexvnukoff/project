@@ -8,7 +8,6 @@ from django.http import Http404
 from django.conf import settings
 
 
-
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -46,7 +45,8 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrV
         page = items = paginator.page(page)
     except Exception:
         page = items = paginator.page(1)
-    items = tuple([item.pk for item in page.object_list])
+    if not isinstance(items, list):
+        items = tuple([item.pk for item in page.object_list])
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
     return attributeValues, page #Return List Item and Page object of current page
@@ -66,9 +66,9 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
         raise ValueError("Wrong object type")
 
     if site:
-        items = clsObj.objects.filter(sites__id=settings.SITE_ID)
+        items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)
     else:
-        items = clsObj.objects.all()
+        items = clsObj.active.get_active().all()
 
     paginator = Paginator(items, 10)
     try:
@@ -95,9 +95,10 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
         raise ValueError("Wrong object type")
 
     if site:
-        items = clsObj.objects.filter(sites__id=settings.SITE_ID)[:qty]
+
+        items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)[:qty]
     else:
-        items = clsObj.objects.all()[:qty]
+        items = clsObj.active.get_active().all()[:qty]
 
 
     items = tuple([item.pk for item in items])
@@ -130,7 +131,7 @@ def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be ca
     if order != "ASC":
         case = '-' + case
 
-    return clsObj.objects.filter(item2value__attr__title=attribute).extra(order_by=[case])
+    return clsObj.active.get_active().filter(item2value__attr__title=attribute).extra(order_by=[case])
 
 def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
     '''
@@ -188,6 +189,7 @@ def _setCouponsStructure(couponsDict):
 
     return couponsDict
 
+#Deprecated
 def _setProductStructure(prodDict):
 
     for item, attrs in prodDict.items():
@@ -251,7 +253,7 @@ def setStructureForHiearhy(dictinory, items):
             nameOfList = items[node['ID']]['NAME'][0].strip()
             dictStructured[nameOfList] = {}
             node['item'] = items[node['ID']]
-            dictStructured[nameOfList]['Parent'] = node
+            dictStructured[nameOfList]['@Parent'] = node
         else:
             node['pre_level'] = level
             node['item'] = items[node['ID']]
@@ -284,7 +286,7 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterChild, c2p__type="rel")\
+    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterChild, c2p__type="relation")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
@@ -296,9 +298,12 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
         return {}
 
     keys = list(listCount[0].keys())
+    childKey = 'childCount'
 
     parentKey = keys[1]
-    childKey = keys[0]
+
+    if childKey == parentKey:
+        parentKey = keys[0]
 
     if needed is not None:
         for cat in catWithAttr:
@@ -308,7 +313,9 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
     for dictCount in listCount:
         elCount[dictCount[parentKey]] = dictCount[childKey]
 
+
     for cat in categories:
+
         if cat['LEVEL'] == categories[0]['LEVEL']:
             parent = cat['ID']
 
@@ -318,4 +325,129 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
             catWithAttr[parent]['count'] += elCount.get(cat['ID'], 0)
 
     return catWithAttr
+
+
+def resize(img, box, fit, out):
+        '''Downsample the image.
+        @param img: Image -  an Image-object
+        @param box: tuple(x, y) - the bounding box of the result image
+        @param fit: boolean - crop the image to fill the box
+        @param out: file-like-object - save the image into the output stream
+        '''
+        #preresize image with factor 2, 4, 8 and fast algorithm
+        factor = 1
+        while img.size[0]/factor > 2*box[0] and img.size[1]/factor > 2*box[1]:
+            factor *=2
+        if factor > 1:
+            img.thumbnail((img.size[0]/factor, img.size[1]/factor), Image.NEAREST)
+
+        #calculate the cropping box and get the cropped part
+        if fit:
+            x1 = y1 = 0
+            x2, y2 = img.size
+            wRatio = 1.0 * x2/box[0]
+            hRatio = 1.0 * y2/box[1]
+            if hRatio > wRatio:
+                y1 = int(y2/2-box[1]*wRatio/2)
+                y2 = int(y2/2+box[1]*wRatio/2)
+            else:
+                x1 = int(x2/2-box[0]*hRatio/2)
+                x2 = int(x2/2+box[0]*hRatio/2)
+            img = img.crop((x1,y1,x2,y2))
+
+        #Resize the image with best quality algorithm ANTI-ALIAS
+        img.thumbnail(box, Image.ANTIALIAS)
+
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+
+        #save it into a file-like object
+        img.save(out, "JPEG", quality=75)
+
+
+
+def findKeywords(tosearch):
+    import string
+    import difflib
+
+    exclude = set(string.punctuation)
+    exclude.remove('-')
+    tosearch = ''.join(ch for ch in tosearch if ch not in exclude and (ch.strip() != '' or ch == ' '))
+    words = [word.lower() for word in tosearch.split(" ") if 3 <= len(word) <= 20 and word.isdigit() is False][:30]
+
+    length = len(words)
+    keywords = []
+
+    for word in words:
+        if len(difflib.get_close_matches(word, keywords)) > 0:
+            continue
+
+        count = len(difflib.get_close_matches(word, words))
+
+        precent = (count * length) / 100
+
+        if 2.5 <= precent <= 3:
+            keywords.append(word)
+
+        if len(keywords) > 5:
+            break
+
+    if len(keywords) < 3:
+        for word in words:
+            if len(difflib.get_close_matches(word, keywords)) == 0:
+                keywords.append(word)
+
+                if len(keywords) == 3:
+                    break
+
+    return ' '.join(keywords)
+
+
+def notify(message_type, notificationtype, **params):
+    user = params['user']
+    params['user'] = user.pk
+    message = SystemMessages.objects.get(type=message_type)
+    notif = Notification(user=user, message=message, create_user=user)
+    notif.save()
+
+
+    sendTask(notificationtype, **params)
+
+
+def sendTask(type, **params):
+    import redis
+    from django.conf import settings
+    import json
+    from django.http import HttpResponse
+
+    ORDERS_FREE_LOCK_TIME = getattr(settings, 'ORDERS_FREE_LOCK_TIME', 0)
+    ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
+    ORDERS_REDIS_PORT = getattr(settings, 'ORDERS_REDIS_PORT', 6379)
+    ORDERS_REDIS_PASSWORD = getattr(settings, 'ORDERS_REDIS_PASSWORD', None)
+    ORDERS_REDIS_DB = getattr(settings, 'ORDERS_REDIS_DB', 0)
+
+    # опять удобства
+    service_queue = redis.StrictRedis(
+        host=ORDERS_REDIS_HOST,
+        port=ORDERS_REDIS_PORT,
+        db=ORDERS_REDIS_DB,
+        password=ORDERS_REDIS_PASSWORD
+    ).publish
+
+    service_queue(type, json.dumps(params))
+
+
+def getAnalytic(params = None):
+
+    from appl.analytic.analytic import get_results
+
+    if not isinstance(params, dict):
+        raise ValueError('Filter required')
+
+    if 'end_date' not in params:
+        params['end_date'] = '2050-01-01'
+    if 'start_date' not in params:
+        params['start_date'] = '2014-01-01'
+
+    return get_results(**params)
 

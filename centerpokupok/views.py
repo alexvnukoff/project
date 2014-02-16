@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet
+from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order, Company
 from registration.backends.default.views import RegistrationView
 from core.models import Value, Item, Attribute, Dictionary, Relationship, User
 from django.db.models import Count
@@ -12,30 +12,41 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
-
-
-
 from django.conf import settings
 
-def home(request):
+
+def home(request, country=None):
+
     #----NEWSLIST------#
     newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    if country:
+        productQuery = Product.active.get_active_related().filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
+        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    if not country:
+        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+
+
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[4:8]
+    if not country:
+        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+    else:
+        products = Product.getTopSales(productQuery)[:4]
+
     topPoductList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
                                                               "COUPON_DISCOUNT"))
 
      #----MAIN MENU AND CATEGORIES IN HEADER ------#
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)  # Select of categories
-    hierarchyStructure = hierarchyStructure[:10] #TODO: Jenya, this is a bug
+
+    hierarchyStructure = hierarchyStructure
+
 
     sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
     level = 0
@@ -59,7 +70,10 @@ def home(request):
     reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
-    couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+    if not country:
+         couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+    else:
+        couponsObj = Product.getCoupons(querySet=productQuery).order_by('item2value__end_date')[:3]
     coupons_ids = [cat.pk for cat in couponsObj]
 
     coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
@@ -67,14 +81,21 @@ def home(request):
     coupons = func._setCouponsStructure(coupons)
 
     #----------- Products with discount -------------#
-    productsSale = Product.getProdWithDiscount()
+    if not country:
+          productsSale = Product.getProdWithDiscount()
+    else:
+          productsSale = Product.getProdWithDiscount(productQuery)
+
     productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
     productsSale_ids = [prod.pk for prod in productsSale]
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
-    productsSale = func._setProductStructure(productsSale)
 
     #---------FLAGS IN HEADER----------#
     flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+    url_country = "home_country"
+
+
 
 
 
@@ -84,7 +105,8 @@ def home(request):
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
                                              'tppList': tppList, 'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale, 'user': user})
+                                             "productsSale": productsSale, 'user': user, 'url_country': url_country,
+                                             'country': country})
 
 
 def about(request):
@@ -101,14 +123,18 @@ def set_news_list(request):
 
 
 def _sortMenu(hierarchyStructure):
+    count = 0
     sortedHierarchyStructure = []
     dictToSort = []
     id = hierarchyStructure[0]['ID']
     for i in range(0, len(hierarchyStructure)):
         if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
+            if count == 9:
+                break
             id = hierarchyStructure[i]['ID']
             sortedHierarchyStructure.extend(_sortList(dictToSort))
             dictToSort = []
+            count += 1
 
         dictToSort.append(hierarchyStructure[i])
 
@@ -136,7 +162,7 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
-   hierarchyStructure = Category.hierarchy.getTree()
+   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
    categories_id = [cat['ID'] for cat in hierarchyStructure]
    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -172,7 +198,10 @@ def registration(request, form, auth_form):
             cabinet = Cabinet(user=user, create_user=user)
             cabinet.save()
 
-          return HttpResponseRedirect("/")
+
+
+
+          return HttpResponseRedirect(request.GET.get('next', '/'))
 
    return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order
+from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order, Favorite
 from core.models import Value, Item, Attribute, Dictionary, Relationship, Slot
 from appl import func
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from tppcenter.forms import ItemForm
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from django.db.models import Q
+from django.db.models import Q, F, Count
 from collections import OrderedDict
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -17,6 +17,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.decorators import login_required
 from centerpokupok.forms import OrderForm
 from django.db import transaction
+import json
 
 def productDetail(request, item_id, page=1):
     if request.POST.get('subCom', False):
@@ -28,31 +29,39 @@ def productDetail(request, item_id, page=1):
 
     product = get_object_or_404(Product, pk=item_id)
 
-    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT')
+    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT', 'ANONS')
     productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
 
     category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
-    sameProducts = Product.objects.filter(c2p__parent_id__in=category).exclude(pk=item_id)
+    sameProducts = Product.active.get_active_related().filter(c2p__parent_id__in=category).exclude(pk=item_id)
     product_id = [prod.id for prod in sameProducts]
     sameProducts = Item.getItemsAttributesValues(("NAME", "IMAGE", "CURRENCY", "COST"), product_id)
 
     try:
-        company = Company.objects.get(p2c__child_id=item_id)
+        company = Company.active.get_active_related().get(p2c__child_id=item_id)
         storeCategories = company.getStoreCategories()
+
+
+        attr = company.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
+
+        name = attr['NAME'][0]
+        picture = attr['IMAGE'][0]
         companyID = company.pk
-        company = company.getAttributeValues("NAME")
     except ObjectDoesNotExist:
         pass
 
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+    #flagList = func.getItemsList("Country", "NAME", "FLAG")
 
     #----------- Popular Products ----------------#
-    productsPopular = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:5]
-    product_id = [prod.id for prod in productsPopular]
-    productsPopularList = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE"), product_id)
+
+
+    popular = Product.getTopSales(Product.active.get_active_related())[:4]
+    product_id = [product.pk for product in popular]
+    popular = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'DISCOUNT',
+                                                         'COUPON_DISCOUNT'), product_id)
 
     #----------- Category Hierarchy ----------------#
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -78,11 +87,21 @@ def productDetail(request, item_id, page=1):
 
     url_paginator = "products:paginator"
     url_parameter = [item_id]
+    store_url = 'companies:products_category'
+
+    if request.user.is_authenticated():
+        try:
+            favorite = Favorite.active.get_active_related().get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
+        except ObjectDoesNotExist:
+            favorite = 0
 
     return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
 
-@login_required(login_url="/registration/")
+
 def addComment(request, item_id):
+        if not request.user.is_authenticated():
+           url_product = reverse("products:detail", args=[item_id])
+           return HttpResponseRedirect("/registration/?next=%s" %url_product)
 
         form = ItemForm("Comment", values=request.POST)
         form.clean()
@@ -102,9 +121,11 @@ def addComment(request, item_id):
 
 
 
-def getCategoryProduct(request, category_id=None, page=1):
+def getCategoryProduct(request, country=None, category_id=None, page=1):
+    url_country = "products:country_products"
+    url_country_parametr = []
 
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
 
     if category_id is None: #Not filtered by category
 
@@ -117,8 +138,18 @@ def getCategoryProduct(request, category_id=None, page=1):
         breadCrumbs = None
 
         #Paginator
-        url_parameter = []
-        url_paginator = "products:products_paginator"
+
+        if country:
+            url_parameter = [country]
+            url_paginator = "products:country_products_paginator"
+            category_url = "products:category_country"
+            category_parameters = [country]
+        else:
+            url_parameter = []
+            url_paginator = "products:products_paginator"
+            category_url = "products:category"
+            category_parameters = []
+
     else:
         #Get related categories
         category_id = int(category_id)
@@ -131,11 +162,29 @@ def getCategoryProduct(request, category_id=None, page=1):
         breadCrumbs = Product.getItemsAttributesValues(("NAME",), ancestors_ids)
 
         #Paginator
-        url_parameter = [category_id]
-        url_paginator = "products:cat_pagination"
+        url_country = "products:category_country"
+        url_country_parametr = [category_id]
+        if country:
+            category_url = "products:category_country"
+            category_parameters = [country]
+            url_parameter = [country, category_id]
+            url_paginator = "products:category_country_paginator"
+        else:
+            category_url = "products:category"
+            category_parameters = []
+            url_parameter = [category_id]
+            url_paginator = "products:cat_pagination"
+
+
+
 
     #Products filtered by site
-    products = Product.objects.filter(sites=settings.SITE_ID)
+    if country is None:
+        products = Product.active.get_active_related().filter(sites=settings.SITE_ID)
+    else:
+        products = Product.active.get_active_related().filter(sites=settings.SITE_ID).filter(c2p__parent_id__in=Company.objects.filter(c2p__parent_id=country))
+
+
 
     #Main search by categories
     categories_id = [cat['ID'] for cat in hierarchyStructure]
@@ -169,48 +218,55 @@ def getCategoryProduct(request, category_id=None, page=1):
     categories = func._categoryStructure(categories, prodInCat, categoriesAttr, category_root_ids)
 
     if category_id is not None:
-        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='rel', sites=settings.SITE_ID)\
+        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='relation', sites=settings.SITE_ID)\
             .order_by("-pk")
 
     result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
                                                  'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+
     #Product list , with companies and countries
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
-    companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
+    favorites_dict = {}
+    if request.user.is_authenticated():
+        favorites = Favorite.active.get_active_related().filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
+        for favorite in favorites:
+            favorites_dict[favorite['p2c__child']] = 1
+
+
+    comments = Comment.objects.filter(c2p__parent__in=products_ids).values("c2p__parent").annotate(num_comments=Count("c2p__parent"))
+    comment_dict = {}
+    for comment in comments:
+        comment_dict[comment['c2p__parent']] = comment['num_comments']
+
+    companies = Company.active.get_active_related().filter(p2c__child_id__in=products_ids)
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="dependence", pk__in=Country.active.get_active().all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
-    items_id =[]
+    items_id = []
     for item in items:
         items_id.append(item['pk'])
         items_id.append(item['p2c__child_id'])
+
 
     items_id = set(items_id)
     itemsWithAttribute = Item.getItemsAttributesValues(("NAME", "IMAGE"), items_id)
     companyList = {}
 
-    for item in items: #TODO: Jenya maybe it's possible to do it more beautifoul
-        products_list[item['p2c__child__p2c__child']].update({
-            'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME']
-        })
+    for item in items:
+        toUpdate = {'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME'],
+                    'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE'],
+                    'COMPANY_ID': item['p2c__child_id'],
+                    'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME'],
+                    'COUNTRY_ID': item['pk'],
+                    'COMMENTS': comment_dict.get(item['p2c__child__p2c__child'], 0),
+                    'FAVORITE': favorites_dict.get(item['p2c__child__p2c__child'], 0)}
+        products_list[item['p2c__child__p2c__child']].update(toUpdate)
 
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COMPANY_ID': item['p2c__child_id']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME']
-            })
-        products_list[item['p2c__child__p2c__child']].update(
-            {
-                'COUNTRY_ID': item['pk']
-            })
+
+
+
+
 
         if item["p2c__child_id"] not in companyList:
             companyList[item["p2c__child_id"]] = {}
@@ -230,6 +286,8 @@ def getCategoryProduct(request, category_id=None, page=1):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
 
 
@@ -238,7 +296,11 @@ def getCategoryProduct(request, category_id=None, page=1):
                                                       'url_paginator': url_paginator, 'url_parameter':url_parameter,
                                                       'categotySelect':categotySelect, 'countryList':countryList,
                                                       'categories': categories, 'currentCat': currentCatName,
-                                                     'breadCrumbs': breadCrumbs, 'nameSpace': 'products:category'})
+                                                     'breadCrumbs': breadCrumbs, 'category_url': category_url,
+                                                     'flagList': flagList, 'url_country': url_country,
+                                                     'url_country_parametr': url_country_parametr,
+                                                     'category_parameters': category_parameters, 'country': country,
+                                                     'user': request.user})
 
 
 def getAllNewProducts(request, page=1):
@@ -250,7 +312,7 @@ def getAllNewProducts(request, page=1):
     products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     companies = Company.objects.filter(p2c__child_id__in=products_ids)
-    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="rel", pk__in=Country.objects.all(),
+    items = Item.objects.filter(p2c__child_id__in=companies, p2c__type="dependence", pk__in=Country.objects.all(),
                                  p2c__child__p2c__child__in=products_ids).values("country", "p2c__child_id",
                                                                                  'p2c__child__p2c__child', 'pk')
     items_id =[]
@@ -273,10 +335,11 @@ def getAllNewProducts(request, page=1):
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
+
     url_paginator = "products:products_paginator"
 
 
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -286,12 +349,15 @@ def getAllNewProducts(request, page=1):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
 
 
     return render_to_response("Product/new.html", {'products_list': products_list, 'page': page,
                                                    'paginator_range':paginator_range, 'url_paginator': url_paginator,
-                                                   'categotySelect': categotySelect, 'countryList': countryList})
+                                                   'categotySelect': categotySelect, 'countryList': countryList,
+                                                   'flagList': flagList, 'user': request.user})
 
 
 
@@ -311,13 +377,15 @@ def _getComment(parent_id, page):
     paginator_range = func.getPaginatorRange(page)
     commentsList = OrderedDict(sorted(commentsList.items(), reverse=True))
 
-    return commentsList, paginator_range , page
+    return commentsList, paginator_range, page
 
 @transaction.atomic
-@login_required(login_url="/products/")
 def orderProduct(request, step=1):
 #------ Order of products in threee step ----#
-    hierarchyStructure = Category.hierarchy.getTree()
+    if not request.user.is_authenticated():
+        url_product = reverse("products:detail", args=[request.POST.get('product', 1)])
+        return HttpResponseRedirect("/registration/?next=%s" %url_product)
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -361,8 +429,12 @@ def orderProduct(request, step=1):
                 else:
                     orderForm.errors.update({"delivery": "Required deleviry method"})
         product = get_object_or_404(Product, pk=request.session.get("product_id", " "))
-        productValues = product.getAttributeValues("NAME", "IMAGE", "CURRENCY", "COST")
-        totalCost = int(request.session.get('qty', 1)) * int(productValues['COST'][0])
+        productValues = product.getAttributeValues("NAME", "IMAGE", "CURRENCY", "COST", 'DISCOUNT', 'COUPON_DISCOUNT')
+        productValues['COST'][0] = _getRealCost(productValues)
+        totalCost = float( productValues['COST'][0]) * float(request.session.get('qty', 1))
+
+
+
         return render_to_response("Product/orderStepOne.html", {'address': address, 'user': user, "orderForm": orderForm,
                                                                 'productValues': productValues ,'totalCost': totalCost,
                                                                 'curr_url': curr_url, 'categotySelect': categotySelect,
@@ -374,13 +446,16 @@ def orderProduct(request, step=1):
         product_id = request.session.get('product_id', False)
         qty = request.session.get('qty', False)
         product = get_object_or_404(Product, pk=product_id)
-        productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY')
+        productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY', 'DISCOUNT', 'COUPON_DISCOUNT')
         orderDetails = {}
         session = request.session.get("order", " ")
         orderDetails['city'] = session['city']
         orderDetails['country'] = session['country']
         orderDetails['address'] = session['address']
-        totalSum = int(productValues['COST'][0]) * int(qty)
+        productValues['COST'][0] = _getRealCost(productValues)
+        totalSum = float(productValues['COST'][0]) * float(request.session.get('qty', 1))
+
+
         user = request.user
 
         return render_to_response("Product/orderStepTwo.html", {'qty': qty, 'productValues': productValues,
@@ -392,7 +467,7 @@ def orderProduct(request, step=1):
         #-----Step three , cleaning of sessions , and creatin of new order object that related to cabinet of user ---#
         if request.session.get("order", False):
             product = get_object_or_404(Product, pk=request.session.get('product_id'))
-            productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY', 'IMAGE')
+            productValues = product.getAttributeValues('NAME', "COST", 'CURRENCY', 'IMAGE', 'DISCOUNT', 'COUPON_DISCOUNT')
             qty = request.session.get('qty', False)
             dict = Dictionary.objects.get(title='CURRENCY')
             slot_id = dict.getSlotID(productValues['CURRENCY'][0])
@@ -402,7 +477,7 @@ def orderProduct(request, step=1):
                        "ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
                        "TELEPHONE_NUMBER": [session.get("telephone_number", "")],
                        "DETAIL_TEXT": [session.get("comment", "")], "SHIPPING_NAME": [session.get("recipient_name", "")]}
-            productValues['COST'][0] = int(productValues['COST'][0]) * int(qty)
+            productValues['COST'][0] = float(_getRealCost(productValues)) * float(qty)
             with transaction.atomic():
                 order = Order(create_user=request.user)
                 order.save()
@@ -413,6 +488,7 @@ def orderProduct(request, step=1):
                 order.setAttributeValue(orderDict, request.user)
                 cabinet = Cabinet.objects.get(user=request.user)
                 Relationship.setRelRelationship(cabinet, order, request.user)
+                Relationship.setRelRelationship(order, product, request.user)
             del request.session['product_id']
             del request.session['qty']
             del request.session['order']
@@ -422,6 +498,54 @@ def orderProduct(request, step=1):
         return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url,
                                                                   'categotySelect': categotySelect,
                                                                   'countryList': countryList})
+
+
+
+def _getRealCost(productValues):
+     if productValues.get('COUPON_DISCOUNT', False):
+            totalCost = (float(productValues['COST'][0]) -
+                   float(productValues['COST'][0])*(float(productValues['COUPON_DISCOUNT'][0])/100))
+     elif productValues.get('DISCOUNT', False) and not productValues.get('COUPON_DISCOUNT', False):
+            totalCost = (float(productValues['COST'][0]) -
+                   float(productValues['COST'][0])*(float(productValues['DISCOUNT'][0])/100))
+     else:
+             totalCost = int(productValues['COST'][0])
+
+     return  totalCost
+
+@transaction.atomic
+@ensure_csrf_cookie
+def addFavorite(request):
+    if request.is_ajax():
+        result = {"RESULT": {"TYPE": "ERROR", "MESS": "ERROR"}}
+        product_id = int(request.POST.get('ID'))
+        user = request.user
+        try:
+            favProduct = Favorite.objects.get(p2c__child_id=product_id, c2p__parent__cabinet__user=user)
+            favProduct.delete()
+            result = {"RESULT": {"TYPE": "OK", "MESS": "DELETE"}}
+        except ObjectDoesNotExist:
+            with transaction.atomic():
+                favProduct = Favorite(create_user=user)
+                favProduct.save()
+                cabinet = get_object_or_404(Cabinet, user=user)
+                product = get_object_or_404(Product, pk=product_id)
+                Relationship.setRelRelationship(favProduct, product, user)
+                Relationship.setRelRelationship(cabinet, favProduct, user, type='dependence')
+                result = {"RESULT": {"TYPE": "OK", "MESS": "ADD"}}
+
+
+
+        return HttpResponse(json.dumps(result))
+    else:
+        raise Http404
+
+
+
+
+
+
+
 
 
 

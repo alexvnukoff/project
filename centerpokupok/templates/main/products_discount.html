@@ -1,34 +1,38 @@
 {% load staticfiles %}
 {% load i18n %}
-<div id="bestprice">
-                    <h3>{% trans "Best proposals" %}</h3>
-                    <ul id="bestproduct">
-                        {% for id, attr in productsSale.items %}
-                            {% with attr.NAME as name  %}
-                            {% with attr.DISCOUNT as discount  %}
-                            {% with attr.IMAGE as picture  %}
+{% if productsSale %}
+    <div id="bestprice">
+        <h3>{% trans "Best proposals" %}</h3>
 
-                            {% if  forloop.counter == 1 %}
-                                <li>
-                            {% endif %}
-                            <div class="clumn-best">
-                                <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                                <a href="{% url "products:detail" id %}">
-                                    <img width="180" height="135" alt="{{ name }}" src="{% static picture %}" class="thumb" />
-                                </a>
-                                <a href="{% url "products:detail" id %}" class="name">{{ name }}</a>
-                            </div>
+        <ul id="bestproduct">
+            {% for id, attr in productsSale.items %}
+                {% with attr.NAME|first as name  %}
+                {% with attr.DISCOUNT|first as discount  %}
+                {% with attr.IMAGE|first as picture  %}
 
-                             {% if forloop.counter|divisibleby:"5" and not forloop.last  %}
-                                 </li>
-                                 <li>
-                             {% elif forloop.last %}
-                                </li>
-                             {% endif %}
+                {% if  forloop.counter == 1 %}
+                    <li>
+                {% endif %}
 
-                             {% endwith %}
-                             {% endwith %}
-                             {% endwith %}
-                        {% endfor %}
-                    </ul>
+                <div class="clumn-best">
+                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                    <a href="{% url "products:detail" id %}">
+                        <img width="180" height="135" alt="{{ name }}" src="{% static picture %}" class="thumb" />
+                    </a>
+                    <a href="{% url "products:detail" id %}" class="name">{{ name }}</a>
                 </div>
+
+                {% if forloop.counter|divisibleby:"5" and not forloop.last  %}
+                    </li>
+                    <li>
+                {% elif forloop.last %}
+                    </li>
+                {% endif %}
+
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

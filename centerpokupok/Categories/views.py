@@ -10,7 +10,7 @@ from django.conf import settings
 
 def categoryList(request):
     user = request.user
-    hierarchyStructure = Category.hierarchy.getTree(10)
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
@@ -18,7 +18,7 @@ def categoryList(request):
     categotySelect = dictStructured
 
 
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
     return render_to_response("Categories/index.html", locals())
 

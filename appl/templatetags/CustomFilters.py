@@ -3,6 +3,9 @@ from collections import OrderedDict
 from django.core.urlresolvers import reverse
 from copy import copy
 from appl.func import currencySymbol
+from tpp.SiteUrlMiddleWare import get_request
+
+from urllib.parse import urlencode
 
 register = template.Library()
 
@@ -56,6 +59,7 @@ class DynUrlNode(template.Node):
         self.parametrs = args[1]
         self.new_parametr = args[2]
 
+
     def render(self, context):
         name = template.Variable(self.name_var).resolve(context)
 
@@ -63,15 +67,45 @@ class DynUrlNode(template.Node):
             parametrs = copy(template.Variable(self.parametrs).resolve(context))
         except Exception:
             parametrs = []
+        if not isinstance(parametrs, list):
+            l = list()
+            l.append(parametrs)
+            parametrs = copy(l)
+
+        try:
+            new_parametr = copy(template.Variable(self.new_parametr).resolve(context))
+            if not isinstance(new_parametr, list):
+                l = list()
+                l.append(new_parametr)
+                new_parametr = copy(l)
+            parametrs.extend(new_parametr)
+        except Exception:
+            pass
 
 
-        new_parametr = template.Variable(self.new_parametr).resolve(context)
-        parametrs.append(new_parametr)
+
+        request = get_request()
+        query_set = None
+        if len(request.GET) > 0:
+            query_set = urlencode(request.GET)
 
 
-        return reverse(name, args=parametrs)
+        url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)
+        return url
 
 @register.tag
 def dynurl(parser, token):
     args = token.split_contents()
     return DynUrlNode(*args[1:])
+
+
+@register.assignment_tag()
+def resolve(lookup, target):
+    try:
+        if isinstance(lookup, list):
+            return lookup[int(target)]
+        else:
+            return lookup[target]
+
+    except Exception as e:
+        return None

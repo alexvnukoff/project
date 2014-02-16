@@ -1,0 +1,86 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {% block head %}
+            {% block  meta%}
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                {% load i18n %}
+            {% endblock %}
+        <title>{% block title %}{% endblock %}</title>
+ {% block styles %}
+            <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
+            <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+            <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
+
+
+            <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
+ {% endblock %}
+{% block js %}
+        <script type="text/javascript" src="{% static "tppcenter/js/jquery-1.10.2.min.js" %}"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+
+
+        <script type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
+
+  {% endblock %}
+
+
+ {% endblock %}
+</head>
+
+<body>
+    {% block header %}
+
+    {% endblock %}
+
+    {% block body %}
+    {% endblock %}
+
+
+{% block footer %}
+    <div class="wrapper">
+        <div class="linkbottom">
+            <ul class="clumn">
+                <li>{% trans 'About project' %}</li>
+                <li><a href="#">{% trans 'About project' %}</a></li>
+                <li><a href="#">{% trans 'How the system works' %}</a></li>
+                <li><a href="#">{% trans 'Terms of use' %}</a></li>
+                <li><a href="#">{% trans 'Privacy' %}</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>{% trans 'About project' %}</li>
+                <li><a href="#">{% trans 'Create online shop' %}</a></li>
+                <li><a href="#">{% trans 'Post announcement event' %}</a></li>
+                <li><a href="#">{% trans 'Add a business proposal' %}</a></li>
+                <li><a href="#">{% trans 'Find a Business Partner' %}</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>{% trans 'About project' %}</li>
+                <li><a href="#">{% trans 'Contuct us' %}</a></li>
+                <li><a href="#">{% trans 'Ask the community' %}</a></li>
+                <li><a href="#">{% trans 'FAQ' %}</a></li>
+            </ul>
+            <ul class="clumn">
+                <li>
+                    <a href="#"><i class="imgmain iconsocial i-blog"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-face"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-tweet"></i></a>
+                    <a href="#"><i class="imgmain iconsocial i-video"></i></a>
+                </li>
+                <li><a href="#"><i class="icons i-stastic"></i>{% trans 'Visitor statistic' %}</a></li>
+            </ul>
+        </div>
+    </div>
+ </div>
+    <div id="footer">
+        <div class="wrapper">
+            © 2010–2014 ТПП-Центр — центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.
+        </div>
+    </div>
+
+ <div class="black_overlay" id="fade-profile"></div>
+ {% endblock %}
+</body>
+</html>

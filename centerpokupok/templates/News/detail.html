@@ -7,13 +7,13 @@
 
 {{% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static "js/jquery.countdown.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
 {% endblock %}
 
 {% block header %}
@@ -24,28 +24,26 @@
     <div id="main">
 		<div id="sidebar">
 			<ul id="categories">
-				<li class="parent">Обзор товаров</li>
-				<li><a href="#">Новости партнеров</a></li>
-				<li><a href="#">Анонсы магазинов</a></li>
+				<li class="parent">{% trans 'Product reviews' %}</li>
+				<li><a href="#">{% trans 'Seller anounses' %}</a></li>
 				<li><a href="#">Полезные статьи</a></li>
 			</ul>
 			<div class="shopinfo margintop">
-				<span class="title"><a href="#">Посмотреть магазин &rarr;</a></span>
+				<span class="title"><a href="#">{% trans 'View store' %} &rarr;</a></span>
 				<div class="shopinfoin">
 					<label>Автор обзора:</label>
 					<p><font class="white">ООО «Металлопрофиль»</font></p>
 				</div>
 			</div>
 			<ul id="categories" class="margintop">
-				<li><a href="#">О компании</a></li>
-				<li><a href="#">Бизнес предложения</a></li>
-				<li><a href="#">Продукция кампании</a></li>
-				<li><a href="#">Связаться </a></li>
+				<li><a href="#">{% trans 'About company' %}</a></li>
+				<li><a href="#">{% trans 'Company products' %}</a></li>
+				<li><a href="#">{% trans 'Contact' %} </a></li>
 			</ul>
 
 			<div class="bestbuy">
 				<div class="items-coupon">
-					<h2>Спеццена</h2>
+					<h2>{% trans 'Special price' %}</h2>
 					<ul>
 						<li>
 							<div class="discount"><i class="icons i-after"></i> -30%</div>

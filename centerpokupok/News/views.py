@@ -17,10 +17,10 @@ def newsList(request, page=1):
     newsList = result[0]
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
     url_paginator = "news:paginator"
 
-    hierarchyStructure = Category.hierarchy.getTree()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -40,10 +40,10 @@ def newsDetail(request, item_id):
 
     newAttr =  new.getAttributeValues("NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE")
     newAttr = newAttr
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
 
-    hierarchyStructure = Category.hierarchy.getTree()
+
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
@@ -53,7 +53,7 @@ def newsDetail(request, item_id):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
-    products = Product.objects.filter(sites=settings.SITE_ID).order_by("-pk")[:2]
+    products = Product.active.get_active_related().filter(sites=settings.SITE_ID).order_by("-pk")[:2]
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE"))
 
     return render_to_response("News/detail.html", locals())

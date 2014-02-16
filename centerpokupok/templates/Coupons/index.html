@@ -8,15 +8,24 @@
 
 {% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
 
     <script type="text/javascript">
+        $(function () {
+            bigCoupon = $('#topCountdown');
+
+            if(bigCoupon.length > 0)
+            {
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
+                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
+            }
+        })
         $(function () {
             $('.countdowntext').each(function() {
                 var until = parseInt($(this).data('countdown')) * 1000;
@@ -30,7 +39,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include "header_small.html" %}
+    {% include "header_big.html" %}
 {% endblock %}
 
 {% block body %}

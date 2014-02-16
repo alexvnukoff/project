@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block title %}News Detail{% endblock %}
+{% block title %}News{% endblock %}
 
 {% block header %}
     {% include "header_big.html" %}
@@ -12,14 +12,13 @@
 		<div id="main">
 		<div id="sidebar">
 			<ul id="categories">
-				<li class="parent">Обзор товаров</li>
-				<li><a href="#">Новости партнеров</a></li>
-				<li><a href="#">Анонсы магазинов</a></li>
+				<li class="parent">{% trans 'Product reviews' %}</li>
+				<li><a href="#">{% trans 'Seller anounses' %}</a></li>
 				<li><a href="#">Полезные статьи</a></li>
 			</ul>
 			<div class="recommended">
 				<div class="items-recm">
-					<h2>Рекомендуем</h2>
+					<h2>{% trans 'Recommended' %}</h2>
 					<ul>
 						<li>
 							<a href="#"><img alt="" src="images/products/pr1.jpg" /></a>
@@ -42,7 +41,7 @@
 			</div>
 			<div class="bestbuy">
 				<div class="items-coupon">
-					<h2>Спеццена</h2>
+					<h2>{% trans 'Special Price' %}</h2>
 					<ul>
 						<li>
 							<div class="discount"><i class="icons i-after"></i> -30%</div>
@@ -71,7 +70,7 @@
 			</div>
 			<div class="recommended">
 				<div class="items-recm">
-					<h2 class="spacer">Рекомендуем</h2>
+					<h2 class="spacer">{% trans 'Recommended' %}</h2>
 					<ul>
 						<li>
 							<a href="#"><img alt="" src="images/products/pr1.jpg" /></a>
@@ -99,7 +98,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="alldeal"><a href="#">Все спецпредложения &rarr;</a></div>
+			<div class="alldeal"><a href="#">{% trans 'All deals' %} &rarr;</a></div>
 		</div>
 		<div id="main-r">
 			<div class="breadcrumbs">
@@ -110,7 +109,7 @@
 				</div>
 			</div>
 			<div class="title-items">
-				<h2>Популярные обзоры</h2>
+				<h2>{% trans 'Popular reviews' %}</h2>
 			</div>
 			<ul class="popular-reveiew">
 				<li>
@@ -135,17 +134,17 @@
 				</li>
 			</ul>
 			<div class="title-items">
-				<h2>Все обзоры товаров</h2>
+				<h2>{% trans 'All products reviews' %}</h2>
 			</div>
 			<div class="topreview">
-				<span>Сортировать </span>
-				<span><a href="#">по популярности</a></span>
+				<span>{% trans "Sort by" %} </span>
+				<span><a href="#">{% trans 'Raiting' %}</a></span>
 				<span>или </span>
-				<span class="date"><a href="#">дате</a></span>
-				<span>(<a href="#">выбрать дату</a>)</span>
+				<span class="date"><a href="#">{% trans 'Date' %}</a></span>
+				<span>(<a href="#">{% trans 'Choose date' %}</a>)</span>
 				<div class="country">
-					<span>Показать товары из </span>
-					<span><a href="#" class="act">всех стран</a><i class="icons arrow-lang"></i></span>
+					<span>{% trans 'Show product from' %}</span>
+					<span><a href="#" class="act">{% trans ' all countries' %}</a><i class="icons arrow-lang"></i></span>
 				</div>
 			</div>
 
@@ -158,32 +157,24 @@
 
                     {%  with attr.Active_From|first as date  %}
 			    <li>
-
 					<img class="star" alt="" src="images/stars.png">
 					<img width="160px" height="115px" src="{% static picture %}" alt="{{ name }}" class="thumb" />
 					<p class="date">{{ date }}</p>
 					<p><a href="{% url "news:detail" id %}">{{ name }}</a></p>
 					<p>{{ content|truncatewords:25 }} </p>
-
-
 	             </li>
                         {% ifequal forloop.counter 4  %}
                               </ul>
-                              <div class="itembanner"><a href="#"><img src="{% static "images/banner.jpg"%}" alt=""></a></div>
+                              <div class="itembanner"><a href="#"><img src="{% static "centerpokupok/images/banner.jpg" %}" alt=""></a></div>
                               <ul class="listreviews">
                         {% endifequal %}
-
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
                      {% empty %}
-
                         <span> It's empty</span>
-
                     {% endfor %}
-
-
                   </ul>
                 {% include "paginator.html" %}
             </div>

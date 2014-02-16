@@ -1,0 +1,133 @@
+{% load static %}
+
+<div class="tophead">
+	<div class="news">
+    	<div class="tophead-l">
+        	<a href="#"><i class="imgnews news-logo"></i></a>
+        	<a href="#" title="">О проекте</a> | <a href="#" title="">Услуги</a> | <a href="#" title="">Помощь</a>
+        </div>
+        <div class="tophead-r">
+        	<a href="#" title="">Выйти</a>
+        </div>
+    </div>
+</div>
+<div class="news">
+	<div class="profile">
+        <div class="community">
+            <div class="newstitle">
+                <label>Профиль: {{ user_name }} + {{ current_section }}</label>
+                <div class="notify">
+                    <span><i class="imgnews i-note" id="showevent"></i> <a href="#" class="num">{{ notification }}</a>
+                      <div class="formevent">
+                        	<i class="close-event imgnews"></i>
+                          <div id='load'><img style="width: 250px;" id="load" src="{% static "tppcenter/img/loading.gif" %}"></div>
+                          <div id="not-content">
+
+                          </div>
+
+
+
+                        </div>
+                    </span>
+
+                    <span><i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">2</a>
+
+                    </span>
+
+                    <span><i class="imgnews i-user" id="showevent"></i> <a href="#" class="num">2</a>
+
+                    </span>
+                    <span><i class="imgnews i-book" ></i> <a href="#" class="num">2</a>
+
+                    </span>
+
+                </div>
+            </div>
+            <div class="newslink">
+                <div class="left">
+                    <a href="#">Пример</a>
+                    <a href="#">Команда</a>
+                    <a href="#">Другая</a>
+                    <a href="#">Четвертая</a>
+                </div>
+                <a href="#" class="btnprofile"><i class="imgnews bullet"></i> Профиль</a>
+            </div>
+        </div>
+    </div>
+     <div class="white_content" id="light-profile">
+    <div class="profile-table">
+        <div class="profile-tablein">
+            <div class="profile-title">Профиль пользователя</div>
+            <div class="profile-main">
+            	<div class="avatar">
+                	<img src="img/avatar.jpg" alt="" />
+                    <p class="name">Я предприниматель</p>
+                </div>
+                <ul class="profile-info">
+                	<li>
+                    	<span class="left">Фамилия </span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Имя</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Отчество</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">E-mail 	</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Логин (<  3 символа)</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">WWW -страница</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">ICQ	</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                </ul>
+                <ul class="profile-info prf-clumn">
+                	<li>
+                    	<span class="left">Страна</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Текущая организация</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Пол</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Дата рождения (ДД.ММ.ГГГГ)</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Телефон</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Мобильный</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Skype</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                    <li>
+                    	<span class="left">Профессия</span>
+                        <span class="right">Пример заполнения</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

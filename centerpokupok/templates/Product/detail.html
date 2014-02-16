@@ -8,22 +8,26 @@
 
 {{% block styles %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.countdown.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}" />
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/company.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
-    <script type="text/javascript" src="{% static "js/jquery.countdown-ru.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/incrementing.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/incrementing.js" %}"></script>
     <script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 
 
     <script>
     $(document).ready(function () {
                     $('#slider2').anythingSlider({hashTags: false});
-    })
+    });
+
     </script>
 
     <script>
@@ -69,73 +73,15 @@
 {% endblock %}
 
 {% block header %}
-    {% include "header_big.html" %}
+    {% include "Company/header.html" %}
 {% endblock %}
 
 {% block body %}
    	<div id="main">
 		<div id="sidebar">
-			<div class="shopinfo">
-                {% with company|first as company %}
-
-				<a href="{% url "companies:main" companyID %}"> <span class="title">{{ company }}</span> </a>
-
-				<div class="shopinfoin">
-					<div class="badge">
-						<i class="icons i-badge"></i>
-						<i class="icons i-badge"></i>
-						<i class="icons i-badge"></i>
-					</div>
-
-					<div class="feedbackinfo">
-						<p>Израиль</p>
-					</div>
-				</div>
-
-                {% endwith %}
-			</div>
-
-			<div class="sale-left">
-				<img src="images/gallery/p1.png" alt="" class="avatar" />
-				<div class="saleinfo">
-					<i class="icons icon-status status-online"></i>
-					<p>Продавец в сети</p>
-					<p><a href="#">Juliy Juliy</a></p>
-					<p><a href="#" class="btnreg"><i class="icons i-cm"></i>Написать</a></p>
-				</div>
-			</div>
-
-			<div id="searchleft">
-				<input type="text" name="" placeholder="Поиск в магазине" class="text" />
-				<a href="#" class="icons btnsl"></a>
-			</div>
-
 			{% include "Company/store_categories.html" %}
 
-			<div class="title-filter">
-				{% trans "Most popular products" %}
-			</div>
-
-			<ul class="bestreview">
-                {% for id , attr in productsPopularList.items %}
-                    {% with attr.NAME|first as name %}
-                    {% with attr.IMAGE|first as picture %}
-                    {% with attr.CURRENCY|first as currency %}
-                    {% with attr.COST|first as price %}
-				<li>
-
-					<a href="{% url "products:detail" id %}">
-                        <img src="{% static picture %}" alt="{{ name }}" class="thumb" />
-                    </a>
-					<a href="{% url "products:detail" id %}">{{ name }}</a>
-					<p><font class="number">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
-				</li>
-                    {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                {% endfor %}
-			</ul>
+			{% include "popular.html" %}
 
 			<div class="bestbuy">
 				<div class="items-coupon">
@@ -161,9 +107,16 @@
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "products:list" %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
+                        <a href="{% url "companies:main" companyID %}" property="v:title" rel="v:url">{{ name }}</a>
+                        &rarr;
+                    </span>
+					<span typeof="v:Breadcrum">
+                        <a href="{% url "companies:products" companyID %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                     </span>
 				</div>
+			</div>
+            <div class="title-items">
+				<a href="javascript:history.back()" class="btnback">← {% trans "Back to catalog" %}</a>
 			</div>
                     {% with productValues as  attr   %}
                     {% with attr.NAME|first as name  %}
@@ -234,7 +187,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    <form action="{% url "products:order" 1 %}" method="post">
+                    <form id ='product_form' action="{% url "products:order" 1 %}" method="post">
                         <div class="option">
 
                                 {% csrf_token %}
@@ -255,25 +208,25 @@
                         </div>
 
                         <div class="details-action">
-                            <input type="submit" class="bigbuy" value="{% trans "Buy" %}">
+                            <a href="javascript:void(0);" onclick="$(this).closest('form').submit();" class="bigbuy">{% trans "Buy" %}</a>
 
-                            <div class="wl">
-                                <i class="icons i-wl"></i>
-                                <p><a href="#"  class="wish" data-gid="{{ item_id }} ">В избранное</a></p>
+                            <div class="wl favorite">
+                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ item_id }}" ></i>
+                                <p><a href="#"  class="wish">{% trans 'Favorite' %}</a></p>
                             </div>
                         </div>
                     </form>
 					<div class="socialplugin">
-						<div><img src="{% static "images/fb.gif" %}"></div>
-						<div><img src="{% static "images/tw.gif" %}"></div>
-						<div><img src="{% static "images/pin.gif" %}"></div>
+						<div><img src="{% static "centerpokupok/images/fb.gif" %}"></div>
+						<div><img src="{% static "centerpokupok/images/tw.gif" %}"></div>
+						<div><img src="{% static "centerpokupok/images/pin.gif" %}"></div>
 					</div>
 				</div>
 
 				<div class="ship">
 					<div class="shiptitle">
 						{% trans "Description" %}
-						<span><a href="#">Способы доставки</a></span> <span><a href="#">Условия возврата</a></span>
+						<span><a href="#">{% trans 'Delivery method' %}</a></span> <span><a href="#">{% trans 'Return policy' %}</a></span>
 					</div>
 					<div class="configuration">
 						<ul>
@@ -311,23 +264,16 @@
 
                                     <div class="name">
                                         {{ user }}
-                                        <p><font class="location">Израиль</font></p>
+
                                     </div>
 
                                     <div class="date">
                                         {{ date }}
-                                        <p><font class="number">US $12.00</font> x 1 piece</p>
+
                                     </div>
 
                                     <div class="cmt">
-                                        <div class="topcmt">
-                                            <img src="{% static "images/stars.png" %}" alt="" class="star">
-                                            <div class="vote">
-                                                Is this feedback helpful for you?
-                                                <span><a href="#" class="yes">Yes</a> <font>(1)</font></span>
-                                                <span><a href="#" class="no">No</a> <font class="numberno">(5)</font></span>
-                                            </div>
-                                        </div>
+
                                         <p>{{ content }}</p>
                                     </div>
 
@@ -363,7 +309,7 @@
                                 </li>
                             </ul>
                             <div class="rows-check">
-                                <input type="submit" name = "subCom" class="btnreg" value="Сохранить">
+                                <input type="submit" name = "subCom" class="btnreg" value="{% trans 'Post' %}">
                             </div>
                         </form>
                     </div>

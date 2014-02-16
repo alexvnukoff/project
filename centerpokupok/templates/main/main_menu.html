@@ -47,7 +47,7 @@
                                                 {% endif %}
 
                                                 {% if level == 3 %}
-                                                    <li>{{ name }}</li>
+                                                    <li><a href="{% url "products:category" id %}">{{ name }}</a></li>
                                                 {% endif %}
 
                                                 {% if level == 2 and isleaf == 1 %}
@@ -58,7 +58,7 @@
 
                                                         <div class="listCol">
                                                             <ul>
-                                                                <li><h3>{{ parent_name}}</h3></li>
+                                                                <li><h3> {{ parent_name}}</h3></li>
                                                     {% endif %}
 
                                                     {% if previous == 1 %}
@@ -73,13 +73,13 @@
 
                                                 {% if forloop.counter == sortedHierarchyStructure|length %}
 
-                                                    {% if previous == 1 %}
+                                                    {% if level == 1 %}
                                                         </li>
                                                         
 
                                                     {% endif %}
 
-                                                    {% if previous == 2 or previous == 3 %}
+                                                    {% if level == 2 or level == 3 %}
                                                                     </ul>
                                                                 </div>
                                                             </div>

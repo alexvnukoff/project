@@ -2,8 +2,8 @@
 {% if page.paginator.num_pages > 1 %}
        <div class="panaging">
              {%  if page.has_previous %}
-                    <a href="{% dynurl url_paginator url_parameter "1" %}" >начало</a>
-                                    <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >«</a>
+                    <a href="{% dynurl url_paginator url_parameter "1"  %}" >начало</a>
+                                    <a href="{% dynurl url_paginator url_parameter  page.previous_page_number  %}" >«</a>
             {% endif %}
             <label>Страницы:</label>
 
@@ -12,13 +12,13 @@
 
 
                    {% ifequal i page.number %}
-                       <a href="{% dynurl url_paginator url_parameter page.number %}" class="current">{{ page.number }}</a>
+                       <a href="{% dynurl url_paginator url_parameter page.number  %}" class="current">{{ page.number }}</a>
                           {% else %}
-                       <a href="{% dynurl url_paginator url_parameter i %}">{{ i }}</a>
+                       <a href="{% dynurl url_paginator url_parameter i  %}">{{ i }}</a>
                  {% endifequal %}
                {% endfor %}
                {%  if page.has_next %}
-                                       <a href="{% dynurl url_paginator url_parameter page.next_page_number %}" >»</a>
+                                       <a href="{% dynurl url_paginator url_parameter page.next_page_number  %}" >»</a>
                    <a href="{% dynurl url_paginator url_parameter  page.paginator.num_pages %}" >конец </a>
                {% endif %}
                         </div>

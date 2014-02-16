@@ -20,7 +20,11 @@ EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
 EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 
+ADMINS = (
+    ('Artur', 'artur@tppcenter.com'),
+)
 
+MANAGERS = ADMINS
 
 
 # Quick-start development settings - unsuitable for production
@@ -54,7 +58,11 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'legacy_data',
+    'djcelery'
 )
+
+
+
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
@@ -68,6 +76,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
+
+
 )
 
 
@@ -80,16 +90,22 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 
-
-
+#TODO Artur change LOCATION to elastic cash ip and port
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
+    }
+}
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'ORCL',
-        'USER': 'tpp',
-        'PASSWORD': 'migirov',
-        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        'ENGINE': 'oraclepool',
+        #'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'TPPDB',
+        'USER': 'tppProduction',
+        'PASSWORD': 'TrQwE123$%^;',
+        'HOST': 'tpp-production-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
         'PORT': '1521',
         #Section for Oracle
         'OPTIONS': {
@@ -98,6 +114,8 @@ DATABASES = {
         },
     }
 }
+
+SOUTH_DATABASE_ADAPTERS = { 'default': "south.db.oracle" }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -118,6 +136,7 @@ LOCALE_PATHS = ("locale",)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+
 STATIC_URL = '/static/'
 
 
@@ -125,20 +144,23 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
 
 
+
+
+
+
+
+
 #Were added by Expert Center -----------------------------------------------------
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
+
+MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
-#Email backend for production
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# Email backend for debugging
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_PORT = 1025
-DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -158,6 +180,7 @@ LANGUAGES = (
     ('tm', gettext('Turkmenistan')),
     ('uk', gettext('Ukrainian')),
     ('uz', gettext('Uzbekistan')),
+    ('he', gettext('Israel')),
 )
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
@@ -188,15 +211,42 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
+
+######################## Haystack settings ###############################
+
 HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    'default':{
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
+        'INDEX_NAME': 'lang-en',
     },
 }
 
+for lang in LANGUAGES:
+    HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {
+        'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
+        'URL': HAYSTACK_CONNECTIONS['default']['URL'],
+        'INDEX_NAME': 'lang-' + lang[0],
+    }
+
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
+############################# AWS settings ################################
+
+AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
+AWS_SECRET = '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'
+BUCKET = 'uploadstg'
+
+ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+
+
+##################### Celery settings ####################################
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+import djcelery
+djcelery.setup_loader()
+
+
+###################### Custom settings ###################################
 try:
     from local_settings import *
 except ImportError:
