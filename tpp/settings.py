@@ -16,9 +16,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
-EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'admin@tppcenter.com'
+EMAIL_HOST_PASSWORD = 'Apocalypse?!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
@@ -100,8 +105,8 @@ CACHES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'oraclepool',
-        #'ENGINE': 'django.db.backends.oracle',
+        #'ENGINE': 'oraclepool',
+        'ENGINE': 'django.db.backends.oracle',
         'NAME': 'TPPDB',
         'USER': 'tppProduction',
         'PASSWORD': 'TrQwE123$%^;',

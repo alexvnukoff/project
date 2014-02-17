@@ -45,7 +45,7 @@ def add(imageFile=None):
 
             for type, size in sizes.items():
                 path = '/' + type + '/'+ folder + '/' + name + '.jpg'
-                out = settings.MEDIA_ROOT + '/' + type + '-' + name + '.jpg'
+                out = settings.MEDIA_ROOT + '/upload/' + type + '-' + name + '.jpg'
                 func.resize(im, out=out, **size)
 
                 f = open(out, 'rb')
