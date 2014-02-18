@@ -18,7 +18,7 @@ from celery import shared_task, task
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1):
+def get_product_list(request, page=1):
     user = request.user
     if user.is_authenticated():
         notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -29,49 +29,49 @@ def get_news_list(request, page=1):
     else:
         user_name = None
         notification = None
-    current_section = "News"
+    current_section = "Products"
 
-    newsPage = _newsContent(request, page)
-
-
+    productsPage = _productContent(request, page)
 
 
 
 
-    return render_to_response("News/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
+
+
+    return render_to_response("Products/index.html", {'user_name': user_name, 'current_section': current_section,
+                                                  'productsPage': productsPage, 'notification': notification},
                               context_instance=RequestContext(request))
 
 
-def _newsContent(request, page=1):
-    news = News.active.get_active().order_by('-pk')
+def _productContent(request, page=1):
+    products = Product.active.get_active_related().filter(sites__id=settings.SITE_ID).order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT'), page_num=5, page=page)
+    result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY'), page_num=9, page=page)
 
-    newsList = result[0]
-    news_ids = [id for id in newsList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=news_ids).values('p2c__child__p2c__child', 'pk')
+    productsList = result[0]
+    products_ids = [id for id in productsList.keys()]
+    countries = Country.objects.filter(p2c__child__p2c__child__in=products_ids).values('p2c__child__p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
     for country in countries:
         country_dict[country['p2c__child__p2c__child']] = country['pk']
 
-    for id, new in newsList.items():
+    for id, product in productsList.items():
         toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
                     'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
-        new.update(toUpdate)
+        product.update(toUpdate)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
 
 
-    url_paginator = "news:paginator"
-    template = loader.get_template('News/contentPage.html')
-    context = RequestContext(request, {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
+    url_paginator = "products:paginator"
+    template = loader.get_template('Products/contentPage.html')
+    context = RequestContext(request, {'productsList': productsList, 'page': page, 'paginator_range': paginator_range,
                                                   'url_paginator': url_paginator})
     return template.render(context)
 
@@ -111,16 +111,15 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
     addAttr = {'NAME': 'True'}
-    if request.method != 'POST':
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
-
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-        form = ItemForm('News', id=item_id, addAttr=addAttr)
+    form = ItemForm('News', id=item_id, addAttr=addAttr)
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
@@ -133,13 +132,12 @@ def updateNew(request, item_id):
         values['NAME'] = request.POST.get('NAME', "")
         values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
         values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['IMAGE-CLEAR'] = request.POST.get('IMAGE-CLEAR', " ")
 
         form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr, item_id)
+            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr , item_id)
             return HttpResponseRedirect(reverse('news:main'))
 
 

@@ -195,6 +195,16 @@ class Country(Item):
         return self.getName()
 
 
+class InnovationProject(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+
+    def __str__(self):
+        return self.getName()
+
+
 class Comment(Item):
     active = ItemManager()
     objects = models.Manager()

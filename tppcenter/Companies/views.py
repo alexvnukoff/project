@@ -18,7 +18,7 @@ from celery import shared_task, task
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1):
+def get_companies_list(request, page=1):
     user = request.user
     if user.is_authenticated():
         notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -29,40 +29,42 @@ def get_news_list(request, page=1):
     else:
         user_name = None
         notification = None
-    current_section = "News"
+    current_section = "Companies"
 
-    newsPage = _newsContent(request, page)
-
-
+    newsPage = _companiesContent(request, page)
 
 
 
 
-    return render_to_response("News/index.html", {'user_name': user_name, 'current_section': current_section,
+
+
+    return render_to_response("Companies/index.html", {'user_name': user_name, 'current_section': current_section,
                                                   'newsPage': newsPage, 'notification': notification},
                               context_instance=RequestContext(request))
 
 
-def _newsContent(request, page=1):
-    news = News.active.get_active().order_by('-pk')
+def _companiesContent(request, page=1):
+    companies = Company.active.get_active().order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT'), page_num=5, page=page)
+    result = func.setPaginationForItemsWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
+                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
+                                                  page_num=5, page=page)
 
-    newsList = result[0]
-    news_ids = [id for id in newsList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=news_ids).values('p2c__child__p2c__child', 'pk')
+    companyList = result[0]
+    company_ids = [id for id in companyList.keys()]
+    countries = Country.objects.filter(p2c__child__in=company_ids).values('p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
     for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
+        country_dict[country['p2c__child']] = country['pk']
 
-    for id, new in newsList.items():
+    for id, company in companyList.items():
         toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
                     'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
-        new.update(toUpdate)
+        company.update(toUpdate)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -70,8 +72,8 @@ def _newsContent(request, page=1):
 
 
     url_paginator = "news:paginator"
-    template = loader.get_template('News/contentPage.html')
-    context = RequestContext(request, {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
+    template = loader.get_template('Companies/contentPage.html')
+    context = RequestContext(request, {'companyList': companyList, 'page': page, 'paginator_range': paginator_range,
                                                   'url_paginator': url_paginator})
     return template.render(context)
 
