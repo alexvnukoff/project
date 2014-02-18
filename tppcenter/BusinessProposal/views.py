@@ -18,7 +18,7 @@ from celery import shared_task, task
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_companies_list(request, page=1):
+def get_proposals_list(request, page=1):
     user = request.user
     if user.is_authenticated():
         notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -29,51 +29,61 @@ def get_companies_list(request, page=1):
     else:
         user_name = None
         notification = None
-    current_section = "Companies"
+    current_section = "Business Proposal"
 
-    newsPage = _companiesContent(request, page)
-
-
+    proposalsPage = _proposalsContent(request, page)
 
 
 
 
-    return render_to_response("Companies/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
+
+
+    return render_to_response("BusinessProposal/index.html", {'user_name': user_name, 'current_section': current_section,
+                                                  'proposalsPage': proposalsPage, 'notification': notification},
                               context_instance=RequestContext(request))
 
 
-def _companiesContent(request, page=1):
-    companies = Company.active.get_active().order_by('-pk')
+def _proposalsContent(request, page=1):
+    proposal = BusinessProposal.active.get_active_related().order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
-                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
+    result = func.setPaginationForItemsWithValues(proposal, *('NAME',),
                                                   page_num=5, page=page)
 
-    companyList = result[0]
-    company_ids = [id for id in companyList.keys()]
-    countries = Country.objects.filter(p2c__child__in=company_ids).values('p2c__child', 'pk')
+    proposalList = result[0]
+    proposal_ids = [id for id in proposalList.keys()]
+    countries = Country.objects.filter(p2c__child__p2c__child__in=proposal_ids).values('p2c__child__p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
+    companies = Company.objects.filter(p2c__child__in=proposal_ids).values('p2c__child', 'pk')
+    companies_ids = [company['pk'] for company in companies]
+    companiesList = Item.getItemsAttributesValues(("NAME"), companies_ids)
+    company_dict = {}
+    for company in companies:
+        company_dict[company['p2c__child']] = company['pk']
+
+
     country_dict = {}
     for country in countries:
-        country_dict[country['p2c__child']] = country['pk']
+        country_dict[country['p2c__child__p2c__child']] = country['pk']
 
-    for id, company in companyList.items():
+    for id, proposal in proposalList.items():
         toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
                     'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        company.update(toUpdate)
+                    'COUNTRY_ID':  country_dict.get(id, 0),
+                    'COMPANY_NAME': companiesList[company_dict[id]].get('NAME', 0 ) if company_dict.get(id, 0) else [0],
+                    'COMPANY_ID': company_dict.get(id, 0)}
+        proposal.update(toUpdate)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
 
 
-    url_paginator = "companies:paginator"
-    template = loader.get_template('Companies/contentPage.html')
-    context = RequestContext(request, {'companyList': companyList, 'page': page, 'paginator_range': paginator_range,
+    url_paginator = "proposals:paginator"
+    template = loader.get_template('BusinessProposal/contentPage.html')
+    context = RequestContext(request, {'proposalList': proposalList, 'page': page, 'paginator_range': paginator_range,
                                                   'url_paginator': url_paginator})
     return template.render(context)
 

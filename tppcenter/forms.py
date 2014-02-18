@@ -4,10 +4,7 @@ import uuid
 from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
 from core.models import AttrTemplate, Dictionary, Item, Relationship, Attribute
-from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
-                         Invoice, News, Order, Payment, Product, Tpp, Tender,
-                         Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category, Greeting,
-                         Exhibition)
+from appl.models import *
 
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -46,7 +43,7 @@ class ItemForm(forms.Form):
 
         super(ItemForm, self).__init__()
         # Get id of ContentType of specific Item
-        object_id = ContentType.objects.get(name=str(item).lower()).id
+        object_id = ContentType.objects.get(model=str(item).lower()).id
         # Get default attributes of Item
 
         attributess = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict")
@@ -159,14 +156,14 @@ class ItemForm(forms.Form):
                            self.fields[title].initial = value
                     if self.id and self.obj:
                          file = self.obj.getAttributeValues(title) if self.id else ""
-                         self.document_to_delete.append(file)
+                         self.document_to_delete.extend(file)
 
 
                 else:
                      file = self.obj.getAttributeValues(title) if self.id else ""
                      value = file[0] if self.id and file else ""
 
-                     if values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value:
+                     if values and values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value:
                          self.fields[title].initial = ""
                          self.document_to_delete.append(values[title + '-CLEAR'])
                      else:
@@ -187,11 +184,11 @@ class ItemForm(forms.Form):
                            self.fields[title].initial = value
                     if self.id and self.obj:
                          picture = self.obj.getAttributeValues(title) if self.id else ""
-                         self.file_to_delete.append(picture)
+                         self.file_to_delete.extend(picture)
                  else:
                      picture = self.obj.getAttributeValues(title) if self.id else ""
                      value = picture if self.id and picture else [""]
-                     if values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value[0]:
+                     if values and values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value[0]:
                          self.fields[title].initial = ""
                          self.file_to_delete.append(values[title + '-CLEAR'])
                      else:

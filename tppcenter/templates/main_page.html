@@ -45,12 +45,12 @@
                     	<li><a href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
                         <li><a href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
                         <li><a href="#">Услуги</a></li>
-                        <li><a href="#">ТПП</a></li>
+                        <li><a href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
                         <li><a href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
                         <li><a href="#">Инновационные проекты</a></li>
-                        <li><a href="#">Бизнес-предложения</a></li>
-                        <li><a href="#">Тендеры</a></li>
-                        <li><a href="#">Афиша</a></li>
+                        <li><a href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
+                        <li><a href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
+                        <li><a href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions' %}</a></li>
                         <li><a href="#">Купоны</a></li>
                         <li><a href="#">ТПП ТВ </a></li>
                         <li><a href="#">Вакансии</a></li>

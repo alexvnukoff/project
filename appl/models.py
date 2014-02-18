@@ -411,7 +411,7 @@ class Tender(Item):
     objects = models.Manager()
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Advertising(Item):
@@ -468,6 +468,14 @@ class Document(Item):
 
     def __str__(self):
         return ''
+
+class BusinessProposal(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
 
 
 class Gallery(Item):

@@ -110,7 +110,7 @@ def addFile(file=None):
         except Exception as e:
             return False
 
-    return '/' + folder + '/' + name
+    return  folder + '/' + name
 
 
 def delete(toDelete=None):
