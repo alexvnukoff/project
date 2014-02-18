@@ -3,7 +3,7 @@ import os
 import uuid
 from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
-from core.models import AttrTemplate, Dictionary, Item, Relationship
+from core.models import AttrTemplate, Dictionary, Item, Relationship, Attribute
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Shipment, Gallery, Country, Comment, Category, Greeting,
@@ -17,13 +17,15 @@ from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.models import modelformset_factory
 from django.db import transaction
-from core.amazonMethods import add, delete, addFile
+from core.amazonMethods import add, delete, addFile, deleteFile
 from appl import func
+from django.db.models import Q
+
 
 
 class ItemForm(forms.Form):
 
-    def __init__(self, item, values=None, id=None):
+    def __init__(self, item, values=None, id=None, addAttr=None):
         '''
         Overriding of BaseForm __init__
         parameters:
@@ -35,30 +37,44 @@ class ItemForm(forms.Form):
         form = Form("News" , values = request.POST, id = 4)(Update News with id 4 by values)
         '''
         self.to_delete_if_exception = []
+        self.document_to_delete_if_exception = []
         self.item = item
         self.id = id
-        self.file_to_delete = ""
+        self.file_to_delete = []
+        self.document_to_delete = []
+
 
         super(ItemForm, self).__init__()
         # Get id of ContentType of specific Item
         object_id = ContentType.objects.get(name=str(item).lower()).id
         # Get default attributes of Item
-        attributes = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict")
+
+        attributess = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict")
+        if addAttr:
+            attributes = Attribute.objects.filter(Q(attrTemplate__classId=object_id) | Q(title__in=addAttr.keys())).\
+              select_related("attrTemplate", "dict").distinct()
+        else:
+            attributes = Attribute.objects.filter(attrTemplate__classId=object_id).select_related("attrTemplate", "dict")
+
 
          #IF id parameter isn't null , and we want update form ,need to populate field with initial values
         if self.id:
             self.obj = globals()[item].objects.get(id=self.id)
         if self.id and not values:
-            attrs = [str(attr.attrId.title) for attr in attributes]
+            attrs = [str(attr.title) for attr in attributes]
             values = self.obj.getAttributeValues(*attrs)
 
 
         # Build form fields , depends on type of attribute
         for attribute in attributes:
-            dictr = attribute.attrId.dict
-            attr = attribute.attrId
-            required = attribute.required
+            dictr = attribute.dict
+            attr = attribute
+
             title = str(attr.title)
+            if addAttr and title in addAttr:
+                required = addAttr[title]
+            else:
+                required = attribute.attrTemplate.get(classId=object_id).required
             if values:
                 value = values.get(title, "")
             else:
@@ -143,14 +159,21 @@ class ItemForm(forms.Form):
                            self.fields[title].initial = value
                     if self.id and self.obj:
                          file = self.obj.getAttributeValues(title) if self.id else ""
-                         self.file_to_delete = file
+                         self.document_to_delete.append(file)
 
 
                 else:
                      file = self.obj.getAttributeValues(title) if self.id else ""
                      value = file[0] if self.id and file else ""
 
-                     self.fields[title].initial = FieldFile(instance=None, field=FileField(), name=value) if value else ""
+                     if values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value:
+                         self.fields[title].initial = ""
+                         self.document_to_delete.append(values[title + '-CLEAR'])
+                     else:
+                         self.fields[title].initial = FieldFile(instance=None, field=FileField(), name=value) if value else ""
+
+
+
 
             #ImageField
             if(attr.type == "Img") and dictr is None:
@@ -164,14 +187,15 @@ class ItemForm(forms.Form):
                            self.fields[title].initial = value
                     if self.id and self.obj:
                          picture = self.obj.getAttributeValues(title) if self.id else ""
-                         self.file_to_delete = picture
-
-
+                         self.file_to_delete.append(picture)
                  else:
                      picture = self.obj.getAttributeValues(title) if self.id else ""
-                     value = picture if self.id and picture else ""
-
-                     self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[0]) if value else ""
+                     value = picture if self.id and picture else [""]
+                     if values.get(title + '-CLEAR', False) and values[title + '-CLEAR'] == value[0]:
+                         self.fields[title].initial = ""
+                         self.file_to_delete.append(values[title + '-CLEAR'])
+                     else:
+                         self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value[0]) if value else ""
 
             #Text field (input type= "text")
             if(attr.type == "Chr") and dictr is None:
@@ -249,14 +273,19 @@ class ItemForm(forms.Form):
 
             self.obj.setAttributeValue(attrValues, user)
 
-            if self.file_to_delete:
+            if len(self.file_to_delete) > 0:
                delete(self.file_to_delete)
+            if len(self.document_to_delete) > 0:
+                 deleteFile(self.document_to_delete)
 
         except Exception as e:
+
             transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)
             if len(self.to_delete_if_exception) > 0:
                  delete(self.to_delete_if_exception)
+            if len(self.document_to_delete_if_exception) > 0:
+                 deleteFile(self.document_to_delete)
             return False
 
         else:
@@ -300,13 +329,9 @@ class ItemForm(forms.Form):
 
         if isinstance(self.fields[title], forms.FileField) and not isinstance(self.fields[title], forms.ImageField):
             filename = addFile(file=file)
-            self.to_delete_if_exception.append(filename)
+            self.document_to_delete_if_exception.append(filename)
             self.fields[title].initial = FieldFile(instance=None, field=FileField(),  name=filename)
-        #if self.file_to_delete:
-         #  filename = '%s/%s' % (settings.MEDIA_ROOT, self.file_to_delete[0])
-          # if os.path.isfile(filename):
-           #     os.remove(filename)
-        #if file has been saved , update initial value of ImageField
+
 
     def setlabels(self, dict):
         for oldLabel, newLabel in dict.items():
@@ -366,13 +391,6 @@ class BasePhotoGallery(BaseModelFormSet):
                     item = post['form-'+str(i)]
                     self.toDelete.append(item)
 
-        if self.toDelete:
-            items = Gallery.objects.filter(pk__in=self.toDelete).distinct()
-            self.toDelete = [item.photo.name for item in items]
-            items.delete()
-
-
-
 
         self.user = parent_id
 
@@ -384,8 +402,13 @@ class BasePhotoGallery(BaseModelFormSet):
         Example :
         form.save(parent = 34 , user = request.user, commit =True)
         """
+        if self.toDelete:
+            items = Gallery.objects.filter(pk__in=self.toDelete).distinct()
+            self.toDelete = [item.photo.name for item in items]
+            items.delete()
         self.user = user
         sid = transaction.savepoint()
+
         try:
             instances = super(BasePhotoGallery, self).save(commit)
             for instance in instances:
@@ -399,7 +422,6 @@ class BasePhotoGallery(BaseModelFormSet):
                 self.files_to_delete.append(file)
                 instance.photo = file
                 instance.save()
-
 
 
             instances_pk = [instance.pk for instance in instances]

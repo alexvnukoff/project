@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
+
 EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 

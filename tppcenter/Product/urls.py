@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 import appl.views
-import tppcenter.News.views
+import tppcenter.Product.views
 
 import tppcenter.views
 
@@ -11,10 +11,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', tppcenter.News.views.get_news_list, name='main'),
-     url(r'^page/([0-9]+)?/$', tppcenter.News.views.get_news_list, name="paginator"),
-     url(r'^add/$', tppcenter.News.views.addNews, name="add"),
-     url(r'^update/([0-9]+)/$', tppcenter.News.views.updateNew, name="update"),
+     url(r'^$', tppcenter.Product.views.get_product_list, name='main'),
+     url(r'^page/([0-9]+)?/$', tppcenter.Product.views.get_product_list, name="paginator"),
+
 
 
 
