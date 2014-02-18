@@ -100,7 +100,7 @@ def addFile(file=None):
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
                                          endpoint='s3.amazonaws.com')
 
-            path = '/' + folder + '/' + name
+            path = '/document/' + folder + '/' + name
             f = open(file, 'rb')
             requests.append(pool.upload(path, f, close=True))
             pool.all_completed(requests)
@@ -110,7 +110,7 @@ def addFile(file=None):
         except Exception as e:
             return False
 
-    return folder + '/' + name
+    return '/' + folder + '/' + name
 
 
 def delete(toDelete=None):
@@ -131,8 +131,30 @@ def delete(toDelete=None):
                 requests.append(pool.delete(filename))
 
          pool.all_completed(requests)
-     except Exception:
+     except Exception as e:
          return False
+
+
+     return True
+
+def deleteFile(toDelete=None):
+
+
+     pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
+                                                                endpoint='s3.amazonaws.com')
+     requests = []
+     if not toDelete:
+         return False
+     try:
+         for delete in toDelete:
+            filename = delete
+            requests.append(pool.delete('/document/' + filename))
+
+
+         pool.all_completed(requests)
+     except Exception as e:
+         return False
+
 
      return True
 

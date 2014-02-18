@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
+
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'admin@tppcenter.com'

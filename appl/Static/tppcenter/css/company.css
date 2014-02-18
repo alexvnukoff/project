@@ -1,0 +1,149 @@
+.companies{ position:relative; float:left; width:100%; padding-bottom:20px; margin:10px 0 0 0;}
+.company-list{ position: relative; float: left; width: 100%;}
+.company-list li{ position: relative; float: left; width: 100%; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 0 12px 0;}
+.company-list li .title{ float: left; width: 100%;font-size: 16px; font-weight: bold;}
+.company-list li .title .flag{ float: left; width: 18px; height: 12px; margin:4px 8px 0 12px; display: inline;}
+.company-list li .title a{ display: block; font-size: 16px; font-weight: bold; padding-right: 10px;}
+.company-list li .company-infor{ position: relative; float: left; width: 100%; margin: 10px 0 0 0;}
+.company-list li .company-infor .logocompany{ float: left; width: 70px; height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom: 4px; margin: 0 10px 0 12px; display: inline;}
+.company-list li .company-infor .desc{ float: left; width: 248px; color: #595959;}
+.company-list li .company-infor .desc a{ display: block; padding-top: 12px;}
+.company-list li .company-infor .companycontact{ float: right; width: 175px;  border-left: 1px #e1e1e1 solid; padding-left:10px;}
+.company-list li .company-infor .companycontact .line{ float: left; width: 100%; margin: 0 0 8px 0;}
+.company-list li .company-infor .companycontact .line .iconinfo{ float: left; width: 25px;}
+.company-list li .company-infor .companycontact .line .nameinfo{ float: left; max-width: 150px;}
+.company-list li .company-infor .companycontact .line i{ display: inline-block; vertical-align: middle;}
+.company-list li .company-details{ display:inline-block; width:265px; padding-top:8px;}
+.company-list li p{ padding:12px 10px 0 10px; display:inline-block;}
+.logo-details{ float:left; width:70px; height:60px; margin:8px 10px 10px 10px;}
+.payjoin{ position:relative; float:right; width:160px; background-color:#e8e8e8; border-radius:4px; margin:10px; display:inline;}
+.payjoin span{ display:inline-block; font-size:11px; color:#4a4a4a; padding:10px;}
+.btnpay{ display:inline-block; width:160px; height:36px; line-height:36px; text-align:center; font-size:15px; color:#FFF; text-shadow:-1px 1px 1px #327da2;
+background-color:#2186b8; border-radius:4px;
+background-image: -webkit-gradient(
+linear,
+left top,
+left bottom,
+color-stop(0, rgb(60,155,203)),
+color-stop(0.49, rgb(60,159,195)),
+color-stop(0.5, rgb(33,134,184)),
+color-stop(1, rgb(33,136,187))
+);
+background-image: -moz-linear-gradient(
+center top,
+rgb(60,155,203) 0%,
+rgb(60,159,195) 49%,
+rgb(33,134,184) 50%,
+rgb(33,136,187) 100%);}
+.btnpay:hover{ color:#FFF; text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
+.companies .social{ float:right; text-align:right;}
+.cpn-details-tab{ position:relative; float:left; width:100%; background-color:#f5f5f5; border-radius:3px; border:1px solid; border-color:#CCC #FFF #FFF #CCC; box-sizing:border-box; margin: 20px 0 0 0;
+box-shadow:inset 0 0 3px #CCC;}
+.cpn-details-tab .tab-cate{ position:relative; float:left; width:100%; height:auto; background-color:#e6e6e6; border-bottom:1px #d0d0d0 solid; font-size:11px;}
+.cpn-details-tab .tab-top{position:relative; float:left; width:100%; padding:8px 0;background-color:#e6e6e6;}
+.cpn-details-tab .tab-top a{ padding: 0 3px;}
+.cpn-details-tab .ui-tabs-nav li a { padding:0 2px;}
+.cpn-details-tab .content-goods-tab{ min-height:380px;}
+.cpn-details-tab .ui-tabs-nav li.ui-tabs-active{ height:25px; line-height:25px;}
+.cpn-details-tab .ui-tabs-nav li{ float:none; display:inline-block;}
+
+.newsform label.sapce{ margin-top:8px;}
+
+.uploadimgage input.text, .uploadimgage select, .uploadimgage textarea{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
+.uploadimgage select{ float:left; width:98%; padding:6px;}
+.uploadimgage input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.uploadconfig .company{ float:left; width:168px; border:1px #bdbdbd solid; background-color:#FFF;}
+.uploadconfig .company li{ display:block; padding:3px 8px 4px 8px; color:#484848; margin-bottom:0; width:152px; cursor:pointer; margin:0;}
+.uploadconfig .company li.selected{ background-color:#4a4a4a; color:#FFF;}
+.addpage-form input.text{ margin-bottom:8px;}
+
+.deals{ position:relative; float:left; width:100%; margin:12px 0;}
+.table-deals{ float:left; width:100%; margin:12px 0 0 0;}
+.table-deals tr td{ padding:8px 0 8px 8px; font-size:11px;}
+.table-deals tr.top{ background-color:#e8e8e8;}
+.table-deals tr.top td{ font-size:12px; font-weight:bold;}
+.deal-details{ position:relative; float:left; width:100%; background-color:#fafafa; padding:10px; margin:12px 0 0 0;}
+.deal-details h3{ font-size:16px; font-weight:bold; padding-bottom:10px; float:left; width:100%;}
+.deal-details .thumb-deal{ float:left; width:150px; height:130px; background:url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom:4px; margin:0 10px 10px 0; color:#595959;}
+.deal-details p{ padding-top:12px;}
+.deals-info{ position:relative; float:left; width:100%; margin:20px 0 0 0;}
+.deals-info-left{ position:relative; float:left; width:40%;}
+.deals-info-left li{ float:left; width:100%; margin-bottom:10px; color:#9b9b9b}
+.deals-info-left li label{ float:left; width:90px; margin-top:3px;}
+.deals-info-left li .right{ float:left; font-size:15px; font-weight:bold; color:#000;}
+
+.tenderline{ float:left; width:500px; padding:10px 20px 20px 20px;}
+.tenderline li{ float:left; width:100%; margin:12px 0 0 0;}
+.tenderline li input.text, .tenderline li select, .tenderline li textarea{ float:left; width:96%; border:1px #bdbdbd solid; padding:5px;}
+.tenderline li select{ float:left; width:98%; padding:6px;}
+.tenderline li label{ float:left; width:100%; font-weight:bold; padding-bottom:5px;}
+.tenderline li .clumn1, .tenderline li .clumn2{ width:240px;}
+.tenderline li .clumn1{ float:left;}
+.tenderline li .clumn2{ float:right;}
+.tenderline li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.tenderline li .editor{ float:left; border:1px #bdbdbd solid;}
+.tenderline li .line{ float: left; width: 100%; margin-top: 5px;}
+.tenderline li .line .buttonclear{ width: auto; padding: 0 35px;}
+
+.tender-list{ position: relative; float: left; width: 100%;}
+.tender-list li{ position: relative; float: left; width: 520px; background-color: #fafafa; margin: 10px 0 0 0; padding:10px;}
+.tender-list li .title{ float: left; width: 100%;font-size: 16px; font-weight: bold;}
+.tender-list li .title .flag{ float: left; width: 18px; height: 12px; margin:4px 8px 0 0; display: inline;}
+.tender-list li .title .name{display: block; color:#9b9b9b; padding-right: 10px; font-size:12px; font-weight:normal; padding-top:2px;}
+.tender-list li h2{ float:left; width:100%; font-size:16px; font-weight:bold; color:#0089bc; padding-top:12px;}
+.tender-list li .line{ float:left; width:100%; padding:12px 0 0 0; color:#9b9b9b;}
+.tender-list li .number{ font-size:15px; font-weight:bold; color:#000;}
+.tender-list li .linkmore{ position:absolute; right:10px; bottom:10px;}
+.tender-list li .button-r{ position:absolute; top:30px; right:10px;}
+.tender-list li .button-r .bigbuy{ padding:8px 30px;}
+#afisha-list h2{ max-width:65%;}
+
+.tender{ position:relative; float:left; width:100%; padding-bottom:20px; margin:30px 0 0 0;}
+.tender-details-title{ float: left; width: 100%;font-size: 16px; font-weight: bold;}
+.tender-details-title .flag{ float: left; width: 18px; height: 12px; margin:4px 8px 0 0; display: inline;}
+.tender-details-title .name{display: block; color:#9b9b9b; padding-right: 10px; font-size:12px; font-weight:normal; padding-top:2px;}
+.tender-info{ position:relative; float:left; width:100%; margin:15px 0 0 0 ;}
+.tender-info .title{ float:left; width:100%; font-size:16px; font-weight:bold; color:#000;}
+.tender-info ul.infolist li{ float:left; width:100%; margin:12px 0 0 0;}
+.tender-info ul.infolist li label{ float:left; width:190px; color:#9b9b9b;}
+.tender-info ul.infolist li .right{ float:left; color:#000;}
+.tender-info ul.infolist li .right .price{ font-size:15px; font-weight:bold; color:#1d82b4;}
+.tender-bottom{ float:left; width:100%;}
+.tender-bottom-left{ float:left; width:49%; line-height:26px; margin:12px 0 0 0;}
+.tender-bottom-right{ float:right; width:49%; text-align:right;}
+.tender-bottom-left .thumb{ float:left; width:30px; margin-right:8px;}
+.tender-button{ position:absolute; top:-15px; right:0;}
+#resume-dt{ margin:0;}
+#afisha-info .title{ color:#0089bc; max-width:65%;}
+.tender-info ul.inforesume li{ float:left; width:100%; margin:8px 0 0 0;}
+.tender-info ul.inforesume li label{ float:left; width:115px; color:#9b9b9b;}
+.tender-info ul.inforesume li .right{ float:left; color:#000; font-weight:bold;}
+
+.vacancy-list{ position: relative; float: left; width: 100%;}
+.vacancy-list li{ position: relative; float: left; width: 516px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
+.vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold;}
+.vacancy-list li .logovacancy{ float: left; width: 70px; height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; margin: 8px 10px 0 0; display: inline;}
+.vacancy-list li .vacancy-desc{ position:relative; float:left; width:435px; margin:8px 0 0 0;}
+.vacancy-list li .vacancy-desc .flag{ float:left; width:18px; height:12px; padding-right:5px;}
+.vacancy-list li .vacancy-desc .date{ color:#9b9b9b;}
+.vacancy-list li .vacancy-desc a.more{ display:block; text-align:right; padding-top:5px;}
+
+.tender-list li .line .clumn{ float:left; padding-right:25px;}
+.tender-list li .line .gray{ color:#4a4a4a;} 
+.innov-details{ float:left; width:100%; margin:12px 0 0 0; color:#595959;}
+.innov-tab-content{ float:left; width:500px; margin: 0 0 0 20px; display:inline; min-height:515px;}
+.innov-tab-content li{ float:left; width:100%; margin:12px 0 0 0;}
+.innov-tab-content li .left{ float:left; width:28%; color:#9b9b9b;}
+.innov-tab-content li .right{ float:left; width:70%; color:#4a4a4a;}
+.innov-tab-content li label{ float:left; width:100%; padding-bottom:6px; font-weight:bold;}
+.innov-tab-content li input.text,.innov-tab-content li select,.innov-tab-content li textarea { float:left; width:90%; border:1px #bdbdbd solid; padding:5px;} 
+
+.innov-coba{ float:left; width:238px; border:1px #bdbdbd solid; background-color:#FFF;}
+.innov-coba li{ display:block; padding:3px 8px 4px 8px; color:#484848; margin-bottom:0; width:222px; cursor:pointer; margin:0;}
+.innov-coba li.selected{ background-color:#4a4a4a; color:#FFF;}
+.innov-img{ float:left; width:100%;}
+.innov-img li{ float:left; width:150px; margin:20px 0 0 20px; display:inline;}
+
+.vacancy-dt{ position:relative; float:left; width:100%; padding-bottom:20px; margin:10px 0 0 0;}
+.vacancy-button{ position:absolute; top:30px; right:0;}
+.bussiness-tab{ min-height:580px;}

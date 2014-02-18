@@ -11,7 +11,7 @@ from appl import func
 
 
 @shared_task
-def addNewsAttrubute(post, files, user, site_id, item_id=None):
+def addNewsAttrubute(post, files, user, site_id, addAttr, item_id=None):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -19,8 +19,9 @@ def addNewsAttrubute(post, files, user, site_id, item_id=None):
     values['NAME'] = post.get('NAME', "")
     values['DETAIL_TEXT'] = post.get('DETAIL_TEXT', "")
     values['IMAGE'] = files.get('IMAGE', "")
+    values['IMAGE-CLEAR'] = post.get('IMAGE-CLEAR', " ")
 
-    form = ItemForm('News', values=values, id=item_id)
+    form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     new = form.save(user, site_id)

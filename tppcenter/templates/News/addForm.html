@@ -13,6 +13,7 @@
     {% if image %}
 
         <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
+        <input type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" />Delete<br>
     {% endif %}
     <label for="id_image">Image</label><input type="file" id="id_image" name="IMAGE"/>{{ form.errors.IMAGE }}<br>
     <label for="id_detail_text"></label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" />{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>

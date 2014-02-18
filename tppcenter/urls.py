@@ -4,6 +4,9 @@ from django.contrib.auth import views as auth_views
 
 import tppcenter.views
 import tppcenter.News.urls
+import tppcenter.Product.urls
+import tppcenter.Companies.urls
+import tppcenter.Innov.urls
 
 
 from django.contrib import admin
@@ -14,6 +17,9 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', tppcenter.views.home),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
+    url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
+    url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
+    url(r'^companies/', include(tppcenter.Companies.urls, namespace='companies')),
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),
     url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
