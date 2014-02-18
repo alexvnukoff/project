@@ -387,7 +387,14 @@ class Item(models.Model):
     #   title = name
 
     @staticmethod
-    def _deactivateRelation(itemList, eDate, sDate=None):
+    def _activationRelated(itemList, eDate, sDate=None):
+
+        if isinstance(itemList, int):
+            itemList = [itemList]
+
+        if not isinstance(itemList, list):
+            raise ValueError('Should be a list or int')
+
         rel = Relationship.objects.filter(parent__in=itemList, type="dependence")
 
         if not rel.exists():
@@ -403,24 +410,29 @@ class Item(models.Model):
 
         rel.update(**fields)
 
-        Item._deactivateRelation(parents, eDate, sDate)
+        Item._activationRelated(parents, eDate, sDate)
 
 
-
-    @staticmethod
-    def deactivate(itemList, eDate, sDate=None):
-        if not isinstance(itemList, list) and isinstance(itemList, int):
-            itemList = [itemList]
+    def activation(self, eDate, sDate=None):
+        if self.__class__.__name__ is 'Item':
+            raise ValueError('Should be subclass of Item')
 
         fields = {'end_date': eDate}
 
         if sDate is not None:
             fields['start_date'] = sDate
 
-        Item.objects.filter(pk__in=itemList).update(**fields)
+        self.update(**fields)
+        self._activationRelated(self.pk, eDate, sDate)
 
-        Item._deactivateRelation(itemList, eDate, sDate)
 
+    def reindexItem(self):
+        if self.__class__.__name__ is 'Item':
+            raise ValueError('Should be subclass of Item')
+
+        #send signal to search frontend
+        from core.signals import setAttValSignal
+        setAttValSignal.send(self._meta.model, instance=self)
 
 
     def __str__(self):
@@ -609,8 +621,10 @@ class Item(models.Model):
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 
-        values = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
-                                      Q(start_date__lte=now()) | Q(start_date__isnull=True),
+        ctime = now()
+
+        values = Value.objects.filter(Q(end_date__gt=ctime) | Q(end_date__isnull=True),
+                                      Q(start_date__lte=ctime) | Q(start_date__isnull=True),
                                       attr__title__in=attr, item=self.id)
         getList = ["title", "attr__title", 'item__create_date', 'item__title']
 
@@ -679,7 +693,7 @@ class Item(models.Model):
         if not slug:
             return pk
 
-        return slugify(string) + '-' + pk
+        return slugify(string) + '-' + str(pk)
 
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
@@ -844,9 +858,6 @@ class Item(models.Model):
         except IntegrityError as e:
             raise e
 
-        #send signal to search frontend
-        from core.signals import setAttValSignal
-        setAttValSignal.send(self._meta.model, instance=self)
 
         return True
 
@@ -899,6 +910,16 @@ class Relationship(models.Model):
 
     @staticmethod
     def setRelRelationship(parent, child, user, type="relation"):
+
+        if not isinstance(parent, Item):
+            raise ValueError('Parent should be an Item instance')
+
+        if not isinstance(child, Item):
+            raise ValueError('Child should be an Item instance')
+
+        if parent.__class__.__name__ == 'Item' or child.__class__.__name__ == 'Item':
+            raise ValueError('Child and Parent should be subclass of Item')
+
         Relationship.objects.create(parent=parent, child=child, create_user=user, type=type)
 
 #----------------------------------------------------------------------------------------------------------

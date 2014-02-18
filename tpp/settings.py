@@ -139,15 +139,7 @@ LOCALE_PATHS = ("locale",)
 
 STATIC_URL = '/static/'
 
-
-
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
-
-
-
-
-
-
 
 
 #Were added by Expert Center -----------------------------------------------------
@@ -165,39 +157,40 @@ AUTHENTICATION_BACKENDS = (
 gettext = lambda s: s
 LANGUAGES = (
     ('ru', gettext('Russia')),
-    ('am', gettext('Armenia')),
-    ('az', gettext('Azerbaijan')),
-    ('be', gettext('Belarus')),
+    #('am', gettext('Armenia')),
+    #('az', gettext('Azerbaijan')),
+    #('be', gettext('Belarus')),
     ('en', gettext('England')),
-    ('et', gettext('Estonia')),
-    ('ka', gettext('Georgia')),
-    ('kk', gettext('Kazakhstan')),
-    ('kg', gettext('Kyrgyzstan')),
-    ('lt', gettext('Lithuania')),
-    ('lv', gettext('Latvia')),
-    ('mo', gettext('Moldova')),
-    ('tg', gettext('Tajikistan')),
-    ('tm', gettext('Turkmenistan')),
-    ('uk', gettext('Ukrainian')),
-    ('uz', gettext('Uzbekistan')),
+    #('et', gettext('Estonia')),
+    #('ka', gettext('Georgia')),
+    #('kk', gettext('Kazakhstan')),
+    #('kg', gettext('Kyrgyzstan')),
+    #('lt', gettext('Lithuania')),
+    #('lv', gettext('Latvia')),
+    #('mo', gettext('Moldova')),
+    #('tg', gettext('Tajikistan')),
+    #('tm', gettext('Turkmenistan')),
+    #('uk', gettext('Ukrainian')),
+    #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
 )
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
-    'am': ('ru',),
-    'az': ('ru',),
-    'be': ('ru',),
-    'et': ('ru',),
-    'ka': ('ru',),
-    'kk': ('ru',),
-    'kg': ('ru',),
-    'lt': ('ru',),
-    'lv': ('ru',),
-    'mo': ('ru',),
-    'tg': ('ru',),
-    'tm': ('ru',),
-    'uk': ('ru',),
-    'uz': ('ru',),
+    'he': ('en',),
+    #'am': ('ru',),
+    #'az': ('ru',),
+    #'be': ('ru',),
+    #'et': ('ru',),
+    #'ka': ('ru',),
+    #'kk': ('ru',),
+    #'kg': ('ru',),
+    #'lt': ('ru',),
+    #'lv': ('ru',),
+    #'mo': ('ru',),
+    #'tg': ('ru',),
+    #'tm': ('ru',),
+    #'uk': ('ru',),
+    #'uz': ('ru',),
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -223,6 +216,10 @@ HAYSTACK_CONNECTIONS = {
 }
 
 for lang in LANGUAGES:
+
+    if lang is 'en':
+        continue
+
     HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {
         'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
         'URL': HAYSTACK_CONNECTIONS['default']['URL'],
@@ -237,13 +234,16 @@ AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
 
-ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
-
 
 ##################### Celery settings ####################################
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_REDIS_HOST = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+
 import djcelery
 djcelery.setup_loader()
+
+##################### Tornado settings ####################################
+ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
 
 
 ###################### Custom settings ###################################
