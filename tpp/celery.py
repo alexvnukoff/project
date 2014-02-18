@@ -9,7 +9,7 @@ from django.conf import settings
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tpp.settings')
 
-ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
+ORDERS_REDIS_HOST = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
 ORDERS_REDIS_PORT = str(getattr(settings, 'ORDERS_REDIS_PORT', 6379))
 
 app = Celery('tpp',  broker='redis://' + ORDERS_REDIS_HOST + ':' + ORDERS_REDIS_PORT)

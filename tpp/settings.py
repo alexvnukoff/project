@@ -17,8 +17,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 
-EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'admin@tppcenter.com'
+EMAIL_HOST_PASSWORD = 'Apocalypse?!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
@@ -94,17 +100,18 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
     }
 }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'oraclepool',
-        'NAME': 'ORCL',
-        'USER': 'tpp',
-        'PASSWORD': 'migirov',
-        'HOST': 'djangodbinststage.c7szux21nkeg.us-west-2.rds.amazonaws.com',
+        #'ENGINE': 'oraclepool',
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'TPPDB',
+        'USER': 'tppProduction',
+        'PASSWORD': 'TrQwE123$%^;',
+        'HOST': 'tpp-production-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
         'PORT': '1521',
         #Section for Oracle
         'OPTIONS': {
@@ -216,7 +223,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-50-112-162-13.us-west-2.compute.amazonaws.com:9200',
+        'URL': 'http://ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
@@ -236,7 +243,7 @@ AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
 
-ORDERS_REDIS_HOST = 'testredis.rhhy9l.0001.usw2.cache.amazonaws.com'
+ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
 
 
 ##################### Celery settings ####################################
