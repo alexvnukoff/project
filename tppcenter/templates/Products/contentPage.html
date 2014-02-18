@@ -1,0 +1,35 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+           {% include "main/paginator.html" %}
+             <ul class="listprd">
+                {% for id , attr in productsList.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.IMAGE.0 as image %}
+                    {% with attr.CREATE_DATE.0 as date%}
+                    {% with attr.COUNTRY_NAME|first as country_name %}
+                    {% with attr.COUNTRY_FLAG|first as flag %}
+                    {% with attr.COST|first as price %}
+                    {% with attr.CURRENCY|first as currency %}
+                    {% with attr.COUNTRY_ID as country_id %}
+                    <li>
+                      <div class="thumb"><a href="#"><img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" /></a></div>
+                        <div class="link">
+                    	<img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
+                        <a href="#" class="name">{{ name }}</a>
+                       </div>
+                        <div class="price">{{ currency|getSymbol }} {{ price }}</div>
+                        <a href="#" class="btnbuy">Купить</a>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+            </ul>
+           {% include "main/paginator.html" %}

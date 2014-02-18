@@ -19,6 +19,12 @@
 .community .newstitle .notify.none .i-user{background-position:-144px -20px; margin-top:9px;}
 .community .newstitle .notify.none .i-book{background-position:-163px -20px; margin-top:8px;}
 
+.icon-info1{ width: 16px; height: 14px; background-position: -120px -90px;}
+.icon-info2{ width: 15px; height: 11px; background-position: -137px -90px;}
+.icon-info3{ width: 16px; height: 13px; background-position: -153px -90px;}
+.icon-info4{ width: 16px; height: 16px; background-position: -170px -90px;}
+.icon-info5{ width: 15px; height: 11px; background-position: -187px -90px;}
+
 .formevent:before{ position:absolute; content:""; width:0; height:0; top:-4px; right:70px; z-index:2;
 border-style: solid; border-width: 0 5px 4px 5px; border-color: transparent transparent #f5f5f5 transparent;}
 .formevent:after{ position:absolute; content:""; width:0; height:0; top:-5px; right:69px; z-index:1;
@@ -163,6 +169,15 @@ rgb(33,136,187) 100%);}
 .listprd{ float:left; width:100%;}
 .listprd li{ position:relative; float:left; width:150px; margin:20px 20px 0 0; padding:8px; background-color:#fafafa; color:#595959; line-height:16px;}
 .listprd li .thumb{ position:relative; float:left; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+.listprd li .thumb img{max-width: 150px;max-height: 120px;position: absolute;margin: auto;left: 0;right: 0;bottom: 0;top: 0;}
+
+
+
+
+
+
+
+
 .listprd li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0 ;}
 .listprd li .link .flag{ float:left; width:18px; height:12px; margin-top:4px;}
 .listprd li .link .name{ display:inline-block; margin-left:6px; max-width:125px; height:48px; vertical-align:top;}
