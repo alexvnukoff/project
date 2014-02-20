@@ -102,6 +102,32 @@ class Company(Organization):
     def getBranches(self):
         return 1
 
+    def reindexItem(self):
+        super(Company, self).reindexItem()
+
+        classes = [Product]
+
+        for klass in classes:
+            objects = klass.objects.filter(c2p__parent_id=self.pk)
+
+            for obj in objects:
+                obj.reindexItem()
+
+    @staticmethod
+    def isCompany(instance):
+        from django.core.exceptions import ObjectDoesNotExist
+
+        if isinstance(instance, Company):
+            return True
+        #or
+        try:
+            if hasattr(instance.organization, 'company'):
+                return True
+        except ObjectDoesNotExist:
+            return False
+
+        return False
+
     def getDepartments(self):
         '''
             Get dict of departments only for this Company
@@ -142,12 +168,38 @@ class Department(Organization):
     def __str__(self):
         return self.getName()
 
+class Branch(Item):
+
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.getName()
+
+class NewsCategories(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.getName()
 
 class Country(Item):
 
     active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.getName()
+
+
+class InnovationProject(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
 
     def __str__(self):
         return self.getName()
