@@ -4,16 +4,33 @@ class L_User(models.Model):
     '''
         Defines buffer table for reloading users' data from CSV file
     '''
-    username = models.CharField(max_length=1024, unique=True)
+    username = models.CharField(max_length=1024)
     is_active = models.BooleanField()
     first_name = models.CharField(max_length=1024)
     last_name = models.CharField(max_length=1024)
-    email = models.CharField(max_length=1024, unique=True)
-    btx_id = models.CharField(max_length=10, unique=True)
-    tpp_id = models.CharField(max_length=10, unique=True) #save generated id in TPP DB
+    email = models.CharField(max_length=1024)
+    btx_id = models.CharField(max_length=10)
     update_date = models.DateField(null=True, blank=True)
     last_visit_date = models.DateField(null=True, blank=True)
     reg_date = models.DateField(null=True, blank=True)
+    profession = models.CharField(max_length=1024)
+    personal_www = models.CharField(max_length=1024)
+    icq = models.CharField(max_length=1024)
+    gender = models.CharField(max_length=40)
+    birth_date = models.DateField(null=True, blank=True)
+    photo = models.CharField(max_length=1024)
+    phone = models.CharField(max_length=1024)
+    fax = models.CharField(max_length=1024)
+    cellular = models.CharField(max_length=1024)
+    addr_street = models.CharField(max_length=1024)
+    addr_city = models.CharField(max_length=1024)
+    addr_state = models.CharField(max_length=1024)
+    addr_zip = models.CharField(max_length=40)
+    addr_country = models.CharField(max_length=1024)
+    company = models.CharField(max_length=1024)
+    department = models.CharField(max_length=1024)
+    position = models.CharField(max_length=1024)
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
     completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
     email_sent = models.BooleanField(default=False) #update in True if notification mail about password was sent
 
@@ -61,3 +78,59 @@ class L_Company(models.Model):
     def __str__(self):
         return self.short_name+'|'+self.INN+'|'+self.KPP
 
+class L_Product(models.Model):
+    '''
+        Defines buffer table for reloading products' data from CSV file
+    '''
+    btx_id = models.CharField(max_length=10, unique=True)
+    prod_name = models.CharField(max_length=1024)
+    detail_page_url = models.CharField(max_length=1024)
+    detail_picture = models.CharField(max_length=1024)
+    create_date = models.DateField(null=True, blank=True)
+    company_id = models.CharField(max_length=40)
+    photos1 = models.CharField(max_length=1024)
+    discount = models.CharField(max_length=40)
+    add_pages = models.CharField(max_length=1024)
+    tpp = models.CharField(max_length=40)
+    direction = models.CharField(max_length=1024)
+    is_deleted = models.BooleanField()
+    photos2 = models.CharField(max_length=1024)
+    file = models.CharField(max_length=1024)
+    keywords = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.prod_name
+
+class L_TPP(models.Model):
+    '''
+        Defines buffer table for reloading TPPs' data from CSV file
+    '''
+    btx_id = models.CharField(max_length=10)
+    tpp_name = models.CharField(max_length=1024)
+    detail_page_url = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    preview_text = models.TextField(max_length=4096)
+    detail_picture = models.CharField(max_length=1024)
+    detail_text = models.TextField(max_length=4096)
+    create_date = models.DateField(null=True, blank=True)
+    country = models.CharField(max_length=40)
+    moderator = models.CharField(max_length=1024)
+    head_pic = models.CharField(max_length=1024)
+    logo = models.CharField(max_length=1024)
+    domain = models.CharField(max_length=1024)
+    header_letter = models.CharField(max_length=1024)
+    member_letter = models.CharField(max_length=1024)
+    address = models.CharField(max_length=1024)
+    email = models.CharField(max_length=1024)
+    fax = models.CharField(max_length=1024)
+    map = models.CharField(max_length=1024)
+    tpp_parent = models.CharField(max_length=1024)
+    phone = models.CharField(max_length=1024)
+    extra = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.tpp_name
