@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
-
+<div class="container">
            {% include "main/paginator.html" %}
             <ul class="listnews">
                 {% for id , attr in newsList.items %}
@@ -31,3 +31,4 @@
 
             </ul>
            {% include "main/paginator.html" %}
+</div>

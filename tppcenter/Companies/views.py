@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -14,33 +14,49 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
+import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
 def get_companies_list(request, page=1):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-    current_section = "Companies"
 
     newsPage = _companiesContent(request, page)
 
+    styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
 
+    if not request.is_ajax():
+        user = request.user
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "Companies"
 
+        countries = Country.objects.all()
+        countries_ids = [country.pk for country in countries]
 
+        countries = Item.getItemsAttributesValues('NAME', countries_ids)
 
+        templateParams = {
+            'user_name': user_name,
+            'current_section': current_section,
+            'newsPage': newsPage,
+            'notification': notification,
+            'scripts': scripts,
+            'styles': styles,
+            'countries': countries
+        }
 
-    return render_to_response("Companies/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
+        return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
+
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
 def _companiesContent(request, page=1):
@@ -57,12 +73,13 @@ def _companiesContent(request, page=1):
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
+
     for country in countries:
         country_dict[country['p2c__child']] = country['pk']
 
     for id, company in companyList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
+        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
         company.update(toUpdate)
 

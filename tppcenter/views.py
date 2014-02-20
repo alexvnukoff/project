@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, Http404
 from appl.models import *
-from django.http import Http404, HttpResponse, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -112,14 +111,11 @@ def home(request):
                               context_instance=RequestContext(request))
 @ensure_csrf_cookie
 def getNotifList(request):
+
     if request.is_ajax():
         notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
         messages_id = [notification.message.pk for notification in notifications]
         notifications_id = [notification.pk for notification in notifications]
-
-
-
-
 
         notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
         notifDict = {}
@@ -141,8 +137,10 @@ def user_login(request):
         return HttpResponseRedirect(reverse('news:main'))
 
     form = None
+
     if request.POST.get('Login', None):
        form = AuthenticationForm(request, data=request.POST)
+
        if form.is_valid():
           user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
           login(request, user)
@@ -154,14 +152,17 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+
     return HttpResponseRedirect("/")
 
 def registration(request):
+
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))
 
     if request.POST.get('Register', None):
          form = RegistrationFormUniqueEmail(request.POST)
+
          if form.is_valid() and request.POST.get('tos', None):
             cleaned = form.cleaned_data
             reg_view = RegistrationView()
@@ -202,6 +203,7 @@ def set_news_list(request):
 def set_items_list(request):
         app = get_app("appl")
         items = []
+
         for model in get_models(app):
             if issubclass(model, Item):
                items.append(model._meta.object_name)
@@ -215,6 +217,7 @@ def set_item_list(request, item):
 
 def showlist(request, item, page):
     i = (globals()[item])
+
     if not issubclass(i, Item):
         raise Http404
     else:
@@ -309,6 +312,47 @@ def meth(request):
             ob = itemform.save()
             form.save(parent=ob.id, user=request.user)
     return False
+
+
+def jsonFilter(request):
+    import json
+
+    filter = request.GET.get('type', None)
+    q = request.GET.get('q', None)
+    page = request.GET.get('page', None)
+
+
+    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
+        from haystack.query import SearchQuerySet
+        from django.core.paginator import Paginator
+
+        model = None
+
+
+        if filter == 'tpp':
+            model = Tpp
+        elif filter == "companies":
+            model = Company
+        elif filter == "category":
+            model = Category
+        elif filter == "branch":
+            model = Branch
+
+        if model:
+
+            if not q:
+                sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
+            else:
+                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+
+            paginator = Paginator(sqs, 10)
+            total = paginator.count
+            items = [{'title': item.title, 'id': item.pk} for item in paginator.object_list]
+
+            return HttpResponse(json.dumps({'content': items, 'total': total}))
+
+    return HttpResponse(json.dumps({'content': [], 'total': 0}))
+
 
 def test(request):
     '''

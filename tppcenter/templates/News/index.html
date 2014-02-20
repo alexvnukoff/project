@@ -11,11 +11,4 @@
         {% include "login_header.html" %}
     {% endblock %}
 
-    {% block styles %}
-         {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-    {% endblock %}
-
-
-
      {% block content %} {{ newsPage }}{% endblock %}

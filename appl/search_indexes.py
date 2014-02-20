@@ -62,6 +62,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
     country = indexes.MultiValueField(null=True)
+    title_auto = indexes.NgramField(null=True)
 
     def index_queryset(self, using=None):
         return self.get_model().active
@@ -72,6 +73,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
         field_to_attr = {
             'title': 'NAME',
+            'title_auto': 'NAME',
             'text': 'DETAIL_TEXT'
         }
 
