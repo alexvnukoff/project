@@ -64,14 +64,17 @@ def add(imageFile=None):
 
 
 
+
+
             filename = imageFile
             if os.path.isfile(filename):
                     os.remove(filename)
             for key in sizes.keys():
-                filename = '%s-%s' % (key, name + '.jpg')
-                filename = '%s/%s' % (settings.MEDIA_ROOT, filename)
+                filename = '%s/%s-%s' % ('upload/', key, name + '.jpg')
+                filename = os.path.join(settings.MEDIA_ROOT, filename)
                 if os.path.isfile(filename):
-                     os.remove(filename)
+                   os.remove(filename)
+
 
 
 
@@ -110,7 +113,7 @@ def addFile(file=None):
         except Exception as e:
             return False
 
-    return  folder + '/' + name
+    return folder + '/' + name
 
 
 def delete(toDelete=None):
