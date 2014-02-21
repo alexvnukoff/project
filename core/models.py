@@ -84,6 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False) #for enterprise content management
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     ip = models.GenericIPAddressField()
 
@@ -123,7 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     group_list.append('Staff')
             else:
                 if self == obj.update_user or self.groups.filter(name=obj.community.name): # is user community member?
-                    if self.is_admin: # has user admin flag?
+                    if self.is_manager: # has user content manager flag?
                         group_list.append('Admin')
                         if obj.status.perm: # is there permissions group for current object's state?
                             group_list.append(obj.status.perm.name)
@@ -499,7 +500,7 @@ class Item(models.Model):
                 group_list.append('Staff')
         else:
             if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
-                if user.is_admin: # has user admin flag?
+                if user.is_manager: # has user content manager flag?
                     group_list.append('Admin')
                     if self.status.perm: # is there permissions group for current object's state?
                         group_list.append(self.status.perm.name)
