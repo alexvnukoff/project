@@ -41,6 +41,7 @@ class ItemForm(forms.Form):
         self.document_to_delete = []
 
 
+
         super(ItemForm, self).__init__()
         # Get id of ContentType of specific Item
         object_id = ContentType.objects.get(model=str(item).lower()).id
@@ -236,7 +237,7 @@ class ItemForm(forms.Form):
             return True
 
     @transaction.atomic
-    def save(self, user, site_id):
+    def save(self, user, site_id, dates=None):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -244,6 +245,7 @@ class ItemForm(forms.Form):
         Example: form.update(request.user)
         Return object of Item
         """
+
         path_to_images = "upload/"
         if not self.is_valid():
             raise ValidationError
@@ -266,7 +268,11 @@ class ItemForm(forms.Form):
                     self._save_file(self.fields[title].initial, title, user, path_to_images)
                     # If Field is Image that call save_file method
 
-                attrValues[title] = self.fields[title].initial
+                if dates and title in dates:
+                    attrValues[title] = {"title": self.fields[title].initial, 'start_date': dates[title][0],
+                                         'end_date': dates[title][1]}
+                else:
+                    attrValues[title] = self.fields[title].initial
 
             self.obj.setAttributeValue(attrValues, user)
 
@@ -438,6 +444,83 @@ class BasePhotoGallery(BaseModelFormSet):
             transaction.savepoint_commit(sid)
             if self.toDelete:
                 delete(self.toDelete)
+
+
+
+
+class BasePages(BaseModelFormSet):
+    """
+    Class that define formset  of photogallery
+    Example of usage:
+     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
+     form = Photo()
+    Gallery its model that contain field ImageField
+    extra its extra field
+    fieds its fields that will be desplayed
+
+    """
+
+    def __init__(self, *args, parent_id=None, **kwargs):
+        """
+        __init__ of BasePhotoGallery
+        parent_id = items that in relationship with Gallery
+        """
+        self.toDelete = []
+        self.files_to_delete = []
+        super(BasePages, self).__init__(*args, **kwargs)
+        post = args[0] if args else False
+        files = args[1] if args and len(args) > 0 else False
+
+        if post and post.getlist("del[]"):
+            self.toDelete.extend(post.getlist("del[]"))
+
+        if post and files:
+            for i in range(0, int(post['pages-TOTAL_FORMS'])):
+
+                if post.get('form-'+str(i), False) and files.get('form-'+str(i)+'-document', False):
+                    item = post['form-'+str(i)]
+                    self.toDelete.append(item)
+
+
+
+
+        self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
+
+
+    @transaction.atomic
+    def save(self, parent=None, user=None,  commit=False):
+        """
+        Method that create new AdditionalPage , and set relationship with parent object
+        Example :
+        form.save(parent = 34 , user = request.user, commit =True)
+        """
+        sid = transaction.savepoint()
+        try:
+            AdditionalPages.objects.filter(c2p__parent=parent).delete()
+            instances = super(BasePages, self).save(commit)
+            for instance in instances:
+                instance.create_user = user
+                instance.save()
+
+            instances_pk = [instance.pk for instance in instances]
+            bulkInsert = []
+            item = Item.objects.get(pk=parent)
+            for instance in instances:
+                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
+            if bulkInsert:
+                Relationship.objects.bulk_create(bulkInsert)
+        except Exception as e:
+
+            transaction.savepoint_rollback(sid)
+            func.notify("error_creating", 'notification', user=user)
+            if len(self.files_to_delete) > 0:
+               delete(self.files_to_delete)
+
+        else:
+            transaction.savepoint_commit(sid)
+            if self.toDelete:
+                delete(self.toDelete)
+
 
 
 

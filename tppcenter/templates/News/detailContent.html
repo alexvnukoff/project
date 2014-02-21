@@ -1,0 +1,88 @@
+{% load static %}
+{% load i18n %}
+
+
+
+  <div class="new-details">
+            {% with newValues.CREATE_DATE.0 as date %}
+            {% with newValues.DETAIL_TEXT.0 as content %}
+            {% with newValues.IMAGE.0 as image %}
+            {% with newValues.NAME.0 as name %}
+            {% with newValues.YOUTUBE_CODE.0 as youtube_code %}
+            {% with newValues.COUNTRY_NAME.0 as country_name %}
+            {% with newValues.COUNTRY_FLAG.0 as country_flag %}
+            {% with newValues.COUNTRY_ID as country_id %}
+            {% with newValues.ORG_NAME.0 as org_name %}
+            {% with newValues.ORG_FLAG.0 as org_flag %}
+            {% with newValues.ORG_ID as org_id %}
+            {% with newValues.CATEGORY_NAME|first as category_name %}
+
+            	<h1>{{ name }}</h1>
+                <p class="date">
+                {% if country_flag or org_flag %}
+                    <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else  %}{{ country_flag }}{% endif %}" class="flag" alt="" />
+                {% endif %}
+                    Россия, {{ date|date:"d M Y" }},
+                    <a href="#">{{ category_name  }}</a></p>
+                <div class="content-news">
+                	<div class="gallery">
+                        <div id="panel">
+                            <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                        </div>
+                        <div id="thumbs">
+                           {% for photo in photos %}
+                            <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+                           {% endfor %}
+                        </div>
+                    </div>
+                    <p>{{ content }} </p>
+                </div>
+                <div class="social">
+                	<a href="#"><i class="imgnews share-1"></i></a>
+                    <a href="#"><i class="imgnews share-2"></i></a>
+                    <a href="#"><i class="imgnews share-3"></i></a>
+                    <a href="#"><i class="imgnews share-4"></i></a>
+                </div>
+                <div class="video-details">
+                {% if youtube_code %}
+                    <iframe width="540" height="322" src="//www.youtube.com/embed/{{ youtube_code }}" frameborder="0" allowfullscreen></iframe>
+                {% endif %}
+                </div>
+                <div class="related-news">
+                	<span class="title">Похожие новости</span>
+                    <ul>
+                     {% for id , attr in similarValues.items %}
+                      {% with attr.NAME|first as sim_name %}
+                      {% with attr.IMAGE|first as sim_image %}
+                      {% with attr.DETAIL_TEXT|first as sim_content %}
+                      {% with attr.CREATE_DATE|first as sim_create_date %}
+                      {% with attr.SLUG|first as sim_slug %}
+                    	<li>
+                        	<img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="" class="thumb" />
+                            <a href="{% url 'news:detail' sim_slug %}">{{ sim_name }}</a>
+                            <span class="date">{{ sim_create_date|date:'d M Y' }}</span>
+                            <p>{{ sim_content|truncatewords:12 }}</p>
+                            <a href="{% url 'news:detail' sim_slug %}" class="more">{% trans 'More' %}...</a>
+                        </li>
+                      {% endwith %}
+                      {% endwith %}
+                      {% endwith %}
+                      {% endwith %}
+                      {% endwith %}
+                     {% endfor %}
+                    </ul>
+                </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+  </div>

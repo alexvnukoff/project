@@ -22,8 +22,14 @@
             $(function() {
 	            $( "#tabs" ).tabs();
                 $( ".tabfilter" ).tabs();
-                 $(".date").datepicker();
+
                 });
+
+            $(document).ready(function(e) {
+                $('#thumbs').delegate('img','click', function(){
+                    $('#largeImage').attr('src',$(this).attr('src').replace('thumb','large'));
+                });
+            });
 
 
         </script>
