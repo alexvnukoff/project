@@ -520,6 +520,7 @@ class BusinessProposal(Item):
 
 
 
+
 class Gallery(Item):
       active = ItemManager()
       objects = models.Manager()
@@ -527,6 +528,16 @@ class Gallery(Item):
 
       def __str__(self):
           return str(self.photo)
+
+
+
+class AdditionalPages(Item):
+      active = ItemManager()
+      objects = models.Manager()
+      content = models.TextField(null=True)
+
+      def __str__(self):
+          return str(self.title)
 
 
 class Exhibition(Item):
