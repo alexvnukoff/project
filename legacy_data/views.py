@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from legacy_data.models import L_User, L_Company
+from legacy_data.models import L_User, L_Company, L_Product, L_TPP
 from core.models import User
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
@@ -17,27 +17,31 @@ def users_reload_CSV_DB(request):
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load user data from CSV file into buffer table...')
-    with open('c:\\data\\users_legacy.csv', 'r') as f:
+    with open('c:\\data\\user_legacy.csv', 'r') as f:
     #with open('c:\\data\\test_users.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
-    for i in range(1, len(data), 1): # start since 1, avoid title string
-        username = data[i][0]
-        if (data[i][1] == 'Да'):
+    for i in range(0, len(data), 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        username = bytearray(data[i][0]).decode(encoding='utf-8')
+        if (bytearray(data[i][1]).decode(encoding='utf-8') == 'Y'):
             is_active = True
         else:
             is_active = False
 
-        if not len(data[i][2]):
+        if not len(bytearray(data[i][2]).decode(encoding='utf-8')):
             update_date = None
         else:
-            update_date = datetime.datetime.strptime(data[i][2], "%d.%m.%Y %H:%M:%S")
+            update_date = datetime.datetime.strptime(bytearray(data[i][2]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
 
-        first_name = data[i][3]
+        first_name = bytearray(data[i][3]).decode(encoding='utf-8')
 
-        if data[i][4] == '':
-            buf = data[i][3].split(' ')
+        if bytearray(data[i][4]).decode(encoding='utf-8') == '':
+            buf = bytearray(data[i][3]).decode(encoding='utf-8').split(' ')
             last_name = buf[0]
             first_name = ''
             for index in range(1, len(buf), 1):
@@ -46,20 +50,39 @@ def users_reload_CSV_DB(request):
                 else:
                     first_name += buf[index]+' '
         else:
-            last_name = data[i][4]
+            last_name = bytearray(data[i][4]).decode(encoding='utf-8')
 
-        email = data[i][5]
-        btx_id = data[i][7]
+        email = bytearray(data[i][5]).decode(encoding='utf-8')
 
-        if not len(data[i][6]):
+        if not len(bytearray(data[i][6]).decode(encoding='utf-8')):
             last_visit_date = None
         else:
-            last_visit_date = datetime.datetime.strptime(data[i][6], "%d.%m.%Y %H:%M")
+            last_visit_date = datetime.datetime.strptime(bytearray(data[i][6]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
 
-        if not len(data[i][8]):
+        btx_id = bytearray(data[i][7]).decode(encoding='utf-8')
+
+        if not len(bytearray(data[i][8]).decode(encoding='utf-8')):
             reg_date = None
         else:
-            reg_date = datetime.datetime.strptime(data[i][8], "%d.%m.%Y %H:%M")
+            reg_date = datetime.datetime.strptime(bytearray(data[i][8]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        profession = bytearray(data[i][9]).decode(encoding='utf-8')
+        personal_www = bytearray(data[i][10]).decode(encoding='utf-8')
+        icq = bytearray(data[i][11]).decode(encoding='utf-8')
+        gender = bytearray(data[i][12]).decode(encoding='utf-8')
+        birth_date = None #datetime.datetime.strptime(bytearray(data[i][13]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+        photo = bytearray(data[i][14]).decode(encoding='utf-8')
+        phone = bytearray(data[i][15]).decode(encoding='utf-8')
+        fax = bytearray(data[i][16]).decode(encoding='utf-8')
+        cellular = bytearray(data[i][17]).decode(encoding='utf-8')
+        addr_street = bytearray(data[i][18]).decode(encoding='utf-8')
+        addr_city = bytearray(data[i][19]).decode(encoding='utf-8')
+        addr_state = bytearray(data[i][20]).decode(encoding='utf-8')
+        addr_zip = bytearray(data[i][21]).decode(encoding='utf-8')
+        addr_country = bytearray(data[i][22]).decode(encoding='utf-8')
+        company = bytearray(data[i][23]).decode(encoding='utf-8')
+        department = bytearray(data[i][24]).decode(encoding='utf-8')
+        position = bytearray(data[i][25]).decode(encoding='utf-8')
 
         try:
             L_User.objects.get_or_create(username = username,\
@@ -70,7 +93,24 @@ def users_reload_CSV_DB(request):
                                     btx_id = btx_id,\
                                     update_date = update_date,\
                                     last_visit_date = last_visit_date,\
-                                    reg_date = reg_date)
+                                    reg_date = reg_date,\
+                                    profession = profession,\
+                                    personal_www = personal_www,\
+                                    icq = icq,\
+                                    gender = gender,\
+                                    birth_date = birth_date,\
+                                    photo = photo,\
+                                    phone = phone,\
+                                    fax = fax,\
+                                    cellular = cellular,\
+                                    addr_street = addr_street,\
+                                    addr_city = addr_city,\
+                                    addr_state = addr_state,\
+                                    addr_zip = addr_zip,\
+                                    addr_country = addr_country,\
+                                    company = company,\
+                                    department = department,\
+                                    position = position)
         except:
             return HttpResponse('Migration process from CSV file into buffer DB was interrupted!\
                                 Possible reason is duplicated data.')
@@ -161,8 +201,7 @@ def company_reload_CSV_DB(request):
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load company data from CSV file into buffer table...')
-    #with open('c:\\data\\companies_legacy.csv', 'r') as f:
-    with open('c:\\data\\test_companies.csv', 'r', encoding='utf8') as f:
+    with open('c:\\data\\companies_legacy.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
@@ -175,13 +214,13 @@ def company_reload_CSV_DB(request):
             data[i][k] = base64.standard_b64decode(data[i][k])
 
         if sz1 == 0:
-            print('The row# ', i, ' is wrong!')
+            print('The row# ', i+1, ' is wrong!')
             bad_count += 1
             continue
-            #break
 
         btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
-        short_name = bytearray(data[i][1]).decode(encoding='utf-8')
+        short_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
         detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
         detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
 
@@ -192,7 +231,11 @@ def company_reload_CSV_DB(request):
 
         tpp_name = bytearray(data[i][5]).decode(encoding='utf-8')
         moderator = bytearray(data[i][6]).decode(encoding='utf-8')
-        full_name = bytearray(data[i][7]).decode(encoding='utf-8')
+        if len(data[i][7]):
+            full_name = bytearray(data[i][7]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", '').strip()
+        else:
+            full_name = short_name
         ur_address = bytearray(data[i][8]).decode(encoding='utf-8')
         fact_address = bytearray(data[i][9]).decode(encoding='utf-8')
         tel = bytearray(data[i][10]).decode(encoding='utf-8')
@@ -225,7 +268,8 @@ def company_reload_CSV_DB(request):
         else:
             is_deleted = False
 
-        keywords = bytearray(data[i][30]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][30]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
 
         try:
             L_Company.objects.get_or_create(
@@ -262,17 +306,187 @@ def company_reload_CSV_DB(request):
                                             keywords = keywords)
             count += 1
         except:
-            #if not i%200:
-            print('Milestone: ', i)
-            print(btx_id, '##', short_name, '##', ' Count: ', i)
+            print('Milestone: ', i+1)
+            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
             continue
-            #break
 
-        #if not i%200:
-        print('Milestone: ', i)
+        print('Milestone: ', i+1)
 
     print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Companies were migrated from CSV into DB!')
+
+def product_reload_CSV_DB(request):
+    '''
+        Reload products' data from prepared CSV file named product_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PRODUCT
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load product data from CSV file into buffer table...')
+    with open('c:\\data\\product_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        prod_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+
+        if not len(data[i][4]):
+            create_date = None
+        else:
+            create_date = datetime.datetime.strptime(bytearray(data[i][4]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        company_id = bytearray(data[i][5]).decode(encoding='utf-8')
+        photos1 = bytearray(data[i][6]).decode(encoding='utf-8')
+        discount = bytearray(data[i][7]).decode(encoding='utf-8')
+        add_pages = bytearray(data[i][8]).decode(encoding='utf-8')
+        tpp = bytearray(data[i][9]).decode(encoding='utf-8')
+        direction = bytearray(data[i][10]).decode(encoding='utf-8')
+        if (data[i][11] == 'Да'):
+            is_deleted = True
+        else:
+            is_deleted = False
+        photos2 = bytearray(data[i][12]).decode(encoding='utf-8')
+        file = bytearray(data[i][13]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][14]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
+
+        try:
+            L_Product.objects.get_or_create(
+                                            btx_id = btx_id,\
+                                            prod_name = prod_name,\
+                                            detail_page_url = detail_page_url,\
+                                            detail_picture = detail_picture,\
+                                            create_date = create_date,\
+                                            company_id = company_id,\
+                                            photos1 = photos1,\
+                                            discount = discount,\
+                                            add_pages = add_pages,\
+                                            tpp = tpp,\
+                                            direction = direction,\
+                                            is_deleted = is_deleted,\
+                                            photos2 = photos2,\
+                                            file = file,\
+                                            keywords = keywords)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Products were migrated from CSV into DB!')
+
+def tpp_reload_CSV_DB(request):
+    '''
+        Reload TPPs' data from prepared CSV file named product_legacy.csv
+        into buffer DB table LEGACY_DATA_L_TPP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load product data from CSV file into buffer table...')
+    with open('c:\\data\\tpp_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        tpp_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
+        preview_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_text = bytearray(data[i][4]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][5]).decode(encoding='utf-8')
+        detail_text = bytearray(data[i][6]).decode(encoding='utf-8')
+
+        if not len(data[i][7]):
+            create_date = None
+        else:
+            create_date = datetime.datetime.strptime(bytearray(data[i][7]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        country = bytearray(data[i][8]).decode(encoding='utf-8')
+        moderator = bytearray(data[i][9]).decode(encoding='utf-8')
+        head_pic = bytearray(data[i][10]).decode(encoding='utf-8')
+        logo = bytearray(data[i][11]).decode(encoding='utf-8')
+        domain = bytearray(data[i][12]).decode(encoding='utf-8')
+        header_letter = bytearray(data[i][13]).decode(encoding='utf-8')
+        member_letter = bytearray(data[i][14]).decode(encoding='utf-8')
+        address = bytearray(data[i][15]).decode(encoding='utf-8')
+        email = bytearray(data[i][16]).decode(encoding='utf-8')
+        fax = bytearray(data[i][17]).decode(encoding='utf-8')
+        map = bytearray(data[i][18]).decode(encoding='utf-8')
+        tpp_parent = bytearray(data[i][19]).decode(encoding='utf-8')
+        phone = bytearray(data[i][20]).decode(encoding='utf-8')
+        extra = bytearray(data[i][21]).decode(encoding='utf-8')
+
+        try:
+            L_TPP.objects.create(btx_id = btx_id,\
+                                tpp_name = tpp_name,\
+                                detail_page_url = detail_page_url,\
+                                preview_picture = preview_picture,\
+                                preview_text = preview_text,\
+                                detail_picture = detail_picture,\
+                                detail_text = detail_text,\
+                                create_date = create_date,\
+                                country = country,\
+                                moderator = moderator,\
+                                head_pic = head_pic,\
+                                logo = logo,\
+                                domain = domain,\
+                                header_letter = header_letter,\
+                                member_letter = member_letter,\
+                                address = address,\
+                                email = email,\
+                                fax = fax,\
+                                map = map,\
+                                tpp_parent = tpp_parent,\
+                                phone = phone,\
+                                extra = extra)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            print(btx_id, '##', tpp_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPPs were migrated from CSV into DB!')

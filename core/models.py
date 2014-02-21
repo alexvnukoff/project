@@ -152,7 +152,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-       return self.is_admin
+        return self.is_admin
 
     def email_user(self, subject, message, from_email=None):
         """
