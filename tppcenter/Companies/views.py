@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, QueryDict
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -25,8 +25,32 @@ def get_companies_list(request, page=1):
     styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
+    filterList = ['tpp', 'country']
+    filtersIDs = {}
+    filters = {}
+    ids = []
+
+    for name in filterList:
+        filtersIDs[name] = request.GET.getlist('filter[' + name + ']', [])
+        filters[name] = []
+        ids += filtersIDs[name]
+
+    if len(ids) > 0:
+        attributes = Item.getItemsAttributesValues('NAME', ids)
+
+        for pk, attr in attributes.items():
+
+            if len(attr['NAME']) != 1:
+                continue
+
+            for name, id in filtersIDs.items():
+                if id == pk:
+                    filters[name].append({'id': id, 'text': attr['NAME'][0]})
+
+
     if not request.is_ajax():
         user = request.user
+
         if user.is_authenticated():
             notification = len(Notification.objects.filter(user=request.user, read=False))
             if not user.first_name and not user.last_name:
@@ -36,6 +60,7 @@ def get_companies_list(request, page=1):
         else:
             user_name = None
             notification = None
+
         current_section = "Companies"
 
         countries = Country.objects.all()
@@ -50,13 +75,14 @@ def get_companies_list(request, page=1):
             'notification': notification,
             'scripts': scripts,
             'styles': styles,
-            'countries': countries
+            'countries': countries,
+            'filters': filters
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage, 'filters': filters}))
 
 
 def _companiesContent(request, page=1):

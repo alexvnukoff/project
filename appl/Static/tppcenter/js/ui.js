@@ -59,9 +59,24 @@ $(document).ready(function() {
             loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
             container: ".news-center .container",
             keywords: null,
+            filter_form: null,
             curPage: null,
             scripts: [],
             styles: [],
+
+           filters: {
+
+               country: {
+                   selector: '#filter-country',
+                   name: 'filter[country][]' //hidden input name
+               },
+
+               tpp: {
+                   selector: '#filter-tpp',
+                   name: 'filter[tpp]' //hidden input name
+               }
+           },
+
 
             signals: {
                 start_load: 'startPageLoad',
@@ -73,39 +88,55 @@ $(document).ready(function() {
             init: function() {
                 ui.curPage = $('.cur-page');
                 ui.keywords = $('.keyword .list-key');
-                ui.setScriptsStyles();
+                ui.filter_form = $('form[name="filter-form"]');
+
+                ui.initFilters();
+
                 $(document).bind(ui.signals['end_load'], ui.loadScripts);
                 $(document).bind(ui.signals['scripts_loaded'], ui.setPage);
 
                 $(document).on('click', '.single-page', ui.onClick);
             },
 
-            setScriptsStyles: function() {
-                $('script[src]').each(function() {
-                    ui.scripts.push($(this).attr('src'));
-                });
+            initFilters: function() {
 
-                $('link[href]').each(function() {
-                    ui.styles.push($(this).attr('href'));
-                });
+                for (filter in ui.filters)
+                {
+                    if (!options.hasOwnProperty(filter))
+                        continue;
+
+                    data = []
+
+                    $('input[name="filter[' + filter + '][]"').each(function() {
+                        data.push({'id': $(this).val(), 'text': $(this).data('text')});
+                    });
+
+                    options[filter]['data'] = data;
+
+                    field = $(ui.filters[filter].selector).data('name', filter);
+                    field.select2(options[filter]);
+
+                    field.on("change", function (e) { filterChange($(this).data('name'), e)});
+                }
             },
 
             onClick: function() {
+                $(document).trigger(ui.signals.link_click, $(this));
 
                 url = $(this).attr('href');
-                text = $(this).text()
-                ui.curPage.text(text)
+                text = $(this).text();
+                ui.curPage.text(text);
 
-                ui.loading = ui.requester(url)
+                ui.loading = ui.requester(url);
 
-                return false
+                return false;
             },
 
             loadScripts: function(event, url, data) {
                 var head = $('head');
 
-                styles = data['styles']
-                scripts = data['scripts']
+                styles = data['styles'];
+                scripts = data['scripts'];
 
                 for (i in styles)
                 {
@@ -128,26 +159,64 @@ $(document).ready(function() {
                 $(ui.container).replaceWith( content );
             },
 
-            requester: function(url, params) {
+            clearer: function() {
+                ui.filter_form.find('input[name]').remove();
+                ui.keywords.html('');
+            },
+
+           setFilters: function(filters)
+           {
+               for (filter in filters)
+               {
+                   switch (filter)
+                   {
+                       case "property":
+
+                       break;
+
+                       case "sort1":
+
+                       break;
+
+                       case "sort2":
+
+                        break;
+
+                       case ui.filters.hasOwnProperty(filter):
+                           for (i in filters[filter])
+                           {
+                               $('<input type="hidden" />').attr({
+                                   name: 'filter[' + filter + '][]',
+                                   value: filters[filter][i].id
+                               }).data('text', filters[filter][i].text).appendTo(ui.filter_form);
+                           }
+                        break;
+                   }
+               }
+
+               ui.initFilters()
+           },
+
+           requester: function(url, params) {
 
                 if (ui.loading != null)
                     ui.loading.abort();
 
-                $(ui.container).html(ui.loader)
-                ui.keywords.html('')
+                $(ui.container).html(ui.loader);
+                ui.clearer();
 
                 history = url
 
                 if (params)
-                    history = history + '?' + params
+                    history = history + '?' + params;
 
-                History.pushState(null, null, history)
+                History.pushState(null, null, history);
 
-                $(document).trigger(ui.signals['start_load'])
+                $(document).trigger(ui.signals['start_load']);
 
                 return  $.get(url, params, function(data) {
-                    $(document).trigger(ui.signals['end_load'], [url, data])
+                    $(document).trigger(ui.signals['end_load'], [url, data]);
                 }, 'json')
-            }
-        }
+           }
+       }
 

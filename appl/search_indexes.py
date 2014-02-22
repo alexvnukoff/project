@@ -25,7 +25,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = object.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -79,7 +79,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = object.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -137,7 +137,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = object.getAttributeValues(*field_to_attr.values())
 
-        if len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -249,7 +249,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = object.getAttributeValues(*field_to_attr.values())
 
-        if len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():

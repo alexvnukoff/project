@@ -48,57 +48,53 @@
                 }
             }
 
+            options = {
+                tpp: {
+                    maximumSelectionSize: 5,
+                    width: "100%",
+                    multiple:true,
+                    placeholder: '{% trans "Select organizations"  %}',
+                    formatNoMatches: noMatches,
+                    ajax: {
+                        url: "/filter/",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            q: term, //search term
+                            page: page, // page number
+                            type: 'tpp'
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+                },
+                country: {
+                    maximumSelectionSize: 5,
+                    width: "100%",
+                    placeholder: '{% trans "Select countries"  %}'
+                }
+            }
+
 
             $(document).ready(function() {
 
                 ui.init();
-                form = $('form[name="filter-form"]')
+                form = $('form[name="filter-form"]');
 
-                $("#filter-country").select2(
-                {
-                    maximumSelectionSize: 5,
-                    width: "100%",
-                    placeholder: '{% trans "Select countries"  %}'
+                $(document).on('click', '#save-filter', function() {
+                    var params = form.serialize();
+                    $(".filter-form, #fade-profile").hide();
+                    ui.requester(window.location.pathname, params)
                 });
-
-                $("#filter-tpp").select2(
-                    {
-                        maximumSelectionSize: 5,
-                        width: "100%",
-                        multiple:true,
-                        placeholder: '{% trans "Select organizations"  %}',
-                        formatNoMatches: noMatches,
-                        ajax: {
-                            url: "/filter/",
-                            dataType: 'json',
-                            quietMillis: 100,
-                            data: function (term, page) { // page is the one-based page number tracked by Select2
-                                return {
-                                    q: term, //search term
-                                    page: page, // page number
-                                    type: 'tpp'
-                                };
-                            },
-                            results: function (data, page) {
-                                var more = (page * 10) < data.total; // whether or not there are more results available
-
-                                // notice we return the value of more so Select2 knows if more results can be loaded
-                                return {results: data.content, more: more};
-                            }
-
-                        },
-                        formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                        formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                        escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-                    });
-
-                    $("#filter-tpp").on("change", function (e) { filterChange('tpp[]', e)});
-                    $("#filter-country").on("change", function (e) { filterChange('country[]', e)});
-                    $(document).on('click', '#save-filter', function() {
-                        var params = form.serialize();
-                        $(".filter-form, #fade-profile").hide();
-                        ui.requester(window.location.pathname, params)
-                    });
 
             });
         </script>
@@ -162,6 +158,17 @@
             		<i class="icon-key imgnews" id="filter-link"></i>
                     <div class="filter-form">
                         <form action="" method="GET" name="filter-form">
+                            {% if filters %}
+                                {% for name, ids in filters %}
+                                    {% for dict in ids %}
+                                        {% with dict.id as id %}
+                                        {% with dict.text as text %}
+                                            <input type="hidden" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
+                                        {% endwith %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
                             <i class="close-event imgnews"></i>
                             <span class="title">Фильтр</span>
                             <div class="tabfilter">
