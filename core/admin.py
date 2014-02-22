@@ -15,7 +15,7 @@ class TPPUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'avatar', 'date_of_birth',)}),
-        ('Permissions', {'fields': ('is_admin', 'is_active', 'groups', 'user_permissions')}),
+        ('Permissions', {'fields': ('is_manager', 'is_admin', 'is_active', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
