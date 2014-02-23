@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -14,33 +14,43 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+import json
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
 def get_product_list(request, page=1):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-    current_section = "Products"
 
     productsPage = _productContent(request, page)
 
+    styles = []
+    scripts = []
 
+    if not request.is_ajax():
+        user = request.user
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "Products"
 
+        templateParams = {
+                'user_name': user_name,
+                'current_section': current_section,
+                'productsPage': productsPage,
+                'notification': notification,
+                'scripts': scripts,
+                'styles': styles
+        }
 
-
-
-    return render_to_response("Products/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'productsPage': productsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
+        return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': productsPage}))
 
 
 def _productContent(request, page=1):
@@ -59,8 +69,8 @@ def _productContent(request, page=1):
         country_dict[country['p2c__child__p2c__child']] = country['pk']
 
     for id, product in productsList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
+        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
         product.update(toUpdate)
 

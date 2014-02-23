@@ -12,7 +12,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Companies.views.get_companies_list, name='main'),
-     url(r'^page/([0-9]+)?/$', tppcenter.Companies.views.get_companies_list, name="paginator"),
+     url(r'^page([0-9]+)?/$', tppcenter.Companies.views.get_companies_list, name="paginator"),
 
 
 

@@ -22,10 +22,84 @@
             $(function() {
 	            $( "#tabs" ).tabs();
                 $( ".tabfilter" ).tabs();
-                 $(".date").datepicker();
-                });
+                $(".date").datepicker();
+            });
+        </script>
+        <script>
+            function noMatches(term) {
+                if (term.length > 0 && term.length < 3)
+                   return '{% trans "Minimum length of search term is 3 characters" %}';
+
+                return '{% trans "No result found" %}';
+
+            }
+
+            function filterChange(name, e) {
+
+                var form = $('form[name="filter-form"]');
+
+                if (e.added)
+                {
+                    if(!$('input[value="' + e.added.id + '"].filter-item').length)
+                    {
+                        $('<input type="hidden" />').attr({
+                            value: e.added.id,
+                            name: name,
+                            class: 'filter-item'
+                        }).attr("name", 'filter[' + name + '][]').appendTo(form);
+                    }
+                }
+                else
+                {
+                    input = form.find('input[value="' + e.removed.id + '"].filter-item')
+
+                    if (input.length == 1)
+                        input.remove()
+                }
+            }
+
+            options = {
+                tpp: {
+                    maximumSelectionSize: 5,
+                    width: "100%",
+                    multiple:true,
+                    placeholder: '{% trans "Select organizations"  %}',
+                    formatNoMatches: noMatches,
+                    ajax: {
+                        url: "/filter/",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            q: term, //search term
+                            page: page, // page number
+                            type: 'tpp'
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+                },
+                country: {
+                    maximumSelectionSize: 5,
+                    width: "100%",
+                    placeholder: '{% trans "Select countries"  %}'
+                }
+            }
 
 
+            $(document).ready(function() {
+
+                ui.init();
+
+            });
         </script>
 
     {% endblock %}
@@ -42,19 +116,19 @@
                 </div>
                 <div id="tabs-1">
                     <ul class="tab1-cate">
-                    	<li><a href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
-                        <li><a href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
-                        <li><a href="#">Услуги</a></li>
-                        <li><a href="#">ТПП</a></li>
-                        <li><a href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
-                        <li><a href="#">Инновационные проекты</a></li>
-                        <li><a href="#">Бизнес-предложения</a></li>
-                        <li><a href="#">Тендеры</a></li>
-                        <li><a href="#">Афиша</a></li>
-                        <li><a href="#">Купоны</a></li>
-                        <li><a href="#">ТПП ТВ </a></li>
-                        <li><a href="#">Вакансии</a></li>
-                        <li><a href="#">Стена</a></li>
+                    	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
+                        <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
+                        <li><a class="single-page" href="#">Услуги</a></li>
+                        <li><a class="single-page" href="#">ТПП</a></li>
+                        <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
+                        <li><a class="single-page" href="#">Инновационные проекты</a></li>
+                        <li><a class="single-page" href="#">Бизнес-предложения</a></li>
+                        <li><a class="single-page" href="#">Тендеры</a></li>
+                        <li><a class="single-page" href="#">Афиша</a></li>
+                        <li><a class="single-page" href="#">Купоны</a></li>
+                        <li><a class="single-page" href="#">ТПП ТВ </a></li>
+                        <li><a class="single-page" href="#">Вакансии</a></li>
+                        <li><a class="single-page" href="#">Стена</a></li>
                     </ul>
                 </div>
             {% if user.email %}
@@ -86,184 +160,122 @@
             	<div class="popuplifter">
             		<i class="icon-key imgnews" id="filter-link"></i>
                     <div class="filter-form">
-                    	<i class="close-event imgnews"></i>
-                        <span class="title">Фильтр</span>
-                        <div class="tabfilter">
-                        	<div class="tab-cate">
-                                <ul>
-                                    <li><a href="#tabfil-1">Страна</a></li>
-                                    <li><a href="#tabfil-2">ТПП</a></li>
-                                    <li><a href="#tabfil-3">Компания</a></li>
-                                    <li><a href="#tabfil-4">Отрасль</a></li>
-                                    <li><a href="#tabfil-5">Категория</a></li>
-                                </ul>
-                            </div>
-                            <script type="text/javascript">
-								$(function(){
-									$(".copy").on("click", function(){
-										$(".options option:selected").each(function(){
-										   $(".textarea2").append('<option>'+$(this).text()+'</option>');
-											$('option:selected', ".textarea").remove();
-										});
-									});
-									$(".removeop").on("click", function(){
-										$(".remove option:selected").each(function(){
-										   $(".textarea").append('<option>'+$(this).text()+'</option>');
-											$('option:selected', ".textarea2").remove();
-										});
-									});
-								});
-							</script>
-                            <div id="tabfil-1">
-                                <div class="tabfilter-content">
-                                    <select multiple="multiple" class="options textarea">
-                                        <option value="item1">Пример заполнения</option>
-                                        <option value="item2">Пример заполнения</option>
-                                        <option value="item3">Пример заполнения</option>
-                                        <option value="item4">Пример заполнения</option>
-                                        <option value="item5">Пример заполнения</option>
-                                        <option value="item6">Пример заполнения</option>
-                                        <option value="item7">Пример заполнения</option>
-                                        <option value="item8">Пример заполнения</option>
-                                        <option value="item9">Пример заполнения</option>
-                                        <option value="item10">Пример заполнения</option>
-                                    </select>
-                                    <div class="button-clumn">
-                                        <button class="removeop imgnews">Remove</button>
-                                        <button class="copy imgnews">Copy</button>
+                        <form action="" method="GET" name="filter-form">
+                                {% for name, ids in filters.items %}
+                                    {% if ids %}
+                                        {% for dict in ids %}
+                                            {% with dict.id as id %}
+                                            {% with dict.text as text %}
+                                                <input type="hidden" class="filter-item" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
+                                            {% endwith %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            <i class="close-event imgnews"></i>
+                            <span class="title">Фильтр</span>
+                            <div class="tabfilter">
+
+                                <div class="tab-cate">
+                                    <ul>
+                                        <li><a href="#tabfil-1">Страна</a></li>
+                                        <li><a href="#tabfil-2">ТПП</a></li>
+                                        <li><a href="#tabfil-3">Компания</a></li>
+                                        <li><a href="#tabfil-4">Отрасль</a></li>
+                                        <li><a href="#tabfil-5">Категория</a></li>
+                                    </ul>
+                                </div>
+                                <div id="tabfil-1">
+                                    <div class="tabfilter-content">
+                                        <select multiple="multiple" id="filter-country">
+                                            {% for id, attr in countries.items %}
+                                                {% with attr.NAME|first as name %}
+                                                    <option value="{{ id }}">{{ name }}</option>
+                                                {% endwith %}
+                                            {% endfor %}
+                                        </select>
                                     </div>
-
-                                    <select class="textarea2 remove" multiple="multiple">
-
-                                    </select>
+                                </div>
+                                <div id="tabfil-2">
+                                    <div class="tabfilter-content">
+                                        <input id="filter-tpp" type="hidden" class="big-selector">
+                                    </div>
+                                </div>
+                                <div id="tabfil-3">
+                                    <div class="tabfilter-content">
+                                        <select multiple="multiple" id="filter-company">
+                                            <option value="item1">Пример заполнения</option>
+                                            <option value="item2">Пример заполнения</option>
+                                            <option value="item3">Пример заполнения</option>
+                                            <option value="item4">Пример заполнения</option>
+                                            <option value="item5">Пример заполнения</option>
+                                            <option value="item6">Пример заполнения</option>
+                                            <option value="item7">Пример заполнения</option>
+                                            <option value="item8">Пример заполнения</option>
+                                            <option value="item9">Пример заполнения</option>
+                                            <option value="item10">Пример заполнения</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="tabfil-4">
+                                    <div class="tabfilter-content">
+                                        <select multiple="multiple" id="filter-branch">
+                                            <option value="item1">Пример заполнения</option>
+                                            <option value="item2">Пример заполнения</option>
+                                            <option value="item3">Пример заполнения</option>
+                                            <option value="item4">Пример заполнения</option>
+                                            <option value="item5">Пример заполнения</option>
+                                            <option value="item6">Пример заполнения</option>
+                                            <option value="item7">Пример заполнения</option>
+                                            <option value="item8">Пример заполнения</option>
+                                            <option value="item9">Пример заполнения</option>
+                                            <option value="item10">Пример заполнения</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="tabfil-5">
+                                    <div class="tabfilter-content">
+                                        <select multiple="multiple" id="filter-category">
+                                            <option value="item1">Пример заполнения</option>
+                                            <option value="item2">Пример заполнения</option>
+                                            <option value="item3">Пример заполнения</option>
+                                            <option value="item4">Пример заполнения</option>
+                                            <option value="item5">Пример заполнения</option>
+                                            <option value="item6">Пример заполнения</option>
+                                            <option value="item7">Пример заполнения</option>
+                                            <option value="item8">Пример заполнения</option>
+                                            <option value="item9">Пример заполнения</option>
+                                            <option value="item10">Пример заполнения</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="tabfil-2">
-                                <div class="tabfilter-content">
-                                    <select multiple="multiple" class="options textarea">
-                                        <option value="item1">Пример заполнения</option>
-                                        <option value="item2">Пример заполнения</option>
-                                        <option value="item3">Пример заполнения</option>
-                                        <option value="item4">Пример заполнения</option>
-                                        <option value="item5">Пример заполнения</option>
-                                        <option value="item6">Пример заполнения</option>
-                                        <option value="item7">Пример заполнения</option>
-                                        <option value="item8">Пример заполнения</option>
-                                        <option value="item9">Пример заполнения</option>
-                                        <option value="item10">Пример заполнения</option>
-                                    </select>
-                                    <div class="button-clumn">
-                                        <button class="removeop imgnews">Remove</button>
-                                        <button class="copy imgnews">Copy</button>
-                                    </div>
-
-                                    <select class="textarea2 remove" multiple="multiple">
-
-                                    </select>
+                            <div class="communities">
+                                <b>Сообщества</b>
+                                <input type="radio" name="filter" value="all" class="radi" /> Все
+                                <input type="radio" name="filter" value="my" class="radi" /> Мои
+                            </div>
+                            <div class="sx">Сортировка</div>
+                            <div class="sxform">
+                                <div class="clumn1">
+                                    <label>Поле 1</label>
+                                    <select><option value="1"></option></select>
+                                    <span class="note"><a href="#">По убыванию</a>По возрастанию</span>
+                                </div>
+                                <div class="clumn2">
+                                    <label>Поле 2</label>
+                                    <select><option value="1"></option></select>
+                                    <span class="note"><a href="#">По убыванию</a>По возрастанию</span>
+                                </div>
+                                <div class="filterbtn">
+                                    <a id="save-filter" href="#" class="btntype2">Сохранить</a>
+                                    <a href="#" class="btntype1">Отменить</a>
                                 </div>
                             </div>
-                            <div id="tabfil-3">
-                                <div class="tabfilter-content">
-                                    <select multiple="multiple" class="options textarea">
-                                        <option value="item1">Пример заполнения</option>
-                                        <option value="item2">Пример заполнения</option>
-                                        <option value="item3">Пример заполнения</option>
-                                        <option value="item4">Пример заполнения</option>
-                                        <option value="item5">Пример заполнения</option>
-                                        <option value="item6">Пример заполнения</option>
-                                        <option value="item7">Пример заполнения</option>
-                                        <option value="item8">Пример заполнения</option>
-                                        <option value="item9">Пример заполнения</option>
-                                        <option value="item10">Пример заполнения</option>
-                                    </select>
-                                    <div class="button-clumn">
-                                        <button class="removeop imgnews">Remove</button>
-                                        <button class="copy imgnews">Copy</button>
-                                    </div>
-
-                                    <select class="textarea2 remove" multiple="multiple">
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="tabfil-4">
-                                <div class="tabfilter-content">
-                                    <select multiple="multiple" class="options textarea">
-                                        <option value="item1">Пример заполнения</option>
-                                        <option value="item2">Пример заполнения</option>
-                                        <option value="item3">Пример заполнения</option>
-                                        <option value="item4">Пример заполнения</option>
-                                        <option value="item5">Пример заполнения</option>
-                                        <option value="item6">Пример заполнения</option>
-                                        <option value="item7">Пример заполнения</option>
-                                        <option value="item8">Пример заполнения</option>
-                                        <option value="item9">Пример заполнения</option>
-                                        <option value="item10">Пример заполнения</option>
-                                    </select>
-                                    <div class="button-clumn">
-                                        <button class="removeop imgnews">Remove</button>
-                                        <button class="copy imgnews">Copy</button>
-                                    </div>
-
-                                    <select class="textarea2 remove" multiple="multiple">
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="tabfil-5">
-                                <div class="tabfilter-content">
-                                    <select multiple="multiple" class="options textarea">
-                                        <option value="item1">Пример заполнения</option>
-                                        <option value="item2">Пример заполнения</option>
-                                        <option value="item3">Пример заполнения</option>
-                                        <option value="item4">Пример заполнения</option>
-                                        <option value="item5">Пример заполнения</option>
-                                        <option value="item6">Пример заполнения</option>
-                                        <option value="item7">Пример заполнения</option>
-                                        <option value="item8">Пример заполнения</option>
-                                        <option value="item9">Пример заполнения</option>
-                                        <option value="item10">Пример заполнения</option>
-                                    </select>
-                                    <div class="button-clumn">
-                                        <button class="removeop imgnews">Remove</button>
-                                        <button class="copy imgnews">Copy</button>
-                                    </div>
-
-                                    <select class="textarea2 remove" multiple="multiple">
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="communities">
-                            <b>Сообщества</b>
-                            <input type="radio" name="" value="" class="radi" /> Все
-                            <input type="radio" name="" value="" class="radi" /> Мои
-                        </div>
-                        <div class="sx">Сортировка</div>
-                        <div class="sxform">
-                        	<div class="clumn1">
-                            	<label>Поле 1</label>
-                                <select><option value="1"></option></select>
-                                <span class="note"><a href="#">По убыванию</a>По возрастанию</span>
-                            </div>
-                            <div class="clumn2">
-                            	<label>Поле 2</label>
-                                <select><option value="1"></option></select>
-                                <span class="note"><a href="#">По убыванию</a>По возрастанию</span>
-                            </div>
-                            <div class="filterbtn">
-                            	<a href="#" class="btntype2">Сохранить</a>
-                				<a href="#" class="btntype1">Отменить</a>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <ul class="list-key">
-                	<li>ООО "Колобок" <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Новости <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Новости <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Только мои сообщества <a href="#"><i class="i-close imgnews"></i></a></li>
                 </ul>
                 <div class="search-key">
                 	<input type="text" name="" placeholder="Поиск…" class="text" />
