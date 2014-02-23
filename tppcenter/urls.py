@@ -11,6 +11,7 @@ import tppcenter.Tpp.urls
 import tppcenter.BusinessProposal.urls
 import tppcenter.Exhibitions.urls
 import tppcenter.Tenders.urls
+import tppcenter.TppTV.urls
 
 
 from django.contrib import admin
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
     url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
+    url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
 
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),

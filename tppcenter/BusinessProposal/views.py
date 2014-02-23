@@ -7,7 +7,7 @@ from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
 from datetime import datetime
 from django.utils.timezone import now
@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
 
-from core.tasks import addNewsAttrubute
+from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
 def get_proposals_list(request, page=1):
@@ -92,39 +92,73 @@ def _proposalsContent(request, page=1):
 
 
 
-def addNews(request):
+def addBusinessProposal(request):
     form = None
+
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+
+
+
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
         user = request.user
-        user = request.user
+
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
         values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        addAttr={'NAME': 'True'}
-        form = ItemForm('News', values=values, addAttr=addAttr)
+        values['KEYWORD'] = request.POST.get('KEYWORD', "")
+        values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
+        values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
+        values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+        branch = request.POST.get('BRANCH', "")
+
+
+
+
+
+        form = ItemForm('BusinessProposal', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr)
-            return HttpResponseRedirect(reverse('news:main'))
+        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            return HttpResponseRedirect(reverse('proposal:main'))
 
 
 
 
 
-    return render_to_response('News/addForm.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('BusinessProposal/addForm.html', {'form': form, 'branches': branches},
+                              context_instance=RequestContext(request))
 
 
 
-def updateNew(request, item_id):
-    addAttr = {'NAME': 'True'}
+def updateBusinessProposal(request, item_id):
+
     if request.method != 'POST':
+        branches = Branch.objects.all()
+        branches_ids = [branch.id for branch in branches]
+        branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+
+        try:
+            currentBranch = Branch.objects.get(p2c__child=item_id)
+        except Exception:
+            currentBranch = ""
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+        pages = pages.queryset
+
+
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(parent_id=item_id)
         photos = ""
@@ -132,27 +166,40 @@ def updateNew(request, item_id):
         if gallery.queryset:
             photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
-        form = ItemForm('News', id=item_id, addAttr=addAttr)
+        form = ItemForm('BusinessProposal', id=item_id)
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
-
         user = request.user
+
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
         values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['IMAGE-CLEAR'] = request.POST.get('IMAGE-CLEAR', " ")
 
-        form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
+        values['KEYWORD'] = request.POST.get('KEYWORD', "")
+        values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
+        values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
+        values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+        branch = request.POST.get('BRANCH', "")
+
+
+
+
+
+        form = ItemForm('BusinessProposal', values=values, id=item_id)
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr, item_id)
-            return HttpResponseRedirect(reverse('news:main'))
+            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            return HttpResponseRedirect(reverse('proposal:main'))
 
 
 
@@ -160,7 +207,10 @@ def updateNew(request, item_id):
 
 
 
-    return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form}, context_instance=RequestContext(request))
+    return render_to_response('BusinessProposal/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
+                                                                'pages': pages, 'currentBranch': currentBranch,
+                                                                'branches': branches},
+                              context_instance=RequestContext(request))
 
 
 

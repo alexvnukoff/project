@@ -51,7 +51,7 @@ def _productContent(request, page=1):
     products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=9, page=page)
+    result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
 
     productsList = result[0]
     products_ids = [id for id in productsList.keys()]
@@ -83,25 +83,25 @@ def _productContent(request, page=1):
 
 
 
-def _getDetailContent(request,id):
+def _getDetailContent(request, item_id):
 
-     product = get_object_or_404(Product, pk=id)
+     product = get_object_or_404(Product, pk=item_id)
      productValues = product.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'IMAGE',
-                                                'DETAIL_TEXT','COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
-                                                     'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'))
+                                                'DETAIL_TEXT', 'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
+                                                'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'))
 
-     photos = Gallery.objects.filter(c2p__parent=id)
+     photos = Gallery.objects.filter(c2p__parent=item_id)
 
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=id)
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-     country = Country.objects.get(p2c__child__p2c__child=id)
-
-
+     country = Country.objects.get(p2c__child__p2c__child=item_id)
 
 
-     company = Company.objects.get(p2c__child=id)
+
+
+     company = Company.objects.get(p2c__child=item_id)
      companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME')
-     companyValues.update({'COMPANY_ID':company.id})
+     companyValues.update({'COMPANY_ID': company.id})
 
 
      countriesList = country.getAttributeValues("NAME", 'FLAG')

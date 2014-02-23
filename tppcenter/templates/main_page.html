@@ -17,6 +17,8 @@
     {% endblock %}
 
     {% block js %}
+        <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
+
         {{  block.super }}
         <script type="text/javascript">
             $(function() {
@@ -53,12 +55,12 @@
                         <li><a href="#">Услуги</a></li>
                         <li><a href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
                         <li><a href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
-                        <li><a href="#">Инновационные проекты</a></li>
+                        <li><a href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
                         <li><a href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
                         <li><a href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions' %}</a></li>
                         <li><a href="#">Купоны</a></li>
-                        <li><a href="#">ТПП ТВ </a></li>
+                        <li><a href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
                         <li><a href="#">Вакансии</a></li>
                         <li><a href="#">Стена</a></li>
                     </ul>

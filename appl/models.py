@@ -185,6 +185,15 @@ class NewsCategories(Item):
     def __str__(self):
         return self.getName()
 
+class TppTV(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.getName()
+
 class Country(Item):
 
     active = ItemManager()

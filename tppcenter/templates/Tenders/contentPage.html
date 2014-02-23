@@ -7,6 +7,7 @@
                 {% for id , attr in tendersList.items %}
                     {% with attr.NAME.0 as name %}
                     {% with attr.COST.0 as cost %}
+                    {% with attr.SLUG.0 as slug %}
                     {% with attr.CREATE_DATE.0 as date %}
                     {% with attr.CURRENCY.0 as currency %}
                     {% with attr.ORG_NAME|first as org_name %}
@@ -23,8 +24,9 @@
                         <h2>{{ name }}</h2>
                         <div class="line">{% trans 'Starting price' %}: <font class="number">{{ currency|getSymbol }} {{ cost }}</font></div>
                         <div class="line">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{% url "tenders:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Tpp.views.get_tpp_list, name='main'),
      url(r'^page/([0-9]+)?/$', tppcenter.Tpp.views.get_tpp_list, name="paginator"),
+     url(r'^add/$', tppcenter.Tpp.views.addTpp, name="add"),
+     url(r'^update/([0-9]+)/$', tppcenter.Tpp.views.updateTpp, name="update"),
 
 
 

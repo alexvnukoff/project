@@ -1,0 +1,77 @@
+{% load static %}
+{% load i18n %}
+
+
+
+  <div class="new-details">
+            {% with newValues.CREATE_DATE.0 as date %}
+            {% with newValues.DETAIL_TEXT.0 as content %}
+            {% with newValues.NAME.0 as name %}
+            {% with newValues.YOUTUBE_CODE.0 as youtube_code %}
+            {% with newValues.COUNTRY_NAME.0 as country_name %}
+            {% with newValues.COUNTRY_FLAG.0 as country_flag %}
+            {% with newValues.COUNTRY_ID as country_id %}
+            {% with newValues.ORG_NAME.0 as org_name %}
+            {% with newValues.ORG_FLAG.0 as org_flag %}
+            {% with newValues.ORG_ID as org_id %}
+            {% with newValues.CATEGORY_NAME|first as category_name %}
+
+            <h1>{{ name }}</h1>
+                <p class="date">
+                {% if country_flag or org_flag %}
+                    <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else  %}{{ country_flag }}{% endif %}" class="flag" alt="" />
+                {% endif %}
+                   {{ country_name }}
+                   {{ date|date:"d M Y" }}, <a href="#">{{ category_name }}</a></p>
+
+                <div class="video-details">
+                 <iframe width="540" height="322" src="//www.youtube.com/embed/{{ youtube_code }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+                <div class="social">
+                	<a href="#"><i class="imgnews share-1"></i></a>
+                    <a href="#"><i class="imgnews share-2"></i></a>
+                    <a href="#"><i class="imgnews share-3"></i></a>
+                    <a href="#"><i class="imgnews share-4"></i></a>
+                </div>
+                <div class="content-news">
+                   <p>{{ content }}</p>
+                </div>
+
+                <div class="related-news">
+                	<span class="title">{% trans 'Similar news' %}</span>
+                    <ul>
+                    {% for id , attr in similarValues.items %}
+                      {% with attr.NAME|first as sim_name %}
+                      {% with attr.IMAGE|first as sim_image %}
+                      {% with attr.DETAIL_TEXT|first as sim_content %}
+                      {% with attr.CREATE_DATE|first as sim_create_date %}
+                      {% with attr.SLUG|first as sim_slug %}
+                    	<li>
+                        	<span class="date">{{ date|date:"d M y" }}</span>
+                        	<img src="{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
+                            <a href="{% url  "tv:detail" sim_slug %}" class="more">{{ sim_name }} </a>
+                        </li>
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                         {% endwith %}
+                     {% endfor %}
+                    </ul>
+                </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+  </div>
+
+

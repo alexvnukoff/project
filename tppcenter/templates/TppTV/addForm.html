@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+
+
+{% csrf_token %}
+    {% with form.fields.NAME.initial as name %}
+    {% with form.fields.IMAGE.initial as image %}
+    {% with form.fields.DETAIL_TEXT.initial as text %}
+    {% with form.fields.YOUTUBE_CODE.initial as youtube_code %}
+
+
+    <label for="id_name">Name</label><input type="text" id="id_name" name="NAME" value="{{ name }}"/><span>{{ form.errors.NAME }}</span><br>
+    {% if image %}
+
+        <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
+        <input type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" />Delete<br>
+    {% endif %}
+    <label for="id_image">Image</label><input type="file" id="id_image" name="IMAGE"/>{{ form.errors.IMAGE }}<br>
+    <label for="id_youtube_code">Youtube</label><input type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/><span>{{ form.errors.YOUTUBE_CODE }}</span><br>
+    <label for="id_detail_text"></label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" />{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>
+    <label for="id_news_category">Category</label>
+        <select id="id_news_category" name="NEWS_CATEGORY">
+        <option>{% trans "Choose category" %}</option>
+        {% for id , atrr in categories.items %}
+         {% with atrr.NAME|first as category  %}
+              <option value="{{ id }}"{% if choosen_category.id == id %} selected {% endif %}>{{ category }}</option>
+         {% endwith %}
+
+        {% endfor %}
+        </select><br>
+
+
+
+
+
+
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+<input type="submit" name="submit">
+</form>

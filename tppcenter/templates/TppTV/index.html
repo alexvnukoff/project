@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-   {% block title %}Tenders{% endblock %}
+   {% block title %}News{% endblock %}
 
 
 
@@ -14,10 +14,8 @@
     {% block styles %}
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
-
     {% endblock %}
 
 
 
-     {% block content %} {{ tendersPage }}{% endblock %}
+     {% block content %} {{ newsPage }}{% endblock %}
