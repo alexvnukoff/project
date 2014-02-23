@@ -35,13 +35,23 @@
             }
 
             function filterChange(name, e) {
+
+                var form = $('form[name="filter-form"]');
+
                 if (e.added)
                 {
-                    $('<input type="hidden" />').attr('value', e.added.id).attr("name", name).appendTo(form)
+                    if(!$('input[value="' + e.added.id + '"].filter-item').length)
+                    {
+                        $('<input type="hidden" />').attr({
+                            value: e.added.id,
+                            name: name,
+                            class: 'filter-item'
+                        }).attr("name", 'filter[' + name + '][]').appendTo(form);
+                    }
                 }
                 else
                 {
-                    input = form.find('input[value="' + e.removed.id + '"]')
+                    input = form.find('input[value="' + e.removed.id + '"].filter-item')
 
                     if (input.length == 1)
                         input.remove()
@@ -88,13 +98,6 @@
             $(document).ready(function() {
 
                 ui.init();
-                form = $('form[name="filter-form"]');
-
-                $(document).on('click', '#save-filter', function() {
-                    var params = form.serialize();
-                    $(".filter-form, #fade-profile").hide();
-                    ui.requester(window.location.pathname, params)
-                });
 
             });
         </script>
@@ -158,17 +161,17 @@
             		<i class="icon-key imgnews" id="filter-link"></i>
                     <div class="filter-form">
                         <form action="" method="GET" name="filter-form">
-                            {% if filters %}
-                                {% for name, ids in filters %}
-                                    {% for dict in ids %}
-                                        {% with dict.id as id %}
-                                        {% with dict.text as text %}
-                                            <input type="hidden" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
-                                        {% endwith %}
-                                        {% endwith %}
-                                    {% endfor %}
+                                {% for name, ids in filters.items %}
+                                    {% if ids %}
+                                        {% for dict in ids %}
+                                            {% with dict.id as id %}
+                                            {% with dict.text as text %}
+                                                <input type="hidden" class="filter-item" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
+                                            {% endwith %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endfor %}
-                            {% endif %}
                             <i class="close-event imgnews"></i>
                             <span class="title">Фильтр</span>
                             <div class="tabfilter">
@@ -273,10 +276,6 @@
                     </div>
                 </div>
                 <ul class="list-key">
-                	<li>ООО "Колобок" <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Новости <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Новости <a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Только мои сообщества <a href="#"><i class="i-close imgnews"></i></a></li>
                 </ul>
                 <div class="search-key">
                 	<input type="text" name="" placeholder="Поиск…" class="text" />

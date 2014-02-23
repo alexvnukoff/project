@@ -574,15 +574,24 @@ class Item(models.Model):
             if items[key] in valuesAttribute:
                 continue
 
-            valuesAttribute[items[key]] = key
+            #if item[key] not int, skip
+            try:
+                valuesAttribute[int(items[key])] = key
+            except ValueError:
+                continue
 
         valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
+        #TODO: Artur fix bug, when just one attribute and it's not exists, will return integer not dict
         for valuesDict in values:
+
+            if valuesDict['item'] not in valuesAttribute:
+                continue
 
             if not isinstance(valuesAttribute[valuesDict['item']], dict):
 
                 valuesAttribute[valuesDict['item']] = {}
+
                 if fullAttrVal:
                      valuesAttribute[valuesDict['item']]['CREATE_DATE'] = [{
                     'start_date': None,

@@ -10,6 +10,10 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     branch = indexes.MultiValueField(null=True)
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
+    id = indexes.IntegerField()
+
+    def prepare_id(self, object):
+        return object.pk
 
     def index_queryset(self, using=None):
         return self.get_model().active
@@ -63,9 +67,13 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     title = indexes.CharField(null=True)
     country = indexes.MultiValueField(null=True)
     title_auto = indexes.NgramField(null=True)
+    id = indexes.IntegerField()
 
     def index_queryset(self, using=None):
         return self.get_model().active
+
+    def prepare_id(self, object):
+        return object.pk
 
     def prepare(self, object):
         self.prepared_data = super(TppIndex, self).prepare(object)
@@ -121,6 +129,11 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
+    id = indexes.IntegerField()
+    site = indexes.MultiValueField(null=True)
+
+    def prepare_id(self, object):
+        return object.pk
 
     def index_queryset(self, using=None):
         return self.get_model().active
@@ -235,6 +248,10 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     categories = indexes.MultiValueField(null=True)
     branch = indexes.MultiValueField(null=True)
+    id = indexes.IntegerField()
+
+    def prepare_id(self, object):
+        return object.pk
 
     def index_queryset(self, using=None):
         return self.get_model().active

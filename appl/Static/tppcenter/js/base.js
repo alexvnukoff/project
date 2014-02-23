@@ -52,9 +52,6 @@ $(document).ready(function() {
             $(".textpart").html($(this).html());
             $(".part-list").slideUp(100);
         });
-        $("i.i-close").click(function(){
-            $(this).parent().parent().hide();
-        });
 
         $(".select-all1").click(function(){
             $(".type1 input[type='checkbox']").prop("checked", $(this).is(":checked"));

@@ -347,7 +347,7 @@ def jsonFilter(request):
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
-            items = [{'title': item.title, 'id': item.pk} for item in paginator.object_list]
+            items = [{'title': item.title, 'id': item.id} for item in paginator.object_list]
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 

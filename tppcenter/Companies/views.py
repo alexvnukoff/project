@@ -17,22 +17,31 @@ from celery import shared_task, task
 import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
+from haystack.query import SearchQuerySet
 
 def get_companies_list(request, page=1):
 
-    newsPage = _companiesContent(request, page)
+
 
     styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
+    searchFilter = {}
     filterList = ['tpp', 'country']
     filtersIDs = {}
     filters = {}
     ids = []
 
     for name in filterList:
-        filtersIDs[name] = request.GET.getlist('filter[' + name + ']', [])
+        filtersIDs[name] = []
         filters[name] = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                filtersIDs[name].append(int(pk))
+            except ValueError:
+                continue
+
         ids += filtersIDs[name]
 
     if len(ids) > 0:
@@ -40,13 +49,17 @@ def get_companies_list(request, page=1):
 
         for pk, attr in attributes.items():
 
-            if len(attr['NAME']) != 1:
+            if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
                 continue
 
             for name, id in filtersIDs.items():
-                if id == pk:
-                    filters[name].append({'id': id, 'text': attr['NAME'][0]})
+                if pk in id:
+                    filters[name].append({'id': pk, 'text': attr['NAME'][0]})
 
+                if len(id):
+                    searchFilter[name + '__in'] = id
+
+    newsPage = _companiesContent(request, page, searchFilter)
 
     if not request.is_ajax():
         user = request.user
@@ -85,13 +98,14 @@ def get_companies_list(request, page=1):
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage, 'filters': filters}))
 
 
-def _companiesContent(request, page=1):
-    companies = Company.active.get_active().order_by('-pk')
+def _companiesContent(request, page=1, searchFilter={}):
 
+    #companies = Company.active.get_active().order_by('-pk')
+    companies = SearchQuerySet().models(Company).filter(**searchFilter)
 
-    result = func.setPaginationForItemsWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
+    result = func.setPaginationForSearchWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
                                                                'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
-                                                  page_num=5, page=page)
+                                                  page_num=2, page=page)
 
     companyList = result[0]
     company_ids = [id for id in companyList.keys()]
@@ -114,7 +128,7 @@ def _companiesContent(request, page=1):
 
 
 
-    url_paginator = "news:paginator"
+    url_paginator = "companies:paginator"
     template = loader.get_template('Companies/contentPage.html')
     context = RequestContext(request, {'companyList': companyList, 'page': page, 'paginator_range': paginator_range,
                                                   'url_paginator': url_paginator})
