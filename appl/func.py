@@ -470,3 +470,41 @@ def getAnalytic(params = None):
 
     return get_results(**params)
 
+
+def filterLive(request):
+    searchFilter = {}
+    filterList = ['tpp', 'country']
+    filtersIDs = {}
+    filters = {}
+    ids = []
+
+    for name in filterList:
+        filtersIDs[name] = []
+        filters[name] = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                filtersIDs[name].append(int(pk))
+            except ValueError:
+                continue
+
+        ids += filtersIDs[name]
+
+    if len(ids) > 0:
+        attributes = Item.getItemsAttributesValues('NAME', ids)
+
+        for pk, attr in attributes.items():
+
+            if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
+                continue
+
+            for name, id in filtersIDs.items():
+                if pk in id:
+                    filters[name].append({'id': pk, 'text': attr['NAME'][0]})
+
+                if len(id):
+                    searchFilter[name + '__in'] = id
+
+
+    return filters, searchFilter
+

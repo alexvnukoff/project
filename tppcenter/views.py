@@ -343,6 +343,8 @@ def jsonFilter(request):
             model = Category
         elif filter == "branch":
             model = Branch
+        elif filter == 'country':
+            model = Country
 
         if model:
 
@@ -353,7 +355,7 @@ def jsonFilter(request):
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
-            items = [{'title': item.title, 'id': item.id} for item in paginator.object_list]
+            items = [{'title': item.title_auto, 'id': item.id} for item in paginator.object_list]
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 

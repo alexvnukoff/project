@@ -71,6 +71,7 @@ def _productContent(request, page=1):
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
+
     for country in countries:
         country_dict[country['p2c__child__p2c__child']] = country['pk']
 

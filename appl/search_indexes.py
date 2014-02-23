@@ -4,12 +4,70 @@ from appl.models import Company, Country, Tpp, News, Product, Category, Branch, 
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
 
+class CountryIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    id = indexes.IntegerField()
+    title_auto = indexes.NgramField(null=True)
+
+    def get_model(self):
+        return Country
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(CountryIndex, self).prepare(obj)
+
+        attr = obj.getAttributeValues('NAME')
+
+        if len(attr) == 0 or attr[0] == '':
+            return self.prepared_data
+
+        textIndex = self.fields['text'].index_fieldname
+        titleAutoIndex = self.fields['title_auto'].index_fieldname
+
+
+        self.prepared_data[textIndex] = attr[0]
+        self.prepared_data[titleAutoIndex] = attr[0]
+
+        return self.prepared_data
+
+class BranchIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    id = indexes.IntegerField()
+    title_auto = indexes.NgramField(null=True)
+
+    def get_model(self):
+        return Branch
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(BranchIndex, self).prepare(obj)
+
+        attr = obj.getAttributeValues('NAME')
+
+        if len(attr) == 0 or attr[0] == '':
+            return self.prepared_data
+
+        textIndex = self.fields['text'].index_fieldname
+        titleAutoIndex = self.fields['title_auto'].index_fieldname
+
+
+        self.prepared_data[textIndex] = attr[0]
+        self.prepared_data[titleAutoIndex] = attr[0]
+
+        return self.prepared_data
+
+
 class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
     branch = indexes.MultiValueField(null=True)
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
+    title_auto = indexes.NgramField(null=True)
     id = indexes.IntegerField()
 
     def prepare_id(self, object):
@@ -24,7 +82,8 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
 
         field_to_attr = {
             'title': 'NAME',
-            'text': 'DETAIL_TEXT'
+            'text': 'DETAIL_TEXT',
+            'title_auto': 'NAME'
         }
 
         attributes = object.getAttributeValues('NAME', 'DETAIL_TEXT')
