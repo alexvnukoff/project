@@ -224,7 +224,7 @@ HAYSTACK_CONNECTIONS = {
 
 for lang in LANGUAGES:
 
-    if lang is 'en':
+    if lang[0] is 'en':
         continue
 
     HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {

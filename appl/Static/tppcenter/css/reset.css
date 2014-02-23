@@ -36,3 +36,15 @@ box-shadow: 0 0 4px rgba(82, 168, 236, 0.5); outline: 0 none;}*/
 article, aside, audio, canvas, command, datalist, details, embed, figcaption, figure, footer, header, hgroup, keygen, meter, nav, output, progress, section, source, video {
     display: block;
 }
+
+.news-center {position: relative}
+.news-center .loader {height: 360px;}
+.news-center .loader-img{position: absolute; left: 50%; top: 50%; margin-left: -50px; margin-top: -8px;}
+.tabfilter-content
+ {
+    padding: 15px !important;
+    box-sizing: border-box;
+}
+.tabfilter-content .big-selector {
+    width: 100%;
+}

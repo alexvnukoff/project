@@ -6,12 +6,15 @@ import tppcenter.views
 import tppcenter.News.urls
 import tppcenter.Product.urls
 import tppcenter.Companies.urls
+
 import tppcenter.Innov.urls
 import tppcenter.Tpp.urls
 import tppcenter.BusinessProposal.urls
 import tppcenter.Exhibitions.urls
 import tppcenter.Tenders.urls
 import tppcenter.TppTV.urls
+
+
 
 
 from django.contrib import admin
@@ -23,7 +26,7 @@ urlpatterns = patterns('',
     url(r'^$', tppcenter.views.home),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
-    url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
+    #url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
     url(r'^companies/', include(tppcenter.Companies.urls, namespace='companies')),
     url(r'^tpp/', include(tppcenter.Tpp.urls, namespace='tpp')),
     url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
@@ -56,6 +59,9 @@ urlpatterns = patterns('',
     url(r'^accounts/password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+
+    url(r'^filter/', tppcenter.views.jsonFilter),
 
 
 )

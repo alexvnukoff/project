@@ -32,6 +32,25 @@ def getPaginatorRange(page):
     return paginator_range
 
 
+def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
+    '''
+    Method  return List of Values of items and  Pagination
+    items = QuerySet of items
+    attr = (list of item's attributes)
+    page = number of current page
+    page_num = num element per page
+    '''
+    paginator = Paginator(items, page_num)
+    try:
+        page = items = paginator.page(page)
+    except Exception:
+        page = items = paginator.page(1)
+    if not isinstance(items, list):
+        items = tuple([item.id for item in page.object_list])
+    attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
+
+    return attributeValues, page #Return List Item and Page object of current page
+
 def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
     '''
     Method  return List of Values of items and  Pagination

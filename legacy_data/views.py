@@ -143,8 +143,12 @@ def users_reload_DB_DB(request):
         try:
             new_user = User.objects.create_user(username=usr.username, email=usr.email, password=str(randint(1000000, 9999999)))
         except:
-            return HttpResponse('Migration process from buffer DB into TPP DB was interrupted!\
-                                Possible reason is duplicated data.')
+            #return HttpResponse('Migration process from buffer DB into TPP DB was interrupted!\
+            #                    Possible reason is duplicated data.')
+            print(usr.username, '##', usr.email, '##', ' Count: ', i)
+            i +=1
+            continue
+
         new_user.first_name=usr.first_name
         new_user.last_name=usr.last_name
         new_user.is_active = True

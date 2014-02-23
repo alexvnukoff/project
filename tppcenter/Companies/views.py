@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse, QueryDict
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -14,41 +14,101 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+
 from core.tasks import addNewCompany
+
+import json
+from core.tasks import addNewsAttrubute
 from django.conf import settings
+from haystack.query import SearchQuerySet
 
 def get_companies_list(request, page=1):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
+
+
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
+
+    searchFilter = {}
+    filterList = ['tpp', 'country']
+    filtersIDs = {}
+    filters = {}
+    ids = []
+
+    for name in filterList:
+        filtersIDs[name] = []
+        filters[name] = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                filtersIDs[name].append(int(pk))
+            except ValueError:
+                continue
+
+        ids += filtersIDs[name]
+
+    if len(ids) > 0:
+        attributes = Item.getItemsAttributesValues('NAME', ids)
+
+        for pk, attr in attributes.items():
+
+            if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
+                continue
+
+            for name, id in filtersIDs.items():
+                if pk in id:
+                    filters[name].append({'id': pk, 'text': attr['NAME'][0]})
+
+                if len(id):
+                    searchFilter[name + '__in'] = id
+
+    newsPage = _companiesContent(request, page, searchFilter)
+
+    if not request.is_ajax():
+        user = request.user
+
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
         else:
-            user_name = user.first_name + ' ' + user.last_name
+            user_name = None
+            notification = None
+
+        current_section = "Companies"
+
+        countries = Country.objects.all()
+        countries_ids = [country.pk for country in countries]
+
+        countries = Item.getItemsAttributesValues('NAME', countries_ids)
+
+        templateParams = {
+            'user_name': user_name,
+            'current_section': current_section,
+            'newsPage': newsPage,
+            'notification': notification,
+            'scripts': scripts,
+            'styles': styles,
+            'countries': countries,
+            'filters': filters
+        }
+
+        return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
+
     else:
-        user_name = None
-        notification = None
-    current_section = "Companies"
-
-    newsPage = _companiesContent(request, page)
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage, 'filters': filters}))
 
 
+def _companiesContent(request, page=1, searchFilter={}):
 
+    #companies = Company.active.get_active().order_by('-pk')
+    companies = SearchQuerySet().models(Company).filter(**searchFilter)
 
-
-
-    return render_to_response("Companies/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
-
-
-def _companiesContent(request, page=1):
-    companies = Company.active.get_active().order_by('-pk')
-
-
-    result = func.setPaginationForItemsWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
+    result = func.setPaginationForSearchWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
                                                                'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
-                                                  page_num=5, page=page)
+                                                  page_num=2, page=page)
 
     companyList = result[0]
     company_ids = [id for id in companyList.keys()]
@@ -56,12 +116,13 @@ def _companiesContent(request, page=1):
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
+
     for country in countries:
         country_dict[country['p2c__child']] = country['pk']
 
     for id, company in companyList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
+        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
         company.update(toUpdate)
 

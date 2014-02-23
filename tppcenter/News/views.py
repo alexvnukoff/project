@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -14,35 +14,47 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+
 from django.core.exceptions import ObjectDoesNotExist
+
+
+import json
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
 def get_news_list(request, page=1):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-    current_section = "News"
 
     newsPage = _newsContent(request, page)
 
+    styles = []
+    scripts = []
 
+    if not request.is_ajax():
+        user = request.user
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "News"
 
+        tempalteParams = {
+            'user_name': user_name,
+            'current_section': current_section,
+            'notification': notification,
+            'newsPage': newsPage,
+            'scripts': scripts,
+            'styles': styles
+        }
 
-
-
-    return render_to_response("News/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
-
+        return render_to_response("News/index.html", tempalteParams, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 def _newsContent(request, page=1):
     news = News.active.get_active().order_by('-pk')
