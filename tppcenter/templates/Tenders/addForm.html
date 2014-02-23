@@ -1,0 +1,126 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+
+
+
+{% csrf_token %}
+    {% with form.fields.NAME.initial as name %}
+    {% with form.fields.DETAIL_TEXT.initial as text %}
+    {% with form.fields.COST.initial as cost %}
+    {% with form.fields.KEYWORD.initial as keyword %}
+    {% with form.fields.CURRENCY.initial as currnecy %}
+    {% with form.fields.START_EVENT_DATE.initial as start_date %}
+    {% with form.fields.END_EVENT_DATE.initial as end_date %}
+    {% with form.fields.DOCUMENT_1.initial as doc_1 %}
+    {% with form.fields.DOCUMENT_2.initial as doc_2 %}
+    {% with form.fields.DOCUMENT_3.initial as doc_3 %}
+
+
+
+    <label for="id_name">Name</label><input type="text" id="id_name" name="NAME" value="{{ name }}"/><span>{{ form.errors.NAME }}</span><br>
+
+
+
+    <label for="id_cost">Cost</label><input type="text" id="id_cost" name="COST" value="{{ cost }}"/><span>{{ form.errors.COST }}</span><br>
+
+     <label for="id_CURRENCY">CURRENCY</label>{{ form.errors.CURRENCY }}
+        <select id="id_CURRENCY" name="CURRENCY">
+          {% for curr in currency_slots %}
+              <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected {% endif %}>{{ curr.title }}</option>
+        {% endfor %}
+        </select><br>
+
+     <label for="id_START_EVENT_DATE">START_EVENT_DATE</label><input type="date" id="id_START_EVENT_DATE" name="START_EVENT_DATE" value="{{ start_date }}"/><span>{{ form.errors.START_EVENT_DATE }}</span><br>
+
+     <label for="id_END_EVENT_DATE">END_EVENT_DATE</label><input type="date" id="id_END_EVENT_DATE" name="END_EVENT_DATE" value="{{ end_date }}"/><span>{{ form.errors.END_EVENT_DATE }}</span>
+
+
+
+       {% if doc_1 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a><br>
+        <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_1">DOCUMENT_1</label><input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/><span>{{ form.errors.DOCUMENT_1 }}</span><br>
+  {% if doc_2 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 2</a><br>
+        <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_2">DOCUMENT_2</label><input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/><span>{{ form.errors.DOCUMENT_2 }}</span><br>
+  {% if doc_3 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 3</a><br>
+        <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_3">DOCUMENT_3</label><input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{ doc_3 }}"/><span>{{ form.errors.DOCUMENT_3 }}</span><br>
+
+
+    <label for="id_detail_text">Detail text</label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>
+
+    <label for="id_KEYWORD">Key word</label><textarea cols="40" rows="10" id="id_KEYWORD"  name="KEYWORD" >{{ keyword }}</textarea>{{ form.errors.KEYWORD }}<br>
+
+
+
+    <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
+    <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+    <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
+
+
+   {% for i in '012'|make_list %}
+       {% resolve photos i as img %}
+       {% if img %}
+            <img src='{{ MEDIA_URL }}th/{{ img.photo.name }}'>
+            <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete<br>
+            <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" /><br>
+        {% endif %}
+        <label for="id_form-{{ i }}-photo">Avatar:</label><input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" /><br>
+   {% endfor %}
+
+
+        <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" />
+        <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
+        <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
+
+      {% if  pages|length >  0 %}
+        {% for page in  pages %}
+        <label for="id_form-{{ forloop.counter0 }}-title">Title:</label><input id="id_form-{{  forloop.counter0 }}-title" maxlength="128" name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.title }}" /><br>
+        <label for="id_form-{{  forloop.counter0 }}-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.content }}</textarea>
+        {% endfor %}
+      {% else %}
+       <label for="id_form-0-title">Title:</label><input id="id_form-0-title" maxlength="128" name="pages-0-title" type="text" value="" /><br>
+        <label for="id_form-0-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-0-content" name="pages-0-content"></textarea>
+      {% endif %}
+
+
+
+
+
+
+
+
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
+
+<input type="submit" name="submit">
+</form>
+
+
+
+
+
+

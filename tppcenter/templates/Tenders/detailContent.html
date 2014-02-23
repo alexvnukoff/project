@@ -1,0 +1,137 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="tender">
+            {% with tenderValues.NAME.0 as name %}
+            {% with tenderValues.COST.0 as cost %}
+            {% with tenderValues.CURRENCY.0 as currency %}
+            {% with tenderValues.DETAIL_TEXT.0 as content %}
+            {% with tenderValues.DOCUMENT_1.0 as doc_1 %}
+            {% with tenderValues.DOCUMENT_2.0 as doc_2 %}
+            {% with tenderValues.DOCUMENT_3.0 as doc_3 %}
+            {% with tenderValues.START_EVENT_DATE.0 as start_event %}
+            {% with tenderValues.END_EVENT_DATE.0 as end_event %}
+            {% with companyValues.NAME.0 as company_name %}
+            {% with companyValues.COMPANY_ID as company_id %}
+            {% with companyValues.FLAG.0 as org_flag %}
+            {% with companyValues.IMAGE.0 as org_image %}
+            {% with companyValues.COUNTRY_NAME.0 as country_name %}
+            {% with companyValues.COUNTRY_FLAG.0 as country_flag %}
+            {% with companyValues.COUNTRY_ID as country_id %}
+
+               <div class="tender-details-title">
+               		<img src="{{ MEDIA_URL }}small/{{ country_flag }}" class="flag" />
+                    <font class="name">{{ country_name }}</font>
+               </div>
+               <div class="tender-info">
+               		<div class="tender-button"><a class="bigbuy" href="#">Подать заявку</a></div>
+					<span class="title">{{ name }}</span>
+                    <ul class="infolist">
+                    	<li>
+                        	<label>Дата размещения:</label>
+                            <span class="right">{{ start_event }}</span>
+                        </li>
+                        <li>
+                        	<label>Дата окончания приёма заявок:</label>
+                            <span class="right">{{ end_event }}</span>
+                        </li>
+                        <li>
+                        	<label>Стартовая цена:</label>
+                            <span class="right"><font class="price">{{ currency|getSymbol }} {{ cost }} </font></span>
+                        </li>
+                    </ul>
+                    <div class="tender-bottom">
+                    	<div class="tender-bottom-left">
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                            <a href="#">{{ company_name }}</a>
+                        </div>
+                        <div class="tender-bottom-right">
+                        	<div class="social">
+                                <a href="#"><i class="imgnews share-1"></i></a>
+                                <a href="#"><i class="imgnews share-2"></i></a>
+                                <a href="#"><i class="imgnews share-3"></i></a>
+                                <a href="#"><i class="imgnews share-4"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">Описание</a></li>
+                                <li><a href="#goods-tabs-2">Галлерия</a></li>
+                                <li><a href="#goods-tabs-3">Documents</a></li>
+                                {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">{{ content }} </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+                              <ul class="tpp-gallery">
+                              {% for photo in photos %}
+                                <li>
+                                    <div class="b-img">
+                                        <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+
+                                        <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
+                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                        <div class="gray-img"></div>
+                                    </div>
+                                </li>
+                              {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                 {% if doc_1 %}
+                                     <a href="{{ MEDIA_URL}}document/{{ doc_1 }}">{% trans 'Link to the document' %}</a><br>
+                                 {% endif %}
+                                 {% if doc_2 %}
+                                     <a href="{{ MEDIA_URL}}document/{{ doc_2 }}">{% trans 'Link to the document' %}</a><br>
+                                 {% endif %}
+                                 {% if doc_3 %}
+                                     <a href="{{ MEDIA_URL}}document/{{ doc_3 }}">{% trans 'Link to the document' %}</a><br>
+                                  {% endif %}
+                            </div>
+                        </div>
+                       {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                              <div class="content-goods-tab">{{ page.content }}</div>
+                         </div>
+                      {% endfor %}
+
+               </div>
+            </div>
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+     </div>
+
+

@@ -4,7 +4,7 @@ from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
 from appl.models import SystemMessages
-from core.models import State, Attribute, Value
+from core.models import State, Attribute, Value, Slot, Dictionary
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -64,6 +64,31 @@ def databaseInitialization(sender, **kwargs):
     st1, created=State.objects.get_or_create(title='Default TPP State', perm=gr1)
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
+
+
+    #Creating default attrubutes, when syncDB
+    #attributes = {NAME_OF_ATTRIBUTE:TYPE_OF_ATTRIBUTE}
+    #if  is dictionary: attributes = {"NAME_OF_ATTRIBUTE": {'type': 'TYPE_OF_ATTRIBUTE', 'slots': ['SLOT1', 'SLOT2']}}
+
+    attributes = {'SKU': 'Chr', 'IMAGE': 'Img', 'SMALL_IMAGE': 'Img', 'KEYWORD': 'Str', 'DOCUMENT_1': 'Ffl',
+                   'DOCUMENT_2': 'Ffl', 'DOCUMENT_3': 'Ffl', 'DISCOUNT': 'Flo',
+                   "MEASUREMENT_UNIT": {'type': 'Chr', 'slots': ['kg', 'piece']}, 'ANONS': 'Str', 'YOUTUBE_CODE': 'Chr',
+                   'INN': 'Chr', 'FAX': 'Chr', 'TELEPHONE_NUMBER': 'Chr', 'SITE_NAME': 'Chr', 'ADDRESS': 'Chr',
+                   'SLUG': 'Chr', 'COUPON_DISCOUNT': 'Flo', 'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR']},
+                   'DETAIL_TEXT': 'Str', 'FILE': 'Ffl', 'COUNTRY': 'Chr', 'CITY': 'Chr', 'COST': 'Flo',
+                   'POSITION': 'Chr', 'AUTHOR_NAME': 'Chr', 'TPP': 'Chr', 'FLAG': 'Img', 'NAME': 'Chr'}
+
+    for attribue, type in attributes.items():
+        if isinstance(type, dict):
+            dictr, created = Dictionary.objects.get_or_create(title=attribue)
+            Attribute.objects.get_or_create(title=attribue, type=type['type'], dict=dictr)
+            for slot in type['slots']:
+                Slot.objects.get_or_create(title=slot, dict=dictr)
+        else:
+            Attribute.objects.get_or_create(title=attribue, type=type)
+
+
+
 
 
 

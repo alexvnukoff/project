@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, Http404
 from appl.models import *
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship, Slot
+
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
@@ -22,6 +25,9 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 def home(request):
+
+
+
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))
 

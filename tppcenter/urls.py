@@ -6,7 +6,15 @@ import tppcenter.views
 import tppcenter.News.urls
 import tppcenter.Product.urls
 import tppcenter.Companies.urls
-#import tppcenter.Innov.urls
+
+import tppcenter.Innov.urls
+import tppcenter.Tpp.urls
+import tppcenter.BusinessProposal.urls
+import tppcenter.Exhibitions.urls
+import tppcenter.Tenders.urls
+import tppcenter.TppTV.urls
+
+
 
 
 from django.contrib import admin
@@ -20,6 +28,12 @@ urlpatterns = patterns('',
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
     #url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
     url(r'^companies/', include(tppcenter.Companies.urls, namespace='companies')),
+    url(r'^tpp/', include(tppcenter.Tpp.urls, namespace='tpp')),
+    url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
+    url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
+    url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
+    url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
+
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),
     url(r'^logout/', tppcenter.views.user_logout, name='logout' ),

@@ -17,13 +17,28 @@
     {% endblock %}
 
     {% block js %}
+        <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
+
         {{  block.super }}
         <script type="text/javascript">
             $(function() {
 	            $( "#tabs" ).tabs();
                 $( ".tabfilter" ).tabs();
-                $(".date").datepicker();
+                  $(".date").datepicker();
+
+
+                });
+
+            $(document).ready(function(e) {
+                $('#thumbs').delegate('img','click', function(){
+                    $('#largeImage').attr('src',$(this).attr('src').replace('thumb','large'));
+                });
             });
+
+
+
+
+
         </script>
         <script>
             function noMatches(term) {
@@ -57,6 +72,7 @@
                         input.remove()
                 }
             }
+
 
             options = {
                 tpp: {
@@ -116,19 +132,21 @@
                 </div>
                 <div id="tabs-1">
                     <ul class="tab1-cate">
-                    	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
-                        <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
-                        <li><a class="single-page" href="#">Услуги</a></li>
-                        <li><a class="single-page" href="#">ТПП</a></li>
-                        <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
-                        <li><a class="single-page" href="#">Инновационные проекты</a></li>
-                        <li><a class="single-page" href="#">Бизнес-предложения</a></li>
-                        <li><a class="single-page" href="#">Тендеры</a></li>
-                        <li><a class="single-page" href="#">Афиша</a></li>
-                        <li><a class="single-page" href="#">Купоны</a></li>
-                        <li><a class="single-page" href="#">ТПП ТВ </a></li>
-                        <li><a class="single-page" href="#">Вакансии</a></li>
-                        <li><a class="single-page" href="#">Стена</a></li>
+
+                    	<li><a href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
+                        <li><a href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
+                        <li><a href="#">Услуги</a></li>
+                        <li><a href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
+                        <li><a href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
+                        <li><a href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
+                        <li><a href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
+                        <li><a href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
+                        <li><a href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions' %}</a></li>
+                        <li><a href="#">Купоны</a></li>
+                        <li><a href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стена</a></li>
+
                     </ul>
                 </div>
             {% if user.email %}

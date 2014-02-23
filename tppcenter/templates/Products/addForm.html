@@ -1,0 +1,158 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+
+
+{% csrf_token %}
+    {% with form.fields.NAME.initial as name %}
+    {% with form.fields.IMAGE.initial as image %}
+    {% with form.fields.DETAIL_TEXT.initial as text %}
+    {% with form.fields.COST.initial as cost %}
+    {% with form.fields.ANONS.initial as anons %}
+    {% with form.fields.KEYWORD.initial as keyword %}
+    {% with form.fields.CURRENCY.initial as currnecy %}
+    {% with form.fields.COUPON_DISCOUNT.initial as coupon_discount %}
+    {% with form.fields.DISCOUNT.initial as discount %}
+    {% with form.fields.MEASUREMENT_UNIT.initial as meas_unit %}
+    {% with form.fields.DOCUMENT_1.initial as doc_1 %}
+    {% with form.fields.DOCUMENT_2.initial as doc_2 %}
+    {% with form.fields.DOCUMENT_3.initial as doc_3 %}
+    {% with form.fields.SMALL_IMAGE.initial as small_image %}
+    {% with form.fields.SKU.initial as sku %}
+
+
+    <label for="id_name">Name</label><input type="text" id="id_name" name="NAME" value="{{ name }}"/><span>{{ form.errors.NAME }}</span><br>
+    {% if image %}
+
+        <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
+        <input type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" />Delete<br>
+    {% endif %}
+         <label for="id_image">Image</label><input type="file" id="id_image" name="IMAGE"/>{{ form.errors.IMAGE }}<br>
+
+
+     {% if small_image %}
+
+        <img src="{{ MEDIA_URL }}th/{{ small_image.name }}"><br>
+        <input type="checkbox" name="SMALL_IMAGE-CLEAR" value="{{ small_image }}" />Delete<br>
+    {% endif %}
+    <label for="id_SMALL_IMAGE">SMALL_IMAGE</label><input type="file" id="id_SMALL_IMAGE" name="SMALL_IMAGE"/>{{ form.errors.SMALL_IMAGE }}<br>
+
+
+    <label for="id_cost">Cost</label><input type="text" id="id_cost" name="COST" value="{{ cost }}"/><span>{{ form.errors.COST }}</span><br>
+
+     <label for="id_CURRENCY">CURRENCY</label>{{ form.errors.CURRENCY }}
+        <select id="id_CURRENCY" name="CURRENCY">
+          {% for curr in currency_slots %}
+              <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected {% endif %}>{{ curr.title }}</option>
+        {% endfor %}
+        </select><br>
+
+     <label for="id_discount">Discount</label><input type="text" id="id_discount" name="DISCOUNT" value="{{ discount }}"/><span>{{ form.errors.DISCOUNT }}</span><br>
+
+     <label for="id_coupon_discount">COUPON DISCOUNT</label><input type="text" id="id_coupon_discount" name="COUPON_DISCOUNT" value="{{ coupon_discount }}"/><span>{{ form.errors.COUPON_DISCOUNT }}</span>
+
+      <label for="id_start_date">start</label><input type="datetime-local" id="id_start_date" name="COUPON_DISCOUNT-START" value="{% if coupon_date.title %}{{ coupon_date.start_date|date:'Y-m-d' }}T{{ coupon_date.start_date|date:'H:i' }}{% endif %}"/>
+
+        <label for="id_end_date">end</label><input type="datetime-local" id="id_end_date" name="COUPON_DISCOUNT-END" value="{% if coupon_date.title %}{{ coupon_date.end_date|date:'Y-m-d' }}T{{ coupon_date.end_date|date:'H:i' }}{% endif %}"/><br>
+
+     <label for="id_SKU">SKU</label><input type="text" id="id_SKU" name="SKU" value="{{sku  }}"/><span>{{ form.errors.SKU }}</span><br>
+
+
+       {% if doc_1 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a><br>
+        <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_1">DOCUMENT_1</label><input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/><span>{{ form.errors.DOCUMENT_1 }}</span><br>
+  {% if doc_2 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 2</a><br>
+        <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_2">DOCUMENT_2</label><input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/><span>{{ form.errors.DOCUMENT_2 }}</span><br>
+  {% if doc_3 %}
+
+        <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 3</a><br>
+        <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}" />Delete<br>
+    {% endif %}
+     <label for="id_DOCUMENT_3">DOCUMENT_3</label><input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{ doc_3 }}"/><span>{{ form.errors.DOCUMENT_3 }}</span><br>
+
+
+    <label for="id_detail_text">Detail text</label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>
+
+     <label for="id_anons">Anons</label><textarea cols="40" rows="10" id="id_anons"  name="ANONS" >{{ anons }}</textarea>{{ form.errors.ANONS }}<br>
+
+     <label for="id_keyword">Anons</label><textarea cols="40" rows="10" id="id_keyword"  name="KEYWORD" >{{ keyword }}</textarea>{{ form.errors.KEYWORD }}<br>
+    <label for="id_MEASUREMENT_UNIT">MEASUREMENT_UNIT</label>{{ form.errors.MEASUREMENT_UNIT }}
+        <select id="id_MEASUREMENT_UNIT" name="MEASUREMENT_UNIT">
+          {% for meas in measurement_slots %}
+              <option value="{{ meas.id }}"{% if meas.id == meas_unit %} selected {% endif %}>{{ meas.title }}</option>
+        {% endfor %}
+        </select><br>
+
+
+    <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
+    <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+    <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
+
+
+   {% for i in '012'|make_list %}
+       {% resolve photos i as img %}
+       {% if img %}
+            <img src='{{ MEDIA_URL }}th/{{ img.photo.name }}'>
+            <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete<br>
+            <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" /><br>
+        {% endif %}
+        <label for="id_form-{{ i }}-photo">Avatar:</label><input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" /><br>
+   {% endfor %}
+
+
+        <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" />
+        <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
+        <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
+
+      {% if  pages|length >  0 %}
+        {% for page in  pages %}
+        <label for="id_form-{{ forloop.counter0 }}-title">Title:</label><input id="id_form-{{  forloop.counter0 }}-title" maxlength="128" name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.title }}" /><br>
+        <label for="id_form-{{  forloop.counter0 }}-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.content }}</textarea>
+        {% endfor %}
+      {% else %}
+       <label for="id_form-0-title">Title:</label><input id="id_form-0-title" maxlength="128" name="pages-0-title" type="text" value="" /><br>
+        <label for="id_form-0-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-0-content" name="pages-0-content"></textarea>
+      {% endif %}
+
+
+
+
+
+
+
+
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
+<input type="submit" name="submit">
+</form>
+
+
+
+
+
+
