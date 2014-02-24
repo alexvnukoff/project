@@ -147,15 +147,18 @@
                     escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
                 }
             }
-
-
             $(document).ready(function() {
 
                 ui.init();
 
             });
         </script>
-
+            <script type="text/javascript">
+                $(function() {
+                    $( "#tabs" ).tabs();
+                    $( ".tabfilter" ).tabs();
+                });
+            </script>
     {% endblock %}
 
 {% block body %}
@@ -216,8 +219,10 @@
                 <ul class="list-key">
                 </ul>
                 <div class="search-key">
-                	<input type="text" name="" placeholder="Поиск…" class="text" />
+                <form action="" method="get" name="search">
+                	<input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
                     <input type="submit" name="" value="" class="i-search imgnews" />
+                </form>
                 </div>
             </div>
 

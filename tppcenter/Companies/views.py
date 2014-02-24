@@ -14,17 +14,15 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
 from core.tasks import addNewCompany
-
+from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
-from haystack.query import SearchQuerySet
 
 def get_companies_list(request, page=1):
 
-    styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
     newsPage = _companiesContent(request, page)
@@ -44,11 +42,6 @@ def get_companies_list(request, page=1):
 
         current_section = "Companies"
 
-        countries = Country.objects.all()
-        countries_ids = [country.pk for country in countries]
-
-        countries = Item.getItemsAttributesValues('NAME', countries_ids)
-
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
@@ -56,7 +49,7 @@ def get_companies_list(request, page=1):
             'notification': notification,
             'scripts': scripts,
             'styles': styles,
-            'countries': countries
+            'search': request.GET.get('q', '')
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -70,19 +63,58 @@ def _companiesContent(request, page=1):
     filters, searchFilter = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
-    companies = SearchQuerySet().models(Company).filter(**searchFilter)
+    sqs = SearchQuerySet().models(Company)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+
+    companies = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
                                                                'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
                                                   page_num=5, page=page)
 
     companyList = result[0]
-    countries_id = [comp.country for comp in companies]
+    company_ids = [id for id in companyList.keys()]
+    countries = Country.objects.filter(p2c__child__in=company_ids).values('p2c__child', 'pk')
+    countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
 
-    for comp in companies:
-        country_dict[comp.id] = comp.country
+    for country in countries:
+        country_dict[country['p2c__child']] = country['pk']
 
     for id, company in companyList.items():
         toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
@@ -97,8 +129,20 @@ def _companiesContent(request, page=1):
 
     url_paginator = "companies:paginator"
     template = loader.get_template('Companies/contentPage.html')
-    context = RequestContext(request, {'companyList': companyList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator, 'filters': filters})
+
+    templateParams = {
+        'companyList': companyList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
 
     return template.render(context)
 

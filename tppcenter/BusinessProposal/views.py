@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, HttpResponse
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
@@ -14,41 +14,94 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
+import json
+from haystack.query import SearchQuerySet, SQ
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
 def get_proposals_list(request, page=1):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-    current_section = "Business Proposal"
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
 
     proposalsPage = _proposalsContent(request, page)
 
+    if not request.is_ajax():
+        user = request.user
 
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "Business Proposal"
 
+        templateParams = {
+            'user_name': user_name,
+            'current_section': current_section,
+            'proposalsPage': proposalsPage,
+            'notification': notification,
+            'scripts': scripts,
+            'styles': styles,
+            'search': request.GET.get('q', '')
+        }
 
-
-
-    return render_to_response("BusinessProposal/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'proposalsPage': proposalsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
+        return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': proposalsPage}))
 
 
 def _proposalsContent(request, page=1):
-    proposal = BusinessProposal.active.get_active_related().order_by('-pk')
+
+    filters, searchFilter = func.filterLive(request)
+
+    #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
+    sqs = SearchQuerySet().models(BusinessProposal)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+    proposal = sqs.order_by(*order)
+
+    #result = func.setPaginationForItemsWithValues(proposal, *('NAME',), page_num=5, page=page)
+    result = func.setPaginationForSearchWithValues(proposal, *('NAME',), page_num=5, page=page)
 
 
-    result = func.setPaginationForItemsWithValues(proposal, *('NAME',),
-                                                  page_num=5, page=page)
 
     proposalList = result[0]
     proposal_ids = [id for id in proposalList.keys()]
@@ -83,8 +136,19 @@ def _proposalsContent(request, page=1):
 
     url_paginator = "proposals:paginator"
     template = loader.get_template('BusinessProposal/contentPage.html')
-    context = RequestContext(request, {'proposalList': proposalList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
+
+    templateParams = {
+        'proposalList': proposalList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
     return template.render(context)
 
 

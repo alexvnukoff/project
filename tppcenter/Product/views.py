@@ -14,24 +14,23 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+from haystack.query import SQ, SearchQuerySet
 import json
-
 from core.tasks import addProductAttrubute
 from django.conf import settings
 
 
-def get_product_list(request, page=1):
+def get_product_list(request, page=1, item_id=None):
 
-
-    if id is None:
+    if item_id is None:
         productsPage = _productContent(request, page)
     else:
-        productsPage = _getDetailContent(request, id)
+        productsPage = _getDetailContent(request, item_id)
 
     styles = []
     scripts = []
 
-    if not request.is_ajax():
+    if not request.is_ajax() or item_id:
         user = request.user
         if user.is_authenticated():
             notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -50,7 +49,8 @@ def get_product_list(request, page=1):
                 'productsPage': productsPage,
                 'notification': notification,
                 'scripts': scripts,
-                'styles': styles
+                'styles': styles,
+                'search': request.GET.get('q', '')
         }
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
@@ -59,11 +59,51 @@ def get_product_list(request, page=1):
 
 
 def _productContent(request, page=1):
-    #TODO Jenya change to get_active_related()
-    products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
+    #TODO: Jenya change to get_active_related()
+    #products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
 
+    filters, searchFilter = func.filterLive(request)
 
-    result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
+    sqs = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+    products = sqs.order_by(*order)
+
+    result = func.setPaginationForSearchWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
+    #result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
 
     productsList = result[0]
     products_ids = [id for id in productsList.keys()]
@@ -88,8 +128,19 @@ def _productContent(request, page=1):
 
     url_paginator = "products:paginator"
     template = loader.get_template('Products/contentPage.html')
-    context = RequestContext(request, {'productsList': productsList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
+
+    templateParams = {
+        'productsList': productsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
     return template.render(context)
 
 

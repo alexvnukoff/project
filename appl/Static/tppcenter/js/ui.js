@@ -62,6 +62,7 @@ $(document).ready(function() {
             container: ".news-center .container",
             keywords: null,
             filter_form: null,
+            search_form: null,
             curPage: null,
             scripts: [],
             styles: [],
@@ -97,6 +98,7 @@ $(document).ready(function() {
                 ui.curPage = $('.cur-page');
                 ui.keywords = $('.keyword .list-key');
                 ui.filter_form = $('form[name="filter-form"]');
+                ui.search_form = $('form[name="search"]');
 
                 ui.initFilters();
 
@@ -108,6 +110,20 @@ $(document).ready(function() {
                 $(document).on('click', '.filter-remove', ui.onRemove);
                 $(document).on('click', '#save-filter', ui.saveFilter);
                 $(document).on('click', '.panging a', ui.pageNav);
+                $(document).on('submit', 'form[name="search"]', ui.search);
+            },
+
+            search: function() {
+                var val = $(this).find('input[name="q"]').val();
+
+                if (val.length > 0 && val.length < 3)
+                    return false;
+
+                url = UpdateQueryString("q", val);
+                params = url.replace(window.location.origin + window.location.pathname, '');
+                ui.requester(window.location.pathname, params.substr(1));
+
+                return false;
             },
 
             pageNav: function() {
@@ -141,18 +157,25 @@ $(document).ready(function() {
                 ui.setFilters(filters, true);
                 $(".filter-form, #fade-profile").hide();
                 ui.filterPageLoad();
-                ui.initFilters()
+
             },
 
             filterPageLoad: function() {
                 var params = ui.filter_form.serialize();
+                var search = ui.search_form.serialize();
+
+                if (params != '')
+                    params += '&' + search;
+                else
+                    params = search;
 
                 ui.requester(window.location.pathname, params)
+
             },
 
-            onRemove: function() {
+            onRemove: function() { //Filter key removed
 
-                link = $(this).parent()
+                link = $(this).parent();
                 id = link.data('id');
                 ui.filter_form.find('input[value="' + id + '"].filter-item').remove();
                 link.parent().remove();
@@ -216,6 +239,7 @@ $(document).ready(function() {
 
             onClick: function() { //On menu click
                 $(document).trigger(ui.signals.link_click, $(this));
+                ui.search_form.find('input[name="q"]').val('');
 
                 url = $(this).attr('href');
                 text = $(this).text();
@@ -253,11 +277,12 @@ $(document).ready(function() {
                 ui.setFilters(data.filters);
 
                 $(ui.container).replaceWith( data.content );
+                ui.filter_form = $('form[name="filter-form"]');
+                ui.initFilters();
             },
 
             clearer: function() { //clear all filters
                 ui.filter_form.find('input[name].filter-item').remove();
-                //ui.keywords.html('');
             },
 
            setFilters: function(filters, disableInit)
@@ -327,6 +352,8 @@ $(document).ready(function() {
 
                 History.pushState(null, null, history);
                 $(document).trigger(ui.signals['start_load']);
+
+
 
                 return  $.get(url, params, function(data) {
                     $(document).trigger(ui.signals['end_load'], [url, data]);

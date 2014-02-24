@@ -473,10 +473,11 @@ def getAnalytic(params = None):
 
 def filterLive(request):
     searchFilter = {}
-    filterList = ['tpp', 'country']
     filtersIDs = {}
     filters = {}
     ids = []
+
+    filterList=['tpp', 'country', 'branch', 'category']
 
     for name in filterList:
         filtersIDs[name] = []

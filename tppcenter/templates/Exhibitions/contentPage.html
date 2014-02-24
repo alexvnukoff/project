@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
- <div class="companies">
+<div class="container">
+     <div class="companies">
            {% include "main/paginator.html" %}
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in exhibitionsList.items %}
@@ -38,4 +39,5 @@
 
             </ul>
            {% include "main/paginator.html" %}
+    </div>
 </div>

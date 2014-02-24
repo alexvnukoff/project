@@ -1,8 +1,142 @@
 __author__ = 'Art'
 from haystack import indexes
-from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories
+from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
+    BusinessProposal, Exhibition
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
+
+
+class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    title = indexes.CharField(null=True)
+    tpp = indexes.IntegerField(null=True)
+    country = indexes.IntegerField(null=True)
+    branch = indexes.MultiValueField(null=True)
+    id = indexes.IntegerField()
+
+    def index_queryset(self, using=None):
+        return self.get_model().active
+
+    def get_model(self):
+        return Exhibition
+
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(ExhibitionProposalIndex, self).prepare(obj)
+
+        field_to_attr = {
+            'title': 'NAME',
+            'text': 'DETAIL_TEXT',
+        }
+
+        attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
+
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+            return self.prepared_data
+
+        for field_name, field in self.fields.items():
+            if field_name in field_to_attr:
+                attr = field_to_attr[field_name]
+
+                if attr not in attributes:
+                    continue
+
+                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        tppIndex = self.fields['tpp'].index_fieldname
+        countryIndex = self.fields['country'].index_fieldname
+
+        try:
+            tpp = Tpp.objects.get(p2c__child_id=obj.pk, p2c__type="dependence").pk
+
+            self.prepared_data[tppIndex] = tpp
+        except ObjectDoesNotExist:
+            return self.prepared_data
+
+        try:
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=tpp, p2c__type="dependence").pk
+
+        except ObjectDoesNotExist:
+            return self.prepared_data
+
+        return self.prepared_data
+
+    def prepare_branch(self, obj):
+        try:
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            return [branch.pk for branch in branches]
+        except ObjectDoesNotExist:
+            return None
+
+class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    title = indexes.CharField(null=True)
+    tpp = indexes.IntegerField(null=True)
+    country = indexes.IntegerField(null=True)
+    company = indexes.IntegerField(null=True)
+    branch = indexes.MultiValueField(null=True)
+    id = indexes.IntegerField()
+
+    def index_queryset(self, using=None):
+        return self.get_model().active
+
+    def get_model(self):
+        return BusinessProposal
+
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(BusinessProposalIndex, self).prepare(obj)
+
+        field_to_attr = {
+            'title': 'NAME',
+            'text': 'DETAIL_TEXT',
+        }
+
+        attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
+
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+            return self.prepared_data
+
+        for field_name, field in self.fields.items():
+            if field_name in field_to_attr:
+                attr = field_to_attr[field_name]
+
+                if attr not in attributes:
+                    continue
+
+                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        try:
+            comp = Company.objects.get(p2c__child_id=obj.pk, p2c__type="dependence").pk
+
+            countryIndex = self.fields['country'].index_fieldname
+            companyIndex = self.fields['company'].index_fieldname
+
+            self.prepared_data[companyIndex] = comp
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp, p2c__type="dependence").pk
+        except ObjectDoesNotExist:
+            return self.prepared_data
+
+        try:
+            tppIndex = self.fields['tpp'].index_fieldname
+            self.prepared_data[countryIndex] = Tpp.objects.get(p2c__child_id=comp, p2c__type="relation").pk
+        except ObjectDoesNotExist:
+            return self.prepared_data
+
+        return self.prepared_data
+
+    def prepare_branch(self, obj):
+        try:
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            return [branch.pk for branch in branches]
+        except ObjectDoesNotExist:
+            return None
 
 class CountryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
@@ -17,6 +151,34 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare(self, obj):
         self.prepared_data = super(CountryIndex, self).prepare(obj)
+
+        attr = obj.getAttributeValues('NAME')
+
+        if len(attr) == 0 or attr[0] == '':
+            return self.prepared_data
+
+        textIndex = self.fields['text'].index_fieldname
+        titleAutoIndex = self.fields['title_auto'].index_fieldname
+
+
+        self.prepared_data[textIndex] = attr[0]
+        self.prepared_data[titleAutoIndex] = attr[0]
+
+        return self.prepared_data
+
+class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    id = indexes.IntegerField()
+    title_auto = indexes.NgramField(null=True)
+
+    def get_model(self):
+        return Category
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(CategoryIndex, self).prepare(obj)
 
         attr = obj.getAttributeValues('NAME')
 
@@ -189,7 +351,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
     id = indexes.IntegerField()
-    site = indexes.MultiValueField(null=True)
+    sites = indexes.MultiValueField(null=True)
 
     def prepare_id(self, object):
         return object.pk
@@ -281,10 +443,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         return self.prepared_data
 
-    def prepare_categories(self, object):
+    def prepare_categories(self, obj):
+
         try:
-            categories = Category.objects.filter(p2c__child_id=object.pk, p2c__type='relation')
-            return [category.pk for category in categories]
+            categories = Category.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            categoryList = []
+
+            for category in categories:
+                hierarchy = Category.hierarchy.getDescendants(category.pk, includeSelf=True)
+                categoryList += [int(cat['ID']) for cat in hierarchy if cat['ID'] not in categoryList]
+
+            return categoryList
         except ObjectDoesNotExist:
             return None
 
@@ -294,6 +463,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return [branch.pk for branch in branches]
         except ObjectDoesNotExist:
             return None
+
+    def prepare_sites(self, obj):
+        return [site.pk for site in obj.sites.all()]
 
     def get_model(self):
         return Product
