@@ -65,34 +65,59 @@ def databaseInitialization(sender, **kwargs):
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
 
+    attributes = {  'ADDRESS': 'Chr',
+                    'ADDRESS_YURID': 'Chr',
+                    'ADDRESS_FACT': 'Chr',
+                    'ADDRESS_COUNTRY': 'Chr',
+                    'ADDRESS_CITY': 'Chr',
+                    'ADDRESS_ZIP': 'Chr',
+                    'AUTHOR_NAME': 'Chr',
+                    'ANONS': 'Str',
+                    'BANK_ACCOUNT': 'Chr',
+                    'BANK_NAME': 'Chr',
+                    'COST': 'Flo',
+                    'COUPON_DISCOUNT': 'Flo',
+                    'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
+                    'DETAIL_TEXT': 'Str',
+                    'DISCOUNT': 'Flo',
+                    'DOCUMENT_1': 'Ffl',
+                    'DOCUMENT_2': 'Ffl',
+                    'DOCUMENT_3': 'Ffl',
+                    'EMAIL': 'Chr',
+                    'FAX': 'Chr',
+                    'FILE': 'Ffl',
+                    'FLAG': 'Img',
+                    'IMAGE': 'Img',
+                    'IMAGE_SMALL': 'Img',
+                    'INN': 'Chr',
+                    'KEYWORD': 'Str',
+                    'KPP': 'Chr',
+                    'MEASUREMENT_UNIT': {'type': 'Chr', 'slots': ['kg', 'piece']},
+                    'MAP_POSITION': 'Chr',
+                    'NAME': 'Chr',
+                    'NAME_FULL': 'Chr',
+                    'NAME_DIRECTOR': 'Chr',
+                    'NAME_BUX': 'Chr',
+                    'OKATO': 'Chr',
+                    'OKVED': 'Chr',
+                    'OKPO': 'Chr',
+                    'POSITION': 'Chr',
+                    'SITE_NAME': 'Chr',
+                    'SKU': 'Chr',
+                    'SLOGAN': 'Chr',
+                    'SLUG': 'Chr',
+                    'TELEPHONE_NUMBER': 'Chr',
+                    'TPP': 'Chr',
+                    'YOUTUBE_CODE': 'Chr'}
 
-    #Creating default attrubutes, when syncDB
-    #attributes = {NAME_OF_ATTRIBUTE:TYPE_OF_ATTRIBUTE}
-    #if  is dictionary: attributes = {"NAME_OF_ATTRIBUTE": {'type': 'TYPE_OF_ATTRIBUTE', 'slots': ['SLOT1', 'SLOT2']}}
-
-    attributes = {'SKU': 'Chr', 'IMAGE': 'Img', 'SMALL_IMAGE': 'Img', 'KEYWORD': 'Str', 'DOCUMENT_1': 'Ffl',
-                   'DOCUMENT_2': 'Ffl', 'DOCUMENT_3': 'Ffl', 'DISCOUNT': 'Flo',
-                   "MEASUREMENT_UNIT": {'type': 'Chr', 'slots': ['kg', 'piece']}, 'ANONS': 'Str', 'YOUTUBE_CODE': 'Chr',
-                   'INN': 'Chr', 'FAX': 'Chr', 'TELEPHONE_NUMBER': 'Chr', 'SITE_NAME': 'Chr', 'ADDRESS': 'Chr',
-                   'SLUG': 'Chr', 'COUPON_DISCOUNT': 'Flo', 'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR']},
-                   'DETAIL_TEXT': 'Str', 'FILE': 'Ffl', 'COUNTRY': 'Chr', 'CITY': 'Chr', 'COST': 'Flo',
-                   'POSITION': 'Chr', 'AUTHOR_NAME': 'Chr', 'TPP': 'Chr', 'FLAG': 'Img', 'NAME': 'Chr'}
-
-    for attribue, type in attributes.items():
+    for attribute, type in attributes.items():
         if isinstance(type, dict):
-            dictr, created = Dictionary.objects.get_or_create(title=attribue)
-            Attribute.objects.get_or_create(title=attribue, type=type['type'], dict=dictr)
+            dictr, created = Dictionary.objects.get_or_create(title=attribute)
+            Attribute.objects.get_or_create(title=attribute, type=type['type'], dict=dictr)
             for slot in type['slots']:
                 Slot.objects.get_or_create(title=slot, dict=dictr)
         else:
-            Attribute.objects.get_or_create(title=attribue, type=type)
-
-
-
-
-
-
-
+            Attribute.objects.get_or_create(title=attribute, type=type)
 
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)

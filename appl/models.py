@@ -93,7 +93,7 @@ class Company(Organization):
 
 
     def getDescription(self):
-        desc = self.getAttributeValues('DETAIL_TEXT')
+        desc = self.getAttributeValues('TEXT_DETAIL')
         return desc[0] if desc else ''
 
     def getCountry(self):

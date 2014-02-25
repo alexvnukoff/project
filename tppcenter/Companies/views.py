@@ -14,55 +14,18 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
 from core.tasks import addNewCompany
-
+from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
-from haystack.query import SearchQuerySet
 
 def get_companies_list(request, page=1):
 
-
-
-    styles = [settings.STATIC_URL + 'tppcenter/css/company.css']
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
-    searchFilter = {}
-    filterList = ['tpp', 'country']
-    filtersIDs = {}
-    filters = {}
-    ids = []
-
-    for name in filterList:
-        filtersIDs[name] = []
-        filters[name] = []
-
-        for pk in request.GET.getlist('filter[' + name + '][]', []):
-            try:
-                filtersIDs[name].append(int(pk))
-            except ValueError:
-                continue
-
-        ids += filtersIDs[name]
-
-    if len(ids) > 0:
-        attributes = Item.getItemsAttributesValues('NAME', ids)
-
-        for pk, attr in attributes.items():
-
-            if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
-                continue
-
-            for name, id in filtersIDs.items():
-                if pk in id:
-                    filters[name].append({'id': pk, 'text': attr['NAME'][0]})
-
-                if len(id):
-                    searchFilter[name + '__in'] = id
-
-    newsPage = _companiesContent(request, page, searchFilter)
+    newsPage = _companiesContent(request, page)
 
     if not request.is_ajax():
         user = request.user
@@ -79,11 +42,6 @@ def get_companies_list(request, page=1):
 
         current_section = "Companies"
 
-        countries = Country.objects.all()
-        countries_ids = [country.pk for country in countries]
-
-        countries = Item.getItemsAttributesValues('NAME', countries_ids)
-
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
@@ -91,24 +49,62 @@ def get_companies_list(request, page=1):
             'notification': notification,
             'scripts': scripts,
             'styles': styles,
-            'countries': countries,
-            'filters': filters
+            'search': request.GET.get('q', '')
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage, 'filters': filters}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
-def _companiesContent(request, page=1, searchFilter={}):
+def _companiesContent(request, page=1):
+
+    filters, searchFilter = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
-    companies = SearchQuerySet().models(Company).filter(**searchFilter)
+    sqs = SearchQuerySet().models(Company)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+
+    companies = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
                                                                'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
-                                                  page_num=2, page=page)
+                                                  page_num=5, page=page)
 
     companyList = result[0]
     company_ids = [id for id in companyList.keys()]
@@ -133,8 +129,21 @@ def _companiesContent(request, page=1, searchFilter={}):
 
     url_paginator = "companies:paginator"
     template = loader.get_template('Companies/contentPage.html')
-    context = RequestContext(request, {'companyList': companyList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
+
+    templateParams = {
+        'companyList': companyList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
+
     return template.render(context)
 
 

@@ -48,6 +48,14 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
 .tabfilter-content .big-selector {
     width: 100%;
 }
+
 .video-details {
     text-align: center;
+}
+
+.sxform .note a.sortCurr {
+    text-decoration: none !important;
+    color: #000;
+    cursor: pointer;
+
 }

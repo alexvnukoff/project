@@ -1,0 +1,93 @@
+{% load i18n %}
+<div class="popuplifter">
+    <div class="filter-form">
+        <i class="close-event imgnews"></i>
+        <span class="title">{% trans "Filter" %}</span>
+
+         <form action="" method="GET" name="filter-form">
+            {% block filterTopContent %}
+
+            {% endblock %}
+
+            {% block filterBottomContent %}
+            <!--
+                <div class="communities">
+                    <b>Сообщества</b>
+                    <input type="radio" checked="checked" name="filter" value="all" class="radi" /> {% trans "All" %}
+                    <input type="radio" name="filter" value="my" class="radi" /> {% trans "My" %}
+                </div>
+            -->
+                <div class="sx">{% trans "Sorting" %}</div>
+
+                <div class="sxform">
+
+                    <div class="clumn1">
+
+                        <label>{% trans "Field" %}1</label>
+
+                        <select name="sortField1">
+
+                            <option {% if sortField1 == 'date' %}selected="selected"{% endif %} value="date">
+                                {% trans "Creation date" %}
+                            </option>
+                            <option {% if sortField1 == 'name' %}selected="selected"{% endif %} value="name">
+                                {% trans "Title" %}
+                            </option>
+                        </select>
+
+                        <span class="note">
+
+                            <input type="hidden" name="order1" value="{% if order1 == 'asc' %}asc{% else %}desc{% endif %}" />
+
+                            <a href="#" data-order="desc" class="{% if order1 == 'asc' %}sortActive{% else %}sortCurr{% endif %}">
+                                {% trans "Descending" %}</a>
+
+                            <a href="#" data-order="asc" class="{% if order1 == 'asc' %}sortCurr{% else %}sortActive{% endif %}">
+                                {% trans "Ascending" %}</a>
+
+                        </span>
+
+                    </div>
+
+                    <div class="clumn2">
+
+                        <label>{% trans "Field" %}2</label>
+
+                        <select name="sortField2">
+
+                            <option></option>
+                            <option {% if sortField2 == 'date' %}selected="selected"{% endif %} value="date">{% trans "Creation date" %}</option>
+                            <option {% if sortField2 == 'name' %}selected="selected"{% endif %} value="name">{% trans "Title" %}</option>
+
+                        </select>
+
+                        <span class="note">
+
+                            <input type="hidden" name="order2" value="{% if order2 == 'asc' %}asc{% else %}desc{% endif %}" />
+
+                            <a href="#" data-order="desc" class="{% if order2 == 'asc' %}sortActive{% else %}sortCurr{% endif %}">
+                                {% trans "Descending" %}</a>
+
+                            <a href="#" data-order="asc" class="{% if order2 == 'asc' %}sortCurr{% else %}sortActive{% endif %}">
+                                {% trans "Ascending" %}</a>
+                        </span>
+
+                    </div>
+
+                    <div class="filterbtn">
+                        <a id="save-filter" href="#" class="btntype2">{% trans "Apply" %}</a>
+                        <a href="#" class="btntype1">{% trans "Close" %}</a>
+                    </div>
+
+                </div>
+            {% endblock %}
+
+         </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+	    $( "#tabs" ).tabs();
+        $( ".tabfilter" ).tabs();
+    });
+</script>

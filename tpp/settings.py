@@ -108,6 +108,7 @@ DATABASES = {
     'default': {
         #'ENGINE': 'oraclepool',
         'ENGINE': 'django.db.backends.oracle',
+
         'NAME': 'TPPDB',
         'USER': 'tppProduction',
         'PASSWORD': 'TrQwE123$%^;',
@@ -217,7 +218,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
+        'URL': 'ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }

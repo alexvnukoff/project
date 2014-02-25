@@ -14,11 +14,10 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
+from haystack.query import SQ, SearchQuerySet
+import json
 from django.core.exceptions import ObjectDoesNotExist
 
-
-import json
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
@@ -49,7 +48,8 @@ def get_news_list(request, page=1):
             'notification': notification,
             'newsPage': newsPage,
             'scripts': scripts,
-            'styles': styles
+            'styles': styles,
+            'search': request.GET.get('q', '')
         }
 
         return render_to_response("News/index.html", tempalteParams, context_instance=RequestContext(request))
@@ -57,10 +57,51 @@ def get_news_list(request, page=1):
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 def _newsContent(request, page=1):
-    news = News.active.get_active().order_by('-pk')
 
+    filters, searchFilter = func.filterLive(request)
 
-    result = func.setPaginationForItemsWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
+    #news = News.active.get_active().order_by('-pk')
+
+    sqs = SearchQuerySet().models(News)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+    news = sqs.order_by(*order)
+
+    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
+    #result = func.setPaginationForItemsWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
 
     newsList = result[0]
     news_ids = [id for id in newsList.keys()]
@@ -74,8 +115,20 @@ def _newsContent(request, page=1):
 
     url_paginator = "news:paginator"
     template = loader.get_template('News/contentPage.html')
-    context = RequestContext(request, {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
+
+    templateParams = {
+        'newsList': newsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
     return template.render(context)
 
 
