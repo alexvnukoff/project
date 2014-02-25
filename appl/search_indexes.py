@@ -293,8 +293,8 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return self.get_model().active
 
-    def prepare_id(self, object):
-        return object.pk
+    def prepare_id(self, obj):
+        return obj.pk
 
     def prepare(self, object):
         self.prepared_data = super(TppIndex, self).prepare(object)
