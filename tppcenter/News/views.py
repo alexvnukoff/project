@@ -222,7 +222,10 @@ def updateNew(request, item_id):
 
 
 
-def detail(request, id):
+def detail(request, item_id):
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
 
     user = request.user
     if user.is_authenticated():
@@ -238,16 +241,21 @@ def detail(request, id):
 
 
 
-    newsPage = _getdetailcontent(request, id)
+    newsPage = _getdetailcontent(request, item_id)
+
+
+    templateParams = {
+        'user_name': user_name,
+        'current_section': current_section,
+        'newsPage': newsPage,
+        'notification': notification,
+        'styles': styles,
+        'scripts': scripts
+    }
 
 
 
-
-
-
-    return render_to_response("News/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
-                              context_instance=RequestContext(request))
+    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
 
 
 
