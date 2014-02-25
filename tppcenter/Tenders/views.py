@@ -50,30 +50,7 @@ def _tendersContent(request, page=1):
     result = func.setPaginationForItemsWithValues(tenders, *('NAME', 'COST', 'CURRENCY', 'SLUG'), page_num=5, page=page)
     tendersList = result[0]
     tenders_ids = [id for id in tendersList.keys()]
-    organizations = Organization.objects.filter(p2c__child__in=tenders_ids).values('c2p__parent__country', 'pk', 'p2c__child__tender')
-    organization_dict = {}
-    country_dict = {}
-    for organization in organizations:
-        organization_dict[organization['p2c__child__tender']] = organization['pk']
-        country_dict[organization['p2c__child__tender']] = organization['c2p__parent__country']
-
-    countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), country_dict.values())
-    organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organization_dict.values())
-
-
-    for id, tender in tendersList.items():
-
-        if organization_dict.get(id, False):
-            orgToUpdate = {'ORG_NAME': organizationsList[organization_dict[id]].get('NAME', [""]),
-                          'ORG_FLAG': organizationsList[organization_dict[id]].get('FLAG', [""]),
-                          'ORG_ID': organization_dict[id]}
-            tender.update(orgToUpdate)
-
-        if country_dict.get(id, False):
-            countryUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [""]),
-                            'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [""]),
-                            'COUNTRY_ID': country_dict[id]}
-            tender.update(countryUpdate)
+    func.addDictinoryWithCountryAndOrganization(tenders_ids, tendersList)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -99,26 +76,12 @@ def _tenderDetailContent(request, item_id):
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-     country = Country.objects.get(p2c__child__p2c__child=item_id)
-
-
-
-
-     company = Organization.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'FLAG', 'IMAGE')
-     companyValues.update({'COMPANY_ID': company.id})
-
-
-     countriesList = country.getAttributeValues("NAME", 'FLAG')
-     toUpdate = {'COUNTRY_NAME': countriesList.get('NAME', 0),
-                 'COUNTRY_FLAG': countriesList.get('FLAG', 0),
-                 'COUNTRY_ID':  country.id}
-     companyValues.update(toUpdate)
+     func.addToItemDictinoryWithCountryAndOrganization(tender.id, tenderValues)
 
      template = loader.get_template('Tenders/detailContent.html')
 
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
-                                        'additionalPages': additionalPages, 'companyValues': companyValues})
+                                        'additionalPages': additionalPages})
      return template.render(context)
 
 

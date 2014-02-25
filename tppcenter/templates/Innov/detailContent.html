@@ -1,0 +1,141 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="tender">
+            {% with innovValues.NAME.0 as name %}
+            {% with innovValues.COST.0 as cost %}
+            {% with innovValues.BRANCH_NAME.0 as branch_name %}
+            {% with innovValues.BRANCH_ID.0 as branch_id %}
+            {% with innovValues.CURRENCY.0 as currency %}
+            {% with innovValues.DETAIL_TEXT.0 as content %}
+            {% with innovValues.DOCUMENT_1.0 as doc_1 %}
+            {% with innovValues.PRODUCT_NAME.0 as product_name %}
+            {% with innovValues.REALESE_DATE.0 as realese_date %}
+            {% with innovValues.BUSINESS_PLAN.0 as bussines_plan %}
+            {% with innovValues.ORGANIZATION_FLAG.0 as org_flag %}
+            {% with innovValues.ORGANIZATION_NAME.0 as org_name %}
+            {% with innovValues.ORGANIZATION_IMAGE.0 as org_image %}
+            {% with innovValues.ORGANIZATION_ID.0 as org_id %}
+            {% with innovValues.COUNTRY_NAME|first as country_name %}
+            {% with innovValues.COUNTRY_FLAG|first as flag %}
+             {% with innovValues.COUNTRY_ID as country_id %}
+
+
+               <div class="tender-details-title">
+               		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+                    <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
+               </div>
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="tender-bottom">
+                    	<div class="tender-bottom-left">
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                            <a href="#">{{ org_name }}</a>
+                            </div>
+                    </div>
+                    <div class="innov-details">
+                    	<p>{{ content }}</p>
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">Главная</a></li>
+                                <li><a href="#goods-tabs-2">Бизнес-план</a></li>
+                                <li><a href="#goods-tabs-3">Галерея</a></li>
+                                <li><a href="#goods-tabs-4">Контакты</a></li>
+                                {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	<ul class="innov-tab-content">
+                                	<li>
+                                    	<span class="left">Продукт: </span>
+                                        <span class="right">{{ product_name }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">Отрасль: </span>
+                                        <span class="right">{{ branch_name }} </span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">Сумма: </span>
+                                        <span class="right">{{ currency|getSymbol }} {{ cost }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">Планируемая дата: </span>
+                                        <span class="right">{{ realese_date }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+                                {% if doc_1 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to Business Plan File' %}</a> </p>
+                                {% endif %}
+                                     <p>{{ bussines_plan }}</p>
+
+                            </div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                <ul class="tpp-gallery">
+                              {% for photo in photos %}
+                                <li>
+                                    <div class="b-img">
+                                        <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+
+                                        <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
+                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                        <div class="gray-img"></div>
+                                    </div>
+                                </li>
+                              {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-4">
+                            <div class="content-goods-tab">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
+                        </div>
+                        {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.content }}</div>
+                         </div>
+                        {% endfor %}
+                    </div>
+               </div>
+
+
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+     </div>
+
+

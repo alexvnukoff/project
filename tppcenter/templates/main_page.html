@@ -14,16 +14,21 @@
     {% block styles %}
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+
     {% endblock %}
 
     {% block js %}
+
+
         {{  block.super }}
         <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
         <script type="text/javascript">
+
             $(document).ready(function(e) {
                 $('#thumbs').delegate('img','click', function(){
                     $('#largeImage').attr('src',$(this).attr('src').replace('thumb','large'));
                 });
+
             });
         </script>
         <script>
@@ -205,6 +210,7 @@
                         <li><a href="#">Купоны</a></li>
                         <li><a href="#">ТПП ТВ </a></li>
                         <li><a href="#">Вакансии</a></li>
+                        <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                         <li><a href="#">Стена</a></li>
                     </ul>
                 </div>

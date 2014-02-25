@@ -272,3 +272,92 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
 
 
     return True
+
+
+
+
+def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+    gallery = Photo(post, files)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
+
+    valPost = ('NAME', 'CITY','KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
+               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR')
+    valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
+    values = {}
+    for val in valPost:
+        values[val] = post.get(val, "")
+    for val in valFiles:
+        values[val] = files.get(val, "")
+
+
+
+
+
+    form = ItemForm('Exhibition', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+
+
+    proposal = form.save(user, site_id)
+    if proposal:
+
+        if branch:
+            branch = Branch.objects.get(pk=branch)
+            rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id)
+            Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
+            Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
+
+
+        gallery.save(parent=proposal.id, user=user)
+        pages.save(parent=proposal.id, user=user)
+        func.notify("item_created", 'notification', user=user)
+
+
+    return True
+
+
+
+
+def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+    gallery = Photo(post, files)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
+    valPost = ('NAME', 'PRODUCT_NAME','COST', 'CURRENCY', 'TARGET_AUDIENCE', 'REALESE_DATE', 'DOCUMENT_1-CLEAR',
+               'REALESE_DATE', 'SITE_NAME', 'KEYWORD', 'DETAIL_TEXT', 'BUSINESS_PLAN')
+    valFiles = ('DOCUMENT_1', )
+    values = {}
+    for val in valPost:
+        values[val] = post.get(val, "")
+    for val in valFiles:
+        values[val] = files.get(val, "")
+
+    form = ItemForm('InnovationProject', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+    project = form.save(user, site_id)
+
+    if project:
+        if branch:
+            branch = Branch.objects.get(pk=branch)
+            rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=project.id)
+            Relationship.objects.filter(parent__in=Branch.objects.all(), child=project.id).delete()
+            Relationship.setRelRelationship(parent=branch, child=project, user=user)
+
+
+        gallery.save(parent=project.id, user=user)
+        pages.save(parent=project.id, user=user)
+        func.notify("item_created", 'notification', user=user)
+
+
+    return True
