@@ -44,7 +44,10 @@ class L_Company(models.Model):
     btx_id = models.CharField(max_length=10, unique=True)
     short_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    preview_text = models.TextField(max_length=4096)
     detail_picture = models.CharField(max_length=1024)
+    detail_text = models.TextField(max_length=4096)
     create_date = models.DateField(null=True, blank=True)
     tpp_name = models.CharField(max_length=1024)
     moderator = models.CharField(max_length=1024)
@@ -82,10 +85,13 @@ class L_Product(models.Model):
     '''
         Defines buffer table for reloading products' data from CSV file
     '''
-    btx_id = models.CharField(max_length=10, unique=True)
+    btx_id = models.CharField(max_length=10)
     prod_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    preview_text = models.TextField(max_length=4096)
     detail_picture = models.CharField(max_length=1024)
+    detail_text = models.TextField(max_length=4096)
     create_date = models.DateField(null=True, blank=True)
     company_id = models.CharField(max_length=40)
     photos1 = models.CharField(max_length=1024)
