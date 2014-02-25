@@ -2,6 +2,58 @@
  * Created by user on 19.02.14.
  */
 
+$(document).ready(function() {
+       function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function sameOrigin(url) {
+            // test that a given url is a same-origin URL
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                     var csrftoken = getCookie('csrftoken');
+                    // Send the token to same-origin, relative URLs only.
+                    // Send the token only if the method warrants CSRF protection
+                    // Using the CSRFToken value acquired earlier
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+});
+
 
        var ui = {
 
@@ -10,6 +62,7 @@
             container: ".news-center .container",
             keywords: null,
             filter_form: null,
+            search_form: null,
             curPage: null,
             scripts: [],
             styles: [],
@@ -24,6 +77,11 @@
                tpp: {
                    selector: '#filter-tpp',
                    name: 'filter[tpp]' //hidden input name
+               },
+
+               branch: {
+                   selector: '#filter-branch',
+                   name: 'filter[branch]' //hidden input name
                }
            },
 
@@ -40,6 +98,7 @@
                 ui.curPage = $('.cur-page');
                 ui.keywords = $('.keyword .list-key');
                 ui.filter_form = $('form[name="filter-form"]');
+                ui.search_form = $('form[name="search"]');
 
                 ui.initFilters();
 
@@ -49,8 +108,22 @@
 
                 $(document).on('click', '.single-page', ui.onClick);
                 $(document).on('click', '.filter-remove', ui.onRemove);
-                $(document).on('click', '#save-filter', ui.filterPageLoad);
+                $(document).on('click', '#save-filter', ui.saveFilter);
                 $(document).on('click', '.panging a', ui.pageNav);
+                $(document).on('submit', 'form[name="search"]', ui.search);
+            },
+
+            search: function() {
+                var val = $(this).find('input[name="q"]').val();
+
+                if (val.length > 0 && val.length < 3)
+                    return false;
+
+                url = UpdateQueryString("q", val);
+                params = url.replace(window.location.origin + window.location.pathname, '');
+                ui.requester(window.location.pathname, params.substr(1));
+
+                return false;
             },
 
             pageNav: function() {
@@ -62,16 +135,47 @@
                 return false;
             },
 
-            filterPageLoad: function() {
-                var params = ui.filter_form.serialize();
-                $(".filter-form, #fade-profile").hide();
+            saveFilter: function() {
 
-                ui.requester(window.location.pathname, params)
+                var filters = {}
+
+                for (filter in ui.filters)
+                {
+                    field = $(ui.filters[filter].selector);
+
+                    if (field.length == 0)
+                        continue;
+
+                    var values = field.select2('data');
+
+                    if (values && values.length > 0)
+                    {
+                        filters[filter] = values;
+                    }
+                }
+
+                ui.setFilters(filters, true);
+                $(".filter-form, #fade-profile").hide();
+                ui.filterPageLoad();
+
             },
 
-            onRemove: function() {
+            filterPageLoad: function() {
+                var params = ui.filter_form.serialize();
+                var search = ui.search_form.serialize();
 
-                link = $(this).parent()
+                if (params != '')
+                    params += '&' + search;
+                else
+                    params = search;
+
+                ui.requester(window.location.pathname, params)
+
+            },
+
+            onRemove: function() { //Filter key removed
+
+                link = $(this).parent();
                 id = link.data('id');
                 ui.filter_form.find('input[value="' + id + '"].filter-item').remove();
                 link.parent().remove();
@@ -90,42 +194,24 @@
                         continue;
 
 
-                    field = $(ui.filters[filter].selector).data('name', filter);
-                    field.select2(options[filter]);
+                    field = $(ui.filters[filter].selector);
+
+                    if (field.length == 0)
+                        continue;
+
+                    field.data('name', filter).select2(options[filter]);
 
                     var data = []
 
-                    if (filter == 'country')
-                    {
-                        $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
-                            data.push($(this).val());
-                            filter_keys.push({id: $(this).val(), title: $(this).data('text')});
-                        });
-
-                        if (data.length > 0)
-                            field.select2('val', data);
-                        else
-                            field.select2('val', '');
-                    }
-                    else
-                    {
-                        $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
+                    $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
                             data.push({id: $(this).val(), title: $(this).data('text')});
                             filter_keys.push(data[data.length - 1]);
-                        });
+                    });
 
-                        if (data.length > 0)
-                        {
+                    if (data.length > 0)
                             field.select2('data', data);
-                        }
-                        else
-                        {
-                            $(ui.filters[filter].selector).select2('val', '');
-                        }
-                    }
-
-                    field.on("change", function (e) { filterChange($(this).data('name'), e)});
-
+                    else //clear filter
+                        $(ui.filters[filter].selector).select2('val', '');
                 }
 
                 ui.setKeyFilters(filter_keys);
@@ -153,6 +239,7 @@
 
             onClick: function() { //On menu click
                 $(document).trigger(ui.signals.link_click, $(this));
+                ui.search_form.find('input[name="q"]').val('');
 
                 url = $(this).attr('href');
                 text = $(this).text();
@@ -190,14 +277,15 @@
                 ui.setFilters(data.filters);
 
                 $(ui.container).replaceWith( data.content );
+                ui.filter_form = $('form[name="filter-form"]');
+                ui.initFilters();
             },
 
             clearer: function() { //clear all filters
                 ui.filter_form.find('input[name].filter-item').remove();
-                //ui.keywords.html('');
             },
 
-           setFilters: function(filters)
+           setFilters: function(filters, disableInit)
            { //Set filters on page
 
                ui.clearer();
@@ -242,7 +330,8 @@
                    }
                }
 
-               ui.initFilters()
+               if (!disableInit)
+                    ui.initFilters()
            },
 
            requester: function(url, params, pagination) {//get content from the server
@@ -263,6 +352,8 @@
 
                 History.pushState(null, null, history);
                 $(document).trigger(ui.signals['start_load']);
+
+
 
                 return  $.get(url, params, function(data) {
                     $(document).trigger(ui.signals['end_load'], [url, data]);

@@ -18,6 +18,13 @@
          {% endfor %}
     {% endblock %}
 
+    {% block js %}
+         {{ block.super }}
+         {% for script in scripts %}
+            <script type="text/javascript" src="{{ script }}"></script>
+         {% endfor %}
+    {% endblock %}
+
 
 
      {% block content %} {{ newsPage }}{% endblock %}

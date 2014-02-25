@@ -90,22 +90,23 @@ $(document).ready(function() {
 		}
 	});
 
-	$(".close-event").click(function()
+	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
 	});
 
-	$("#filter-link").click(function()
+    $(document).on('click', "#filter-link", function()
     {
 		$(".filter-form, #fade-profile").show();
 	});
 
-	$(".close-event").click(function()
+    $(document).on('click', ".close-event", function()
     {
 		$(".filter-form, #fade-profile").hide();
 	});
 
-	$(".btnprofile").click(function(){
+    $(document).on('click', ".btnprofile", function()
+	{
 		if($("#light-profile, #fade-profile").is(":hidden"))
         {
 			$("#light-profile, #fade-profile").show();
@@ -114,4 +115,43 @@ $(document).ready(function() {
 			$("#light-profile, #fade-profile").hide();
 		}
 	});
+
+    $(document).on('click', ".sortActive", function() {
+       var parent = $(this).parents('.note');
+
+       parent.find('input').val($(this).data('order'));
+       parent.find('.sortCurr').removeClass('sortCurr').addClass('sortActive');
+       $(this).removeClass('sortActive').addClass('sortCurr');
+
+       return false;
+    });
 });
+
+function UpdateQueryString(key, value, url) {
+    if (!url) url = window.location.href;
+    var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi");
+
+    if (re.test(url)) {
+        if (typeof value !== 'undefined' && value !== null)
+            return url.replace(re, '$1' + key + "=" + value + '$2$3');
+        else {
+            var hash = url.split('#');
+            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+    }
+    else {
+        if (typeof value !== 'undefined' && value !== null) {
+            var separator = url.indexOf('?') !== -1 ? '&' : '?',
+                hash = url.split('#');
+            url = hash[0] + separator + key + '=' + value;
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+        else
+            return url;
+    }
+}
