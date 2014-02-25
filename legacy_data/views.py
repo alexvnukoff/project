@@ -1,6 +1,7 @@
 from django.http import HttpResponse, Http404
 from legacy_data.models import L_User, L_Company, L_Product, L_TPP
 from core.models import User
+from appl.models import Company, Tpp, Product
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings
@@ -226,61 +227,67 @@ def company_reload_CSV_DB(request):
         short_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
                                 replace("quot;", '"').replace("&amp;", "&").strip()
         detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
-        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_text = bytearray(data[i][4]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][5]).decode(encoding='utf-8')
+        detail_text = bytearray(data[i][6]).decode(encoding='utf-8')
 
-        if not len(data[i][4]):
+        if not len(data[i][7]):
             create_date = None
         else:
-            create_date = datetime.datetime.strptime(bytearray(data[i][4]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+            create_date = datetime.datetime.strptime(bytearray(data[i][7]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
 
-        tpp_name = bytearray(data[i][5]).decode(encoding='utf-8')
-        moderator = bytearray(data[i][6]).decode(encoding='utf-8')
-        if len(data[i][7]):
-            full_name = bytearray(data[i][7]).decode(encoding='utf-8').replace("&quot;", '"').\
+        tpp_name = bytearray(data[i][8]).decode(encoding='utf-8')
+        moderator = bytearray(data[i][9]).decode(encoding='utf-8')
+        if len(data[i][10]):
+            full_name = bytearray(data[i][10]).decode(encoding='utf-8').replace("&quot;", '"').\
                                 replace("quot;", '"').replace("&amp;", '').strip()
         else:
             full_name = short_name
-        ur_address = bytearray(data[i][8]).decode(encoding='utf-8')
-        fact_address = bytearray(data[i][9]).decode(encoding='utf-8')
-        tel = bytearray(data[i][10]).decode(encoding='utf-8')
-        fax = bytearray(data[i][11]).decode(encoding='utf-8')
-        email = bytearray(data[i][12]).decode(encoding='utf-8')
-        INN = bytearray(data[i][13]).decode(encoding='utf-8')
-        KPP = bytearray(data[i][14]).decode(encoding='utf-8')
-        OKVED = bytearray(data[i][24]).decode(encoding='utf-8')
-        OKATO = bytearray(data[i][25]).decode(encoding='utf-8')
-        OKPO = bytearray(data[i][26]).decode(encoding='utf-8')
-        bank_account = bytearray(data[i][15]).decode(encoding='utf-8')
-        bank_name = bytearray(data[i][16]).decode(encoding='utf-8')
-        director_name = bytearray(data[i][17]).decode(encoding='utf-8')
-        bux_name = bytearray(data[i][18]).decode(encoding='utf-8')
-        slogan = bytearray(data[i][19]).decode(encoding='utf-8')
+        ur_address = bytearray(data[i][11]).decode(encoding='utf-8')
+        fact_address = bytearray(data[i][12]).decode(encoding='utf-8')
+        tel = bytearray(data[i][13]).decode(encoding='utf-8')
+        fax = bytearray(data[i][14]).decode(encoding='utf-8')
+        email = bytearray(data[i][15]).decode(encoding='utf-8')
+        INN = bytearray(data[i][16]).decode(encoding='utf-8')
+        KPP = bytearray(data[i][17]).decode(encoding='utf-8')
+        OKVED = bytearray(data[i][27]).decode(encoding='utf-8')
+        OKATO = bytearray(data[i][28]).decode(encoding='utf-8')
+        OKPO = bytearray(data[i][29]).decode(encoding='utf-8')
+        bank_account = bytearray(data[i][18]).decode(encoding='utf-8')
+        bank_name = bytearray(data[i][19]).decode(encoding='utf-8')
+        director_name = bytearray(data[i][20]).decode(encoding='utf-8')
+        bux_name = bytearray(data[i][21]).decode(encoding='utf-8')
+        slogan = bytearray(data[i][22]).decode(encoding='utf-8')
 
-        if (data[i][20] == 'Да'):
+        if (data[i][23] == 'Y'):
             is_active = True
         else:
             is_active = False
 
-        branch = bytearray(data[i][21]).decode(encoding='utf-8')
-        experts = bytearray(data[i][22]).decode(encoding='utf-8')
-        map_id = bytearray(data[i][23]).decode(encoding='utf-8')
-        site = bytearray(data[i][27]).decode(encoding='utf-8')
-        country_name = bytearray(data[i][28]).decode(encoding='utf-8')
+        branch = bytearray(data[i][24]).decode(encoding='utf-8')
+        experts = bytearray(data[i][25]).decode(encoding='utf-8')
+        map_id = bytearray(data[i][26]).decode(encoding='utf-8')
+        site = bytearray(data[i][30]).decode(encoding='utf-8')
+        country_name = bytearray(data[i][31]).decode(encoding='utf-8')
 
-        if (data[i][29] == 'Да'):
+        if (data[i][32] == 'Y'):
             is_deleted = True
         else:
             is_deleted = False
 
-        keywords = bytearray(data[i][30]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+        keywords = bytearray(data[i][33]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
                                             replace("&amp;", '').strip()
 
         try:
-            L_Company.objects.get_or_create(
+            L_Company.objects.create(
                                             btx_id = btx_id,\
                                             short_name = short_name,\
                                             detail_page_url = detail_page_url,\
+                                            preview_picture = preview_picture,\
+                                            preview_text = preview_text,\
                                             detail_picture = detail_picture,\
+                                            detail_text = detail_text,\
                                             create_date = create_date,\
                                             tpp_name = tpp_name,\
                                             moderator = moderator,\
@@ -310,17 +317,126 @@ def company_reload_CSV_DB(request):
                                             keywords = keywords)
             count += 1
         except:
-            print('Milestone: ', i+1)
-            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
+            #print('Milestone: ', i+1)
+            print(btx_id, '##', short_name, '##', ' Count: ', i+1)
             continue
 
-        print('Milestone: ', i+1)
+        #print('Milestone: ', i+1)
 
     print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Companies were migrated from CSV into DB!')
+
+def company_reload_DB_DB(request):
+    '''
+        Reload companies' data from buffer DB table LEGACY_DATA_L_COMPANY into TPP DB
+    '''
+    time1 = datetime.datetime.now()
+    # Move users from buffer table into original tables
+    print('Reload companies from buffer DB into TPP DB...')
+    qty = L_Company.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    comp_lst = L_Company.objects.filter(completed=False).all()
+    #comp_lst = L_Company.objects.filter(pk=545208)
+    i = 0
+    for leg_cmp in comp_lst:
+        #set create_user (owner) for the Company
+        if leg_cmp.moderator:
+            try:
+                l_user = L_User.objects.get(btx_id=leg_cmp.moderator)
+                create_usr = User.objects.get(pk=l_user.tpp_id)
+            except:
+                create_usr = User.objects.get(pk=1)
+        else:
+            create_usr = User.objects.get(pk=1)
+
+        try:
+            new_comp = Company.objects.create(title='COMPANY_LEG_ID:'+leg_cmp.btx_id,
+                                              create_user=create_usr)
+        except:
+            print(leg_cmp.btx_id, '##', leg_cmp.short_name, '##', ' Count: ', i)
+            i += 1
+            continue
+
+        #new_comp.setAttributeValue({"ANONS": a}, request.user)
+        attr = {'NAME': leg_cmp.short_name,
+                'IMAGE_SMALL': leg_cmp.preview_picture,
+                'ANONS': leg_cmp.preview_text,
+                'IMAGE': leg_cmp.detail_picture,
+                'DETAIL_TEXT': leg_cmp.detail_text,
+                'NAME_FULL': leg_cmp.full_name,
+                'ADDRESS_YURID': leg_cmp.ur_address,
+                'ADDRESS_FACT': leg_cmp.fact_address,
+                'TELEPHONE_NUMBER': leg_cmp.tel,
+                'FAX': leg_cmp.fax,
+                'EMAIL': leg_cmp.email,
+                'INN': leg_cmp.INN,
+                'KPP': leg_cmp.KPP,
+                'OKVED': leg_cmp.OKVED,
+                'OKATO': leg_cmp.OKATO,
+                'OKPO': leg_cmp.OKPO,
+                'BANK_ACCOUNT': leg_cmp.bank_account,
+                'BANK_NAME': leg_cmp.bank_name,
+                'NAME_DIRECTOR': leg_cmp.director_name,
+                'NAME_BUX': leg_cmp.bux_name,
+                'SLOGAN': leg_cmp.slogan,
+                'MAP_POSITION': leg_cmp.map_id,
+            }
+
+        try: #this try for problem with bulk create for fields about 3000 symbols.
+            res = new_comp.setAttributeValue(attr, request.user)
+            if res:
+                leg_cmp.tpp_id = new_comp.pk
+                leg_cmp.completed = True
+                leg_cmp.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+        except:
+            attr = {
+                    'ANONS': leg_cmp.preview_text[:2000],
+                    'IMAGE': leg_cmp.detail_picture[:2000],
+                    'DETAIL_TEXT': leg_cmp.detail_text[0:2000],
+                    'NAME_FULL': leg_cmp.full_name[:2000],
+                    'ADDRESS_YURID': leg_cmp.ur_address[:2000],
+                    'ADDRESS_FACT': leg_cmp.fact_address[:2000],
+                    'TELEPHONE_NUMBER': leg_cmp.tel[:2000],
+                    'FAX': leg_cmp.fax[:2000],
+                    'EMAIL': leg_cmp.email[:2000],
+                    'INN': leg_cmp.INN[:2000],
+                    'KPP': leg_cmp.KPP[:2000],
+                    'OKVED': leg_cmp.OKVED[0:2000],
+                    'OKATO': leg_cmp.OKATO[0:2000],
+                    'OKPO': leg_cmp.OKPO[0:2000],
+                    'BANK_ACCOUNT': leg_cmp.bank_account[0:2000],
+                    'BANK_NAME': leg_cmp.bank_name[0:2000],
+                    'NAME_DIRECTOR': leg_cmp.director_name[0:2000],
+                    'NAME_BUX': leg_cmp.bux_name[0:2000],
+                    'SLOGAN': leg_cmp.slogan[0:2000],
+                    'MAP_POSITION': leg_cmp.map_id[0:2000],
+            }
+            res = new_comp.setAttributeValue(attr, request.user)
+            if res:
+                leg_cmp.tpp_id = new_comp.pk
+                leg_cmp.completed = True
+                leg_cmp.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Companies were migrated from buffer DB into TPP DB!')
+
 
 def product_reload_CSV_DB(request):
     '''
@@ -330,6 +446,7 @@ def product_reload_CSV_DB(request):
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
     print('Load product data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
     with open('c:\\data\\product_legacy.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
@@ -351,34 +468,42 @@ def product_reload_CSV_DB(request):
         prod_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
                                 replace("quot;", '"').replace("&amp;", "&").strip()
         detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
-        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_text = bytearray(data[i][4]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
+        detail_picture = bytearray(data[i][5]).decode(encoding='utf-8')
+        detail_text = bytearray(data[i][6]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+                                            replace("&amp;", '').strip()
 
-        if not len(data[i][4]):
+        if not len(data[i][7]):
             create_date = None
         else:
-            create_date = datetime.datetime.strptime(bytearray(data[i][4]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+            create_date = datetime.datetime.strptime(bytearray(data[i][7]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
 
-        company_id = bytearray(data[i][5]).decode(encoding='utf-8')
-        photos1 = bytearray(data[i][6]).decode(encoding='utf-8')
-        discount = bytearray(data[i][7]).decode(encoding='utf-8')
-        add_pages = bytearray(data[i][8]).decode(encoding='utf-8')
-        tpp = bytearray(data[i][9]).decode(encoding='utf-8')
-        direction = bytearray(data[i][10]).decode(encoding='utf-8')
-        if (data[i][11] == 'Да'):
+        company_id = bytearray(data[i][8]).decode(encoding='utf-8')
+        photos1 = bytearray(data[i][9]).decode(encoding='utf-8')
+        discount = bytearray(data[i][10]).decode(encoding='utf-8')
+        add_pages = bytearray(data[i][11]).decode(encoding='utf-8')
+        tpp = bytearray(data[i][12]).decode(encoding='utf-8')
+        direction = bytearray(data[i][13]).decode(encoding='utf-8')
+        if (data[i][14] == 'Y'):
             is_deleted = True
         else:
             is_deleted = False
-        photos2 = bytearray(data[i][12]).decode(encoding='utf-8')
-        file = bytearray(data[i][13]).decode(encoding='utf-8')
-        keywords = bytearray(data[i][14]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
+        photos2 = bytearray(data[i][15]).decode(encoding='utf-8')
+        file = bytearray(data[i][16]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][17]).decode(encoding='utf-8').replace("&quot;", '"').replace("quot;", '"').\
                                             replace("&amp;", '').strip()
 
         try:
-            L_Product.objects.get_or_create(
+            L_Product.objects.create(
                                             btx_id = btx_id,\
                                             prod_name = prod_name,\
                                             detail_page_url = detail_page_url,\
+                                            preview_picture = preview_picture,\
+                                            preview_text = preview_text,\
                                             detail_picture = detail_picture,\
+                                            detail_text = detail_text,\
                                             create_date = create_date,\
                                             company_id = company_id,\
                                             photos1 = photos1,\
@@ -392,8 +517,8 @@ def product_reload_CSV_DB(request):
                                             keywords = keywords)
             count += 1
         except:
-            print('Milestone: ', i+1)
-            #print(btx_id, '##', short_name, '##', ' Count: ', i+1)
+            #print('Milestone: ', i+1)
+            print(btx_id, '##', prod_name, '##', ' Count: ', i+1)
             continue
 
         print('Milestone: ', i+1)

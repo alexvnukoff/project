@@ -4,7 +4,7 @@ from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
 from appl.models import SystemMessages
-from core.models import State, Attribute, Value
+from core.models import State, Attribute, Value, Slot, Dictionary
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -65,9 +65,59 @@ def databaseInitialization(sender, **kwargs):
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
 
+    attributes = {  'ADDRESS': 'Chr',
+                    'ADDRESS_YURID': 'Chr',
+                    'ADDRESS_FACT': 'Chr',
+                    'ADDRESS_COUNTRY': 'Chr',
+                    'ADDRESS_CITY': 'Chr',
+                    'ADDRESS_ZIP': 'Chr',
+                    'AUTHOR_NAME': 'Chr',
+                    'ANONS': 'Str',
+                    'BANK_ACCOUNT': 'Chr',
+                    'BANK_NAME': 'Chr',
+                    'COST': 'Flo',
+                    'COUPON_DISCOUNT': 'Flo',
+                    'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
+                    'DETAIL_TEXT': 'Str',
+                    'DISCOUNT': 'Flo',
+                    'DOCUMENT_1': 'Ffl',
+                    'DOCUMENT_2': 'Ffl',
+                    'DOCUMENT_3': 'Ffl',
+                    'EMAIL': 'Chr',
+                    'FAX': 'Chr',
+                    'FILE': 'Ffl',
+                    'FLAG': 'Img',
+                    'IMAGE': 'Img',
+                    'IMAGE_SMALL': 'Img',
+                    'INN': 'Chr',
+                    'KEYWORD': 'Str',
+                    'KPP': 'Chr',
+                    'MEASUREMENT_UNIT': {'type': 'Chr', 'slots': ['kg', 'piece']},
+                    'MAP_POSITION': 'Chr',
+                    'NAME': 'Chr',
+                    'NAME_FULL': 'Chr',
+                    'NAME_DIRECTOR': 'Chr',
+                    'NAME_BUX': 'Chr',
+                    'OKATO': 'Chr',
+                    'OKVED': 'Chr',
+                    'OKPO': 'Chr',
+                    'POSITION': 'Chr',
+                    'SITE_NAME': 'Chr',
+                    'SKU': 'Chr',
+                    'SLOGAN': 'Chr',
+                    'SLUG': 'Chr',
+                    'TELEPHONE_NUMBER': 'Chr',
+                    'TPP': 'Chr',
+                    'YOUTUBE_CODE': 'Chr'}
 
-
-
+    for attribute, type in attributes.items():
+        if isinstance(type, dict):
+            dictr, created = Dictionary.objects.get_or_create(title=attribute)
+            Attribute.objects.get_or_create(title=attribute, type=type['type'], dict=dictr)
+            for slot in type['slots']:
+                Slot.objects.get_or_create(title=slot, dict=dictr)
+        else:
+            Attribute.objects.get_or_create(title=attribute, type=type)
 
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)
