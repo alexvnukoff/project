@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
@@ -18,7 +18,7 @@ from celery import shared_task, task
 from core.tasks import addNewTpp
 from django.conf import settings
 
-def get_tpp_list(request, page=1):
+def get_tpp_list(request, page=1, item_id=None):
     user = request.user
     if user.is_authenticated():
         notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -29,9 +29,12 @@ def get_tpp_list(request, page=1):
     else:
         user_name = None
         notification = None
-    current_section = "Companies"
+    current_section = "Organizations"
 
-    tppPage = _tppContent(request, page)
+    if item_id is None:
+        tppPage = _tppContent(request, page)
+    else:
+        tppPage = _tppDetailContent(request, item_id)
 
 
 
@@ -48,7 +51,8 @@ def _tppContent(request, page=1):
 
 
     result = func.setPaginationForItemsWithValues(tpp, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
-                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG'),
+                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG',
+                                                               'SLUG'),
                                                   page_num=5, page=page)
 
     tppList = result[0]
@@ -79,7 +83,34 @@ def _tppContent(request, page=1):
 
 
 
+def _tppDetailContent(request, item_id):
 
+    tpp = get_object_or_404(Tpp, pk=item_id)
+    tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+
+
+    if not tppValues.get('FLAG', False):
+       country = Country.objects.get(p2c__child=tpp).getAttributeValues(*('FLAG', 'NAME'))
+    else:
+       country = ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    template = loader.get_template('Tpp/detailContent.html')
+    context = RequestContext(request, {'tppValues': tppValues, 'country': country})
+    return template.render(context)
 
 
 

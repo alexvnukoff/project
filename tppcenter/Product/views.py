@@ -20,7 +20,7 @@ from core.tasks import addProductAttrubute
 from django.conf import settings
 
 
-def get_product_list(request, page=1):
+def get_product_list(request, page=1, id=None):
 
 
     if id is None:

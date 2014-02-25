@@ -67,7 +67,7 @@ INSTALLED_APPS = (
     'djcelery'
 )
 
-APPEND_SLASH = False
+
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
@@ -121,7 +121,7 @@ DATABASES = {
     }
 }
 
-SOUTH_DATABASE_ADAPTERS = { 'default': "south.db.oracle" }
+SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

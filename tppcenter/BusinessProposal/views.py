@@ -52,29 +52,8 @@ def _proposalsContent(request, page=1):
 
     proposalList = result[0]
     proposal_ids = [id for id in proposalList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=proposal_ids).values('p2c__child__p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    companies = Company.objects.filter(p2c__child__in=proposal_ids).values('p2c__child', 'pk')
-    companies_ids = [company['pk'] for company in companies]
-    companiesList = Item.getItemsAttributesValues(("NAME"), companies_ids)
-    company_dict = {}
-    for company in companies:
-        company_dict[company['p2c__child']] = company['pk']
-
-
-    country_dict = {}
-    for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
-
-    for id, proposal in proposalList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0),
-                    'COMPANY_NAME': companiesList[company_dict[id]].get('NAME', 0 ) if company_dict.get(id, 0) else [0],
-                    'COMPANY_ID': company_dict.get(id, 0)}
-        proposal.update(toUpdate)
+    func.addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -145,15 +124,18 @@ def addBusinessProposal(request):
 
 def updateBusinessProposal(request, item_id):
 
-    if request.method != 'POST':
-        branches = Branch.objects.all()
-        branches_ids = [branch.id for branch in branches]
-        branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    try:
+        currentBranch = Branch.objects.get(p2c__child=item_id)
+    except Exception:
+        currentBranch = ""
 
-        try:
-            currentBranch = Branch.objects.get(p2c__child=item_id)
-        except Exception:
-            currentBranch = ""
+    if request.method != 'POST':
+
+
+
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
         pages = pages.queryset

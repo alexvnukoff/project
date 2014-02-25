@@ -39,67 +39,43 @@ def home(request):
 
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizations = Tpp.active.get_active().filter(c2p__parent__in=Country.objects.all()).distinct()
+    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
     organizations_id = [organization.pk for organization in organizations]
 
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
 
     products = Product.active.get_active_related().order_by('-pk')[:3]
-    products = products.values('c2p__parent__organization__c2p__parent__country', "pk")
-    country_dict = {}
-    for product in products:
-        country_dict[product['pk']] = product['c2p__parent__organization__c2p__parent__country']
 
 
-    products_id = [product['pk'] for product in products]
+
+
+    products_id = [product.pk for product in products]
     productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE'), products_id)
-
-    for id, product in productsList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]]['NAME'],
-                   'COUNTRY_ID:': country_dict[id],
-                   'COUNTRY_FLAG': countriesList[country_dict[id]]['FLAG']}
-        product.update(toUpdate)
+    func.addDictinoryWithCountryAndOrganization(products_id,productsList)
 
 
-    services = Service.active.get_active_related()[:3]
-    services = services.values('c2p__parent__organization__c2p__parent__country', 'c2p__parent__organization', "pk")
-    services_dict = {}
-    for service in services:
-        services_dict[service['pk']] = {}
-        services_dict[service['pk']]['country'] = service['c2p__parent__organization__c2p__parent__country']
-        services_dict[service['pk']]['company'] = service['c2p__parent__organization']
 
-    services_id = [service['pk'] for service in services]
+
+
+    services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
+
+
+    services_id = [service.id for service in services]
     serviceList = Item.getItemsAttributesValues(("NAME",), services_id)
-    companies_id = [service['c2p__parent__organization'] for service in services]
-    companyList = Item.getItemsAttributesValues(("NAME",), companies_id)
+    func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
-    for id, service in serviceList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[services_dict[id]['country']]['NAME'],
-                   'COUNTRY_ID':  services_dict[id]['country'],
-                   'COUNTRY_FLAG':  countriesList[services_dict[id]['country']]['FLAG'],
-                   'COMPANY_NAME': companyList[services_dict[id]['company']]['NAME'],
-                   'COMPANY_ID': services_dict[id]['company']}
-        service.update(toUpdate)
+
 
     greetings = Greeting.active.get_active().all()
     greetings_id = [greeting.id for greeting in greetings]
     greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
 
-    exhibitions = Exhibition.active.get_active_related()[:3]
-    exhibitions = exhibitions.values('c2p__parent__organization', "pk")
-    exhibitions_id = [exhibition['pk'] for exhibition in exhibitions]
-    exhibitions_dict = {}
-    for exhibition in exhibitions:
-        exhibitions_dict[exhibition['pk']] = exhibition['c2p__parent__organization']
+    exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
+    exhibitions_id = [exhibition.pk for exhibition in exhibitions]
+    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE"), exhibitions_id)
+    func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
-    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "EVENT_DATE"), exhibitions_id)
 
-    for id, exhibition in exhibitionsList.items():
-        toUpdate = {'ORG_NAME': organizationsList[exhibitions_dict[id]]['NAME'],
-                    'ORG_FLAG': organizationsList[exhibitions_dict[id]]['FLAG'],
-                    'ORG_ID': exhibitions_dict[id]}
-        exhibition.update(toUpdate)
 
 
 
@@ -150,6 +126,8 @@ def user_login(request):
        if form.is_valid():
           user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
           login(request, user)
+          if user.is_authenticated():
+               cabinet = Cabinet.objects.get_or_create(user=user, create_user=user)
           return HttpResponseRedirect(reverse('news:main'))
 
     return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
