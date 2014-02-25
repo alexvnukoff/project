@@ -13,9 +13,16 @@
 
     {% block styles %}
          {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+         {% for style in styles %}
+            <link type="text/css" rel="stylesheet" href="{{ style }}" />
+         {% endfor %}
     {% endblock %}
 
-
+    {% block js %}
+         {{ block.super }}
+         {% for script in scripts %}
+            <script type="text/javascript" src="{{ script }}"></script>
+         {% endfor %}
+    {% endblock %}
 
      {% block content %} {{ newsPage }}{% endblock %}

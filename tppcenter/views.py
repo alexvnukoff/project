@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, Http404
 from appl.models import *
+
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship, Slot
+
 from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
@@ -23,6 +25,9 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 def home(request):
+
+
+
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))
 
@@ -112,14 +117,11 @@ def home(request):
                               context_instance=RequestContext(request))
 @ensure_csrf_cookie
 def getNotifList(request):
+
     if request.is_ajax():
         notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
         messages_id = [notification.message.pk for notification in notifications]
         notifications_id = [notification.pk for notification in notifications]
-
-
-
-
 
         notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
         notifDict = {}
@@ -141,8 +143,10 @@ def user_login(request):
         return HttpResponseRedirect(reverse('news:main'))
 
     form = None
+
     if request.POST.get('Login', None):
        form = AuthenticationForm(request, data=request.POST)
+
        if form.is_valid():
           user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
           login(request, user)
@@ -154,14 +158,17 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+
     return HttpResponseRedirect("/")
 
 def registration(request):
+
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))
 
     if request.POST.get('Register', None):
          form = RegistrationFormUniqueEmail(request.POST)
+
          if form.is_valid() and request.POST.get('tos', None):
             cleaned = form.cleaned_data
             reg_view = RegistrationView()
@@ -202,6 +209,7 @@ def set_news_list(request):
 def set_items_list(request):
         app = get_app("appl")
         items = []
+
         for model in get_models(app):
             if issubclass(model, Item):
                items.append(model._meta.object_name)
@@ -215,6 +223,7 @@ def set_item_list(request, item):
 
 def showlist(request, item, page):
     i = (globals()[item])
+
     if not issubclass(i, Item):
         raise Http404
     else:
@@ -310,25 +319,62 @@ def meth(request):
             form.save(parent=ob.id, user=request.user)
     return False
 
+
+def jsonFilter(request):
+    import json
+
+    filter = request.GET.get('type', None)
+    q = request.GET.get('q', None)
+    page = request.GET.get('page', None)
+
+
+    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
+        from haystack.query import SearchQuerySet
+        from django.core.paginator import Paginator
+
+        model = None
+
+
+        if filter == 'tpp':
+            model = Tpp
+        elif filter == "companies":
+            model = Company
+        elif filter == "category":
+            model = Category
+        elif filter == "branch":
+            model = Branch
+        elif filter == 'country':
+            model = Country
+
+        if model:
+
+            if not q:
+                sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
+            else:
+                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+
+            paginator = Paginator(sqs, 10)
+            total = paginator.count
+            items = [{'title': item.title_auto, 'id': item.id} for item in paginator.object_list]
+
+            return HttpResponse(json.dumps({'content': items, 'total': total}))
+
+    return HttpResponse(json.dumps({'content': [], 'total': 0}))
+
+
 def test(request):
-    '''
-        import uuid
-        from django.utils.timezone import now
-        a = Company(create_user=request.user)
-        a.save()
+    a = '''
+        ЯбросилучебувReedcollegeчерезполгодасмоментапоступления,нопродолжалходитьналекцииижитьвстудгородкееще18месяцев,поканезабросилэтоделоокончательно.Такпочемуябросилучебу?Этаисторияначаласьдомоегорождения.Моябиологическаямать,молодаянезамужняяаспирантка,решилаотдатьменянаусыновление.Ейоченьхотелось,чтобыменяусыновилилюдисвысшимобразованием.Ивсебылоготоводлятого,чтобыменявзялинавоспитаниевсемьюнекоегоюриста.Нокмоментумоегорожденияюристиегоженавдругрешили,чтонасамомделеимнужнадевочка,анемальчик.Такчтомоимбудущимродителям,которыебылиследующимивочереди,позвонилисрединочисвопросом:«Унасестьвнеплановыйребенок.Мальчик.Возьметеего?»Иониответили«Конечно».Позжемоябиологическаяматьузнала,чтомояреальнаяматьнезаканчиваланикакогоколледжа,ичтомойотецнезакончилдажесреднейшколы.Онаотказаласьподписатьокончательныебумагинаусыновление.Лишьнесколькомесяцевспустямоимродителямудалосьееуговорить.Онипообещали,чтообязательноотдадутменявколледж.Такначаласьмояжизнь.17летспустяяпошел-такивколледж.Понаивности,явыбралоченьдорогойколледж–почтикакСтенфорд–ивсесбережениямоихнебогатыхродителейуходилинаоплатумоейучебы.Черезполгодаяпонял,чтовучебенетникакогосмысла:японятиянеимелничемяхочузаниматьсявжизни,никакколледжпоможетмнеэтопонять.Приэтомнаучебуятратилвсе,чтомоиродителископилизавсюсвоюжизнь.Поэтомуярешилброситьучебуинадеятьсянато,чтовсекак-нибудьобразуется.Тогдамнеотэтогобылонепосебе,носейчас,оглядываясьназад,японимаю,чтоэтобылоодноизсамыхлучшихрешенийвмоейжизни.Меняотчислили.Этозначило,чтобольшененужноходитьнаобязательныекурсы–иможноходитьтольконато,чтокажетсяинтересным.Конечно,невсебылогладко.Уменянебылокомнатывобщежитии,иночеватьприходилосьнаполувкомнатахдрузей.Ясдавалбутылкииз-подколыпо5центовзаштуку,чтобыпокупатьеду.Каждоевоскресеньеяходилпешкомпо7мильчерезвесьгород,чтобыразвнеделюхорошопоестьукришнаитов.Едатамбылазамечательная(Воригинале"Ilovedit"",парафраззнаменитогослоганаMcDonalds).Многоеизтого,чтояоткрылдлясебявтевремена,подчиняясьсвоемулюбопытствуиинтуиции,впоследствииоказалосьбесценным.Приведуодинпример.Reedcollegeтогдапредлагаллучшеевстранеобразованиевобластикаллиграфии.Любойплакат,любаянадписьналюбомшкафчикевлюбомместестуденческогогородкабылизамечательновыведеныотрукиповсемзаконамискусствакаллиграфии.Ябылотчислен,мнененужнобылопосещатьобычныезанятия,иярешилизучатькаллиграфию.Яузналмногоеогарнитурахшрифтов(serif,sans-serif),оварьированиирасстояниямеждуразличнымисочетаниямибукв–обовсем,чтоделаетвеликолепнуютипографикувеликолепной.Вэтихзанятияхбылакакая-токрасота,история,тонкостьискусства,недоступнаянауке…меняэтозавораживало.Тогдамнеказалось,чтовсеэтонеимеетнималейшегошансанапрактическоеприменение.Но10летспустя,когдамыразрабатывалипервыйМакинтош,всемоизнанияпокаллиграфиивернулиськомне–ипригодились.Макинтошсталпервымкомпьютеромскрасивымишрифтами.Еслибыянесталпосещатьэтизанятиявколледже,вМакахнебылобывозможностииспользоватьразныегарнитуры,шрифтынебылибыпропорциональными…АпосколькуWindows–этовсеголишькалькаМ.
+     '''
 
-        from core.tasks import add
-        i = now()
-        name = uuid.uuid4()
-        tnow = "%s/%s/%s" % (i.day, i.month, i.year)
-
-        add.delay(a.pk, request.user, {'NAME': 'Company Test'},
-                    'C:\\Users\\user\\PycharmProjects\\tpp\\appl\Static\pr5.jpg')
-    '''
-
-
-
-    return render_to_response('test.html', locals(), context_instance=RequestContext(request))
+    i = Item.objects.get(pk='61')
+    z = Attribute.objects.get(title='DETAIL_TEXT')
+    v = Value(title=a, create_user=request.user, item=i, attr=z)
+    #v.save()
+    Value.objects.bulk_create([v])
+    #i.setAttributeValue({'DETAIL_TEXT': a}, request.user)
+    from django.http import StreamingHttpResponse
+    return StreamingHttpResponse('pong')
 
 
 def ping(request):

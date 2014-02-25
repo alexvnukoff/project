@@ -1,7 +1,8 @@
 from appl.models import (Advertising, Announce, Article, Basket, Company, Cabinet, Department, Document,
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment, Favorite,
-                         Greeting, Exhibition, SystemMessages, Notification, Branch, NewsCategories, InnovationProject)
+                         Greeting, Exhibition, SystemMessages, Notification, Branch, NewsCategories, InnovationProject,
+                         BusinessProposal, AdditionalPages)
 
 
 
@@ -42,3 +43,5 @@ admin.site.register(SystemMessages)
 admin.site.register(Branch)
 admin.site.register(NewsCategories)
 admin.site.register(InnovationProject)
+admin.site.register(BusinessProposal)
+admin.site.register(AdditionalPages)

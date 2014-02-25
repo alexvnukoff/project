@@ -67,7 +67,7 @@ INSTALLED_APPS = (
     'djcelery'
 )
 
-
+APPEND_SLASH = True
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
@@ -108,6 +108,7 @@ DATABASES = {
     'default': {
         #'ENGINE': 'oraclepool',
         'ENGINE': 'django.db.backends.oracle',
+
         'NAME': 'TPPDB',
         'USER': 'tppProduction',
         'PASSWORD': 'TrQwE123$%^;',
@@ -141,6 +142,7 @@ LOCALE_PATHS = ("locale",)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
+
 
 
 STATIC_URL = '/static/'
@@ -216,14 +218,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
+        'URL': 'ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
 
 for lang in LANGUAGES:
 
-    if lang is 'en':
+    if lang[0] is 'en':
         continue
 
     HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {

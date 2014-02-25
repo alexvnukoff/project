@@ -1,80 +1,4 @@
 $(document).ready(function() {
-       socket_connect();
-
-        function socket_connect() {
-            socket = new SockJS('http://' + window.location.host + ':9999/orders');  // ваш порт для асинхронного сервиса
-            // при соединении вызываем событие login, которое будет выполнено на серверной стороне
-
-            socket.onmessage = function(msg){
-                var data = msg['data']
-                var type = JSON.parse(data).type
-
-                if (type == 'notification')
-                {
-                    el = $(".imgnews.i-note")
-                    num = el.siblings(".num").text()
-
-                    el.siblings(".num").text(parseInt(num)+1)
-                }
-                console.log(el)
-
-
-            }
-
-            socket.onclose = function(e){
-                setTimeout(socket_connect, 5000);
-            };
-        }
-
-
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-
-        function sameOrigin(url) {
-            // test that a given url is a same-origin URL
-            // url could be relative or scheme relative or absolute
-            var host = document.location.host; // host + port
-            var protocol = document.location.protocol;
-            var sr_origin = '//' + host;
-            var origin = protocol + sr_origin;
-            // Allow absolute or scheme relative URLs to same origin
-            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-                // or any other URL that isn't scheme relative or absolute i.e relative.
-                !(/^(\/\/|http:|https:).*/.test(url));
-        }
-
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                     var csrftoken = getCookie('csrftoken');
-                    // Send the token to same-origin, relative URLs only.
-                    // Send the token only if the method warrants CSRF protection
-                    // Using the CSRFToken value acquired earlier
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-
         $("#country").click(function(){
             if($(".country-list").is(":hidden")){
                 $(".country-list").slideDown(100);
@@ -128,9 +52,6 @@ $(document).ready(function() {
             $(".textpart").html($(this).html());
             $(".part-list").slideUp(100);
         });
-        $("i.i-close").click(function(){
-            $(this).parent().parent().hide();
-        });
 
         $(".select-all1").click(function(){
             $(".type1 input[type='checkbox']").prop("checked", $(this).is(":checked"));
@@ -169,22 +90,23 @@ $(document).ready(function() {
 		}
 	});
 
-	$(".close-event").click(function()
+	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
 	});
 
-	$("#filter-link").click(function()
+    $(document).on('click', "#filter-link", function()
     {
 		$(".filter-form, #fade-profile").show();
 	});
 
-	$(".close-event").click(function()
+    $(document).on('click', ".close-event", function()
     {
 		$(".filter-form, #fade-profile").hide();
 	});
 
-	$(".btnprofile").click(function(){
+    $(document).on('click', ".btnprofile", function()
+	{
 		if($("#light-profile, #fade-profile").is(":hidden"))
         {
 			$("#light-profile, #fade-profile").show();
@@ -193,4 +115,43 @@ $(document).ready(function() {
 			$("#light-profile, #fade-profile").hide();
 		}
 	});
+
+    $(document).on('click', ".sortActive", function() {
+       var parent = $(this).parents('.note');
+
+       parent.find('input').val($(this).data('order'));
+       parent.find('.sortCurr').removeClass('sortCurr').addClass('sortActive');
+       $(this).removeClass('sortActive').addClass('sortCurr');
+
+       return false;
+    });
 });
+
+function UpdateQueryString(key, value, url) {
+    if (!url) url = window.location.href;
+    var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi");
+
+    if (re.test(url)) {
+        if (typeof value !== 'undefined' && value !== null)
+            return url.replace(re, '$1' + key + "=" + value + '$2$3');
+        else {
+            var hash = url.split('#');
+            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+    }
+    else {
+        if (typeof value !== 'undefined' && value !== null) {
+            var separator = url.indexOf('?') !== -1 ? '&' : '?',
+                hash = url.split('#');
+            url = hash[0] + separator + key + '=' + value;
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+        else
+            return url;
+    }
+}

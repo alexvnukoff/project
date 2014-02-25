@@ -1,0 +1,161 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="goods-details">
+            {% with productValues.NAME.0 as name %}
+            {% with productValues.SKU.0 as sku %}
+            {% with productValues.COST.0 as cost %}
+            {% with productValues.CURRENCY.0 as currency %}
+            {% with productValues.IMAGE.0 as image %}
+            {% with productValues.DETAIL_TEXT.0 as content %}
+            {% with productValues.MEASUREMENT_UNIT.0 as meas_unit %}
+            {% with productValues.DOCUMENT_1.0 as doc_1 %}
+            {% with productValues.DOCUMENT_2.0 as doc_2 %}
+            {% with productValues.DOCUMENT_3.0 as doc_3 %}
+            {% with companyValues.NAME.0 as company_name %}
+            {% with companyValues.ADDRESS.0 as company_address %}
+            {% with companyValues.FAX.0 as company_fax %}
+            {% with companyValues.TELEPHONE_NUMBER.0 as company_telephone %}
+            {% with companyValues.SITE_NAME.0 as site_name %}
+            {% with companyValues.COMPANY_ID as company_id %}
+            {% with companyValues.COUNTRY_NAME.0 as country_name %}
+            {% with companyValues.COUNTRY_FLAG.0 as country_flag %}
+            {% with companyValues.COUNTRY_ID as country_id %}
+
+
+
+            	<h1>{{ name }}  {{ sku }}</h1>
+                <div class="goods-details-left">
+                	<div class="gallery">
+                        <div id="panel">
+                            <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                        </div>
+                        <div id="thumbs">
+                            {% for photo in photos %}
+                               <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="social">
+                        <a href="#"><i class="imgnews share-1"></i></a>
+                        <a href="#"><i class="imgnews share-2"></i></a>
+                        <a href="#"><i class="imgnews share-3"></i></a>
+                        <a href="#"><i class="imgnews share-4"></i></a>
+                    </div>
+                </div>
+                <div class="goods-details-center">
+                	<ul>
+                    	<li>
+                        	<label>Цена за ед.:</label>
+                            <p>{{ currency|getSymbol }} {{ cost }}</p>
+                        </li>
+                        <li>
+                        	<label>Ед. измер.:</label>
+                            <p>{{ meas_unit }}</p>
+                        </li>
+                        <li>
+                        	<label>Кол-во:</label>
+                            <input type="text" name="" value="" class="text" style="width:60%;" />
+                        </li>
+                        <li>
+                        	<label>Доставка:</label>
+                            <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
+                            <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
+                       </li>
+                       <li><a href="#" class="bigbuy">Купить</a></li>
+                    </ul>
+                </div>
+                <ul class="goods-info">
+                   <li class="top">
+                        <div class="iconinfo"><img src="{{ MEDIA_URL }}small/{{ country_flag }}" class="flag" /></div>
+                        <div class="nameinfo"><b>{{ company_name }}</b></div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                        <div class="nameinfo">{{ company_address }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                        <div class="nameinfo">{{ company_telephone }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                        <div class="nameinfo">{{ company_fax }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                        <div class="nameinfo"><a href="#">{{ site_name }}</a></div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+                        <div class="nameinfo"><a href="#">{% trans 'Contact us' %}</a></div>
+                   </li>
+                </ul>
+                <div class="goods-details-tab">
+                    <div class="tab-cate">
+                        <ul>
+                            <li><a href="#goods-tabs-1">{% trans 'About company' %}</a></li>
+                            <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                            <li><a href="#goods-tabs-3">Отзывы</a></li>
+                            {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="goods-tabs-1">
+                        <div class="content-goods-tab">{{ content }}</div>
+                    </div>
+                    <div id="goods-tabs-2">
+                        <div class="content-goods-tab">
+                            {% if doc_1 %}
+                                <a href="{{ MEDIA_URL}}document/{{ doc_1 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                            {% if doc_2 %}
+                                  <a href="{{ MEDIA_URL}}document/{{ doc_2 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                           {% if doc_3 %}
+                                 <a href="{{ MEDIA_URL}}document/{{ doc_3 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div id="goods-tabs-3">
+                        <div class="content-goods-tab">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
+                    </div>
+                    {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                                 <div class="content-goods-tab">{{ page.content }}</div>
+                         </div>
+                     {% endfor %}
+                   </div>
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+     </div>
+

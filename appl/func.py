@@ -32,6 +32,25 @@ def getPaginatorRange(page):
     return paginator_range
 
 
+def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
+    '''
+    Method  return List of Values of items and  Pagination
+    items = QuerySet of items
+    attr = (list of item's attributes)
+    page = number of current page
+    page_num = num element per page
+    '''
+    paginator = Paginator(items, page_num)
+    try:
+        page = items = paginator.page(page)
+    except Exception:
+        page = items = paginator.page(1)
+    if not isinstance(items, list):
+        items = tuple([item.id for item in page.object_list])
+    attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
+
+    return attributeValues, page #Return List Item and Page object of current page
+
 def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
     '''
     Method  return List of Values of items and  Pagination
@@ -450,4 +469,43 @@ def getAnalytic(params = None):
         params['start_date'] = '2014-01-01'
 
     return get_results(**params)
+
+
+def filterLive(request):
+    searchFilter = {}
+    filtersIDs = {}
+    filters = {}
+    ids = []
+
+    filterList=['tpp', 'country', 'branch', 'category']
+
+    for name in filterList:
+        filtersIDs[name] = []
+        filters[name] = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                filtersIDs[name].append(int(pk))
+            except ValueError:
+                continue
+
+        ids += filtersIDs[name]
+
+    if len(ids) > 0:
+        attributes = Item.getItemsAttributesValues('NAME', ids)
+
+        for pk, attr in attributes.items():
+
+            if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
+                continue
+
+            for name, id in filtersIDs.items():
+                if pk in id:
+                    filters[name].append({'id': pk, 'text': attr['NAME'][0]})
+
+                if len(id):
+                    searchFilter[name + '__in'] = id
+
+
+    return filters, searchFilter
 

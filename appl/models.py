@@ -185,6 +185,15 @@ class NewsCategories(Item):
     def __str__(self):
         return self.getName()
 
+class TppTV(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+    hierarchy = hierarchyManager()
+
+    def __str__(self):
+        return self.getName()
+
 class Country(Item):
 
     active = ItemManager()
@@ -453,7 +462,7 @@ class Tender(Item):
     objects = models.Manager()
 
     def __str__(self):
-        return ''
+        return self.getName()
 
 
 class Advertising(Item):
@@ -511,6 +520,15 @@ class Document(Item):
     def __str__(self):
         return ''
 
+class BusinessProposal(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
+
 
 class Gallery(Item):
       active = ItemManager()
@@ -519,6 +537,16 @@ class Gallery(Item):
 
       def __str__(self):
           return str(self.photo)
+
+
+
+class AdditionalPages(Item):
+      active = ItemManager()
+      objects = models.Manager()
+      content = models.TextField(null=True)
+
+      def __str__(self):
+          return str(self.title)
 
 
 class Exhibition(Item):

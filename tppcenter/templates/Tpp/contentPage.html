@@ -1,0 +1,72 @@
+{% load static %}
+{% load i18n %}
+<div class="container">
+    <div class="companies">
+           {% include "main/paginator.html" %}
+             <ul class="company-list">
+                {% for id , attr in tppList.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.IMAGE.0 as image %}
+                    {% with attr.DETAIL_TEXT.0 as about_company %}
+                    {% with attr.ADDRESS.0 as address %}
+                    {% with attr.SITE_NAME.0 as site%}
+                    {% with attr.TELEPHONE_NUMBER.0 as telephone%}
+                    {% with attr.FAX.0 as fax%}
+                    {% with attr.INN.0 as inn%}
+                    {% with attr.FLAG.0 as flag%}
+                    {% with attr.COUNTRY_NAME|first as country_name %}
+                    {% with attr.COUNTRY_FLAG|first as country_flag %}
+                    {% with attr.COUNTRY_ID as country_id %}
+                         <li>
+                        <div class="title">
+                            <img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" />
+                            <a href="#">{{ name }}, {% trans 'VATIN' %} {{ inn }}</a>
+                        </div>
+                        <div class="company-infor">
+                            <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
+                            <div class="desc">
+                               {{ about_company|truncatewords:30 }}
+                                <a href="#">{% trans "More" %}...</a>
+                            </div>
+                            <div class="companycontact">
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                                    <div class="nameinfo">{{ address }}</div>
+                               </div>
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                                    <div class="nameinfo">{{ telephone }}</div>
+                               </div>
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                                    <div class="nameinfo">{{ fax }}</div>
+                               </div>
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                                    <div class="nameinfo"><a href="http://{{ site }}">{{ site }}</a></div>
+                               </div>
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+                                    <div class="nameinfo"><a href="#">{% trans 'Contact us' %}</a></div>
+                               </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+
+            </ul>
+           {% include "main/paginator.html" %}
+    </div>
+</div>

@@ -1,0 +1,147 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+
+
+{% csrf_token %}
+    {% with form.fields.NAME.initial as name %}
+    {% with form.fields.IMAGE.initial as image %}
+    {% with form.fields.FLAG.initial as flag %}
+    {% with form.fields.DETAIL_TEXT.initial as text %}
+    {% with form.fields.ADDRESS.initial as address %}
+    {% with form.fields.SITE_NAME.initial as site_name %}
+    {% with form.fields.TELEPHONE_NUMBER.initial as telephone_number %}
+    {% with form.fields.FAX.initial as fax %}
+    {% with form.fields.INN.initial as inn %}
+    {% with form.fields.SLOGAN.initial as slogan %}
+    {% with form.fields.EMAIL.initial as email %}
+    {% with form.fields.KEYWORD.initial as keyword %}
+    {% with form.fields.DIRECTOR.initial as director %}
+    {% with form.fields.KPP.initial as kpp %}
+    {% with form.fields.OKPO.initial as okpo %}
+    {% with form.fields.OKATO.initial as okato %}
+    {% with form.fields.OKVED.initial as okved %}
+    {% with form.fields.ACCOUNTANT.initial as accountant %}
+    {% with form.fields.ACCOUNT_NUMBER.initial as acoount_number %}
+    {% with form.fields.BANK_DETAILS.initial as bank_detail %}
+
+
+    <label for="id_name">Name</label><input type="text" id="id_name" name="NAME" value="{{ name }}"/><span>{{ form.errors.NAME }}</span><br>
+    {% if image %}
+
+        <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
+        <input type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" />Delete<br>
+    {% endif %}
+         <label for="id_image">Image</label><input type="file" id="id_image" name="IMAGE"/>{{ form.errors.IMAGE }}<br>
+
+
+         {% if flag %}
+
+        <img src="{{ MEDIA_URL }}th/{{ flag.name }}"><br>
+        <input type="checkbox" name="FLAG-CLEAR" value="{{ image }}" />Delete<br>
+    {% endif %}
+         <label for="id_flag">Flag</label><input type="file" id="id_flag" name="FLAG"/>{{ form.errors.FLAG }}<br>
+
+
+
+
+
+    <label for="id_ADDRESS">ADDRESS</label><input type="text" id="id_ADDRESS" name="ADDRESS" value="{{ address }}"/><span>{{ form.errors.ADDRESS }}</span><br>
+
+
+
+     <label for="id_SITE_NAME">SITE_NAME</label><input type="text" id="id_SITE_NAME" name="SITE_NAME" value="{{ site_name }}"/><span>{{ form.errors.SITE_NAME }}</span><br>
+
+     <label for="id_TELEPHONE_NUMBER">TELEPHONE_NUMBER </label><input type="text" id="id_TELEPHONE_NUMBER" name="TELEPHONE_NUMBER" value="{{ telephone_number }}"/><span>{{ form.errors.TELEPHONE_NUMBER }}</span>
+
+
+
+     <label for="id_FAX">FAX</label><input type="text" id="id_FAX" name="FAX" value="{{ fax }}"/><span>{{ form.errors.FAX }}</span><br>
+
+      <label for="id_INN">INN</label><input type="text" id="id_INN" name="INN" value="{{ inn }}"/><span>{{ form.errors.INN }}</span><br>
+
+       <label for="id_EMAIL">EMAIL</label><input type="text" id="id_EMAIL" name="EMAIL" value="{{ email }}"/><span>{{ form.errors.EMAIL }}</span><br>
+
+
+         <label for="id_DIRECTOR">DIRECTOR</label><input type="text" id="id_DIRECTOR" name="DIRECTOR" value="{{ director }}"/><span>{{ form.errors.DIRECTOR }}</span><br>
+
+        <label for="id_KPP">KPP</label><input type="text" id="id_KPP" name="KPP" value="{{kpp}}"/><span>{{ form.errors.KPP }}</span><br>
+
+        <label for="id_OKPO">OKPO</label><input type="text" id="id_OKPO" name="OKPO" value="{{okpo}}"/><span>{{ form.errors.OKPO }}</span><br>
+
+        <label for="id_OKATO">OKATO</label><input type="text" id="id_OKATO" name="OKATO" value="{{okato }}"/><span>{{ form.errors.OKATO }}</span><br>
+
+        <label for="id_OKVED">OKVED</label><input type="text" id="id_OKVED" name="OKVED" value="{{okved }}"/><span>{{ form.errors.OKVED }}</span><br>
+
+        <label for="id_ACCOUNTANT">ACCOUNTANT</label><input type="text" id="id_ACCOUNTANT" name="ACCOUNTANT" value="{{accountant }}"/><span>{{ form.errors.ACCOUNTANT }}</span><br>
+
+     <label for="id_ACCOUNT_NUMBER">ACCOUNT_NUMBER</label><input type="text" id="id_ACCOUNT_NUMBER" name="ACCOUNT_NUMBER" value="{{acoount_number }}"/><span>{{ form.errors.ACCOUNT_NUMBER }}</span><br>
+
+        <label for="id_BANK_DETAILS">BANK_DETAILS</label><input type="text" id="id_BANK_DETAILS" name="BANK_DETAILS" value="{{bank_detail }}"/><span>{{ form.errors.BANK_DETAILS }}</span><br>
+
+    <label for="id_detail_text">Detail text</label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>
+
+
+
+
+
+     <label for="id_keyword">KEYWORD</label><textarea cols="40" rows="10" id="id_keyword"  name="KEYWORD" >{{ keyword }}</textarea>{{ form.errors.KEYWORD }}<br>
+
+
+
+
+
+
+        <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" />
+        <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
+        <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
+
+      {% if  pages|length >  0 %}
+        {% for page in  pages %}
+        <label for="id_form-{{ forloop.counter0 }}-title">Title:</label><input id="id_form-{{  forloop.counter0 }}-title" maxlength="128" name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.title }}" /><br>
+        <label for="id_form-{{  forloop.counter0 }}-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.content }}</textarea>
+        {% endfor %}
+      {% else %}
+       <label for="id_form-0-title">Title:</label><input id="id_form-0-title" maxlength="128" name="pages-0-title" type="text" value="" /><br>
+        <label for="id_form-0-content">Content:</label>
+        <textarea cols="40" rows="10" id="id_form-0-content" name="pages-0-content"></textarea>
+      {% endif %}
+
+
+
+
+
+
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
+
+<input type="submit" name="submit">
+</form>
+
+
+
+
+
+
