@@ -162,25 +162,36 @@ def _tppDetailContent(request, item_id):
     else:
        country = ""
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country})
+    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id' : item_id})
+
     return template.render(context)
 
+def _tabsCompanies(request, page=1):
 
+    tpp = request.GET.get('tpp', 0)
+
+    companies = SearchQuerySet().models(Company)
+    attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(companies, *attr, page_num=10, page=page)
+
+
+    companyList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "tpp:tab_companies_paged"
+
+    templateParams = {
+        'companyList': companyList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+    }
+
+    return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
 
 def addTpp(request):
     form = None
@@ -262,5 +273,7 @@ def _getValues(request):
     values['BANK_DETAILS'] = request.POST.get('BANK_DETAILS', "")
 
     return values
+
+
 
 

@@ -95,6 +95,7 @@ $(document).ready(function() {
             },
 
             init: function() {
+
                 ui.curPage = $('.cur-page');
                 ui.keywords = $('.keyword .list-key');
                 ui.filter_form = $('form[name="filter-form"]');
@@ -109,7 +110,7 @@ $(document).ready(function() {
                 $(document).on('click', '.single-page', ui.onClick);
                 $(document).on('click', '.filter-remove', ui.onRemove);
                 $(document).on('click', '#save-filter', ui.saveFilter);
-                $(document).on('click', '.panging a', ui.pageNav);
+                $(document).on('click', ui.container + ' .panging a', ui.pageNav);
                 $(document).on('submit', 'form[name="search"]', ui.search);
             },
 
@@ -137,7 +138,7 @@ $(document).ready(function() {
 
             saveFilter: function() {
 
-                var filters = {}
+                var filters = {};
 
                 for (filter in ui.filters)
                 {
@@ -186,7 +187,7 @@ $(document).ready(function() {
             },
 
             initFilters: function() {//initial values for filter popup
-                var filter_keys = []
+                var filter_keys = [];
 
                 for (filter in ui.filters)
                 {
@@ -359,5 +360,48 @@ $(document).ready(function() {
                     $(document).trigger(ui.signals['end_load'], [url, data]);
                 }, 'json');
            }
-       }
+       };
 
+
+var uiDetail = {
+        tabs: ".cpn-details-tab",
+
+        loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
+
+
+
+        tabContent: '.tpp-dt-content',
+
+        init: function () {
+            $(uiDetail.tabs).tabs({
+                beforeLoad: function(event, ui) {
+                    uiDetail.setLoader(ui.panel);
+                },
+                load: uiDetail.cacheData
+            });
+
+            $(document).on('click', uiDetail.tabContent + ' .panging a', uiDetail.pageNav);
+        },
+
+        setLoader: function (content) {
+            content.html(uiDetail.loader);
+        },
+
+        cacheData: function( event, ui ) {
+            var tabLink = ui.tab.find('a');
+            var id = tabLink.data('id');
+            var tab = $('<div></div>').attr('id', id).append(ui.panel);
+
+            tabLink.attr('href', '#' + id);
+            $(this).append(tab);
+        },
+
+        pageNav: function() {
+            var content = $(this).parents(uiDetail.tabContent).parent();
+            var link = $(this).attr('href');
+            uiDetail.setLoader(content);
+            content.load( link );
+
+            return false;
+        }
+};
