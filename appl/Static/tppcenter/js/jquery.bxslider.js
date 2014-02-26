@@ -298,6 +298,7 @@
 			// if "vertical" mode, always use adaptiveHeight to prevent odd behavior
 			if (slider.settings.mode == 'vertical') slider.settings.adaptiveHeight = true;
 			// set the viewport height
+
 			slider.viewport.height(getViewportHeight());
 			// make sure everything is positioned just right (same as a window resize)
 			el.redrawSlider();
@@ -317,6 +318,8 @@
 			if (slider.settings.controls) updateDirectionControls();
 			// if touchEnabled is true, setup the touch events
 			if (slider.settings.touchEnabled && !slider.settings.ticker) initTouch();
+			
+			el.redrawSlider();
 		}
 
 		/**
@@ -350,6 +353,7 @@
 					}
 				}
 			}
+			
 			// if "vertical" mode, calculate the sum of the heights of the children
 			if(slider.settings.mode == 'vertical'){
 				children.each(function(index) {
@@ -359,12 +363,14 @@
 				if(slider.settings.slideMargin > 0){
 					height += slider.settings.slideMargin * (slider.settings.minSlides - 1);
 				}
+				
 			// if not "vertical" mode, calculate the max height of the children
 			}else{
 				height = Math.max.apply(Math, children.map(function(){
 					return $(this).outerHeight(false);
 				}).get());
 			}
+			
 			return height;
 		}
 

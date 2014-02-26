@@ -105,18 +105,8 @@ def _newsContent(request, page=1):
 
     newsList = result[0]
     news_ids = [id for id in newsList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=news_ids).values('p2c__child__p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-    for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
 
-    for id, new in newsList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        new.update(toUpdate)
+    func.addDictinoryWithCountryAndOrganization(news_ids, newsList)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)

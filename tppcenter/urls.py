@@ -13,6 +13,7 @@ import tppcenter.BusinessProposal.urls
 import tppcenter.Exhibitions.urls
 import tppcenter.Tenders.urls
 import tppcenter.TppTV.urls
+import tppcenter.Profile.urls
 
 
 
@@ -33,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
+    url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
 
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),

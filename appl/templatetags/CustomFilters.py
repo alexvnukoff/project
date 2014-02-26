@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 from copy import copy
 from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
-from django.template import  Node, TemplateSyntaxError
+import datetime
+from django.template import Node, TemplateSyntaxError
 
 from urllib.parse import urlencode
 
@@ -53,6 +54,16 @@ def formatPrice(value):
 def getSymbol(value):
 
     return currencySymbol(value)
+
+@register.filter(name='makeDate')
+def makeDate(value):
+
+    if value:
+        date = datetime.datetime.strptime(value, "%Y-%m-%d")
+        return date
+
+
+
 
 class DynUrlNode(template.Node):
     def __init__(self, *args):
