@@ -251,7 +251,7 @@ import djcelery
 djcelery.setup_loader()
 
 ##################### Tornado settings ####################################
-ORDERS_REDIS_HOST = 'tornadoredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'
 
 
 ###################### Custom settings ###################################
