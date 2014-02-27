@@ -3,8 +3,8 @@ __author__ = 'Root'
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
-from appl.models import SystemMessages
-from core.models import State, Attribute, Value, Slot, Dictionary
+from appl.models import SystemMessages, Country
+from core.models import State, Attribute, Value, Slot, Dictionary, User
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -119,5 +119,86 @@ def databaseInitialization(sender, **kwargs):
         else:
             Attribute.objects.get_or_create(title=attribute, type=type)
 
+    #Create dictionary of countries
+    crt_usr = User.objects.get(pk=1)
+    cntr, res = Country.objects.get_or_create(title='Azerbaydjan', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Азербайджан'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Armeniya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Армения'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Belarus', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Беларусь'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Jordjiya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Грузия'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Israel', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Израиль'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Kazakhstan', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Казахстан'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Kyrgiziya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Киргизия'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Latviya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Латвия'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Litva', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Литва'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Moldova', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Молдова'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Russia', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Россия'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Tadjikistan', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Таджикистан'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Turkmeniya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Туркмения'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Uzbekistan', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Узбекистан'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Ukraine', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Украина'}
+        cntr.setAttributeValue(attr, crt_usr)
+
+    cntr, res = Country.objects.get_or_create(title='Estoniya', create_user = crt_usr)
+    if res:
+        attr = {'NAME': 'Эстония'}
+        cntr.setAttributeValue(attr, crt_usr)
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)
