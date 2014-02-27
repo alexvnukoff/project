@@ -10,6 +10,7 @@ from tpp.SiteUrlMiddleWare import get_request
 
 
 class ProfileForm(forms.Form):
+      #TODO: Jenya Fix required field + messages (if successfully saved)
       image = forms.ImageField(required=False)
 
       last_name = forms.CharField(required=True, label=_("Last name"))
@@ -26,13 +27,13 @@ class ProfileForm(forms.Form):
       countries = ([(id, country['NAME'][0]) for id, country in countries.items()])
       country = forms.ChoiceField(required=False, widget=forms.Select(), choices=countries)
 
-      #dictSex = Dictionary.objects.get(title='SEX')
-      #slots = tuple(dictSex.getSlotsList().values_list("id", "title"))
-      #sex  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
+      dictSex = Dictionary.objects.get(title='SEX')
+      slots = tuple(dictSex.getSlotsList().values_list("id", "title"))
+      sex  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
 
-      #dictStatus = Dictionary.objects.get(title='PERSONAL_STATUS')
-      #slots = tuple(dictStatus.getSlotsList().values_list("id", "title"))
-      #personal_status  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
+      dictStatus = Dictionary.objects.get(title='PERSONAL_STATUS')
+      slots = tuple(dictStatus.getSlotsList().values_list("id", "title"))
+      personal_status  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
 
       site_name = forms.CharField(required=False, label=_("Site name"))
       site_name.widget.attrs.update({'class': 'text'})

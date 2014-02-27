@@ -22,7 +22,6 @@ from django.conf import settings
 
 def get_product_list(request, page=1, item_id=None):
 
-
     if item_id is None:
         productsPage = _productContent(request, page)
     else:

@@ -556,6 +556,11 @@ class Exhibition(Item):
     def __str__(self):
         return self.getName()
 
+class Messages(Item):
+
+    def __str__(self):
+        return self.title
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers

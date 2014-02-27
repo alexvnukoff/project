@@ -109,13 +109,15 @@ def _profileContent(request):
                                              'SKYPE', 'SITE_NAME', 'ICQ', 'USER_MIDDLE_NAME', 'USER_FIRST_NAME',
                                              'USER_LAST_NAME', 'IMAGE', 'TELEPHONE_NUMBER')
 
-        avatar = profile['IMAGE'][0] if profile.get('IMAGE', False) else ""
+
         if not profile:
             profile = {}
         try:
             country = Country.objects.get(p2c__child=cabinet).pk
         except Exception:
             country = ""
+
+        avatar = profile['IMAGE'][0] if profile.get('IMAGE', False) else ""
         dictSex = Dictionary.objects.get(title='SEX')
         sexSlot = profile['SEX'][0] if profile.get('SEX', False) else ""
         sex = dictSex.getSlotID(title=sexSlot) if sexSlot else ""

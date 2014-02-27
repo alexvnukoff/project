@@ -1,0 +1,364 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}News{% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
+    {% endblock %}
+
+
+    {% block js %}
+         {{ block.super }}
+ <script type="text/javascript">
+    $(function() {
+        $( "#tabs" ).tabs();
+        $( ".date" ).datepicker();
+        $(".messages-l").tabs();
+        $(".message-tabcontent").tabs();
+
+    });
+</script>
+
+    {% endblock %}
+
+     {% block content %}
+<div class="analytics">
+				<div class="community">
+                	<div class="messages-l">
+                    	<div class="tab-cate">
+                            <ul>
+                                <li><a href="#message-tabs-1">Организация</a></li>
+                                <li class="ui-tabs-active"><a href="#message-tabs-2">Польз-ли</a></li>
+                            </ul>
+                        </div>
+                        <div id="message-tabs-1">
+                            <div class="message-tabcontent">
+								<ul class="custom-ms">
+                                	<li>
+                                    	<span class="thumb"></span>
+                                        <a href="#test">ООО «Дятел»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="message-tabs-2">
+                            <div class="message-tabcontent">
+								<ul class="custom-ms">
+                                    {% for id, attr in users.items %}
+                                        {% with attr.USER_LAST_NAME|first as last_name %}
+                                        {% with attr.USER_FIRST_NAME|first as first_name %}
+                                        {% with attr.USER_MIDDLE_NAME|first as middle_name %}
+                                        {% with attr.IMAGE|first as image %}
+                                        <li {% if active == id %}class="ui-tabs-active"{% endif %}>
+
+                                                <span class="thumb"></span>
+                                                <a href="#custom-content1">{{ first_name }} {{ middle_name }} {{ last_name }}</a>
+
+                                        </li>
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                                <div id="custom-content1">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="title">Написать сообщение</div>
+                                        <div class="customform">
+                                        	<div class="editor"><img src="img/editor.jpg" width="435" height="115" /></div>
+                                            <p><a href="#test" class="btntype2">Отправить</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content2">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content3">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 3
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content4">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 4
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content5">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 5
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content6">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 6
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content7">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 7
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content8">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 8
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content9">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 9
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content10">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 10
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content11">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 11
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content12">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="dateline"><span>23 фев 2014</span></div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                            <div class="customline">
+                                                <label class="time">9:23:15</label>
+                                                <div class="clumnleft">
+                                                    <span class="thumb"></span>
+                                                    <a href="#test"><i class="i-attack imgnews"></i></a>
+                                                </div>
+                                                <div class="clumnright">
+                                                    <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube </p>
+                                                    <a href="#test">Подробнее...</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="title">Написать сообщение</div>
+                                        <div class="customform">
+                                        	<div class="editor"><img src="img/editor.jpg" width="435" height="115" /></div>
+                                            <p><a href="#test" class="btntype2">Отправить</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content13">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 13
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content14">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 14
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content15">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 15
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content16">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 16
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content17">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 17
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content18">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 18
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="custom-content19">
+                                	<div class="custom-contentin">
+                                        <div class="customtable">
+                                            tab 19
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+     {% endblock %}
