@@ -1,0 +1,10 @@
+.table-big{ float:left; width:100%; margin:12px 0 0 0;}
+.table-big tr td{ padding:8px; font-size:11px;}
+.table-big tr.top td{ font-size:12px; font-weight:bold;}
+.table-big tr:nth-child(4n+1){ background-color:#fcfcfc;}
+.table-big tr:nth-child(4n+2){ background-color:#fcfcfc;}
+.no-results { text-align: center; }
+.table-big tr td img {
+    max-width: 115px;
+    max-height: 100px;
+}
