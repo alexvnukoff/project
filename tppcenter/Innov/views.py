@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
@@ -7,18 +7,17 @@ from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
 from datetime import datetime
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
-
-from core.tasks import addNewsAttrubute
+from core.tasks import addNewProject
 from django.conf import settings
 
-def get_innov_list(request, page=1):
+def get_innov_list(request, page=1, item_id=None):
     user = request.user
     if user.is_authenticated():
         notification = len(Notification.objects.filter(user=request.user, read=False))
@@ -31,15 +30,19 @@ def get_innov_list(request, page=1):
         notification = None
 
     current_section = "Innovation Project"
-
-    newsPage = _innovContent(request, page)
-
-
-
-
+    if item_id is None:
+        newsPage = _innovContent(request, page)
+    else:
+        newsPage = _innovDetailContent(request, item_id)
 
 
-    return render_to_response("Innov/index.html", {'newsPage': newsPage},   context_instance=RequestContext(request))
+
+
+
+
+    return render_to_response("Innov/index.html", {'newsPage': newsPage, 'current_section': current_section,
+                                                   'notification': notification, 'user_name': user_name },
+                              context_instance=RequestContext(request))
 
 
 
@@ -49,25 +52,10 @@ def _innovContent(request, page=1):
     innov_projects = InnovationProject.active.get_active().order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(innov_projects, *('NAME',), page_num=6, page=page)
+    result = func.setPaginationForItemsWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
 
     innovList = result[0]
     innov_ids = [id for id in innovList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=innov_ids).values('p2c__child__p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-
-    country_dict = {}
-    for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
-
-    companies = Company.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
-    companies_ids = [company['pk'] for company in companies]
-    companiesList = Item.getItemsAttributesValues(("NAME"), companies_ids)
-
-    company_dict = {}
-    for company in companies:
-        company_dict[company['p2c__child']] = company['pk']
 
 
     branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
@@ -78,14 +66,11 @@ def _innovContent(request, page=1):
     for branch in branches:
         branches_dict[branch['p2c__child']] = branch['pk']
 
+    func.addDictinoryWithCountryAndOrganization(innov_ids, innovList)
 
     for id, innov in innovList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0),
-                    'COMPANY_NAME': companiesList[company_dict[id]].get('NAME', 0 ) if company_dict.get(id, 0) else [0],
-                    'COMPANY_ID': company_dict.get(id, 0),
-                    'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0 ) if branches_dict.get(id, 0) else [0],
+
+        toUpdate = {'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0 ) if branches_dict.get(id, 0) else [0],
                     'BRANCH_ID': branches_dict.get(id, 0)}
         innov.update(toUpdate)
 
@@ -102,67 +87,112 @@ def _innovContent(request, page=1):
 
 
 
-def addNews(request):
+def _innovDetailContent(request, item_id):
+     innov = get_object_or_404(InnovationProject, pk=item_id)
+     innovValues = innov.getAttributeValues(*('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN',
+                                                 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT'))
+
+     photos = Gallery.objects.filter(c2p__parent=item_id)
+
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+     branch = Branch.objects.get(p2c__child=item_id)
+     branchValues = branch.getAttributeValues('NAME')
+     innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
+
+     func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
+
+     template = loader.get_template('Innov/detailContent.html')
+
+     context = RequestContext(request, {'innovValues': innovValues, 'photos': photos,
+                                        'additionalPages': additionalPages})
+     return template.render(context)
+
+
+
+
+def addProject(request):
     form = None
 
-    if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
-        user = request.user
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        addAttr={'NAME': 'True'}
-        form = ItemForm('News', values=values, addAttr=addAttr)
-        form.clean()
-
-        if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr)
-            return HttpResponseRedirect(reverse('news:main'))
-
-
-
-
-
-    return render_to_response('News/addForm.html', {'form': form}, context_instance=RequestContext(request))
-
-
-
-def updateNew(request, item_id):
-    addAttr = {'NAME': 'True'}
-    if request.method != 'POST':
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
-
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-        form = ItemForm('News', id=item_id, addAttr=addAttr)
+    currency = Dictionary.objects.get(title='CURRENCY')
+    currency_slots = currency.getSlotsList()
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
-
         user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['IMAGE-CLEAR'] = request.POST.get('IMAGE-CLEAR', " ")
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
 
-        form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
+        values = _getValues(request)
+
+        branch = request.POST.get('BRANCH', "")
+
+        form = ItemForm('InnovationProject', values=values)
+        form.clean()
+
+        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            return HttpResponseRedirect(reverse('innov:main'))
+
+    return render_to_response('Innov/addForm.html', {'form': form, 'branches': branches,
+                                                           'currency_slots':currency_slots},
+                              context_instance=RequestContext(request))
+
+
+
+def updateProject(request, item_id):
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    try:
+        currentBranch = Branch.objects.get(p2c__child=item_id)
+    except Exception:
+        currentBranch = ""
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+    pages = pages.queryset
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+
+    currency = Dictionary.objects.get(title='CURRENCY')
+    currency_slots = currency.getSlotsList()
+
+    form = ItemForm('InnovationProject', id=item_id)
+
+    if request.POST:
+        func.notify("item_creating", 'notification', user=request.user)
+
+        user = request.user
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+
+        values = _getValues(request)
+
+        branch = request.POST.get('BRANCH', "")
+
+        form = ItemForm('InnovationProject', values=values, id=item_id)
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr, item_id)
-            return HttpResponseRedirect(reverse('news:main'))
+            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            return HttpResponseRedirect(reverse('innov:main'))
 
 
 
@@ -170,7 +200,33 @@ def updateNew(request, item_id):
 
 
 
-    return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form}, context_instance=RequestContext(request))
+    return render_to_response('Innov/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
+                                                           'pages': pages, 'currentBranch': currentBranch,
+                                                           'branches': branches, 'currency_slots': currency_slots},
+                              context_instance=RequestContext(request))
 
+
+
+
+def _getValues(request):
+
+    values = {}
+    values['NAME'] = request.POST.get('NAME', "")
+    values['PRODUCT_NAME'] = request.POST.get('PRODUCT_NAME', "")
+    values['COST'] = request.POST.get('COST', "")
+    values['CURRENCY'] = request.POST.get('CURRENCY', "")
+    values['TARGET_AUDIENCE'] = request.POST.get('TARGET_AUDIENCE', "")
+    values['REALESE_DATE'] = request.POST.get('REALESE_DATE', "")
+    values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
+    values['KEYWORD'] = request.POST.get('KEYWORD', "")
+    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
+    values['BUSINESS_PLAN'] = request.POST.get('BUSINESS_PLAN', "")
+    values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
+
+
+
+
+
+    return values
 
 

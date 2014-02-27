@@ -7,16 +7,19 @@ from appl import func
 from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
 from datetime import datetime
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+
+from core.tasks import addNewExhibition
+
 from haystack.query import SQ, SearchQuerySet
 import json
-from core.tasks import addNewsAttrubute
+
 from django.conf import settings
 
 def get_exhibitions_list(request, page=1):
@@ -103,26 +106,8 @@ def _exhibitionsContent(request, page=1):
 
     exhibitionsList = result[0]
     exhibitions_ids = [id for id in exhibitionsList.keys()]
-    organizations = Organization.objects.filter(p2c__child__in=exhibitions_ids).values('c2p__parent__country', 'pk', 'p2c__child__exhibition')
-    organization_dict = {}
-    country_dict = {}
 
-    for organization in organizations:
-        organization_dict[organization['p2c__child__exhibition']] = organization['pk']
-        country_dict[organization['p2c__child__exhibition']] = organization['c2p__parent__country']
-
-    countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), country_dict.values())
-    organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organization_dict.values())
-
-
-    for id, exhibition in exhibitionsList.items():
-        toUpdate = {'ORG_NAME': organizationsList[organization_dict[id]].get('NAME', [""]),
-                    'ORG_FLAG': organizationsList[organization_dict[id]].get('FLAG', [""]),
-                    'ORG_ID': organization_dict[id],
-                    'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [""]),
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [""]),
-                    'COUNTRY_ID': country_dict[id]}
-        exhibition.update(toUpdate)
+    func.addDictinoryWithCountryAndOrganization(exhibitions_ids, exhibitionsList)
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -152,65 +137,86 @@ def _exhibitionsContent(request, page=1):
 
 
 
-def addNews(request):
+
+def addExhibition(request):
     form = None
+
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
         user = request.user
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        addAttr={'NAME': 'True'}
-        form = ItemForm('News', values=values, addAttr=addAttr)
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+
+        values = _getValues(request)
+
+        branch = request.POST.get('BRANCH', "")
+
+        form = ItemForm('Exhibition', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr)
-            return HttpResponseRedirect(reverse('news:main'))
+        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            return HttpResponseRedirect(reverse('exhibitions:main'))
+
+    return render_to_response('Exhibitions/addForm.html', {'form': form, 'branches': branches},
+                              context_instance=RequestContext(request))
 
 
 
+def updateExhibition(request, item_id):
+    branches = Branch.objects.all()
+    branches_ids = [branch.id for branch in branches]
+    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    try:
+        currentBranch = Branch.objects.get(p2c__child=item_id)
+    except Exception:
+        currentBranch = ""
 
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+    pages = pages.queryset
 
-    return render_to_response('News/addForm.html', {'form': form}, context_instance=RequestContext(request))
-
-
-
-def updateNew(request, item_id):
-
-    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(parent_id=item_id)
     photos = ""
 
     if gallery.queryset:
         photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-    addAttr = {'NAME': 'True'}
-    form = ItemForm('News', id=item_id, addAttr=addAttr)
+
+
+
+
+    form = ItemForm('Exhibition', id=item_id)
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
 
+
         user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
 
-        form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
+        values = _getValues(request)
+
+        branch = request.POST.get('BRANCH', "")
+
+        form = ItemForm('Exhibition', values=values, id=item_id)
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, addAttr , item_id)
-            return HttpResponseRedirect(reverse('news:main'))
+            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            return HttpResponseRedirect(reverse('exhibitions:main'))
 
 
 
@@ -218,7 +224,31 @@ def updateNew(request, item_id):
 
 
 
-    return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form}, context_instance=RequestContext(request))
+    return render_to_response('Exhibitions/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
+                                                           'pages': pages, 'currentBranch': currentBranch,
+                                                           'branches': branches},
+                              context_instance=RequestContext(request))
+
+
+
+
+def _getValues(request):
+
+    values = {}
+    values['NAME'] = request.POST.get('NAME', "")
+    values['CITY'] = request.POST.get('CITY', "")
+    values['START_EVENT_DATE'] = request.POST.get('START_EVENT_DATE', "")
+    values['END_EVENT_DATE'] = request.POST.get('END_EVENT_DATE', "")
+    values['KEYWORD'] = request.POST.get('KEYWORD', "")
+    values['ROUTE_DESCRIPTION'] = request.POST.get('ROUTE_DESCRIPTION', "")
+    values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
+    values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
+    values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+
+
+
+
+    return values
 
 
 

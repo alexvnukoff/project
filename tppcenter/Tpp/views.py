@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
@@ -19,9 +19,15 @@ import json
 from core.tasks import addNewTpp
 from django.conf import settings
 
-def get_tpp_list(request, page=1):
 
-    tppPage = _tppContent(request, page)
+
+def get_tpp_list(request, page=1, item_id=None):
+
+
+    if item_id is None:
+        tppPage = _tppContent(request, page)
+    else:
+        tppPage = _tppDetailContent(request, item_id)
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
@@ -98,11 +104,12 @@ def _tppContent(request, page=1):
         else:
             order.append(sortFields[sortField2])
 
+
     tpp = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(tpp, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
-                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG'),
-                                                  page_num=5, page=page)
+                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG',
+                                                               'SLUG'),      page_num=5, page=page)
 
     tppList = result[0]
     tpp_ids = [id for id in tppList.keys()]
@@ -119,6 +126,7 @@ def _tppContent(request, page=1):
                     'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                     'COUNTRY_ID':  country_dict.get(id, 0)}
         tpp.update(toUpdate)
+
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -137,9 +145,41 @@ def _tppContent(request, page=1):
         'order2': order2
     }
 
+
     context = RequestContext(request, templateParams)
 
     return template.render(context)
+
+
+def _tppDetailContent(request, item_id):
+
+    tpp = get_object_or_404(Tpp, pk=item_id)
+    tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+
+
+    if not tppValues.get('FLAG', False):
+       country = Country.objects.get(p2c__child=tpp).getAttributeValues(*('FLAG', 'NAME'))
+    else:
+       country = ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    template = loader.get_template('Tpp/detailContent.html')
+    context = RequestContext(request, {'tppValues': tppValues, 'country': country})
+    return template.render(context)
+
 
 
 def addTpp(request):

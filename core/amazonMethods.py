@@ -16,13 +16,14 @@ from celery import shared_task
 
 
 
-def add(imageFile=None):
+def add(imageFile=None, sizes=None):
 
-    sizes = {
-        'big': {'box': (500, 500), 'fit': False},
-        'small': {'box': (200, 200), 'fit': False},
-        'th': {'box':(80, 80), 'fit': True}
-    }
+    if not sizes:
+        sizes = {
+            'big': {'box': (500, 500), 'fit': False},
+            'small': {'box': (200, 200), 'fit': False},
+            'th': {'box':(80, 80), 'fit': True}
+        }
 
     name = str(uuid.uuid4())
     i = now()
