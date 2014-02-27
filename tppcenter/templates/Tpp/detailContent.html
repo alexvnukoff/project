@@ -28,203 +28,87 @@
                 <div class="cpn-details-tab" id="tpp-details-tab">
                     <div class="tab-cate">
                         <ul>
-                        	<li><a href="#cpn-tabs-1">О нас</a></li>
-                            <li><a href="#cpn-tabs-2">Реквизиты</a></li>
-                            <li><a href="#cpn-tabs-3">Обращения</a></li>
-                            <li><a href="#cpn-tabs-4">Новости</a></li>
-                            <li><a href="#cpn-tabs-5">Товары</a></li>
-                            <li><a href="#cpn-tabs-6">Услуги</a></li>
-                            <li><a href="#cpn-tabs-7">Сайты</a></li>
-                            <li><a href="#cpn-tabs-8">Компании</a></li>
-
-                            <li><a href="#cpn-tabs-9">Тендеры</a></li>
-                            <li><a href="#cpn-tabs-10">Афиша</a></li>
-                            <li><a href="#cpn-tabs-11">Структура</a></li>
-                            <li><a href="#cpn-tabs-12">Персонал</a></li>
-                            <li><a href="#cpn-tabs-13">Контакты</a></li>
-                            <li><a href="#cpn-tabs-14">Фото</a></li>
+                        	<li>
+                                <a href="#cpn-tabs-about">
+                                    {% trans "About" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-recvisits">
+                                    {% trans "Recvisits" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="news-tab" href="{% url "tpp:tab_news" item_id %}">
+                                    {% trans "News" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-services">
+                                    {% trans "Services" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-gallery">
+                                    {% trans "Gallery" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="tenders-tenders" href="{% url "tpp:tab_tenders" item_id %}">
+                                    {% trans "Tenders" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="exhibitions-tab" href="{% url "tpp:tab_exhibitions" item_id %}">
+                                    {% trans "Exhibitions" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-structure">
+                                    {% trans "Structure" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-staff">
+                                    {% trans "Staff" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#cpn-tabs-contacts">
+                                    {% trans "Contacts" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="company-tab" href="{% url "tpp:tab_companies" item_id %}">
+                                    {% trans "Companies" %}
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                    <div id="cpn-tabs-1">
+                    <div id="cpn-tabs-about">
                         <div class="tpp-dt-content">
                         	{{ content }}
                         </div>
                     </div>
-                    <div id="cpn-tabs-2">
+                    <div id="cpn-tabs-recvisits">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
-                    <div id="cpn-tabs-3">
+                    <div id="cpn-tabs-services">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
-                    <div id="cpn-tabs-4">
+                    <div id="cpn-tabs-gallery">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
-                    <div id="cpn-tabs-5">
+                    <div id="cpn-tabs-structure">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
-                    <div id="cpn-tabs-6">
+                    <div id="cpn-tabs-staff">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
-                    <div id="cpn-tabs-7">
+                    <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
-                    </div>
-                    <div id="cpn-tabs-8">
-                        <div class="tpp-dt-content">
-                        	<table class="table-deals" cellpadding="0" cellpadding="0">
-                            	<tr class="top">
-                                	<td>№</td>
-                                    <td>Лого</td>
-                                    <td>Наименование</td>
-                                    <td>Контакты</td>
-                                    <td>Сайт</td>
-                                    <td>Дата рег-ии</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                                <tr>
-                                	<td>1</td>
-                                    <td><img src="img/thumb-small.gif" alt="" /></td>
-                                    <td>ООО "Авангард"</td>
-                                    <td> +7(945) 345-56-67, 567-56-67</td>
-                                    <td>www.avang.ru</td>
-                                    <td>23.10.2013</td>
-                                </tr>
-                            </table>
-                            <div class="panging">
-                                ←<a href="#">Назад</a>|
-                                <a href="#">1</a>|
-                                <a href="#">2</a>|
-                                <a href="#">3</a>|
-                                <a href="#">4</a>|
-                                <a href="#">5</a>|
-                                <a href="#">6</a>|
-                                <a href="#">Вперед </a>→
-                            </div>
-                        </div>
-                    </div>
-                    <div id="cpn-tabs-9">
-                        <div class="tpp-dt-content">9</div>
-                    </div>
-                    <div id="cpn-tabs-10">
-                        <div class="tpp-dt-content">10</div>
-                    </div>
-                    <div id="cpn-tabs-11">
-                        <div class="tpp-dt-content">11</div>
-                    </div>
-                    <div id="cpn-tabs-12">
-                        <div class="tpp-dt-content">12</div>
-                    </div>
-                    <div id="cpn-tabs-13">
-                        <div class="tpp-dt-content">13</div>
-                    </div>
-                    <div id="cpn-tabs-14">
-                        <div class="tpp-dt-content">14</div>
                     </div>
                 </div>
-
-
             {% endwith %}
             {% endwith %}
             {% endwith %}
@@ -234,5 +118,4 @@
 
 
   </div>
-
 

@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Logo" %}</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Contacts" %}</td>
+            <td>{% trans "Site" %}</td>
+            <td>{% trans "Joined" %}</td>
+        </tr>
+
+        {% for id, attr in companyList.items %}
+            {% with attr.NAME|first as name %}
+            {% with attr.IMAGE|first as logo %}
+            {% with attr.SITE_NAME|first as site %}
+            {% with attr.TELEPHONE_NUMBER|first as phone %}
+            {% with attr.SLUG|first as slug %}
+            <tr>
+                <td>{{ id }}</td>
+                <td>
+                    <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
+                        <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
+                        {{ name|truncatewords:2 }}
+                    </a>
+                </td>
+                <td>{{ phone }}</td>
+                <td>{{ site }}</td>
+                <td>23.10.2013</td>
+            </tr>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "main/paginator.html" %}
+</div>

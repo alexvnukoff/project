@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -16,38 +16,97 @@ from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
 from core.tasks import addNewTender
 from django.conf import settings
+from haystack.query import SQ, SearchQuerySet
+import json
 
 def get_tenders_list(request, page=1, item_id=None):
-    user = request.user
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-    current_section = "Tenders"
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
 
     if item_id is None:
         tendersPage = _tendersContent(request, page)
     else:
         tendersPage = _tenderDetailContent(request, item_id)
 
+    if not request.is_ajax():
+        user = request.user
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "Tenders"
 
+        templateParams =  {
+            'user_name': user_name,
+            'current_section': current_section,
+            'tendersPage': tendersPage,
+            'notification': notification,
+            'scripts': scripts,
+            'styles': styles,
+            'search': request.GET.get('q', '')
+        }
 
-
-
-    return render_to_response("Tenders/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'tendersPage': tendersPage, 'notification': notification},
-                              context_instance=RequestContext(request))
+        return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage}))
 
 
 def _tendersContent(request, page=1):
+
     #TODO Jenya change to get_active_related()
-    tenders = Tender.active.get_active().order_by('-pk')
-    result = func.setPaginationForItemsWithValues(tenders, *('NAME', 'COST', 'CURRENCY', 'SLUG'), page_num=5, page=page)
+
+    #tenders = Tender.active.get_active().order_by('-pk')
+
+    filters, searchFilter = func.filterLive(request)
+
+    #companies = Company.active.get_active().order_by('-pk')
+    sqs = SearchQuerySet().models(Tender)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+
+    tenders = sqs.order_by(*order)
+
+    result = func.setPaginationForSearchWithValues(tenders, *('NAME', 'COST', 'CURRENCY', 'SLUG'), page_num=5, page=page)
+
     tendersList = result[0]
     tenders_ids = [id for id in tendersList.keys()]
     func.addDictinoryWithCountryAndOrganization(tenders_ids, tendersList)
@@ -56,17 +115,29 @@ def _tendersContent(request, page=1):
     paginator_range = func.getPaginatorRange(page)
 
 
-
     url_paginator = "tenders:paginator"
     template = loader.get_template('Tenders/contentPage.html')
-    context = RequestContext(request, {'tendersList': tendersList, 'page': page,
-                                       'paginator_range': paginator_range, 'url_paginator': url_paginator})
+
+    templateParams = {
+        'tendersList': tendersList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
+
     return template.render(context)
 
 
-
-
 def _tenderDetailContent(request, item_id):
+
+
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -83,9 +154,6 @@ def _tenderDetailContent(request, item_id):
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
                                         'additionalPages': additionalPages})
      return template.render(context)
-
-
-
 
 
 def addTender(request):
@@ -116,7 +184,6 @@ def addTender(request):
 
     return render_to_response('Tenders/addForm.html', {'form': form, 'currency_slots': currency_slots},
                               context_instance=RequestContext(request))
-
 
 
 def updateTender(request, item_id):
@@ -169,8 +236,6 @@ def updateTender(request, item_id):
     return render_to_response('Tenders/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
                                                         'currency_slots': currency_slots, 'pages': pages},
                               context_instance=RequestContext(request))
-
-
 
 
 def _getValues(request):
