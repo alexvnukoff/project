@@ -340,8 +340,8 @@ def company_reload_DB_DB(request):
     print('Reload companies from buffer DB into TPP DB...')
     qty = L_Company.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    #comp_lst = L_Company.objects.filter(completed=False).all()
-    comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
+    comp_lst = L_Company.objects.filter(completed=False).all()
+    #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
     #comp_lst = L_Company.objects.filter(pk=545208)
     i = 0
     for leg_cmp in comp_lst:
