@@ -5,6 +5,7 @@ from core.amazonMethods import add
 from appl.models import Company, Tpp, Product, Country
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import Group
 from django.conf import settings
 import datetime
 import csv
@@ -362,7 +363,7 @@ def company_reload_DB_DB(request):
             print(leg_cmp.btx_id, '##', leg_cmp.short_name, '##', ' Count: ', i)
             i += 1
             continue
-
+        '''
         if len(leg_cmp.preview_picture):
             img_small_path = add(img_root + leg_cmp.preview_picture)
         else:
@@ -371,7 +372,9 @@ def company_reload_DB_DB(request):
             img_detail_path = add(img_root + leg_cmp.detail_picture)
         else:
             img_detail_path = ''
-
+        '''
+        img_small_path = ''
+        img_detail_path = ''
         attr = {'NAME': leg_cmp.short_name,
                 'IMAGE_SMALL': img_small_path,
                 'ANONS': leg_cmp.preview_text,
@@ -441,9 +444,30 @@ def company_reload_DB_DB(request):
                 i += 1
                 continue
 
+        # add workers to Company's community
+        lst_wrk = L_User.objects.filter(company=leg_cmp.short_name)
+        for wrk in lst_wrk:
+            g = Group.objects.get(name=new_comp.community)
+            try:
+                wrk_obj = User.objects.get(pk=wrk.tpp_id)
+                g.user_set.add(wrk_obj)
+            except:
+                continue
+
         # create relationship type=Dependence with country
-        Relationship.objects.get_or_create(parent=Country.objects.get(item2value__attr__title="NAME",
-                    item2value__title=leg_cmp.country_name), type='dependence', child=new_comp, create_user=create_usr)
+        try: #if there isn't country in Company take it from TPP
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
+        except:
+            tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
+            try:
+                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
+            except:
+                L_Company.objects.get(btx_id=leg_cmp.btx_id).delete()
+                Company.objects.get(pk=leg_cmp.tpp_id).delete()
+                i += 1
+                continue
+
+        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
 
         i += 1
         print('Milestone: ', qty + i)
