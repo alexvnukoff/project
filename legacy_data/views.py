@@ -1,7 +1,8 @@
 from django.http import HttpResponse, Http404
 from legacy_data.models import L_User, L_Company, L_Product, L_TPP
-from core.models import User
-from appl.models import Company, Tpp, Product
+from core.models import User, Relationship
+from core.amazonMethods import add
+from appl.models import Company, Tpp, Product, Country
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings
@@ -333,12 +334,14 @@ def company_reload_DB_DB(request):
     '''
         Reload companies' data from buffer DB table LEGACY_DATA_L_COMPANY into TPP DB
     '''
+    img_root = 'c:' #additional path to images
     time1 = datetime.datetime.now()
     # Move users from buffer table into original tables
     print('Reload companies from buffer DB into TPP DB...')
     qty = L_Company.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    comp_lst = L_Company.objects.filter(completed=False).all()
+    #comp_lst = L_Company.objects.filter(completed=False).all()
+    comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
     #comp_lst = L_Company.objects.filter(pk=545208)
     i = 0
     for leg_cmp in comp_lst:
@@ -360,11 +363,19 @@ def company_reload_DB_DB(request):
             i += 1
             continue
 
-        #new_comp.setAttributeValue({"ANONS": a}, request.user)
+        if len(leg_cmp.preview_picture):
+            img_small_path = add(img_root + leg_cmp.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_cmp.detail_picture):
+            img_detail_path = add(img_root + leg_cmp.detail_picture)
+        else:
+            img_detail_path = ''
+
         attr = {'NAME': leg_cmp.short_name,
-                'IMAGE_SMALL': leg_cmp.preview_picture,
+                'IMAGE_SMALL': img_small_path,
                 'ANONS': leg_cmp.preview_text,
-                'IMAGE': leg_cmp.detail_picture,
+                'IMAGE': img_detail_path,
                 'DETAIL_TEXT': leg_cmp.detail_text,
                 'NAME_FULL': leg_cmp.full_name,
                 'ADDRESS_YURID': leg_cmp.ur_address,
@@ -386,7 +397,7 @@ def company_reload_DB_DB(request):
             }
 
         try: #this try for problem with bulk create for fields about 3000 symbols.
-            res = new_comp.setAttributeValue(attr, request.user)
+            res = new_comp.setAttributeValue(attr, create_usr)
             if res:
                 leg_cmp.tpp_id = new_comp.pk
                 leg_cmp.completed = True
@@ -397,9 +408,11 @@ def company_reload_DB_DB(request):
                 continue
         except:
             attr = {
+                    'NAME': leg_cmp.short_name[:2000],
+                    'IMAGE_SMALL': img_small_path,
                     'ANONS': leg_cmp.preview_text[:2000],
-                    'IMAGE': leg_cmp.detail_picture[:2000],
-                    'DETAIL_TEXT': leg_cmp.detail_text[0:2000],
+                    'IMAGE': img_detail_path,
+                    'DETAIL_TEXT': leg_cmp.detail_text[:2000],
                     'NAME_FULL': leg_cmp.full_name[:2000],
                     'ADDRESS_YURID': leg_cmp.ur_address[:2000],
                     'ADDRESS_FACT': leg_cmp.fact_address[:2000],
@@ -408,17 +421,17 @@ def company_reload_DB_DB(request):
                     'EMAIL': leg_cmp.email[:2000],
                     'INN': leg_cmp.INN[:2000],
                     'KPP': leg_cmp.KPP[:2000],
-                    'OKVED': leg_cmp.OKVED[0:2000],
-                    'OKATO': leg_cmp.OKATO[0:2000],
-                    'OKPO': leg_cmp.OKPO[0:2000],
-                    'BANK_ACCOUNT': leg_cmp.bank_account[0:2000],
-                    'BANK_NAME': leg_cmp.bank_name[0:2000],
-                    'NAME_DIRECTOR': leg_cmp.director_name[0:2000],
-                    'NAME_BUX': leg_cmp.bux_name[0:2000],
-                    'SLOGAN': leg_cmp.slogan[0:2000],
-                    'MAP_POSITION': leg_cmp.map_id[0:2000],
+                    'OKVED': leg_cmp.OKVED[:2000],
+                    'OKATO': leg_cmp.OKATO[:2000],
+                    'OKPO': leg_cmp.OKPO[:2000],
+                    'BANK_ACCOUNT': leg_cmp.bank_account[:2000],
+                    'BANK_NAME': leg_cmp.bank_name[:2000],
+                    'NAME_DIRECTOR': leg_cmp.director_name[:2000],
+                    'NAME_BUX': leg_cmp.bux_name[:2000],
+                    'SLOGAN': leg_cmp.slogan[:2000],
+                    'MAP_POSITION': leg_cmp.map_id[:2000],
             }
-            res = new_comp.setAttributeValue(attr, request.user)
+            res = new_comp.setAttributeValue(attr, create_usr)
             if res:
                 leg_cmp.tpp_id = new_comp.pk
                 leg_cmp.completed = True
@@ -427,6 +440,10 @@ def company_reload_DB_DB(request):
                 print('Problems with Attributes adding!')
                 i += 1
                 continue
+
+        # create relationship type=Dependence with country
+        Relationship.objects.get_or_create(parent=Country.objects.get(item2value__attr__title="NAME",
+                    item2value__title=leg_cmp.country_name), type='dependence', child=new_comp, create_user=create_usr)
 
         i += 1
         print('Milestone: ', qty + i)
