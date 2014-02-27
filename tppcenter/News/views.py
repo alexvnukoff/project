@@ -42,7 +42,7 @@ def get_news_list(request, page=1):
             notification = None
         current_section = "News"
 
-        tempalteParams = {
+        templateParams = {
             'user_name': user_name,
             'current_section': current_section,
             'notification': notification,
@@ -52,7 +52,7 @@ def get_news_list(request, page=1):
             'search': request.GET.get('q', '')
         }
 
-        return render_to_response("News/index.html", tempalteParams, context_instance=RequestContext(request))
+        return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
     else:
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 

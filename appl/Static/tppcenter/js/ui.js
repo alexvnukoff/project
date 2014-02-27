@@ -101,6 +101,9 @@ $(document).ready(function() {
                 ui.filter_form = $('form[name="filter-form"]');
                 ui.search_form = $('form[name="search"]');
 
+                if (ui.filter_form.length == 0)
+                    return false;
+
                 ui.initFilters();
 
                 $(document).bind(ui.signals['end_load'], ui.loadScripts);
@@ -373,7 +376,12 @@ var uiDetail = {
         tabContent: '.tpp-dt-content',
 
         init: function () {
-            $(uiDetail.tabs).tabs({
+            tabs = $(uiDetail.tabs);
+
+            if (tabs.length == 0)
+                return false;
+
+            tabs.tabs({
                 beforeLoad: function(event, ui) {
                     uiDetail.setLoader(ui.panel);
                 },

@@ -37,6 +37,8 @@
             {% endwith %}
             {% endwith %}
             {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}
     </table>
     {% include "main/paginator.html" %}
