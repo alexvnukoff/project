@@ -166,7 +166,11 @@ def addExhibition(request):
             addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
-    return render_to_response('Exhibitions/addForm.html', {'form': form, 'branches': branches},
+    template = loader.get_template('Exhibitions/addForm.html')
+    context = RequestContext(request,  {'form': form, 'branches': branches})
+    exhibitionPage = template.render(context)
+
+    return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage},
                               context_instance=RequestContext(request))
 
 
@@ -219,14 +223,13 @@ def updateExhibition(request, item_id):
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
 
-
-
-
-
-
-    return render_to_response('Exhibitions/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
+    template = loader.get_template('Exhibitions/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form,
                                                            'pages': pages, 'currentBranch': currentBranch,
-                                                           'branches': branches},
+                                                           'branches': branches})
+    exhibitionPage = template.render(context)
+
+    return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage},
                               context_instance=RequestContext(request))
 
 

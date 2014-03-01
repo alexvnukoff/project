@@ -89,6 +89,7 @@ def addNews(request):
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
+    countries = func.getItemsList("Country", 'NAME')
 
 
     if request.POST:
@@ -111,21 +112,33 @@ def addNews(request):
             addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID)
             return HttpResponseRedirect(reverse('tv:main'))
 
+    template = loader.get_template('TppTV/addForm.html')
+    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
+    newsPage = template.render(context)
 
 
 
 
-    return render_to_response('TppTV/addForm.html', {'form': form, 'categories': categories},
+
+    return render_to_response('TppTV/index.html', {'newsPage': newsPage},
                               context_instance=RequestContext(request))
 
 
 
 def updateNew(request, item_id):
 
+    create_date = TppTV.objects.get(pk=item_id).create_date
+
     try:
         choosen_category = NewsCategories.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
+    try:
+        choosen_country = Country.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_country = ""
+
+    countries = func.getItemsList("Country", 'NAME')
     categories = func.getItemsList('NewsCategories', 'NAME')
     if request.method != 'POST':
 
@@ -157,10 +170,13 @@ def updateNew(request, item_id):
 
 
 
+    template = loader.get_template('TppTV/addForm.html')
+    context = RequestContext(request, {'form': form, 'choosen_category': choosen_category, 'categories': categories,
+                                       'create_date': create_date,'choosen_country':choosen_country,
+                                       'countries': countries})
+    newsPage = template.render(context)
 
-
-    return render_to_response('TppTV/addForm.html', {'form': form, 'choosen_category': choosen_category,
-                                                    'categories': categories},
+    return render_to_response('TppTV/index.html', {'newsPage': newsPage},
                               context_instance=RequestContext(request))
 
 

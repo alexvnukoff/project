@@ -19,6 +19,7 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 def get_companies_list(request, page=1):
 
@@ -156,6 +157,8 @@ def addCompany(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    countries = func.getItemsList("Country", 'NAME')
+    tpp = func.getItemsList("Tpp", 'NAME')
 
 
     if request.POST:
@@ -179,18 +182,33 @@ def addCompany(request):
             addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
             return HttpResponseRedirect(reverse('companies:main'))
 
+    template = loader.get_template('Companies/addForm.html')
+    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp})
+    newsPage = template.render(context)
 
 
 
 
-    return render_to_response('Companies/addForm.html', {'form': form, 'branches': branches},
+
+    return render_to_response('Companies/index.html', {'newsPage': newsPage},
                               context_instance=RequestContext(request))
 
 
 
 def updateCompany(request, item_id):
+    try:
+        choosen_country = Country.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_country = ""
+    try:
+        choosen_tpp = Tpp.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_tpp = ""
 
+    countries = func.getItemsList("Country", 'NAME')
+    tpp = func.getItemsList("Tpp", 'NAME')
 
+    company = Company.objects.get(pk=item_id)
     if request.method != 'POST':
         branches = Branch.objects.all()
         branches_ids = [branch.id for branch in branches]
@@ -227,18 +245,22 @@ def updateCompany(request, item_id):
 
 
 
+    template = loader.get_template('Companies/addForm.html')
+    context = RequestContext(request, {'form': form, 'branches': branches, 'currentBranch': currentBranch,
+                                       'pages': pages,'company': company, 'choosen_country': choosen_country,
+                                       'countries': countries, 'choosen_tpp': choosen_tpp, 'tpp': tpp})
+    newsPage = template.render(context)
 
 
 
-
-    return render_to_response('Companies/addForm.html', {'form': form, 'branches': branches,
-                                                         'currentBranch': currentBranch, 'pages': pages},
+    return render_to_response('Companies/index.html',{'newsPage': newsPage} ,
                               context_instance=RequestContext(request))
 
 
 
 def _getValues(request):
     values = {}
+    values['ANONS'] = request.POST.get('ANONS', "")
     values['NAME'] = request.POST.get('NAME', "")
     values['IMAGE'] = request.FILES.get('IMAGE', "")
     values['ADDRESS'] = request.POST.get('ADDRESS', "")

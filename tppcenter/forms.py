@@ -3,7 +3,7 @@ import os
 import uuid
 from django.forms.models import BaseModelFormSet
 from django.contrib.contenttypes.models import ContentType
-from core.models import AttrTemplate, Dictionary, Item, Relationship, Attribute
+from core.models import AttrTemplate, Dictionary, Item, Relationship, Attribute, Value
 from appl.models import *
 
 from django.core.exceptions import ValidationError
@@ -262,6 +262,7 @@ class ItemForm(forms.Form):
                 #self.obj.title = self.fields['NAME'].initial
                 self.obj.save()
             attrValues = {}
+            attrValues_to_delte = []
             for title in self.fields:
                 if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
                         and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
@@ -272,9 +273,16 @@ class ItemForm(forms.Form):
                     attrValues[title] = {"title": self.fields[title].initial, 'start_date': dates[title][0],
                                          'end_date': dates[title][1]}
                 else:
-                    attrValues[title] = self.fields[title].initial
+                    if self.fields[title].initial:
+                        attrValues[title] = self.fields[title].initial
+                    else:
+                        attrValues_to_delte.append(title)
+
 
             self.obj.setAttributeValue(attrValues, user)
+            if len(attrValues_to_delte) > 0:
+                Value.objects.filter(item=self.obj, attr__title__in=attrValues_to_delte).delete()
+
 
             if len(self.file_to_delete) > 0:
                delete(self.file_to_delete)
