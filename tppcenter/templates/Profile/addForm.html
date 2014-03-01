@@ -1,6 +1,9 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% if saved == 1%}
+<div style="color: navy;margin-left: 200px;margin-top: 80px;font-size: 20px;">{% trans 'Your profile was updated' %}</div>
+{% endif %}
 
 <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 
@@ -9,14 +12,18 @@
 
 
     <div class="user-profile">
+
             	<div class="profile-l">
                 {% if avatar %}
                 	<div class="avatar"><img src="{{ MEDIA_URL }}big/{{ avatar }}" alt="" /></div>
                 {% endif %}
+{% if form.personal_status.errors   %}<div style="color: #ff0000">{{ form.personal_status.errors.as_text }}</div>{% endif %}
                     {% for choice in form.personal_status %}
                                <div class="line">{{ choice }}</div>
                             {% endfor %}
+
                     <div class="line"><b>{% trans 'Change avatar' %}</b></div>
+
                      <input type = "button" value = "Choose image"
                      onclick ="javascript:document.getElementById('imagefile').click();">
                     <input id = "imagefile" type="file" style='visibility: hidden;' name="image"/>
@@ -78,6 +85,7 @@
                            {% for choice in form.sex %}
                                {{ choice }}
                             {% endfor %}
+                        {% if form.sex.errors   %}<div class="formerror">{{ form.sex.errors.as_text }}</div>{% endif %}
                         </div>
                     </li>
                     <li>
@@ -101,7 +109,9 @@
                          {% if form.profession.errors   %}<div class="formerror">{{ form.profession.errors.as_text }}</div>{% endif %}
                     </li>
                 </ul>
+
                 <div class="profilebutton">
+
                 	<input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
                     <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
                 </div>
