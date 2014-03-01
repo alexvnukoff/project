@@ -90,15 +90,16 @@ class Connection(SockJSConnection):
                                    #  поняли я передаю данные в JSON
 
             # в зависимости от канала получения распределяем сообщения
-            if message.channel == 'notification':
-                self.sendNoification(message_body)
+            if message.channel == 'notification' or message.channel == 'private_massage':
+                self.sendNoification(message, message_body)
 
 
 
-    def sendNoification(self, message):
 
-        if message['user'] == self.user.pk:
-            self.send('notification', message)
+    def sendNoification(self, message, message_body):
+
+        if message_body['user'] == self.user.pk:
+            self.send(message.channel, message_body)
 
 
 

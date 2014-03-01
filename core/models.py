@@ -544,6 +544,7 @@ class Item(models.Model):
                         }
                 }
         '''
+
         if not isinstance(attr, tuple):
             attr = (attr,)
 

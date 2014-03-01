@@ -10,7 +10,8 @@ $(document).ready(function() {
 
             socket.onmessage = function(msg){
                 var data = msg['data']
-                var type = JSON.parse(data).type
+                var data = JSON.parse(data)
+                var type = data.type
 
                 if (type == 'notification')
                 {
@@ -18,8 +19,10 @@ $(document).ready(function() {
                     num = el.siblings(".num").text()
 
                     el.siblings(".num").text(parseInt(num)+1)
+                } else if (type == 'private_massage')
+                {
+                    $(document).trigger('new_message', [data.fromUser])
                 }
-                console.log(el)
 
 
             }
