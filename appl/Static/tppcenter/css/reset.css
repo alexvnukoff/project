@@ -59,3 +59,9 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     cursor: pointer;
 
 }
+
+.container .no-results {
+    text-align: center;
+    font-size: 30px;
+    margin-top: 20px;
+}

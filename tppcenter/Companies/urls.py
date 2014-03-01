@@ -16,10 +16,5 @@ urlpatterns = patterns('',
      url(r'^page([0-9]+)?/$', tppcenter.Companies.views.get_companies_list, name="paginator"),
      url(r'^add/$', tppcenter.Companies.views.addCompany, name="add"),
      url(r'^update/([0-9]+)/$', tppcenter.Companies.views.updateCompany, name="update"),
-
-
-
-
-
-
+     url(r'^[a-zA-z-]+-(?P<item_id>[0-9]+)\.html$', tppcenter.Companies.views.get_companies_list, name="detail"),
 )

@@ -29,7 +29,11 @@ def get_tpp_list(request, page=1, item_id=None):
     else:
         tppPage = _tppDetailContent(request, item_id)
 
-    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css',
+        settings.STATIC_URL + 'tppcenter/css/tpp.reset.css'
+    ]
     scripts = []
 
     if not request.is_ajax():
@@ -162,25 +166,10 @@ def _tppDetailContent(request, item_id):
     else:
        country = ""
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country})
+    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id' : item_id})
+
     return template.render(context)
-
-
 
 def addTpp(request):
     form = None
@@ -264,3 +253,70 @@ def _getValues(request):
     return values
 
 
+
+
+def _tabsCompanies(request, tpp, page=1):
+
+    companies = SearchQuerySet().models(Company).filter(tpp=tpp)
+    attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(companies, *attr, page_num=10, page=page)
+
+
+    companyList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "tpp:tab_companies_paged"
+
+    templateParams = {
+        'companyList': companyList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+    }
+
+    return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsNews(request, tpp, page=1):
+
+    news = SearchQuerySet().models(News).filter(tpp=tpp)
+    attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
+
+
+    newsList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "tpp:tab_news_paged"
+
+    templateParams = {
+        'newsList': newsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
+
+    return render_to_response('Tpp/tabNews.html', templateParams, context_instance=RequestContext(request))
+
+
+def _tabsTenders(request, tpp, page=1):
+
+
+    templateParams = {
+    }
+
+    return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsExhibitions(request, tpp, page=1):
+
+
+    templateParams = {
+    }
+
+    return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
