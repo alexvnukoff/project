@@ -570,6 +570,98 @@ def product_reload_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Products were migrated from CSV into DB!')
 
+
+def product_reload_DB_DB(request):
+    '''
+        Reload products' data from buffer DB table LEGACY_DATA_L_PRODUCT into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Product.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    prod_lst = L_Product.objects.filter(completed=False).all()
+    #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
+    #comp_lst = L_Company.objects.filter(pk=545208)
+    i = 0
+    create_usr = User.objects.get(pk=1)
+    for leg_prod in prod_lst:
+        try:
+            new_prod = Company.objects.create(title='COMPANY_LEG_ID:'+leg_prod.btx_id,
+                                              create_user=create_usr)
+        except:
+            print(leg_prod.btx_id, '##', leg_prod.prod_name, '##', ' Count: ', i)
+            i += 1
+            continue
+        '''
+        if len(leg_prod.preview_picture):
+            img_small_path = add(img_root + leg_prod.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_prod.detail_picture):
+            img_detail_path = add(img_root + leg_prod.detail_picture)
+        else:
+            img_detail_path = ''
+        '''
+        img_small_path = ''
+        img_detail_path = ''
+        attr = {
+                'NAME': leg_prod.prod_name,
+                'IMAGE_SMALL': img_small_path,
+                'ANONS': leg_prod.preview_text,
+                'IMAGE': img_detail_path,
+                'DETAIL_TEXT': leg_prod.detail_text,
+                'DISCOUNT': leg_prod.discount,
+            }
+
+        try: #this try for problem with bulk create for fields about 3000 symbols.
+            res = new_prod.setAttributeValue(attr, create_usr)
+            if res:
+                leg_prod.tpp_id = new_prod.pk
+                leg_prod.completed = True
+                leg_prod.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+        except:
+            attr = {
+                    'NAME': leg_prod.prod_name[0:2000],
+                    'IMAGE_SMALL': img_small_path[0:2000],
+                    'ANONS': leg_prod.preview_text[0:2000],
+                    'IMAGE': img_detail_path[0:2000],
+                    'DETAIL_TEXT': leg_prod.detail_text[0:2000],
+                    'DISCOUNT': leg_prod.discount[0:2000],
+                }
+            res = new_prod.setAttributeValue(attr, create_usr)
+            if res:
+                leg_prod.tpp_id = new_prod.pk
+                leg_prod.completed = True
+                leg_prod.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        # create relationship type=Dependence with Company
+        try:
+            prod_cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
+            prnt = Company.objects.get(pk=prod_cmp.tpp_id)
+        except:
+            continue
+
+        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Products were migrated from buffer DB into TPP DB!')
+
 def tpp_reload_CSV_DB(request):
     '''
         Reload TPPs' data from prepared CSV file named product_legacy.csv
