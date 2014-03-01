@@ -140,6 +140,8 @@ def addNews(request):
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
+    countries = func.getItemsList("Country", 'NAME')
+
 
 
     if request.POST:
@@ -160,24 +162,34 @@ def addNews(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID)
+            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID)
             return HttpResponseRedirect(reverse('news:main'))
 
 
 
+    template = loader.get_template('News/addForm.html')
+    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
+    newsPage = template.render(context)
 
 
-    return render_to_response('News/addForm.html', {'form': form, 'categories': categories}, context_instance=RequestContext(request))
+    return render_to_response('News/index.html', {'newsPage': newsPage}, context_instance=RequestContext(request))
 
 
 
 def updateNew(request, item_id):
 
+    create_date = News.objects.get(pk=item_id).create_date
+
     try:
         choosen_category = NewsCategories.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
+    try:
+        choosen_country = Country.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_country = ""
     categories = func.getItemsList('NewsCategories', 'NAME')
+    countries = func.getItemsList("Country", 'NAME')
     if request.method != 'POST':
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(parent_id=item_id)
@@ -207,17 +219,22 @@ def updateNew(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
             return HttpResponseRedirect(reverse('news:main'))
 
 
 
+    template = loader.get_template('News/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form,
+                                                    'choosen_category': choosen_category, 'categories': categories,
+                                                    'countries': countries, 'choosen_country': choosen_country,
+                                                    'create_date':create_date})
+    newsPage = template.render(context)
 
 
 
 
-    return render_to_response('News/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
-                                                    'choosen_category': choosen_category, 'categories': categories},
+    return render_to_response('News/index.html', {'newsPage': newsPage} ,
                               context_instance=RequestContext(request))
 
 

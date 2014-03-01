@@ -177,11 +177,15 @@ def addBusinessProposal(request):
             addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
             return HttpResponseRedirect(reverse('proposal:main'))
 
+    template = loader.get_template('BusinessProposal/addForm.html')
+    context = RequestContext(request, {'form': form, 'branches': branches})
+    proposalsPage = template.render(context)
 
 
 
 
-    return render_to_response('BusinessProposal/addForm.html', {'form': form, 'branches': branches},
+
+    return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage} ,
                               context_instance=RequestContext(request))
 
 
@@ -249,13 +253,16 @@ def updateBusinessProposal(request, item_id):
 
 
 
-
-
-
-
-    return render_to_response('BusinessProposal/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
+    template = loader.get_template('BusinessProposal/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form,
                                                                 'pages': pages, 'currentBranch': currentBranch,
-                                                                'branches': branches},
+                                                                'branches': branches})
+    proposalsPage = template.render(context)
+
+
+
+
+    return render_to_response('BusinessProposal/index.html',{'proposalsPage': proposalsPage} ,
                               context_instance=RequestContext(request))
 
 

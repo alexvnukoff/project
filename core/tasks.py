@@ -10,7 +10,7 @@ from celery import shared_task, task
 from appl import func
 
 
-@shared_task
+#@shared_task
 def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -20,20 +20,39 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
     values['DETAIL_TEXT'] = post.get('DETAIL_TEXT', "")
     values['YOUTUBE_CODE'] = post.get('YOUTUBE_CODE', "")
     values['IMAGE'] = files.get('IMAGE', "")
-    values['IMAGE-CLEAR'] = post.get('IMAGE-CLEAR', " ")
+    values['IMAGE-CLEAR'] = post.get('IMAGE-CLEAR', "")
     category = post.get('NEWS_CATEGORY', "")
     category = NewsCategories.objects.get(pk=category) if category else False
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+    date = post.get('CREATE_DATE', False)
+
+
 
     form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     new = form.save(user, site_id)
     if new:
+        if date:
+            try:
+                date = datetime.datetime.strptime(date, "%m/%d/%Y")
+                new.create_date = date
+                new.save()
+            except Exception as e:
+                pass
         gallery.save(parent=new.id, user=user)
 
         if category:
             Relationship.objects.filter(parent__in=NewsCategories.objects.all(), child=new.id).delete()
             Relationship.setRelRelationship(parent=category, child=new, user=user)
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=new.id).delete()
+            Relationship.setRelRelationship(parent=country, child=new, user=user)
+
+        new.reindexItem()
+
 
         func.notify("item_created", 'notification', user=user)
 
@@ -62,9 +81,13 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
     for val in valFiles:
         values[val] = files.get(val, "")
 
+    start_date = post.get('START_DATE', None)
+    end_date = post.get('END_DATE', None)
+    category = post.get('CATEGORY', None)
 
     if post.get('COUPON_DISCOUNT-END', None):
-       dates = {'COUPON_DISCOUNT': [post.get('COUPON_DISCOUNT-START', now()), post.get('COUPON_DISCOUNT-END', None)]}
+       date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
+       dates = {'COUPON_DISCOUNT': [post.get('COUPON_DISCOUNT-START', now()), date]}
     else:
         dates = None
 
@@ -77,11 +100,24 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
     product = form.save(user, site_id, dates=dates)
     if product:
+        if end_date:
+            product.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+            product.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            product.save()
+
+        if category:
+            category = Category.objects.get(pk=category)
+            Relationship.objects.filter(parent__in=Category.objects.all(), child=product.id).delete()
+            Relationship.setRelRelationship(parent=category, child=product, user=user)
+
+
 
 
         gallery.save(parent=product.id, user=user)
         pages.save(parent=product.id, user=user)
+        product.reindexItem()
         func.notify("item_created", 'notification', user=user)
+
 
 
     return True
@@ -100,7 +136,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     pages.clean()
 
 
-    valPost = ('NAME', 'DETAIL_TEXT', 'DOCUMENT_1-CLEAR', 'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR')
+    valPost = ('NAME', 'DETAIL_TEXT', 'DOCUMENT_1-CLEAR', 'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', 'KEYWORD')
     valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
     for val in valPost:
@@ -129,6 +165,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
 
         gallery.save(parent=proposal.id, user=user)
         pages.save(parent=proposal.id, user=user)
+        proposal.reindexItem()
         func.notify("item_created", 'notification', user=user)
 
 
@@ -143,7 +180,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
     valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
                'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
-               'ACCOUNT_NUMBER', 'BANK_DETAILS')
+               'ACCOUNT_NUMBER', 'BANK_DETAILS', 'ANONS')
     valFiles = ('IMAGE',)
 
     values = {}
@@ -153,17 +190,42 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     for val in valFiles:
         values[val] = files.get(val, "")
 
+    start_date = post.get('START_DATE', None)
+    end_date = post.get('END_DATE', None)
+
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+
+    tpp = post.get('TPP', False)
+    tpp = Tpp.objects.get(pk=tpp) if tpp else False
+
     form = ItemForm('Company', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     company = form.save(user, site_id)
     if company:
+        if end_date:
+            company.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+            company.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            company.save()
+
 
         if branch:
             branch = Branch.objects.get(pk=branch)
             rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=company.id)
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=branch, child=company, user=user)
+
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=company.id).delete()
+            Relationship.setRelRelationship(parent=country, child=company, user=user, type='dependence')
+
+        if tpp:
+            Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
+            Relationship.setRelRelationship(parent=tpp, child=company, user=user)
+
+        company.reindexItem()
 
 
 
@@ -187,17 +249,34 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
     values['IMAGE-CLEAR'] = post.get('IMAGE-CLEAR', " ")
     category = post.get('NEWS_CATEGORY', "")
     category = NewsCategories.objects.get(pk=category) if category else False
+    date = post.get('CREATE_DATE', False)
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+
 
     form = ItemForm('TppTV', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     new = form.save(user, site_id)
     if new:
+        if date:
+            try:
+                date = datetime.datetime.strptime(date, "%m/%d/%Y")
+                new.create_date = date
+                new.save()
+            except Exception as e:
+                pass
 
 
         if category:
             Relationship.objects.filter(parent__in=NewsCategories.objects.all(), child=new.id).delete()
             Relationship.setRelRelationship(parent=category, child=new, user=user)
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=new.id).delete()
+            Relationship.setRelRelationship(parent=country, child=new, user=user)
+
+        new.reindexItem()
 
         func.notify("item_created", 'notification', user=user)
 
@@ -357,6 +436,9 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
 
         gallery.save(parent=project.id, user=user)
         pages.save(parent=project.id, user=user)
+
+        project.reindexItem()
+
         func.notify("item_created", 'notification', user=user)
 
 

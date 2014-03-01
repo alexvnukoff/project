@@ -74,14 +74,17 @@ box-shadow:inset 0 0 3px #CCC;}
 .deals-info-left li label{ float:left; width:90px; margin-top:3px;}
 .deals-info-left li .right{ float:left; font-size:15px; font-weight:bold; color:#000;}
 
-.tenderline{ float:left; width:500px; padding:10px 20px 20px 20px;}
+.tenderline{ float:left; width:620px; padding:10px 20px 20px 20px;}
 .tenderline li{ float:left; width:100%; margin:12px 0 0 0;}
-.tenderline li input.text, .tenderline li select, .tenderline li textarea{ float:left; width:96%; border:1px #bdbdbd solid; padding:5px;}
+.tenderline li input.text, .tenderline li select, .tenderline li textarea{ float:left; width:97%; border:1px #bdbdbd solid; padding:5px;}
 .tenderline li select{ float:left; width:98%; padding:6px;}
 .tenderline li label{ float:left; width:100%; font-weight:bold; padding-bottom:5px;}
-.tenderline li .clumn1, .tenderline li .clumn2{ width:240px;}
-.tenderline li .clumn1{ float:left;}
-.tenderline li .clumn2{ float:right;}
+.tenderline li .clumn1, .tenderline li .clumn2{ width:300px;}
+.tenderline li .clumn3, .tenderline li .clumn4{ width:49%;}
+.tenderline li .clumn3 span, .tenderline li .clumn4 span{ float:left; line-height:22px; margin-right:4px; display:inline;}
+.tenderline li .clumn1, .tenderline li .clumn3, .tenderline li .clumn5{ float:left;}
+.tenderline li .clumn2, .tenderline li .clumn4, .tenderline li .clumn6{ float:right;}
+.tenderline li .clumn5, .tenderline li .clumn6{ width:32%;}
 .tenderline li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
 .tenderline li .editor{ float:left; border:1px #bdbdbd solid;}
 .tenderline li .line{ float: left; width: 100%; margin-top: 5px;}
@@ -144,7 +147,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .innov-coba li{ display:block; padding:3px 8px 4px 8px; color:#484848; margin-bottom:0; width:222px; cursor:pointer; margin:0;}
 .innov-coba li.selected{ background-color:#4a4a4a; color:#FFF;}
 .innov-img{ float:left; width:100%;}
-.innov-img li{ float:left; width:150px; margin:20px 0 0 20px; display:inline;}
+.innov-img li{ float:left; width:140px; margin:20px 0 0 20px; display:inline;}
 
 .vacancy-dt{ position:relative; float:left; width:100%; padding-bottom:20px; margin:10px 0 0 0;}
 .vacancy-button{ position:absolute; top:30px; right:0;}
@@ -185,3 +188,5 @@ box-shadow:inset 0 0 3px #CCC;}
 .viewimge .zoomtext{ float:left; font-size:11px; color:#FFF; line-height:20px; width:62px; text-align:center; background-color:#000; opacity:0.8; filter:alpha(opacity=80);}
 .b-img:hover .viewimge{ display:block;}
 #tpp-details-tab .panging{ padding-bottom:20px;}
+
+.gray-img{ position:absolute; width:150px; height:130px; top:0; left:0; z-index:99; background-color:#d7d7d7; display:none;}

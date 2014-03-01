@@ -339,3 +339,86 @@ box-shadow:inset 0 0 3px #CCC;}
 .formerror:after{ position:absolute; content:""; width:0; height:0; bottom:-5px; right:50%; margin-right:-5px;
 border-style: solid; border-width: 5px 5px 0 5px; border-color: #ff0000 transparent transparent transparent;}
 
+.newsform{ position:relative; float:left; width:100%; background-color:#fafafa; padding-bottom:20px; margin:12px 0 0 0;}
+.uploadimgage{ float:left; width:152px; margin:0 0 0 14px; display:inline;}
+.newsform label{ float:left; width:100%; padding-bottom:5px; font-weight:bold;}
+.imgbig{ float:left; width:100%; margin:12px 0 0 0;}
+.b-img{ position:relative; float:left; width:150px; height:130px; border:1px #e4e4e4 solid; margin-top:10px;}
+.imgbig .b-img{ margin-top:0;}
+.file{ float:left; width:100%; margin:5px 0 0 0; font-size:12px; color:#484848; font-family:Arial, Helvetica, sans-serif;}
+.imgother{ float:left; width:100%; margin:60px 0 0 0;}
+.uploadconfig{ float:left; width:470px; margin:0 0 0 15px; display:inline;}
+.uploadconfig li{ float:left; width:100%; margin:12px 0 0 0;}
+.uploadconfig li input.text, .uploadconfig li select, .uploadconfig li textarea{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
+.uploadconfig li select{ float:left; width:98%; padding:6px;}
+.uploadconfig li .clumn1, .uploadconfig li .clumn2{ width:220px;}
+.uploadconfig li .clumn3, .uploadconfig li .clumn4{ width:92px;}
+.uploadconfig li .clumn1, .uploadconfig li .clumn3{ float:left;}
+.uploadconfig li .clumn2, .uploadconfig li .clumn4{ float:right;}
+.uploadconfig li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.uploadconfig li .editor{ float:left; border:1px #bdbdbd solid;}
+.uploadconfig li .line{ float: left; width: 100%; margin-top: 6px;}
+.uploadconfig li .line .buttonclear{ width: auto; padding: 0 35px;}
+.delete-key{ display: inline-block; width: 10px; height: 10px; background-position: -164px -60px; margin-left: 5px; cursor: pointer;}
+.newform-button{ float:left; width:100%; margin:25px 0 0 0; text-align:center;}
+.newform-button .btntype1, .newform-button .btntype2{ font-size:16px;}
+.deleteimge{ position:absolute; height:20px; line-height:20px; top:0; right:0; cursor:pointer; display:none;}
+.deleteimge .delete{ float:left; width:20px; height:20px; background-position:-120px -60px;}
+.deleteimge .deletext{ float:left; font-size:11px; color:#FFF; line-height:20px; width:62px; text-align:center; background-color:#000; opacity:0.8; filter:alpha(opacity=80);}
+.b-img:hover .deleteimge{ display:block;}
+div.fileinputs {position: relative; float:left;}
+div.fakefile {
+	position: absolute;
+	top: 5px;
+	left: 0px;
+	z-index: 1;
+}
+div.fakefile img{ position:absolute; top:0px; right:-20px;}
+input.fileimg{
+	position: relative;
+	text-align: right;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+}
+.inputhide{width:115px; border:1px #bdbdbd solid; margin-right:8px; padding:2px;}
+#thumbs { padding-top: 10px;}
+#thumbs img, #largeImage { background-color: white; cursor: pointer; }
+#thumbs img { float: left; width:46px; height:40px; margin-right: 4px; box-shadow:0px 0px 2px #bcbcbc;}
+#panel { position: relative; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+.delete-confirm{ position:absolute; width:250px; padding:12px 0; background-color:#f5f5f5; border-radius:5px; border:1px #d9d9d9 solid; border-top:1px #399ed0 solid; top:20px; left:-40px; z-index:9; display:none;}
+.delete-confirm:before{ position:absolute; content:""; width:0; height:0; top:-4px; left:62px; z-index:2;
+border-style: solid; border-width: 0 5px 4px 5px; border-color: transparent transparent #f5f5f5 transparent;}
+.delete-confirm:after{ position:absolute; content:""; width:0; height:0; top:-5px; left:62px; z-index:1;
+border-style: solid; border-width: 0 6px 4px 6px; border-color: transparent transparent #399ed0 transparent;}
+.delete-confirm p{ padding:0 14px; font-size:13px; color:#595959; line-height:18px;}
+.delete-confirm .linedelete{ display:inline-block; width:100%; text-align:center; margin:10px 0 0 0;}
+.delete-confirm .linedelete .btntype2, .delete-confirm .linedelete .btntype1{ padding:0px 20px; line-height:25px;}
+.close-this{ position:absolute; width:20px; height:20px; background-position:-142px -60px; top:-10px; right:-10px; cursor:pointer;}
+
+
+
+.btntype1,.btntype2{ margin:0 5px;}
+.filterbtn .btntype1, .filterbtn .btntype2, .profilebutton .btntype1, .profilebutton .btntype2, .newform-button .btntype1, .newform-button .btntype2{ padding:7px 35px;}
+.filterbtn .btntype1, .profilebutton .btntype1, .newform-button .btntype1 { background: #FFF url(../img/bgbutton.gif) repeat-x bottom center; border:0;}
+.filterbtn .btntype2, .profilebutton .btntype2, .newform-button .btntype2{ border:0;
+background-color:#2186b8;
+background-image: -webkit-gradient(
+linear,
+left top,
+left bottom,
+color-stop(0, rgb(60,155,203)),
+color-stop(0.49, rgb(60,159,195)),
+color-stop(0.5, rgb(33,134,184)),
+color-stop(1, rgb(33,136,187))
+);
+background-image: -moz-linear-gradient(
+center top,
+rgb(60,155,203) 0%,
+rgb(60,159,195) 49%,
+rgb(33,134,184) 50%,
+rgb(33,136,187) 100%);}
+
+.buttonclear{ float:right; width:187px; height:21px; text-align:center; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; margin:4px 20px 0 0; display:inline;}
+.buttonclear:hover{ color:#FFF; text-decoration:none;}
+.gray-img{ position:absolute; width:150px; height:130px; top:0; left:0; z-index:99; background-color:#d7d7d7; display:none;}

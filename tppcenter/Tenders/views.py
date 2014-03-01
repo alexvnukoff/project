@@ -182,7 +182,11 @@ def addTender(request):
             addNewTender(request.POST, request.FILES, user, settings.SITE_ID)
             return HttpResponseRedirect(reverse('tenders:main'))
 
-    return render_to_response('Tenders/addForm.html', {'form': form, 'currency_slots': currency_slots},
+    template = loader.get_template('Tenders/addForm.html')
+    context = RequestContext(request, {'form': form, 'currency_slots': currency_slots})
+    tendersPage = template.render(context)
+
+    return render_to_response('Tenders/index.html', {'tendersPage': tendersPage},
                               context_instance=RequestContext(request))
 
 
@@ -230,11 +234,13 @@ def updateTender(request, item_id):
 
 
 
+    template = loader.get_template('Tenders/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form,
+                                                        'currency_slots': currency_slots, 'pages': pages})
+    tendersPage = template.render(context)
 
 
-
-    return render_to_response('Tenders/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
-                                                        'currency_slots': currency_slots, 'pages': pages},
+    return render_to_response('Tenders/index.html', {'tendersPage': tendersPage} ,
                               context_instance=RequestContext(request))
 
 
