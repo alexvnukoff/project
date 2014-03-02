@@ -87,9 +87,11 @@
             if (!active_id)
                 return false;
 
-            var textarea = $('#message-box-'+ active_id)
-            var val = textarea.val()
+            var textarea = $('#message-box-'+ active_id);
+            var val = textarea.val();
+
             if (val == '')
+                return false;
 
             textarea.attr('disabled', 'disabled');
 
@@ -182,7 +184,7 @@
 
 
         $(document).on('click', 'a.send-message', sendMessage);
-        $(document).bind('new_message', function(fromUser) {
+        $(document).bind('new_message', function(ev, fromUser) {
             var active_id = $('.mess-cur a').data('user-id');
 
             if (fromUser == active_id)
