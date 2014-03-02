@@ -932,7 +932,7 @@ class Relationship(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
-    create_date = models.DateField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
 
     start_date = models.DateTimeField(default=timezone.now)

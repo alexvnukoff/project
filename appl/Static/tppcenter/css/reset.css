@@ -110,3 +110,7 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     top: 20px;
     position: absolute;
 }
+
+.message-paging-loader {
+    text-align: center;
+}

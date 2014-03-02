@@ -12,10 +12,17 @@ def viewMessages(request, item_id=None):
 
         mess = Messages.objects.filter(c2p__parent=cabinet)
         users = Relationship.objects.filter(child=mess).exclude(parent=cabinet).values_list('parent', flat=True)\
-            .annotate(Max('child__c2p__create_date')).order_by('-child__c2p__create_date__max')
+            .annotate(Max('child__create_date')).order_by('-child__create_date__max')
 
         attrs = ('USER_LAST_NAME', 'USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'IMAGE')
         user_name = ''
+
+        if item_id is not None:
+            item_id = int(item_id)
+            cabinet_coll = Cabinet.objects.filter(pk=item_id)
+
+            if not cabinet_coll.exists():
+                item_id = None
 
         if len(users) > 0 or item_id is not None:
 
@@ -24,7 +31,6 @@ def viewMessages(request, item_id=None):
             if item_id is None:
                 item_id = users[0]
             else:
-                item_id = int(item_id)
                 users.insert(0, item_id)
 
             users.append(cabinet)
