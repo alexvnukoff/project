@@ -65,3 +65,48 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     font-size: 30px;
     margin-top: 20px;
 }
+
+.message-box {
+    position: absolute;
+    width: 458px;
+    right: -458px;
+    top: 440px;
+}
+.custom-contentin {
+    height: 460px;
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+.message-list {
+    float: none;
+    bottom: 0;
+    padding: 0 10px;
+}
+
+.message-list:after {
+   content: "";
+   display: block;
+   clear: both;
+}
+
+.custom-ms {
+    height: 430px;
+    max-height: 430px;
+    overflow-y: auto;
+}
+
+.customform .editor textarea {
+    width: 430px;
+    height: 100px;
+    border: none;
+    resize: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+}
+
+.message-loader > img {
+    left: 415px;
+    top: 20px;
+    position: absolute;
+}

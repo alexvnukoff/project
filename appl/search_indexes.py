@@ -2,8 +2,13 @@ __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
     BusinessProposal, Exhibition, Tender
+from core.models import Relationship
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
+
+class SearchIndexActive(indexes.SearchIndex):
+    def index_queryset(self, using=None):
+        return self.get_model().active.get_active()
 
 ################## Exhibition Index #############################
 
@@ -14,13 +19,11 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
-
-    def index_queryset(self, using=None):
-        return self.get_model().active
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
     def get_model(self):
         return Exhibition
-
 
     def prepare_id(self, obj):
         return obj.pk
@@ -46,6 +49,41 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                     continue
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+            
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+            
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date            
 
         tppIndex = self.fields['tpp'].index_fieldname
         countryIndex = self.fields['country'].index_fieldname
@@ -82,9 +120,8 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
-
-    def index_queryset(self, using=None):
-        return self.get_model().active
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
     def get_model(self):
         return BusinessProposal
@@ -114,6 +151,40 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                     continue
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
 
         try:
             comp = Company.objects.get(p2c__child_id=obj.pk, p2c__type="dependence").pk
@@ -242,15 +313,14 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     tpp = indexes.IntegerField(null=True)
     title_auto = indexes.NgramField(null=True)
     id = indexes.IntegerField()
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
     def prepare_id(self, object):
         return object.pk
 
-    def index_queryset(self, using=None):
-        return self.get_model().active
-
-    def prepare(self, object):
-        self.prepared_data = super(CompanyIndex, self).prepare(object)
+    def prepare(self, obj):
+        self.prepared_data = super(CompanyIndex, self).prepare(obj)
 
 
         field_to_attr = {
@@ -259,7 +329,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
             'title_auto': 'NAME'
         }
 
-        attributes = object.getAttributeValues('NAME', 'DETAIL_TEXT')
+        attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
@@ -272,6 +342,40 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
                     continue
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
 
         return self.prepared_data
 
@@ -302,15 +406,14 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.MultiValueField(null=True)
     title_auto = indexes.NgramField(null=True)
     id = indexes.IntegerField()
-
-    def index_queryset(self, using=None):
-        return self.get_model().active
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
     def prepare_id(self, obj):
         return obj.pk
 
-    def prepare(self, object):
-        self.prepared_data = super(TppIndex, self).prepare(object)
+    def prepare(self, obj):
+        self.prepared_data = super(TppIndex, self).prepare(obj)
 
 
         field_to_attr = {
@@ -319,7 +422,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
             'text': 'DETAIL_TEXT'
         }
 
-        attributes = object.getAttributeValues('NAME', 'DETAIL_TEXT')
+        attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
@@ -333,15 +436,47 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
         return self.prepared_data
 
-    def prepare_country(self, object):
+    def prepare_country(self, obj):
         try:
-            return [Country.objects.get(p2c__child_id=object.pk, p2c__type='relation').pk]
+            return Country.objects.get(p2c__child_id=obj.pk, p2c__type='relation').values_list('pk', flat=True)
         except ObjectDoesNotExist:
-            countries = Country.objects.filter(c2p__parent_id=object.pk, p2c__type='dependence')
-
-            return [country.pk for country in countries]
+            return None
 
     def get_model(self):
         return Tpp
@@ -366,15 +501,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     discount_price = indexes.FloatField(null=True)
     id = indexes.IntegerField()
     sites = indexes.MultiValueField(null=True)
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
-    def prepare_id(self, object):
-        return object.pk
+    def get_model(self):
+        return Product
 
-    def index_queryset(self, using=None):
-        return self.get_model().active
+    def prepare_id(self, obj):
+        return obj.pk
 
-    def prepare(self, object):
-        self.prepared_data = super(ProductIndex, self).prepare(object)
+    def prepare(self, obj):
+        self.prepared_data = super(ProductIndex, self).prepare(obj)
 
         field_to_attr = {
             'title': 'NAME',
@@ -383,7 +520,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             'currency': 'CURRENCY'
         }
 
-        attributes = object.getAttributeValues(*field_to_attr.values())
+        attributes = obj.getAttributeValues(*field_to_attr.values())
 
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
@@ -400,9 +537,43 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        comp = Company.objects.get(p2c__child_id=object.pk, p2c__type="dependence")
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
 
-        attributes = object.getAttributeValues('DISCOUNT', 'COUPON_DISCOUNT', fullAttrVal=True)
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
+        comp = Company.objects.get(p2c__child_id=obj.pk, p2c__type="dependence")
+
+        attributes = obj.getAttributeValues('DISCOUNT', 'COUPON_DISCOUNT', fullAttrVal=True)
 
         #Discount
         discountIndex = self.fields['discount'].index_fieldname
@@ -434,7 +605,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         #Create Date
         createIndex = self.fields['create_date'].index_fieldname
-        self.prepared_data[createIndex] = object.create_date
+        self.prepared_data[createIndex] = obj.create_date
 
         discountPriceIndex = self.fields['discount_price'].index_fieldname
         priceIndex = self.fields['price'].index_fieldname
@@ -471,18 +642,15 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             return None
 
-    def prepare_branch(self, object):
+    def prepare_branch(self, obj):
         try:
-            branches = Branch.objects.filter(p2c__child_id=object.pk, p2c__type='relation')
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
             return [branch.pk for branch in branches]
         except ObjectDoesNotExist:
             return None
 
     def prepare_sites(self, obj):
         return [site.pk for site in obj.sites.all()]
-
-    def get_model(self):
-        return Product
 
 ########################## News Index #############################
 
@@ -495,22 +663,21 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     categories = indexes.MultiValueField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
+    end_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
 
-    def prepare_id(self, object):
-        return object.pk
+    def prepare_id(self, obj):
+        return obj.pk
 
-    def index_queryset(self, using=None):
-        return self.get_model().active
-
-    def prepare(self, object):
-        self.prepared_data = super(NewsIndex, self).prepare(object)
+    def prepare(self, obj):
+        self.prepared_data = super(NewsIndex, self).prepare(obj)
 
         field_to_attr = {
             'title': 'NAME',
             'text': 'DETAIL_TEXT'
         }
 
-        attributes = object.getAttributeValues(*field_to_attr.values())
+        attributes = obj.getAttributeValues(*field_to_attr.values())
 
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
@@ -524,11 +691,45 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
         #country
         countryIndex = self.fields['country'].index_fieldname
 
         try:
-            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=object.pk, p2c__type='relation').pk
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=obj.pk, p2c__type='relation').pk
         except ObjectDoesNotExist:
             self.prepared_data[countryIndex] = None
 
@@ -538,10 +739,12 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         companyIndex = self.fields['company'].index_fieldname
         tppIndexfield = self.fields['tpp'].index_fieldname
 
-        comp = Company.objects.filter(p2c__child_id=object.pk, p2c__type="dependence")
-        tpp = Tpp.objects.filter(p2c__child_id=object.pk, p2c__type="dependence")
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
+            comp = comp.all()
+
             self.prepared_data[companyIndex] = comp.pk
 
             if not self.prepared_data[countryIndex]:
@@ -549,6 +752,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
             self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
+
+            tpp = tpp.all()
+
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
 
@@ -556,7 +762,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
 
                 if country.exists():
-                    self.prepared_data[countryIndex] = country.pk
+                    self.prepared_data[countryIndex] = country.all().pk
 
         return self.prepared_data
 
@@ -585,7 +791,9 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
-    start_date = indexes.DateTimeField(null=True)
+    start_event_date = indexes.DateTimeField(null=True)
+    end_event_date = indexes.DateTimeField(null=True)
+    start_date = indexes.DateTimeField()
     end_date = indexes.DateTimeField(null=True)
     cost = indexes.FloatField(null=True)
 
@@ -594,21 +802,18 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_id(self, obj):
         return obj.pk
 
-    def index_queryset(self, using=None):
-        return self.get_model().active
-
-    def prepare(self, object):
-        self.prepared_data = super(TenderIndex, self).prepare(object)
+    def prepare(self, obj):
+        self.prepared_data = super(TenderIndex, self).prepare(obj)
 
         field_to_attr = {
             'title': 'NAME',
             'text': 'DETAIL_TEXT',
-            'start_date': 'START_EVENT_DATE',
-            'end_date': 'END_EVENT_DATE',
+            'start_event_date': 'START_EVENT_DATE',
+            'end_event_date': 'END_EVENT_DATE',
             'cost': 'COST',
         }
 
-        attributes = object.getAttributeValues(*field_to_attr.values())
+        attributes = obj.getAttributeValues(*field_to_attr.values())
 
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
             return self.prepared_data
@@ -622,24 +827,58 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
         #country
         countryIndex = self.fields['country'].index_fieldname
 
         try:
-            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=object.pk, p2c__type='relation').pk
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=obj.pk, p2c__type='relation').pk
         except ObjectDoesNotExist:
             self.prepared_data[countryIndex] = None
-
-
 
         #company , tpp
         companyIndex = self.fields['company'].index_fieldname
         tppIndexfield = self.fields['tpp'].index_fieldname
 
-        comp = Company.objects.filter(p2c__child_id=object.pk, p2c__type="dependence")
-        tpp = Tpp.objects.filter(p2c__child_id=object.pk, p2c__type="dependence")
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
+            comp = comp.all()
+
             self.prepared_data[companyIndex] = comp.pk
 
             if not self.prepared_data[countryIndex]:
@@ -647,6 +886,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
 
             self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
+            tpp = tpp.all()
+
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
 
@@ -654,6 +895,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
 
                 if country.exists():
+                    country = country.all()
                     self.prepared_data[countryIndex] = country.pk
 
         return self.prepared_data
