@@ -266,9 +266,9 @@ class Notification(Item):
 
 
 class Category(Item):
-    active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
+    #active = ItemManager()
 
 
     def __str__(self):

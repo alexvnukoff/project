@@ -316,13 +316,23 @@ def jsonFilter(request):
 
 
 def test(request):
+    import datetime
 
-    i = Item.objects.get(pk='61')
-    z = Attribute.objects.get(title='DETAIL_TEXT')
-    v = Value(title=a, create_user=request.user, item=i, attr=z)
-    #v.save()
-    Value.objects.bulk_create([v])
-    #i.setAttributeValue({'DETAIL_TEXT': a}, request.user)
+    i = Item(title="lol", create_user=request.user)
+    i.save()
+    i.setAttributeValue({'DETAIL_TEXT': ['test1', 'test22'], 'NAME': 'normal text', 'SEX': 44}, request.user)
+
+    a = Item.objects.get(pk=289)
+    z = Item.objects.get(pk=295)
+
+    date = datetime.datetime.now() - datetime.timedelta(days=22)
+    date2 = datetime.datetime.now() - datetime.timedelta(days=21)
+
+
+    Relationship.setRelRelationship(parent=z, child=i, user=request.user, type="dependence")
+
+    a.activation(date2, date)
+
     from django.http import StreamingHttpResponse
     return StreamingHttpResponse('pong')
 
