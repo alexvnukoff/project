@@ -18,6 +18,7 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addProductAttrubute
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def get_product_list(request, page=1, item_id=None):
@@ -196,6 +197,10 @@ def addProducts(request):
     measurement_slots = measurement.getSlotsList()
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
 
 
@@ -237,20 +242,34 @@ def addProducts(request):
             return HttpResponseRedirect(reverse('products:main'))
 
 
+    template = loader.get_template('Products/addForm.html')
+    context = RequestContext(request, {'form': form, 'measurement_slots': measurement_slots,
+                                                        'currency_slots': currency_slots,
+                                                        'categotySelect': categotySelect})
+    productsPage = template.render(context)
 
 
-
-    return render_to_response('Products/addForm.html', {'form': form, 'measurement_slots': measurement_slots,
-                                                        'currency_slots': currency_slots},
+    return render_to_response('Products/index.html', {'productsPage': productsPage },
                               context_instance=RequestContext(request))
 
 
 
 def updateProduct(request, item_id):
+    try:
+        choosen_category = Category.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_category = ''
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
+    product = Product.objects.get(pk=item_id)
 
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -305,12 +324,16 @@ def updateProduct(request, item_id):
 
 
 
-
-
-
-    return render_to_response('Products/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form, 'coupon_date':
+    template = loader.get_template('Products/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form, 'coupon_date':
                                                     coupon_date, 'measurement_slots': measurement_slots,
-                                                    'currency_slots': currency_slots, 'pages': pages},
+                                                    'currency_slots': currency_slots, 'pages': pages,
+                                                    'product': product, 'choosen_category': choosen_category,
+                                                     'categotySelect': categotySelect})
+    productsPage = template.render(context)
+
+
+    return render_to_response('Products/index.html', {'productsPage': productsPage},
                               context_instance=RequestContext(request))
 
 

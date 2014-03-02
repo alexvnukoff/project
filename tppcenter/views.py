@@ -344,5 +344,11 @@ def ping(request):
     return StreamingHttpResponse('pong')
 
 
+def getAdditionalPage(request):
+    i = request.GET.get('NUMBER', "")
 
+    template = loader.get_template('additionalPage.html')
+    context = RequestContext(request, {'i': i})
+
+    return HttpResponse(template.render(context))
 

@@ -17,7 +17,7 @@ class ProfileForm(forms.Form):
       last_name.widget.attrs.update({'class': 'text'})
 
 
-      first_name = forms.CharField(required=False, label=_("First name"))
+      first_name = forms.CharField(required=True, label=_("First name"))
       first_name.widget.attrs.update({'class': 'text'})
 
       middle_name = forms.CharField(required=False, label=_("Middle name"))

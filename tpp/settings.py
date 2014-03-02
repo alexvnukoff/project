@@ -234,6 +234,8 @@ for lang in LANGUAGES:
         'INDEX_NAME': 'lang-' + lang[0],
     }
 
+
+
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
 ############################# AWS settings ################################
@@ -259,3 +261,5 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+

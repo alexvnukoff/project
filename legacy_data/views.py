@@ -5,6 +5,7 @@ from core.amazonMethods import add
 from appl.models import Company, Tpp, Product, Country
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import Group
 from django.conf import settings
 import datetime
 import csv
@@ -362,7 +363,7 @@ def company_reload_DB_DB(request):
             print(leg_cmp.btx_id, '##', leg_cmp.short_name, '##', ' Count: ', i)
             i += 1
             continue
-
+        '''
         if len(leg_cmp.preview_picture):
             img_small_path = add(img_root + leg_cmp.preview_picture)
         else:
@@ -371,7 +372,9 @@ def company_reload_DB_DB(request):
             img_detail_path = add(img_root + leg_cmp.detail_picture)
         else:
             img_detail_path = ''
-
+        '''
+        img_small_path = ''
+        img_detail_path = ''
         attr = {'NAME': leg_cmp.short_name,
                 'IMAGE_SMALL': img_small_path,
                 'ANONS': leg_cmp.preview_text,
@@ -441,9 +444,30 @@ def company_reload_DB_DB(request):
                 i += 1
                 continue
 
+        # add workers to Company's community
+        lst_wrk = L_User.objects.filter(company=leg_cmp.short_name)
+        for wrk in lst_wrk:
+            g = Group.objects.get(name=new_comp.community)
+            try:
+                wrk_obj = User.objects.get(pk=wrk.tpp_id)
+                g.user_set.add(wrk_obj)
+            except:
+                continue
+
         # create relationship type=Dependence with country
-        Relationship.objects.get_or_create(parent=Country.objects.get(item2value__attr__title="NAME",
-                    item2value__title=leg_cmp.country_name), type='dependence', child=new_comp, create_user=create_usr)
+        try: #if there isn't country in Company take it from TPP
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
+        except:
+            tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
+            try:
+                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
+            except:
+                L_Company.objects.get(btx_id=leg_cmp.btx_id).delete()
+                Company.objects.get(pk=leg_cmp.tpp_id).delete()
+                i += 1
+                continue
+
+        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
 
         i += 1
         print('Milestone: ', qty + i)
@@ -545,6 +569,98 @@ def product_reload_CSV_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Products were migrated from CSV into DB!')
+
+
+def product_reload_DB_DB(request):
+    '''
+        Reload products' data from buffer DB table LEGACY_DATA_L_PRODUCT into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Product.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    prod_lst = L_Product.objects.filter(completed=False).all()
+    #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
+    #comp_lst = L_Company.objects.filter(pk=545208)
+    i = 0
+    create_usr = User.objects.get(pk=1)
+    for leg_prod in prod_lst:
+        try:
+            new_prod = Company.objects.create(title='COMPANY_LEG_ID:'+leg_prod.btx_id,
+                                              create_user=create_usr)
+        except:
+            print(leg_prod.btx_id, '##', leg_prod.prod_name, '##', ' Count: ', i)
+            i += 1
+            continue
+        '''
+        if len(leg_prod.preview_picture):
+            img_small_path = add(img_root + leg_prod.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_prod.detail_picture):
+            img_detail_path = add(img_root + leg_prod.detail_picture)
+        else:
+            img_detail_path = ''
+        '''
+        img_small_path = ''
+        img_detail_path = ''
+        attr = {
+                'NAME': leg_prod.prod_name,
+                'IMAGE_SMALL': img_small_path,
+                'ANONS': leg_prod.preview_text,
+                'IMAGE': img_detail_path,
+                'DETAIL_TEXT': leg_prod.detail_text,
+                'DISCOUNT': leg_prod.discount,
+            }
+
+        try: #this try for problem with bulk create for fields about 3000 symbols.
+            res = new_prod.setAttributeValue(attr, create_usr)
+            if res:
+                leg_prod.tpp_id = new_prod.pk
+                leg_prod.completed = True
+                leg_prod.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+        except:
+            attr = {
+                    'NAME': leg_prod.prod_name[0:2000],
+                    'IMAGE_SMALL': img_small_path[0:2000],
+                    'ANONS': leg_prod.preview_text[0:2000],
+                    'IMAGE': img_detail_path[0:2000],
+                    'DETAIL_TEXT': leg_prod.detail_text[0:2000],
+                    'DISCOUNT': leg_prod.discount[0:2000],
+                }
+            res = new_prod.setAttributeValue(attr, create_usr)
+            if res:
+                leg_prod.tpp_id = new_prod.pk
+                leg_prod.completed = True
+                leg_prod.save()
+            else:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        # create relationship type=Dependence with Company
+        try:
+            prod_cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
+            prnt = Company.objects.get(pk=prod_cmp.tpp_id)
+        except:
+            continue
+
+        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Products were migrated from buffer DB into TPP DB!')
 
 def tpp_reload_CSV_DB(request):
     '''

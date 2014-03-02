@@ -1,8 +1,17 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<script type="text/javascript">
 
-<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+$(function() {
+
+	$( ".date" ).datepicker();
+});
+</script>
+
+<div class="newsform">
+  <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 
 
 {% csrf_token %}
@@ -12,48 +21,128 @@
     {% with form.fields.YOUTUBE_CODE.initial as youtube_code %}
 
 
-    <label for="id_name">Name</label><input type="text" id="id_name" name="NAME" value="{{ name }}"/><span>{{ form.errors.NAME }}</span><br>
-    {% if image %}
 
-        <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
-        <input type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" />Delete<br>
-    {% endif %}
-    <label for="id_image">Image</label><input type="file" id="id_image" name="IMAGE"/>{{ form.errors.IMAGE }}<br>
-    <label for="id_youtube_code">Youtube</label><input type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/><span>{{ form.errors.YOUTUBE_CODE }}</span><br>
-    <label for="id_detail_text"></label><textarea cols="40" rows="10" id="id_detail_text"  name="DETAIL_TEXT" />{{ text }}</textarea>{{ form.errors.DETAIL_TEXT }}<br>
-    <label for="id_news_category">Category</label>
-        <select id="id_news_category" name="NEWS_CATEGORY">
-        <option>{% trans "Choose category" %}</option>
-        {% for id , atrr in categories.items %}
-         {% with atrr.NAME|first as category  %}
-              <option value="{{ id }}"{% if choosen_category.id == id %} selected {% endif %}>{{ category }}</option>
-         {% endwith %}
+   <div class="uploadimgage">
+         	<div class="imgbig">
+                    	<label>Миниатюра</label>
+                          {% if image %}
+                             <div class="b-img">
+                    		<img src="{{ MEDIA_URL }}big/{{ image.name }}">
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                            <div class="gray-img"></div>
+                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
+                             </div>
+                         {% endif %}
 
-        {% endfor %}
-        </select><br>
+                        <div class="fileinputs">
+                            <input name="IMAGE" type="file" class="fileimg" />
+                            <div class="fakefile">
+                                <input class="inputhide" />
+                                <img src="{% static "tppcenter/img/file.png" %}" />
+                            </div>
+                        </div>
+                    </div>
+                <div  class="imgother">
+                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
+                <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+                <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
+                    	<label>Галерея</label>
+                     {% for i in '012'|make_list %}
+                      {% resolve photos i as img %}
+                         {% if img %}
+                            <div class="b-img">
+                    		 <img src='{{ MEDIA_URL }}big/{{ img.photo.name }}'>
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                            <div class="gray-img"></div>
+                             <input id="delete" type="checkbox" name="del[]" value="{{ img.pk }}" hidden="hidden" />
+                             <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" /><br>
+                           </div>
+                         {% endif %}
+                         <div class="fileinputs">
+                            <input name="form-{{ i }}-photo" type="file" class="fileimg" />
+                            <div class="fakefile">
+                                <input class="inputhide" />
+                                <img src="{% static "tppcenter/img/file.png" %}" />
+                            </div>
+                        </div>
+                     {% endfor %}
+                </div>
+        </div>
+         <ul class="uploadconfig">
+                	<li>
+                    	<div class="clumn1">
+                        	<label>Категория</label>
+                            <select id="id_news_category" name="NEWS_CATEGORY">
+                             <option value="">{% trans "Choose category" %}</option>
+                              {% for id , atrr in categories.items %}
+                              {% with atrr.NAME|first as category  %}
+                                  <option value="{{ id }}"{% if choosen_category.id == id %} selected {% endif %}>{{ category }}</option>
+                             {% endwith %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Country' %}</label>
+                            <select  name="COUNTRY">
+                             <option value="">{% trans "Choose Country" %}</option>
+                              {% for id , atrr in countries.items %}
+                              {% with atrr.NAME|first as country  %}
+                                  <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
+                             {% endwith %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                	<li>
+                    	<label>Заголовок</label>
+                        <input type="text" id="id_name" name="NAME" value="{{ name }}" class="text"/>
+
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>Дата</label>
+                            <input type="datetime" name="CREATE_DATE" placeholder="" class="date" value="{{ create_date|date:"m/d/Y" }}" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>Ключи поиска</label>
+                            <input type="text" name="" placeholder="" class="text" style="width:89%;" />
+                        </div>
+                    </li>
+                	<li>
+                    	<label>Код на YouTube видео</label>
+                        <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
+
+                    </li>
+                    <li>
+                    	<label>Подробное описание</label>
+                        <div >
+                            <textarea cols="40" rows="30" id="id_detail_text"  name="DETAIL_TEXT" />{{ text }}</textarea>
+                        </div>
+                    </li>
+                </ul>
 
 
-    <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
-    <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
-    <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
-
-
-   {% for i in '012'|make_list %}
-       {% resolve photos i as img %}
-       {% if img %}
-            <img src='{{ MEDIA_URL }}th/{{ img.photo.name }}'>
-            <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete<br>
-            <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" /><br>
-        {% endif %}
-        <label for="id_form-{{ i }}-photo">Avatar:</label><input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" /><br>
-
-
-
-   {% endfor %}
     {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}
+               <div class="newform-button">
+                    <input class="btntype2" type="submit" name="submit" value="Сохранить">
+                    <a href="#" class="btntype1">Отменить</a>
+                </div>
 
-<input type="submit" name="submit">
 </form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+

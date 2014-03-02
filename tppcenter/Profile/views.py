@@ -57,6 +57,7 @@ def getProfileForm(request):
 
 
 def _profileContent(request):
+    saved = 0
     if request.method == 'POST':
         cabinet = Cabinet.objects.get(user=request.user.pk)
         image = cabinet.getAttributeValues('IMAGE')
@@ -103,6 +104,8 @@ def _profileContent(request):
                 except Exception:
                       form.errors.update({"email": _("This email already in use")})
              avatar = file
+        if len(form.errors) == 0:
+            saved = 1
     else:
         cabinet = get_object_or_404(Cabinet, user=request.user)
         profile = cabinet.getAttributeValues('PROFESSION', 'MOBILE_NUMBER', 'BIRTHDAY', 'PERSONAL_STATUS', 'SEX',
@@ -144,7 +147,7 @@ def _profileContent(request):
 
 
     template = loader.get_template('Profile/addForm.html')
-    context = RequestContext(request, {"form": form, 'avatar': avatar})
+    context = RequestContext(request, {"form": form, 'avatar': avatar, 'saved': saved})
     return template.render(context)
 
 def save_image(file, path=''):

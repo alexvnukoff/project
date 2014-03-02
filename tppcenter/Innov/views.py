@@ -142,9 +142,14 @@ def addProject(request):
             addNewProject(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
             return HttpResponseRedirect(reverse('innov:main'))
 
-    return render_to_response('Innov/addForm.html', {'form': form, 'branches': branches,
-                                                           'currency_slots':currency_slots},
-                              context_instance=RequestContext(request))
+
+    template = loader.get_template('Innov/addForm.html')
+    context = RequestContext(request, {'form': form, 'branches': branches, 'currency_slots': currency_slots})
+    newsPage = template.render(context)
+
+
+    return render_to_response('Innov/index.html', {'newsPage': newsPage}, context_instance=RequestContext(request))
+
 
 
 
@@ -194,15 +199,18 @@ def updateProject(request, item_id):
             addNewProject(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
             return HttpResponseRedirect(reverse('innov:main'))
 
+    template = loader.get_template('Innov/addForm.html')
+    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form, 'pages': pages,
+                                       'currentBranch': currentBranch, 'branches': branches,
+                                       'currency_slots': currency_slots})
+    newsPage = template.render(context)
 
 
 
 
 
 
-    return render_to_response('Innov/addForm.html', {'gallery': gallery, 'photos': photos, 'form': form,
-                                                           'pages': pages, 'currentBranch': currentBranch,
-                                                           'branches': branches, 'currency_slots': currency_slots},
+    return render_to_response('Innov/index.html',{'newsPage': newsPage} ,
                               context_instance=RequestContext(request))
 
 
