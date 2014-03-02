@@ -193,6 +193,22 @@ def _getDetailContent(request, item_id):
 
 
 def addProducts(request):
+    current_company = request.session.get('current_company', False)
+
+    if not request.session.get('current_company', False):
+         return render_to_response("permissionDen.html")
+
+    item = Organization.objects.get(pk=current_company)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+
+
+    if 'add_product' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
+
+
     form = None
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
@@ -239,7 +255,7 @@ def addProducts(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID)
+            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
             return HttpResponseRedirect(reverse('products:main'))
 
 
@@ -256,6 +272,11 @@ def addProducts(request):
 
 
 def updateProduct(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_exhibition' not in perm_list:
+        return render_to_response("permissionDenied.html")
     try:
         choosen_category = Category.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:

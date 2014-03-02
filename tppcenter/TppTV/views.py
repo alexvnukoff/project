@@ -86,6 +86,10 @@ def _newsContent(request, page=1):
 
 
 def addNews(request):
+    current_company = request.session.get('current_company', None)
+    perm = request.user.get_all_permissions()
+    if not {'appl.add_tpptv'}.issubset(perm):
+         return render_to_response("permissionDenied.html")
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
@@ -126,6 +130,10 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
+
+    perm = request.user.get_all_permissions()
+    if not {'appl.change_tpptv'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
+          return render_to_response("permissionDenied.html")
 
     create_date = TppTV.objects.get(pk=item_id).create_date
 

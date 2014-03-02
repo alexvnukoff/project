@@ -57,8 +57,17 @@ def getProfileForm(request):
 
 
 def _profileContent(request):
+    user_groups = request.user.groups.values_list('pk', flat=True)
+
+    companies_ids = Organization.active.get_active_related().filter(community__in=user_groups).values_list('pk', flat=True)
+
+    companies = Item.getItemsAttributesValues('NAME', companies_ids)
     saved = 0
+
+
     if request.method == 'POST':
+        if int(request.POST.get('CURRENT_COMPANY', 0)) in companies_ids:
+            request.session['current_company'] = int(request.POST.get('CURRENT_COMPANY'))
         cabinet = Cabinet.objects.get(user=request.user.pk)
         image = cabinet.getAttributeValues('IMAGE')
         avatar = image[0] if len(image) > 0 else ""
@@ -144,9 +153,11 @@ def _profileContent(request):
                                         'email': request.user.email})
 
 
+    current_company = request.session.get('current_company', False)
 
     template = loader.get_template('Profile/addForm.html')
-    context = RequestContext(request, {"form": form, 'avatar': avatar, 'saved': saved})
+    context = RequestContext(request, {"form": form, 'avatar': avatar, 'saved': saved, 'companies': companies,
+                                       'current_company': current_company})
     return template.render(context)
 
 def save_image(file, path=''):

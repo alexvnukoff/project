@@ -190,6 +190,10 @@ class TppTV(Item):
     active = ItemManager()
     objects = models.Manager()
     hierarchy = hierarchyManager()
+    class Meta:
+        permissions = (
+            ("read_tpptv", "Can read tpptv"),
+        )
 
     def __str__(self):
         return self.getName()
@@ -552,6 +556,12 @@ class AdditionalPages(Item):
 class Exhibition(Item):
     active = ItemManager()
     objects = models.Manager()
+
+    class Meta:
+        permissions = (
+            ("read_exhibition", "Can read exhibition"),
+
+        )
 
     def __str__(self):
         return self.getName()

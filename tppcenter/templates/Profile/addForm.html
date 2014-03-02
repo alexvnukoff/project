@@ -73,11 +73,11 @@
                     </li>
                     <li>
                     	<label>{% trans 'Your organization' %}	</label>
-                        <ul class="company">
-                        	<li>ООО «Колобок»<>
-                            <li class="selected">ЗАО «Альбатрос»</li>
-                            <li>ТПП г. Москвы</li>
-                        </ul>
+                         <select id="id_CURRENCY" name="CURRENT_COMPANY">
+                             {% for id, company in companies.items %}
+                               <option value="{{ id }}"{% if current_company == id%} selected {% endif %}>{{ company.NAME.0 }}</option>
+                             {% endfor %}
+                           </select>
                     </li>
                     <li>
                     	<label>{% trans 'Sex' %}</label>

@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
+     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),

@@ -95,8 +95,7 @@
                             <div class="clumn2">
                                 <label>Страна  <font color="#FF0000">*</font></label>
                                    <select style="width:94%;"  name="COUNTRY">
-                                        <option value="">{% trans "Choose Country" %}</option>
-                                        {% for id , atrr in countries.items %}
+                                         {% for id , atrr in countries.items %}
                                          {% with atrr.NAME|first as country  %}
                                               <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
                                          {% endwith %}

@@ -137,6 +137,18 @@ def _newsContent(request, page=1):
 
 
 def addNews(request):
+    current_company = request.session.get('current_company', None)
+    if current_company:
+        item = Organization.objects.get(pk=current_company)
+        perm_list = item.getItemInstPermList(request.user)
+        if 'add_news' not in perm_list:
+             return render_to_response("permissionDenied.html")
+    else:
+        perm = request.user.get_all_permissions()
+        if not {'appl.add_news'}.issubset(perm):
+             return render_to_response("permissionDenied.html")
+
+
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
@@ -162,7 +174,7 @@ def addNews(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID)
+            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
             return HttpResponseRedirect(reverse('news:main'))
 
 
@@ -177,6 +189,19 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
+
+    try:
+        item = Organization.objects.get(p2c__child_id=item_id)
+        perm_list = item.getItemInstPermList(request.user)
+        if 'change_news' not in perm_list:
+            return render_to_response("permissionDenied.html")
+    except ObjectDoesNotExist:
+         perm = request.user.get_all_permissions()
+         if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
+             return render_to_response("permissionDenied.html")
+
+
+
 
     create_date = News.objects.get(pk=item_id).create_date
 
