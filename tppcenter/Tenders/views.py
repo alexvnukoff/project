@@ -157,6 +157,21 @@ def _tenderDetailContent(request, item_id):
 
 
 def addTender(request):
+    current_company = request.session.get('current_company', False)
+    if not request.session.get('current_company', False):
+         return render_to_response("permissionDen.html")
+
+    item = Organization.objects.get(pk=current_company)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+
+
+    if 'add_tender' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
+
+
     form = None
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
@@ -179,7 +194,7 @@ def addTender(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID)
+            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
             return HttpResponseRedirect(reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
@@ -191,6 +206,12 @@ def addTender(request):
 
 
 def updateTender(request, item_id):
+
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_tender' not in perm_list:
+        return render_to_response("permissionDenied.html")
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
