@@ -23,9 +23,15 @@
      function onScrollTop(el) {
 
             el.unbind('scroll');
+
+            if (el.find('.last').length)
+                return true;
+
             var page = $(this).data('page');
             var active_id = $('.mess-cur a').data('user-id');
-            el.find('.dateline:first').replaceWith('<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />');
+            el.find('.dateline:first').replaceWith('<div class="message-paging-loader">' +
+                                                        '<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />' +
+                                                    '</div>');
             var last_message = el.find('.customline:first');
             var date = last_message.data('date');
             var lid =  last_message.data('message');

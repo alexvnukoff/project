@@ -1,5 +1,9 @@
 {% load static %}
 {% load i18n %}
+
+{% if messagesList|length < 10 %}
+    <div class="last"></div>
+{% endif %}
 {% for id, attr in messagesList.items %}
     {% with attr.CREATE_DATE as date %}
     {% with attr.DETAIL_TEXT|first as message %}
@@ -30,10 +34,13 @@
     {% if forloop.last and startDate %}
         {% if startDate.day != date.day or startDate.month != date.month or startDate.year != date.year %}
              <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
+        {% endif %}    {% endif %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% empty %}
+        {% if startDate %}
+             <div class="dateline"><span>{{ startDate|date:"d M Y" }}</span></div>
         {% endif %}
-    {% endif %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
 {% endfor %}
