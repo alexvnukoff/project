@@ -1,0 +1,20 @@
+{% load i18n %}
+
+
+
+                                        <div class="custom-contentin">
+<div id="test-w"></div>
+                                            <div class="message-list">
+
+                                                {{ messages }}
+                                            </div>
+                                        </div>
+                                        <div class="message-box">
+                                            <div class="title">{% trans "Send private message" %}</div>
+                                            <div class="customform">
+                                                <div class="editor">
+                                                    <textarea id="message-box-{{ active }}"  name="DETAIL_TEXT"></textarea>
+                                                </div>
+                                                <p><a href="#test" class="send-message btntype2">{% trans "Send" %}</a></p>
+                                            </div>
+                                        </div>

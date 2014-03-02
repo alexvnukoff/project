@@ -1,11 +1,9 @@
-from django.conf.urls import patterns, include, url
-import appl.views
-import tppcenter.News.views
+from django.conf.urls import patterns, url
+from django.contrib import admin
 
+import tppcenter.News.views
 import tppcenter.views
 
-
-from django.contrib import admin
 admin.autodiscover()
 
 

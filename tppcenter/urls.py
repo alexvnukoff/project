@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, include, url
-import appl.views
 from django.contrib.auth import views as auth_views
+from django.contrib import admin
 
 import tppcenter.views
 import tppcenter.News.urls
 import tppcenter.Product.urls
 import tppcenter.Companies.urls
-
 import tppcenter.Innov.urls
 import tppcenter.Tpp.urls
 import tppcenter.BusinessProposal.urls
@@ -14,11 +13,9 @@ import tppcenter.Exhibitions.urls
 import tppcenter.Tenders.urls
 import tppcenter.TppTV.urls
 import tppcenter.Profile.urls
+import tppcenter.Messages
+import tppcenter.Messages.urls
 
-
-
-
-from django.contrib import admin
 admin.autodiscover()
 
 
@@ -35,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
+    url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
 
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),
@@ -53,6 +51,8 @@ urlpatterns = patterns('',
     url(r'^items/([a-zA-Z]+)/update/([0-9]+)/$', tppcenter.views.update_item),
     url(r'^items/([a-zA-Z]+)/showlist/([0-9]+)/$', tppcenter.views.showlist),
 
+
+
     url(r'^notification/get/$', tppcenter.views.getNotifList),
     url(r'^addPage/get/$', tppcenter.views.getAdditionalPage),
     url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
@@ -62,6 +62,8 @@ urlpatterns = patterns('',
     url(r'^accounts/password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+
 
 
     url(r'^filter/', tppcenter.views.jsonFilter),

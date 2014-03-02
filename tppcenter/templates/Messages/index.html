@@ -1,0 +1,251 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}News{% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
+    {% endblock %}
+
+
+    {% block js %}
+         {{ block.super }}
+        <script type="text/javascript" src="{% static "tppcenter/js/ajax.queue.min.js" %}"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.js"></script>
+
+
+ <script type="text/javascript">
+
+     function onScrollTop(el) {
+
+            el.unbind('scroll');
+            var page = $(this).data('page');
+            var active_id = $('.mess-cur a').data('user-id');
+            el.find('.dateline:first').replaceWith('<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />');
+            var last_message = el.find('.customline:first');
+            var date = last_message.data('date');
+            var lid =  last_message.data('message');
+
+            var url = '/messages/' + active_id + '/';
+
+            $.ajaxQueue({
+                url: url,
+                data: {
+                    page: 2,
+                    lid: lid,
+                    date: date
+                },
+                success: function(data) {
+                    bindSccroll();
+
+                    el.find('.im-test').replaceWith(data);
+                },
+                type: 'GET'
+            });
+
+     }
+
+     function bindSccroll()
+     {
+         $('.custom-contentin').unbind('scroll');
+
+        $('.custom-contentin:visible').bind('scroll', function() {
+
+         if($(this).scrollTop() == 0)
+         {
+            onScrollTop($(this))
+         }
+        });
+     }
+
+
+
+    $(function() {
+
+
+
+
+
+        $( "#tabs" ).tabs();
+        $( ".date" ).datepicker();
+        $(".messages-l").tabs();
+
+        function scroollMessageDown() {
+            var content = $('.custom-contentin:visible');
+            content.scrollTop(content.find('.message-list').height());
+        }
+
+
+        function sendMessage()
+        {
+            var active_id = $('.mess-cur a').data('user-id');
+
+            if (!active_id)
+                return false;
+
+            var textarea = $('#message-box-'+ active_id)
+            var val = textarea.val()
+            if (val == '')
+
+            textarea.attr('disabled', 'disabled');
+
+            $.ajaxQueue({
+                url: '/messages/add/',
+                data: {
+                    text: val,
+                    active: active_id
+                },
+                success: function(data) {
+                    getMessages(active_id);
+                    textarea.val('');
+                    textarea.removeAttr('disabled')
+                },
+                type: 'POST'
+            });
+
+           return false;
+        }
+
+        function getMessages(coll) {
+            var selector = $('#custom-content-' + coll);
+
+            if (selector.length == 0)
+                return false;
+
+            var lastTime = selector.find('.customline:last').data('date');
+            var lid = selector.find('.customline:last').data('message');
+            var url = '/messages/' + coll + '/';
+
+            jQuery.ajaxQueue({
+                url: url,
+                data: {
+                    date: lastTime,
+                    lid: lid
+                },
+                type: 'GET',
+                success: function(data) {
+                    selector.find('.message-list').append(data);
+                    scroollMessageDown();
+                },
+                dataType: 'html'
+            });
+
+        }
+
+        function getMessageBox(coll, newPanel) {
+            var url = '/messages/' + coll + '/';
+            var content = ''
+            History.pushState(null, null, url);
+
+            jQuery.ajaxQueue({
+                url: url,
+                type: 'GET',
+                data: {box: 1},
+                success: function(data) {
+                     newPanel.html(data);
+                    scroollMessageDown();
+                    bindSccroll()
+                },
+                dataType: 'html'
+            });
+        }
+
+        $(".message-tabcontent").tabs({
+            activate: function( event, ui ) {
+                ui.oldTab.removeClass('mess-cur').unbind('scroll');
+                ui.newTab.addClass('mess-cur');
+                scroollMessageDown();
+                    bindSccroll()
+            },
+
+            beforeActivate: function( event, ui ) {
+                var link = ui.newTab.find('a')
+                var cabinet = link.data('user-id');
+                var target = link.attr('href');
+
+                if ($(target).length == 0)
+                {
+                    box = $('<div></div>').appendTo($(this))
+                    box.html('<img src="/static/tppcenter/img/messages-loader.gif" />');
+                    box.attr('id', 'custom-content-' + cabinet);
+                    box.addClass('message-loader');
+                    ui.newPanel = $(target);
+                    getMessageBox(cabinet, ui.newPanel);
+                }
+            }
+        });
+
+
+
+        $(document).on('click', 'a.send-message', sendMessage);
+        $(document).bind('new_message', function(fromUser) {
+            var active_id = $('.mess-cur a').data('user-id');
+
+            if (fromUser == active_id)
+                getMessages(active_id);
+        });
+
+        scroollMessageDown();
+               bindSccroll()
+    });
+</script>
+
+    {% endblock %}
+
+     {% block content %}
+<div class="analytics">
+				<div class="community">
+                	<div class="messages-l">
+                    	<div class="tab-cate">
+                            <ul>
+                                <li><a href="#message-tabs-1">{% trans "Organizations" %}</a></li>
+                                <li class="ui-tabs-active"><a href="#message-tabs-2">{% trans "Users" %}</a></li>
+                            </ul>
+                        </div>
+                        <div id="message-tabs-1">
+                            <div class="message-tabcontent">
+								<ul class="custom-ms">
+                                	<li>
+                                    	<span class="thumb"></span>
+                                        <a href="#test">ООО «Дятел»</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="message-tabs-2">
+                            <div class="message-tabcontent">
+								<ul class="custom-ms">
+                                    {% for id, attr in users.items %}
+                                        {% with attr.USER_LAST_NAME|first as last_name %}
+                                        {% with attr.USER_FIRST_NAME|first as first_name %}
+                                        {% with attr.USER_MIDDLE_NAME|first as middle_name %}
+                                        {% with attr.IMAGE|first as image %}
+                                        <li {% if active == id %}class="mess-cur ui-tabs-active"{% endif %}>
+
+                                                <span class="thumb"></span>
+                                                <a data-user-id="{{ id }}" href="#custom-content-{{ id }}">{{ first_name }} {{ middle_name }} {{ last_name }}</a>
+
+                                        </li>
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                                {% if users %}
+                                    <div id="custom-content-{{ active }}">
+
+                                    {% include "Messages/contentBox.html" %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+     {% endblock %}
+

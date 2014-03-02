@@ -29,6 +29,7 @@ from tpp.SiteUrlMiddleWare import get_request
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
 
+
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
 
@@ -345,18 +346,16 @@ class ItemManager(models.Manager):
         example of usage :
         item = Item.active.get_active_related()
         '''
-        return self.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now()).\
-            filter(Q(c2p__end_date__gt=now()) | Q(c2p__end_date__isnull=True), c2p__start_date__lte=now(),
-                               c2p__type='dependence')
+        return self.get_active()
+
     def get_active(self):
         '''
         Method return active items without relatiopnship:
         Example of usage:
         item = Item.active.get_active()
         '''
-        return self.filter(Q(Q( end_date__gt=now()) | Q(end_date__isnull=True), start_date__lte=now())
-        | Q(Q(c2p__end_date__gt=now()) | Q(c2p__end_date__isnull=True), c2p__start_date__lte=now(),
-                               c2p__type='dependence'))
+        return self.filter(Q(Q(end_date__gt=timezone.now()) | Q(end_date__isnull=True)), start_date__lte=timezone.now())\
+            .exclude(Q(c2p__end_date__lte=timezone.now(), c2p__end_date__isnull=False) | Q(c2p__start_date__gt=now()), c2p__type='dependence')
 
 
 class Item(models.Model):
@@ -376,7 +375,7 @@ class Item(models.Model):
     update_user = models.ForeignKey(User, null=True, blank=True, related_name='user2item')
     update_date = models.DateField(null=True, blank=True)
 
-    start_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -394,15 +393,15 @@ class Item(models.Model):
             itemList = [itemList]
 
         if not isinstance(itemList, list):
-            raise ValueError('Should be a list or int')
+            raise ValueError('Depended items should be as list or int')
 
         rel = Relationship.objects.filter(parent__in=itemList, type="dependence")
 
         if not rel.exists():
             return False
 
-        parents = rel.values_list('child')
-        parents = [parent[0] for parent in parents]
+        parents = rel.values_list('child', flat=True)
+        parents = list(parents)
 
         fields = {'end_date': eDate}
 
@@ -415,15 +414,13 @@ class Item(models.Model):
 
 
     def activation(self, eDate, sDate=None):
-        if self.__class__.__name__ is 'Item':
-            raise ValueError('Should be subclass of Item')
 
         fields = {'end_date': eDate}
 
         if sDate is not None:
             fields['start_date'] = sDate
 
-        self.update(**fields)
+        Item.objects.filter(pk=self.pk).update(**fields)
         self._activationRelated(self.pk, eDate, sDate)
 
 
@@ -544,6 +541,7 @@ class Item(models.Model):
                         }
                 }
         '''
+
         if not isinstance(attr, tuple):
             attr = (attr,)
 
@@ -705,6 +703,69 @@ class Item(models.Model):
 
         return slugify(string) + '-' + str(pk)
 
+    def _setAttrDictValues(self, attrWithValues, existsAttributes, queries, uniqDict, user):
+        '''
+            sett attr values form dictionary, call only from setAttributeValue method
+        '''
+
+        bulkInsert = []
+
+        #check if dictionary slot exists for this dictionary - using conditions
+        filter_or = ' | '.join(queries)
+
+        valueFileds = ['title']
+
+        #get slot value for all languages
+        for lang in settings.LANGUAGES:
+            valueFileds.append(valueFileds[0] + '_' + lang[0])
+
+        params = valueFileds + ['dict__pk', 'pk']
+
+        #apply filter to get values
+        attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
+
+        if len(attributesValue) < len(queries):
+            raise ValueError('Dict slot does not exists')
+
+        for value in attributesValue:
+
+            uniqDict[value['dict__pk']][value['pk']] = {
+                'title': value['title']
+            }
+
+            for langDict in valueFileds: #set value for all languages
+                uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
+
+        #Insert dict slot
+        for attribute in attrWithValues.keys():
+            values = attrWithValues[attribute]
+            attributeObj = existsAttributes.get(title=attribute)
+            dictID = attributeObj.dict_id
+
+            if not isinstance(values, list):
+                values = [values]
+
+            for value in values:
+                if isinstance(value, dict):
+                    value.update(uniqDict[dictID][int(value['title'])])
+
+                    if 'create_user' not in value:
+                        value['create_user'] = user
+
+                    value['sha1_code'] = createHash(value['title'])
+
+
+
+                    bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                else:
+                    value = uniqDict[dictID][int(value)]
+
+                    bulkInsert.append(Value(item=self, attr=attributeObj, create_user=user,
+                                                sha1_code=createHash(value), **value))
+
+        return bulkInsert
+
+
     @transaction.atomic
     def setAttributeValue(self, attrWithValues, user):
 
@@ -748,11 +809,12 @@ class Item(models.Model):
 
         queries = []
         bulkInsert = []
+        notBulk = []
         attributes = copy(attrWithValues).keys()
         uniqDict = {}
 
         #get all passed attributes
-        existsAttributes = Attribute.objects.filter(title__in=attributes).all()
+        existsAttributes = Attribute.objects.filter(title__in=attributes)
 
         if len(existsAttributes) != len(attrWithValues):
             raise ValueError("Attribute does not exists")
@@ -782,9 +844,16 @@ class Item(models.Model):
 
                         value['sha1_code'] = createHash(value['title'])
 
-                        bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                        if attributeObj.type == 'Str':
+                            notBulk.append(Value(item=self, attr=attributeObj, **value))
+                        else:
+                            bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                     else:
-                        bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                        if attributeObj.type == 'Str':
+                            notBulk.append(Value(title=value, item=self, attr=attributeObj,
+                                                create_user=user, sha1_code=createHash(value)))
+                        else:
+                            bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
                                                 create_user=user, sha1_code=createHash(value)))
                 #Dictionary value
                 else:
@@ -808,63 +877,19 @@ class Item(models.Model):
                         queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
 
         if len(queries) > 0:
-            #check if dictionary slot exists for this dictionary - using conditions
-            filter_or = ' | '.join(queries)
-
-            valueFileds = ['title']
-
-            #get slot value for all languages
-            for lang in settings.LANGUAGES:
-                valueFileds.append(valueFileds[0] + '_' + lang[0])
-
-            params = valueFileds + ['dict__pk', 'pk']
-
-            #apply filter to get values
-            attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
-
-            if len(attributesValue) < len(queries):
-                raise ValueError('Wrong number of dict values')
-
-            for value in attributesValue:
-
-                uniqDict[value['dict__pk']][value['pk']] = {
-                    'title': value['title']
-                }
-
-                for langDict in valueFileds: #set value for all languages
-                    uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
-
-            #Insert dict slot
-            for attribute in attrWithValues.keys():
-                values = attrWithValues[attribute]
-                attributeObj = existsAttributes.get(title=attribute)
-                dictID = attributeObj.dict_id
-
-                if not isinstance(values, list):
-                    values = [values]
-
-                for value in values:
-                    if isinstance(value, dict):
-                        value.update(uniqDict[dictID][int(value['title'])])
-
-                        if 'create_user' not in value:
-                            value['create_user'] = user
-
-                        value['sha1_code'] = createHash(value['title'])
-
-
-
-                        bulkInsert.append(Value(item=self, attr=attributeObj, **value))
-                    else:
-                        value = uniqDict[dictID][int(value)]
-
-                        bulkInsert.append(Value(item=self, attr=attributeObj, create_user=user,
-                                                sha1_code=createHash(value), **value))
+            bulkInsert += self._setAttrDictValues(attrWithValues, existsAttributes, queries, uniqDict, user)
 
         try:
             with transaction.atomic():
                 Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
                 Value.objects.bulk_create(bulkInsert)
+
+                #TODO: Artur fix it
+                #workaround of some bug with oracle + bulk_insert
+                # django ticket #22144
+                for instanceToSave in notBulk:
+                    instanceToSave.save()
+
         except IntegrityError as e:
             raise e
 
@@ -909,7 +934,8 @@ class Relationship(models.Model):
     qty = models.FloatField(null=True, blank=True)
     create_date = models.DateField(auto_now_add=True)
     create_user = models.ForeignKey(User)
-    start_date = models.DateTimeField(auto_now_add=True)
+
+    start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -919,7 +945,7 @@ class Relationship(models.Model):
         return self.title
 
     @staticmethod
-    def setRelRelationship(parent, child, user, type="relation"):
+    def setRelRelationship(parent, child, user, type="relation", **additionParams):
 
         if not isinstance(parent, Item):
             raise ValueError('Parent should be an Item instance')
@@ -927,10 +953,51 @@ class Relationship(models.Model):
         if not isinstance(child, Item):
             raise ValueError('Child should be an Item instance')
 
-        if parent.__class__.__name__ == 'Item' or child.__class__.__name__ == 'Item':
-            raise ValueError('Child and Parent should be subclass of Item')
+        #if parent.__class__.__name__ == 'Item' or child.__class__.__name__ == 'Item':
+        #    raise ValueError('Child and Parent should be subclass of Item')
 
-        Relationship.objects.create(parent=parent, child=child, create_user=user, type=type)
+        params = {
+            'parent': parent,
+            'child': child,
+            'create_user': user,
+            'type': type
+        }
+
+        params.update(additionParams)
+
+        if type == 'dependence' and ('end_date' not in params or 'start_date' not in params):
+            #set activation date for dependence relation
+            try:
+                parentRel = Relationship.objects.get(child=parent.pk, type='dependence')
+                parentRelEnd = parentRel.end_date
+                parendStart = parentRel.start_date
+            except ObjectDoesNotExist:
+                parentRelEnd = None
+                parendStart = None
+
+            if 'end_date' not in params:
+                if not parent.end_date and parentRelEnd:
+                    params['end_date'] = parentRelEnd
+                elif not parentRelEnd and parent.end_date:
+                    params['end_date'] = parent.end_date
+                elif parentRelEnd and parent.end_date:
+
+                    if parentRelEnd > parent.end_date:
+                        params['end_date'] = parent.end_date
+                    else:
+                        params['end_date'] = parentRelEnd
+
+            if 'start_date' not in params:
+                if not parendStart and parent.start_date:
+                    params['start_date'] = parent.start_date
+                elif parendStart and parent.start_date:
+
+                    if parendStart > parent.start_date:
+                        params['start_date'] = parendStart
+                    else:
+                        params['start_date'] = parent.start_date
+
+        Relationship.objects.create(**params)
 
 #----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
@@ -942,7 +1009,7 @@ class Value(models.Model):
     #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
     sha1_code = models.CharField(max_length=40, blank=True)
 
-    start_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User, related_name='creator')
