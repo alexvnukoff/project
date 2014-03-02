@@ -10,6 +10,7 @@ from tpp.SiteUrlMiddleWare import get_request
 
 
 class ProfileForm(forms.Form):
+      #TODO: Jenya Fix required field + messages (if successfully saved)
       image = forms.ImageField(required=False)
 
       last_name = forms.CharField(required=True, label=_("Last name"))

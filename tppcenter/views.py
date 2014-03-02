@@ -26,8 +26,6 @@ from django.conf import settings
 
 def home(request):
 
-
-
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))
 
@@ -46,19 +44,11 @@ def home(request):
 
     products = Product.active.get_active_related().order_by('-pk')[:3]
 
-
-
-
     products_id = [product.pk for product in products]
     productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE'), products_id)
     func.addDictinoryWithCountryAndOrganization(products_id,productsList)
 
-
-
-
-
     services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
-
 
     services_id = [service.id for service in services]
     serviceList = Item.getItemsAttributesValues(("NAME",), services_id)
@@ -75,22 +65,18 @@ def home(request):
     exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE"), exhibitions_id)
     func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
+    templateParams = {
+        "countriesList": countriesList,
+        'organizationsList': organizationsList,
+        'productsList': productsList,
+        'serviceList': serviceList,
+        'greetingsList': greetingsList,
+        'exhibitionsList': exhibitionsList
+    }
+
+    return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
 
 
-
-
-
-
-
-
-
-
-
-    return render_to_response("index.html", {"countriesList": countriesList, 'organizationsList': organizationsList,
-                                             'productsList': productsList, 'serviceList': serviceList,
-                                             'greetingsList': greetingsList, 'exhibitionsList': exhibitionsList},
-
-                              context_instance=RequestContext(request))
 @ensure_csrf_cookie
 def getNotifList(request):
 
@@ -139,11 +125,11 @@ def user_login(request):
     return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
 
 
-
 def user_logout(request):
     logout(request)
 
     return HttpResponseRedirect("/")
+
 
 def registration(request):
 
@@ -167,17 +153,6 @@ def registration(request):
               return render_to_response('registration/registration.html', {'form': form, 'user': request.user}, context_instance=RequestContext(request))
 
     return render_to_response('registration/registration.html', {'user': request.user}, context_instance=RequestContext(request))
-
-
-
-
-
-
-
-
-
-
-
 
 
 def set_news_list(request):
@@ -347,16 +322,23 @@ def jsonFilter(request):
 
 
 def test(request):
-    a = '''
-        ЯбросилучебувReedcollegeчерезполгодасмоментапоступления,нопродолжалходитьналекцииижитьвстудгородкееще18месяцев,поканезабросилэтоделоокончательно.Такпочемуябросилучебу?Этаисторияначаласьдомоегорождения.Моябиологическаямать,молодаянезамужняяаспирантка,решилаотдатьменянаусыновление.Ейоченьхотелось,чтобыменяусыновилилюдисвысшимобразованием.Ивсебылоготоводлятого,чтобыменявзялинавоспитаниевсемьюнекоегоюриста.Нокмоментумоегорожденияюристиегоженавдругрешили,чтонасамомделеимнужнадевочка,анемальчик.Такчтомоимбудущимродителям,которыебылиследующимивочереди,позвонилисрединочисвопросом:«Унасестьвнеплановыйребенок.Мальчик.Возьметеего?»Иониответили«Конечно».Позжемоябиологическаяматьузнала,чтомояреальнаяматьнезаканчиваланикакогоколледжа,ичтомойотецнезакончилдажесреднейшколы.Онаотказаласьподписатьокончательныебумагинаусыновление.Лишьнесколькомесяцевспустямоимродителямудалосьееуговорить.Онипообещали,чтообязательноотдадутменявколледж.Такначаласьмояжизнь.17летспустяяпошел-такивколледж.Понаивности,явыбралоченьдорогойколледж–почтикакСтенфорд–ивсесбережениямоихнебогатыхродителейуходилинаоплатумоейучебы.Черезполгодаяпонял,чтовучебенетникакогосмысла:японятиянеимелничемяхочузаниматьсявжизни,никакколледжпоможетмнеэтопонять.Приэтомнаучебуятратилвсе,чтомоиродителископилизавсюсвоюжизнь.Поэтомуярешилброситьучебуинадеятьсянато,чтовсекак-нибудьобразуется.Тогдамнеотэтогобылонепосебе,носейчас,оглядываясьназад,японимаю,чтоэтобылоодноизсамыхлучшихрешенийвмоейжизни.Меняотчислили.Этозначило,чтобольшененужноходитьнаобязательныекурсы–иможноходитьтольконато,чтокажетсяинтересным.Конечно,невсебылогладко.Уменянебылокомнатывобщежитии,иночеватьприходилосьнаполувкомнатахдрузей.Ясдавалбутылкииз-подколыпо5центовзаштуку,чтобыпокупатьеду.Каждоевоскресеньеяходилпешкомпо7мильчерезвесьгород,чтобыразвнеделюхорошопоестьукришнаитов.Едатамбылазамечательная(Воригинале"Ilovedit"",парафраззнаменитогослоганаMcDonalds).Многоеизтого,чтояоткрылдлясебявтевремена,подчиняясьсвоемулюбопытствуиинтуиции,впоследствииоказалосьбесценным.Приведуодинпример.Reedcollegeтогдапредлагаллучшеевстранеобразованиевобластикаллиграфии.Любойплакат,любаянадписьналюбомшкафчикевлюбомместестуденческогогородкабылизамечательновыведеныотрукиповсемзаконамискусствакаллиграфии.Ябылотчислен,мнененужнобылопосещатьобычныезанятия,иярешилизучатькаллиграфию.Яузналмногоеогарнитурахшрифтов(serif,sans-serif),оварьированиирасстояниямеждуразличнымисочетаниямибукв–обовсем,чтоделаетвеликолепнуютипографикувеликолепной.Вэтихзанятияхбылакакая-токрасота,история,тонкостьискусства,недоступнаянауке…меняэтозавораживало.Тогдамнеказалось,чтовсеэтонеимеетнималейшегошансанапрактическоеприменение.Но10летспустя,когдамыразрабатывалипервыйМакинтош,всемоизнанияпокаллиграфиивернулиськомне–ипригодились.Макинтошсталпервымкомпьютеромскрасивымишрифтами.Еслибыянесталпосещатьэтизанятиявколледже,вМакахнебылобывозможностииспользоватьразныегарнитуры,шрифтынебылибыпропорциональными…АпосколькуWindows–этовсеголишькалькаМ.
-     '''
+    import datetime
 
-    i = Item.objects.get(pk='61')
-    z = Attribute.objects.get(title='DETAIL_TEXT')
-    v = Value(title=a, create_user=request.user, item=i, attr=z)
-    #v.save()
-    Value.objects.bulk_create([v])
-    #i.setAttributeValue({'DETAIL_TEXT': a}, request.user)
+    i = Item(title="lol", create_user=request.user)
+    i.save()
+    i.setAttributeValue({'DETAIL_TEXT': ['test1', 'test22'], 'NAME': 'normal text', 'SEX': 44}, request.user)
+
+    a = Item.objects.get(pk=289)
+    z = Item.objects.get(pk=295)
+
+    date = datetime.datetime.now() - datetime.timedelta(days=22)
+    date2 = datetime.datetime.now() - datetime.timedelta(days=21)
+
+
+    Relationship.setRelRelationship(parent=z, child=i, user=request.user, type="dependence")
+
+    a.activation(date2, date)
+
     from django.http import StreamingHttpResponse
     return StreamingHttpResponse('pong')
 

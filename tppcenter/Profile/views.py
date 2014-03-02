@@ -128,6 +128,7 @@ def _profileContent(request):
             country = Country.objects.get(p2c__child=cabinet).pk
         except Exception:
             country = ""
+
         avatar = profile['IMAGE'][0] if profile.get('IMAGE', False) else ""
         dictSex = Dictionary.objects.get(title='SEX')
         sexSlot = profile['SEX'][0] if profile.get('SEX', False) else ""

@@ -67,7 +67,6 @@ def makeDate(value):
 
 
 
-
 class DynUrlNode(template.Node):
     def __init__(self, *args):
         self.name_var = args[0]
