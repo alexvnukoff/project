@@ -15,191 +15,246 @@
     {% block js %}
          {{ block.super }}
         <script type="text/javascript" src="{% static "tppcenter/js/ajax.queue.min.js" %}"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.js"></script>
 
 
  <script type="text/javascript">
 
-     function onScrollTop(el) {
 
-            el.unbind('scroll');
+    var messagesUI = {
 
-            if (el.find('.last').length)
+        curChat: 'mess-cur' ,
+        chatList: '.message-tabcontent',
+        messageLine: '.customline',
+        messageBox: '.custom-contentin',
+        messageList: '.message-list',
+        textarea: '#message-box-',
+        chatWindow: 'custom-content-',
+
+
+        onScrollTop: function( el ) {
+
+            el.unbind( 'scroll' );
+
+            if ( el.find( '.last' ).length )
                 return true;
 
-            var page = $(this).data('page');
-            var active_id = $('.mess-cur a').data('user-id');
-            el.find('.dateline:first').replaceWith('<div class="message-paging-loader">' +
-                                                        '<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />' +
-                                                    '</div>');
-            var last_message = el.find('.customline:first');
-            var date = last_message.data('date');
-            var lid =  last_message.data('message');
+            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
 
+            el.find( '.dateline:first' ).replaceWith( '<div class="message-paging-loader">' +
+                                                        '<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />' +
+                                                    '</div>' );
+
+            var last_message = el.find( messageLine + ':first' );
+            var date = last_message.data( 'date' );
+            var lid =  last_message.data( 'message' );
             var url = '/messages/' + active_id + '/';
 
             $.ajaxQueue({
+
                 url: url,
                 data: {
                     page: 2,
                     lid: lid,
                     date: date
                 },
-                success: function(data) {
-                    bindSccroll();
 
-                    el.find('.message-paging-loader').replaceWith(data);
+                success: function(data) {
+
+                    messagesUI.bindSccroll();
+
+                    el.find( '.message-paging-loader' ).replaceWith( data );
                 },
+
                 type: 'GET'
             });
+        },
 
-     }
+        bindSccroll: function() {
 
-     function bindSccroll()
-     {
-        $('.custom-contentin').unbind('scroll');
+            $( messagesUI.messageBox ).unbind( 'scroll' );
 
-        $('.custom-contentin:visible').bind('scroll', function() {
+            $( messagesUI.messageBox + ':visible' ).bind( 'scroll', function() {
 
-         if($(this).scrollTop() == 0)
-         {
-            onScrollTop($(this))
-         }
-        });
-     }
+                 if( $(this).scrollTop() == 0 )
+                    messagesUI.onScrollTop( $(this) );
+            });
+        },
 
+        scroollMessageDown: function() {
 
+            var content = $( messagesUI.messageBox + ':visible' );
+            var height = content.find( messagesUI.messageList ).height();
 
-    $(function() {
+            content.scrollTop( height );
 
+        },
 
+        sendMessage: function() {
 
+            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
 
-
-        $( "#tabs" ).tabs();
-        $( ".date" ).datepicker();
-        $(".messages-l").tabs();
-
-        function scroollMessageDown() {
-            var content = $('.custom-contentin:visible');
-            content.scrollTop(content.find('.message-list').height());
-        }
-
-
-        function sendMessage()
-        {
-            var active_id = $('.mess-cur a').data('user-id');
-
-            if (!active_id)
+            if ( !active_id )
                 return false;
 
-            var textarea = $('#message-box-'+ active_id);
+            var textarea = $( messagesUI.textarea + active_id );
             var val = textarea.val();
 
-            if (val == '')
+            if ( val == '' )
                 return false;
 
-            textarea.attr('disabled', 'disabled');
+            textarea.attr( 'disabled', 'disabled' );
 
             $.ajaxQueue({
+
                 url: '/messages/add/',
                 data: {
                     text: val,
                     active: active_id
                 },
-                success: function(data) {
-                    getMessages(active_id);
-                    textarea.val('');
-                    textarea.removeAttr('disabled')
+
+                success: function( data ) {
+
+                    messagesUI.getMessages( active_id );
+                    textarea.val( '' );
+                    textarea.removeAttr( 'disabled' );
+
                 },
+
                 type: 'POST'
             });
 
            return false;
-        }
 
-        function getMessages(coll) {
-            var selector = $('#custom-content-' + coll);
+        },
 
-            if (selector.length == 0)
+        getMessages: function( coll ) {
+            var selector = $( '#' + messagesUI.chatWindow + coll );
+
+            if ( selector.length == 0 )
                 return false;
 
-            var lastTime = selector.find('.customline:last').data('date');
-            var lid = selector.find('.customline:last').data('message');
+            var lastTime = selector.find( messagesUI.messageLine + ':last' ).data( 'date' );
+            var lid = selector.find( messagesUI.messageLine + ':last' ).data( 'message' );
             var url = '/messages/' + coll + '/';
 
             jQuery.ajaxQueue({
+
                 url: url,
                 data: {
                     date: lastTime,
                     lid: lid
                 },
-                type: 'GET',
-                success: function(data) {
-                    selector.find('.message-list').append(data);
-                    scroollMessageDown();
+
+                success: function( data ) {
+
+                    selector.find( messagesUI.messageList ).append( data );
+                    messagesUI.scroollMessageDown();
                 },
-                dataType: 'html'
+
+                dataType: 'html',
+                type: 'GET'
             });
+        },
 
-        }
+        getMessageBox: function( coll, newPanel ) {
 
-        function getMessageBox(coll, newPanel) {
             var url = '/messages/' + coll + '/';
             var content = ''
-            History.pushState(null, null, url);
+
+            History.pushState( null, null, url );
 
             jQuery.ajaxQueue({
+
                 url: url,
-                type: 'GET',
                 data: {box: 1},
-                success: function(data) {
-                     newPanel.html(data);
-                    scroollMessageDown();
-                    bindSccroll()
+
+                success: function( data ) {
+
+                    newPanel.html( data );
+                    messagesUI.scroollMessageDown();
+                    messagesUI.bindSccroll()
+
                 },
-                dataType: 'html'
+
+                dataType: 'html',
+                type: 'GET'
             });
+        },
+
+        init: function() {
+            $( ".messages-l" ).tabs({
+                beforeActivate: function( event, ui ) {
+
+                    var subTab = ui.newPanel.find( messagesUI.chatList );
+                    var curr = subTab.tabs( 'option','active' );
+
+                    if ( curr != 0 )
+                    {
+                        subTab.tabs( 'option','active', 0 );
+                        subTab.tabs( 'option','active', curr );
+                    }
+
+                }
+            });
+
+
+            $( messagesUI.chatList ).tabs({
+
+                beforeLoad: function( event, ui ) {
+                    ui.panel.html('<div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>');
+                },
+
+                load: function( event, ui ) {
+
+                    var tabLink = ui.tab.find( 'a' );
+                    var id = tabLink.data( 'user-id' );
+                    var tab = $( '<div></div>' ).attr( 'id', messagesUI.chatWindow + id ).append( ui.panel );
+
+                    tabLink.attr( 'href', '#' + messagesUI.chatWindow + id );
+
+                    $(this).append( tab );
+
+                    messagesUI.scroollMessageDown();
+                    messagesUI.bindSccroll();
+                },
+
+                activate: function( event, ui) {
+
+                    var url = ui.newTab.find( 'a' ).attr( 'href' );
+
+                    History.pushState( null, null, url.replace( '?box=1', '' ) );
+
+                    $( messagesUI.chatList + " ." + messagesUI.curChat ).removeClass( messagesUI.curChat )
+                    ui.newTab.addClass( messagesUI.curChat );
+                }
+            });
+
+
+
+            $(document).on( 'click', 'a.send-message', messagesUI.sendMessage );
+
+            $(document).bind( 'new_message', function( ev, fromUser ) {
+
+                var active_id = $( '.' + messagesUI.curChat  + ' a').data('user-id');
+
+                if ( fromUser == active_id )
+                    messagesUI.getMessages( active_id );
+            });
+
+            messagesUI.scroollMessageDown();
+            messagesUI.bindSccroll();
+
         }
 
-        $(".message-tabcontent").tabs({
-            beforeLoad: function( event, ui ) {
-                ui.panel.html('<div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>');
-            },
-
-            load: function( event, ui ) {
-                var tabLink = ui.tab.find('a');
-                var id = tabLink.data('user-id');
-                var tab = $('<div></div>').attr('id', 'custom-content-' + id).append(ui.panel);
-
-                tabLink.attr('href', 'custom-content-' + id);
-                $(this).append(tab);
-                scroollMessageDown();
-                bindSccroll();
-            },
-
-            activate: function( event, ui) {
-                var url = ui.newTab.find('a').attr('href');
-
-                History.pushState(null, null, url.replace('?box=1', ''));
-
-                $(".message-tabcontent .mess-cur").removeClass('mess-cur')
-                ui.newTab.addClass('mess-cur');
-            }
-        });
+    }
 
 
 
-        $(document).on('click', 'a.send-message', sendMessage);
-        $(document).bind('new_message', function(ev, fromUser) {
-            var active_id = $('.mess-cur a').data('user-id');
 
-            if (fromUser == active_id)
-                getMessages(active_id);
-        });
 
-        scroollMessageDown();
-               bindSccroll()
+    $(function() {
+        messagesUI.init();
+
     });
 </script>
 
@@ -273,7 +328,14 @@
                                         {% endwith %}
                                         {% endwith %}
                                     {% endfor %}
+
                                 </ul>
+                                                            {% if active in cabinets %}
+                                    <div id="custom-content-{{ active }}">
+
+                                    {% include "Messages/contentBox.html" %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
