@@ -791,8 +791,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
-    start_event_date = indexes.DateTimeField(null=True)
-    end_event_date = indexes.DateTimeField(null=True)
+    start_event_date = indexes.DateField(null=True)
+    end_event_date = indexes.DateField(null=True)
     start_date = indexes.DateTimeField()
     end_date = indexes.DateTimeField(null=True)
     cost = indexes.FloatField(null=True)
@@ -803,6 +803,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.pk
 
     def prepare(self, obj):
+        from django.utils.dateparse import parse_date
+
         self.prepared_data = super(TenderIndex, self).prepare(obj)
 
         field_to_attr = {

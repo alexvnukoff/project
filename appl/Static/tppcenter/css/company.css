@@ -193,7 +193,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
 .message-tabcontent{ position:relative; float:left; width:100%;}
 .custom-ms{ position:relative; float:left; width:100%;}
-.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:13px; line-height:30px;}
+.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px;}
 .custom-ms li .thumb{ float:left; width:24px; height:24px; background-color:#afafaf; margin:3px 8px; display:inline;}
 .message-tabcontent .custom-ms li.ui-tabs-active{ background:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px;}
 .message-tabcontent .custom-ms li.ui-tabs-active a{ color:#FFF;}

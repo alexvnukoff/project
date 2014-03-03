@@ -48,7 +48,7 @@
                 success: function(data) {
                     bindSccroll();
 
-                    el.find('.im-test').replaceWith(data);
+                    el.find('.message-paging-loader').replaceWith(data);
                 },
                 type: 'GET'
             });
@@ -57,7 +57,7 @@
 
      function bindSccroll()
      {
-         $('.custom-contentin').unbind('scroll');
+        $('.custom-contentin').unbind('scroll');
 
         $('.custom-contentin:visible').bind('scroll', function() {
 
@@ -163,27 +163,28 @@
         }
 
         $(".message-tabcontent").tabs({
-            activate: function( event, ui ) {
-                ui.oldTab.removeClass('mess-cur').unbind('scroll');
-                ui.newTab.addClass('mess-cur');
-                scroollMessageDown();
-                    bindSccroll()
+            beforeLoad: function( event, ui ) {
+                ui.panel.html('<div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>');
             },
 
-            beforeActivate: function( event, ui ) {
-                var link = ui.newTab.find('a')
-                var cabinet = link.data('user-id');
-                var target = link.attr('href');
+            load: function( event, ui ) {
+                var tabLink = ui.tab.find('a');
+                var id = tabLink.data('user-id');
+                var tab = $('<div></div>').attr('id', 'custom-content-' + id).append(ui.panel);
 
-                if ($(target).length == 0)
-                {
-                    box = $('<div></div>').appendTo($(this))
-                    box.html('<img src="/static/tppcenter/img/messages-loader.gif" />');
-                    box.attr('id', 'custom-content-' + cabinet);
-                    box.addClass('message-loader');
-                    ui.newPanel = $(target);
-                    getMessageBox(cabinet, ui.newPanel);
-                }
+                tabLink.attr('href', 'custom-content-' + id);
+                $(this).append(tab);
+                scroollMessageDown();
+                bindSccroll();
+            },
+
+            activate: function( event, ui) {
+                var url = ui.newTab.find('a').attr('href');
+
+                History.pushState(null, null, url.replace('?box=1', ''));
+
+                $(".message-tabcontent .mess-cur").removeClass('mess-cur')
+                ui.newTab.addClass('mess-cur');
             }
         });
 
@@ -210,46 +211,69 @@
                 	<div class="messages-l">
                     	<div class="tab-cate">
                             <ul>
-                                <li><a href="#message-tabs-1">{% trans "Organizations" %}</a></li>
-                                <li class="ui-tabs-active"><a href="#message-tabs-2">{% trans "Users" %}</a></li>
+                                <li {% if active in organizations %} class="ui-tabs-active" {% endif %}>
+                                    <a href="#message-tabs-1">{% trans "Organizations" %}</a>
+                                </li>
+                                <li {% if active in cabinets %} class="ui-tabs-active" {% endif %} >
+                                    <a href="#message-tabs-2">{% trans "Users" %}</a>
+                                </li>
                             </ul>
                         </div>
                         <div id="message-tabs-1">
-                            <div class="message-tabcontent">
+                            <div class="message-tabcontent message-tabcontent-org">
 								<ul class="custom-ms">
-                                	<li>
-                                    	<span class="thumb"></span>
-                                        <a href="#test">ООО «Дятел»</a>
-                                    </li>
+                                    {% for id, attr in organizations.items %}
+                                        {% with attr.NAME|first as name %}
+                                        {% with attr.IMAGE|first as image %}
+                                        <li style="display: none"><a href="#placeholder"></a> </li>
+                                        <li {% if active == id %}class="mess-cur ui-tabs-active"{% endif %}>
+                                            <span class="thumb"></span>
+                                            <a data-user-id="{{ id }}" href="#custom-content-{{ id }}">
+                                                {{ name|truncatewords:3 }}
+                                            </a>
+                                        </li>
+                                        {% endwith %}
+                                        {% endwith %}
+                                    {% endfor %}
+
                                 </ul>
+                                {% if active in organizations %}
+                                    <div id="custom-content-{{ active }}">
+                                        {% include "Messages/contentBox.html" %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div id="message-tabs-2">
-                            <div class="message-tabcontent">
+                            <div class="message-tabcontent message-tabcontent-cab">
 								<ul class="custom-ms">
-                                    {% for id, attr in users.items %}
+                                    {% for id, attr in cabinets.items %}
                                         {% with attr.USER_LAST_NAME|first as last_name %}
                                         {% with attr.USER_FIRST_NAME|first as first_name %}
                                         {% with attr.USER_MIDDLE_NAME|first as middle_name %}
                                         {% with attr.IMAGE|first as image %}
-                                        <li {% if active == id %}class="mess-cur ui-tabs-active"{% endif %}>
-
+                                        <li style="display: none"><a href="#placeholder"></a> </li>
+                                        {% if active == id %}
+                                        <li class="mess-cur ui-tabs-active">
                                                 <span class="thumb"></span>
-                                                <a data-user-id="{{ id }}" href="#custom-content-{{ id }}">{{ first_name }} {{ middle_name }} {{ last_name }}</a>
-
+                                                <a data-user-id="{{ id }}" href="#custom-content-{{ id }}">
+                                                    {{ first_name }} {{ last_name }}
+                                                </a>
                                         </li>
+                                        {% else %}
+                                        <li>
+                                            <span class="thumb"></span>
+                                            <a data-user-id="{{ id }}" href="{% url "messages:message_item" id  %}?box=1">
+                                                {{ first_name }} {{ last_name }}
+                                            </a>
+                                        </li>
+                                        {% endif %}
                                         {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
                                     {% endfor %}
                                 </ul>
-                                {% if users %}
-                                    <div id="custom-content-{{ active }}">
-
-                                    {% include "Messages/contentBox.html" %}
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>

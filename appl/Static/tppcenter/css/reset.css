@@ -111,6 +111,20 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     position: absolute;
 }
 
+.message-list .customline {
+    width: 400px;
+    overflow-wrap: break-word;
+}
+
 .message-paging-loader {
     text-align: center;
+}
+
+.customline .clumnleft {
+    margin-bottom: 10px;
+}
+
+.message-list .customline .thumb img {
+    width: 30px;
+    height: 30px;
 }
