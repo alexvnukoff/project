@@ -776,3 +776,101 @@ def tpp_reload_CSV_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('TPPs were migrated from CSV into DB!')
+
+def tpp_reload_DB_DB(request):
+    '''
+        Reload TPPs' data from buffer DB table LEGACY_DATA_L_TPP into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    print('Loading TPPs from buffer DB into TPP DB...')
+    qty = L_TPP.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    i = 0
+    tpp_lst = L_TPP.objects.filter(completed=False)[:20] #.all()
+    for leg_tpp in tpp_lst:
+        #set create_user (owner) for the TPP
+        if leg_tpp.moderator:
+            try:
+                l_user = L_User.objects.get(btx_id=leg_tpp.moderator)
+                create_usr = User.objects.get(pk=l_user.tpp_id)
+            except:
+                create_usr = User.objects.get(pk=1)
+        else:
+            create_usr = User.objects.get(pk=1)
+
+        try:
+            new_tpp = Tpp.objects.create(title='TPP_LEG_ID:'+leg_tpp.btx_id,
+                                                  create_user=create_usr)
+        except:
+            print(leg_tpp.btx_id, '##', leg_tpp.tpp_name, '##', ' Count: ', i)
+            i += 1
+            continue
+
+        '''
+        if len(leg_tpp.preview_picture):
+            img_small_path = add(img_root + leg_tpp.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_tpp.detail_picture):
+            img_detail_path = add(img_root + leg_tpp.detail_picture)
+        else:
+            img_detail_path = ''
+        if len(leg_tpp.head_pic):
+            head_pic_path = add(img_root + leg_tpp.head_pic)
+        else:
+            head_pic_path = ''
+
+        '''
+        img_small_path = ''
+        img_detail_path = ''
+        head_pic_path = ''
+
+        attr = {'NAME': leg_tpp.tpp_name,
+                'IMAGE_SMALL': img_small_path,
+                'ANONS': leg_tpp.preview_text,
+                'IMAGE': img_detail_path,
+                'DETAIL_TEXT': leg_tpp.detail_text,
+                'HEAD_PIC': head_pic_path,
+                'SITE_NAME': leg_tpp.domain,
+                'ADDRESS': leg_tpp.address,
+                'EMAIL': leg_tpp.email,
+                'FAX': leg_tpp.fax,
+                'MAP_POSITION': leg_tpp.map,
+                'TELEPHONE_NUMBER': leg_tpp.phone,
+            }
+
+        res = new_tpp.setAttributeValue(attr, create_usr)
+        if res:
+            leg_tpp.tpp_id = new_tpp.pk
+            #leg_tpp.completed = True
+            leg_tpp.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
+
+        # create relationship type=Dependence with country
+        prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
+        try: #if there isn't country in Company take it from TPP
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
+        except Exception as e:
+            print('TPP %s has not Country!', new_tpp.tpp_name)
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    #set up mother TPP
+    tpp_lst = L_TPP.objects.exclude(tpp_parent='').all()
+    for tpp in tpp_lst:
+        try:
+            parent_tpp = Tpp.objects.get(pk=L_TPP.objects.get(btx_id=tpp.tpp_parent).tpp_id)
+            Relationship.objects.get_or_create(parent=parent_tpp, type='hierarchy', child=tpp, create_user=create_usr)
+        except:
+            continue
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPPs were migrated from buffer DB into TPP DB!')

@@ -32,8 +32,9 @@ urlpatterns = patterns('',
     url(r'^legacy/company/dbdb$', leg_v.company_reload_DB_DB),
 
     url(r'^legacy/product/csvdb$', leg_v.product_reload_CSV_DB),
-    url(r'^legacy/product/csvdb$', leg_v.product_reload_DB_DB),
+    url(r'^legacy/product/dbdb$', leg_v.product_reload_DB_DB),
 
     url(r'^legacy/tpp/csvdb$', leg_v.tpp_reload_CSV_DB),
+    url(r'^legacy/tpp/dbdb$', leg_v.tpp_reload_DB_DB),
 
 )
