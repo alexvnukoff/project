@@ -95,7 +95,9 @@ $(function() {
                     </li>
                 	<li>
                     	<label>Заголовок</label>
+                         {% if form.errors.NAME %}<div class="formerror">{{ form.errors.NAME }}</div>{% endif %}
                         <input type="text" id="id_name" name="NAME" value="{{ name }}" class="text"/>
+
 
                     </li>
                     <li>

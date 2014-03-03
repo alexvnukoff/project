@@ -743,12 +743,12 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-            comp = comp.all()
 
-            self.prepared_data[companyIndex] = comp.pk
+
+
 
             if not self.prepared_data[countryIndex]:
-                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
+                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp[0].pk, p2c__type='dependence').pk
 
             self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
@@ -756,13 +756,14 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             tpp = tpp.all()
 
             self.prepared_data[companyIndex] = None
-            self.prepared_data[tppIndexfield] = tpp.pk
+            self.prepared_data[tppIndexfield] = tpp[0].pk
 
             if not self.prepared_data[countryIndex]:
-                country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+                country = Country.objects.filter(p2c__child_id=tpp[0].pk, p2c__type='dependence')
 
                 if country.exists():
-                    self.prepared_data[countryIndex] = country.all().pk
+
+                    self.prepared_data[countryIndex] = country[0].pk
 
         return self.prepared_data
 
@@ -877,22 +878,22 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-            comp = comp.all()
 
-            self.prepared_data[companyIndex] = comp.pk
+            self.prepared_data[companyIndex] = comp[0].pk
+
 
             if not self.prepared_data[countryIndex]:
-                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
+                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp[0].pk, p2c__type='dependence').pk
 
             self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
             tpp = tpp.all()
 
             self.prepared_data[companyIndex] = None
-            self.prepared_data[tppIndexfield] = tpp.pk
+            self.prepared_data[tppIndexfield] = tpp[0].pk
 
             if not self.prepared_data[countryIndex]:
-                country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+                country = Country.objects.filter(p2c__child_id=tpp[0].pk, p2c__type='dependence')
 
                 if country.exists():
                     country = country.all()

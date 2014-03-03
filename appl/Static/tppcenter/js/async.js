@@ -12,6 +12,7 @@ $(document).ready(function() {
                 var data = msg['data']
                 var data = JSON.parse(data)
                 var type = data.type
+                data = data.data
 
                 if (type == 'notification')
                 {

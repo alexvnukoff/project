@@ -11,7 +11,7 @@ from appl import func
 
 
 #@shared_task
-def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
+def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -51,6 +51,9 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
             Relationship.objects.filter(parent__in=Country.objects.all(), child=new.id).delete()
             Relationship.setRelRelationship(parent=country, child=new, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=new, type='dependence', user=user)
+
         new.reindexItem()
 
 
@@ -61,7 +64,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 #@shared_task
-def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
+def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -110,6 +113,8 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
             Relationship.objects.filter(parent__in=Category.objects.all(), child=product.id).delete()
             Relationship.setRelRelationship(parent=category, child=product, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=product, type='dependence', user=user)
 
 
 
@@ -126,7 +131,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 
-def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -161,6 +166,9 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
             rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id)
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
+
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
 
 
         gallery.save(parent=proposal.id, user=user)
@@ -224,7 +232,13 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         if tpp:
             Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=tpp, child=company, user=user)
+        else:
+            time = now() + datetime.timedelta(days=60)
+            company.end_date = time
+            company.save()
 
+        g = Group.objects.get(name=company.community)
+        g.user_set.add(user)
         company.reindexItem()
 
 
@@ -317,7 +331,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 #@shared_task
-def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
+def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -343,6 +357,13 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
 
     tender = form.save(user, site_id)
     if tender:
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=tender, type='dependence', user=user)
+
+
+
+        tender.reindexItem()
+
 
 
         gallery.save(parent=tender.id, user=user)
@@ -355,7 +376,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 
-def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
@@ -393,6 +414,16 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
 
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
+
+
+
+        proposal.reindexItem()
+
+
+
+
         gallery.save(parent=proposal.id, user=user)
         pages.save(parent=proposal.id, user=user)
         func.notify("item_created", 'notification', user=user)
@@ -403,7 +434,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
 
-def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
@@ -433,6 +464,8 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=project.id).delete()
             Relationship.setRelRelationship(parent=branch, child=project, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=project, type='dependence', user=user)
 
         gallery.save(parent=project.id, user=user)
         pages.save(parent=project.id, user=user)

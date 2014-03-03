@@ -113,7 +113,7 @@ def _proposalsContent(request, page=1):
 
 
 
-    url_paginator = "proposals:paginator"
+    url_paginator = "proposal:paginator"
     template = loader.get_template('BusinessProposal/contentPage.html')
 
     templateParams = {
@@ -136,6 +136,20 @@ def _proposalsContent(request, page=1):
 
 
 def addBusinessProposal(request):
+    current_company = request.session.get('current_company', False)
+    if not request.session.get('current_company', False):
+         return render_to_response("permissionDen.html")
+
+    item = Organization.objects.get(pk=current_company)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'add_businessproposal' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
+
+
+
+
     form = None
 
     branches = Branch.objects.all()
@@ -174,7 +188,8 @@ def addBusinessProposal(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+                                current_company=current_company)
             return HttpResponseRedirect(reverse('proposal:main'))
 
     template = loader.get_template('BusinessProposal/addForm.html')
@@ -191,6 +206,12 @@ def addBusinessProposal(request):
 
 
 def updateBusinessProposal(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_businessproposal' not in perm_list:
+        return render_to_response("permissionDenied.html")
+
 
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]

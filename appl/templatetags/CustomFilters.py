@@ -59,8 +59,11 @@ def getSymbol(value):
 def makeDate(value):
 
     if value:
-        date = datetime.datetime.strptime(value, "%Y-%m-%d")
-        return date
+        try:
+            date = datetime.datetime.strptime(value, "%Y-%m-%d")
+            return date
+        except Exception:
+            pass
 
 
 

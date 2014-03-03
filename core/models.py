@@ -512,7 +512,7 @@ class Item(models.Model):
         obj_type = self.__class__.__name__ # get current object's type
         obj_type = obj_type.lower()
         perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
-                    permissions__codename__contains=obj_type).values('permissions__codename')]
+                    ).values('permissions__codename')]
         # attach user's private permissions
         perm_list += [p['codename'] for p in user.user_permissions.filter(codename__contains=obj_type).values('codename')]
         perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
@@ -932,7 +932,7 @@ class Relationship(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
-    create_date = models.DateField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
 
     start_date = models.DateTimeField(default=timezone.now)

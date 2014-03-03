@@ -153,6 +153,12 @@ def _companiesContent(request, page=1):
 
 
 def addCompany(request):
+    user = request.user
+
+    user_groups = user.groups.values_list('name', flat=True)
+    if not user.is_manager or not 'Company Creator' in user_groups:
+        raise PermissionError("you don't have permission to add company" )
+
     form = None
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
@@ -163,7 +169,7 @@ def addCompany(request):
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
-        user = request.user
+
 
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -196,6 +202,12 @@ def addCompany(request):
 
 
 def updateCompany(request, item_id):
+
+    item = Organization.objects.get(pk=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_company' not in perm_list:
+        return render_to_response("permissionDenied.html")
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:
