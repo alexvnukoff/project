@@ -2,7 +2,7 @@ from django.http import HttpResponse, Http404
 from legacy_data.models import L_User, L_Company, L_Product, L_TPP
 from core.models import User, Relationship
 from core.amazonMethods import add
-from appl.models import Company, Tpp, Product, Country
+from appl.models import Company, Tpp, Product, Country, Cabinet
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
@@ -139,6 +139,7 @@ def users_reload_DB_DB(request):
     print('Before already were processed: ', qty)
     user_lst = L_User.objects.filter(completed=False).all()
     i=1
+    photo_root = 'C:'
     for usr in user_lst:
         request = get_request()
         # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
@@ -149,17 +150,54 @@ def users_reload_DB_DB(request):
             #return HttpResponse('Migration process from buffer DB into TPP DB was interrupted!\
             #                    Possible reason is duplicated data.')
             print(usr.username, '##', usr.email, '##', ' Count: ', i)
-            i +=1
+            i += 1
             continue
 
-        new_user.first_name=usr.first_name
-        new_user.last_name=usr.last_name
+        new_user.first_name = usr.first_name
+        new_user.last_name = usr.last_name
         new_user.is_active = True
+        '''
+        if len(usr.photo):
+            photo_path = add(photo_root + usr.photo)
+        else:
+            photo_path = ''
+        new_user.avatar = photo_path
+        '''
         new_user.save()
 
-        usr.tpp_id=new_user.pk
-        usr.completed = True
-        usr.save()
+        #create Cabinet for user
+
+        try:
+            user_cab = Cabinet.objects.create(title='CABINET_USER_ID_' + str(new_user.pk), user = new_user, create_user = new_user)
+
+        except:
+            User.objects.filter(pk = new_user.pk).delete()
+            continue
+
+        address = usr.addr_zip + ',' + usr.addr_country + ',' + usr.addr_state + ',' + usr.addr_city + usr.addr_street
+        address.strip()
+
+        attr = {
+                'PROFESSION': usr.profession,
+                'PERSONAL_WWW': usr.personal_www,
+                'ICQ': usr.icq,
+                'SEX': usr.gender,
+                'PERSONAL_PHONE': usr.phone,
+                'PERSONAL_FAX': usr.fax,
+                'CELLULAR': usr.cellular,
+                'ADDRESS': address,
+                'POSITION': usr.position,
+            }
+
+        res = user_cab.setAttributeValue(attr, new_user)
+        if res:
+            usr.tpp_id = new_user.pk
+            usr.completed = True
+            usr.save()
+
+        #Add user to Company Creator Group
+        g = Group.objects.get(name='Company Creator')
+        g.user_set.add(new_user)
 
         if not i%200:
             print('Milestone: ', qty + i)
