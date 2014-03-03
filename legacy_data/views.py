@@ -424,6 +424,12 @@ def company_reload_DB_DB(request):
             '''
             img_small_path = ''
             img_detail_path = ''
+            #if wrong VATIN then generate default
+            if len(leg_cmp.INN) < 5:
+                inn = 'INN_' + str(randint(1000000000, 9999999999))
+            else:
+                inn = leg_cmp.INN
+
             attr = {'NAME': leg_cmp.short_name,
                     'IMAGE_SMALL': img_small_path,
                     'ANONS': leg_cmp.preview_text,
@@ -436,7 +442,7 @@ def company_reload_DB_DB(request):
                     'TELEPHONE_NUMBER': leg_cmp.tel,
                     'FAX': leg_cmp.fax,
                     'EMAIL': leg_cmp.email,
-                    'INN': leg_cmp.INN,
+                    'INN': inn,
                     'KPP': leg_cmp.KPP,
                     'OKVED': leg_cmp.OKVED,
                     'OKATO': leg_cmp.OKATO,

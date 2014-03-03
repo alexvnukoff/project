@@ -113,7 +113,7 @@ class L_TPP(models.Model):
     '''
         Defines buffer table for reloading TPPs' data from CSV file
     '''
-    btx_id = models.CharField(max_length=10)
+    btx_id = models.CharField(max_length=10, unique=True)
     tpp_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
     preview_picture = models.CharField(max_length=1024)
