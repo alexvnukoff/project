@@ -132,7 +132,7 @@ def databaseInitialization(sender, **kwargs):
     crt_usr = User.objects.get(pk=1)
     cntr, res = Country.objects.get_or_create(title='Azerbaydjan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Азербайджан'}
+        attr = {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Armeniya', create_user = crt_usr)
