@@ -38,6 +38,8 @@ def get_proposals_list(request, page=1):
         else:
             user_name = None
             notification = None
+
+        #TODO: Jenya set multilingual
         current_section = "Business Proposal"
 
         templateParams = {

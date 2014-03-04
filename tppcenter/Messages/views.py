@@ -110,9 +110,9 @@ def _getMessageList(request, item_id, page, date=None, lid=None):
                 templateParams['startDate'] = date
                 messages = messages.filter(pk__lt=lid)
 
-        #trans_real.activate('ru')
+        trans_real.activate('en')
         result = func.setPaginationForSearchWithValues(messages, *('DETAIL_TEXT',), page_num=10, page=1)
-        #trans_real.deactivate()
+        trans_real.deactivate()
         messagesList = result[0]
         paginator = result[1]
 
@@ -136,42 +136,6 @@ def _getMessageList(request, item_id, page, date=None, lid=None):
     context = RequestContext(request, templateParams)
 
     return template.render(context)
-
-@login_required(login_url='/login/')
-def addMessages(request):
-    #TODO: Artur limit of chars for message
-    item_id = int(request.POST.get('active'))
-    text = request.POST.get('text')
-
-    if len(text) == 0:
-        raise ValueError('Empty message')
-
-    message = Messages(create_user=request.user)
-    message.save()
-
-    #trans_real.activate('ru')
-    message.setAttributeValue({'DETAIL_TEXT': text}, request.user)
-    #trans_real.deactivate()
-
-    cabinet_my = Cabinet.objects.get(user=request.user)
-
-    notify = None
-
-    try:
-        item = Cabinet.objects.get(pk=item_id)
-        notify = item.user.pk
-    except ObjectDoesNotExist:
-        item = Organization.objects.get(pk=item_id)
-
-
-    Relationship.setRelRelationship(item, message, request.user)
-    Relationship.setRelRelationship(cabinet_my, message, request.user, 'dependence')
-
-
-    if notify:
-        func.sendTask('private_massage', user=notify.user.pk, fromUser=cabinet_my.pk)
-
-    return HttpResponse('')
 
 def _getContactList(request, cabinet, item_id):
 
@@ -221,6 +185,41 @@ def _getContactList(request, cabinet, item_id):
 
         return False
 
+@login_required(login_url='/login/')
+def addMessages(request):
+    #TODO: Artur limit of chars for message
+    item_id = int(request.POST.get('active'))
+    text = request.POST.get('text')
+
+    if len(text) == 0:
+        raise ValueError('Empty message')
+
+    message = Messages(create_user=request.user)
+    message.save()
+
+    trans_real.activate('en')
+    message.setAttributeValue({'DETAIL_TEXT': text}, request.user)
+    trans_real.deactivate()
+
+    cabinet_my = Cabinet.objects.get(user=request.user)
+
+    notify = None
+
+    try:
+        item = Cabinet.objects.get(pk=item_id)
+        notify = item.user.pk
+    except ObjectDoesNotExist:
+        item = Organization.objects.get(pk=item_id)
+
+
+    Relationship.setRelRelationship(item, message, request.user)
+    Relationship.setRelRelationship(cabinet_my, message, request.user, 'dependence')
+
+
+    if notify:
+        func.sendTask('private_massage', user=notify, fromUser=cabinet_my.pk)
+
+    return HttpResponse('')
 
 
 

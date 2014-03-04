@@ -124,6 +124,11 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     margin-bottom: 10px;
 }
 
+.custom-ms .thumb img {
+    width: 24px;
+    height: 24px;
+}
+
 .message-list .customline .thumb img {
     width: 30px;
     height: 30px;

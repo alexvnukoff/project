@@ -15,6 +15,8 @@ import tppcenter.TppTV.urls
 import tppcenter.Profile.urls
 import tppcenter.Messages
 import tppcenter.Messages.urls
+import tppcenter.AdvBanner
+import tppcenter.AdvBanner.urls
 
 admin.autodiscover()
 
@@ -33,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
+    url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
 
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),

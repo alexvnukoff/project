@@ -176,6 +176,21 @@ class Branch(Item):
     def __str__(self):
         return self.getName()
 
+class AdvBannerType(Item):
+
+    def __str__(self):
+        return self.getName()
+
+class AdvBanner(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
+
 class NewsCategories(Item):
 
     active = ItemManager()

@@ -2,7 +2,7 @@ from appl.models import (Advertising, Announce, Article, Basket, Company, Cabine
                          Invoice, News, Order, Payment, Product, Tpp, Tender,
                          Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment, Favorite,
                          Greeting, Exhibition, SystemMessages, Notification, Branch, NewsCategories, InnovationProject,
-                         BusinessProposal, AdditionalPages, Messages)
+                         BusinessProposal, AdditionalPages, Messages, AdvBanner, AdvBannerType)
 
 
 
@@ -46,3 +46,5 @@ admin.site.register(InnovationProject)
 admin.site.register(BusinessProposal)
 admin.site.register(AdditionalPages)
 admin.site.register(Messages)
+admin.site.register(AdvBanner)
+admin.site.register(AdvBannerType)

@@ -277,7 +277,7 @@ def jsonFilter(request):
     import json
 
     filter = request.GET.get('type', None)
-    q = request.GET.get('q', None)
+    q = request.GET.get('q', '')
     page = request.GET.get('page', None)
 
 

@@ -1,0 +1,158 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/datepicker.css' %}">
+    <style>
+        .select2-container-multi .select2-choices {
+         max-height: 150px !important;
+         overflow: auto;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'tppcenter/js/jquery.slimscroll.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $( "#tabs" ).tabs();
+            $( ".tabfilter" ).tabs();
+            $( ".date" ).datepicker();
+            $(".messages-l").tabs();
+            $(".message-tabcontent").tabs();
+            $('.custom-ms').slimScroll({
+                height: '750px',
+                railVisible: true,
+                alwaysVisible: false
+            });
+            $('.customtablein').slimScroll({
+                height: '580px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            $('.ads-pricein').slimScroll({
+                height: '270px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            //slimScroll fix
+            $('.arrow-scroll-down').click(function(){
+                $(this).parent().find('.custom-ms').trigger('scrollContent', [1] );
+                $(this).parent().find('.customtablein').trigger('scrollContent', [1] );
+                $(this).parent().find('.clumnin').trigger('scrollContent', [1] );
+                $(this).parent().find('.ads-pricein').trigger('scrollContent', [1] );
+            });
+
+            $('.arrow-scroll-up').click(function(){
+                $('.custom-ms').trigger('scrollContent', [-1] );
+                $('.customtablein').trigger('scrollContent', [-1] );
+                $('.clumnin').trigger('scrollContent', [-1] );
+                $('.ads-pricein').trigger('scrollContent', [-1] );
+            });
+
+            $('.ads-details-center input.ui-select').select2({
+                    width: "200px",
+                    multiple:true,
+                    formatNoMatches: noMatches,
+                    ajax: {
+                        url: "/filter/",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            page: page, // page number
+                            type: $(this).attr('name')
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+                });
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block center %}
+           <div class="ads-details">
+            <div class="ads-details-center">
+
+            	<ul class="ads-line">
+                	<li>
+                    	<label>Файл изображения (максимум 4MB)</label>
+                        <div class="img-ads">
+                            <img alt="" src="img/img-ads.jpg" />
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                            <div class="gray-img"></div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>URL для перехода при клике на изображение</label>
+                            <input type="text" name="" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>Дата начала</label>
+                            <input type="text" name="" placeholder="" class="date" />
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>Текст всплывающей подсказки</label>
+                            <textarea rows="3"></textarea>
+                        </div>
+                        <div class="clumn2">
+                        	<label>Дата завершения</label>
+                            <input type="text" name="" placeholder="" class="date" />
+                        </div>
+                    </li>
+                </ul>
+
+                <input name="country" class="ui-select" placeholder="Select country" type="hidden" />
+                <input name="tpp" class="ui-select" placeholder="Select Tpp" type="hidden" />
+                <input name="branch" class="ui-select" placeholder="Select Branch" type="hidden" />
+            </div>
+    <div class="ads-details-right">
+            	<div class="screen"><img src="img/demo.gif" /></div>
+                <div class="title">Корзина</div>
+                <div class="ads-price">
+                	<div class="arrow-scroll-up"></div>
+                	<div class="ads-pricein">
+                    	<ul>
+                        	<li>
+                            	<span class="left">1. Россия</span>
+                                <span class="right">25.00 $/сут</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="arrow-scroll-down"></div>
+                </div>
+                <div class="total-price">
+                	<span class="left">Кол-во дней:</span>
+                    <span class="right">10</span>
+                </div>
+                <div class="total-price white">
+                	<span class="left"><b>Итого:</b></span>
+                    <span class="right"><b>1 500.00 $</b></span>
+                </div>
+                <a href="#" class="btnprice">Оплатить</a>
+            </div>
+{% endblock %}
+
+{% block right %}
+{% endblock %}
