@@ -192,12 +192,12 @@ def users_reload_DB_DB(request):
 
         trans_real.activate('ru') #activate russian locale
         res = user_cab.setAttributeValue(attr, new_user)
+        trans_real.deactivate() #deactivate russian locale
         if res:
             usr.tpp_id = new_user.pk
             usr.completed = True
             usr.save()
 
-        trans_real.deactivate() #deactivate russian locale
         #Add user to Company Creator Group
         g = Group.objects.get(name='Company Creator')
         g.user_set.add(new_user)
@@ -485,12 +485,18 @@ def company_reload_DB_DB(request):
 
             # create relationship type=Dependence with country
             try: #if there isn't country in Company take it from TPP
+                trans_real.activate('ru')
                 prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
+                trans_real.deactivate()
             except:
+                trans_real.deactivate()
                 tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
                 try:
+                    trans_real.activate('ru')
                     prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
+                    trans_real.deactivate()
                 except:
+                    trans_real.deactivate()
                     L_Company.objects.get(btx_id=leg_cmp.btx_id).delete()
                     Company.objects.get(pk=leg_cmp.tpp_id).delete()
                     i += 1
@@ -614,11 +620,13 @@ def product_reload_DB_DB(request):
     #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
     #comp_lst = L_Company.objects.filter(pk=545208)
     i = 0
+    count = 0;
     create_usr = User.objects.get(pk=1)
     for leg_prod in prod_lst:
         try:
-            new_prod = Company.objects.create(title='COMPANY_LEG_ID:'+leg_prod.btx_id,
+            new_prod = Product.objects.create(title='PRODUCT_LEG_ID:'+leg_prod.btx_id,
                                               create_user=create_usr)
+            count += 1
         except:
             print(leg_prod.btx_id, '##', leg_prod.prod_name, '##', ' Count: ', i)
             i += 1
@@ -643,51 +651,37 @@ def product_reload_DB_DB(request):
                 'DETAIL_TEXT': leg_prod.detail_text,
                 'DISCOUNT': leg_prod.discount,
             }
-
-        try: #this try for problem with bulk create for fields about 3000 symbols.
-            res = new_prod.setAttributeValue(attr, create_usr)
-            if res:
-                leg_prod.tpp_id = new_prod.pk
-                leg_prod.completed = True
-                leg_prod.save()
-            else:
-                print('Problems with Attributes adding!')
-                i += 1
-                continue
-        except:
-            attr = {
-                    'NAME': leg_prod.prod_name[0:2000],
-                    'IMAGE_SMALL': img_small_path[0:2000],
-                    'ANONS': leg_prod.preview_text[0:2000],
-                    'IMAGE': img_detail_path[0:2000],
-                    'DETAIL_TEXT': leg_prod.detail_text[0:2000],
-                    'DISCOUNT': leg_prod.discount[0:2000],
-                }
-            trans_real.activate('ru') #activate russian locale
-            res = new_prod.setAttributeValue(attr, create_usr)
-            trans_real.deactivate()
-            if res:
-                leg_prod.tpp_id = new_prod.pk
-                leg_prod.completed = True
-                leg_prod.save()
-            else:
-                print('Problems with Attributes adding!')
-                i += 1
-                continue
+        trans_real.activate('ru')
+        res = new_prod.setAttributeValue(attr, create_usr)
+        trans_real.deactivate()
+        if res:
+            leg_prod.tpp_id = new_prod.pk
+            leg_prod.completed = True
+            leg_prod.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
 
         # create relationship type=Dependence with Company
         try:
-            prod_cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
-            prnt = Company.objects.get(pk=prod_cmp.tpp_id)
+            cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
+            prnt = Company.objects.get(pk=cmp.tpp_id)
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
         except:
+            print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+            Product.objects.filter(pk=new_prod.pk)
+            count -= 1
+            print('Milestone: ', qty + i)
+            i += 1
             continue
 
-        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
+        print('Relationship between Product and Company was created! Prod_id:', new_prod.pk)
 
         i += 1
         print('Milestone: ', qty + i)
 
-    print('Done. Quantity of processed strings:', qty + i)
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
@@ -861,9 +855,12 @@ def tpp_reload_DB_DB(request):
 
         # create relationship type=Dependence with country
         try: #if there isn't country in Company take it from TPP
+            trans_real.activate('ru')
             prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
+            trans_real.deactivate()
             Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
-        except Exception as e:
+        except:
+            trans_real.deactivate()
             print('TPP %s has not Country!', new_tpp.getName())
 
         i += 1

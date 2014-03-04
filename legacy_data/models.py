@@ -85,7 +85,7 @@ class L_Product(models.Model):
     '''
         Defines buffer table for reloading products' data from CSV file
     '''
-    btx_id = models.CharField(max_length=10)
+    btx_id = models.CharField(max_length=10, unique=True)
     prod_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
     preview_picture = models.CharField(max_length=1024)
