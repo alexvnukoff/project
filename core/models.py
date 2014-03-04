@@ -226,6 +226,7 @@ class Dictionary(models.Model):
     def getSlotID(self, title):
         slot = Slot.objects.get(dict=self.id, title=title)
         return slot.id
+
     def deleteSlot(self, slotTitle):
         '''
         Delete slot
