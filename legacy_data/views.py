@@ -1,6 +1,6 @@
 from django.http import HttpResponse, Http404
 from legacy_data.models import L_User, L_Company, L_Product, L_TPP
-from core.models import User, Relationship
+from core.models import User, Relationship, Dictionary
 from core.amazonMethods import add
 from appl.models import Company, Tpp, Product, Country, Cabinet
 from random import randint
@@ -11,6 +11,7 @@ import datetime
 import csv
 from tpp.SiteUrlMiddleWare import get_request
 import base64
+from django.utils.translation import trans_real
 
 def users_reload_CSV_DB(request):
     '''
@@ -181,7 +182,7 @@ def users_reload_DB_DB(request):
                 'PROFESSION': usr.profession,
                 'PERSONAL_WWW': usr.personal_www,
                 'ICQ': usr.icq,
-                'SEX': usr.gender,
+                #'SEX': usr.gender,
                 'PERSONAL_PHONE': usr.phone,
                 'PERSONAL_FAX': usr.fax,
                 'CELLULAR': usr.cellular,
@@ -189,12 +190,14 @@ def users_reload_DB_DB(request):
                 'POSITION': usr.position,
             }
 
+        trans_real.activate('ru') #activate russian locale
         res = user_cab.setAttributeValue(attr, new_user)
         if res:
             usr.tpp_id = new_user.pk
             usr.completed = True
             usr.save()
 
+        trans_real.deactivate() #deactivate russian locale
         #Add user to Company Creator Group
         g = Group.objects.get(name='Company Creator')
         g.user_set.add(new_user)
@@ -455,7 +458,9 @@ def company_reload_DB_DB(request):
                     'MAP_POSITION': leg_cmp.map_id,
                 }
 
+            trans_real.activate('ru') #activate russian locale
             res = new_comp.setAttributeValue(attr, create_usr)
+            trans_real.deactivate() #deactivate russian locale
             if res:
                 leg_cmp.tpp_id = new_comp.pk
                 leg_cmp.completed = True
@@ -658,7 +663,9 @@ def product_reload_DB_DB(request):
                     'DETAIL_TEXT': leg_prod.detail_text[0:2000],
                     'DISCOUNT': leg_prod.discount[0:2000],
                 }
+            trans_real.activate('ru') #activate russian locale
             res = new_prod.setAttributeValue(attr, create_usr)
+            trans_real.deactivate()
             if res:
                 leg_prod.tpp_id = new_prod.pk
                 leg_prod.completed = True
@@ -787,7 +794,7 @@ def tpp_reload_DB_DB(request):
     qty = L_TPP.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
     i = 0
-    tpp_lst = L_TPP.objects.filter(completed=False)[:20] #.all()
+    tpp_lst = L_TPP.objects.filter(completed=False).all()
     for leg_tpp in tpp_lst:
         #set create_user (owner) for the TPP
         if leg_tpp.moderator:
@@ -840,10 +847,12 @@ def tpp_reload_DB_DB(request):
                 'TELEPHONE_NUMBER': leg_tpp.phone,
             }
 
+        trans_real.activate('ru') #activate russian locale
         res = new_tpp.setAttributeValue(attr, create_usr)
+        trans_real.deactivate() #deactivate russian locale
         if res:
             leg_tpp.tpp_id = new_tpp.pk
-            #leg_tpp.completed = True
+            leg_tpp.completed = True
             leg_tpp.save()
         else:
             print('Problems with Attributes adding!')
@@ -851,11 +860,11 @@ def tpp_reload_DB_DB(request):
             continue
 
         # create relationship type=Dependence with country
-        prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
         try: #if there isn't country in Company take it from TPP
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
             Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
         except Exception as e:
-            print('TPP %s has not Country!', new_tpp.tpp_name)
+            print('TPP %s has not Country!', new_tpp.getName())
 
         i += 1
         print('Milestone: ', qty + i)
@@ -865,7 +874,9 @@ def tpp_reload_DB_DB(request):
     for tpp in tpp_lst:
         try:
             parent_tpp = Tpp.objects.get(pk=L_TPP.objects.get(btx_id=tpp.tpp_parent).tpp_id)
-            Relationship.objects.get_or_create(parent=parent_tpp, type='hierarchy', child=tpp, create_user=create_usr)
+            child_tpp = Tpp.objects.get(pk=tpp.tpp_id)
+            Relationship.objects.create(parent=parent_tpp, type='hierarchy', child=child_tpp, create_user=create_usr)
+            print('Relationship for TPPs was created!')
         except:
             continue
 
