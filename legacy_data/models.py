@@ -140,3 +140,48 @@ class L_TPP(models.Model):
 
     def __str__(self):
         return self.btx_id+'|'+self.tpp_name
+
+class L_Pic2Comp(models.Model):
+    '''
+        Defines buffer table for reloading relationships between pictures and companies from CSV file
+    '''
+    btx_id = models.CharField(max_length=10) # legacy company's id
+    comp_name = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    detail_picture = models.CharField(max_length=1024)
+    gallery = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.comp_name
+
+class L_Pic2Tpp(models.Model):
+    '''
+        Defines buffer table for reloading relationships between pictures and TPPs from CSV file
+    '''
+    btx_id = models.CharField(max_length=10) #legacy tpp's id
+    tpp_name = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    detail_picture = models.CharField(max_length=1024)
+    gallery = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.tpp_name
+
+class L_Pic2Prod(models.Model):
+    '''
+        Defines buffer table for reloading relationships between pictures and products from CSV file
+    '''
+    btx_id = models.CharField(max_length=10) #legacy product's id
+    prod_name = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    detail_picture = models.CharField(max_length=1024)
+    gallery = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.prod_name

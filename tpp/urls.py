@@ -37,4 +37,10 @@ urlpatterns = patterns('',
     url(r'^legacy/tpp/csvdb$', leg_v.tpp_reload_CSV_DB),
     url(r'^legacy/tpp/dbdb$', leg_v.tpp_reload_DB_DB),
 
+    url(r'^legacy/pic2prod/csvdb$', leg_v.pic2prod_CSV_DB),
+    url(r'^legacy/pic2prod/dbdb$', leg_v.pic2prod_DB_DB),
+    #url(r'^legacy/pic2comp/csvdb$', leg_v.pic2comp_CSV_DB),
+    #url(r'^legacy/pic2comp/dbdb$', leg_v.pic2comp_DB_DB),
+    #url(r'^legacy/pic2tpp/csvdb$', leg_v.pic2tpp_CSV_DB),
+    #url(r'^legacy/pic2tpp/dbdb$', leg_v.pic2tpp_DB_DB),
 )
