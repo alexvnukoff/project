@@ -1,34 +1,27 @@
-from django.db import models, transaction
+from django.db import IntegrityError, transaction, models
+from django.db.models import Q
 from django.db.models.signals import pre_delete, post_delete, pre_save
 from django.dispatch import receiver
-from django.db.models import Q
-from django.db import IntegrityError, transaction
-from django.core.exceptions import ObjectDoesNotExist
-from PIL import Image
 from django.contrib.auth.models import Group, PermissionsMixin, BaseUserManager, AbstractBaseUser
-from django.core.exceptions import ImproperlyConfigured
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
-from django.contrib.sites.managers import CurrentSiteManager
-from core.hierarchy import hierarchyManager
-from copy import copy
-from random import randint
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 from django.core.mail import send_mail
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-import warnings
-from collections import OrderedDict
-from operator import itemgetter
 from django.conf import settings
+from django.utils import timezone
 from django.utils.timezone import now
+from django.utils.translation import get_language, ugettext_lazy as _
+from django.template.defaultfilters import slugify
+from copy import copy
+from collections import OrderedDict
+from core.hierarchy import hierarchyManager
+from random import randint
+from tpp.SiteUrlMiddleWare import get_request
+from unidecode import unidecode
+
+import warnings
 import datetime
 import hashlib
-from django.utils.timezone import now
-from django.shortcuts import render_to_response
-from tpp.SiteUrlMiddleWare import get_request
-from django.db.models.query import QuerySet
-from django.template.defaultfilters import slugify
-
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
@@ -698,8 +691,12 @@ class Item(models.Model):
 
         slug = slugify(nonDig)
 
-        if not slug:
-            return pk
+
+        if slug == '':
+            if get_language() == 'ru':
+                string = unidecode(string)
+        else:
+            return str(pk) + '-' + str(pk)
 
         return slugify(string) + '-' + str(pk)
 

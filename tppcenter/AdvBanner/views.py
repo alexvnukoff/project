@@ -123,14 +123,20 @@ def advJsonFilter(request):
                 sqs = SearchQuerySet().models(model).filter(title_auto=q)
 
             paginator = Paginator(sqs, 10)
+
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
+
             total = paginator.count
 
-            obj_list = [item.id for item in paginator.object_list]
+            obj_list = [item.id for item in onPage.object_list]
 
             itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
             items = []
 
-            for item in paginator.object_list:
+            for item in onPage.object_list:
 
                 if not isinstance(itemsAttr[item.id], dict) :
                     itemsAttr[item.id] = {}
