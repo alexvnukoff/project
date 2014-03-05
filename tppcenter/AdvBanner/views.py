@@ -1,7 +1,7 @@
 __author__ = 'user'
 from appl.models import AdvBannerType, AdvBanner, Cabinet
 from core.models import Item
-from django.shortcuts import HttpResponse, render_to_response
+from django.shortcuts import HttpResponse, render_to_response, get_object_or_404
 from appl.models import *
 from django.db.models import ObjectDoesNotExist
 from appl import func
@@ -51,6 +51,20 @@ def gatPositions(request):
 
 def bannerForm(request, bannerType):
 
+    btype = get_object_or_404(AdvBannerType, pk=bannerType)
+
+    enable = {}
+
+    if btype.enableBranch:
+        enable['branch'] = _('Select branch')
+
+    if btype.enableCountry:
+        enable['country'] = _('Select country')
+
+    if btype.enableTpp:
+        enable['tpp'] = _('Select organization')
+
+
     cabinet = Cabinet.objects.get(user=request.user)
     cabinetAttr = cabinet.getAttributeValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'))
 
@@ -69,6 +83,66 @@ def bannerForm(request, bannerType):
         'user_name': user_name,
         'current_section': current_section,
         'notification': notification,
+        'enable': enable
     }
 
     return render_to_response("AdvBanner/detail.html", templateParams, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def advJsonFilter(request):
+    import json
+
+    filter = request.GET.get('type', None)
+    q = request.GET.get('q', '')
+    page = request.GET.get('page', None)
+
+
+    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
+        from haystack.query import SearchQuerySet
+        from django.core.paginator import Paginator
+
+        model = None
+
+
+        if filter == 'tpp':
+            model = Tpp
+        elif filter == "companies":
+            model = Company
+        elif filter == "category":
+            model = Category
+        elif filter == "branch":
+            model = Branch
+        elif filter == 'country':
+            model = Country
+
+        if model:
+
+            if not q:
+                sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
+            else:
+                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+
+            paginator = Paginator(sqs, 10)
+            total = paginator.count
+
+            obj_list = [item.id for item in paginator.object_list]
+
+            itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
+            items = []
+
+            for item in paginator.object_list:
+
+                if not isinstance(itemsAttr[item.id], dict) :
+                    itemsAttr[item.id] = {}
+
+                resultDict = {
+                    'title': item.title_auto,
+                    'id': item.id,
+                    'cost': itemsAttr[item.id].get('COST', [0])[0],
+                }
+
+                items.append(resultDict)
+
+            return HttpResponse(json.dumps({'content': items, 'total': total}))
+
+    return HttpResponse(json.dumps({'content': [], 'total': 0}))
