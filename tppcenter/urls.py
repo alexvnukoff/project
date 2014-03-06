@@ -15,6 +15,8 @@ import tppcenter.TppTV.urls
 import tppcenter.Profile.urls
 import tppcenter.Messages
 import tppcenter.Messages.urls
+import tppcenter.AdvBanner
+import tppcenter.AdvBanner.urls
 
 admin.autodiscover()
 
@@ -36,6 +38,7 @@ urlpatterns = patterns('',
      url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
+    url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
 
 
     # url(r'^blog/', include('blog.urls')),

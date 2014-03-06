@@ -3,6 +3,7 @@
 {% load CustomFilters %}
 <div class="container">
     <div class="companies">
+          {% include "Tenders/popupFilter.html" %}
            {% include "main/paginator.html" %}
             <ul class="tender-list">
                 {% for id , attr in tendersList.items %}

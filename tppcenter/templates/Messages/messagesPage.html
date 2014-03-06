@@ -9,6 +9,7 @@
     {% with attr.DETAIL_TEXT|first as message %}
     {% with attr.USER_FIRST_NAME|first as fname %}
     {% with attr.USER_LAST_NAME|first as lname %}
+    {% with attr.IMAGE|first as image %}
 
     {% if lastDate and forloop.first %}
 
@@ -24,10 +25,13 @@
 
     <div class="customline" data-message="{{ id }}" data-date="{{ date|date:"Y-n-d H:m:s.u" }}">
         <label class="time">{{ fname }} {{ lname }}    {{ date|date:"H:i" }}</label>
-        <div class="clumnleft"><span class="thumb"></span></div>
+        <div class="clumnleft">
+            <span class="thumb">
+                <img src="{{ MEDIA_URL }}th/{{ image }}"/>
+            </span>
+        </div>
         <div class="clumnright">
             <p>{{ message }}</p>
-            <a href="#test">Подробнее...</a>
         </div>
     </div>
 
@@ -35,6 +39,7 @@
         {% if startDate.day != date.day or startDate.month != date.month or startDate.year != date.year %}
              <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
         {% endif %}    {% endif %}
+    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}

@@ -413,3 +413,231 @@ var uiDetail = {
             return false;
         }
 };
+
+var messagesUI = {
+
+        curChat: 'mess-cur' ,
+        chatList: '.message-tabcontent',
+        messageLine: '.customline',
+        messageBox: '.custom-contentin',
+        messageList: '.message-list',
+        textarea: '#message-box-',
+        chatWindow: 'custom-content-',
+
+
+        onScrollTop: function( el ) {
+
+            el.unbind( 'scroll' );
+
+            if ( el.find( '.last' ).length )
+                return true;
+
+            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
+
+            el.find( '.dateline:first' ).replaceWith( '<div class="message-paging-loader">' +
+                                                        '<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />' +
+                                                    '</div>' );
+
+            var last_message = el.find( messagesUI.messageLine + ':first' );
+            var date = last_message.data( 'date' );
+            var lid =  last_message.data( 'message' );
+            var url = '/messages/' + active_id + '/';
+
+            $.ajaxQueue({
+
+                url: url,
+                data: {
+                    page: 2,
+                    lid: lid,
+                    date: date
+                },
+
+                success: function(data) {
+
+                    messagesUI.bindSccroll();
+
+                    el.find( '.message-paging-loader' ).replaceWith( data );
+                },
+
+                type: 'GET'
+            });
+        },
+
+        bindSccroll: function() {
+
+            $( messagesUI.messageBox ).unbind( 'scroll' );
+
+            $( messagesUI.messageBox + ':visible' ).bind( 'scroll', function() {
+
+                 if( $(this).scrollTop() == 0 )
+                    messagesUI.onScrollTop( $(this) );
+            });
+        },
+
+        scroollMessageDown: function() {
+
+            var content = $( messagesUI.messageBox + ':visible' );
+            var height = content.find( messagesUI.messageList ).height();
+
+            content.scrollTop( height );
+
+        },
+
+        sendMessage: function() {
+
+            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
+
+            if ( !active_id )
+                return false;
+
+            var textarea = $( messagesUI.textarea + active_id );
+            var val = textarea.val();
+
+            if ( val == '' )
+                return false;
+
+            textarea.attr( 'disabled', 'disabled' );
+
+            $.ajaxQueue({
+
+                url: '/messages/add/',
+                data: {
+                    text: val,
+                    active: active_id
+                },
+
+                success: function( data ) {
+
+                    messagesUI.getMessages( active_id );
+                    textarea.val( '' );
+                    textarea.removeAttr( 'disabled' );
+
+                },
+
+                type: 'POST'
+            });
+
+           return false;
+
+        },
+
+        getMessages: function( coll ) {
+            var selector = $( '#' + messagesUI.chatWindow + coll );
+
+            if ( selector.length == 0 )
+                return false;
+
+            var lastTime = selector.find( messagesUI.messageLine + ':last' ).data( 'date' );
+            var lid = selector.find( messagesUI.messageLine + ':last' ).data( 'message' );
+            var url = '/messages/' + coll + '/';
+
+            jQuery.ajaxQueue({
+
+                url: url,
+                data: {
+                    date: lastTime,
+                    lid: lid
+                },
+
+                success: function( data ) {
+
+                    selector.find( messagesUI.messageList ).append( data );
+                    messagesUI.scroollMessageDown();
+                },
+
+                dataType: 'html',
+                type: 'GET'
+            });
+        },
+
+        getMessageBox: function( coll, newPanel ) {
+
+            var url = '/messages/' + coll + '/';
+            var content = ''
+
+            History.pushState( null, null, url );
+
+            jQuery.ajaxQueue({
+
+                url: url,
+                data: {box: 1},
+
+                success: function( data ) {
+
+                    newPanel.html( data );
+                    messagesUI.scroollMessageDown();
+                    messagesUI.bindSccroll()
+
+                },
+
+                dataType: 'html',
+                type: 'GET'
+            });
+        },
+
+        init: function() {
+            $( ".messages-l" ).tabs({
+                beforeActivate: function( event, ui ) {
+
+                    var subTab = ui.newPanel.find( messagesUI.chatList );
+                    var curr = subTab.tabs( 'option','active' );
+
+                    if ( curr != 0 )
+                    {
+                        subTab.tabs( 'option','active', 0 );
+                        subTab.tabs( 'option','active', curr );
+                    }
+
+                }
+            });
+
+
+            $( messagesUI.chatList ).tabs({
+
+                beforeLoad: function( event, ui ) {
+                    ui.panel.html('<div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>');
+                },
+
+                load: function( event, ui ) {
+
+                    var tabLink = ui.tab.find( 'a' );
+                    var id = tabLink.data( 'user-id' );
+                    var tab = $( '<div></div>' ).attr( 'id', messagesUI.chatWindow + id ).append( ui.panel );
+
+                    tabLink.attr( 'href', '#' + messagesUI.chatWindow + id );
+
+                    $(this).append( tab );
+
+                    messagesUI.scroollMessageDown();
+                    messagesUI.bindSccroll();
+                },
+
+                activate: function( event, ui) {
+
+                    var url = ui.newTab.find( 'a' ).data( 'url' );
+
+                    History.pushState( null, null, url);
+
+                    $( messagesUI.chatList + " ." + messagesUI.curChat ).removeClass( messagesUI.curChat )
+                    ui.newTab.addClass( messagesUI.curChat );
+                }
+            });
+
+
+
+            $(document).on( 'click', 'a.send-message', messagesUI.sendMessage );
+
+            $(document).bind( 'new_message', function( ev, fromUser ) {
+
+                var active_id = $( '.' + messagesUI.curChat  + ' a').data('user-id');
+
+                if ( fromUser == active_id )
+                    messagesUI.getMessages( active_id );
+            });
+
+            messagesUI.scroollMessageDown();
+            messagesUI.bindSccroll();
+
+        }
+
+    };

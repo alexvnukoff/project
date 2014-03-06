@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="container">
+            {% include "Products/popupFilter.html" %}
            {% include "main/paginator.html" %}
              <ul class="listprd">
                 {% for id , attr in productsList.items %}
@@ -34,7 +35,7 @@
                     {% endwith %}
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}    }
+                {% endfor %}
             </ul>
            {% include "main/paginator.html" %}
 </div>
