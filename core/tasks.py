@@ -114,7 +114,8 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.setRelRelationship(parent=category, child=product, user=user)
 
         if current_company:
-            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=product, type='dependence', user=user)
+            parent = Organization.objects.get(pk=int(current_company))
+            Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
 
 
@@ -197,6 +198,8 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         values[val] = post.get(val, "")
     for val in valFiles:
         values[val] = files.get(val, "")
+
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
@@ -308,7 +311,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
 
     valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'FLAG-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
                'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
-               'ACCOUNT_NUMBER', 'BANK_DETAILS')
+               'ACCOUNT_NUMBER', 'BANK_DETAILS', 'ANONS')
     valFiles = ('IMAGE', 'FLAG')
 
     values = {}
@@ -318,11 +321,33 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
     for val in valFiles:
         values[val] = files.get(val, "")
 
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
+
+    start_date = post.get('START_DATE', None)
+    end_date = post.get('END_DATE', None)
+
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+
     form = ItemForm('Tpp', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     tpp = form.save(user, site_id)
     if tpp:
+        if end_date:
+            tpp.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+            tpp.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            tpp.save()
+
+
+
+
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=tpp.id).delete()
+            Relationship.setRelRelationship(parent=country, child=tpp, user=user, type='dependence')
+
+        tpp.reindexItem()
 
         pages.save(parent=tpp.id, user=user)
         func.notify("item_created", 'notification', user=user)
@@ -386,14 +411,16 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     pages.clean()
 
 
-    valPost = ('NAME', 'CITY','KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
-               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR')
+    valPost = ('NAME', 'CITY', 'KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
+               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', )
     valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
     for val in valPost:
         values[val] = post.get(val, "")
     for val in valFiles:
         values[val] = files.get(val, "")
+
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
 
 

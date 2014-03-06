@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-30 16:09+0200\n"
+"POT-Creation-Date: 2014-03-03 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,22 +18,42 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: .\local_settings.py:41 .\tpp\settings.py:167
+msgid "Russia"
+msgstr ""
+
+#: .\local_settings.py:45 .\tpp\settings.py:171
+msgid "England"
+msgstr ""
+
+#: .\local_settings.py:57 .\tpp\settings.py:183
+msgid "Israel"
+msgstr ""
+
 #: .\centerpokupok\forms.py:6
 msgid "Recipient name"
 msgstr ""
 
 #: .\centerpokupok\forms.py:7
-#: .\centerpokupok\templates\Product\orderStepOne.html:94
+#: .\centerpokupok\templates\Product\orderStepOne.html:81
 msgid "City"
 msgstr ""
 
 #: .\centerpokupok\forms.py:8
-#: .\centerpokupok\templates\Product\orderStepOne.html:108
+#: .\centerpokupok\templates\Product\orderStepOne.html:95
+#: .\tppcenter\templates\BusinessProposal\popupFilter.html:19
+#: .\tppcenter\templates\Companies\popupFilter.html:19
+#: .\tppcenter\templates\Exhibitions\popupFilter.html:19
+#: .\tppcenter\templates\News\addForm.html:86
+#: .\tppcenter\templates\News\popupFilter.html:19
+#: .\tppcenter\templates\Products\popupFilter.html:19
+#: .\tppcenter\templates\Profile\addForm.html:71
+#: .\tppcenter\templates\TppTV\addForm.html:62
 msgid "Country"
 msgstr ""
 
 #: .\centerpokupok\forms.py:9
-#: .\centerpokupok\templates\Product\orderStepOne.html:101
+#: .\centerpokupok\templates\Product\orderStepOne.html:88
 msgid "Zipcode"
 msgstr ""
 
@@ -41,7 +61,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: .\centerpokupok\forms.py:11
+#: .\centerpokupok\forms.py:11 .\tppcenter\Profile\profileForms.py:52
 msgid "Telephone"
 msgstr ""
 
@@ -49,217 +69,526 @@ msgstr ""
 msgid "Fisrt name"
 msgstr ""
 
-#: .\centerpokupok\forms.py:22
+#: .\centerpokupok\forms.py:22 .\tppcenter\Profile\profileForms.py:16
+#: .\tppcenter\templates\Profile\addForm.html:34
 msgid "Last name"
 msgstr ""
 
-#: .\centerpokupok\forms.py:24
+#: .\centerpokupok\forms.py:24 .\tppcenter\Profile\profileForms.py:47
+#: .\tppcenter\templates\Profile\addForm.html:92
 msgid "Birthday"
 msgstr ""
 
-#: .\centerpokupok\Cabinet\views.py:28 .\centerpokupok\Cabinet\views.py:53
+#: .\centerpokupok\views.py:187 .\tppcenter\views.py:152
+msgid "Agreement with terms is required"
+msgstr ""
+
+#: .\centerpokupok\Cabinet\views.py:42 .\centerpokupok\Cabinet\views.py:81
 msgid "was successfully saved "
 msgstr ""
 
-#: .\centerpokupok\Product\views.py:97
-msgid "You can send one comment per minute"
-msgstr "Вы можете оставлять только один комментарий в минуту"
-
-#: .\centerpokupok\templates\related_categories.html:3
-msgid "Related Categories"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\index.html:27
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:37
-#: .\centerpokupok\templates\Product\orderStepOne.html:29
-#: .\centerpokupok\templates\Product\orderStepThree.html:36
-#: .\centerpokupok\templates\Product\orderStepTwo.html:36
-msgid "Start chat"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\index.html:33
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:43
-#: .\centerpokupok\templates\Product\orderStepThree.html:42
-msgid "Home page"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\index.html:37
-msgid "My profile"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\index.html:39
-msgid "User details "
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\index.html:56
-msgid "Save"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:6
-msgid "Shipping Address"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:51
-#: .\centerpokupok\templates\Product\orderStepOne.html:80
-msgid "Shipping Addres"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:55
-msgid "Shipping Addres "
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:56
-#: .\centerpokupok\templates\Product\orderStepOne.html:81
-msgid "Required fields"
-msgstr ""
-
-#: .\centerpokupok\templates\Cabinet\shippingAddress.html:71
-#: .\centerpokupok\templates\Product\orderStepOne.html:164
-msgid "Continue"
-msgstr ""
-
-#: .\centerpokupok\templates\Categories\index.html:6
-msgid "Categories"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:6
-msgid "Order step one"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:28
-msgid "Ask question"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:35
-msgid "Start page"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:42
-msgid "Ordering"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:87
-msgid "Recipient Name"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:115
-msgid "Adress"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:122
-msgid "Telephone number"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:130
-#: .\centerpokupok\templates\Product\orderStepTwo.html:66
-msgid "Delivery method"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:133
-msgid "Choose delivery method"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:149
-msgid "Comment to your order"
-msgstr ""
-
-#: .\centerpokupok\templates\Product\orderStepOne.html:152
+#: .\centerpokupok\Product\views.py:85
+#: .\centerpokupok\templates\Product\orderStepOne.html:139
 msgid "Comment"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepOne.html:156
-msgid "Payment method"
+#: .\centerpokupok\Product\views.py:110
+msgid "You can send one comment per minute"
+msgstr "Вы можете оставлять только один комментарий в минуту"
+
+#: .\centerpokupok\templates\popular.html:5
+msgid "Most popular products"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepThree.html:46
-msgid "Thank you for  shopping on our site,"
+#: .\centerpokupok\templates\related_categories.html:4
+msgid "Related Categories"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepThree.html:46
-msgid "here"
+#: .\centerpokupok\templates\Cabinet\favorite.html:5
+#: .\centerpokupok\templates\Cabinet\favorite.html:21
+#: .\centerpokupok\templates\Cabinet\orderHistory.html:5
+#: .\centerpokupok\templates\Cabinet\orderHistory.html:21
+msgid "Order history"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepThree.html:46
-msgid "you can view your order history"
+#: .\centerpokupok\templates\Cabinet\favorite.html:17
+#: .\centerpokupok\templates\Cabinet\index.html:18
+#: .\centerpokupok\templates\Cabinet\orderHistory.html:17
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:17
+#: .\centerpokupok\templates\Product\orderStepThree.html:28
+#: .\centerpokupok\templates\Registr\registr.html:58
+#: .\centerpokupok\templates\registration\activation_complete.html:45
+#: .\centerpokupok\templates\registration\password_reset_complete.html:41
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:43
+#: .\centerpokupok\templates\registration\password_reset_done.html:43
+#: .\centerpokupok\templates\registration\password_reset_form.html:40
+#: .\centerpokupok\templates\registration\registration_closed.html:47
+#: .\centerpokupok\templates\registration\registration_complete.html:48
+msgid "Home page"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:42
-msgid "Home Page"
+#: .\centerpokupok\templates\Cabinet\favorite.html:71
+msgid "Delete"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:43
-msgid "Step One"
+#: .\centerpokupok\templates\Cabinet\index.html:22
+msgid "Welcome"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:55
-msgid "Your order"
+#: .\centerpokupok\templates\Cabinet\index.html:23
+msgid "Here, you can change your data, shipment address and monitor orders."
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:73
-msgid "Payment"
+#: .\centerpokupok\templates\Cabinet\index.html:26
+msgid "My profile"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:79
-msgid "The total amount of your order"
+#: .\centerpokupok\templates\Cabinet\index.html:28
+msgid "User details "
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:87
-msgid "Make changes to your order"
+#: .\centerpokupok\templates\Cabinet\index.html:45
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:39
+#: .\tppcenter\templates\BusinessProposal\addForm.html:153
+#: .\tppcenter\templates\Exhibitions\addForm.html:170
+#: .\tppcenter\templates\Innov\addForm.html:205
+#: .\tppcenter\templates\Profile\addForm.html:115
+#: .\tppcenter\templates\Tenders\addForm.html:170
+msgid "Save"
 msgstr ""
 
-#: .\centerpokupok\templates\Product\orderStepTwo.html:88
-msgid "Confirm order"
+#: .\centerpokupok\templates\Cabinet\orderHistory.html:48
+#: .\centerpokupok\templates\Product\detail.html:199
+msgid "Quantity"
 msgstr ""
 
-#: .\centerpokupok\templates\main\cabinet_menu.html:4
-msgid "My favorite products"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:4
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:23
+msgid "Shipping Address"
 msgstr ""
 
-#: .\centerpokupok\templates\main\cabinet_menu.html:7
-msgid "Personal data"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:25
+msgid "Shipping Addres "
 msgstr ""
 
-#: .\centerpokupok\templates\main\cabinet_menu.html:10
-msgid "Shipment address"
+#: .\centerpokupok\templates\Cabinet\shippingAddress.html:26
+#: .\centerpokupok\templates\Product\orderStepOne.html:68
+msgid "Required fields"
 msgstr ""
 
-#: .\centerpokupok\templates\main\cabinet_menu.html:13
-msgid "Order History"
+#: .\centerpokupok\templates\Categories\index.html:6
+msgid "All Categories"
 msgstr ""
 
-#: .\centerpokupok\templates\main\main_coupons.html:5
-msgid "Coupons"
+#: .\centerpokupok\templates\Categories\index.html:8
+msgid "Categories"
 msgstr ""
 
-#: .\centerpokupok\templates\main\main_coupons.html:6
-msgid "More"
+#: .\centerpokupok\templates\Categories\index.html:18
+#: .\centerpokupok\templates\Product\detail.html:106
+#: .\centerpokupok\templates\Product\new.html:96
+msgid "Main"
 msgstr ""
 
-#: .\centerpokupok\templates\main\main_coupons.html:9
-msgid "New"
-msgstr ""
-
-#: .\centerpokupok\templates\main\main_coupons.html:10
-msgid "Popular"
-msgstr ""
-
-#: .\centerpokupok\templates\main\main_coupons.html:11
-msgid "By categories"
-msgstr ""
-
-#: .\centerpokupok\templates\main\main_coupons.html:38
-msgid "Remaining time"
-msgstr ""
-
-#: .\centerpokupok\templates\main\main_coupons.html:48
-msgid "Buy"
-msgstr ""
-
+#: .\centerpokupok\templates\Categories\index.html:23
 #: .\centerpokupok\templates\main\main_menu.html:102
 msgid "All categories"
 msgstr ""
 
+#: .\centerpokupok\templates\Company\index.html:99
+#: .\centerpokupok\templates\Product\new.html:99
+#: .\centerpokupok\templates\main\main_coupons.html:8
+msgid "Coupons"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:122
+#: .\centerpokupok\templates\Company\index.html:167
+msgid "Time till the end"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:136
+msgid "You are saving"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:144
+#: .\centerpokupok\templates\Product\detail.html:211
+#: .\centerpokupok\templates\main\main_coupons.html:48
+msgid "Buy"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:191
+#: .\centerpokupok\templates\main\products.html:9
+msgid "Latest"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:247
+#: .\centerpokupok\templates\main\products.html:73
+msgid "Top sales"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\index.html:248
+#: .\centerpokupok\templates\main\main_coupons.html:9
+#: .\tppcenter\templates\BusinessProposal\contentPage.html:23
+#: .\tppcenter\templates\Companies\contentPage.html:35
+#: .\tppcenter\templates\Exhibitions\contentPage.html:32
+#: .\tppcenter\templates\Innov\contentPage.html:30
+#: .\tppcenter\templates\News\detailContent.html:65
+#: .\tppcenter\templates\Tenders\contentPage.html:28
+#: .\tppcenter\templates\Tpp\contentPage.html:30
+msgid "More"
+msgstr ""
+
+#: .\centerpokupok\templates\Company\store_categories.html:4
+msgid "Store Categories"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:15
+msgid "Product reviews"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:16
+msgid "Seller anounses"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:21
+#: .\centerpokupok\templates\News\index.html:73
+msgid "Recommended"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:44
+msgid "Special Price"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:101
+msgid "All deals"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:112
+msgid "Popular reviews"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:137
+msgid "All products reviews"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:140
+#: .\centerpokupok\templates\Product\new.html:134
+msgid "Sort by"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:141
+#: .\centerpokupok\templates\Product\new.html:148
+msgid "Raiting"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:143
+#: .\tppcenter\templates\BusinessProposal\contentPage.html:19
+msgid "Date"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:144
+msgid "Choose date"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:146
+msgid "Show product from"
+msgstr ""
+
+#: .\centerpokupok\templates\News\index.html:147
+msgid " all countries"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:114
+#: .\centerpokupok\templates\Product\new.html:112
+#: .\tppcenter\templates\Companies\detailContent.html:68
+msgid "Products"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:119
+msgid "Back to catalog"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:134
+msgid "Product ID"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:181
+msgid "Discount will end in"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:215
+msgid "Favorite"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:228
+#: .\tppcenter\templates\Companies\tabProducts.html:9
+msgid "Description"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:229
+#: .\centerpokupok\templates\Product\orderStepOne.html:117
+#: .\centerpokupok\templates\Product\orderStepTwo.html:53
+msgid "Delivery method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:229
+msgid "Return policy"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:234
+msgid "Short description"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:238
+msgid "Complete description"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:312
+msgid "Post"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\detail.html:320
+msgid "Similar products"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\new.html:115
+msgid "Show only"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\new.html:119
+msgid "Salesman online"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\new.html:124
+msgid "High raiting"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\new.html:129
+msgid "Free shipping"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\new.html:136
+#: .\tppcenter\templates\Companies\tabProducts.html:10
+msgid "Price"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:7
+msgid "Order step one"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:22
+msgid "Start page"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:29
+msgid "Ordering"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:67
+msgid "Shipping Addres"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:74
+msgid "Recipient Name"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:102
+msgid "Adress"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:109
+msgid "Telephone number"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:120
+msgid "Choose delivery method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:136
+msgid "Comment to your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:143
+msgid "Payment method"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepOne.html:151
+msgid "Continue"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:32
+msgid "Thank you for  shopping on our site,"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:32
+#: .\centerpokupok\templates\registration\password_reset_complete.html:48
+#: .\tppcenter\templates\registration\password_reset_complete.html:33
+msgid "here"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepThree.html:32
+msgid "you can view your order history"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:29
+msgid "Home Page"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:30
+msgid "Step One"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:42
+msgid "Your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:60
+msgid "Payment"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:66
+msgid "The total amount of your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:74
+msgid "Make changes to your order"
+msgstr ""
+
+#: .\centerpokupok\templates\Product\orderStepTwo.html:75
+msgid "Confirm order"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:6
+msgid "registration"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:33
+#: .\centerpokupok\templates\registration\activation_complete.html:20
+#: .\centerpokupok\templates\registration\password_reset_complete.html:16
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:18
+#: .\centerpokupok\templates\registration\password_reset_done.html:18
+#: .\centerpokupok\templates\registration\password_reset_form.html:15
+#: .\centerpokupok\templates\registration\registration_closed.html:22
+#: .\centerpokupok\templates\registration\registration_complete.html:23
+msgid "On August 20 at the website registered"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:37
+#: .\centerpokupok\templates\registration\activation_complete.html:24
+#: .\centerpokupok\templates\registration\password_reset_complete.html:20
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:22
+#: .\centerpokupok\templates\registration\password_reset_done.html:22
+#: .\centerpokupok\templates\registration\password_reset_form.html:19
+#: .\centerpokupok\templates\registration\registration_closed.html:26
+#: .\centerpokupok\templates\registration\registration_complete.html:27
+msgid "We protect the interests of our customers, so the site has a system"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:37
+#: .\centerpokupok\templates\registration\activation_complete.html:24
+#: .\centerpokupok\templates\registration\password_reset_complete.html:20
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:22
+#: .\centerpokupok\templates\registration\password_reset_done.html:22
+#: .\centerpokupok\templates\registration\password_reset_form.html:19
+#: .\centerpokupok\templates\registration\registration_closed.html:26
+#: .\centerpokupok\templates\registration\registration_complete.html:27
+msgid "Consumer protection"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:42
+#: .\centerpokupok\templates\registration\activation_complete.html:29
+#: .\centerpokupok\templates\registration\password_reset_complete.html:25
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:27
+#: .\centerpokupok\templates\registration\password_reset_done.html:27
+#: .\centerpokupok\templates\registration\password_reset_form.html:24
+#: .\centerpokupok\templates\registration\registration_closed.html:31
+#: .\centerpokupok\templates\registration\registration_complete.html:32
+msgid "The guaranteed delivery within 30 days"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:46
+#: .\centerpokupok\templates\registration\activation_complete.html:33
+#: .\centerpokupok\templates\registration\password_reset_complete.html:29
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:31
+#: .\centerpokupok\templates\registration\password_reset_done.html:31
+#: .\centerpokupok\templates\registration\password_reset_form.html:28
+#: .\centerpokupok\templates\registration\registration_closed.html:35
+#: .\centerpokupok\templates\registration\registration_complete.html:36
+msgid "Return policy and warranty"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:50
+#: .\centerpokupok\templates\registration\activation_complete.html:37
+#: .\centerpokupok\templates\registration\password_reset_complete.html:33
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:35
+#: .\centerpokupok\templates\registration\password_reset_done.html:35
+#: .\centerpokupok\templates\registration\password_reset_form.html:32
+#: .\centerpokupok\templates\registration\registration_closed.html:39
+#: .\centerpokupok\templates\registration\registration_complete.html:40
+msgid ""
+"Freezing of seller's funds till then buyer  confirm receipt of the goods"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:52
+#: .\centerpokupok\templates\registration\activation_complete.html:39
+#: .\centerpokupok\templates\registration\password_reset_complete.html:35
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:37
+#: .\centerpokupok\templates\registration\password_reset_done.html:37
+#: .\centerpokupok\templates\registration\password_reset_form.html:34
+#: .\centerpokupok\templates\registration\registration_closed.html:41
+#: .\centerpokupok\templates\registration\registration_complete.html:42
+msgid "Ask us a question"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:59
+#: .\centerpokupok\templates\registration\activation_complete.html:46
+#: .\centerpokupok\templates\registration\password_reset_complete.html:42
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:44
+#: .\centerpokupok\templates\registration\password_reset_done.html:44
+#: .\centerpokupok\templates\registration\password_reset_form.html:41
+#: .\centerpokupok\templates\registration\registration_closed.html:48
+#: .\centerpokupok\templates\registration\registration_complete.html:49
+#: .\tppcenter\templates\Exhibitions\contentPage.html:29
+#: .\tppcenter\templates\registration\registration.html:6
+#: .\tppcenter\templates\registration\registration.html:28
+msgid "Registration"
+msgstr ""
+
+#: .\centerpokupok\templates\Registr\registr.html:66
+msgid "No, I am seller"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:5
+msgid "My favorite products"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:8
+msgid "Personal data"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:11
+msgid "Shipment address"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:14
+msgid "Order History"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:29
+msgid "Ask a question"
+msgstr ""
+
+#: .\centerpokupok\templates\main\cabinet_menu.html:30
+msgid "Start chat"
+msgstr ""
+
+#: .\centerpokupok\templates\main\main_coupons.html:36
+msgid "Remaining time"
+msgstr ""
+
 #: .\centerpokupok\templates\main\news.html:5
+#: .\tppcenter\templates\Companies\detailContent.html:43
+#: .\tppcenter\templates\Tpp\detailContent.html:43
 msgid "News"
 msgstr ""
 
@@ -267,20 +596,12 @@ msgstr ""
 msgid "Partner"
 msgstr ""
 
-#: .\centerpokupok\templates\main\products.html:8
-msgid "Latest"
-msgstr ""
-
-#: .\centerpokupok\templates\main\products.html:9
-#: .\centerpokupok\templates\main\products.html:51
+#: .\centerpokupok\templates\main\products.html:10
+#: .\centerpokupok\templates\main\products.html:74
 msgid "more"
 msgstr ""
 
-#: .\centerpokupok\templates\main\products.html:50
-msgid "Top sales"
-msgstr ""
-
-#: .\centerpokupok\templates\main\products_discount.html:4
+#: .\centerpokupok\templates\main\products_discount.html:5
 msgid "Best proposals"
 msgstr ""
 
@@ -288,72 +609,1146 @@ msgstr ""
 msgid "Products reviews"
 msgstr ""
 
-#: .\core\models.py:78
+#: .\centerpokupok\templates\registration\activation_email.html:2
+#: .\tppcenter\templates\registration\activation_email.html:2
+msgid "You joined to the site"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\activation_email.html:3
+#: .\tppcenter\templates\registration\activation_email.html:3
+msgid "If you have received this message in error, ignore it."
+msgstr ""
+
+#: .\centerpokupok\templates\registration\activation_email.html:6
+#: .\tppcenter\templates\registration\activation_email.html:6
+msgid ""
+"In order to activate your account on the site, go, on the following link for "
+msgstr ""
+
+#: .\centerpokupok\templates\registration\activation_email.html:6
+#: .\tppcenter\templates\registration\activation_email.html:6
+msgid " days:"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\activation_email.html:10
+#: .\tppcenter\templates\registration\activation_email.html:10
+msgid "Sincerely, Administration of, "
+msgstr ""
+
+#: .\centerpokupok\templates\registration\login.html:3
+#: .\centerpokupok\templates\registration\registration_form.html:9
+msgid "Create new account"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\login.html:17
+#: .\tppcenter\templates\Profile\addForm.html:49
+msgid "Email"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\login.html:23
+#: .\centerpokupok\templates\registration\registration_form.html:31
+#: .\centerpokupok\templates\registration\registration_form.html:42
+#: .\modules-mod\registration\forms.py:40
+msgid "Password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\login.html:31
+msgid "Forgot"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\login.html:31
+msgid "your password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_complete.html:6
+msgid "Reset complete"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_complete.html:47
+#: .\tppcenter\templates\registration\password_reset_complete.html:32
+msgid "Your password has been changed!"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_complete.html:48
+#: .\tppcenter\templates\registration\password_reset_complete.html:33
+msgid "You can sign up"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:8
+msgid "Reset confirm"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:48
+#: .\tppcenter\templates\registration\password_reset_confirm.html:31
+msgid "Enter your new password below to change the old password:"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_confirm.html:52
+#: .\tppcenter\templates\registration\password_reset_confirm.html:35
+msgid "Change password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_done.html:8
+msgid "Password reset done"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_done.html:48
+#: .\tppcenter\templates\registration\password_reset_done.html:31
+msgid "We sent you an e-mail message with a link to change your password."
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_done.html:49
+#: .\tppcenter\templates\registration\password_reset_done.html:32
+msgid ""
+"Please, check you email. To change the password, click on the link in the "
+"message."
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_email.html:2
+#: .\tppcenter\templates\registration\password_reset_email.html:2
+msgid "Hello"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_email.html:4
+#: .\tppcenter\templates\registration\password_reset_email.html:4
+msgid ""
+"You received this message because you have a request to change the password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_email.html:5
+#: .\tppcenter\templates\registration\password_reset_email.html:5
+msgid ""
+"on centerpokupok If you did not make such a request, please ignore this "
+"message."
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_email.html:7
+#: .\tppcenter\templates\registration\password_reset_email.html:7
+msgid ""
+"To change the password, click the following to link or copy it into your "
+"browser:"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_email.html:11
+#: .\tppcenter\templates\registration\password_reset_email.html:11
+msgid "Sincerely, Administration of,"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_form.html:5
+msgid "Reset password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_form.html:45
+#: .\tppcenter\templates\registration\password_reset_form.html:31
+msgid ""
+"Forgot your password? Enter your e-mail and we will send you the required "
+"information to create a new password."
+msgstr ""
+
+#: .\centerpokupok\templates\registration\password_reset_form.html:49
+#: .\tppcenter\templates\registration\password_reset_form.html:35
+msgid "Sent password"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_closed.html:52
+#: .\tppcenter\templates\registration\registration_closed.html:31
+msgid "Registration error. Please try again "
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_complete.html:53
+#: .\tppcenter\templates\registration\registration_complete.html:32
+msgid ""
+"We sent you message. Please check you email and click on the  link to "
+"activate your account. "
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_form.html:5
+msgid "Registration of customer"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_form.html:20
+#: .\modules-mod\registration\forms.py:38
+msgid "E-mail"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_form.html:55
+msgid "I agree to the"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_form.html:55
+msgid "terms"
+msgstr ""
+
+#: .\centerpokupok\templates\registration\registration_form.html:56
+#: .\tppcenter\templates\main_header.html:9
+#: .\tppcenter\templates\registration\registration.html:59
+msgid "Sign up"
+msgstr ""
+
+#: .\core\models.py:89
 msgid "date joined"
 msgstr ""
 
-#: .\tpp\settings.py:144
-msgid "Russia"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\admin.py:118
+#: .\modules-mod\django-haystack-master\haystack\admin.py:118
+#, python-format
+msgid "0 of %(count)d selected"
+msgid_plural "of %(count)d selected"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: .\modules-mod\django-haystack-master\build\lib\haystack\admin.py:120
+#: .\modules-mod\django-haystack-master\haystack\admin.py:120
+#, python-format
+msgid "%(total_count)s selected"
+msgid_plural "All %(total_count)s selected"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: .\modules-mod\django-haystack-master\build\lib\haystack\forms.py:22
+#: .\modules-mod\django-haystack-master\haystack\forms.py:22
+msgid "Search"
 msgstr ""
 
-#: .\tpp\settings.py:145
-msgid "Armenia"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\forms.py:96
+#: .\modules-mod\django-haystack-master\haystack\forms.py:96
+msgid "Search In"
 msgstr ""
 
-#: .\tpp\settings.py:146
-msgid "Azerbaijan"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\panels.py:26
+#: .\modules-mod\django-haystack-master\haystack\panels.py:26
+msgid "Haystack"
 msgstr ""
 
-#: .\tpp\settings.py:147
-msgid "Belarus"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\panels.py:50
+#: .\modules-mod\django-haystack-master\haystack\panels.py:50
+msgid "Search Queries"
 msgstr ""
 
-#: .\tpp\settings.py:148
-msgid "England"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\templates\panels\haystack.html:5
+#: .\modules-mod\django-haystack-master\haystack\templates\panels\haystack.html:5
+msgid "Query"
 msgstr ""
 
-#: .\tpp\settings.py:149
-msgid "Estonia"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\templates\panels\haystack.html:6
+#: .\modules-mod\django-haystack-master\haystack\templates\panels\haystack.html:6
+msgid "Backend Alias"
 msgstr ""
 
-#: .\tpp\settings.py:150
-msgid "Georgia"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\templates\panels\haystack.html:7
+#: .\modules-mod\django-haystack-master\haystack\templates\panels\haystack.html:7
+msgid "Timeline"
 msgstr ""
 
-#: .\tpp\settings.py:151
-msgid "Kazakhstan"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\templates\panels\haystack.html:8
+#: .\modules-mod\django-haystack-master\haystack\templates\panels\haystack.html:8
+msgid "Time"
 msgstr ""
 
-#: .\tpp\settings.py:152
-msgid "Kyrgyzstan"
+#: .\modules-mod\django-haystack-master\build\lib\haystack\templates\panels\haystack.html:9
+#: .\modules-mod\django-haystack-master\haystack\templates\panels\haystack.html:9
+msgid "Kwargs"
 msgstr ""
 
-#: .\tpp\settings.py:153
-msgid "Lithuania"
+#: .\modules-mod\djcelery\admin.py:51 .\modules-mod\djcelery\admin.py:58
+#: .\modules-mod\djcelery\models.py:27 .\modules-mod\djcelery\models.py:317
+msgid "state"
 msgstr ""
 
-#: .\tpp\settings.py:154
-msgid "Latvia"
+#: .\modules-mod\djcelery\admin.py:65 .\modules-mod\djcelery\models.py:326
+msgid "ETA"
 msgstr ""
 
-#: .\tpp\settings.py:155
-msgid "Moldova"
+#: .\modules-mod\djcelery\admin.py:72
+msgid "when"
 msgstr ""
 
-#: .\tpp\settings.py:156
-msgid "Tajikistan"
+#: .\modules-mod\djcelery\admin.py:79 .\modules-mod\djcelery\models.py:196
+#: .\modules-mod\djcelery\models.py:321
+msgid "name"
 msgstr ""
 
-#: .\tpp\settings.py:157
-msgid "Turkmenistan"
+#: .\modules-mod\djcelery\admin.py:113
+msgid "Task detail"
 msgstr ""
 
-#: .\tpp\settings.py:158
-msgid "Ukrainian"
+#: .\modules-mod\djcelery\admin.py:114
+msgid "Tasks"
 msgstr ""
 
-#: .\tpp\settings.py:159
-msgid "Uzbekistan"
+#: .\modules-mod\djcelery\admin.py:129 .\modules-mod\djcelery\models.py:319
+msgid "UUID"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:153
+msgid "Revoke selected tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:159
+msgid "Terminate selected tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:165
+msgid "Kill selected tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:172
+#: .\modules-mod\djcelery\templates\djcelery\confirm_rate_limit.html:9
+msgid "Rate limit selected tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:185
+msgid "Rate limit selection"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:210
+msgid "Node detail"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:211
+msgid "Worker Nodes"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:218
+msgid "Shutdown selected worker nodes"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:222
+msgid "Enable event mode for selected nodes."
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:227
+msgid "Disable event mode for selected nodes."
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:257
+msgid "Task (registered)"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:259
+msgid "Task (custom)"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:271
+msgid "Need name of task"
+msgstr ""
+
+#: .\modules-mod\djcelery\admin.py:282
+#, python-format
+msgid "Unable to parse JSON: %s"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:8
+msgid "just now"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:9
+msgid "{seconds} second ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:9
+msgid "{seconds} seconds ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:10
+msgid "{minutes} minute ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:10
+msgid "{minutes} minutes ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:11
+msgid "{hours} hour ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:11
+msgid "{hours} hours ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:12
+msgid "yesterday at {time}"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:13
+msgid "year"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:13
+msgid "years"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:14
+msgid "month"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:14
+msgid "months"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:15
+msgid "week"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:15
+msgid "weeks"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:16
+msgid "day"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:16
+msgid "days"
+msgstr ""
+
+#: .\modules-mod\djcelery\humanize.py:23
+msgid "{number} {type} ago"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:25
+msgid "task id"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:31
+msgid "done at"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:32 .\modules-mod\djcelery\models.py:329
+msgid "traceback"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:35
+msgid "meta"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:41
+msgid "task state"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:42
+msgid "task states"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:59
+msgid "group id"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:61
+msgid "created at"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:68
+msgid "saved group result"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:69
+msgid "saved group results"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:81
+msgid "Days"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:82
+msgid "Hours"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:83
+msgid "Minutes"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:84
+msgid "Seconds"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:85
+msgid "Microseconds"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:89
+msgid "every"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:91
+msgid "period"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:95 .\modules-mod\djcelery\models.py:202
+msgid "interval"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:96
+msgid "intervals"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:116
+msgid "every {0.period_singular}"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:117
+msgid "every {0.every} {0.period}"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:125
+msgid "minute"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:126
+msgid "hour"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:128
+msgid "day of week"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:131
+msgid "day of month"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:134
+msgid "month of year"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:138 .\modules-mod\djcelery\models.py:205
+msgid "crontab"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:139
+msgid "crontabs"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:197
+msgid "Useful description"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:199
+msgid "task name"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:206
+msgid "Use one of interval/crontab"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:209 .\modules-mod\djcelery\models.py:324
+msgid "Arguments"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:210
+msgid "JSON encoded positional arguments"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:213 .\modules-mod\djcelery\models.py:325
+msgid "Keyword arguments"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:214
+msgid "JSON encoded keyword arguments"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:217
+msgid "queue"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:218
+msgid "Queue defined in CELERY_QUEUES"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:221
+msgid "exchange"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:224
+msgid "routing key"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:227 .\modules-mod\djcelery\models.py:327
+msgid "expires"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:230
+msgid "enabled"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:240
+msgid "description"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:246
+msgid "periodic task"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:247
+msgid "periodic tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:286
+msgid "hostname"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:287
+msgid "last heartbeat"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:294 .\modules-mod\djcelery\models.py:336
+msgid "worker"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:295
+msgid "workers"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:323
+msgid "event received at"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:328
+msgid "result"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:331
+msgid "execution time"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:332
+msgid "in seconds if task succeeded"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:334
+msgid "number of retries"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:344
+msgid "task"
+msgstr ""
+
+#: .\modules-mod\djcelery\models.py:345
+msgid "tasks"
+msgstr ""
+
+#: .\modules-mod\djcelery\templates\admin\djcelery\change_list.html:7
+#: .\modules-mod\djcelery\templates\djcelery\confirm_rate_limit.html:6
+msgid "Home"
+msgstr ""
+
+#: .\modules-mod\djcelery\templates\djcelery\confirm_rate_limit.html:22
+msgid "Rate limit"
+msgstr ""
+
+#: .\modules-mod\registration\admin.py:23
+msgid "Activate users"
+msgstr ""
+
+#: .\modules-mod\registration\admin.py:43
+msgid "Re-send activation emails"
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:42
+msgid "Password (again)"
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:66
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:77
+msgid "I have read and agree to the Terms of Service"
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:78
+msgid "You must agree to the terms to register"
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:94
+msgid ""
+"This email address is already in use. Please supply a different email "
+"address."
+msgstr ""
+
+#: .\modules-mod\registration\forms.py:121
+msgid ""
+"Registration using free email addresses is prohibited. Please supply a "
+"different email address."
+msgstr ""
+
+#: .\modules-mod\registration\models.py:180
+msgid "user"
+msgstr ""
+
+#: .\modules-mod\registration\models.py:181
+msgid "activation key"
+msgstr ""
+
+#: .\modules-mod\registration\models.py:186
+msgid "registration profile"
+msgstr ""
+
+#: .\modules-mod\registration\models.py:187
+msgid "registration profiles"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:20
+msgid "First name"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:23
+#: .\tppcenter\templates\Profile\addForm.html:44
+msgid "Middle name"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:38
+msgid "Site name"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:41
+msgid "Icq"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:44
+msgid "Skype"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:55
+#: .\tppcenter\templates\Profile\addForm.html:102
+msgid "Mobile number"
+msgstr ""
+
+#: .\tppcenter\Profile\profileForms.py:58
+msgid "Proffesion"
+msgstr ""
+
+#: .\tppcenter\Profile\views.py:119
+msgid "This email already in use"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:51 .\tppcenter\templates\base.html.py:52
+#: .\tppcenter\templates\base.html:58 .\tppcenter\templates\base.html.py:65
+#: .\tppcenter\templates\main_header.html:6
+msgid "About project"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:53
+msgid "How the system works"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:54
+msgid "Terms of use"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:55
+msgid "Privacy"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:59
+msgid "Create online shop"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:60
+msgid "Post announcement event"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:61
+msgid "Add a business proposal"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:62
+msgid "Find a Business Partner"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:66
+msgid "Contuct us"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:67
+msgid "Ask the community"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:68 .\tppcenter\templates\main_header.html:6
+msgid "FAQ"
+msgstr ""
+
+#: .\tppcenter\templates\base.html:77
+msgid "Visitor statistic"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:5
+msgid "Filter"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:16
+msgid "All"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:17
+msgid "My"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:20
+msgid "Sorting"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:26
+#: .\tppcenter\templates\baseFilter.html:54
+msgid "Field"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:31
+#: .\tppcenter\templates\baseFilter.html:59
+msgid "Creation date"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:34
+#: .\tppcenter\templates\baseFilter.html:60
+msgid "Title"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:43
+#: .\tppcenter\templates\baseFilter.html:69
+msgid "Descending"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:46
+#: .\tppcenter\templates\baseFilter.html:72
+msgid "Ascending"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:78
+msgid "Apply"
+msgstr ""
+
+#: .\tppcenter\templates\baseFilter.html:79
+msgid "Close"
+msgstr ""
+
+#: .\tppcenter\templates\main_header.html:6
+msgid "Portal services"
+msgstr ""
+
+#: .\tppcenter\templates\main_header.html:6
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:49
+#: .\tppcenter\templates\Companies\detailContent.html:83
+#: .\tppcenter\templates\Exhibitions\detailContent.html:54
+#: .\tppcenter\templates\Tpp\detailContent.html:78
+#: .\tppcenter\templates\Tpp\tabCompanies.html:8
+msgid "Contacts"
+msgstr ""
+
+#: .\tppcenter\templates\main_header.html:9
+#: .\tppcenter\templates\registration\login.html:46
+msgid "Sign in"
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:6
+#: .\tppcenter\templates\permissionDenied.html:6
+msgid "Permission Denied"
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:28
+#: .\tppcenter\templates\permissionDenied.html:28
+msgid "Perrmission denied"
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:30
+msgid ""
+"Sorry but you cannot create this item , if you have created company you need "
+"choose it in you  "
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:31
+msgid "profile"
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:31
+msgid " or create "
+msgstr ""
+
+#: .\tppcenter\templates\permissionDen.html:32
+msgid "new company "
+msgstr ""
+
+#: .\tppcenter\templates\permissionDenied.html:30
+msgid "Sorry but you cannot modify this item "
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\contentPage.html:22
+#: .\tppcenter\templates\BusinessProposal\popupFilter.html:20
+#: .\tppcenter\templates\Companies\popupFilter.html:20
+#: .\tppcenter\templates\Exhibitions\popupFilter.html:20
+#: .\tppcenter\templates\News\popupFilter.html:20
+#: .\tppcenter\templates\Products\popupFilter.html:20
+msgid "Organization"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\contentPage.html:35
+#: .\tppcenter\templates\Companies\contentPage.html:74
+#: .\tppcenter\templates\Companies\tabExhibitions.html:19
+#: .\tppcenter\templates\Companies\tabNews.html:32
+#: .\tppcenter\templates\Companies\tabProducts.html:45
+#: .\tppcenter\templates\Exhibitions\contentPage.html:47
+#: .\tppcenter\templates\News\contentPage.html:43
+#: .\tppcenter\templates\Products\contentPage.html:36
+#: .\tppcenter\templates\Tpp\contentPage.html:70
+#: .\tppcenter\templates\Tpp\tabCompanies.html:41
+#: .\tppcenter\templates\Tpp\tabNews.html:32
+msgid "No results found"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:46
+#: .\tppcenter\templates\Companies\detailContent.html:33
+#: .\tppcenter\templates\Tpp\detailContent.html:33
+msgid "About"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:47
+#: .\tppcenter\templates\Exhibitions\detailContent.html:52
+#: .\tppcenter\templates\Products\detailContent.html:108
+msgid "Document"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:48
+#: .\tppcenter\templates\Companies\detailContent.html:53
+#: .\tppcenter\templates\Exhibitions\detailContent.html:53
+#: .\tppcenter\templates\Tpp\detailContent.html:53
+msgid "Gallery"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:63
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:66
+#: .\tppcenter\templates\BusinessProposal\detailContent.html:69
+#: .\tppcenter\templates\Exhibitions\detailContent.html:68
+#: .\tppcenter\templates\Exhibitions\detailContent.html:71
+#: .\tppcenter\templates\Exhibitions\detailContent.html:74
+msgid "Link to the File"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\popupFilter.html:21
+#: .\tppcenter\templates\News\popupFilter.html:21
+msgid "Company"
+msgstr ""
+
+#: .\tppcenter\templates\BusinessProposal\popupFilter.html:22
+#: .\tppcenter\templates\Companies\popupFilter.html:21
+#: .\tppcenter\templates\Exhibitions\popupFilter.html:21
+#: .\tppcenter\templates\Innov\contentPage.html:27
+#: .\tppcenter\templates\News\popupFilter.html:22
+#: .\tppcenter\templates\Products\popupFilter.html:21
+msgid "Branch"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\contentPage.html:27
+#: .\tppcenter\templates\Tpp\contentPage.html:24
+msgid "VATIN"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\contentPage.html:56
+#: .\tppcenter\templates\Products\detailContent.html:101
+#: .\tppcenter\templates\Tpp\contentPage.html:51
+msgid "Contact us"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:38
+#: .\tppcenter\templates\Tpp\detailContent.html:38
+msgid "Recvisits"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:48
+#: .\tppcenter\templates\Tpp\detailContent.html:48
+msgid "Services"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:58
+#: .\tppcenter\templates\Tpp\detailContent.html:58
+msgid "Tenders"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:63
+#: .\tppcenter\templates\Tpp\detailContent.html:63
+msgid "Exhibitions"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:73
+#: .\tppcenter\templates\Tpp\detailContent.html:68
+msgid "Structure"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\detailContent.html:78
+#: .\tppcenter\templates\Tpp\detailContent.html:73
+msgid "Staff"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\tabProducts.html:7
+msgid "Image"
+msgstr ""
+
+#: .\tppcenter\templates\Companies\tabProducts.html:8
+#: .\tppcenter\templates\Profile\addForm.html:39
+#: .\tppcenter\templates\Tpp\tabCompanies.html:7
+msgid "Name"
+msgstr ""
+
+#: .\tppcenter\templates\Exhibitions\contentPage.html:31
+#: .\tppcenter\templates\Innov\contentPage.html:28
+#: .\tppcenter\templates\Tenders\contentPage.html:27
+msgid "Organizer"
+msgstr ""
+
+#: .\tppcenter\templates\Exhibitions\detailContent.html:51
+msgid "Route Description"
+msgstr ""
+
+#: .\tppcenter\templates\Innov\contentPage.html:23
+msgid "Publication date"
+msgstr ""
+
+#: .\tppcenter\templates\Innov\detailContent.html:83
+msgid "Link to Business Plan File"
+msgstr ""
+
+#: .\tppcenter\templates\Messages\contentBox.html:13
+msgid "Send private message"
+msgstr ""
+
+#: .\tppcenter\templates\Messages\contentBox.html:18
+msgid "Send"
+msgstr ""
+
+#: .\tppcenter\templates\Messages\index.html:207
+msgid "Organizations"
+msgstr ""
+
+#: .\tppcenter\templates\Messages\index.html:208
+msgid "Users"
+msgstr ""
+
+#: .\tppcenter\templates\News\addForm.html:77
+#: .\tppcenter\templates\TppTV\addForm.html:53
+msgid "Choose category"
+msgstr ""
+
+#: .\tppcenter\templates\News\addForm.html:88
+#: .\tppcenter\templates\TppTV\addForm.html:64
+msgid "Choose Country"
+msgstr ""
+
+#: .\tppcenter\templates\News\contentPage.html:28
+msgid "Read more"
+msgstr ""
+
+#: .\tppcenter\templates\Products\detailContent.html:107
+msgid "About company"
+msgstr ""
+
+#: .\tppcenter\templates\Products\detailContent.html:121
+#: .\tppcenter\templates\Products\detailContent.html:124
+#: .\tppcenter\templates\Products\detailContent.html:127
+#: .\tppcenter\templates\Tenders\detailContent.html:98
+#: .\tppcenter\templates\Tenders\detailContent.html:101
+#: .\tppcenter\templates\Tenders\detailContent.html:104
+msgid "Link to the document"
+msgstr ""
+
+#: .\tppcenter\templates\Products\popupFilter.html:22
+msgid "Category"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:5
+msgid "Your profile was updated"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:25
+msgid "Change avatar"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:54
+msgid "WWW"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:75
+msgid "Your organization"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:83
+msgid "Sex"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:97
+msgid "Telephone Number"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:107
+msgid "Profession"
+msgstr ""
+
+#: .\tppcenter\templates\Profile\addForm.html:116
+msgid "Cancel"
+msgstr ""
+
+#: .\tppcenter\templates\Tenders\contentPage.html:23
+msgid "Date of publication"
+msgstr ""
+
+#: .\tppcenter\templates\Tenders\contentPage.html:26
+msgid "Starting price"
+msgstr ""
+
+#: .\tppcenter\templates\Tpp\detailContent.html:83
+msgid "Companies"
+msgstr ""
+
+#: .\tppcenter\templates\Tpp\tabCompanies.html:6
+msgid "Logo"
+msgstr ""
+
+#: .\tppcenter\templates\Tpp\tabCompanies.html:9
+msgid "Site"
+msgstr ""
+
+#: .\tppcenter\templates\Tpp\tabCompanies.html:10
+msgid "Joined"
+msgstr ""
+
+#: .\tppcenter\templates\TppTV\detailContent.html:42
+msgid "Similar news"
+msgstr ""
+
+#: .\tppcenter\templates\registration\activation_complete.html:6
+#: .\tppcenter\templates\registration\activation_complete.html:28
+msgid "Activation complete"
+msgstr ""
+
+#: .\tppcenter\templates\registration\activation_complete.html:30
+msgid "Thank you that you have completed the registration! Now you can  "
+msgstr ""
+
+#: .\tppcenter\templates\registration\activation_complete.html:31
+msgid "sign in"
+msgstr ""
+
+#: .\tppcenter\templates\registration\activation_complete.html:31
+msgid "using the email and password you provided during registration."
+msgstr ""
+
+#: .\tppcenter\templates\registration\password_reset_complete.html:6
+#: .\tppcenter\templates\registration\password_reset_complete.html:28
+#: .\tppcenter\templates\registration\password_reset_confirm.html:6
+#: .\tppcenter\templates\registration\password_reset_confirm.html:28
+#: .\tppcenter\templates\registration\password_reset_done.html:6
+#: .\tppcenter\templates\registration\password_reset_done.html:28
+#: .\tppcenter\templates\registration\password_reset_form.html:6
+#: .\tppcenter\templates\registration\password_reset_form.html:28
+msgid "Password reset"
+msgstr ""
+
+#: .\tppcenter\templates\registration\registration_closed.html:6
+#: .\tppcenter\templates\registration\registration_closed.html:28
+msgid "Registration error"
+msgstr ""
+
+#: .\tppcenter\templates\registration\registration_complete.html:7
+#: .\tppcenter\templates\registration\registration_complete.html:29
+msgid "Registration complete"
 msgstr ""
 
 #~ msgid "Field is required"

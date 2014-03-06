@@ -7,6 +7,7 @@
                  <ul class="company-list">
                     {% for id , attr in companyList.items %}
                         {% with attr.NAME.0 as name %}
+                        {% with attr.SLUG.0 as slug %}
                         {% with attr.IMAGE.0 as image %}
                         {% with attr.DETAIL_TEXT.0 as about_company %}
                         {% with attr.ADDRESS.0 as address %}
@@ -31,7 +32,7 @@
                                 <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
                                 <div class="desc">
                                    {{ about_company|truncatewords:30 }}
-                                    <a href="#">{% trans "More" %}...</a>
+                                    <a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>
                                 </div>
                                 <div class="companycontact">
                                     <div class="line">
@@ -57,6 +58,7 @@
                                 </div>
                             </div>
                         </li>
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}

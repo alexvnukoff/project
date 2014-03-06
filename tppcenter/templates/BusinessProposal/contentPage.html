@@ -1,11 +1,14 @@
 {% load static %}
 {% load i18n %}
 <div class="container">
-            {% include "BusinessProposal/popupFilter.html" %}
+
+
+          {% include "BusinessProposal/popupFilter.html" %}
            {% include "main/paginator.html" %}
              <ul class="tender-list" id="afisha-list">
                 {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
+                    {% with attr.SLUG.0 as slug %}
                     {% with attr.CREATE_DATE.0 as create_date %}
                     {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                     {% with attr.ORGANIZATION_NAME.0 as org_name %}
@@ -18,10 +21,11 @@
                             <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>
                         </div>
-                        <h2>{{ name }}</h2>
-                        <div class="line">{% trans 'Organization' %}: <a href="#">{{ org_name }}</a></div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <h2><a href="{% url "proposal:detail" slug %}"> {{ name }} </a></h2>
+                        <div class="line">{% trans 'Organization' %}: <a href="">{{ org_name }}</a></div>
+                        <a href="{% url "proposal:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
