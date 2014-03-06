@@ -68,8 +68,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': proposalsPage,
-                                        'current_company': current_company, 'cabinetValues': cabinetValues}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': proposalsPage}))
 
 
 def _proposalsContent(request, page=1, my=None):

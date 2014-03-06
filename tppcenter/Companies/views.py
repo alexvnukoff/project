@@ -66,8 +66,7 @@ def get_companies_list(request, page=1, item_id=None, my=None):
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
-                                        'current_company': current_company, 'cabinetValues': cabinetValues}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
 def _companiesContent(request, page=1, my=None):
