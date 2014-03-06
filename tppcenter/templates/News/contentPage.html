@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="container">
+            {% include "News/popupFilter.html" %}
            {% include "main/paginator.html" %}
             <ul class="listnews">
                 {% for id , attr in newsList.items %}

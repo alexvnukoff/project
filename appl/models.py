@@ -176,6 +176,25 @@ class Branch(Item):
     def __str__(self):
         return self.getName()
 
+
+class AdvBannerType(Item):
+
+    enableBranch = models.BooleanField(default=False)
+    enableTpp = models.BooleanField(default=False)
+    enableCountry = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.getName()
+
+class AdvBanner(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+
 class NewsCategories(Item):
 
     active = ItemManager()
@@ -415,15 +434,6 @@ class Article(Item):
         return self.getName()
 
 
-class Announce(Item):
-
-    active = ItemManager()
-    objects = models.Manager()
-
-    def __str__(self):
-        return self.getName()
-
-
 class Review(Item):
 
     active = ItemManager()
@@ -467,15 +477,6 @@ class Tender(Item):
 
     def __str__(self):
         return self.getName()
-
-
-class Advertising(Item):
-
-    active = ItemManager()
-    objects = models.Manager()
-
-    def __str__(self):
-        return ''
 
 
 class Rate(Item):

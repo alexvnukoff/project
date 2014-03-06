@@ -50,7 +50,9 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
             user_name = None
             notification = None
 
+
         current_section = _("Business Proposal")
+
 
         templateParams = {
             'user_name': user_name,

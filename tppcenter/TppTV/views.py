@@ -1,42 +1,33 @@
-from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
+
 from django.utils.translation import ugettext as _
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
-from appl import func
-from django.core.exceptions import ValidationError
-from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
-from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
-from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
-from django.core.exceptions import ObjectDoesNotExist
 
+from appl import func
+from tppcenter.forms import ItemForm
+from django.template import RequestContext, loader
+from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from haystack.query import SQ, SearchQuerySet
+import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_news_list(request,page=1, id=None):
 
+
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    user = request.user
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
+
     current_section = "TPP-TV"
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
+    scripts = []
+
 
     if not id:
         newsPage = _newsContent(request, page)
@@ -44,22 +35,89 @@ def get_news_list(request,page=1, id=None):
         newsPage = _getdetailcontent(request, id)
 
 
+    if not request.is_ajax():
 
+        user = request.user
 
+        if user.is_authenticated():
+            notification = Notification.objects.filter(user=request.user, read=False).count()
 
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+        current_section = "TPP-TV"
 
+        templatePramrams = {
+            'user_name': user_name,
+            'current_section': current_section,
+            'newsPage': newsPage,
+            'notification': notification,
+            'scripts': scripts,
+            'styles': styles,
+            'search': request.GET.get('q', ''),
+            'current_company': current_company
+        }
 
-    return render_to_response("TppTV/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification,
-                                                  'current_company': current_company},
-                              context_instance=RequestContext(request))
+        return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
+
+    else:
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
+                                        'current_company': current_company}))
+
 
 
 def _newsContent(request, page=1):
-    news = TppTV.active.get_active().order_by('-pk')
+
+    #news = TppTV.active.get_active().order_by('-pk')
+
+    filters, searchFilter = func.filterLive(request)
+
+    #companies = Company.active.get_active().order_by('-pk')
+    sqs = SearchQuerySet().models(TppTV)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
 
 
-    result = func.setPaginationForItemsWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
+    news = sqs.order_by(*order)
+
+    result = func.setPaginationForSearchWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
+    #result = func.setPaginationForItemsWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
 
     newsList = result[0]
     news_ids = [id for id in newsList.keys()]
@@ -83,11 +141,22 @@ def _newsContent(request, page=1):
 
     url_paginator = "tv:paginator"
     template = loader.get_template('TppTV/contentPage.html')
-    context = RequestContext(request, {'newsList': newsList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
+
+
+    templateParams = {
+        'newsList': newsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
     return template.render(context)
-
-
 
 
 def tvForm(request, action, item_id=None):
@@ -129,10 +198,6 @@ def tvForm(request, action, item_id=None):
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
 
-
-
-
-
 def addNews(request):
     current_company = request.session.get('current_company', None)
     perm = request.user.get_all_permissions()
@@ -167,6 +232,7 @@ def addNews(request):
     template = loader.get_template('TppTV/addForm.html')
     context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
     newsPage = template.render(context)
+
 
 
 
@@ -222,19 +288,14 @@ def updateNew(request, item_id):
             return HttpResponseRedirect(reverse('tv:main'))
 
 
-
-
-
     template = loader.get_template('TppTV/addForm.html')
     context = RequestContext(request, {'form': form, 'choosen_category': choosen_category, 'categories': categories,
                                        'create_date': create_date,'choosen_country':choosen_country,
                                        'countries': countries})
     newsPage = template.render(context)
 
+
     return newsPage
-
-
-
 
 
 

@@ -1,10 +1,11 @@
 __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
-    BusinessProposal, Exhibition, Tender
+    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet
 from core.models import Relationship
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
 
 class SearchIndexActive(indexes.SearchIndex):
     def index_queryset(self, using=None):
@@ -21,6 +22,12 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+    start_event_date = indexes.DateField(null=True)
+    end_event_date = indexes.DateField(null=True)
+    create_date = indexes.DateTimeField(null=True)
+
+    def prepare_create_date(self, obj):
+        return obj.create_date
 
     def get_model(self):
         return Exhibition
@@ -34,6 +41,8 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
         field_to_attr = {
             'title': 'NAME',
             'text': 'DETAIL_TEXT',
+            'start_event_date': 'START_EVENT_DATE',
+            'end_event_date': 'END_EVENT_DATE'
         }
 
         attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
@@ -48,7 +57,10 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                if field_name == 'start_event_date' or field_name == 'end_event_date':
+                    self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
+                else:
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
 
         endDateIndex = self.fields['end_date'].index_fieldname
@@ -85,21 +97,42 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
             else:
                 self.prepared_data[startDateIndex] = obj.start_date            
 
-        tppIndex = self.fields['tpp'].index_fieldname
+        #country
         countryIndex = self.fields['country'].index_fieldname
 
-        try:
-            tpp = Tpp.objects.get(p2c__child_id=obj.pk, p2c__type="dependence").pk
+        #company , tpp
+        companyIndex = self.fields['company'].index_fieldname
+        tppIndexfield = self.fields['tpp'].index_fieldname
 
-            self.prepared_data[tppIndex] = tpp
-        except ObjectDoesNotExist:
-            return self.prepared_data
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
-        try:
-            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=tpp, p2c__type="dependence").pk
+        if comp.exists():
+            comp = comp.all()
 
-        except ObjectDoesNotExist:
-            return self.prepared_data
+            self.prepared_data[companyIndex] = comp.pk
+
+            if not self.prepared_data[countryIndex]:
+                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
+
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
+
+        elif tpp.exists():
+            tpp = tpp.all()
+
+            self.prepared_data[companyIndex] = None
+            self.prepared_data[tppIndexfield] = tpp.pk
+
+            if not self.prepared_data[countryIndex]:
+                country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+
+                if country.exists():
+                    country = country.all()
+                    self.prepared_data[countryIndex] = country.pk
+
 
         return self.prepared_data
 
@@ -122,6 +155,10 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+    create_date = indexes.DateTimeField(null=True)
+
+    def prepate_create_date(self, obj):
+        return obj.create_date
 
     def get_model(self):
         return BusinessProposal
@@ -186,22 +223,41 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
             else:
                 self.prepared_data[startDateIndex] = obj.start_date
 
-        try:
-            comp = Company.objects.get(p2c__child_id=obj.pk, p2c__type="dependence").pk
+        #country
+        countryIndex = self.fields['country'].index_fieldname
 
-            countryIndex = self.fields['country'].index_fieldname
-            companyIndex = self.fields['company'].index_fieldname
+        #company , tpp
+        companyIndex = self.fields['company'].index_fieldname
+        tppIndexfield = self.fields['tpp'].index_fieldname
 
-            self.prepared_data[companyIndex] = comp
-            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp, p2c__type="dependence").pk
-        except ObjectDoesNotExist:
-            return self.prepared_data
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
-        try:
-            tppIndex = self.fields['tpp'].index_fieldname
-            self.prepared_data[countryIndex] = Tpp.objects.get(p2c__child_id=comp, p2c__type="relation").pk
-        except ObjectDoesNotExist:
-            return self.prepared_data
+        if comp.exists():
+            comp = comp.all()
+
+            self.prepared_data[companyIndex] = comp.pk
+
+            if not self.prepared_data[countryIndex]:
+                self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
+
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
+
+        elif tpp.exists():
+            tpp = tpp.all()
+
+            self.prepared_data[companyIndex] = None
+            self.prepared_data[tppIndexfield] = tpp.pk
+
+            if not self.prepared_data[countryIndex]:
+                country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+
+                if country.exists():
+                    country = country.all()
+                    self.prepared_data[countryIndex] = country.pk
 
         return self.prepared_data
 
@@ -315,9 +371,13 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+    create_date = indexes.DateTimeField(null=True)
 
-    def prepare_id(self, object):
-        return object.pk
+    def prepare_create_date(self, obj):
+        return obj.create_date
+
+    def prepare_id(self, obj):
+        return obj.pk
 
     def prepare(self, obj):
         self.prepared_data = super(CompanyIndex, self).prepare(obj)
@@ -408,6 +468,10 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+    create_date = indexes.DateTimeField(null=True)
+
+    def prepare_create_date(self, obj):
+        return obj.create_date
 
     def prepare_id(self, obj):
         return obj.pk
@@ -607,6 +671,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         createIndex = self.fields['create_date'].index_fieldname
         self.prepared_data[createIndex] = obj.create_date
 
+        #Discount price
         discountPriceIndex = self.fields['discount_price'].index_fieldname
         priceIndex = self.fields['price'].index_fieldname
 
@@ -665,16 +730,22 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+    create_date = indexes.DateTimeField()
+    video = indexes.BooleanField(default=False)
 
     def prepare_id(self, obj):
         return obj.pk
+
+    def prepare_create_date(self, obj):
+        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(NewsIndex, self).prepare(obj)
 
         field_to_attr = {
             'title': 'NAME',
-            'text': 'DETAIL_TEXT'
+            'text': 'DETAIL_TEXT',
+            'video': 'YOUTUBE_CODE'
         }
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
@@ -689,7 +760,13 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                if field_name == 'video':
+                    if attributes[attr][0] == '':
+                        self.prepared_data[field.index_fieldname] = False
+                    else:
+                        self.prepared_data[field.index_fieldname] = True
+                else:
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
         endDateIndex = self.fields['end_date'].index_fieldname
         startDateIndex = self.fields['start_date'].index_fieldname
@@ -766,16 +843,16 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
         return self.prepared_data
 
-    def prepare_branch(self, object):
+    def prepare_branch(self, obj):
         try:
-            branches = Branch.objects.filter(p2c__child_id=object.pk, p2c__type='relation')
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
             return [branch.pk for branch in branches]
         except ObjectDoesNotExist:
             return None
 
-    def prepare_categories(self, object):
+    def prepare_categories(self, obj):
         try:
-            categories = NewsCategories.objects.filter(p2c__child_id=object.pk, p2c__type='relation')
+            categories = NewsCategories.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
             return [category.pk for category in categories]
         except ObjectDoesNotExist:
             return None
@@ -791,18 +868,24 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
-    start_event_date = indexes.DateTimeField(null=True)
-    end_event_date = indexes.DateTimeField(null=True)
+    start_event_date = indexes.DateField(null=True)
+    end_event_date = indexes.DateField(null=True)
     start_date = indexes.DateTimeField()
     end_date = indexes.DateTimeField(null=True)
     cost = indexes.FloatField(null=True)
+    create_date = indexes.DateTimeField()
 
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
         return obj.pk
 
+    def prepare_create_date(self, obj):
+        return obj.create_date
+
     def prepare(self, obj):
+
+
         self.prepared_data = super(TenderIndex, self).prepare(obj)
 
         field_to_attr = {
@@ -825,7 +908,10 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                if field_name == 'start_event_date' or field_name == 'end_event_date':
+                    self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
+                else:
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
         endDateIndex = self.fields['end_date'].index_fieldname
         startDateIndex = self.fields['start_date'].index_fieldname
@@ -902,3 +988,239 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Tender
+
+
+class InnovIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    title = indexes.CharField(null=True)
+    country = indexes.IntegerField(null=True)
+    tpp = indexes.IntegerField(null=True)
+    company = indexes.IntegerField(null=True)
+    create_date = indexes.DateTimeField()
+    start_date = indexes.DateTimeField()
+    end_date = indexes.DateTimeField(null=True)
+    branch = indexes.MultiValueField(null=True)
+
+    id = indexes.IntegerField()
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare_create_date(self, obj):
+        return obj.create_date
+
+    def prepare(self, obj):
+
+        self.prepared_data = super(InnovIndex, self).prepare(obj)
+
+        field_to_attr = {
+            'title': 'NAME',
+            'text': 'DETAIL_TEXT',
+        }
+
+        attributes = obj.getAttributeValues(*field_to_attr.values())
+
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+            return self.prepared_data
+
+        for field_name, field in self.fields.items():
+            if field_name in field_to_attr:
+                attr = field_to_attr[field_name]
+
+                if attr not in attributes:
+                    continue
+
+                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
+        #country
+        countryIndex = self.fields['country'].index_fieldname
+        self.prepared_data[countryIndex] = None
+
+        #company , tpp
+        companyIndex = self.fields['company'].index_fieldname
+        tppIndexfield = self.fields['tpp'].index_fieldname
+
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
+        cabinet = Cabinet.objects.filter(user=obj.create_user)
+
+        if comp.exists():
+            comp = comp.all()
+
+            self.prepared_data[companyIndex] = comp.pk
+
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
+
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
+        elif tpp.exists():
+            tpp = tpp.all()
+
+            self.prepared_data[companyIndex] = None
+            self.prepared_data[tppIndexfield] = tpp.pk
+
+            country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+
+            if country.exists():
+                country = country.all()
+                self.prepared_data[countryIndex] = country.pk
+
+        elif cabinet.exists():
+            cabinet = cabinet.all()
+
+            country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='relation')
+
+            if country.exists():
+                country = country.all()
+                self.prepared_data[countryIndex] = country.pk
+
+        return self.prepared_data
+
+    def prepare_branch(self, obj):
+        try:
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            return [branch.pk for branch in branches]
+        except ObjectDoesNotExist:
+            return None
+
+    def get_model(self):
+        return InnovationProject
+
+
+class TppTv(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    title = indexes.CharField(null=True)
+    country = indexes.IntegerField(null=True)
+    create_date = indexes.DateTimeField()
+    start_date = indexes.DateTimeField()
+    end_date = indexes.DateTimeField(null=True)
+    categories = indexes.MultiValueField(null=True)
+
+    id = indexes.IntegerField()
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare_create_date(self, obj):
+        return obj.create_date
+
+    def prepare(self, obj):
+
+        self.prepared_data = super(TppTv, self).prepare(obj)
+
+        field_to_attr = {
+            'title': 'NAME',
+            'text': 'DETAIL_TEXT',
+        }
+
+        attributes = obj.getAttributeValues(*field_to_attr.values())
+
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+            return self.prepared_data
+
+        for field_name, field in self.fields.items():
+            if field_name in field_to_attr:
+                attr = field_to_attr[field_name]
+
+                if attr not in attributes:
+                    continue
+
+                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+
+        endDateIndex = self.fields['end_date'].index_fieldname
+        startDateIndex = self.fields['start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
+        #country
+        countryIndex = self.fields['country'].index_fieldname
+
+        try:
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child=obj.pk, p2c__type='relation').pk
+        except ObjectDoesNotExist:
+            self.prepared_data[countryIndex] = None
+
+        return self.prepared_data
+
+    def prepare_branch(self, obj):
+        try:
+            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            return [branch.pk for branch in branches]
+        except ObjectDoesNotExist:
+            return None
+
+    def prepare_categories(self, obj):
+        try:
+            categories = NewsCategories.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            return [category.pk for category in categories]
+        except ObjectDoesNotExist:
+            return None
+
+    def get_model(self):
+        return TppTv
+

@@ -1,24 +1,19 @@
+
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
+
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse, QueryDict
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from django.http import HttpResponseRedirect, HttpResponse
+from core.models import Item
 from appl import func
-from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePages
+from tppcenter.forms import ItemForm, BasePages
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
 from core.tasks import addNewCompany
 from haystack.query import SQ, SearchQuerySet
 import json
-from core.tasks import addNewsAttrubute
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 

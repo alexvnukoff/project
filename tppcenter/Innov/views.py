@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
@@ -6,17 +7,16 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
 from core.tasks import addNewProject
 from django.conf import settings
+from haystack.query import SQ, SearchQuerySet
+import json
+
 
 def get_innov_list(request, page=1, item_id=None, my=None):
 
@@ -24,42 +24,102 @@ def get_innov_list(request, page=1, item_id=None, my=None):
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    user = request.user
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
 
-    current_section = "Innovation Project"
+
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    scripts = []
+
     if item_id is None:
         newsPage = _innovContent(request, page)
     else:
         newsPage = _innovDetailContent(request, item_id)
 
+    if not request.is_ajax():
+        user = request.user
+        if user.is_authenticated():
+            notification = len(Notification.objects.filter(user=request.user, read=False))
+            if not user.first_name and not user.last_name:
+                user_name = user.email
+            else:
+                user_name = user.first_name + ' ' + user.last_name
+        else:
+            user_name = None
+            notification = None
+
+        current_section = "Innovation Project"
+
+        templateParams = {
+            'newsPage': newsPage,
+            'current_section': current_section,
+            'notification': notification,
+            'user_name': user_name,
+            'scripts': scripts,
+            'styles': styles,
+            'search': request.GET.get('q', ''),
+            'current_company': current_company
+        }
+
+        return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
+
+    else:
 
 
-
-
-
-    return render_to_response("Innov/index.html", {'newsPage': newsPage, 'current_section': current_section,
-                                                   'notification': notification, 'user_name': user_name,
-                                                   'current_company': current_company },
-                              context_instance=RequestContext(request))
-
-
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
+                                        'current_company': current_company}))
 
 
 
 def _innovContent(request, page=1):
-    innov_projects = InnovationProject.active.get_active().order_by('-pk')
 
 
-    result = func.setPaginationForItemsWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
+    filters, searchFilter = func.filterLive(request)
+
+    #companies = Company.active.get_active().order_by('-pk')
+    sqs = SearchQuerySet().models(InnovationProject)
+
+    if len(searchFilter) > 0:
+        sqs = sqs.filter(**searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+    sortFields = {
+        'date': 'id',
+        'name': 'title'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+    if sortField2 and sortField2 in sortFields:
+        if order2 == 'desc':
+            order.append('-' + sortFields[sortField2])
+        else:
+            order.append(sortFields[sortField2])
+
+
+    innov_projects = sqs.order_by(*order)
+
+    result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
+    #innov_projects = InnovationProject.active.get_active().order_by('-pk')
+
+
+    #result = func.setPaginationForItemsWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
 
     innovList = result[0]
     innov_ids = [id for id in innovList.keys()]
@@ -88,10 +148,21 @@ def _innovContent(request, page=1):
 
     url_paginator = "innov:paginator"
     template = loader.get_template('Innov/contentPage.html')
-    context = RequestContext(request, {'innovList': innovList, 'page': page, 'paginator_range': paginator_range,
-                                                  'url_paginator': url_paginator})
-    return template.render(context)
 
+    templateParams = {
+        'innovList': innovList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'filters': filters,
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+    }
+
+    context = RequestContext(request, templateParams)
+    return template.render(context)
 
 
 def _innovDetailContent(request, item_id):
@@ -155,7 +226,6 @@ def innovForm(request, action, item_id=None):
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
 
-
 def addProject(request):
     current_company = request.session.get('current_company', False)
 
@@ -210,7 +280,6 @@ def addProject(request):
 
 
     return newsPage
-
 
 
 

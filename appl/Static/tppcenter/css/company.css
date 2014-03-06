@@ -196,7 +196,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
 .message-tabcontent{ position:relative; float:left; width:100%;}
 .custom-ms{ position:relative; float:left; width:100%;}
-.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:13px; line-height:30px;}
+.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px;}
 .custom-ms li .thumb{ float:left; width:24px; height:24px; background-color:#afafaf; margin:3px 8px; display:inline;}
 .message-tabcontent .custom-ms li.ui-tabs-active{ background:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px;}
 .message-tabcontent .custom-ms li.ui-tabs-active a{ color:#FFF;}
@@ -236,4 +236,65 @@ rgb(33,136,187) 100%);}
 .slimScrollRail{ width:4px!important;}
 
 .gray-img{ position:absolute; width:150px; height:130px; top:0; left:0; z-index:99; background-color:#d7d7d7; display:none;}
+
+.table-deals tr td.pr{ text-align:right;}
+.table-deals tr td.status{ text-align: center; padding-left:0;}
+#advertising .table-deals tr.top td{ font-size:12px;  padding:8px 0 8px 8px;}
+#advertising .table-deals tr td{ font-size:13px; padding:2px 0 2px 8px;}
+#advertising .table-deals tr td .thumb{ display:inline-block; width:24px; height:24px; background-color:#afafaf;}
+#advertising .table-deals tr td .stt-close{ color:#f69679;}
+#advertising .table-deals tr td .stt-active{ color:#197b30;}
+#advertising .table-deals tr td .stt-add{ display:inline-block; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; padding:0 20px; text-shadow:1px -1px 1px #327fa4;}
+#advertising .table-deals tr td.end{ text-align:center;}
+.ads-bottom{ position:relative; float:left; width:100%; padding:8px 0; margin:12px 0 0 0;background-color:#e8e8e8; font-size:13px; font-weight:bold; color:#4a4a4a; text-indent:18px;}
+.ads-bottom .red{ color:#FF0000;}
+
+
+.slimScrollDiv{ margin:15px 2px 15px 0;}
+.arrow-scroll-up, .arrow-scroll-down{ position:absolute; width:10px; height:7px; right:0; z-index:9999; cursor:pointer;}
+.arrow-scroll-up{ background:url(../img/up.png) no-repeat; top:5px;}
+.arrow-scroll-down{ background:url(../img/down.png) no-repeat; bottom:5px;}
+.custom-outline{ position:relative; float:left; width:100%;}
+.ads-details{ position:relative; float:right; width:880px;}
+.ads-details-center{ position:relative; float:left; width:580px;}
+
+.ads-line{ float:left; width:100%;}
+.ads-line li{ float:left; width:100%; margin:12px 0 0 0;}
+.ads-line li input.text, .ads-line li select, .ads-line li textarea{ float:left; width:97%; border:1px #bdbdbd solid; padding:5px;}
+.ads-line li select{ float:left; width:98%; padding:6px;}
+.ads-line li label{ float:left; width:100%; font-weight:bold; padding-bottom:5px;}
+.ads-line li .gray-img{ width:215px; height:72px;}
+.ads-line li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.ads-line li .clumn1{ float:left; width:385px;}
+.ads-line li .clumn2{ float:right; width:180px;}
+
+.img-ads{ position:relative; float:left; width:215px; height:72px;}
+.img-ads:hover .deleteimge{ display:block;}
+.tab-cate .tab-ads a{ padding:0 40px!important;}
+.cpn-details-tab .content-tab-ads{ position:relative; float:left; width:558px; margin:15px 10px 10px 10px; display:inline;}
+.cpn-details-tab .content-tab-ads .title{ position:relative; float:left; width:100%; font-weight:bold; padding:8px 0; background:#e8e8e8;}
+.cpn-details-tab .content-tab-ads .clumn{ position:relative; float:left; width:165px; margin:0px 15px 0 10px; display:inline;}
+.cpn-details-tab .content-tab-ads .clumn:last-child{ margin-right:0;}
+.cpn-details-tab .content-tab-ads .clumnin{ position:relative; float:left; width:165px; height:315px;}
+.cpn-details-tab .content-tab-ads .clumn ul li{ position:relative; float:left; width:100%; padding:6px 0; font-size:11px;}
+.cpn-details-tab .content-tab-ads .clumn ul li input{ margin:0 5px 0 0; padding:0;}
+.cpn-details-tab .content-tab-ads .clumn ul li:nth-child(2n){ background:#FFF;}
+.ads-details-right{ position:relative; float:right; width:280px;}
+
+.screen{ position:relative; float:left; width:278x; border:1px #d7d7d7 solid; margin:12px 0 0 0; box-shadow:0px 0px 7px #d7d7d7;}
+.ads-details-right .title{ position:relative; float:left; width:100%; margin:25px 0 10px 0; display:inline; font-size:18px; font-weight:bold; color:#000;}
+.ads-price{ position:relative; float:left; width:100%;}
+.ads-pricein{position:relative; float:left; width:100%; height:270px;}
+.ads-pricein ul li{ float:left; width:270px; background:#f5f5f5; padding:6px 0; margin-right:10px; display:inline; font-size:13px;}
+.ads-pricein ul li:nth-child(2n){ background:#FFF;}
+.ads-pricein ul li .left, .total-price .left{ float:left; padding-left:8px;}
+.ads-pricein ul li .right, .total-price .right{ float:right; padding-right:5px;}
+.total-price{ position:relative; float:left; width:100%; background:#e8e8e8; padding:8px 0;}
+.total-price.white{ background:#FFF;}
+.ads-details-right .btnprice{ color:#FFF; font-size:17px; border-radius:3px; margin-top:10px; display:inline-block;}
+.ads-details-right .btnprice:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
+.btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; color:#FFF; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
+.btncatedt:hover{ opacity:0.9; filter:alpha(opacity=90); color:#FFF; text-decoration:none;}
+.social-l{ float:left; line-height:25px;}
+.social-l a{ padding:0 3px;}
 
