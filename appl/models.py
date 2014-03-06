@@ -483,6 +483,11 @@ class Rate(Item):
     def __str__(self):
         return ''
 
+class AdvOrder(Item):
+
+    def __str__(self):
+        return ''
+
 class Order(Item):
 
     active = ItemManager()

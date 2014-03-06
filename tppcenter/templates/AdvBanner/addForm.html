@@ -107,6 +107,24 @@
             var stDate;
             var edDate;
 
+            var initial = {
+                branch: []
+                country: [],
+                tpp: []
+            }
+
+
+
+
+
+            {% if edDate %}
+                edDate = '{{ edDate }}';
+            {% endif %}
+
+            {% if stDate %}
+                stDate = '{{ stDate }}';
+            {% endif %}
+
             $( "#date-start" ).datepicker({
               changeMonth: true,
               minDate: 0,
@@ -117,6 +135,9 @@
                 setDays();
               }
             });
+
+
+
             $( "#date-end" ).datepicker({
               defaultDate: "+1d",
               changeMonth: true,
@@ -127,6 +148,13 @@
                 setDays();
               }
             });
+
+            if ( edDate )
+                $( "#date-start").datepicker( "option", "maxDate", edDate );
+
+            if ( stDate )
+                $( "#date-end").datepicker( "option", "minDate", stDate );
+
 
             function setDays() {
 
@@ -156,9 +184,10 @@
                 if ( e.added ) {
 
                      var input = $('<input />');
+                     var name = $(this).attr('name')
 
                     input.attr({
-                        name: "advertisement[]",
+                        name: "filter[" + name + "][]",
                         value: e.added.id,
                         type: 'hidden'
                     });
@@ -197,49 +226,75 @@
 
 
 {% block center %}
+<div class="ads-details">
+    <form enctype="multipart/form-data" method="post" action="" name="advForm">
+        {% with form.fields.NAME.initial as name %}
+        {% with form.fields.SITE_NAME.initial as url %}
 
-           <div class="ads-details">
-            <div class="ads-details-center">
-            	<ul class="ads-line">
-                	<li>
-                    	<label>Файл изображения (максимум 4MB)</label>
-                        <div class="img-ads">
-                            <img alt="" src="img/img-ads.jpg" />
-                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
-                            <div class="gray-img"></div>
-                        </div>
-                    </li>
-                    <li>
-                    	<div class="clumn1">
-                        	<label>{% trans "Link URL" %}</label>
-                            <input type="text" name="" placeholder="" class="text" />
-                        </div>
-                        <div class="clumn2">
-                        	<label>{% trans "Start date" %}</label>
-                            <input type="text" name="" placeholder="" id="date-start" />
-                        </div>
-                    </li>
-                    <li>
-                    	<div class="clumn1">
-                        	<label>{% trans "Image title" %}</label>
-                            <textarea rows="3"></textarea>
-                        </div>
-                        <div class="clumn2">
-                        	<label>{% trans "End date" %}</label>
-                            <input type="text" name="" placeholder="" id="date-end" />
-                        </div>
-                    </li>
-                </ul>
-                <div class="filter">
-                        <label>{% trans "Filter" %}</label>
-                            {% for name, placeholder in enable.items %}
-                                <input name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
-                            {% endfor %}
-                </div>
+        {% csrf_token %}
+
+        <div class="ads-details-center">
+            {% if form.errors.DATE %}
+                <div class="formserror">{{ form.errors.DATE }}</div>
+            {% endif %}
+
+            {% if form.errors.ERROR %}
+                <div class="formserror">{{ form.errors.ERROR }}</div>
+            {% endif %}
+
+            <ul class="ads-line">
+                <li>
+                    <label>{% trans "Image file (Maximum 50KB)" %}</label>
+                    {% if form.errors.IMAGE %}
+                        <div class="formserror">{{ form.errors.IMAGE }}</div>
+                    {% endif %}
+                    <div class="img-ads">
+                        <input type="file" name="IMAGE" />
+                        <div class="gray-img"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="clumn1">
+                        <label>{% trans "Link URL" %}</label>
+                        {% if form.errors.URL %}
+                            <div class="formserror">{{ form.errors.URL }}</div>
+                        {% endif %}
+                        <input type="text" name="SITE_NAME" value="{{ url }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans "Start date" %}</label>
+                        <input value="{{ stDate }}" type="text" name="st_date" placeholder="" id="date-start" />
+                    </div>
+                </li>
+                <li>
+                    <div class="clumn1">
+                        {% if form.errors.NAME %}
+                            <div class="formserror">{{ form.errors.NAME }}</div>
+                        {% endif %}
+
+                        <label>{% trans "Image title" %}</label>
+                        <textarea name="NAME" rows="3">{{ name }}</textarea>
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans "End date" %}</label>
+                        <input type="text" value="{{ edDate }}" name="ed_date" placeholder="" id="date-end" />
+                    </div>
+                </li>
+            </ul>
+
+            <div class="filter">
+                {% if form.errors.FILTER %}
+                    <div class="formserror">{{ form.errors.FILTER }}</div>
+                {% endif %}
+                <label>{% trans "Filter" %}</label>
+                {% for name, placeholder in enable.items %}
+                    <input name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
+                {% endfor %}
             </div>
-    <div class="ads-details-right">
+        </div>
+        <div class="ads-details-right">
 
-                <div class="title">{% trans "Basket" %}</div>
+            <div class="title">{% trans "Basket" %}</div>
                 <div class="ads-price">
                 	<div class="arrow-scroll-up"></div>
                 	<div class="ads-pricein">
@@ -256,11 +311,14 @@
                 	<span class="left"><b>{% trans "Summary" %}:</b></span>
                     <span class="right"><b>0.00</b><b> $</b></span>
                 </div>
-                <form action="POST" name="advForm">
 
-                </form>
-                <a href="#" class="btnprice">{% trans "Pay" %}</a>
+
+                <input type="submit" class="btnprice" value="{% trans "Pay" %}">
             </div>
+        {% endwith %}
+        {% endwith %}
+    </form>
+</div>
 {% endblock %}
 
 {% block right %}

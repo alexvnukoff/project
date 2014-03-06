@@ -6,7 +6,7 @@ from django.db.models import Count, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.conf import settings
-
+from PIL import Image
 
 def getPaginatorRange(page):
     '''

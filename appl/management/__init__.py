@@ -101,6 +101,8 @@ def databaseInitialization(sender, **kwargs):
                     'OKATO': 'Chr',
                     'OKVED': 'Chr',
                     'OKPO': 'Chr',
+                    'ORDER_DAYS': 'Str',
+                    'ORDER_HISTORY': 'Str',
                     'POSITION': 'Chr',
                     'SITE_NAME': 'Chr',
                     'SKU': 'Chr',

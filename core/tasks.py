@@ -6,7 +6,7 @@ from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
 
 from celery import shared_task, task
-
+import json
 from appl import func
 
 
@@ -443,3 +443,72 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
 
 
     return True
+
+@transaction.atomic
+def addBannerAttr(post, files, user, site_id, ids):
+    values = {}
+
+    values['NAME'] = post.get('NAME', "")
+    values['SITE_NAME'] = post.get('SITE_NAME', "")
+    values['IMAGE'] = files.get('IMAGE', "")
+
+    form = ItemForm('AdvBanner', values=values)
+    form.clean()
+
+    item = form.save(user, site_id)
+
+    stDate = post.get('st_date')
+    edDate = post.get('ed_date')
+
+    stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
+    edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
+
+    item.update(start_date=stDate, end_date=edDate)
+
+    delta = edDate - stDate
+    delta = delta.days
+
+    costs = Item.getItemsAttributesValues('COST', ids)
+    total = 0
+
+    for id in ids:
+        if not isinstance(costs[id], dict):
+            costs[id] = {}
+            cost = costs[id].get('COST', [0])[0]
+            costs[id] = cost
+            total += int(cost) * delta
+
+    history = {
+        'costs': costs,
+        'ids': ids
+    }
+
+    history = json.dumps(history)
+
+    advGoal = Item.objects.filter(pk__in=ids)
+    bulk = []
+
+    for goal in advGoal:
+        bulk.append(Relationship(child=item, parent=goal, create_user=user))
+
+    Relationship.objects.bulk_create(bulk)
+
+    ord = AdvOrder(create_user=user, sites=site_id)
+    ord.save()
+
+    itemAttrs = item.getAttributeValues('IMAGE', 'SITE_NAME', 'NAME')
+
+    attr = {
+        'ORDER_HISTORY': history,
+        'IMAGE': itemAttrs.get('IMAGE', [''])[0],
+        'ORDER_DAYS': delta,
+        'COST': total,
+        'START_EVENT_DATE': stDate,
+        'END_EVENT_DATE': edDate,
+        'SITE_NAME': itemAttrs.get('SITE_NAME', [''])[0],
+        'NAME': itemAttrs.get('NAME', [''])[0]
+    }
+
+    ord.setAttributeValue(attr, user)
+
+    Relationship.setRelRelationship(item, ord, user=user, type="relation")
