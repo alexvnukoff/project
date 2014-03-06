@@ -85,6 +85,8 @@ def databaseInitialization(sender, **kwargs):
                     'DOCUMENT_2': 'Ffl',
                     'DOCUMENT_3': 'Ffl',
                     'EMAIL': 'Chr',
+#TODO раскомментировать EMAIL 'Eml' (Ilya)
+                    #'EMAIL': 'Eml',
                     'FAX': 'Chr',
                     'FILE': 'Ffl',
                     'FLAG': 'Img',

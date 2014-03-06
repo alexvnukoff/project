@@ -485,18 +485,12 @@ def company_reload_DB_DB(request):
 
             # create relationship type=Dependence with country
             try: #if there isn't country in Company take it from TPP
-                trans_real.activate('ru')
-                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
-                trans_real.deactivate()
+                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_cmp.country_name)
             except:
-                trans_real.deactivate()
                 tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
                 try:
-                    trans_real.activate('ru')
-                    prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
-                    trans_real.deactivate()
+                    prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=tpp[0].country)
                 except:
-                    trans_real.deactivate()
                     L_Company.objects.filter(btx_id=leg_cmp.btx_id).delete()
                     Company.objects.filter(pk=leg_cmp.tpp_id).delete()
                     i += 1
@@ -1074,6 +1068,7 @@ def pic2org_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Pictures for Products were migrated from CSV into DB!')
 
+#TODO доделать это вью (Ilya)
 def pic2org_DB_DB(request):
     '''
         Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2ORG into TPP DB
