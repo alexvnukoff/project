@@ -226,6 +226,7 @@ class Dictionary(models.Model):
     def getSlotID(self, title):
         slot = Slot.objects.get(dict=self.id, title=title)
         return slot.id
+
     def deleteSlot(self, slotTitle):
         '''
         Delete slot
@@ -932,7 +933,7 @@ class Relationship(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     qty = models.FloatField(null=True, blank=True)
-    create_date = models.DateField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
 
     start_date = models.DateTimeField(default=timezone.now)
