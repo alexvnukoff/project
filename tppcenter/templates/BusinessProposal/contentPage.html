@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 <div class="container">
+
            {% include "main/paginator.html" %}
              <ul class="tender-list" id="afisha-list">
                 {% for id , attr in proposalList.items %}

@@ -23,7 +23,7 @@ def get_wall_list(request):
 
     current_company = request.session.get('current_company', False)
     if current_company:
-        current_company = Company.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     user = request.user
     if user.is_authenticated():

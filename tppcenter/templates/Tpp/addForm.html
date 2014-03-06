@@ -89,6 +89,7 @@
                         </div>
                         <div>
                             <label class="sapce">Телефон <font color="#FF0000">*</font></label>
+                             {% if form.errors.TELEPHONE_NUMBER %}<div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" />
 
                         </div>
@@ -98,6 +99,7 @@
                         </div>
                         <div>
                             <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                            {% if form.errors.EMAIL %}<div class="formserror">{{ form.errors.EMAIL }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="EMAIL" value="{{ email }}" />
                         </div>
                         <div>
@@ -109,12 +111,13 @@
                         <li>
                             <div class="clumn1">
                                 <label>ИНН  <font color="#FF0000">*</font></label>
+                                 {% if form.errors.INN %}<div class="formserror">{{ form.errors.INN }}</div>{% endif %}
                                 <input type="text" name="INN" value="{{ inn }}"placeholder="" class="text" style="width:94%;" />
                             </div>
                             <div class="clumn2">
                                 <label>Страна  <font color="#FF0000">*</font></label>
                                    <select style="width:94%;"  name="COUNTRY">
-                                    <option value="">{% trans 'Choose Country' %}</option>
+
                                          {% for id , atrr in countries.items %}
                                          {% with atrr.NAME|first as country  %}
                                               <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
@@ -125,17 +128,20 @@
                         </li>
                         <li>
                             <label>Наименование компании <font color="#FF0000">*</font></label>
+                              {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="NAME" value="{{ name }}" />
                         </li>
 
 
                          <li>
                             <label>Описание для анонса <font color="#FF0000">*</font></label>
+                              {% if form.errors.ANONS %}<div class="formserror">{{ form.errors.ANONS }}</div>{% endif %}
                             <textarea name="ANONS">{{ anons }}</textarea>
                         </li>
                         <li>
                             <label>Детальное описание</label>
                             <div class="">
+                                  {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
                                 <textarea class="tiny" style="width: 456px;height: 90px;" name="DETAIL_TEXT">{{ text }}</textarea>
 
                             </div>

@@ -212,7 +212,7 @@ def proposalForm(request, action, item_id=None):
     else:
         proposalsPage = updateBusinessProposal(request, item_id)
 
-    if isinstance(proposalsPage, HttpResponseRedirect):
+    if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
         return proposalsPage
 
     return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage, 'current_company':current_company,

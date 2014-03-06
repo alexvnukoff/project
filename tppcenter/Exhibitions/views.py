@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -185,6 +186,46 @@ def _exhibitionsDetailContent(request, item_id):
 
 
 
+def exhibitionForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Companies")
+
+    if action == 'add':
+        exhibitionPage = addExhibition(request)
+    else:
+        exhibitionPage = updateExhibition(request, item_id)
+
+    if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):
+        return exhibitionPage
+
+    return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
+
+
 
 def addExhibition(request):
     form = None
@@ -231,8 +272,7 @@ def addExhibition(request):
     context = RequestContext(request,  {'form': form, 'branches': branches})
     exhibitionPage = template.render(context)
 
-    return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage},
-                              context_instance=RequestContext(request))
+    return exhibitionPage
 
 
 
@@ -296,8 +336,7 @@ def updateExhibition(request, item_id):
                                                            'branches': branches})
     exhibitionPage = template.render(context)
 
-    return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage},
-                              context_instance=RequestContext(request))
+    return exhibitionPage
 
 
 

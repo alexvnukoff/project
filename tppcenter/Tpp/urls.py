@@ -17,8 +17,8 @@ urlpatterns = patterns('',
      url(r'^my/$', tppcenter.Tpp.views.get_tpp_list,{'my':True}, name='my_main'),
      url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Tpp.views.get_tpp_list,{'my':True}, name="my_main_paginator"),
 
-     url(r'^add/$', tppcenter.Tpp.views.addTpp, name="add"),
-     url(r'^update/([0-9]+)/$', tppcenter.Tpp.views.updateTpp, name="update"),
+     url(r'^add/$', tppcenter.Tpp.views.tppForm,{'action': 'add'}, name="add"),
+     url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Tpp.views.tppForm,{'action': 'update'}, name="update"),
      url(r'^[a-zA-z-]+-(?P<item_id>[0-9]+)\.html$', tppcenter.Tpp.views.get_tpp_list, name="detail"),
 
      url(r'^tabs/companies/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsCompanies, name="tab_companies"),

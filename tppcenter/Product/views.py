@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -214,7 +215,44 @@ def _getDetailContent(request, item_id):
 
 
 
+def productForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Companies")
+
+    if action == 'add':
+        productsPage = addProducts(request)
+    else:
+        productsPage = updateProduct(request, item_id)
+
+    if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
+        return productsPage
+
+    return render_to_response('Products/index.html', {'productsPage': productsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
 
 
 def addProducts(request):
@@ -223,7 +261,11 @@ def addProducts(request):
     if not request.session.get('current_company', False):
          return render_to_response("permissionDen.html")
 
-    item = Organization.objects.get(pk=current_company)
+    try:
+        item = Company.objects.get(pk=current_company)
+    except ObjectDoesNotExist:
+        return render_to_response("permissionDen.html")
+
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -291,13 +333,16 @@ def addProducts(request):
     productsPage = template.render(context)
 
 
-    return render_to_response('Products/index.html', {'productsPage': productsPage },
-                              context_instance=RequestContext(request))
+    return productsPage
 
 
 
 def updateProduct(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    try:
+        item = Company.objects.get(p2c__child_id=item_id)
+    except ObjectDoesNotExist:
+        return render_to_response("permissionDen.html")
+
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
@@ -380,8 +425,7 @@ def updateProduct(request, item_id):
     productsPage = template.render(context)
 
 
-    return render_to_response('Products/index.html', {'productsPage': productsPage},
-                              context_instance=RequestContext(request))
+    return productsPage
 
 
 

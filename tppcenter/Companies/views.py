@@ -291,7 +291,7 @@ def companyForm(request, action, item_id=None):
 
     current_company = request.session.get('current_company', False)
     if current_company:
-        current_company = Company.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
     user = request.user
@@ -316,7 +316,7 @@ def companyForm(request, action, item_id=None):
     else:
         newsPage = updateCompany(request, item_id)
 
-    if isinstance(newsPage, HttpResponseRedirect):
+    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
         return newsPage
 
     return render_to_response('Companies/index.html', {'newsPage': newsPage, 'current_company':current_company,

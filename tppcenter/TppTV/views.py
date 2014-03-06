@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
+from django.utils.translation import ugettext as _
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
 from django.core.exceptions import ValidationError
@@ -23,7 +24,7 @@ def get_news_list(request,page=1, id=None):
 
     current_company = request.session.get('current_company', False)
     if current_company:
-        current_company = Company.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     user = request.user
     if user.is_authenticated():
@@ -89,6 +90,47 @@ def _newsContent(request, page=1):
 
 
 
+def tvForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("TppTv")
+
+    if action == 'add':
+        newsPage = addNews(request)
+    else:
+        newsPage = updateNew(request, item_id)
+
+    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
+        return newsPage
+
+    return render_to_response('TppTV/index.html', {'newsPage': newsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
+
+
+
 
 
 def addNews(request):
@@ -130,8 +172,7 @@ def addNews(request):
 
 
 
-    return render_to_response('TppTV/index.html', {'newsPage': newsPage},
-                              context_instance=RequestContext(request))
+    return newsPage
 
 
 
@@ -190,8 +231,7 @@ def updateNew(request, item_id):
                                        'countries': countries})
     newsPage = template.render(context)
 
-    return render_to_response('TppTV/index.html', {'newsPage': newsPage},
-                              context_instance=RequestContext(request))
+    return newsPage
 
 
 

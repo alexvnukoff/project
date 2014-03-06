@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -156,6 +157,44 @@ def _newsContent(request, page=1, my=None):
 
 
 
+def newsForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("News")
+
+    if action == 'add':
+        newsPage = addNews(request)
+    else:
+        newsPage = updateNew(request, item_id)
+
+    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
+        return newsPage
+
+    return render_to_response('News/index.html', {'newsPage': newsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
 
 
 def addNews(request):
@@ -206,7 +245,7 @@ def addNews(request):
     newsPage = template.render(context)
 
 
-    return render_to_response('News/index.html', {'newsPage': newsPage}, context_instance=RequestContext(request))
+    return newsPage
 
 
 
@@ -281,8 +320,7 @@ def updateNew(request, item_id):
 
 
 
-    return render_to_response('News/index.html', {'newsPage': newsPage} ,
-                              context_instance=RequestContext(request))
+    return newsPage
 
 
 

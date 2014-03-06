@@ -62,6 +62,7 @@
             <div class="uploadimgage">
                         <div class="imgbig">
                             <label>Миниатюра</label>
+                        {% if form.errors.IMAGE %}<div class="formserror">{{ form.errors.IMAGE }}</div>{% endif %}
                               {% if image %}
                                  <div class="b-img">
                                 <img src="{{ MEDIA_URL }}big/{{ image.name }}">
@@ -89,6 +90,7 @@
                         </div>
                         <div>
                             <label class="sapce">Телефон <font color="#FF0000">*</font></label>
+                            {% if form.errors.TELEPHONE_NUMBER %}<div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" />
 
                         </div>
@@ -98,6 +100,7 @@
                         </div>
                         <div>
                             <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                              {% if form.errors.EMAIL %}<div class="formserror">{{ form.errors.EMAIL }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="EMAIL" value="{{ email }}" />
                         </div>
                         <div>
@@ -109,6 +112,7 @@
                         <li>
                             <div class="clumn1">
                                 <label>ИНН  <font color="#FF0000">*</font></label>
+                                  {% if form.errors.INN %}<div class="formserror">{{ form.errors.INN }}</div>{% endif %}
                                 <input type="text" name="INN" value="{{ inn }}"placeholder="" class="text" style="width:94%;" />
                             </div>
                             <div class="clumn2">
@@ -124,6 +128,7 @@
                         </li>
                         <li>
                             <label>Наименование компании <font color="#FF0000">*</font></label>
+                            {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                             <input type="text" class="text" placeholder="" name="NAME" value="{{ name }}" />
                         </li>
                         <li>
@@ -146,10 +151,12 @@
 
                          <li>
                             <label>Описание для анонса <font color="#FF0000">*</font></label>
+                              {% if form.errors.ANONS %}<div class="formserror">{{ form.errors.ANONS }}</div>{% endif %}
                             <textarea name="ANONS">{{ anons }}</textarea>
                         </li>
                         <li>
                             <label>Детальное описание</label>
+                            {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
                             <div class="">
                                 <textarea class="tiny" style="width: 456px;height: 90px;" name="DETAIL_TEXT">{{ text }}</textarea>
 
