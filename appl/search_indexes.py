@@ -1,7 +1,7 @@
 __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
-    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet
+    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV
 from core.models import Relationship
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,6 +18,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     title = indexes.CharField(null=True)
     tpp = indexes.IntegerField(null=True)
     country = indexes.IntegerField(null=True)
+    company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
     end_date = indexes.DateTimeField(null=True)
@@ -108,7 +109,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-            comp = comp.all()
+            comp = comp[0]
 
             self.prepared_data[companyIndex] = comp.pk
 
@@ -121,7 +122,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 self.prepared_data[tppIndexfield] = None
 
         elif tpp.exists():
-            tpp = tpp.all()
+            tpp = tpp[0]
 
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
@@ -130,7 +131,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
 
                 if country.exists():
-                    country = country.all()
+                    country = country[0]
                     self.prepared_data[countryIndex] = country.pk
 
 
@@ -234,7 +235,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-            comp = comp.all()
+            comp = comp[0]
 
             self.prepared_data[companyIndex] = comp.pk
 
@@ -247,7 +248,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 self.prepared_data[tppIndexfield] = None
 
         elif tpp.exists():
-            tpp = tpp.all()
+            tpp = tpp[0]
 
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
@@ -256,7 +257,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
 
                 if country.exists():
-                    country = country.all()
+                    country = country[0]
                     self.prepared_data[countryIndex] = country.pk
 
         return self.prepared_data
@@ -820,8 +821,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-
-
+            self.prepared_data[companyIndex] = comp[0].pk
 
 
             if not self.prepared_data[countryIndex]:
@@ -1080,7 +1080,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
         cabinet = Cabinet.objects.filter(user=obj.create_user)
 
         if comp.exists():
-            comp = comp.all()
+            comp = comp[0]
 
             self.prepared_data[companyIndex] = comp.pk
 
@@ -1091,7 +1091,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
             except ObjectDoesNotExist:
                 self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
-            tpp = tpp.all()
+            tpp = tpp[0]
 
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
@@ -1099,7 +1099,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
             country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
 
             if country.exists():
-                country = country.all()
+                country = country[0]
                 self.prepared_data[countryIndex] = country.pk
 
         elif cabinet.exists():
@@ -1223,5 +1223,5 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
             return None
 
     def get_model(self):
-        return TppTv
+        return TppTV
 

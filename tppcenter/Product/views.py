@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -21,10 +22,14 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def get_product_list(request, page=1, item_id=None):
+def get_product_list(request, page=1, item_id=None, my=None):
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     if item_id is None:
-        productsPage = _productContent(request, page)
+        productsPage = _productContent(request, page, my)
     else:
         productsPage = _getDetailContent(request, item_id)
 
@@ -34,7 +39,7 @@ def get_product_list(request, page=1, item_id=None):
     if not request.is_ajax() or item_id:
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -49,6 +54,7 @@ def get_product_list(request, page=1, item_id=None):
                 'current_section': current_section,
                 'productsPage': productsPage,
                 'notification': notification,
+                'current_company': current_company,
                 'scripts': scripts,
                 'styles': styles,
                 'search': request.GET.get('q', '')
@@ -56,52 +62,75 @@ def get_product_list(request, page=1, item_id=None):
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': productsPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': productsPage,
+                                        'current_company': current_company}))
 
 
-def _productContent(request, page=1):
+def _productContent(request, page=1, my=None):
     #TODO: Jenya change to get_active_related()
     #products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    sqs = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID)
+        sqs = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+        products = sqs.order_by(*order)
+        params = {
+        'sortField1': sortField1,
+        'sortField2': sortField2,
+        'order1': order1,
+        'order2': order2
+                        }
+        url_paginator = "products:paginator"
     else:
-        order.append('-id')
+         current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+         if current_organization:
+             products = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID).\
+                 filter(SQ(tpp=current_organization)|SQ(company=current_organization))
 
-    products = sqs.order_by(*order)
+             url_paginator = "products:my_main_paginator"
+             params = {}
+         else:
+             raise ObjectDoesNotExist('you need check company')
+
+
+
 
     result = func.setPaginationForSearchWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
     #result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
@@ -127,7 +156,7 @@ def _productContent(request, page=1):
 
 
 
-    url_paginator = "products:paginator"
+
     template = loader.get_template('Products/contentPage.html')
 
     templateParams = {
@@ -135,11 +164,9 @@ def _productContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
     return template.render(context)
@@ -188,7 +215,44 @@ def _getDetailContent(request, item_id):
 
 
 
+def productForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Companies")
+
+    if action == 'add':
+        productsPage = addProducts(request)
+    else:
+        productsPage = updateProduct(request, item_id)
+
+    if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
+        return productsPage
+
+    return render_to_response('Products/index.html', {'productsPage': productsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
 
 
 def addProducts(request):
@@ -197,7 +261,11 @@ def addProducts(request):
     if not request.session.get('current_company', False):
          return render_to_response("permissionDen.html")
 
-    item = Organization.objects.get(pk=current_company)
+    try:
+        item = Company.objects.get(pk=current_company)
+    except ObjectDoesNotExist:
+        return render_to_response("permissionDen.html")
+
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -265,13 +333,16 @@ def addProducts(request):
     productsPage = template.render(context)
 
 
-    return render_to_response('Products/index.html', {'productsPage': productsPage },
-                              context_instance=RequestContext(request))
+    return productsPage
 
 
 
 def updateProduct(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    try:
+        item = Company.objects.get(p2c__child_id=item_id)
+    except ObjectDoesNotExist:
+        return render_to_response("permissionDen.html")
+
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
@@ -354,8 +425,7 @@ def updateProduct(request, item_id):
     productsPage = template.render(context)
 
 
-    return render_to_response('Products/index.html', {'productsPage': productsPage},
-                              context_instance=RequestContext(request))
+    return productsPage
 
 
 

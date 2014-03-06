@@ -1,0 +1,158 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% with exhibitionlValues.POSITION.0 as position %}
+ <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+
+ <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+ <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+ <script type="text/javascript">
+
+        $(function() {
+             $(".goods-details-tab").tabs();});
+
+  var marker;
+        $(document).ready(function($) {
+            $( '.goods-details-tab' ).tabs();
+            var href = $('.goods-details-tab').find('a[href="#goods-tabs-4"]');
+            (href).on('click',function(){
+
+                {% if position %}
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ position }})
+                });
+                {% endif %}
+              initialize(false);
+
+
+            })});
+
+
+
+
+    </script>
+
+
+
+  <div class="tender">
+            {% with exhibitionlValues.NAME.0 as name %}
+            {% with exhibitionlValues.CITY.0 as city %}
+            {% with exhibitionlValues.ROUTE_DESCRIPTION.0 as route_description %}
+            {% with exhibitionlValues.DETAIL_TEXT.0 as content %}
+            {% with exhibitionlValues.START_EVENT_DATE.0 as start_date %}
+            {% with exhibitionlValues.END_EVENT_DATE.0 as end_date %}
+            {% with exhibitionlValues.DOCUMENT_1.0 as doc_1 %}
+            {% with exhibitionlValues.DOCUMENT_2.0 as doc_2 %}
+            {% with exhibitionlValues.DOCUMENT_3.0 as doc_3 %}
+            {% with exhibitionlValues.ORGANIZATION_FLAG.0 as org_flag %}
+            {% with exhibitionlValues.ORGANIZATION_NAME.0 as org_name %}
+            {% with exhibitionlValues.ORGANIZATION_IMAGE.0 as org_image %}
+            {% with exhibitionlValues.ORGANIZATION_ID.0 as org_id %}
+            {% with exhibitionlValues.COUNTRY_NAME|first as country_name %}
+            {% with exhibitionlValues.COUNTRY_FLAG|first as flag %}
+             {% with exhibitionlValues.COUNTRY_ID as country_id %}
+
+
+               <div class="tender-details-title">
+               		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+                    <font class="name">
+                        {% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %} {{ city }}
+                        {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}
+                    </font>
+               </div>
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="tender-bottom">
+                    	<div class="tender-bottom-left">
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                            <a href="#">{{ org_name }}</a>
+                            </div>
+                    </div>
+                    <div class="innov-details">
+                    	<p>{{ content }}</p>
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">{% trans 'Route Description' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                                <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
+                                {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	{{ route_description }}
+                            </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+                                {% if doc_1 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_2 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_2 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_3 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_3 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                <ul class="tpp-gallery">
+                              {% for photo in photos %}
+                                <li>
+                                    <div class="b-img">
+                                        <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+
+                                        <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
+                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                        <div class="gray-img"></div>
+                                    </div>
+                                </li>
+                              {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-4">
+                            <div class="content-goods-tab">
+                                  <div id="map-canvas"></div>
+                            </div>
+                        </div>
+                        {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.getContent }}</div>
+                         </div>
+                        {% endfor %}
+                    </div>
+               </div>
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+     </div>
+
+{% endwith %}
+

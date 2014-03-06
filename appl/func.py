@@ -580,3 +580,31 @@ def filterLive(request):
 
 
     return filters, searchFilter
+
+
+def getB2BcabinetValues(request):
+    if request.user.is_authenticated():
+        user = request.user
+        current_company = request.session.get('current_company', False)
+        if current_company:
+           current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+        cabinet = Cabinet.objects.get(user=user.pk)
+
+        try:
+            country = Country.objects.get(p2c__child=cabinet)
+            country = country.getAttributeValues('NAME')
+        except Exception:
+            country = ""
+        cabinetValues = {}
+        cabinetValues['EMAIL'] = [user.email]
+        cabinetValues['LOGIN'] = [user.username]
+        cabinetValues.update(cabinet.getAttributeValues('PROFESSION', 'MOBILE_NUMBER', 'BIRTHDAY', 'PERSONAL_STATUS', 'SEX',
+                                                'SKYPE', 'SITE_NAME', 'ICQ', 'USER_MIDDLE_NAME', 'USER_FIRST_NAME',
+                                                'USER_LAST_NAME', 'IMAGE', 'TELEPHONE_NUMBER'))
+        cabinetValues['COUNTRY'] = country
+        cabinetValues['CURRENT_COMPANY'] = current_company if current_company else ['']
+
+
+        return cabinetValues
+
+    return None
