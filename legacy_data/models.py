@@ -149,8 +149,6 @@ class L_Pic2Org(models.Model):
     '''
     btx_id = models.CharField(max_length=10) # legacy company's id
     org_name = models.CharField(max_length=1024)
-    preview_picture = models.CharField(max_length=1024)
-    detail_picture = models.CharField(max_length=1024)
     gallery = models.CharField(max_length=1024)
     pic_title = models.CharField(max_length=1024)
     completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB

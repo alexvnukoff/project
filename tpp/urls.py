@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 import appl.views
 from legacy_data import views as leg_v
+import tppcenter
+import tppcenter.views
 
 from django.contrib import admin
 admin.autodiscover()
@@ -41,5 +43,6 @@ urlpatterns = patterns('',
     url(r'^legacy/pic2prod/dbdb$', leg_v.pic2prod_DB_DB),
     url(r'^legacy/pic2org/csvdb$', leg_v.pic2org_CSV_DB),
     url(r'^legacy/pic2org/dbdb$', leg_v.pic2org_DB_DB),
+    url(r'^test/$', tppcenter.views.test),
 
 )

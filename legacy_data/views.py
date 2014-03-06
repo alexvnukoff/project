@@ -854,13 +854,13 @@ def tpp_reload_DB_DB(request):
 
         # create relationship type=Dependence with country
         try: #if there isn't country in Company take it from TPP
-            trans_real.activate('ru')
-            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
-            trans_real.deactivate()
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_tpp.country)
+
             Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
         except:
+            trans_real.activate('ru')
+            print('Next TPP has not country:', new_tpp.getName())
             trans_real.deactivate()
-            print('TPP %s has not Country!', new_tpp.getName())
 
         i += 1
         print('Milestone: ', qty + i)
@@ -872,7 +872,7 @@ def tpp_reload_DB_DB(request):
             parent_tpp = Tpp.objects.get(pk=L_TPP.objects.get(btx_id=tpp.tpp_parent).tpp_id)
             child_tpp = Tpp.objects.get(pk=tpp.tpp_id)
             Relationship.objects.create(parent=parent_tpp, type='hierarchy', child=child_tpp, create_user=create_usr)
-            print('Relationship for TPPs was created!')
+            print('Relationship for parent TPPs was created!')
         except:
             continue
 
@@ -946,8 +946,8 @@ def pic2prod_DB_DB(request):
     print('Reload products from buffer DB into TPP DB...')
     qty = L_Pic2Prod.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    #pic_lst = L_Pic2Prod.objects.filter(completed=False).all()
-    pic_lst = L_Pic2Prod.objects.filter(completed=False)[:10]
+    pic_lst = L_Pic2Prod.objects.filter(completed=False).all()
+    #pic_lst = L_Pic2Prod.objects.filter(completed=False)[:10]
     i = 0
     count = 0;
     prev_btx_id = 0;
@@ -1021,7 +1021,7 @@ def pic2prod_DB_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')
 
-def pic2comp_CSV_DB(request):
+def pic2org_CSV_DB(request):
     '''
         Reload companies' pictures from prepared CSV file named pic2comp_legacy.csv
         into buffer DB table LEGACY_DATA_L_PIC2COMP
@@ -1030,7 +1030,7 @@ def pic2comp_CSV_DB(request):
     #Upload from CSV file into buffer table
     print('Load data from CSV file into buffer table...')
     csv.field_size_limit(4000000)
-    with open('c:\\data\\pic2comp_legacy.csv', 'r') as f:
+    with open('c:\\data\\pic2org_legacy.csv', 'r') as f:
         reader = csv.reader(f, delimiter=';')
         data = [row for row in reader]
 
@@ -1048,23 +1048,22 @@ def pic2comp_CSV_DB(request):
             continue
 
         btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
-        comp_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
                                 replace("quot;", '"').replace("&amp;", "&").strip()
-        preview_picture = bytearray(data[i][2]).decode(encoding='utf-8')
-        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
-        gallery = bytearray(data[i][4]).decode(encoding='utf-8')
+        gallery = bytearray(data[i][2]).decode(encoding='utf-8')
+        pic_title = bytearray(data[i][3]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
 
         try:
-            L_Pic2Comp.objects.create(  btx_id = btx_id,\
-                                        comp_name = comp_name,\
-                                        preview_picture = preview_picture,\
-                                        detail_picture = detail_picture,\
-                                        gallery = gallery)
+            L_Pic2Org.objects.create(   btx_id=btx_id,\
+                                        org_name=org_name,\
+                                        gallery=gallery,\
+                                        pic_title=pic_title)
             count += 1
         except:
             #print('Milestone: ', i+1)
             i += 1
-            print(btx_id, '##', comp_name, '##', ' Count: ', i+1)
+            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
             continue
 
         print('Milestone: ', i+1)
@@ -1075,18 +1074,18 @@ def pic2comp_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Pictures for Products were migrated from CSV into DB!')
 
-def pic2comp_DB_DB(request):
+def pic2org_DB_DB(request):
     '''
-        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2PROD into TPP DB
+        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2ORG into TPP DB
     '''
     img_root = 'c:' #additional path to images
     time1 = datetime.datetime.now()
     # Move products' pictures from buffer table into original tables
     print('Reload products from buffer DB into TPP DB...')
-    qty = L_Pic2Prod.objects.filter(completed=True).count()
+    qty = L_Pic2Org.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    #pic_lst = L_Pic2Prod.objects.filter(completed=False).all()
-    pic_lst = L_Pic2Prod.objects.filter(completed=False)[:10]
+    #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
+    pic_lst = L_Pic2Org.objects.filter(completed=False)[:10]
     i = 0
     count = 0;
     prev_btx_id = 0;
