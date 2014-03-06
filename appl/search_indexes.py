@@ -115,7 +115,11 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
             if not self.prepared_data[countryIndex]:
                 self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
 
-            self.prepared_data[tppIndexfield] = None
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
+
         elif tpp.exists():
             tpp = tpp.all()
 
@@ -237,7 +241,11 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
             if not self.prepared_data[countryIndex]:
                 self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
 
-            self.prepared_data[tppIndexfield] = None
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
+
         elif tpp.exists():
             tpp = tpp.all()
 
@@ -663,6 +671,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         createIndex = self.fields['create_date'].index_fieldname
         self.prepared_data[createIndex] = obj.create_date
 
+        #Discount price
         discountPriceIndex = self.fields['discount_price'].index_fieldname
         priceIndex = self.fields['price'].index_fieldname
 
@@ -1076,7 +1085,10 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
 
             self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type='dependence').pk
 
-            self.prepared_data[tppIndexfield] = None
+            try:
+                self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
+            except ObjectDoesNotExist:
+                self.prepared_data[tppIndexfield] = None
         elif tpp.exists():
             tpp = tpp.all()
 
