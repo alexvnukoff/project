@@ -21,6 +21,10 @@ import json
 
 def get_tenders_list(request, page=1, item_id=None):
 
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Company.objects.get(pk=current_company).getAttributeValues("NAME")
+
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
@@ -32,7 +36,7 @@ def get_tenders_list(request, page=1, item_id=None):
     if not request.is_ajax():
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -47,6 +51,7 @@ def get_tenders_list(request, page=1, item_id=None):
             'current_section': current_section,
             'tendersPage': tendersPage,
             'notification': notification,
+            'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', '')
@@ -54,12 +59,13 @@ def get_tenders_list(request, page=1, item_id=None):
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage,
+                                        'current_company': current_company}))
 
 
 def _tendersContent(request, page=1):
 
-    #TODO Jenya change to get_active_related()
+
 
     #tenders = Tender.active.get_active().order_by('-pk')
 

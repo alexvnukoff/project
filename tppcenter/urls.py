@@ -15,6 +15,7 @@ import tppcenter.TppTV.urls
 import tppcenter.Profile.urls
 import tppcenter.Messages
 import tppcenter.Messages.urls
+import tppcenter.Wall.urls
 
 admin.autodiscover()
 
@@ -32,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
+    url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),
 
      url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 

@@ -22,9 +22,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1):
+def get_news_list(request, page=1, my=None):
 
-    newsPage = _newsContent(request, page)
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+    newsPage = _newsContent(request, page, my)
 
     styles = []
     scripts = []
@@ -32,7 +36,7 @@ def get_news_list(request, page=1):
     if not request.is_ajax():
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -48,57 +52,78 @@ def get_news_list(request, page=1):
             'notification': notification,
             'newsPage': newsPage,
             'scripts': scripts,
+            'current_company': current_company,
             'styles': styles,
             'search': request.GET.get('q', '')
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
+                                        'current_company':current_company}))
 
-def _newsContent(request, page=1):
+def _newsContent(request, page=1, my=None):
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    #news = News.active.get_active().order_by('-pk')
+        #news = News.active.get_active().order_by('-pk')
 
-    sqs = SearchQuerySet().models(News)
+        sqs = SearchQuerySet().models(News)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+        news = sqs.order_by(*order)
+        url_paginator = "news:paginator"
+        params = {'filters': filters,
+                  'sortField1': sortField1,
+                  'sortField2': sortField2,
+                  'order1': order1,
+                  'order2': order2}
     else:
-        order.append('-id')
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
+        current_organization = request.session.get('current_company', False)
+
+        if current_organization:
+             news = SearchQuerySet().models(News).\
+                 filter(SQ(tpp=current_organization)|SQ(company=current_organization))
+
+             url_paginator = "news:my_main_paginator"
+             params = {}
         else:
-            order.append(sortFields[sortField2])
-
-    news = sqs.order_by(*order)
+             raise ObjectDoesNotExist('you need check company')
 
     result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
     #result = func.setPaginationForItemsWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
@@ -113,7 +138,7 @@ def _newsContent(request, page=1):
 
 
 
-    url_paginator = "news:paginator"
+
     template = loader.get_template('News/contentPage.html')
 
     templateParams = {
@@ -121,12 +146,9 @@ def _newsContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
     return template.render(context)
@@ -194,8 +216,8 @@ def updateNew(request, item_id):
         item = Organization.objects.get(p2c__child_id=item_id)
         perm_list = item.getItemInstPermList(request.user)
         if 'change_news' not in perm_list:
-            return render_to_response("permissionDenied.html")
-    except ObjectDoesNotExist:
+            raise PermissionError('permission denied')
+    except Exception:
          perm = request.user.get_all_permissions()
          if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
              return render_to_response("permissionDenied.html")
@@ -305,7 +327,10 @@ def _getdetailcontent(request, id):
     new = get_object_or_404(News, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
     photos = Gallery.objects.filter(c2p__parent=new)
-    organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
+
+
+
+
     try:
         newsCategory = NewsCategories.objects.get(p2c__child=id)
         category_value = newsCategory.getAttributeValues('NAME')
@@ -318,21 +343,8 @@ def _getdetailcontent(request, id):
         pass
 
 
-    if organizations.get('c2p__parent__country', False):
-        countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['c2p__parent__country'])
-        toUpdate = {'COUNTRY_NAME': countriesList[organizations['c2p__parent__country']].get('NAME', [""]),
-                    'COUNTRY_FLAG': countriesList[organizations['c2p__parent__country']].get('FLAG', [""]),
-                    'COUNTRY_ID': organizations['c2p__parent__country']}
-        newValues.update(toUpdate)
 
-
-    if organizations.get('pk', False):
-        organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['pk'])
-        toUpdate = {'ORG_NAME': organizationsList[organizations['pk']].get('NAME', [""]),
-                    'ORG_FLAG': organizationsList[organizations['pk']].get('FLAG', [""]),
-                    'ORG_ID': organizations['pk']}
-        newValues.update(toUpdate)
-
+    func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
 
 
     template = loader.get_template('News/detailContent.html')

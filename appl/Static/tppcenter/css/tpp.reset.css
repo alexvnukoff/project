@@ -1,5 +1,6 @@
-.table-big{ float:left; width:100%; margin:12px 0 0 0;}
+.table-big{ width:100%; margin:12px 0 0 0;}
 .table-big tr td{ padding:8px; font-size:11px;}
+
 .table-big tr.top td{ font-size:12px; font-weight:bold;}
 .table-big tr:nth-child(4n+1){ background-color:#fcfcfc;}
 .table-big tr:nth-child(4n+2){ background-color:#fcfcfc;}
@@ -8,3 +9,8 @@
     max-width: 115px;
     max-height: 100px;
 }
+
+.table-big tr:nth-child(2n+2) td:nth-child(1) { width: 120px; }
+.table-big tr:nth-child(2n+2) td:nth-child(2) { vertical-align: top; }
+
+.table-deals td img{ width: 50px;}

@@ -11,8 +11,10 @@
                 {% for id , attr in exhibitionsList.items %}
                     {% with attr.NAME.0 as name %}
                     {% with attr.CITY.0 as city %}
+                    {% with attr.SLUG.0 as slug %}
                     {% with attr.COUNTRY.0 as country %}
-                    {% with attr.EVENT_DATE.0 as date%}
+                    {% with attr.START_EVENT_DATE.0 as start_date%}
+                    {% with attr.END_EVENT_DATE.0 as end_date %}
                     {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                     {% with attr.ORGANIZATION_NAME.0 as org_name %}
                     {% with attr.ORGANIZATION_ID.0 as org_id %}
@@ -22,13 +24,15 @@
                     <li>
                         <div class="title">
                             <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
-                            <font class="name">{{ country }}, {{ city }}, {{ date|makeDate|date:"d M Y" }}</font>
+                            <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
                         </div>
                         <div class="button-r"><a href="#" class="bigbuy">{% trans 'Registration' %}</a></div>
-                        <h2>{{ name }}</h2>
+                        <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
                         <div class="line">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{% url 'exhibitions:detail' slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

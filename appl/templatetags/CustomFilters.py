@@ -6,6 +6,7 @@ from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
 import datetime
 from django.template import Node, TemplateSyntaxError
+from lxml.html.clean import clean_html
 
 from urllib.parse import urlencode
 
@@ -55,6 +56,17 @@ def getSymbol(value):
 
     return currencySymbol(value)
 
+@register.filter(name='split')
+def split(str, splitter):
+    return str.split(splitter)
+
+
+@register.filter(name='cleanHtml')
+def cleanHtml(value):
+    return clean_html(value)
+
+
+
 @register.filter(name='makeDate')
 def makeDate(value):
 
@@ -64,7 +76,11 @@ def makeDate(value):
             return date
         except Exception:
             pass
-
+        try:
+            date = datetime.datetime.strptime(value, "%m/%d/%Y")
+            return date
+        except Exception:
+            pass
 
 
 class DynUrlNode(template.Node):

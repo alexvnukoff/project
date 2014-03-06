@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load CustomFilters %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script>
+        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
+</script>
 <script type="text/javascript">
 
 $(function() {
@@ -206,7 +210,7 @@ $(function() {
                     <li>
                         <label>Краткое описание</label>
                         <div class="">
-                            <textarea style="height: 154px;width: 456px;" name="DETAIL_TEXT" >{{ text }}</textarea>
+                            <textarea class="tiny" style="height: 154px;width: 456px;" name="DETAIL_TEXT" >{{ text }}</textarea>
 
                         </div>
                     </li>
@@ -249,7 +253,7 @@ $(function() {
                 <div class="addpage-form">
                     <div class="clumn1">
                         <label>Заголовок</label>
-                        <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.title }}" />
+                        <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
                         {% if forloop.counter0 > 0 %}
                           <a href="#" class="buttonclear  buttonremove">Remove</a>
                         {% else %}
@@ -260,7 +264,7 @@ $(function() {
                         <label>Описание</label>
 
                         <div class="">
-                            <textarea style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.content }}</textarea>
+                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
 
                         </div>
                     </div>
@@ -279,7 +283,7 @@ $(function() {
                         <label>Описание</label>
 
                         <div class="">
-                            <textarea style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
+                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
 
                         </div>
 

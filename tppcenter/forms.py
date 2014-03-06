@@ -509,6 +509,7 @@ class BasePages(BaseModelFormSet):
             for instance in instances:
                 instance.create_user = user
                 instance.save()
+                instance.setAttributeValue({'NAME': instance.title, 'DETAIL_TEXT': instance.content}, user=user)
 
             instances_pk = [instance.pk for instance in instances]
             bulkInsert = []

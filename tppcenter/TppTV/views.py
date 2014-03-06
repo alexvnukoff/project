@@ -20,9 +20,14 @@ from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_news_list(request,page=1, id=None):
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Company.objects.get(pk=current_company).getAttributeValues("NAME")
+
     user = request.user
     if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
+        notification = Notification.objects.filter(user=request.user, read=False).count()
         if not user.first_name and not user.last_name:
             user_name = user.email
         else:
@@ -44,7 +49,8 @@ def get_news_list(request,page=1, id=None):
 
 
     return render_to_response("TppTV/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'newsPage': newsPage, 'notification': notification},
+                                                  'newsPage': newsPage, 'notification': notification,
+                                                  'current_company': current_company},
                               context_instance=RequestContext(request))
 
 

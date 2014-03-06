@@ -14,6 +14,8 @@ urlpatterns = patterns('',
      url(r'^$', tppcenter.Tpp.views.get_tpp_list, name='main'),
 
      url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Tpp.views.get_tpp_list, name="paginator"),
+     url(r'^my/$', tppcenter.Tpp.views.get_tpp_list,{'my':True}, name='my_main'),
+     url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Tpp.views.get_tpp_list,{'my':True}, name="my_main_paginator"),
 
      url(r'^add/$', tppcenter.Tpp.views.addTpp, name="add"),
      url(r'^update/([0-9]+)/$', tppcenter.Tpp.views.updateTpp, name="update"),

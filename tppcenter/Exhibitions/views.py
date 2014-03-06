@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
@@ -22,17 +22,24 @@ import json
 
 from django.conf import settings
 
-def get_exhibitions_list(request, page=1):
+def get_exhibitions_list(request, page=1, item_id=None, my=None):
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     scripts = []
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
 
-    exhibitionPage = _exhibitionsContent(request, page)
+    if not item_id:
+        exhibitionPage = _exhibitionsContent(request, page, my)
+    else:
+        exhibitionPage = _exhibitionsDetailContent(request, item_id)
 
     if not request.is_ajax():
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -48,57 +55,81 @@ def get_exhibitions_list(request, page=1):
             'user_name': user_name,
             'current_section': current_section,
             'exhibitionPage': exhibitionPage,
+            'current_company': current_company,
             'notification': notification,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'styles': styles,
+            'scripts': scripts
         }
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': exhibitionPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': exhibitionPage,
+                                        'current_company': current_company}))
 
-def _exhibitionsContent(request, page=1):
+def _exhibitionsContent(request, page=1, my=None):
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    sqs = SearchQuerySet().models(Exhibition)
+        sqs = SearchQuerySet().models(Exhibition)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+        exhibitions = sqs.order_by(*order)
+        url_paginator = "exhibitions:paginator"
+        params = {'sortField1': sortField1,
+                  'sortField2': sortField2,
+                  'order1': order1,
+                  'order2': order2}
     else:
-        order.append('-id')
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+         current_organization = request.session.get('current_company', False)
 
-    exhibitions = sqs.order_by(*order)
+         if current_organization:
+             exhibitions = SearchQuerySet().models(Exhibition).\
+                 filter(SQ(tpp=current_organization)|SQ(company=current_organization))
 
-    result = func.setPaginationForSearchWithValues(exhibitions, *('NAME', 'CITY', 'COUNTRY', 'EVENT_DATE'), page_num=5, page=page)
+             url_paginator = "exhibitions:my_main_paginator"
+             params = {}
+         else:
+             raise ObjectDoesNotExist('you need check company')
+
+    result = func.setPaginationForSearchWithValues(exhibitions, *('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
+                                                                  'END_EVENT_DATE', 'SLUG'),
+                                                   page_num=5, page=page)
 
     #exhibitions = Exhibition.active.get_active_related().order_by('-pk')
     #result = func.setPaginationForItemsWithValues(exhibitions, *('NAME', 'CITY', 'COUNTRY', 'EVENT_DATE'), page_num=5, page=page)
@@ -122,11 +153,9 @@ def _exhibitionsContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
 
@@ -134,6 +163,25 @@ def _exhibitionsContent(request, page=1):
 
 
 
+def _exhibitionsDetailContent(request, item_id):
+     exhibition = get_object_or_404(Exhibition, pk=item_id)
+     exhibitionlValues = exhibition.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'START_EVENT_DATE', 'END_EVENT_DATE',
+                                                         'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'CITY',
+                                                         'ROUTE_DESCRIPTION', 'POSITION'))
+
+     photos = Gallery.objects.filter(c2p__parent=item_id)
+
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+
+
+     func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
+
+     template = loader.get_template('Exhibitions/detailContent.html')
+
+     context = RequestContext(request, {'exhibitionlValues': exhibitionlValues, 'photos': photos,
+                                        'additionalPages': additionalPages})
+     return template.render(context)
 
 
 

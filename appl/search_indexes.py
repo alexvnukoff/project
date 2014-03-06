@@ -743,8 +743,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
 
         if comp.exists():
-
-
+            self.prepared_data[companyIndex] = comp[0].pk
 
 
             if not self.prepared_data[countryIndex]:

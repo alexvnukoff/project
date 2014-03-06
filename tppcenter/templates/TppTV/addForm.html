@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load CustomFilters %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script>
+        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
+</script>
 <script type="text/javascript">
 
 $(function() {
@@ -93,7 +97,7 @@ $(function() {
                     <li>
                     	<label>Подробное описание</label>
                         <div >
-                            <textarea cols="40" rows="30" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>
+                            <textarea class="tiny" cols="40" rows="30" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>
                         </div>
                     </li>
                 </ul>

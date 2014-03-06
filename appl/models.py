@@ -552,6 +552,14 @@ class AdditionalPages(Item):
       def __str__(self):
           return str(self.title)
 
+      def getTitle(self):
+        title = self.getAttributeValues('NAME')
+        return title[0] if title else ''
+
+      def getContent(self):
+        content = self.getAttributeValues('DETAIL_TEXT')
+        return content[0] if content else ''
+
 
 class Exhibition(Item):
     active = ItemManager()
