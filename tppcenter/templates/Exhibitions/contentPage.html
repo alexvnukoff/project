@@ -5,7 +5,7 @@
 
 <div class="container">
      <div class="companies">
-
+            {% include "Exhibitions/popupFilter.html" %}
            {% include "main/paginator.html" %}
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in exhibitionsList.items %}

@@ -314,7 +314,13 @@ def jsonFilter(request):
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
-            items = [{'title': item.title_auto, 'id': item.id} for item in paginator.object_list]
+
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
+
+            items = [{'title': item.title_auto, 'id': item.id} for item in onPage.object_list]
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
@@ -326,8 +332,11 @@ def test(request):
 
     Country.objects.get(item2value__attr__title="NAME", item2value__title="Украина")
 
+    from unidecode import unidecode
     from django.http import StreamingHttpResponse
-    return StreamingHttpResponse('pong')
+    from django.template.defaultfilters import slugify
+    a = slugify(a)
+    return StreamingHttpResponse(a)
 
 
 def ping(request):

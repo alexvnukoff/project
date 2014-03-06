@@ -1,7 +1,8 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-
+<div class="container">
+            {% include "TppTV/popupFilter.html" %}
            {% include "main/paginator.html" %}
              <ul id="tv-list">
                 {% for id , attr in newsList.items %}
@@ -37,3 +38,4 @@
 
             </ul>
            {% include "main/paginator.html" %}
+</div>

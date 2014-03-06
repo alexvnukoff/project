@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 <div class="container">
+            {% include "News/popupFilter.html" %}
            {% include "main/paginator.html" %}
             <ul class="listnews">
                 {% for id , attr in newsList.items %}

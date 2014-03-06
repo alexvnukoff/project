@@ -222,6 +222,7 @@
             <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b2.jpg' %}" alt="" /></a></div>
             <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b3.jpg' %}" alt="" /></a></div>
         </div>
+        {% block center %}
 <div class="news-center">
         	<div class="keyword">
                 <i class="icon-key imgnews" id="filter-link"></i>
@@ -237,60 +238,62 @@
 
             {% block content %}{% endblock %}
         </div>
-        <div class="newsright">
+        {% endblock %}
+        {% block right %}
+            <div class="newsright">
+                <div class="bannerleft nomargin"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
 
-        	<div class="bannerleft nomargin"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
-
-            <div class="news-ads">
-            	<div class="title">Платные объявления</div>
-                <span class="titlesub">Название раздела</span>
-                <ul class="list-ads">
-                	<li>
-                    	<div class="top">
-                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
-                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
-                        </div>
-                        <div class="infoads">
-                        	<a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
-                            предназначен для технического оснащения воинских частей...
-                        </div>
-                    </li>
-                    <li>
-                    	<div class="top">
-                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
-                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
-                        </div>
-                        <div class="infoads">
-                           предназначен для технического оснащения воинских частей...
-                        </div>
-                    </li>
-                </ul>
-                <span class="titlesub">Название раздела</span>
-                <ul class="list-ads">
-                	<li>
-                    	<div class="top">
-                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
-                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
-                        </div>
-                        <div class="infoads">
-                           предназначен для технического оснащения воинских частей...
-                        </div>
-                    </li>
-                	<li>
-                    	<div class="top">
-                        	<img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
-                            <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
-                        </div>
-                        <div class="infoads">
-                        	<a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
-                            предназначен для технического оснащения воинских частей...
-                        </div>
-                    </li>
-                </ul>
+                <div class="news-ads">
+                    <div class="title">Платные объявления</div>
+                    <span class="titlesub">Название раздела</span>
+                    <ul class="list-ads">
+                        <li>
+                            <div class="top">
+                                <img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                                <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                            </div>
+                            <div class="infoads">
+                                <a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
+                                предназначен для технического оснащения воинских частей...
+                            </div>
+                        </li>
+                        <li>
+                            <div class="top">
+                                <img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                                <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                            </div>
+                            <div class="infoads">
+                               предназначен для технического оснащения воинских частей...
+                            </div>
+                        </li>
+                    </ul>
+                    <span class="titlesub">Название раздела</span>
+                    <ul class="list-ads">
+                        <li>
+                            <div class="top">
+                                <img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                                <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                            </div>
+                            <div class="infoads">
+                               предназначен для технического оснащения воинских частей...
+                            </div>
+                        </li>
+                        <li>
+                            <div class="top">
+                                <img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                                <a href="#" class="linkads">Пожарно - спасательный комплекс "Огнеборец... </a>
+                            </div>
+                            <div class="infoads">
+                                <a href="#"><img src="{% static 'tppcenter/img/prd/img4.jpg' %}" alt="" class="thumb" /></a>
+                                предназначен для технического оснащения воинских частей...
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
+                <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r3.jpg' %}" alt="" /></a></div>
             </div>
-            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
-            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/r3.jpg' %}" alt="" /></a></div>
-        </div>
+        {% endblock %}
     </div>
 {% endblock %}
 
