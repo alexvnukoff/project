@@ -1127,12 +1127,13 @@ def pic2org_DB_DB(request):
 
         if len(rec.gallery): #create relationship with Gallery
             try:
-                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
+                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id,\
+                                             photo = add(img_root + rec.gallery), create_user=create_usr)
             except:
+                print('Can not create Gallery! Product ID: ', prod.pk)
                 i += 1
                 continue
-
-            gal.photo = add(img_root + rec.gallery)
+            
             # create relationship
             try:
                 Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
