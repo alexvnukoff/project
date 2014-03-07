@@ -13,6 +13,7 @@ from django.conf import settings
 from core.tasks import addBannerAttr
 from django.core.files.images import ImageFile
 from django.db import transaction
+from copy import copy
 
 @login_required(login_url='/login/')
 def gatPositions(request):
@@ -185,7 +186,7 @@ def addBanner(request, bannerType):
             if form.is_valid():
 
                 #50 KB file
-                if form.is_valid() and values['IMAGE'].size > 50 * 1024:
+                if form.is_valid() and (not values['IMAGE'] or values['IMAGE'].size > 50 * 1024):
                     form.errors.update({"IMAGE": _("The image size cannot exceed 50 KB")})
 
                 if form.is_valid():
@@ -240,6 +241,13 @@ def addBanner(request, bannerType):
 
 
     notification = Notification.objects.filter(user=request.user, read=False).count()
+
+    for id in ids:
+        if not isinstance(filterAttr[id], dict):
+            filterAttr[id] = {}
+
+        filterAttr[id]['NAME'] = filterAttr[id].get('NAME', [''])[0]
+        filterAttr[id]['COST'] = filterAttr[id].get('COST', [0])[0]
 
     current_section = _('Banners')
 

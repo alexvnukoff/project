@@ -4,8 +4,9 @@
 
 {% block styles %}
     {{ block.super }}
-    <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/datepicker.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+
     <style>
         .select2-container-multi .select2-choices {
          max-height: 150px !important;
@@ -72,31 +73,27 @@
             });
 
 
-            $('.ads-details-center .filter input').select2({
-                    width: "100%",
-                    multiple:true,
-                    formatNoMatches: noMatches,
-                    ajax: {
-                        url: "/advbanner/filter/",
-                        dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
-                        return {
-                            page: page, // page number
-                            type: $(this).attr('name')
-                            };
-                        },
-                        results: function (data, page) {
-                            var more = (page * 10) < data.total; // whether or not there are more results available
-                            // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.content, more: more};
-                        }
+            var initial = {
+                branch: [],
+                country: [],
+                tpp: []
+            }
 
-                    },
-                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-            });
+            {% for id, attr in filterAttr.items %}
+                {% with attr.COST as cost %}
+                {% with attr.NAME as name %}
+                    {% if id in filters.tpp %}
+                        initial['tpp'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
+                    {% endif %}
+                    {% if id in filters.country %}
+                        initial['country'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
+                    {% endif %}
+                    {% if id in filters.branch %}
+                        initial['branch'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
+                    {% endif %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
 
             var advForm = $('form[name="advForm"]');
             var priceList = $('.ads-pricein ul');
@@ -106,15 +103,6 @@
             var days = 0;
             var stDate;
             var edDate;
-
-            var initial = {
-                branch: []
-                country: [],
-                tpp: []
-            }
-
-
-
 
 
             {% if edDate %}
@@ -127,11 +115,12 @@
 
             $( "#date-start" ).datepicker({
               changeMonth: true,
+              maxDate: edDate ? edDate : null,
               minDate: 0,
               onClose: function( selectedDate ) {
                 $( "#date-end" ).datepicker( "option", "minDate", selectedDate );
 
-                stDate = new Date(selectedDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
+                stDate = selectedDate;
                 setDays();
               }
             });
@@ -140,26 +129,25 @@
 
             $( "#date-end" ).datepicker({
               defaultDate: "+1d",
+              minDate: stDate ? stDate : '+1d',
               changeMonth: true,
-              minDate: '+1d',
               onClose: function( selectedDate ) {
                 $( "#date-start" ).datepicker( "option", "maxDate", selectedDate );
-                edDate = new Date(selectedDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
+                edDate = selectedDate;
                 setDays();
               }
             });
 
-            if ( edDate )
-                $( "#date-start").datepicker( "option", "maxDate", edDate );
 
-            if ( stDate )
-                $( "#date-end").datepicker( "option", "minDate", stDate );
 
 
             function setDays() {
 
                 if (stDate && edDate)
                 {
+                    edDate = new Date(edDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
+                    stDate = new Date(stDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
+
                     var mSec = Math.abs(edDate - stDate);
 
                     if ( !mSec || mSec <= 0 )
@@ -179,8 +167,9 @@
                 total.text(newCost);
 
             }
+            $.fn.onChangeSet = function(e) {
 
-            $('.ads-details-center .filter input').on("change", function(e) {
+
                 if ( e.added ) {
 
                      var input = $('<input />');
@@ -218,7 +207,55 @@
                     setTotal();
                 }
 
-            });
+            };
+
+
+
+
+            $('.ads-details-center .filter input').select2({
+                    width: "100%",
+                    multiple:true,
+                    formatNoMatches: noMatches,
+                    ajax: {
+                        url: "/advbanner/filter/",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            page: page, // page number
+                            type: $(this).attr('name')
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    initSelection : function (element, callback) {
+                        var name = element.attr('name');
+
+                        if ( name in initial )
+                        {
+                            e = {'added': {}, removed: {}};
+
+                            for ( data in initial[name] )
+                            {
+                                e.added = initial[name][data];
+                                 element.onChangeSet(e);
+                            }
+
+                            callback(initial[name]);
+                        }
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+            }).on("change", function(e) { $(this).onChangeSet(e) });
+
+
+            setDays();
         });
     </script>
 {% endblock %}
@@ -263,32 +300,34 @@
                     </div>
                     <div class="clumn2">
                         <label>{% trans "Start date" %}</label>
-                        <input value="{{ stDate }}" type="text" name="st_date" placeholder="" id="date-start" />
+                        <input value="{{ stDate }}" type="text" name="st_date" class="date" id="date-start" />
                     </div>
                 </li>
                 <li>
                     <div class="clumn1">
+                        <label>{% trans "Image title" %}</label>
                         {% if form.errors.NAME %}
                             <div class="formserror">{{ form.errors.NAME }}</div>
                         {% endif %}
 
-                        <label>{% trans "Image title" %}</label>
+
                         <textarea name="NAME" rows="3">{{ name }}</textarea>
                     </div>
                     <div class="clumn2">
                         <label>{% trans "End date" %}</label>
-                        <input type="text" value="{{ edDate }}" name="ed_date" placeholder="" id="date-end" />
+                        <input type="text" value="{{ edDate }}" name="ed_date" class="date"  id="date-end" />
                     </div>
                 </li>
             </ul>
 
             <div class="filter">
+                <label>{% trans "Filter" %}</label>
                 {% if form.errors.FILTER %}
                     <div class="formserror">{{ form.errors.FILTER }}</div>
                 {% endif %}
-                <label>{% trans "Filter" %}</label>
+
                 {% for name, placeholder in enable.items %}
-                    <input name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
+                    <input value="60" name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
                 {% endfor %}
             </div>
         </div>
