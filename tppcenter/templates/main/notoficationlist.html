@@ -1,4 +1,4 @@
-
+{% load staticfiles %}
 <ul>
         <li>
              <h4>События в сообществе</h4>
@@ -7,8 +7,8 @@
         {% with attr.DETAIL_TEXT|first as message  %}
 
         <li>
-            <img src="img/flag4.gif" class="flag" alt="" />
-            <img src="img/imgnone.png" class="image" alt="" />
+
+            <img src="{% static 'tppcenter/img/imgnone.png' %}" class="image" alt="" />
             <div class="info">{{ message }}</div>
         </li>
 

@@ -687,17 +687,13 @@ class Item(models.Model):
     def createItemSlug(string, pk):
         nonDig = ''.join([i for i in string if not i.isdigit()])
 
-        if not nonDig:
-            return pk
-
         slug = slugify(nonDig)
-
 
         if slug == '':
             if get_language() == 'ru':
                 string = unidecode(string)
-        else:
-            return str(pk) + '-' + str(pk)
+            else:
+                string = str(pk)
 
         return slugify(string) + '-' + str(pk)
 

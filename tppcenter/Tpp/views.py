@@ -24,6 +24,7 @@ from django.conf import settings
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -31,7 +32,10 @@ def get_tpp_list(request, page=1, item_id=None, my=None):
 
 
     if item_id is None:
-        tppPage = _tppContent(request, page, my)
+        try:
+            tppPage = _tppContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         tppPage = _tppDetailContent(request, item_id)
 
@@ -65,13 +69,14 @@ def get_tpp_list(request, page=1, item_id=None, my=None):
             'scripts': scripts,
             'current_company': current_company,
             'styles': styles,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'addNew': reverse('tpp:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tppPage,
-                                        'current_company': current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tppPage}))
 
 
 def _tppContent(request, page=1, my=None):
@@ -190,7 +195,7 @@ def _tppDetailContent(request, item_id):
        country = ""
 
     template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id' : item_id})
+    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
 
     return template.render(context)
 
@@ -241,7 +246,7 @@ def addTpp(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not user.is_manager or not 'Tpp Creator' in user_groups:
-        raise PermissionError("you don't have permission to add tpp" )
+          return render_to_response("permissionDenied.html")
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
@@ -256,7 +261,7 @@ def addTpp(request):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID)
+            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tpp:main'))
 
     template = loader.get_template('Tpp/addForm.html')
@@ -305,7 +310,7 @@ def updateTpp(request, item_id):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tpp:main'))
 
     template = loader.get_template('Tpp/addForm.html')
@@ -397,7 +402,25 @@ def _tabsNews(request, tpp, page=1):
 def _tabsTenders(request, tpp, page=1):
 
 
+    tenders = SearchQuerySet().models(Tender).filter(tpp=tpp)
+    attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
+
+
+    tendersList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "tpp:tab_tenders_paged"
+
     templateParams = {
+        'tendersList': tendersList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
     }
 
     return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
@@ -405,7 +428,26 @@ def _tabsTenders(request, tpp, page=1):
 def _tabsExhibitions(request, tpp, page=1):
 
 
+    exhibition = SearchQuerySet().models(Exhibition).filter(tpp=tpp)
+    attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
+
+    result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
+
+
+    exhibitionList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "tpp:tab_exhibitions_paged"
+
     templateParams = {
+        'exhibitionList': exhibitionList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
     }
+
 
     return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))

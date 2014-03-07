@@ -5,7 +5,7 @@ from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
@@ -20,7 +20,8 @@ from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
 import json
 
-def get_tenders_list(request, page=1, item_id=None):
+def get_tenders_list(request, page=1, item_id=None, my=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -30,7 +31,10 @@ def get_tenders_list(request, page=1, item_id=None):
     scripts = []
 
     if item_id is None:
-        tendersPage = _tendersContent(request, page)
+        try:
+            tendersPage = _tendersContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         tendersPage = _tenderDetailContent(request, item_id)
 
@@ -55,62 +59,82 @@ def get_tenders_list(request, page=1, item_id=None):
             'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'addNew': reverse('tenders:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage,
-                                        'current_company': current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage }))
 
 
-def _tendersContent(request, page=1):
+def _tendersContent(request, page=1, my=None):
 
 
 
     #tenders = Tender.active.get_active().order_by('-pk')
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    filters, searchFilter = func.filterLive(request)
+        #companies = Company.active.get_active().order_by('-pk')
+        sqs = SearchQuerySet().models(Tender)
 
-    #companies = Company.active.get_active().order_by('-pk')
-    sqs = SearchQuerySet().models(Tender)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        q = request.GET.get('q', '')
 
-    q = request.GET.get('q', '')
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        order = []
 
-    order = []
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
-
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+
+        tenders = sqs.order_by(*order)
+        url_paginator = "tenders:paginator"
+        params = {'filters': filters,
+                  'sortField1': sortField1,
+                  'sortField2': sortField2,
+                  'order1': order1,
+                  'order2': order2
+        }
     else:
-        order.append('-id')
+        current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+        if current_organization:
+             tenders = SearchQuerySet().models(Tender).\
+                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
 
+             url_paginator = "tenders:my_main_paginator"
+             params = {}
+        else: #TODO Jenya do block try
+             raise ObjectDoesNotExist('you need check company')
 
-    tenders = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(tenders, *('NAME', 'COST', 'CURRENCY', 'SLUG'), page_num=5, page=page)
 
@@ -122,7 +146,7 @@ def _tendersContent(request, page=1):
     paginator_range = func.getPaginatorRange(page)
 
 
-    url_paginator = "tenders:paginator"
+
     template = loader.get_template('Tenders/contentPage.html')
 
     templateParams = {
@@ -130,11 +154,7 @@ def _tendersContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
 
     context = RequestContext(request, templateParams)
@@ -240,7 +260,7 @@ def addTender(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
+            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
@@ -294,7 +314,7 @@ def updateTender(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tenders:main'))
 
 

@@ -67,11 +67,12 @@ $(function() {
                                 <li><a href="#goods-tabs-1">Описание</a></li>
                                 <li><a href="#goods-tabs-2">Галлерия</a></li>
                                 <li><a href="#goods-tabs-3">Documents</a></li>
-                                {% for page in additionalPages %}
-                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle }}</a></li>
+                            {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle|truncatewords:2 }}</a></li>
                             {% endfor %}
                             </ul>
                         </div>
+
                         <div id="goods-tabs-1">
                             <div class="content-goods-tab">{{ content }} </div>
                         </div>
@@ -113,6 +114,7 @@ $(function() {
 
                </div>
             </div>
+
 
 
 
