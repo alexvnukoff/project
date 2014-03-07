@@ -205,11 +205,6 @@ class ItemForm(forms.Form):
                 self.fields[title] = forms.IntegerField(required=bool(required))
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 
-
-
-
-
-
     def clean(self):
         """
         Method that validate fields of the form
@@ -302,13 +297,6 @@ class ItemForm(forms.Form):
         else:
             transaction.savepoint_commit(sid)
             return self.obj
-
-
-
-
-
-
-
 
 
     def _save_file(self, file, title, user, path=''):

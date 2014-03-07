@@ -1,8 +1,8 @@
 from django.http import HttpResponse, Http404
-from legacy_data.models import L_User, L_Company, L_Product, L_TPP
+from legacy_data.models import *
 from core.models import User, Relationship, Dictionary
 from core.amazonMethods import add
-from appl.models import Company, Tpp, Product, Country, Cabinet
+from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
@@ -485,24 +485,18 @@ def company_reload_DB_DB(request):
 
             # create relationship type=Dependence with country
             try: #if there isn't country in Company take it from TPP
-                trans_real.activate('ru')
-                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
-                trans_real.deactivate()
+                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_cmp.country_name)
             except:
-                trans_real.deactivate()
                 tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
                 try:
-                    trans_real.activate('ru')
-                    prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
-                    trans_real.deactivate()
+                    prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=tpp[0].country)
                 except:
-                    trans_real.deactivate()
-                    L_Company.objects.get(btx_id=leg_cmp.btx_id).delete()
-                    Company.objects.get(pk=leg_cmp.tpp_id).delete()
+                    L_Company.objects.filter(btx_id=leg_cmp.btx_id).delete()
+                    Company.objects.filter(pk=leg_cmp.tpp_id).delete()
                     i += 1
                     continue
 
-            Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
 
             i += 1
             print('Milestone: ', qty + i)
@@ -605,7 +599,6 @@ def product_reload_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Products were migrated from CSV into DB!')
 
-
 def product_reload_DB_DB(request):
     '''
         Reload products' data from buffer DB table LEGACY_DATA_L_PRODUCT into TPP DB
@@ -649,7 +642,7 @@ def product_reload_DB_DB(request):
                 'ANONS': leg_prod.preview_text,
                 'IMAGE': img_detail_path,
                 'DETAIL_TEXT': leg_prod.detail_text,
-                'DISCOUNT': leg_prod.discount,
+                'DISCOUNT': float(leg_prod.discount),
             }
         trans_real.activate('ru')
         res = new_prod.setAttributeValue(attr, create_usr)
@@ -670,7 +663,7 @@ def product_reload_DB_DB(request):
             Relationship.objects.create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
         except:
             print('Product was deleted! Product btx_id:', leg_prod.btx_id)
-            Product.objects.filter(pk=new_prod.pk)
+            Product.objects.filter(pk=new_prod.pk).delete()
             count -= 1
             print('Milestone: ', qty + i)
             i += 1
@@ -855,13 +848,13 @@ def tpp_reload_DB_DB(request):
 
         # create relationship type=Dependence with country
         try: #if there isn't country in Company take it from TPP
-            trans_real.activate('ru')
-            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_tpp.country)
-            trans_real.deactivate()
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_tpp.country)
+
             Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
         except:
+            trans_real.activate('ru')
+            print('Next TPP has not country:', new_tpp.getName())
             trans_real.deactivate()
-            print('TPP %s has not Country!', new_tpp.getName())
 
         i += 1
         print('Milestone: ', qty + i)
@@ -873,7 +866,7 @@ def tpp_reload_DB_DB(request):
             parent_tpp = Tpp.objects.get(pk=L_TPP.objects.get(btx_id=tpp.tpp_parent).tpp_id)
             child_tpp = Tpp.objects.get(pk=tpp.tpp_id)
             Relationship.objects.create(parent=parent_tpp, type='hierarchy', child=child_tpp, create_user=create_usr)
-            print('Relationship for TPPs was created!')
+            print('Relationship for parent TPPs was created!')
         except:
             continue
 
@@ -882,3 +875,282 @@ def tpp_reload_DB_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('TPPs were migrated from buffer DB into TPP DB!')
+
+def pic2prod_CSV_DB(request):
+    '''
+        Reload products' pictures from prepared CSV file named pic2prod_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PIC2PROD
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pic2prod_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        prod_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        preview_picture = bytearray(data[i][2]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        gallery = bytearray(data[i][4]).decode(encoding='utf-8')
+
+        try:
+            L_Pic2Prod.objects.create(  btx_id = btx_id,\
+                                        prod_name = prod_name,\
+                                        preview_picture = preview_picture,\
+                                        detail_picture = detail_picture,\
+                                        gallery = gallery)
+            count += 1
+        except Exception as e:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', prod_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Pictures for Products were migrated from CSV into DB!')
+
+def pic2prod_DB_DB(request):
+    '''
+        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2PROD into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products' pictures from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Pic2Prod.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    pic_lst = L_Pic2Prod.objects.filter(completed=False).all()
+    #pic_lst = L_Pic2Prod.objects.filter(completed=False)[:10]
+    i = 0
+    count = 0;
+    prev_btx_id = 0;
+    create_usr = User.objects.get(pk=1)
+    for rec in pic_lst:
+        if prev_btx_id != rec.btx_id:
+            try:
+                leg_prod = L_Product.objects.get(btx_id=rec.btx_id)
+            except:
+                i += 1
+                continue
+            try:
+                prod = Product.objects.get(pk=leg_prod.tpp_id)
+            except:
+                i += 1
+                continue
+
+            prev_btx_id = rec.btx_id
+
+            if len(rec.preview_picture):
+                img_small_path = add(img_root + rec.preview_picture)
+            else:
+                img_small_path = ''
+            if len(rec.detail_picture):
+                img_detail_path = add(img_root + rec.detail_picture)
+            else:
+                img_detail_path = ''
+
+            attr = {
+                    'IMAGE_SMALL': img_small_path,
+                    'IMAGE': img_detail_path,
+                }
+            trans_real.activate('ru')
+            res = prod.setAttributeValue(attr, create_usr)
+            trans_real.deactivate()
+            if not res:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        rec.tpp_id = prod.pk
+        rec.completed = True
+        rec.save()
+
+        if len(rec.gallery): #create relationship with Gallery
+            try:
+                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
+            except:
+                i += 1
+                continue
+
+            gal.photo = add(img_root + rec.gallery)
+            # create relationship
+            try:
+                Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
+                print('Relationship between Product and Gallery was created! Prod_id:', prod.pk)
+                count += 1
+            except:
+                print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+                gal.delete()
+                count -= 1
+                i += 1
+                continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')
+
+def pic2org_CSV_DB(request):
+    '''
+        Reload companies' pictures from prepared CSV file named pic2comp_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PIC2COMP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pic2org_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        gallery = bytearray(data[i][2]).decode(encoding='utf-8')
+        pic_title = bytearray(data[i][3]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+
+        try:
+            L_Pic2Org.objects.create(   btx_id=btx_id,\
+                                        org_name=org_name,\
+                                        gallery=gallery,\
+                                        pic_title=pic_title)
+            count += 1
+        except:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Pictures for Products were migrated from CSV into DB!')
+
+#TODO доделать это вью (Ilya)
+def pic2org_DB_DB(request):
+    '''
+        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2ORG into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products' pictures from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Pic2Org.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
+    pic_lst = L_Pic2Org.objects.filter(completed=False)[:10]
+    i = 0
+    count = 0;
+    prev_btx_id = 0;
+    create_usr = User.objects.get(pk=1)
+    for rec in pic_lst:
+        if prev_btx_id != rec.btx_id:
+            try:
+                leg_prod = L_Product.objects.get(btx_id=rec.btx_id)
+            except:
+                i += 1
+                continue
+            try:
+                prod = Product.objects.get(pk=leg_prod.tpp_id)
+            except:
+                i += 1
+                continue
+
+            prev_btx_id = rec.btx_id
+
+            if len(rec.preview_picture):
+                img_small_path = add(img_root + rec.preview_picture)
+            else:
+                img_small_path = ''
+            if len(rec.detail_picture):
+                img_detail_path = add(img_root + rec.detail_picture)
+            else:
+                img_detail_path = ''
+
+            attr = {
+                    'IMAGE_SMALL': img_small_path,
+                    'IMAGE': img_detail_path,
+                }
+            trans_real.activate('ru')
+            res = prod.setAttributeValue(attr, create_usr)
+            trans_real.deactivate()
+            if not res:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        rec.tpp_id = prod.pk
+        rec.completed = True
+        rec.save()
+
+        if len(rec.gallery): #create relationship with Gallery
+            try:
+                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id,\
+                                             photo = add(img_root + rec.gallery), create_user=create_usr)
+            except:
+                print('Can not create Gallery! Product ID: ', prod.pk)
+                i += 1
+                continue
+            
+            # create relationship
+            try:
+                Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
+                print('Relationship between Product and Gallery was created! Prod_id:', prod.pk)
+                count += 1
+            except:
+                print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+                gal.delete()
+                count -= 1
+                i += 1
+                continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')
