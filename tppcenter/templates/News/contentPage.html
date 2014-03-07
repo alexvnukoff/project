@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="container">
             {% include "News/popupFilter.html" %}
            {% include "main/paginator.html" %}
@@ -25,7 +26,7 @@
                                <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
-                            <p>{{ content|truncatewords:"30" }} </p>
+                            <p>{{ content|cleanHtml|safe|truncatewords:"30" }} </p>
                            <!--noindex--><a href="#" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>

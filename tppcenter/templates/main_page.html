@@ -7,6 +7,7 @@
 
 
 
+
     {% block header %}
         {% include "login_header.html" %}
     {% endblock %}
@@ -14,7 +15,6 @@
     {% block styles %}
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-
     {% endblock %}
 
     {% block js %}
@@ -183,37 +183,37 @@
 
                     	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
-                        <li><a class="single-page" href="#">Услуги</a></li>
+                      <!---  <li><a class="single-page" href="#">Услуги</a></li>-->
                         <li><a class="single-page" href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
                         <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
                         <li><a class="single-page" href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
                         <li><a class="single-page" href="{% url 'proposal:main' %}">{% trans 'Business Proposals' %}</a></li>
                         <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions' %}</a></li>
-                        <li><a class="single-page" href="#">Купоны</a></li>
+
                         <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
-                        <li><a class="single-page" href="#">Вакансии</a></li>
-                        <li><a class="single-page" href="#">Стена</a></li>
+                        <!--<li><a class="single-page" href="#">Вакансии</a></li>-->
+                        <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
 
                     </ul>
                 </div>
             {% if user.email %}
                 <div id="tabs-2">
                     <ul class="tab1-cate">
-                    	<li><a href="#">Новости</a></li>
-                        <li><a href="#">Товары</a></li>
-                        <li><a href="#">Услуги</a></li>
-                        <li><a href="#">ТПП</a></li>
-                        <li><a href="#">Компании</a></li>
+                    	<li><a href="{%url 'news:my_main' %}">Новости</a></li>
+                        <li><a href="{% url 'products:my_main' %}">Товары</a></li>
+                       <!-- <li><a href="#">Услуги</a></li>-->
+                        <li><a href="{% url "tpp:my_main" %}">ТПП</a></li>
+                        <li><a href="{% url "companies:my_main" %}">Компании</a></li>
                         <li><a href="#">Инновационные проекты</a></li>
-                        <li><a href="#">Бизнес-предложения</a></li>
+                        <li><a href="{% url 'proposal:my_main' %}">Бизнес-предложения</a></li>
                         <li><a href="#">Тендеры</a></li>
-                        <li><a href="#">Афиша</a></li>
-                        <li><a href="#">Купоны</a></li>
-                        <li><a href="#">ТПП ТВ </a></li>
-                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="{% url 'exhibitions:my_main' %}">Афиша</a></li>
+
+                        <!--<li><a href="#">ТПП ТВ </a></li>-->
+                       <!-- <li><a href="#">Вакансии</a></li>-->
                         <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
-                        <li><a href="#">Стена</a></li>
+                        <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
                     </ul>
                 </div>
             {% endif %}

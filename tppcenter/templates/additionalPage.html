@@ -1,4 +1,7 @@
 
+     <script>
+        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
+      </script>
                 <div class="addpage-form">
                     <div class="clumn1">
                         <label>Заголовок</label>
@@ -10,7 +13,7 @@
                         <label>Описание</label>
 
                         <div class="">
-                            <textarea style="height: 158px;width: 456px;" id="id_form-{{ i }}-content" name="pages-{{ i }}-content"></textarea>
+                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{ i }}-content" name="pages-{{ i }}-content"></textarea>
 
                         </div>
 

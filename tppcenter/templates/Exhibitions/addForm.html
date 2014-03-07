@@ -1,15 +1,44 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% with form.fields.POSITION.initial as position %}
+
     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-    <script type="text/javascript">
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script>
+        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
+</script>
+
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+
+        <script type="text/javascript">
         $(function() {
 
             $( ".date" ).datepicker();
+
         });
+
+        var marker;
+
+        {% if position %}
+         marker = new google.maps.Marker({
+            position: new google.maps.LatLng({{ position }})
+        });
+        {% endif %}
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
     </script>
+
+
+
 
 <div class="newsform">
 
@@ -32,21 +61,25 @@
 				<ul class="tenderline">
                     <li>
                         <label>Наименование мероприятия <font color="#FF0000">*</font></label>
+                          {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                         <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>Дата начала <font color="#FF0000">*</font></label>
+                             {% if form.errors.START_EVENT_DATE %}<div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>{% endif %}
                             <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
                         </div>
                         <div class="clumn2">
                         	<label>Дата завершения <font color="#FF0000">*</font></label>
+                             {% if form.errors.END_EVENT_DATE %}<div class="formserror">{{ form.errors.END_EVENT_DATE }}</div>{% endif %}
                             <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" style="width:94%;" />
                         </div>
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>Город <font color="#FF0000">*</font></label>
+                             {% if form.errors.CITY %}<div class="formserror">{{ form.errors.CITY }}</div>{% endif %}
                             <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
                         </div>
                         <div class="clumn2">
@@ -61,15 +94,18 @@
                          <li>
                     	<div class="clumn1">
                         	<label>Ключевые слова (для поиска)</label>
-                            <textarea name="KEYWORD"  rows="3">{{ keyword }}</textarea>
-                            <div class="line">
-                                <label>Карта <font color="#FF0000">*</font></label>
-                                <textarea rows="4"></textarea>
-                            </div>
+                            <textarea name="KEYWORD"  rows="7">{{ keyword }}</textarea>
                             <div class="line">
                                 <label>Описание маршрута</label>
-                                <textarea name="ROUTE_DESCRIPTION"  rows="3">{{ route }}</textarea>
+                                <textarea name="ROUTE_DESCRIPTION"  rows="16">{{ route }}</textarea>
                             </div>
+                            <div  class="line">
+                                <label>Карта <font color="#FF0000">*</font></label>
+                                  <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                                <div id="map-canvas"></div>
+
+                            </div>
+
                         </div>
 
                       	<div class="clumn2">
@@ -128,7 +164,7 @@
                 <div class="addpage-form">
                     <div class="clumn1">
                         <label>Заголовок</label>
-                        <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.title }}" />
+                        <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
                         {% if forloop.counter0 > 0 %}
                           <a href="#" class="buttonclear  buttonremove">Remove</a>
                         {% else %}
@@ -139,7 +175,7 @@
                         <label>Описание</label>
 
                         <div class="">
-                            <textarea style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.content }}</textarea>
+                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
 
                         </div>
                     </div>
@@ -158,7 +194,7 @@
                         <label>Описание</label>
 
                         <div class="">
-                            <textarea style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
+                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
 
                         </div>
 
@@ -170,16 +206,21 @@
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
                 <a href="#" class="btntype1">Отменить</a>
                 </div>
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+   {% with  position|split:"," as LatLng %}
+ <input type="hidden" id="latFld" name="Lat" value="{{ LatLng.0}}">
+ <input type="hidden" id="lngFld" name="Lng" value="{{ LatLng.1 }}">
+{% endwith %}
 
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
 
 </form>
  </div>
+{% endwith %}

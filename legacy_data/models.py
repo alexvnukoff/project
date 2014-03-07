@@ -76,6 +76,7 @@ class L_Company(models.Model):
     is_deleted = models.BooleanField()
     keywords = models.CharField(max_length=1024)
     completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    pic_completed = models.BooleanField(default=False) #update in True if pictures are reloaded from buffer DB into TPP DB
     tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
 
     def __str__(self):
@@ -85,7 +86,7 @@ class L_Product(models.Model):
     '''
         Defines buffer table for reloading products' data from CSV file
     '''
-    btx_id = models.CharField(max_length=10)
+    btx_id = models.CharField(max_length=10, unique=True)
     prod_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
     preview_picture = models.CharField(max_length=1024)
@@ -113,7 +114,7 @@ class L_TPP(models.Model):
     '''
         Defines buffer table for reloading TPPs' data from CSV file
     '''
-    btx_id = models.CharField(max_length=10)
+    btx_id = models.CharField(max_length=10, unique=True)
     tpp_name = models.CharField(max_length=1024)
     detail_page_url = models.CharField(max_length=1024)
     preview_picture = models.CharField(max_length=1024)
@@ -136,7 +137,37 @@ class L_TPP(models.Model):
     phone = models.CharField(max_length=1024)
     extra = models.CharField(max_length=1024)
     completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    pic_completed = models.BooleanField(default=False) #update in True if pictures are reloaded from buffer DB into TPP DB
     tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
 
     def __str__(self):
         return self.btx_id+'|'+self.tpp_name
+
+class L_Pic2Org(models.Model):
+    '''
+        Defines buffer table for reloading relationships between pictures and organization from CSV file
+    '''
+    btx_id = models.CharField(max_length=10) # legacy company's id
+    org_name = models.CharField(max_length=1024)
+    gallery = models.CharField(max_length=1024)
+    pic_title = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.org_name
+
+class L_Pic2Prod(models.Model):
+    '''
+        Defines buffer table for reloading relationships between pictures and products from CSV file
+    '''
+    btx_id = models.CharField(max_length=10) #legacy product's id
+    prod_name = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    detail_picture = models.CharField(max_length=1024)
+    gallery = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.prod_name

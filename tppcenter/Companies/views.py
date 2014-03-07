@@ -1,4 +1,8 @@
-from django.shortcuts import render_to_response
+
+from django.shortcuts import render
+from django.utils.translation import ugettext as _
+from django.shortcuts import render_to_response, get_object_or_404
+
 from appl.models import *
 from django.http import HttpResponseRedirect, HttpResponse
 from core.models import Item
@@ -13,18 +17,29 @@ import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-def get_companies_list(request, page=1):
+def get_companies_list(request, page=1, item_id=None, my=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
-    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+
+    styles = [settings.STATIC_URL + 'tppcenter/css/news.css',
+              settings.STATIC_URL + 'tppcenter/css/company.css',
+              settings.STATIC_URL + 'tppcenter/css/tpp.reset.css']
     scripts = []
-
-    newsPage = _companiesContent(request, page)
+    if not item_id:
+        newsPage = _companiesContent(request, page, my)
+    else:
+        newsPage = _companiesDetailContent(request, item_id)
 
     if not request.is_ajax():
         user = request.user
 
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -35,6 +50,7 @@ def get_companies_list(request, page=1):
 
         current_section = "Companies"
 
+
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
@@ -42,7 +58,9 @@ def get_companies_list(request, page=1):
             'notification': notification,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'current_company': current_company,
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -51,52 +69,71 @@ def get_companies_list(request, page=1):
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
-def _companiesContent(request, page=1):
+def _companiesContent(request, page=1, my=None):
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    #companies = Company.active.get_active().order_by('-pk')
-    sqs = SearchQuerySet().models(Company)
+        #companies = Company.active.get_active().order_by('-pk')
+        sqs = SearchQuerySet().models(Company)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+
+        companies = sqs.order_by(*order)
+        url_paginator = "companies:paginator"
+        params = {'filters': filters,
+                    'sortField1': sortField1,
+                    'sortField2': sortField2,
+                    'order1': order1,
+                    'order2': order2}
     else:
-        order.append('-id')
+         current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+         if current_organization:
+             companies = SearchQuerySet().models(Company).\
+                 filter(SQ(tpp=current_organization)|SQ(id=current_organization))
 
+             url_paginator = "companies:my_main_paginator"
+             params = {}
+         else:
+             raise ObjectDoesNotExist('you need check company')
 
-    companies = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(companies, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
-                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT'),
+                                                               'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG'),
                                                   page_num=5, page=page)
 
     companyList = result[0]
@@ -120,7 +157,7 @@ def _companiesContent(request, page=1):
 
 
 
-    url_paginator = "companies:paginator"
+
     template = loader.get_template('Companies/contentPage.html')
 
     templateParams = {
@@ -128,12 +165,9 @@ def _companiesContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
 
@@ -142,9 +176,157 @@ def _companiesContent(request, page=1):
 
 
 
+def _companiesDetailContent(request, item_id):
+    company = get_object_or_404(Company, pk=item_id)
+    companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
+
+    country = Country.objects.get(p2c__child=company).getAttributeValues(*('FLAG', 'NAME'))
+
+
+    template = loader.get_template('Companies/detailContent.html')
+    context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+
+    return template.render(context)
+
+
+
+def _tabsNews(request, company, page=1):
+
+    news = SearchQuerySet().models(News).filter(company=company)
+    attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
+
+
+    newsList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "companies:tab_news_paged"
+
+    templateParams = {
+        'newsList': newsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('Companies/tabNews.html', templateParams, context_instance=RequestContext(request))
+
+
+
+def _tabsTenders(request, company, page=1):
+
+
+    templateParams = {
+
+    }
+
+    return render_to_response('Companies/tabTenders.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsExhibitions(request, company, page=1):
+
+
+    exhibition = SearchQuerySet().models(Exhibition).filter(company=company)
+    attr = ('NAME',)
+
+    result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
+
+
+    exhibitionList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "companies:tab_news_paged"
+
+    templateParams = {
+        'exhibitionList': exhibitionList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('Companies/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
+
+
+def _tabsProducts(request, company, page=1):
+
+
+    products = SearchQuerySet().models(Product).filter(company=company)
+    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG', 'DETAIL_TEXT')
+
+    result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+    productsList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "companies:tab_products_paged"
+
+    templateParams = {
+        'productsList': productsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
+
+
+def companyForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Companies")
+
+    if action == 'add':
+        newsPage = addCompany(request)
+    else:
+        newsPage = updateCompany(request, item_id)
+
+    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
+        return newsPage
+
+    return render_to_response('Companies/index.html', {'newsPage': newsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
 
 
 def addCompany(request):
+    user = request.user
+
+    user_groups = user.groups.values_list('name', flat=True)
+    if not user.is_manager or not 'Company Creator' in user_groups:
+        raise PermissionError("you don't have permission to add company")
+
     form = None
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
@@ -155,7 +337,7 @@ def addCompany(request):
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
-        user = request.user
+
 
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -182,12 +364,17 @@ def addCompany(request):
 
 
 
-    return render_to_response('Companies/index.html', {'newsPage': newsPage},
-                              context_instance=RequestContext(request))
+    return newsPage
 
 
 
 def updateCompany(request, item_id):
+
+    item = Organization.objects.get(pk=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_company' not in perm_list:
+        return render_to_response("permissionDenied.html")
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:
@@ -245,8 +432,7 @@ def updateCompany(request, item_id):
 
 
 
-    return render_to_response('Companies/index.html',{'newsPage': newsPage} ,
-                              context_instance=RequestContext(request))
+    return newsPage
 
 
 

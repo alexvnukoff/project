@@ -1,0 +1,34 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}{% trans 'Permission Denied' %}{% endblock %}
+
+
+
+    {% block header %}
+        {% include "login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+
+    {% endblock %}
+
+
+
+
+
+            {% block content %}
+            <div class="blogin">
+				<h3>{% trans 'Perrmission denied' %}</h3>
+           <div style="margin-top: 20px;">
+           <span style="font-size: 15px;"> {% trans 'Sorry but you cannot modify this item ' %}<span>
+
+           </div>
+            </div>
+          {% endblock %}

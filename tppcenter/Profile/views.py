@@ -25,16 +25,28 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
     user = request.user
     if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
+        notification = Notification.objects.filter(user=request.user, read=False).count()
         if not user.first_name and not user.last_name:
             user_name = user.email
         else:
             user_name = user.first_name + ' ' + user.last_name
+
+        cabinetValues = func.getB2BcabinetValues(request)
+
+
+
+
     else:
         user_name = None
         notification = None
+        cabinetValues = None
     current_section = "Profile"
 
 
@@ -52,13 +64,23 @@ def getProfileForm(request):
 
 
     return render_to_response("Profile/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                   'notification': notification, 'profilePage': profilePage},
+                                                   'notification': notification, 'profilePage': profilePage,
+                                                   'current_company': current_company, 'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
 
 
 def _profileContent(request):
+    user_groups = request.user.groups.values_list('pk', flat=True)
+
+    companies_ids = Organization.active.get_active_related().filter(community__in=user_groups).values_list('pk', flat=True)
+
+    companies = Item.getItemsAttributesValues('NAME', companies_ids)
     saved = 0
+
+
     if request.method == 'POST':
+        if int(request.POST.get('CURRENT_COMPANY', 0)) in companies_ids:
+            request.session['current_company'] = int(request.POST.get('CURRENT_COMPANY'))
         cabinet = Cabinet.objects.get(user=request.user.pk)
         image = cabinet.getAttributeValues('IMAGE')
         avatar = image[0] if len(image) > 0 else ""
@@ -145,9 +167,11 @@ def _profileContent(request):
                                         'email': request.user.email})
 
 
+    current_company = request.session.get('current_company', False)
 
     template = loader.get_template('Profile/addForm.html')
-    context = RequestContext(request, {"form": form, 'avatar': avatar, 'saved': saved})
+    context = RequestContext(request, {"form": form, 'avatar': avatar, 'saved': saved, 'companies': companies,
+                                       'current_company': current_company})
     return template.render(context)
 
 def save_image(file, path=''):
@@ -171,7 +195,7 @@ def save_image(file, path=''):
 
         file = '%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename))
         sizes = {
-            'big': {'box': (150, 150), 'fit': False},
+            'big': {'box': (200, 200), 'fit': False},
             'small': {'box': (100, 100), 'fit': False},
             'th': {'box': (80, 80), 'fit': True}
         }

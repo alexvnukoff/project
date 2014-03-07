@@ -11,7 +11,7 @@ from appl import func
 
 
 #@shared_task
-def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
+def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -51,6 +51,9 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
             Relationship.objects.filter(parent__in=Country.objects.all(), child=new.id).delete()
             Relationship.setRelRelationship(parent=country, child=new, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=new, type='dependence', user=user)
+
         new.reindexItem()
 
 
@@ -61,7 +64,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 #@shared_task
-def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
+def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -110,6 +113,9 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
             Relationship.objects.filter(parent__in=Category.objects.all(), child=product.id).delete()
             Relationship.setRelRelationship(parent=category, child=product, user=user)
 
+        if current_company:
+            parent = Organization.objects.get(pk=int(current_company))
+            Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
 
 
@@ -126,7 +132,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 
-def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -162,6 +168,9 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
+
 
         gallery.save(parent=proposal.id, user=user)
         pages.save(parent=proposal.id, user=user)
@@ -189,6 +198,8 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         values[val] = post.get(val, "")
     for val in valFiles:
         values[val] = files.get(val, "")
+
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
@@ -224,7 +235,13 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         if tpp:
             Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=tpp, child=company, user=user)
+        else:
+            time = now() + datetime.timedelta(days=60)
+            company.end_date = time
+            company.save()
 
+        g = Group.objects.get(name=company.community)
+        g.user_set.add(user)
         company.reindexItem()
 
 
@@ -294,7 +311,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
 
     valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'FLAG-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
                'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
-               'ACCOUNT_NUMBER', 'BANK_DETAILS')
+               'ACCOUNT_NUMBER', 'BANK_DETAILS', 'ANONS')
     valFiles = ('IMAGE', 'FLAG')
 
     values = {}
@@ -304,11 +321,33 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
     for val in valFiles:
         values[val] = files.get(val, "")
 
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
+
+    start_date = post.get('START_DATE', None)
+    end_date = post.get('END_DATE', None)
+
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+
     form = ItemForm('Tpp', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
     tpp = form.save(user, site_id)
     if tpp:
+        if end_date:
+            tpp.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+            tpp.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            tpp.save()
+
+
+
+
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=tpp.id).delete()
+            Relationship.setRelRelationship(parent=country, child=tpp, user=user, type='dependence')
+
+        tpp.reindexItem()
 
         pages.save(parent=tpp.id, user=user)
         func.notify("item_created", 'notification', user=user)
@@ -317,7 +356,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 #@shared_task
-def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
+def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
@@ -343,6 +382,13 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
 
     tender = form.save(user, site_id)
     if tender:
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=tender, type='dependence', user=user)
+
+
+
+        tender.reindexItem()
+
 
 
         gallery.save(parent=tender.id, user=user)
@@ -355,7 +401,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None):
 
 
 
-def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
@@ -365,14 +411,16 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     pages.clean()
 
 
-    valPost = ('NAME', 'CITY','KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
-               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR')
+    valPost = ('NAME', 'CITY', 'KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
+               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', )
     valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
     for val in valPost:
         values[val] = post.get(val, "")
     for val in valFiles:
         values[val] = files.get(val, "")
+
+    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
 
 
@@ -393,6 +441,16 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
 
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
+
+
+
+        proposal.reindexItem()
+
+
+
+
         gallery.save(parent=proposal.id, user=user)
         pages.save(parent=proposal.id, user=user)
         func.notify("item_created", 'notification', user=user)
@@ -403,7 +461,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
 
-def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
+def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
@@ -433,6 +491,8 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=project.id).delete()
             Relationship.setRelRelationship(parent=branch, child=project, user=user)
 
+        if current_company:
+            Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=project, type='dependence', user=user)
 
         gallery.save(parent=project.id, user=user)
         pages.save(parent=project.id, user=user)

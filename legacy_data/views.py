@@ -1,8 +1,8 @@
 from django.http import HttpResponse, Http404
-from legacy_data.models import L_User, L_Company, L_Product, L_TPP
-from core.models import User, Relationship
+from legacy_data.models import *
+from core.models import User, Relationship, Dictionary
 from core.amazonMethods import add
-from appl.models import Company, Tpp, Product, Country
+from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
@@ -11,6 +11,7 @@ import datetime
 import csv
 from tpp.SiteUrlMiddleWare import get_request
 import base64
+from django.utils.translation import trans_real
 
 def users_reload_CSV_DB(request):
     '''
@@ -139,6 +140,7 @@ def users_reload_DB_DB(request):
     print('Before already were processed: ', qty)
     user_lst = L_User.objects.filter(completed=False).all()
     i=1
+    photo_root = 'C:'
     for usr in user_lst:
         request = get_request()
         # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
@@ -149,17 +151,56 @@ def users_reload_DB_DB(request):
             #return HttpResponse('Migration process from buffer DB into TPP DB was interrupted!\
             #                    Possible reason is duplicated data.')
             print(usr.username, '##', usr.email, '##', ' Count: ', i)
-            i +=1
+            i += 1
             continue
 
-        new_user.first_name=usr.first_name
-        new_user.last_name=usr.last_name
+        new_user.first_name = usr.first_name
+        new_user.last_name = usr.last_name
         new_user.is_active = True
+        '''
+        if len(usr.photo):
+            photo_path = add(photo_root + usr.photo)
+        else:
+            photo_path = ''
+        new_user.avatar = photo_path
+        '''
         new_user.save()
 
-        usr.tpp_id=new_user.pk
-        usr.completed = True
-        usr.save()
+        #create Cabinet for user
+
+        try:
+            user_cab = Cabinet.objects.create(title='CABINET_USER_ID_' + str(new_user.pk), user = new_user, create_user = new_user)
+
+        except:
+            User.objects.filter(pk = new_user.pk).delete()
+            continue
+
+        address = usr.addr_zip + ',' + usr.addr_country + ',' + usr.addr_state + ',' + usr.addr_city + usr.addr_street
+        address.strip()
+
+        attr = {
+                'PROFESSION': usr.profession,
+                'PERSONAL_WWW': usr.personal_www,
+                'ICQ': usr.icq,
+                #'SEX': usr.gender,
+                'PERSONAL_PHONE': usr.phone,
+                'PERSONAL_FAX': usr.fax,
+                'CELLULAR': usr.cellular,
+                'ADDRESS': address,
+                'POSITION': usr.position,
+            }
+
+        trans_real.activate('ru') #activate russian locale
+        res = user_cab.setAttributeValue(attr, new_user)
+        trans_real.deactivate() #deactivate russian locale
+        if res:
+            usr.tpp_id = new_user.pk
+            usr.completed = True
+            usr.save()
+
+        #Add user to Company Creator Group
+        g = Group.objects.get(name='Company Creator')
+        g.user_set.add(new_user)
 
         if not i%200:
             print('Milestone: ', qty + i)
@@ -338,139 +379,127 @@ def company_reload_DB_DB(request):
     img_root = 'c:' #additional path to images
     time1 = datetime.datetime.now()
     # Move users from buffer table into original tables
+    print('Data validation. Please, wait...')
+    qty = L_Company.objects.filter(country_name='').count()
+    if qty:
+        L_Company.objects.filter(country_name='').delete()
+        print('Were deleted companies without countries: ', qty)
     print('Reload companies from buffer DB into TPP DB...')
     qty = L_Company.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    comp_lst = L_Company.objects.filter(completed=False).all()
-    #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
-    #comp_lst = L_Company.objects.filter(pk=545208)
+    flag = True
+    block_size = 1000
     i = 0
-    for leg_cmp in comp_lst:
-        #set create_user (owner) for the Company
-        if leg_cmp.moderator:
-            try:
-                l_user = L_User.objects.get(btx_id=leg_cmp.moderator)
-                create_usr = User.objects.get(pk=l_user.tpp_id)
-            except:
+    while flag:
+        comp_lst = L_Company.objects.filter(completed=False).all()[:block_size]
+        if len(comp_lst) < block_size: # it will last big loop
+            flag = False
+        #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
+        #comp_lst = L_Company.objects.filter(pk=545208)
+
+        for leg_cmp in comp_lst:
+            #set create_user (owner) for the Company
+            if leg_cmp.moderator:
+                try:
+                    l_user = L_User.objects.get(btx_id=leg_cmp.moderator)
+                    create_usr = User.objects.get(pk=l_user.tpp_id)
+                except:
+                    create_usr = User.objects.get(pk=1)
+            else:
                 create_usr = User.objects.get(pk=1)
-        else:
-            create_usr = User.objects.get(pk=1)
 
-        try:
-            new_comp = Company.objects.create(title='COMPANY_LEG_ID:'+leg_cmp.btx_id,
-                                              create_user=create_usr)
-        except:
-            print(leg_cmp.btx_id, '##', leg_cmp.short_name, '##', ' Count: ', i)
-            i += 1
-            continue
-        '''
-        if len(leg_cmp.preview_picture):
-            img_small_path = add(img_root + leg_cmp.preview_picture)
-        else:
+            try:
+                new_comp = Company.objects.create(title='COMPANY_LEG_ID:'+leg_cmp.btx_id,
+                                                  create_user=create_usr)
+            except:
+                print(leg_cmp.btx_id, '##', leg_cmp.short_name, '##', ' Count: ', i)
+                i += 1
+                continue
+            '''
+            if len(leg_cmp.preview_picture):
+                img_small_path = add(img_root + leg_cmp.preview_picture)
+            else:
+                img_small_path = ''
+            if len(leg_cmp.detail_picture):
+                img_detail_path = add(img_root + leg_cmp.detail_picture)
+            else:
+                img_detail_path = ''
+            '''
             img_small_path = ''
-        if len(leg_cmp.detail_picture):
-            img_detail_path = add(img_root + leg_cmp.detail_picture)
-        else:
             img_detail_path = ''
-        '''
-        img_small_path = ''
-        img_detail_path = ''
-        attr = {'NAME': leg_cmp.short_name,
-                'IMAGE_SMALL': img_small_path,
-                'ANONS': leg_cmp.preview_text,
-                'IMAGE': img_detail_path,
-                'DETAIL_TEXT': leg_cmp.detail_text,
-                'NAME_FULL': leg_cmp.full_name,
-                'ADDRESS_YURID': leg_cmp.ur_address,
-                'ADDRESS_FACT': leg_cmp.fact_address,
-                'TELEPHONE_NUMBER': leg_cmp.tel,
-                'FAX': leg_cmp.fax,
-                'EMAIL': leg_cmp.email,
-                'INN': leg_cmp.INN,
-                'KPP': leg_cmp.KPP,
-                'OKVED': leg_cmp.OKVED,
-                'OKATO': leg_cmp.OKATO,
-                'OKPO': leg_cmp.OKPO,
-                'BANK_ACCOUNT': leg_cmp.bank_account,
-                'BANK_NAME': leg_cmp.bank_name,
-                'NAME_DIRECTOR': leg_cmp.director_name,
-                'NAME_BUX': leg_cmp.bux_name,
-                'SLOGAN': leg_cmp.slogan,
-                'MAP_POSITION': leg_cmp.map_id,
-            }
-
-        try: #this try for problem with bulk create for fields about 3000 symbols.
-            res = new_comp.setAttributeValue(attr, create_usr)
-            if res:
-                leg_cmp.tpp_id = new_comp.pk
-                leg_cmp.completed = True
-                leg_cmp.save()
+            #if wrong VATIN then generate default
+            if len(leg_cmp.INN) < 5:
+                inn = 'INN_' + str(randint(1000000000, 9999999999))
             else:
-                print('Problems with Attributes adding!')
-                i += 1
-                continue
-        except:
-            attr = {
-                    'NAME': leg_cmp.short_name[:2000],
+                inn = leg_cmp.INN
+
+            attr = {'NAME': leg_cmp.short_name,
                     'IMAGE_SMALL': img_small_path,
-                    'ANONS': leg_cmp.preview_text[:2000],
+                    'ANONS': leg_cmp.preview_text,
                     'IMAGE': img_detail_path,
-                    'DETAIL_TEXT': leg_cmp.detail_text[:2000],
-                    'NAME_FULL': leg_cmp.full_name[:2000],
-                    'ADDRESS_YURID': leg_cmp.ur_address[:2000],
-                    'ADDRESS_FACT': leg_cmp.fact_address[:2000],
-                    'TELEPHONE_NUMBER': leg_cmp.tel[:2000],
-                    'FAX': leg_cmp.fax[:2000],
-                    'EMAIL': leg_cmp.email[:2000],
-                    'INN': leg_cmp.INN[:2000],
-                    'KPP': leg_cmp.KPP[:2000],
-                    'OKVED': leg_cmp.OKVED[:2000],
-                    'OKATO': leg_cmp.OKATO[:2000],
-                    'OKPO': leg_cmp.OKPO[:2000],
-                    'BANK_ACCOUNT': leg_cmp.bank_account[:2000],
-                    'BANK_NAME': leg_cmp.bank_name[:2000],
-                    'NAME_DIRECTOR': leg_cmp.director_name[:2000],
-                    'NAME_BUX': leg_cmp.bux_name[:2000],
-                    'SLOGAN': leg_cmp.slogan[:2000],
-                    'MAP_POSITION': leg_cmp.map_id[:2000],
-            }
+                    'DETAIL_TEXT': leg_cmp.detail_text,
+                    'NAME_FULL': leg_cmp.full_name,
+                    'ADDRESS_YURID': leg_cmp.ur_address,
+                    'ADDRESS_FACT': leg_cmp.fact_address,
+                    'ADDRESS': leg_cmp.fact_address,
+                    'TELEPHONE_NUMBER': leg_cmp.tel,
+                    'FAX': leg_cmp.fax,
+                    'EMAIL': leg_cmp.email,
+                    'INN': inn,
+                    'KPP': leg_cmp.KPP,
+                    'OKVED': leg_cmp.OKVED,
+                    'OKATO': leg_cmp.OKATO,
+                    'OKPO': leg_cmp.OKPO,
+                    'BANK_ACCOUNT': leg_cmp.bank_account,
+                    'BANK_NAME': leg_cmp.bank_name,
+                    'NAME_DIRECTOR': leg_cmp.director_name,
+                    'NAME_BUX': leg_cmp.bux_name,
+                    'SLOGAN': leg_cmp.slogan,
+                    'MAP_POSITION': leg_cmp.map_id,
+                }
+
+            trans_real.activate('ru') #activate russian locale
             res = new_comp.setAttributeValue(attr, create_usr)
+            trans_real.deactivate() #deactivate russian locale
             if res:
                 leg_cmp.tpp_id = new_comp.pk
                 leg_cmp.completed = True
                 leg_cmp.save()
+                if not leg_cmp.tpp_name:
+                    new_comp.end_date = datetime.datetime.now()
+                    new_comp.save()
             else:
                 print('Problems with Attributes adding!')
                 i += 1
                 continue
 
-        # add workers to Company's community
-        lst_wrk = L_User.objects.filter(company=leg_cmp.short_name)
-        for wrk in lst_wrk:
-            g = Group.objects.get(name=new_comp.community)
-            try:
-                wrk_obj = User.objects.get(pk=wrk.tpp_id)
-                g.user_set.add(wrk_obj)
+            # add workers to Company's community
+            lst_wrk = L_User.objects.filter(company=leg_cmp.short_name)
+            for wrk in lst_wrk:
+                g = Group.objects.get(name=new_comp.community)
+                try:
+                    wrk_obj = User.objects.get(pk=wrk.tpp_id)
+                    g.user_set.add(wrk_obj)
+                except:
+                    continue
+
+            # create relationship type=Dependence with country
+            try: #if there isn't country in Company take it from TPP
+                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_cmp.country_name)
             except:
-                continue
+                tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
+                try:
+                    prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=tpp[0].country)
+                except:
+                    L_Company.objects.filter(btx_id=leg_cmp.btx_id).delete()
+                    Company.objects.filter(pk=leg_cmp.tpp_id).delete()
+                    i += 1
+                    continue
 
-        # create relationship type=Dependence with country
-        try: #if there isn't country in Company take it from TPP
-            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=leg_cmp.country_name)
-        except:
-            tpp = L_TPP.objects.filter(btx_id=leg_cmp.tpp_name)
-            try:
-                prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title=tpp[0].country)
-            except:
-                L_Company.objects.get(btx_id=leg_cmp.btx_id).delete()
-                Company.objects.get(pk=leg_cmp.tpp_id).delete()
-                i += 1
-                continue
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
 
-        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_comp, create_user=create_usr)
-
-        i += 1
-        print('Milestone: ', qty + i)
+            i += 1
+            print('Milestone: ', qty + i)
 
     print('Done. Quantity of processed strings:', qty + i)
     time2 = datetime.datetime.now()
@@ -570,7 +599,6 @@ def product_reload_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Products were migrated from CSV into DB!')
 
-
 def product_reload_DB_DB(request):
     '''
         Reload products' data from buffer DB table LEGACY_DATA_L_PRODUCT into TPP DB
@@ -585,11 +613,13 @@ def product_reload_DB_DB(request):
     #comp_lst = L_Company.objects.exclude(preview_picture='')[:2]
     #comp_lst = L_Company.objects.filter(pk=545208)
     i = 0
+    count = 0;
     create_usr = User.objects.get(pk=1)
     for leg_prod in prod_lst:
         try:
-            new_prod = Company.objects.create(title='COMPANY_LEG_ID:'+leg_prod.btx_id,
+            new_prod = Product.objects.create(title='PRODUCT_LEG_ID:'+leg_prod.btx_id,
                                               create_user=create_usr)
+            count += 1
         except:
             print(leg_prod.btx_id, '##', leg_prod.prod_name, '##', ' Count: ', i)
             i += 1
@@ -612,51 +642,39 @@ def product_reload_DB_DB(request):
                 'ANONS': leg_prod.preview_text,
                 'IMAGE': img_detail_path,
                 'DETAIL_TEXT': leg_prod.detail_text,
-                'DISCOUNT': leg_prod.discount,
+                'DISCOUNT': float(leg_prod.discount),
             }
-
-        try: #this try for problem with bulk create for fields about 3000 symbols.
-            res = new_prod.setAttributeValue(attr, create_usr)
-            if res:
-                leg_prod.tpp_id = new_prod.pk
-                leg_prod.completed = True
-                leg_prod.save()
-            else:
-                print('Problems with Attributes adding!')
-                i += 1
-                continue
-        except:
-            attr = {
-                    'NAME': leg_prod.prod_name[0:2000],
-                    'IMAGE_SMALL': img_small_path[0:2000],
-                    'ANONS': leg_prod.preview_text[0:2000],
-                    'IMAGE': img_detail_path[0:2000],
-                    'DETAIL_TEXT': leg_prod.detail_text[0:2000],
-                    'DISCOUNT': leg_prod.discount[0:2000],
-                }
-            res = new_prod.setAttributeValue(attr, create_usr)
-            if res:
-                leg_prod.tpp_id = new_prod.pk
-                leg_prod.completed = True
-                leg_prod.save()
-            else:
-                print('Problems with Attributes adding!')
-                i += 1
-                continue
+        trans_real.activate('ru')
+        res = new_prod.setAttributeValue(attr, create_usr)
+        trans_real.deactivate()
+        if res:
+            leg_prod.tpp_id = new_prod.pk
+            leg_prod.completed = True
+            leg_prod.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
 
         # create relationship type=Dependence with Company
         try:
-            prod_cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
-            prnt = Company.objects.get(pk=prod_cmp.tpp_id)
+            cmp = L_Company.objects.get(btx_id=leg_prod.company_id)
+            prnt = Company.objects.get(pk=cmp.tpp_id)
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
         except:
+            print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+            Product.objects.filter(pk=new_prod.pk).delete()
+            count -= 1
+            print('Milestone: ', qty + i)
+            i += 1
             continue
 
-        Relationship.objects.get_or_create(parent=prnt, type='dependence', child=new_prod, create_user=create_usr)
+        print('Relationship between Product and Company was created! Prod_id:', new_prod.pk)
 
         i += 1
         print('Milestone: ', qty + i)
 
-    print('Done. Quantity of processed strings:', qty + i)
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
@@ -752,3 +770,387 @@ def tpp_reload_CSV_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('TPPs were migrated from CSV into DB!')
+
+def tpp_reload_DB_DB(request):
+    '''
+        Reload TPPs' data from buffer DB table LEGACY_DATA_L_TPP into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    print('Loading TPPs from buffer DB into TPP DB...')
+    qty = L_TPP.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    i = 0
+    tpp_lst = L_TPP.objects.filter(completed=False).all()
+    for leg_tpp in tpp_lst:
+        #set create_user (owner) for the TPP
+        if leg_tpp.moderator:
+            try:
+                l_user = L_User.objects.get(btx_id=leg_tpp.moderator)
+                create_usr = User.objects.get(pk=l_user.tpp_id)
+            except:
+                create_usr = User.objects.get(pk=1)
+        else:
+            create_usr = User.objects.get(pk=1)
+
+        try:
+            new_tpp = Tpp.objects.create(title='TPP_LEG_ID:'+leg_tpp.btx_id,
+                                                  create_user=create_usr)
+        except:
+            print(leg_tpp.btx_id, '##', leg_tpp.tpp_name, '##', ' Count: ', i)
+            i += 1
+            continue
+
+        '''
+        if len(leg_tpp.preview_picture):
+            img_small_path = add(img_root + leg_tpp.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_tpp.detail_picture):
+            img_detail_path = add(img_root + leg_tpp.detail_picture)
+        else:
+            img_detail_path = ''
+        if len(leg_tpp.head_pic):
+            head_pic_path = add(img_root + leg_tpp.head_pic)
+        else:
+            head_pic_path = ''
+
+        '''
+        img_small_path = ''
+        img_detail_path = ''
+        head_pic_path = ''
+
+        attr = {'NAME': leg_tpp.tpp_name,
+                'IMAGE_SMALL': img_small_path,
+                'ANONS': leg_tpp.preview_text,
+                'IMAGE': img_detail_path,
+                'DETAIL_TEXT': leg_tpp.detail_text,
+                'HEAD_PIC': head_pic_path,
+                'SITE_NAME': leg_tpp.domain,
+                'ADDRESS': leg_tpp.address,
+                'EMAIL': leg_tpp.email,
+                'FAX': leg_tpp.fax,
+                'MAP_POSITION': leg_tpp.map,
+                'TELEPHONE_NUMBER': leg_tpp.phone,
+            }
+
+        trans_real.activate('ru') #activate russian locale
+        res = new_tpp.setAttributeValue(attr, create_usr)
+        trans_real.deactivate() #deactivate russian locale
+        if res:
+            leg_tpp.tpp_id = new_tpp.pk
+            leg_tpp.completed = True
+            leg_tpp.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
+
+        # create relationship type=Dependence with country
+        try: #if there isn't country in Company take it from TPP
+            prnt = Country.objects.get(item2value__attr__title="NAME", item2value__title_ru=leg_tpp.country)
+
+            Relationship.objects.create(parent=prnt, type='dependence', child=new_tpp, create_user=create_usr)
+        except:
+            trans_real.activate('ru')
+            print('Next TPP has not country:', new_tpp.getName())
+            trans_real.deactivate()
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    #set up mother TPP
+    tpp_lst = L_TPP.objects.exclude(tpp_parent='').all()
+    for tpp in tpp_lst:
+        try:
+            parent_tpp = Tpp.objects.get(pk=L_TPP.objects.get(btx_id=tpp.tpp_parent).tpp_id)
+            child_tpp = Tpp.objects.get(pk=tpp.tpp_id)
+            Relationship.objects.create(parent=parent_tpp, type='hierarchy', child=child_tpp, create_user=create_usr)
+            print('Relationship for parent TPPs was created!')
+        except:
+            continue
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPPs were migrated from buffer DB into TPP DB!')
+
+def pic2prod_CSV_DB(request):
+    '''
+        Reload products' pictures from prepared CSV file named pic2prod_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PIC2PROD
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pic2prod_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        prod_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        preview_picture = bytearray(data[i][2]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        gallery = bytearray(data[i][4]).decode(encoding='utf-8')
+
+        try:
+            L_Pic2Prod.objects.create(  btx_id = btx_id,\
+                                        prod_name = prod_name,\
+                                        preview_picture = preview_picture,\
+                                        detail_picture = detail_picture,\
+                                        gallery = gallery)
+            count += 1
+        except Exception as e:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', prod_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Pictures for Products were migrated from CSV into DB!')
+
+def pic2prod_DB_DB(request):
+    '''
+        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2PROD into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products' pictures from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Pic2Prod.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    pic_lst = L_Pic2Prod.objects.filter(completed=False).all()
+    #pic_lst = L_Pic2Prod.objects.filter(completed=False)[:10]
+    i = 0
+    count = 0;
+    prev_btx_id = 0;
+    create_usr = User.objects.get(pk=1)
+    for rec in pic_lst:
+        if prev_btx_id != rec.btx_id:
+            try:
+                leg_prod = L_Product.objects.get(btx_id=rec.btx_id)
+            except:
+                i += 1
+                continue
+            try:
+                prod = Product.objects.get(pk=leg_prod.tpp_id)
+            except:
+                i += 1
+                continue
+
+            prev_btx_id = rec.btx_id
+
+            if len(rec.preview_picture):
+                img_small_path = add(img_root + rec.preview_picture)
+            else:
+                img_small_path = ''
+            if len(rec.detail_picture):
+                img_detail_path = add(img_root + rec.detail_picture)
+            else:
+                img_detail_path = ''
+
+            attr = {
+                    'IMAGE_SMALL': img_small_path,
+                    'IMAGE': img_detail_path,
+                }
+            trans_real.activate('ru')
+            res = prod.setAttributeValue(attr, create_usr)
+            trans_real.deactivate()
+            if not res:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        rec.tpp_id = prod.pk
+        rec.completed = True
+        rec.save()
+
+        if len(rec.gallery): #create relationship with Gallery
+            try:
+                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
+            except:
+                i += 1
+                continue
+
+            gal.photo = add(img_root + rec.gallery)
+            # create relationship
+            try:
+                Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
+                print('Relationship between Product and Gallery was created! Prod_id:', prod.pk)
+                count += 1
+            except:
+                print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+                gal.delete()
+                count -= 1
+                i += 1
+                continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')
+
+def pic2org_CSV_DB(request):
+    '''
+        Reload companies' pictures from prepared CSV file named pic2comp_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PIC2COMP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Load data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pic2org_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        gallery = bytearray(data[i][2]).decode(encoding='utf-8')
+        pic_title = bytearray(data[i][3]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+
+        try:
+            L_Pic2Org.objects.create(   btx_id=btx_id,\
+                                        org_name=org_name,\
+                                        gallery=gallery,\
+                                        pic_title=pic_title)
+            count += 1
+        except:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Pictures for Products were migrated from CSV into DB!')
+
+#TODO доделать это вью (Ilya)
+def pic2org_DB_DB(request):
+    '''
+        Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2ORG into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    # Move products' pictures from buffer table into original tables
+    print('Reload products from buffer DB into TPP DB...')
+    qty = L_Pic2Org.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
+    pic_lst = L_Pic2Org.objects.filter(completed=False)[:10]
+    i = 0
+    count = 0;
+    prev_btx_id = 0;
+    create_usr = User.objects.get(pk=1)
+    for rec in pic_lst:
+        if prev_btx_id != rec.btx_id:
+            try:
+                leg_prod = L_Product.objects.get(btx_id=rec.btx_id)
+            except:
+                i += 1
+                continue
+            try:
+                prod = Product.objects.get(pk=leg_prod.tpp_id)
+            except:
+                i += 1
+                continue
+
+            prev_btx_id = rec.btx_id
+
+            if len(rec.preview_picture):
+                img_small_path = add(img_root + rec.preview_picture)
+            else:
+                img_small_path = ''
+            if len(rec.detail_picture):
+                img_detail_path = add(img_root + rec.detail_picture)
+            else:
+                img_detail_path = ''
+
+            attr = {
+                    'IMAGE_SMALL': img_small_path,
+                    'IMAGE': img_detail_path,
+                }
+            trans_real.activate('ru')
+            res = prod.setAttributeValue(attr, create_usr)
+            trans_real.deactivate()
+            if not res:
+                print('Problems with Attributes adding!')
+                i += 1
+                continue
+
+        rec.tpp_id = prod.pk
+        rec.completed = True
+        rec.save()
+
+        if len(rec.gallery): #create relationship with Gallery
+            try:
+                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id,\
+                                             photo = add(img_root + rec.gallery), create_user=create_usr)
+            except:
+                print('Can not create Gallery! Product ID: ', prod.pk)
+                i += 1
+                continue
+            
+            # create relationship
+            try:
+                Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
+                print('Relationship between Product and Gallery was created! Prod_id:', prod.pk)
+                count += 1
+            except:
+                print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+                gal.delete()
+                count -= 1
+                i += 1
+                continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')

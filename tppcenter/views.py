@@ -113,7 +113,13 @@ def user_login(request):
           user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
           login(request, user)
           if user.is_authenticated():
-               cabinet = Cabinet.objects.get_or_create(user=user, create_user=user)
+               cabinet, created = Cabinet.objects.get_or_create(user=user, create_user=user)
+
+               if created:
+                   group = Group.objects.get(name='Company Creator')
+                   user.is_manager = True
+                   user.save()
+                   group.user_set.add(user)
           return HttpResponseRedirect(reverse('news:main'))
 
     return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
@@ -322,7 +328,9 @@ def jsonFilter(request):
 
 
 def test(request):
-    a = "חלךגד כחךלףכגדגכףךיעףדגכעגדףי"
+    import datetime
+
+    Country.objects.get(item2value__attr__title="NAME", item2value__title="Украина")
 
     from unidecode import unidecode
     from django.http import StreamingHttpResponse
@@ -345,4 +353,10 @@ def getAdditionalPage(request):
     context = RequestContext(request, {'i': i})
 
     return HttpResponse(template.render(context))
+
+
+def perm_denied(request):
+
+
+    return render_to_response("permissionDen.html")
 

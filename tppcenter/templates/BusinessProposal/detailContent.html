@@ -1,0 +1,122 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="tender">
+            {% with proposalValues.NAME.0 as name %}
+
+            {% with proposalValues.DETAIL_TEXT.0 as content %}
+            {% with proposalValues.DOCUMENT_1.0 as doc_1 %}
+            {% with proposalValues.DOCUMENT_2.0 as doc_2 %}
+            {% with proposalValues.DOCUMENT_3.0 as doc_3 %}
+
+            {% with proposalValues.ORGANIZATION_FLAG.0 as org_flag %}
+            {% with proposalValues.ORGANIZATION_NAME.0 as org_name %}
+            {% with proposalValues.ORGANIZATION_IMAGE.0 as org_image %}
+            {% with proposalValues.ORGANIZATION_ID.0 as org_id %}
+            {% with proposalValues.COUNTRY_NAME|first as country_name %}
+            {% with proposalValues.COUNTRY_FLAG|first as flag %}
+             {% with proposalValues.COUNTRY_ID as country_id %}
+
+
+               <div class="tender-details-title">
+               		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+                    <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
+               </div>
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="tender-bottom">
+                    	<div class="tender-bottom-left">
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                            <a href="#">{{ org_name }}</a>
+                            </div>
+                    </div>
+                    <div class="innov-details">
+                    	<p>{{ content }}</p>
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                                <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
+                                {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.geTitle }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	{{ content }}
+                            </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+                                {% if doc_1 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_2 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_2 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_3 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_3 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                <ul class="tpp-gallery">
+                              {% for photo in photos %}
+                                <li>
+                                    <div class="b-img">
+                                        <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+
+                                        <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
+                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                        <div class="gray-img"></div>
+                                    </div>
+                                </li>
+                              {% endfor %}
+                              </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-4">
+                            <div class="content-goods-tab">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
+                        </div>
+                        {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.getContent }}</div>
+                         </div>
+                        {% endfor %}
+                    </div>
+               </div>
+
+
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+     </div>
+
+

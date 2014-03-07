@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
-from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
@@ -19,37 +20,50 @@ from haystack.query import SearchQuerySet, SQ
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
-def get_proposals_list(request, page=1):
+def get_proposals_list(request, page=1, item_id=None,  my=None):
 
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    cabinetValues = func.getB2BcabinetValues(request)
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
-
-    proposalsPage = _proposalsContent(request, page)
+    if not item_id:
+        proposalsPage = _proposalsContent(request, page, my)
+    else:
+        proposalsPage = _proposalDetailContent(request, item_id)
 
     if not request.is_ajax():
         user = request.user
 
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
                 user_name = user.first_name + ' ' + user.last_name
+
         else:
             user_name = None
             notification = None
 
-        #TODO: Jenya set multilingual
-        current_section = "Business Proposal"
+
+        current_section = _("Business Proposal")
+
 
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
             'proposalsPage': proposalsPage,
             'notification': notification,
+            'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -57,51 +71,69 @@ def get_proposals_list(request, page=1):
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': proposalsPage}))
 
 
-def _proposalsContent(request, page=1):
+def _proposalsContent(request, page=1, my=None):
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
-    sqs = SearchQuerySet().models(BusinessProposal)
+        #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
+        sqs = SearchQuerySet().models(BusinessProposal)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+        proposal = sqs.order_by(*order)
+        url_paginator = "proposal:paginator"
+        params = {'sortField1': sortField1,
+                    'sortField2': sortField2,
+                    'order1': order1,
+                    'order2': order2
+        }
+
     else:
-        order.append('-id')
+        current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
+        if current_organization:
+             proposal = SearchQuerySet().models(BusinessProposal).\
+                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
+
+             url_paginator = "proposal:my_main_paginator"
+             params = {}
         else:
-            order.append(sortFields[sortField2])
-
-    proposal = sqs.order_by(*order)
-
+             raise ObjectDoesNotExist('you need check company')
     #result = func.setPaginationForItemsWithValues(proposal, *('NAME',), page_num=5, page=page)
-    result = func.setPaginationForSearchWithValues(proposal, *('NAME',), page_num=5, page=page)
+    result = func.setPaginationForSearchWithValues(proposal, *('NAME', 'SLUG'), page_num=5, page=page)
 
 
 
@@ -115,7 +147,7 @@ def _proposalsContent(request, page=1):
 
 
 
-    url_paginator = "proposals:paginator"
+
     template = loader.get_template('BusinessProposal/contentPage.html')
 
     templateParams = {
@@ -123,21 +155,91 @@ def _proposalsContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
     return template.render(context)
 
 
 
+def _proposalDetailContent(request, item_id):
+     proposal = get_object_or_404(BusinessProposal, pk=item_id)
+     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3'))
+
+     photos = Gallery.objects.filter(c2p__parent=item_id)
+
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+
+
+     func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
+
+     template = loader.get_template('BusinessProposal/detailContent.html')
+
+     context = RequestContext(request, {'proposalValues': proposalValues, 'photos': photos,
+                                        'additionalPages': additionalPages})
+     return template.render(context)
+
+
+
+def proposalForm(request, action, item_id=None):
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+    cabinetValues = func.getB2BcabinetValues(request)
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+        user_name = None
+        notification = None
+
+    current_section = _("Business Proposal")
+
+    if action == 'add':
+        proposalsPage = addBusinessProposal(request)
+    else:
+        proposalsPage = updateBusinessProposal(request, item_id)
+
+    if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
+        return proposalsPage
+
+    return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
+
 
 
 
 def addBusinessProposal(request):
+    current_company = request.session.get('current_company', False)
+    if not request.session.get('current_company', False):
+         return render_to_response("permissionDen.html")
+
+    item = Organization.objects.get(pk=current_company)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'add_businessproposal' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
+
+
+
+
     form = None
 
     branches = Branch.objects.all()
@@ -176,23 +278,31 @@ def addBusinessProposal(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+                                current_company=current_company)
             return HttpResponseRedirect(reverse('proposal:main'))
 
     template = loader.get_template('BusinessProposal/addForm.html')
     context = RequestContext(request, {'form': form, 'branches': branches})
     proposalsPage = template.render(context)
 
+    return  proposalsPage
 
 
 
 
-    return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage} ,
-                              context_instance=RequestContext(request))
+
+
 
 
 
 def updateBusinessProposal(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_businessproposal' not in perm_list:
+        return render_to_response("permissionDenied.html")
+
 
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
@@ -264,8 +374,7 @@ def updateBusinessProposal(request, item_id):
 
 
 
-    return render_to_response('BusinessProposal/index.html',{'proposalsPage': proposalsPage} ,
-                              context_instance=RequestContext(request))
+    return proposalsPage
 
 
 

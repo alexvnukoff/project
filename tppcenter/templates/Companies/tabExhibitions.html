@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="tpp-dt-content">
+    <table class="table-big" cellpadding="0" cellpadding="0">
+        {% for id, attr in exhibitionList.items %}
+            {% with attr.NAME|first as name %}
+
+            <tr>
+
+                <td colspan="2">
+                    <a href="#" title="{{ name }}">
+                        {{ name|truncatewords:10 }}
+                    </a>
+                </td>
+            </tr>
+
+
+            {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "main/paginator.html" %}
+</div>

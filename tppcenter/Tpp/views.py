@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 from appl import func
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from tppcenter.forms import ItemForm, Test, BasePages
@@ -21,11 +22,16 @@ from django.conf import settings
 
 
 
-def get_tpp_list(request, page=1, item_id=None):
+
+def get_tpp_list(request, page=1, item_id=None, my=None):
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
     if item_id is None:
-        tppPage = _tppContent(request, page)
+        tppPage = _tppContent(request, page, my)
     else:
         tppPage = _tppDetailContent(request, item_id)
 
@@ -39,7 +45,7 @@ def get_tpp_list(request, page=1, item_id=None):
     if not request.is_ajax():
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -57,59 +63,78 @@ def get_tpp_list(request, page=1, item_id=None):
             'tppPage': tppPage,
             'notification': notification,
             'scripts': scripts,
+            'current_company': current_company,
             'styles': styles,
             'search': request.GET.get('q', '')
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tppPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tppPage,
+                                        'current_company': current_company}))
 
 
-def _tppContent(request, page=1):
+def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    sqs = SearchQuerySet().models(Tpp)
+        sqs = SearchQuerySet().models(Tpp)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+
+        tpp = sqs.order_by(*order)
+        url_paginator = "tpp:paginator"
+        params = {'sortField1': sortField1,
+                    'sortField2': sortField2,
+                    'order1': order1,
+                    'order2': order2}
     else:
-        order.append('-id')
+         current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+         if current_organization:
+             tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
 
+             url_paginator = "tpp:my_main_paginator"
+             params = {}
+         else:
+             raise ObjectDoesNotExist('you need check company')
 
-    tpp = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(tpp, *('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME',
                                                                'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG',
@@ -135,7 +160,7 @@ def _tppContent(request, page=1):
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "tpp:paginator"
+
     template = loader.get_template('Tpp/contentPage.html')
 
     templateParams = {
@@ -143,11 +168,9 @@ def _tppContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
 
     context = RequestContext(request, templateParams)
@@ -171,8 +194,54 @@ def _tppDetailContent(request, item_id):
 
     return template.render(context)
 
+
+def tppForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Tpp")
+
+    if action == 'add':
+        tppPage = addTpp(request)
+    else:
+        tppPage = updateTpp(request, item_id)
+
+    if isinstance(tppPage, HttpResponseRedirect) or isinstance(tppPage, HttpResponse):
+        return tppPage
+
+    return render_to_response('Tpp/index.html', {'tppPage': tppPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
+
 def addTpp(request):
     form = None
+    countries = func.getItemsList("Country", 'NAME')
+    user = request.user
+
+    user_groups = user.groups.values_list('name', flat=True)
+    if not user.is_manager or not 'Tpp Creator' in user_groups:
+        raise PermissionError("you don't have permission to add tpp" )
 
     if request.POST:
         func.notify("item_creating", 'notification', user=request.user)
@@ -190,12 +259,28 @@ def addTpp(request):
             addNewTpp(request.POST, request.FILES, user, settings.SITE_ID)
             return HttpResponseRedirect(reverse('tpp:main'))
 
+    template = loader.get_template('Tpp/addForm.html')
+    context = RequestContext(request, {'form': form, 'countries': countries})
+    tppPage = template.render(context)
 
-    return render_to_response('Tpp/addForm.html', {'form': form},
-                              context_instance=RequestContext(request))
+    return tppPage
 
 
 def updateTpp(request, item_id):
+    item = Organization.objects.get(pk=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_tpp' not in perm_list:
+        return render_to_response("permissionDenied.html")
+
+    try:
+        choosen_country = Country.objects.get(p2c__child__id=item_id)
+    except ObjectDoesNotExist:
+        choosen_country = ""
+
+
+    countries = func.getItemsList("Country", 'NAME')
+    tpp = Tpp.objects.get(pk=item_id)
 
 
     if request.method != 'POST':
@@ -219,12 +304,16 @@ def updateTpp(request, item_id):
         form = ItemForm('Tpp', values=values, id=item_id)
         form.clean()
 
-        if form.is_valid() and pages.is_valid() :
+        if form.is_valid() and pages.is_valid():
             addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
             return HttpResponseRedirect(reverse('tpp:main'))
 
-    return render_to_response('Tpp/addForm.html', {'form': form, 'pages': pages},
-                              context_instance=RequestContext(request))
+    template = loader.get_template('Tpp/addForm.html')
+    context = RequestContext(request, {'form': form, 'pages': pages, 'choosen_country': choosen_country,
+                                       'countries': countries, 'tpp': tpp})
+    tppPage = template.render(context)
+
+    return tppPage
 
 
 def _getValues(request):

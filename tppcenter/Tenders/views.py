@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -21,6 +22,10 @@ import json
 
 def get_tenders_list(request, page=1, item_id=None):
 
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
@@ -32,7 +37,7 @@ def get_tenders_list(request, page=1, item_id=None):
     if not request.is_ajax():
         user = request.user
         if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
+            notification = Notification.objects.filter(user=request.user, read=False).count()
             if not user.first_name and not user.last_name:
                 user_name = user.email
             else:
@@ -47,6 +52,7 @@ def get_tenders_list(request, page=1, item_id=None):
             'current_section': current_section,
             'tendersPage': tendersPage,
             'notification': notification,
+            'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', '')
@@ -54,12 +60,13 @@ def get_tenders_list(request, page=1, item_id=None):
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage,
+                                        'current_company': current_company}))
 
 
 def _tendersContent(request, page=1):
 
-    #TODO Jenya change to get_active_related()
+
 
     #tenders = Tender.active.get_active().order_by('-pk')
 
@@ -156,7 +163,61 @@ def _tenderDetailContent(request, item_id):
      return template.render(context)
 
 
+def tenderForm(request, action, item_id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
+
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
+
+    user = request.user
+
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+
+    else:
+
+        user_name = None
+        notification = None
+
+    current_section = _("Tenders")
+
+    if action == 'add':
+        tendersPage = addTender(request)
+    else:
+        tendersPage = updateTender(request, item_id)
+
+    if isinstance(tendersPage, HttpResponseRedirect) or isinstance(tendersPage, HttpResponse):
+        return tendersPage
+
+    return render_to_response('Tenders/index.html', {'tendersPage': tendersPage, 'current_company':current_company,
+                                                              'notification': notification, 'user_name': user_name,
+                                                              'current_section': current_section,
+                                                              'cabinetValues': cabinetValues},
+                              context_instance=RequestContext(request))
+
 def addTender(request):
+    current_company = request.session.get('current_company', False)
+    if not request.session.get('current_company', False):
+         return render_to_response("permissionDen.html")
+
+    item = Organization.objects.get(pk=current_company)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+
+
+    if 'add_tender' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
+
+
     form = None
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
@@ -179,18 +240,23 @@ def addTender(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID)
+            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
             return HttpResponseRedirect(reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
     context = RequestContext(request, {'form': form, 'currency_slots': currency_slots})
     tendersPage = template.render(context)
 
-    return render_to_response('Tenders/index.html', {'tendersPage': tendersPage},
-                              context_instance=RequestContext(request))
+    return tendersPage
 
 
 def updateTender(request, item_id):
+
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+    if 'change_tender' not in perm_list:
+        return render_to_response("permissionDenied.html")
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
@@ -240,8 +306,7 @@ def updateTender(request, item_id):
     tendersPage = template.render(context)
 
 
-    return render_to_response('Tenders/index.html', {'tendersPage': tendersPage} ,
-                              context_instance=RequestContext(request))
+    return tendersPage
 
 
 def _getValues(request):
