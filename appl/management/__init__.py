@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group, Permission
 import appl.models
 from appl.models import SystemMessages, Country
 from core.models import State, Attribute, Value, Slot, Dictionary, User, AttrTemplate
-from appl.models import *
+
 
 def databaseInitialization(sender, **kwargs):
     '''
