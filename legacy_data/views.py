@@ -642,7 +642,7 @@ def product_reload_DB_DB(request):
                 'ANONS': leg_prod.preview_text,
                 'IMAGE': img_detail_path,
                 'DETAIL_TEXT': leg_prod.detail_text,
-                'DISCOUNT': float(leg_prod.discount),
+                'DISCOUNT': leg_prod.discount,
             }
         trans_real.activate('ru')
         res = new_prod.setAttributeValue(attr, create_usr)
@@ -1018,7 +1018,7 @@ def pic2prod_DB_DB(request):
 def pic2org_CSV_DB(request):
     '''
         Reload companies' pictures from prepared CSV file named pic2comp_legacy.csv
-        into buffer DB table LEGACY_DATA_L_PIC2COMP
+        into buffer DB table LEGACY_DATA_L_PIC2ORG
     '''
     time1 = datetime.datetime.now()
     #Upload from CSV file into buffer table
@@ -1042,7 +1042,7 @@ def pic2org_CSV_DB(request):
             continue
 
         btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
-        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+        gallery_topic = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
                                 replace("quot;", '"').replace("&amp;", "&").strip()
         gallery = bytearray(data[i][2]).decode(encoding='utf-8')
         pic_title = bytearray(data[i][3]).decode(encoding='utf-8').replace("&quot;", '"').\
@@ -1050,14 +1050,14 @@ def pic2org_CSV_DB(request):
 
         try:
             L_Pic2Org.objects.create(   btx_id=btx_id,\
-                                        org_name=org_name,\
+                                        gallery_topic=gallery_topic,\
                                         gallery=gallery,\
                                         pic_title=pic_title)
             count += 1
         except:
             #print('Milestone: ', i+1)
             i += 1
-            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
+            print(btx_id, '##', gallery_topic, '##', ' Count: ', i+1)
             continue
 
         print('Milestone: ', i+1)
@@ -1068,7 +1068,6 @@ def pic2org_CSV_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Pictures for Products were migrated from CSV into DB!')
 
-#TODO доделать это вью (Ilya)
 def pic2org_DB_DB(request):
     '''
         Reload products' pictures from buffer DB table LEGACY_DATA_L_PIC2ORG into TPP DB
@@ -1080,7 +1079,7 @@ def pic2org_DB_DB(request):
     qty = L_Pic2Org.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
     #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
-    pic_lst = L_Pic2Org.objects.filter(completed=False)[:10]
+    pic_lst = L_Pic2Org.objects.filter(completed=False)[:1000]
     i = 0
     count = 0;
     prev_btx_id = 0;
@@ -1088,24 +1087,34 @@ def pic2org_DB_DB(request):
     for rec in pic_lst:
         if prev_btx_id != rec.btx_id:
             try:
-                leg_prod = L_Product.objects.get(btx_id=rec.btx_id)
+                leg_org = L_Product.objects.get(btx_id=rec.btx_id)
             except:
-                i += 1
-                continue
+                try:
+                    leg_org = L_TPP.objects.get(btx_id=rec.btx_id)
+                except:
+                    print('ATTENTION! Legacy Organization not found! Org ID:', rec.btx_id)
+                    rec.completed = True
+                    rec.save()
+                    i += 1
+                    continue
             try:
-                prod = Product.objects.get(pk=leg_prod.tpp_id)
+                org = Company.objects.get(pk=leg_org.tpp_id)
             except:
-                i += 1
-                continue
+                try:
+                    org = Tpp.objects.get(pk=leg_org.tpp_id)
+                except:
+                    print('ATTENTION! Organization not found! Org ID:', leg_org.tpp_id)
+                    i += 1
+                    continue
 
             prev_btx_id = rec.btx_id
 
-            if len(rec.preview_picture):
-                img_small_path = add(img_root + rec.preview_picture)
+            if len(leg_org.preview_picture):
+                img_small_path = add(img_root + leg_org.preview_picture)
             else:
                 img_small_path = ''
-            if len(rec.detail_picture):
-                img_detail_path = add(img_root + rec.detail_picture)
+            if len(leg_org.detail_picture):
+                img_detail_path = add(img_root + leg_org.detail_picture)
             else:
                 img_detail_path = ''
 
@@ -1114,32 +1123,44 @@ def pic2org_DB_DB(request):
                     'IMAGE': img_detail_path,
                 }
             trans_real.activate('ru')
-            res = prod.setAttributeValue(attr, create_usr)
+            res = org.setAttributeValue(attr, create_usr)
             trans_real.deactivate()
             if not res:
                 print('Problems with Attributes adding!')
                 i += 1
                 continue
 
-        rec.tpp_id = prod.pk
-        rec.completed = True
-        rec.save()
-
         if len(rec.gallery): #create relationship with Gallery
             try:
-                gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
+                gal = Gallery.objects.create(title='GALLERY_FOR_ORG_ID:'+rec.btx_id,\
+                                             photo = add(img_root + rec.gallery), create_user=create_usr)
+                attr = {
+                    'GALLERY_TOPIC': rec.gallery_topic,
+                    'NAME': rec.pic_title,
+                }
+                trans_real.activate('ru')
+                res = org.setAttributeValue(attr, create_usr)
+                trans_real.deactivate()
+                if not res:
+                    print('Problems with Attributes adding!')
+                    i += 1
+                    continue
             except:
+                print('Can not create Gallery! Organization ID: ', org.pk)
                 i += 1
                 continue
-
-            gal.photo = add(img_root + rec.gallery)
+            
             # create relationship
             try:
-                Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
-                print('Relationship between Product and Gallery was created! Prod_id:', prod.pk)
+                Relationship.objects.create(parent=org, type='relation', child=gal, create_user=create_usr)
+                rec.tpp_id = org.pk
+                rec.save()
+                leg_org.pic_completed = True
+                leg_org.save()
+                print('Relationship between Organization and Gallery was created! Org_id:', org.pk)
                 count += 1
             except:
-                print('Product was deleted! Product btx_id:', leg_prod.btx_id)
+                print('Can not establish gallery relationship! Organization btx_id:', leg_org.btx_id)
                 gal.delete()
                 count -= 1
                 i += 1
@@ -1152,4 +1173,4 @@ def pic2org_DB_DB(request):
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
-    return HttpResponse('Product pictures were migrated from buffer DB into TPP DB!')
+    return HttpResponse('Organization pictures were migrated from buffer DB into TPP DB!')

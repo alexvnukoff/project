@@ -1,10 +1,10 @@
 __author__ = 'Root'
-
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
 from appl.models import SystemMessages, Country
-from core.models import State, Attribute, Value, Slot, Dictionary, User
+from core.models import State, Attribute, Value, Slot, Dictionary, User, AttrTemplate
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -90,6 +90,7 @@ def databaseInitialization(sender, **kwargs):
                     'FAX': 'Chr',
                     'FILE': 'Ffl',
                     'FLAG': 'Img',
+                    'GALLERY_TOPIC': 'Chr',
                     'HEAD_PIC': 'Img',
                     'ICQ': 'Chr',
                     'IMAGE': 'Img',
@@ -99,6 +100,7 @@ def databaseInitialization(sender, **kwargs):
                     'KPP': 'Chr',
                     'MEASUREMENT_UNIT': {'type': 'Chr', 'slots': ['kg', 'piece']},
                     'MAP_POSITION': 'Chr',
+                    'MOBILE_NUMBER': 'Chr',
                     'NAME': 'Chr',
                     'NAME_FULL': 'Chr',
                     'NAME_DIRECTOR': 'Chr',
