@@ -90,6 +90,7 @@ def databaseInitialization(sender, **kwargs):
                     'FAX': 'Chr',
                     'FILE': 'Ffl',
                     'FLAG': 'Img',
+                    'GALLERY_TOPIC': 'Chr',
                     'HEAD_PIC': 'Img',
                     'ICQ': 'Chr',
                     'IMAGE': 'Img',
