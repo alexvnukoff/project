@@ -454,7 +454,10 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
             return None
 
     def prepare_country(self, object):
-        return Country.objects.get(p2c__child_id=object.pk, p2c__type='dependence').pk
+        try:
+            return Country.objects.get(p2c__child_id=object.pk, p2c__type='dependence').pk
+        except ObjectDoesNotExist:
+            return None        
 
     def get_model(self):
         return Company

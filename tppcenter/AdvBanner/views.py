@@ -1,12 +1,19 @@
 __author__ = 'user'
 from appl.models import AdvBannerType, AdvBanner, Cabinet
 from core.models import Item
-from django.shortcuts import HttpResponse, render_to_response, get_object_or_404
+from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from appl.models import *
 from django.db.models import ObjectDoesNotExist
 from appl import func
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
+from tppcenter.forms import ItemForm
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from core.tasks import addBannerAttr
+from django.core.files.images import ImageFile
+from django.db import transaction
+from copy import copy
 
 @login_required(login_url='/login/')
 def gatPositions(request):
@@ -48,45 +55,6 @@ def gatPositions(request):
     }
 
     return render_to_response("AdvBanner/index.html", templateParams, context_instance=RequestContext(request))
-
-def bannerForm(request, bannerType):
-
-    btype = get_object_or_404(AdvBannerType, pk=bannerType)
-
-    enable = {}
-
-    if btype.enableBranch:
-        enable['branch'] = _('Select branch')
-
-    if btype.enableCountry:
-        enable['country'] = _('Select country')
-
-    if btype.enableTpp:
-        enable['tpp'] = _('Select organization')
-
-
-    cabinet = Cabinet.objects.get(user=request.user)
-    cabinetAttr = cabinet.getAttributeValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'))
-
-    user_name = ''
-
-    if len(cabinetAttr) != 0:
-        user_name = cabinetAttr.get('USER_FIRST_NAME', [''])[0] + ' ' + cabinetAttr.get('USER_MIDDLE_NAME', ['']) + ' '\
-                    + cabinetAttr.get('USER_LAST_NAME', [''])[0]
-
-
-    notification = Notification.objects.filter(user=request.user, read=False).count()
-
-    current_section = _('Banners')
-
-    templateParams = {
-        'user_name': user_name,
-        'current_section': current_section,
-        'notification': notification,
-        'enable': enable
-    }
-
-    return render_to_response("AdvBanner/detail.html", templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
@@ -152,3 +120,147 @@ def advJsonFilter(request):
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
+
+
+@login_required(login_url='/login/')
+def addBanner(request, bannerType):
+    form = None
+    stDate = ''
+    edDate = ''
+    filterAttr = {}
+    filter = {'branch': [], 'country': [], 'tpp': []}
+
+    if request.POST:
+        user = request.user
+
+        values = {}
+        values['NAME'] = request.POST.get('NAME', "")
+        values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
+        values['IMAGE'] = request.FILES.get('IMAGE', "")
+
+        stDate = request.POST.get('st_date', '')
+        edDate = request.POST.get('ed_date', '')
+
+        filterList = ['tpp', 'country', 'branch']
+        ids = []
+
+        for name in filterList:
+
+            for pk in request.POST.getlist('filter[' + name + '][]', []):
+                try:
+                    ids.append(int(pk))
+                except ValueError:
+                    continue
+
+        tpps = Tpp.objects.filter(pk__in=ids)
+        countries = Country.objects.filter(pk__in=ids)
+        branches = Branch.objects.filter(pk__in=ids)
+
+        ids = []
+        filter = {}
+
+        if tpps.exists():
+            filter['tpp'] = tpps.values_list('pk', flat=True)
+            ids += filter['tpp']
+
+        if countries.exists():
+            filter['country'] = countries.values_list('pk', flat=True)
+            ids += filter['country']
+
+        if branches.exists():
+            filter['branch'] = branches.values_list('pk', flat=True)
+            ids += filter['branch']
+
+        filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
+
+
+
+        form = ItemForm('AdvBanner', values=values)
+        form.clean()
+
+        if form.is_valid():
+
+            if len(ids) == 0:
+                form.errors.update({"FILTER": _("You must choose one filter al least")})
+
+            if form.is_valid():
+
+                #50 KB file
+                if form.is_valid() and (not values['IMAGE'] or values['IMAGE'].size > 50 * 1024):
+                    form.errors.update({"IMAGE": _("The image size cannot exceed 50 KB")})
+
+                if form.is_valid():
+                    im = ImageFile(values['IMAGE'])
+
+                    if im.height > 200 and im.width > 300:
+                        form.errors.update({"IMAGE": _("Image dimension should not exceed")})
+
+                if form.is_valid():
+                    startDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
+                    endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
+
+                    if not startDate or not endDate:
+                        form.errors.update({"DATE": _("You should choose a date range")})
+
+                    delta = endDate - startDate
+
+                    if delta.days <= 0:
+                        form.errors.update({"DATE": _("You should choose a valid date range")})
+
+        if form.is_valid():
+            try:
+                addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids)
+            except Exception:
+                form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
+
+            if form.is_valid():
+                return HttpResponseRedirect(reverse('news:main'))
+
+    btype = get_object_or_404(AdvBannerType, pk=bannerType)
+
+    enable = {}
+
+    if btype.enableBranch:
+        enable['branch'] = _('Select branch')
+
+    if btype.enableCountry:
+        enable['country'] = _('Select country')
+
+    if btype.enableTpp:
+        enable['tpp'] = _('Select organization')
+
+
+    cabinet = Cabinet.objects.get(user=request.user)
+    cabinetAttr = cabinet.getAttributeValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'))
+
+    user_name = ''
+
+    if len(cabinetAttr) != 0:
+        user_name = cabinetAttr.get('USER_FIRST_NAME', [''])[0] + ' ' + cabinetAttr.get('USER_MIDDLE_NAME', ['']) + ' '\
+                    + cabinetAttr.get('USER_LAST_NAME', [''])[0]
+
+
+    notification = Notification.objects.filter(user=request.user, read=False).count()
+
+    for id in ids:
+        if not isinstance(filterAttr[id], dict):
+            filterAttr[id] = {}
+
+        filterAttr[id]['NAME'] = filterAttr[id].get('NAME', [''])[0]
+        filterAttr[id]['COST'] = filterAttr[id].get('COST', [0])[0]
+
+    current_section = _('Banners')
+
+    templateParams = {
+        'user_name': user_name,
+        'current_section': current_section,
+        'notification': notification,
+        'enable': enable,
+        'form': form,
+        'stDate': stDate,
+        'edDate': edDate,
+        'filterAttr': filterAttr,
+        'filters': filter
+    }
+
+    return render_to_response('AdvBanner/addForm.html', templateParams, context_instance=RequestContext(request))

@@ -360,10 +360,15 @@ $(document).ready(function() {
                 $(document).trigger(ui.signals['start_load']);
 
 
-
-                return  $.get(url, params, function(data) {
-                    $(document).trigger(ui.signals['end_load'], [url, data]);
-                }, 'json');
+               return $.ajax(url, {
+                   data: params,
+                   type: "GET",
+                   success: function(data) {
+                        $(document).trigger(ui.signals['end_load'], [url, data]);
+                   },
+                   cache: false,
+                   dataType: 'json'
+               });
            }
        };
 

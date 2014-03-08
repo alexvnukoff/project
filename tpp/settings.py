@@ -110,8 +110,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.oracle',
 
         'NAME': 'TPPDB',
-        'USER': 'tppProduction',
-        'PASSWORD': 'TrQwE123$%^;',
+        'USER': 'DDeath',
+        'PASSWORD': '123321',
         'HOST': 'tpp-production-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
         'PORT': '1521',
         #Section for Oracle

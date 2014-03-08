@@ -330,7 +330,9 @@ def jsonFilter(request):
 
 
 def test(request):
-    a = "חלךגד כחךלףכגדגכףךיעףדגכעגדףי"
+    import datetime
+
+    Country.objects.get(item2value__attr__title="NAME", item2value__title="Украина")
 
     from unidecode import unidecode
     from django.http import StreamingHttpResponse
