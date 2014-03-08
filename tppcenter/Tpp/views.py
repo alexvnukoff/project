@@ -57,7 +57,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Companies"
+        current_section = _("Tpp")
 
 
 

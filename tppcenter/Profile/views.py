@@ -45,7 +45,7 @@ def getProfileForm(request):
         user_name = None
         notification = None
         cabinetValues = None
-    current_section = "Profile"
+    current_section = _("Profile")
 
 
 

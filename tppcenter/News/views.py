@@ -47,7 +47,7 @@ def get_news_list(request, page=1, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "News"
+        current_section = _("News")
 
         templateParams = {
             'user_name': user_name,

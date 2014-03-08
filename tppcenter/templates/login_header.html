@@ -6,7 +6,7 @@
 	<div class="news">
     	<div class="tophead-l">
         	<a href="#"><i class="imgnews news-logo"></i></a>
-        	<a href="#" title="">О проекте</a> | <a href="#" title="">Услуги</a> | <a href="#" title="">Помощь</a>
+        	<a href="#" title="">{% trans 'About project' %}</a> | <a href="#" title="">{% trans 'Service' %}</a> | <a href="#" title="">{% trans 'Help' %}</a>
         </div>
         <div class="tophead-r">
         	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}{% endif %}</a>
@@ -53,7 +53,7 @@
                     <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
 
                 </div>
-                <a href="#" class="btnprofile"><i class="imgnews bullet"></i> Профиль</a>
+                <a href="#" class="btnprofile"><i class="imgnews bullet"></i> {% trans 'Profile' %}</a>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
      <div class="white_content" id="light-profile">
     <div class="profile-table">
         <div class="profile-tablein">
-            <div class="profile-title">Профиль пользователя</div>
+            <div class="profile-title">{% trans 'User profile' %}</div>
             <div class="profile-main">
             	<div class="avatar">
                 	<img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" />

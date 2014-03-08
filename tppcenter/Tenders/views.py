@@ -49,7 +49,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Tenders"
+        current_section = _("Tenders")
 
         templateParams =  {
             'user_name': user_name,

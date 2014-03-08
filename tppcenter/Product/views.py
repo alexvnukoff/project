@@ -50,7 +50,7 @@ def get_product_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Products"
+        current_section = _("Products")
 
         templateParams = {
                 'user_name': user_name,
@@ -243,7 +243,7 @@ def productForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Products")
 
     if action == 'add':
         productsPage = addProducts(request)

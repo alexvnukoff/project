@@ -51,7 +51,7 @@ def get_companies_list(request, page=1, item_id=None, my=None):
             user_name = None
             notification = None
 
-        current_section = "Companies"
+        current_section = _("Companies")
 
 
         templateParams = {

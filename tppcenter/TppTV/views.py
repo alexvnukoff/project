@@ -24,7 +24,7 @@ def get_news_list(request,page=1, id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
-    current_section = "TPP-TV"
+    current_section = _("TPP-TV")
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
     scripts = []

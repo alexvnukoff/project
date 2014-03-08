@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 
 from core.tasks import addTppAttrubute
 from django.conf import settings
@@ -36,7 +37,7 @@ def get_wall_list(request):
     else:
         user_name = None
         notification = None
-    current_section = "Wall"
+    current_section = _("Wall")
 
 
     wallPage = _wallContent(request)

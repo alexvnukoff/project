@@ -53,7 +53,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Exhibitions"
+        current_section = _("Exhibitions")
 
 
 
@@ -215,7 +215,7 @@ def exhibitionForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Exhibitions")
 
     if action == 'add':
         exhibitionPage = addExhibition(request)

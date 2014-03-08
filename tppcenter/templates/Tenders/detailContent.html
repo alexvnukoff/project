@@ -35,15 +35,15 @@ $(function() {
 					<span class="title">{{ name }}</span>
                     <ul class="infolist">
                     	<li>
-                        	<label>Дата размещения:</label>
+                        	<label>{% trans 'Publication date' %}:</label>
                             <span class="right">{{ start_event }}</span>
                         </li>
                         <li>
-                        	<label>Дата окончания приёма заявок:</label>
+                        	<label>{% trans 'Deadline for receiving bids' %}:</label>
                             <span class="right">{{ end_event }}</span>
                         </li>
                         <li>
-                        	<label>Стартовая цена:</label>
+                        	<label>{% trans 'Starting price' %}:</label>
                             <span class="right"><font class="price">{{ currency|getSymbol }} {{ cost }} </font></span>
                         </li>
                     </ul>
@@ -64,9 +64,9 @@ $(function() {
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
-                                <li><a href="#goods-tabs-1">Описание</a></li>
-                                <li><a href="#goods-tabs-2">Галлерия</a></li>
-                                <li><a href="#goods-tabs-3">Documents</a></li>
+                                <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Gallery' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Documents' %}</a></li>
                             {% for page in additionalPages %}
                                  <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle|truncatewords:2 }}</a></li>
                             {% endfor %}
@@ -85,7 +85,7 @@ $(function() {
                                         <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
 
                                         <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
-                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span></div>
                                         <div class="gray-img"></div>
                                     </div>
                                 </li>

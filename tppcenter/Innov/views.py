@@ -50,7 +50,7 @@ def get_innov_list(request, page=1, item_id=None, my=None):
             user_name = None
             notification = None
 
-        current_section = "Innovation Project"
+        current_section = _("Innovation Project")
 
         templateParams = {
             'newsPage': newsPage,
@@ -230,7 +230,7 @@ def innovForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Innovation Project")
 
     if action == 'add':
         newsPage = addProject(request)
