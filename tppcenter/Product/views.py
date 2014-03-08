@@ -68,12 +68,12 @@ def get_product_list(request, page=1, item_id=None, my=None):
 
 def _productContent(request, page=1, my=None):
     #TODO: Jenya change to get_active_related()
-    #products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
+    #products = Product.active.get_active().order_by('-pk')
 
     if not my:
         filters, searchFilter = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID)
+        sqs = SearchQuerySet().models(Product)
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
