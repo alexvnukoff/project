@@ -1,6 +1,6 @@
 
 from appl.models import *
-
+from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
 
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
@@ -11,7 +11,8 @@ from appl import func
 
 
 #@shared_task
-def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
+def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -59,13 +60,13 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
 
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
 #@shared_task
-def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
-
+def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -125,15 +126,15 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
         func.notify("item_created", 'notification', user=user)
 
 
-
+    trans_real.deactivate()
     return True
 
 
 
 
 
-def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
-
+def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -177,12 +178,12 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
         proposal.reindexItem()
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
-def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None):
-
+def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
+    trans_real.activate(lang_code)
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(post, files, prefix="pages")
     pages.clean()
@@ -199,10 +200,10 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     for val in valFiles:
         values[val] = files.get(val, "")
 
-    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
+    if post.get('Lat', ''):
+        values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
-    start_date = post.get('START_DATE', None)
-    end_date = post.get('END_DATE', None)
+
 
     country = post.get('COUNTRY', False)
     country = Country.objects.get(pk=country) if country else False
@@ -215,10 +216,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
     company = form.save(user, site_id)
     if company:
-        if end_date:
-            company.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
-            company.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
-            company.save()
+
 
 
         if branch:
@@ -249,14 +247,14 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         pages.save(parent=company.id, user=user)
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
 
 
-def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
-
+def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
 
     values = {}
     values['NAME'] = post.get('NAME', "")
@@ -297,14 +295,14 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None):
 
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
 
 
-def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
-
+def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(post, files, prefix="pages")
     pages.clean()
@@ -321,7 +319,8 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
     for val in valFiles:
         values[val] = files.get(val, "")
 
-    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
+    if post.get('Lat', ''):
+        values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
@@ -352,12 +351,13 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None):
         pages.save(parent=tpp.id, user=user)
         func.notify("item_created", 'notification', user=user)
 
+    trans_real.deactivate()
     return True
 
 
 #@shared_task
-def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None):
-
+def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -395,14 +395,14 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
         pages.save(parent=tender.id, user=user)
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
 
 
-def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
-
+def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -420,7 +420,8 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     for val in valFiles:
         values[val] = files.get(val, "")
 
-    values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
+    if post.get('Lat', ''):
+        values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
 
 
@@ -455,14 +456,14 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
         pages.save(parent=proposal.id, user=user)
         func.notify("item_created", 'notification', user=user)
 
-
+    trans_real.deactivate()
     return True
 
 
 
 
-def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None):
-
+def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
@@ -502,6 +503,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
         func.notify("item_created", 'notification', user=user)
 
 
+    trans_real.deactivate()
     return True
 
 @transaction.atomic
@@ -572,3 +574,4 @@ def addBannerAttr(post, files, user, site_id, ids):
     ord.setAttributeValue(attr, user)
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
+

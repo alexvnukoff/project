@@ -22,7 +22,7 @@
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
                        </div>
                         <div class="price">{{ currency|getSymbol }} {{ price }}</div>
-                        <a href="{% url "products:detail" slug %}" class="btnbuy">Купить</a>
+                        <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
                     </li>
                     {% endwith %}
                     {% endwith %}

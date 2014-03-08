@@ -60,30 +60,30 @@
 
 				<ul class="tenderline">
                     <li>
-                        <label>Наименование мероприятия <font color="#FF0000">*</font></label>
+                        <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
                           {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                         <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
                     </li>
                     <li>
                     	<div class="clumn1">
-                        	<label>Дата начала <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'Start event date' %}<font color="#FF0000">*</font></label>
                              {% if form.errors.START_EVENT_DATE %}<div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>{% endif %}
                             <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
                         </div>
                         <div class="clumn2">
-                        	<label>Дата завершения <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'End event date' %} <font color="#FF0000">*</font></label>
                              {% if form.errors.END_EVENT_DATE %}<div class="formserror">{{ form.errors.END_EVENT_DATE }}</div>{% endif %}
                             <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" style="width:94%;" />
                         </div>
                     </li>
                     <li>
                     	<div class="clumn1">
-                        	<label>Город <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'City' %} <font color="#FF0000">*</font></label>
                              {% if form.errors.CITY %}<div class="formserror">{{ form.errors.CITY }}</div>{% endif %}
                             <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
                         </div>
                         <div class="clumn2">
-                        	<label>Отрасль  <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
                             <select id="id_BRANCH" name="BRANCH">
                               {% for id, branch in branches.items %}
                                  <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >{{ branch.NAME|first }}</option>
@@ -93,14 +93,14 @@
                     </li>
                          <li>
                     	<div class="clumn1">
-                        	<label>Ключевые слова (для поиска)</label>
+                        	<label>{% trans 'Keywords' %}</label>
                             <textarea name="KEYWORD"  rows="7">{{ keyword }}</textarea>
                             <div class="line">
-                                <label>Описание маршрута</label>
+                                <label>{% trans 'Route description' %}</label>
                                 <textarea name="ROUTE_DESCRIPTION"  rows="16">{{ route }}</textarea>
                             </div>
                             <div  class="line">
-                                <label>Карта <font color="#FF0000">*</font></label>
+                                <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
                                   <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                                 <div id="map-canvas"></div>
 
@@ -109,7 +109,7 @@
                         </div>
 
                       	<div class="clumn2">
-                       	<label>Документы</label>
+                       	<label>{% trans 'Documents' %}</label>
                          <div class="line">
                            {% if doc_1 %}
                                 <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a>
@@ -137,7 +137,7 @@
                            <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="5" />
                             <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
                             <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="5" />
-                        	<label>Фото</label>
+                        	<label>{% trans 'Image' %}</label>
                             {% for i in '01234'|make_list %}
                               {% resolve photos i as img %}
                                 <div class="line">
@@ -153,7 +153,7 @@
                     </li>
                   </ul>
             <div class="append-formin">
-                <div class="addpage-title">Дополнительные страницы</div>
+                <div class="addpage-title">{% trans 'Additional pages' %}</div>
                 <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
                 <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
                 <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
@@ -163,7 +163,7 @@
                     {% for page in  pages %}
                 <div class="addpage-form">
                     <div class="clumn1">
-                        <label>Заголовок</label>
+                        <label>{% trans 'Title' %}</label>
                         <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
                         {% if forloop.counter0 > 0 %}
                           <a href="#" class="buttonclear  buttonremove">Remove</a>
@@ -172,7 +172,7 @@
                         {% endif %}
                     </div>
                     <div class="clumn2">
-                        <label>Описание</label>
+                        <label>{% trans 'Content' %}</label>
 
                         <div class="">
                             <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
@@ -185,13 +185,13 @@
 
                    <div class="addpage-form">
                     <div class="clumn1">
-                        <label>Заголовок</label>
+                        <label>{% trans 'Title' %}</label>
                         <input class="text" style="width:89%;" id="id_form-0-title"  name="pages-0-title" type="text" value="" />
 
                         <a href="#" class="buttonclear add-advandce">Добавить</a>
                     </div>
                     <div class="clumn2">
-                        <label>Описание</label>
+                        <label>{% trans 'Content' %}</label>
 
                         <div class="">
                             <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
@@ -204,7 +204,7 @@
            </div>
            <div class="newform-button">
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
-                <a href="#" class="btntype1">Отменить</a>
+                <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
                 </div>
         {% endwith %}
         {% endwith %}

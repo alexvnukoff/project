@@ -4,7 +4,7 @@
 {% load i18n %}
 
 
-        {% block title %}Tppcenter{% endblock %}
+        {% block title %}{% trans 'Tppcenter' %}{% endblock %}
 
          {% block styles %}
              {{ block.super }}
@@ -37,10 +37,10 @@
 	<a href="#"><i class="imgmain" id="logo"></i></a>
     <div id="search">
         <div class="styled-select">
-            <span class="textfilter" id="country">- Страна</span>
+            <span class="textfilter" id="country">- {% trans 'Country' %}</span>
             <div class="country-list">
             	<ul>
-                	<li>Все страны</li>
+                	<li>{% trans 'All countries' %}</li>
                 	<li><a href="#">Азербайджан</a></li>
                     <li><a href="#">Армения</a></li>
                     <li><a href="#">Беларусь</a></li>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="styled-select">
-        	<span class="texttype" id="type">–  Категория/отрасль</span>
+        	<span class="texttype" id="type">–  {% trans 'Industry/branch' %}</span>
             <div class="type-list">
             	<ul>
                 	<li><input type="checkbox" name="" class="check" /><label>Все категории</label></li>

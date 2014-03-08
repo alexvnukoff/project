@@ -25,13 +25,16 @@ def get_innov_list(request, page=1, item_id=None, my=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
-
+    cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
     if item_id is None:
-        newsPage = _innovContent(request, page)
+        try:
+            newsPage = _innovContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         newsPage = _innovDetailContent(request, item_id)
 
@@ -47,7 +50,7 @@ def get_innov_list(request, page=1, item_id=None, my=None):
             user_name = None
             notification = None
 
-        current_section = "Innovation Project"
+        current_section = _("Innovation Project")
 
         templateParams = {
             'newsPage': newsPage,
@@ -57,7 +60,9 @@ def get_innov_list(request, page=1, item_id=None, my=None):
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
-            'current_company': current_company
+            'current_company': current_company,
+            'addNew': reverse('innov:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
@@ -65,55 +70,73 @@ def get_innov_list(request, page=1, item_id=None, my=None):
     else:
 
 
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
-                                        'current_company': current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
 
-def _innovContent(request, page=1):
+def _innovContent(request, page=1, my=None):
 
 
-    filters, searchFilter = func.filterLive(request)
+    if not my:
+        filters, searchFilter = func.filterLive(request)
 
-    #companies = Company.active.get_active().order_by('-pk')
-    sqs = SearchQuerySet().models(InnovationProject)
+        #companies = Company.active.get_active().order_by('-pk')
+        sqs = SearchQuerySet().models(InnovationProject)
 
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
 
-    q = request.GET.get('q', '')
+        q = request.GET.get('q', '')
 
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
 
-    order = []
+        order = []
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
 
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
         else:
-            order.append(sortFields[sortField1])
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+
+        innov_projects = sqs.order_by(*order)
+        url_paginator = "innov:paginator"
+        params = {'filters': filters,
+                  'sortField1': sortField1,
+                  'sortField2': sortField2,
+                  'order1': order1,
+                  'order2': order2
+        }
     else:
-        order.append('-id')
+        current_organization = request.session.get('current_company', False)
 
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
+        if current_organization:
+             innov_projects = SearchQuerySet().models(InnovationProject).\
+                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
 
-
-    innov_projects = sqs.order_by(*order)
+             url_paginator = "innov:my_main_paginator"
+             params = {}
+        else: #TODO Jenya do block try
+             raise ObjectDoesNotExist('you need check company')
 
     result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
     #innov_projects = InnovationProject.active.get_active().order_by('-pk')
@@ -146,7 +169,7 @@ def _innovContent(request, page=1):
 
 
 
-    url_paginator = "innov:paginator"
+
     template = loader.get_template('Innov/contentPage.html')
 
     templateParams = {
@@ -154,12 +177,9 @@ def _innovContent(request, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+
     }
+    templateParams.update(params)
 
     context = RequestContext(request, templateParams)
     return template.render(context)
@@ -210,7 +230,7 @@ def innovForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Innovation Project")
 
     if action == 'add':
         newsPage = addProject(request)
@@ -270,7 +290,7 @@ def addProject(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company)
+            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('innov:main'))
 
 
@@ -332,7 +352,7 @@ def updateProject(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('innov:main'))
 
     template = loader.get_template('Innov/addForm.html')

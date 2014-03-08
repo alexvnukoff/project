@@ -25,9 +25,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
-    current_company = request.session.get('current_company', False)
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+
 
 
     user = request.user
@@ -47,7 +45,7 @@ def getProfileForm(request):
         user_name = None
         notification = None
         cabinetValues = None
-    current_section = "Profile"
+    current_section = _("Profile")
 
 
 
@@ -56,7 +54,9 @@ def getProfileForm(request):
     if isinstance(profilePage, HttpResponseRedirect):
         return profilePage
 
-
+    current_company = request.session.get('current_company', False)
+    if current_company:
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
 

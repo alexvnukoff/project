@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Tenders.views.get_tenders_list, name='main'),
      url(r'^page/(?P<page>[0-9]+)?/$', tppcenter.Tenders.views.get_tenders_list, name="paginator"),
+     url(r'^my/$', tppcenter.Tenders.views.get_tenders_list,{'my':True}, name='my_main'),
+     url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Tenders.views.get_tenders_list,{'my':True}, name="my_main_paginator"),
      url(r'^add/$', tppcenter.Tenders.views.tenderForm,{'action': 'add'} , name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Tenders.views.tenderForm,{'action': 'update'}, name="update"),
      url(r'^[a-zA-z0-9-]+-(?P<item_id>[0-9]+).html$', tppcenter.Tenders.views.get_tenders_list, name="detail"),

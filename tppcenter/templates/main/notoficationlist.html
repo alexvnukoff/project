@@ -1,19 +1,20 @@
-
+{% load staticfiles %}
+{% load i18n %}
 <ul>
         <li>
-             <h4>События в сообществе</h4>
+             <h4>{% trans 'Notifications'  %}</h4>
         </li>
     {% for id, attr in notifDict.items %}
         {% with attr.DETAIL_TEXT|first as message  %}
 
         <li>
-            <img src="img/flag4.gif" class="flag" alt="" />
-            <img src="img/imgnone.png" class="image" alt="" />
+
+            <img src="{% static 'tppcenter/img/imgnone.png' %}" class="image" alt="" />
             <div class="info">{{ message }}</div>
         </li>
 
 
         {% endwith %}
     {% endfor %}
-   <li><a href="#" class="viewmore">Показать все…</a></li>
+   <li><a href="#" class="viewmore">{% trans 'See all' %}…</a></li>
 </ul>
