@@ -31,7 +31,11 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
     if not item_id:
-        proposalsPage = _proposalsContent(request, page, my)
+        try:
+            proposalsPage = _proposalsContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
+
     else:
         proposalsPage = _proposalDetailContent(request, item_id)
 
@@ -63,7 +67,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'addNew': reverse('proposal:add')
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -279,7 +284,7 @@ def addBusinessProposal(request):
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
             addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                current_company=current_company)
+                                current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 
     template = loader.get_template('BusinessProposal/addForm.html')
@@ -360,7 +365,8 @@ def updateBusinessProposal(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
+                                lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 
 

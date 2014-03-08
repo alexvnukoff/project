@@ -985,7 +985,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=tpp[0].pk, p2c__type='dependence')
 
                 if country.exists():
-                    country = country.all()
+                    country = country[0]
                     self.prepared_data[countryIndex] = country.pk
 
         return self.prepared_data

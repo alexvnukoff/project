@@ -27,7 +27,7 @@ $(function() {
 
    <div class="uploadimgage">
          	<div class="imgbig">
-                    	<label>Миниатюра</label>
+                    	<label>{% trans 'Image' %}</label>
 
             {% if form.errors.IMAGE %}<div class="formserror">{{ form.errors.IMAGE }}</div>{% endif %}
                           {% if image %}
@@ -51,7 +51,7 @@ $(function() {
                 <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
                 <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
                 <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
-                    	<label>Галерея</label>
+                    	<label>{% trans 'Gallery' %}</label>
                      {% for i in '012'|make_list %}
                       {% resolve photos i as img %}
                          {% if img %}
@@ -76,7 +76,7 @@ $(function() {
          <ul class="uploadconfig">
                 	<li>
                     	<div class="clumn1">
-                        	<label>Категория</label>
+                        	<label>{% trans 'Category' %}</label>
                             <select id="id_news_category" name="NEWS_CATEGORY">
                              <option value="">{% trans "Choose category" %}</option>
                               {% for id , atrr in categories.items %}
@@ -99,7 +99,7 @@ $(function() {
                         </div>
                     </li>
                 	<li>
-                    	<label>Заголовок</label>
+                    	<label>{% trans 'Title' %}</label>
                          {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                         <input type="text" id="id_name" name="NAME" value="{{ name }}" class="text"/>
 
@@ -107,24 +107,24 @@ $(function() {
                     </li>
                     <li>
                     	<div class="clumn1">
-                        	<label>Дата</label>
+                        	<label>{% trans 'Date' %}</label>
                              {% if form.errors.CREATE_DATE %}<div class="formserror">{{ form.errors.CREATE_DATE }}</div>{% endif %}
                             <input type="datetime" name="CREATE_DATE" placeholder="" class="date" value="{{ create_date|date:"m/d/Y" }}" />
                         </div>
                         <div class="clumn2">
-                        	<label>Ключи поиска</label>
+                        	<label>{% trans 'Keyword' %}</label>
                             {% if form.errors.KEYWORD %}<div class="formserror">{{ form.errors.KEYWORD }}</div>{% endif %}
                             <input type="text" name="KEYWORD" placeholder="" class="text" style="width:89%;" />
                         </div>
                     </li>
                 	<li>
-                    	<label>Код на YouTube видео</label>
+                    	<label>{% trans 'Youtube code' %}</label>
                         {% if form.errors.CREATE_DATE %}<div class="formserror">{{ form.errors.CREATE_DATE }}</div>{% endif %}
                         <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
 
                     </li>
                     <li>
-                    	<label>Подробное описание</label>
+                    	<label>{% trans 'Content' %}</label>
                           {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
                         <div >
                             <textarea class="tiny" cols="40" rows="30" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>
@@ -139,7 +139,7 @@ $(function() {
     {% endwith %}
                <div class="newform-button">
                     <input class="btntype2" type="submit" name="submit" value="Сохранить">
-                    <a href="#" class="btntype1">Отменить</a>
+                    <a href="#" class="btntype1">{% trans 'Content' %}</a>
                 </div>
 
 </form>

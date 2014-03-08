@@ -8,6 +8,7 @@ from django.http import Http404
 from django.conf import settings
 from PIL import Image
 
+
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
