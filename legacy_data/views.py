@@ -1078,8 +1078,8 @@ def pic2org_DB_DB(request):
     print('Reload products from buffer DB into TPP DB...')
     qty = L_Pic2Org.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
-    pic_lst = L_Pic2Org.objects.filter(completed=False)[:1000]
+    pic_lst = L_Pic2Org.objects.filter(completed=False).all()
+    #pic_lst = L_Pic2Org.objects.filter(completed=False)[:1000]
     i = 0
     count = 0;
     prev_btx_id = 0;
@@ -1174,3 +1174,61 @@ def pic2org_DB_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Organization pictures were migrated from buffer DB into TPP DB!')
+
+def comp2tpp_DB_DB(request):
+    '''
+        Create relationships between companies and their TPP
+    '''
+    print('Create relationships between Companies and their TPP...')
+    time1 = datetime.datetime.now()
+    comp_lst = L_Company.objects.exclude(tpp_name='').all()
+    #comp_lst = L_Company.objects.exclude(tpp_name='')[:10]
+    i = 0
+    count = 0;
+    create_usr = User.objects.get(pk=1)
+    flag = True
+    block_size = 1000
+    i = 0
+    while flag:
+        comp_lst = L_Company.objects.exclude(tpp_name='').all()[:block_size]
+        if len(comp_lst) < block_size: # it will last big loop
+            flag = False
+        for cmp in comp_lst:
+            try:
+                company = Company.objects.get(pk=cmp.tpp_id)
+            except:
+                print('Company does not exist in DB! Company btx_id:', cmp.btx_id)
+                i += 1
+                continue
+
+            try:
+                leg_tpp = L_TPP.objects.get(btx_id=cmp.tpp_name)
+            except:
+                print('Legacy TPP does not exist in DB! TPP btx_id:', cmp.tpp_name)
+                i += 1
+                continue
+
+            try:
+                tpp = Tpp.objects.get(pk=leg_tpp.tpp_id)
+            except:
+                print('TPP does not exist in DB! TPP btx_id:', cmp.tpp_name)
+                i += 1
+                continue
+
+            # create relationship
+            try:
+                Relationship.objects.create(parent=tpp, type='relation', child=tpp, create_user=create_usr)
+                count += 1
+            except:
+                print('Can not establish relationship! Company ID:', company.pk, ' TPP ID:', tpp.pk)
+                i += 1
+                continue
+
+            i += 1
+            print('Milestone: ', i)
+
+    print('Done. Quantity of processed strings:', i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Relationships between Companies and their TPP were created!')
