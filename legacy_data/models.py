@@ -171,3 +171,15 @@ class L_Pic2Prod(models.Model):
 
     def __str__(self):
         return self.btx_id+'|'+self.prod_name
+
+class L_Site2Prod(models.Model):
+    '''
+        Defines buffer table for updating products' site
+    '''
+    btx_id = models.CharField(max_length=10) # legacy product's id
+    section_name = models.CharField(max_length=1024)
+    product_name = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if item is processed
+
+    def __str__(self):
+        return self.btx_id+'|'+self.product_name+'|'+self.section_name
