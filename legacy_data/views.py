@@ -1237,52 +1237,115 @@ def comp2tpp_DB_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Relationships between Companies and their TPP were created!')
 
+def site2prod_CSV_DB(request):
+    '''
+        Reload products' sections from prepared CSV file named site2prod_legacy.csv
+        into buffer DB table LEGACY_DATA_L_SITE2PROD
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\site2prod_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        section_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        product_name = bytearray(data[i][2]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+
+        try:
+            L_Site2Prod.objects.create( btx_id=btx_id,\
+                                        section_name=section_name,\
+                                        product_name=product_name)
+            count += 1
+        except:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', product_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Sites for Products were migrated from CSV into DB!')
 
 def site2prod_DB_DB(request):
     '''
         Update site attribute for products
     '''
-    print('Update site attribute for products...')
+    print('Updating B2C products...')
     time1 = datetime.datetime.now()
-    comp_lst = L_Company.objects.exclude(tpp_name='').all()
-    #comp_lst = L_Company.objects.exclude(tpp_name='')[:10]
+    qty = L_Site2Prod.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    prod_lst = L_Site2Prod.objects.filter(completed=False).all()
+
+    b2c_site = 0
+    b2b_site = 0
+
     i = 0
-    count = 0;
-    create_usr = User.objects.get(pk=1)
-    flag = True
-    block_size = 1000
-    i = 0
-    while flag:
-        comp_lst = L_Company.objects.exclude(tpp_name='').all()[:block_size]
-        if len(comp_lst) < block_size: # it will last big loop
-            flag = False
-        for cmp in comp_lst:
-            try:
-                company = Company.objects.get(pk=cmp.tpp_id)
-            except:
-                print('Company does not exist in DB! Company btx_id:', cmp.btx_id)
-                i += 1
-                continue
+    count = 0
 
-            try:
-                leg_tpp = L_TPP.objects.get(btx_id=cmp.tpp_name)
-            except:
-                print('Legacy TPP does not exist in DB! TPP btx_id:', cmp.tpp_name)
-                i += 1
-                continue
-
-            try:
-                tpp = Tpp.objects.get(pk=leg_tpp.tpp_id)
-            except:
-                print('TPP does not exist in DB! TPP btx_id:', cmp.tpp_name)
-                i += 1
-                continue
-
+    for itm in prod_lst:
+        try:
+            leg_prod = L_Product.objects.get(btx_id=itm.btx_id)
+        except:
+            print('Product does not exist in DB! Product btx_id:', itm.btx_id)
             i += 1
-            print('Milestone: ', i)
+            continue
 
-    print('Done. Quantity of processed strings:', i, 'Were added into DB:', count)
+        try:
+            prod = Product.objects.get(pk=leg_prod.tpp_id)
+        except:
+            print('Product does not exist in DB! Product btx_id:', itm.btx_id)
+            i += 1
+            continue
+
+        prod.sites.add(b2c_site)
+        itm.completed = True
+        itm.save()
+        count += 1
+        i += 1
+        print('Milestone: ', i)
+
+    print('Updating B2B products...')
+    start = 0
+    block_size = 1000
+    flag = True
+    j = 0
+    while flag:
+        prod_lst = Product.objects.exclude(sites=b2c_site).all()[start:start+block_size]
+        if len(prod_lst) < block_size:
+            flag = False
+        else:
+            start += block_size
+
+        for prod in prod_lst:
+            prod.sites.add(b2b_site)
+            j += 1
+            count += 1
+            print('Milestone: ', j)
+
+    print('Done. Quantity of processed items:', i+j, 'Were updated:', count)
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
-    return HttpResponse('Relationships between Companies and their TPP were created!')
+    return HttpResponse('Production sites were updated!')
