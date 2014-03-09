@@ -46,10 +46,10 @@ $(function() {
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
-                                <li><a href="#goods-tabs-1">Главная</a></li>
-                                <li><a href="#goods-tabs-2">Бизнес-план</a></li>
-                                <li><a href="#goods-tabs-3">Галерея</a></li>
-                                <li><a href="#goods-tabs-4">Контакты</a></li>
+                                <li><a href="#goods-tabs-1">{% trans 'Main' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Business plan' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                                <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
                                 {% for page in additionalPages %}
                                  <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle }}</a></li>
                                 {% endfor %}
@@ -59,19 +59,19 @@ $(function() {
                             <div class="content-goods-tab">
                             	<ul class="innov-tab-content">
                                 	<li>
-                                    	<span class="left">Продукт: </span>
+                                    	<span class="left">{% trans 'Product' %}: </span>
                                         <span class="right">{{ product_name }}</span>
                                     </li>
                                     <li>
-                                    	<span class="left">Отрасль: </span>
+                                    	<span class="left">{% trans 'Industry' %}: </span>
                                         <span class="right">{{ branch_name }} </span>
                                     </li>
                                     <li>
-                                    	<span class="left">Сумма: </span>
+                                    	<span class="left">{% trans 'Cost' %}: </span>
                                         <span class="right">{{ currency|getSymbol }} {{ cost }}</span>
                                     </li>
                                     <li>
-                                    	<span class="left">Планируемая дата: </span>
+                                    	<span class="left">{% trans 'Realese date' %}: </span>
                                         <span class="right">{{ realese_date }}</span>
                                     </li>
                                 </ul>
@@ -95,7 +95,7 @@ $(function() {
                                         <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
 
                                         <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
-                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span></div>
                                         <div class="gray-img"></div>
                                     </div>
                                 </li>
@@ -104,7 +104,9 @@ $(function() {
                             </div>
                         </div>
                         <div id="goods-tabs-4">
-                            <div class="content-goods-tab">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
+                            <div class="content-goods-tab">
+
+                            </div>
                         </div>
                         {% for page in additionalPages %}
                         <div id="goods-tabs-{{ forloop.counter0|add:5 }}">

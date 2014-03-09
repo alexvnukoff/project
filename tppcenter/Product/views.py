@@ -23,13 +23,16 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def get_product_list(request, page=1, item_id=None, my=None):
-
+    cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     if item_id is None:
-        productsPage = _productContent(request, page, my)
+        try:
+            productsPage = _productContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         productsPage = _getDetailContent(request, item_id)
 
@@ -47,7 +50,7 @@ def get_product_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Products"
+        current_section = _("Products")
 
         templateParams = {
                 'user_name': user_name,
@@ -57,7 +60,9 @@ def get_product_list(request, page=1, item_id=None, my=None):
                 'current_company': current_company,
                 'scripts': scripts,
                 'styles': styles,
-                'search': request.GET.get('q', '')
+                'search': request.GET.get('q', ''),
+                'addNew': reverse('products:add'),
+                'cabinetValues': cabinetValues
         }
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
@@ -68,12 +73,12 @@ def get_product_list(request, page=1, item_id=None, my=None):
 
 def _productContent(request, page=1, my=None):
     #TODO: Jenya change to get_active_related()
-    #products = Product.active.get_active().filter(sites__id=settings.SITE_ID).order_by('-pk')
+    #products = Product.active.get_active().order_by('-pk')
 
     if not my:
         filters, searchFilter = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID)
+        sqs = SearchQuerySet().models(Product)
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -238,7 +243,7 @@ def productForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Products")
 
     if action == 'add':
         productsPage = addProducts(request)
@@ -322,7 +327,7 @@ def addProducts(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
+            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('products:main'))
 
 
@@ -410,7 +415,7 @@ def updateProduct(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('products:main'))
 
 
