@@ -10,7 +10,7 @@ import json
 from appl import func
 
 
-#@shared_task
+@shared_task
 def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -64,7 +64,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     return True
 
 
-#@shared_task
+@shared_task
 def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -132,7 +132,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
 
 
 
-
+@shared_task
 def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -181,7 +181,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     trans_real.deactivate()
     return True
 
-
+@shared_task
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -252,7 +252,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
 
 
-
+@shared_task
 def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -300,7 +300,7 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 
 
 
-
+@shared_task
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -355,7 +355,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
     return True
 
 
-#@shared_task
+@shared_task
 def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -400,7 +400,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
 
 
 
-
+@shared_task
 def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -461,7 +461,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
 
-
+@shared_task
 def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))

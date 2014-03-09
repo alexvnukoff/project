@@ -73,20 +73,27 @@ def databaseInitialization(sender, **kwargs):
                     'ADDRESS_ZIP': 'Chr',
                     'AUTHOR_NAME': 'Chr',
                     'ANONS': 'Str',
+                    'ACCOUNTANT': 'Chr',
                     'BANK_ACCOUNT': 'Chr',
+                    'BANK_DETAILS': 'Str',
+                    'BIRTHDAY': 'Dat',
                     'BANK_NAME': 'Chr',
+                    'BUSINESS_PLAN': 'Str',
                     'CELLULAR': 'Chr',
                     'COST': 'Flo',
+                    'CITY': 'Chr',
                     'COUPON_DISCOUNT': 'Flo',
                     'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
                     'DETAIL_TEXT': 'Str',
+                    'DIRECTOR': 'Chr',
                     'DISCOUNT': 'Flo',
                     'DOCUMENT_1': 'Ffl',
                     'DOCUMENT_2': 'Ffl',
                     'DOCUMENT_3': 'Ffl',
-                    'EMAIL': 'Chr',
-#TODO раскомментировать EMAIL 'Eml' (Ilya)
-                    #'EMAIL': 'Eml',
+
+                    'END_EVENT_DATE': 'Dat',
+
+                    'EMAIL': 'Eml',
                     'FAX': 'Chr',
                     'FILE': 'Ffl',
                     'FLAG': 'Img',
@@ -114,14 +121,24 @@ def databaseInitialization(sender, **kwargs):
                     'PERSONAL_WWW': 'Chr',
                     'POSITION': 'Chr',
                     'PROFESSION': 'Chr',
+                    'ROUTE_DESCRIPTION': 'Str',
+                    'PRODUCT_NAME': 'Chr',
+                    'REALESE_DATE': 'Dat',
                     'SEX': {'type': 'Chr', 'slots': ['Male', 'Female']},
                     'SITE_NAME': 'Chr',
+                    'SMALL_IMAGE': 'Img',
+                    'SKYPE': 'Chr',
                     'SKU': 'Chr',
                     'SLOGAN': 'Chr',
                     'SLUG': 'Chr',
+                    'START_EVENT_DATE': 'Dat',
+
                     'TELEPHONE_NUMBER': 'Chr',
                     'TPP': 'Chr',
-                    'YOUTUBE_CODE': 'Chr'}
+                    'YOUTUBE_CODE': 'Chr',
+                    'USER_MIDDLE_NAME': 'Chr',
+                    'USER_LAST_NAME': 'Chr',
+                    'USER_FIRST_NAME': 'Chr'}
 
     for attribute, type in attributes.items():
         if isinstance(type, dict):
@@ -213,5 +230,56 @@ def databaseInitialization(sender, **kwargs):
     if res:
         attr = {'NAME': {'title': 'Estonia', 'title_ru': 'Эстония'}}
         cntr.setAttributeValue(attr, crt_usr)
+
+    content_type = {'News': {'NAME': True, 'IMAGE': True, 'DETAIL_TEXT': True, 'YOUTUBE_CODE': False},
+
+                    'BusinessProposal': {'NAME': True, 'DETAIL_TEXT': True, 'KEYWORD': False, 'DOCUMENT_1': False,
+                                         'DOCUMENT_2': False, 'DOCUMENT_3': False},
+
+                    'Comment': {'DETAIL_TEXT': True},
+
+                    'Company': {'NAME': True, 'IMAGE': False, 'ADDRESS': False, 'SITE_NAME': False,
+                                'TELEPHONE_NUMBER': True, 'FAX': False, 'INN': True, 'DETAIL_TEXT': True,
+                                'SLOGAN': False, 'EMAIL': True, 'KEYWORD': False, 'DIRECTOR': False, 'KPP': False,
+                                'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
+                                'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
+
+                    'Tpp': {'NAME': True, 'IMAGE': False, 'ADDRESS': False, 'SITE_NAME': False,
+                            'TELEPHONE_NUMBER': True, 'FAX': False, 'INN': True, 'DETAIL_TEXT': True,
+                            'FAG': False, 'EMAIL': True, 'KEYWORD': False, 'DIRECTOR': False, 'KPP': False,
+                            'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
+                            'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
+
+                    'Country': {'NAME': True, 'FLAG': False},
+
+                    'Exhibition': {'NAME': True, 'CITY': True, 'START_EVENT_DATE': True, 'END_EVENT_DATE': True,
+                                   'KEYWORD': False, 'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False,
+                                   'ROUTE_DESCRIPTION': False, 'POSITION': False},
+
+                    'InnovationProject': {'NAME': True, 'PRODUCT_NAME': True, 'COST': True, 'TARGET_AUDIENCE': False,
+                                          'REALESE_DATE': True, 'SITE_NAME': False, 'KEYWORD': False,
+                                          'DETAIL_TEXT': False, 'BUSINESS_PLAN': False, 'DOCUMENT_1': False,
+                                          'CURRENCY': True},
+
+                    'Product': {'NAME': True, 'IMAGE': True, 'COST': True, 'CURRENCY': True, 'DETAIL_TEXT': False,
+                                'COUPON_DISCOUNT': False, 'DISCOUNT': False, 'MEASUREMENT_UNIT': True, 'ANONS': False,
+                                'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False, 'KEYWORD': False,
+                                'SMALL_IMAGE': False, 'SKU': False},
+
+                    'Tender': {'NAME': True, 'COST': True, 'CURRENCY': True, 'START_EVENT_DATE': True,
+                               'END_EVENT_DATE': True, 'DETAIL_TEXT': False,  'DOCUMENT_1': False, 'DOCUMENT_2': False,
+                               'DOCUMENT_3': False, 'KEYWORD': False},
+
+                    'TppTV': {'NAME': True, 'DETAIL_TEXT': True, 'IMAGE': False, 'YOUTUBE_CODE': True}
+
+
+    }
+
+    for type, attributes in content_type.items():
+         object_id = ContentType.objects.get(model=str(type).lower())
+         for name, required in attributes.items():
+             attr = Attribute.objects.get(title=name)
+             attribute, created = AttrTemplate.objects.get_or_create(classId=object_id, attrId=attr, required=bool(required))
+
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)

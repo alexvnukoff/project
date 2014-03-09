@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load CustomFilters %}
 <div class="tpp-dt-content">
     <table class="table-big" cellpadding="0" cellpadding="0">
         {% for id, attr in newsList.items %}
@@ -21,7 +22,7 @@
                     </a>
                 </td>
                 <td>
-                    {{ text|truncatewords:50 }}
+                    {{ text|cleanHtml|safe|truncatewords:50 }}
                 </td>
             </tr>
             {% endwith %}

@@ -46,6 +46,9 @@ urlpatterns = patterns('',
 
     url(r'^legacy/comp2tpp/dbdb$', leg_v.comp2tpp_DB_DB),
 
+    url(r'^legacy/site2prod/csvdb$', leg_v.site2prod_CSV_DB),
+    url(r'^legacy/site2prod/dbdb$', leg_v.site2prod_DB_DB),
+
     url(r'^test/$', tppcenter.views.test),
 
 )

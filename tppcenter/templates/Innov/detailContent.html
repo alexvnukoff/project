@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
 <script>
 $(function() {
 	 $(".goods-details-tab").tabs();});
@@ -41,7 +42,7 @@ $(function() {
                             </div>
                     </div>
                     <div class="innov-details">
-                    	<p>{{ content }}</p>
+                    	<p>{{ content|cleanHtml|safe }}</p>
                     </div>
                     <div class="goods-details-tab">
                         <div class="tab-cate">
@@ -82,7 +83,7 @@ $(function() {
                                 {% if doc_1 %}
                                    <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to Business Plan File' %}</a> </p>
                                 {% endif %}
-                                     <p>{{ bussines_plan }}</p>
+                                     <p>{{ bussines_plan|cleanHtml|safe }}</p>
 
                             </div>
                         </div>
@@ -110,7 +111,7 @@ $(function() {
                         </div>
                         {% for page in additionalPages %}
                         <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                              <div class="content-goods-tab">{{ page.getContent }}</div>
+                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
                          </div>
                         {% endfor %}
                     </div>

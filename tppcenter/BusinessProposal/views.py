@@ -188,7 +188,7 @@ def _proposalDetailContent(request, item_id):
      return template.render(context)
 
 
-
+@login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -255,7 +255,7 @@ def addBusinessProposal(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -283,7 +283,8 @@ def addBusinessProposal(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+            func.notify("item_creating", 'notification', user=request.user)
+            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
                                 current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 
@@ -336,7 +337,7 @@ def updateBusinessProposal(request, item_id):
         form = ItemForm('BusinessProposal', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -365,7 +366,8 @@ def updateBusinessProposal(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
+            func.notify("item_creating", 'notification', user=request.user)
+            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
                                 lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 

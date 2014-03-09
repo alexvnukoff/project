@@ -74,7 +74,7 @@ $(function() {
                         </div>
 
                         <div id="goods-tabs-1">
-                            <div class="content-goods-tab">{{ content }} </div>
+                            <div class="content-goods-tab">{{ content|cleanHtml|safe }} </div>
                         </div>
                         <div id="goods-tabs-2">
                             <div class="content-goods-tab">
@@ -108,7 +108,7 @@ $(function() {
                         </div>
                        {% for page in additionalPages %}
                         <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
-                              <div class="content-goods-tab">{{ page.getContent }}</div>
+                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
                          </div>
                       {% endfor %}
 

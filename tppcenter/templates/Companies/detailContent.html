@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
  {% with companyValues.POSITION.0 as position %}
  <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
@@ -42,7 +43,7 @@
                 <div class="deal-details">
                     <h3><img src="{{ MEDIA_URL }}small/{{ country_flag }}" class="flag" /> {{ name }}</h3>
                     <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="" />
-                    <p>{{ content }}</p>
+                    <p>{{ content|cleanHtml|safe }}</p>
                 </div>
                 <div class="social">
                     <a href="#"><i class="imgnews share-1"></i></a>
@@ -116,7 +117,7 @@
                     </div>
                     <div id="cpn-tabs-about">
                         <div class="tpp-dt-content">
-                        	{{ content }}
+                        	{{ content|cleanHtml|safe }}
                         </div>
                     </div>
                     <div id="cpn-tabs-recvisits">

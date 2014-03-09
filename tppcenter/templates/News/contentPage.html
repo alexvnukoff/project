@@ -27,7 +27,7 @@
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
                             <p>{{ content|cleanHtml|safe|truncatewords:"30" }} </p>
-                           <!--noindex--><a href="#" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                           <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>
                     {% endwith %}
