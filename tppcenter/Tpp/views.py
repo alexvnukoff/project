@@ -24,26 +24,30 @@ from django.conf import settings
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None):
+
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-
     if item_id is None:
         try:
-            tppPage = _tppContent(request, page, my)
+            tppPage, filterAdv  = _tppContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        tppPage = _tppDetailContent(request, item_id)
+        tppPage, filterAdv = _tppDetailContent(request, item_id)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
         settings.STATIC_URL + 'tppcenter/css/tpp.reset.css'
     ]
+
     scripts = []
 
     if not request.is_ajax():
@@ -58,8 +62,6 @@ def get_tpp_list(request, page=1, item_id=None, my=None):
             user_name = None
             notification = None
         current_section = _("Tpp")
-
-
 
         templateParams = {
             'user_name': user_name,
@@ -83,8 +85,10 @@ def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Tpp)
 
@@ -180,10 +184,12 @@ def _tppContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def _tppDetailContent(request, item_id):
+
+    filterAdv = func.getDeatailAdv(item_id)
 
     tpp = get_object_or_404(Tpp, pk=item_id)
     tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
@@ -197,7 +203,7 @@ def _tppDetailContent(request, item_id):
     template = loader.get_template('Tpp/detailContent.html')
     context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def tppForm(request, action, item_id=None):

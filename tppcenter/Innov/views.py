@@ -20,10 +20,11 @@ import json
 
 def get_innov_list(request, page=1, item_id=None, my=None):
 
+    filterAdv = []
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -32,11 +33,13 @@ def get_innov_list(request, page=1, item_id=None, my=None):
 
     if item_id is None:
         try:
-            newsPage = _innovContent(request, page, my)
+            newsPage, filterAdv = _innovContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        newsPage = _innovDetailContent(request, item_id)
+        newsPage, filterAdv = _innovDetailContent(request, item_id)
+
+
 
     if not request.is_ajax():
         user = request.user
@@ -68,17 +71,16 @@ def get_innov_list(request, page=1, item_id=None, my=None):
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-
-
         return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
 
 def _innovContent(request, page=1, my=None):
 
+    filterAdv = []
 
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(InnovationProject)
@@ -182,10 +184,13 @@ def _innovContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def _innovDetailContent(request, item_id):
+
+     filterAdv = func.getDeatailAdv(item_id)
+
      innov = get_object_or_404(InnovationProject, pk=item_id)
      innovValues = innov.getAttributeValues(*('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN',
                                                  'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT'))
@@ -204,7 +209,8 @@ def _innovDetailContent(request, item_id):
 
      context = RequestContext(request, {'innovValues': innovValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context)
+
+     return template.render(context), filterAdv
 
 
 def innovForm(request, action, item_id=None):

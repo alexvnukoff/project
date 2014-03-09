@@ -23,21 +23,29 @@ from django.conf import settings
 def get_proposals_list(request, page=1, item_id=None,  my=None):
 
     current_company = request.session.get('current_company', False)
+    filterAdv = []
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
     cabinetValues = func.getB2BcabinetValues(request)
+
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
+
     if not item_id:
         try:
-            proposalsPage = _proposalsContent(request, page, my)
+            proposalsPage, filterAdv = _proposalsContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
 
     else:
-        proposalsPage = _proposalDetailContent(request, item_id)
+        proposalsPage, filterAdv = _proposalDetailContent(request, item_id)
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -68,18 +76,33 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'cabinetValues': cabinetValues,
-            'addNew': reverse('proposal:add')
+            'addNew': reverse('proposal:add'),
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': proposalsPage}))
+
+        serialize = {
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops,
+            'styles': styles,
+            'scripts': scripts,
+            'content': proposalsPage
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _proposalsContent(request, page=1, my=None):
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
         sqs = SearchQuerySet().models(BusinessProposal)
@@ -165,11 +188,14 @@ def _proposalsContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 
 def _proposalDetailContent(request, item_id):
+
+     filterAdv = func.getDeatailAdv(item_id)
+
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
      proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3'))
 
@@ -185,7 +211,7 @@ def _proposalDetailContent(request, item_id):
 
      context = RequestContext(request, {'proposalValues': proposalValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context)
+     return template.render(context), filterAdv
 
 
 

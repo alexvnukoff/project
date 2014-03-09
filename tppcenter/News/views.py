@@ -25,13 +25,18 @@ from django.conf import settings
 
 def get_news_list(request, page=1, my=None):
 
+    filterAdv = []
+
     current_company = request.session.get('current_company', False)
+
     if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company, filterAdv = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
-        newsPage = _newsContent(request, page, my)
+        newsPage, filterAdv = _newsContent(request, page, my)
+
     except ObjectDoesNotExist:
         return render_to_response("permissionDen.html")
+
     cabinetValues = func.getB2BcabinetValues(request)
     styles = []
     scripts = []
@@ -68,8 +73,10 @@ def get_news_list(request, page=1, my=None):
 
 def _newsContent(request, page=1, my=None):
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #news = News.active.get_active().order_by('-pk')
 
@@ -155,9 +162,8 @@ def _newsContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
 
-
+    return template.render(context), filterAdv
 
 
 def newsForm(request, action, item_id=None):
@@ -330,6 +336,8 @@ def updateNew(request, item_id):
 
 def detail(request, item_id):
 
+    filterAdv = func.getDeatailAdv(item_id)
+
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
@@ -362,7 +370,7 @@ def detail(request, item_id):
 
 
 
-    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
+    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request)), filterAdv
 
 
 

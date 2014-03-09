@@ -48,36 +48,36 @@ def add(imageFile=None, sizes=None):
             # Creating a pool connection
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
                                          endpoint='s3.amazonaws.com')
+            f = {}
 
-            for type, size in sizes.items():
-                path = '/' + type + '/'+ folder + '/' + name + '.png'
-                out = settings.MEDIA_ROOT + '/upload/' + type + '-' + name + '.png'
-                func.resize(im, out=out, **size)
+            for sizeType, size in sizes.items():
+                path = '/' + sizeType + '/'+ folder + '/' + name + '.png'
+                out = '%s-%s.%s' % (sizeType, name, 'png')
+                out = os.path.join(settings.MEDIA_ROOT, 'upload', out).replace('\\', '/')
+                func.resize(imageFile, out=out, box=size['box'], fit=size['fit'])
 
-                f = open(out, 'rb')
+                f[sizeType] = open(out, 'rb')
 
                 # Uploading a single file
                 #f = open('some_file.zip','rb')
-                requests.append(pool.upload(path, f, close=True))
+                requests.append(pool.upload(path, f[sizeType], close=True))
 
 
 
-            f = open(imageFile, 'rb')
+            f['original'] = open(imageFile, 'rb')
 
-
-            requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f, close=True))
+            requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f['original'], close=True))
             pool.all_completed(requests)
 
-
-
-
-
             filename = imageFile
+
             if os.path.isfile(filename):
-                    os.remove(filename)
+                os.remove(filename)
+
             for key in sizes.keys():
-                filename = '%s/%s-%s' % ('upload/', key, name + '.png')
-                filename = os.path.join(settings.MEDIA_ROOT, filename)
+                filename = '%s-%s' % (key, name + '.png')
+                filename = os.path.join(settings.MEDIA_ROOT, 'upload', filename).replace('\\', '/')
+
                 if os.path.isfile(filename):
                    os.remove(filename)
 

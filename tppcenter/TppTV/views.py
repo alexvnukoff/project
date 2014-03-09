@@ -16,13 +16,15 @@ from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_news_list(request,page=1, id=None):
+
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
 
-
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
 
     current_section = _("TPP-TV")
 
@@ -31,9 +33,9 @@ def get_news_list(request,page=1, id=None):
 
 
     if not id:
-        newsPage = _newsContent(request, page)
+        newsPage, filterAdv = _newsContent(request, page)
     else:
-        newsPage = _getdetailcontent(request, id)
+        newsPage, filterAdv = _getdetailcontent(request, id)
 
 
     if not request.is_ajax():
@@ -76,7 +78,7 @@ def _newsContent(request, page=1):
 
     #news = TppTV.active.get_active().order_by('-pk')
 
-    filters, searchFilter = func.filterLive(request)
+    filters, searchFilter, filterAdv = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
     sqs = SearchQuerySet().models(TppTV)
@@ -127,6 +129,7 @@ def _newsContent(request, page=1):
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
+
     for country in countries:
         country_dict[country['p2c__child__p2c__child']] = country['pk']
 
@@ -158,7 +161,8 @@ def _newsContent(request, page=1):
     }
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
+
+    return template.render(context), filterAdv
 
 
 def tvForm(request, action, item_id=None):
@@ -303,6 +307,9 @@ def updateNew(request, item_id):
 
 
 def _getdetailcontent(request, id):
+
+    filterAdv = func.getDeatailAdv(item_id)
+
     new = get_object_or_404(TppTV, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
 
@@ -339,4 +346,5 @@ def _getdetailcontent(request, id):
     template = loader.get_template('TppTV/detailContent.html')
 
     context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
-    return template.render(context)
+
+    return template.render(context), filterAdv

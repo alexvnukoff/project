@@ -331,14 +331,25 @@ def jsonFilter(request):
 
 def test(request):
     from PIL import Image
-    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\1111082.gif'
+    from core.amazonMethods import add
+
+    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\078279f0100c6ea1d7692338d59719d2.jpg'
     z = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\test.png'
-    im = Image.open(a)
-    func.resize(im, (100, 100), False, z)
+
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (70, 70), 'fit': False},
+            'th': {'box':(30, 30), 'fit': True}
+    }
+
+    a = add(a, sizes=sizes)
+
+    #func.resize(im, sizes['big']['box'], False, z)
+
 
 
     from django.http import StreamingHttpResponse
-    return StreamingHttpResponse('pong')
+    return StreamingHttpResponse(a)
 
 
 def ping(request):

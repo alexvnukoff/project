@@ -23,18 +23,22 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def get_product_list(request, page=1, item_id=None, my=None):
+
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     if item_id is None:
         try:
-            productsPage = _productContent(request, page, my)
+            productsPage, filterAdv = _productContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        productsPage = _getDetailContent(request, item_id)
+        productsPage, filterAdv = _getDetailContent(request, item_id)
 
     styles = []
     scripts = []
@@ -75,8 +79,10 @@ def _productContent(request, page=1, my=None):
     #TODO: Jenya change to get_active_related()
     #products = Product.active.get_active().order_by('-pk')
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Product)
 
@@ -171,16 +177,19 @@ def _productContent(request, page=1, my=None):
         'url_paginator': url_paginator,
 
     }
+
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 
 
 
 def _getDetailContent(request, item_id):
+
+     filterAdv = func.getDeatailAdv(item_id)
 
      product = get_object_or_404(Product, pk=item_id)
      productValues = product.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'IMAGE',
@@ -215,7 +224,8 @@ def _getDetailContent(request, item_id):
 
      context = RequestContext(request, {'productValues': productValues, 'photos': photos,
                                         'additionalPages': additionalPages, 'companyValues': companyValues})
-     return template.render(context)
+
+     return template.render(context), filterAdv
 
 
 

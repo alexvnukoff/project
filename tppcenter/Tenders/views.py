@@ -21,6 +21,9 @@ from haystack.query import SQ, SearchQuerySet
 import json
 
 def get_tenders_list(request, page=1, item_id=None, my=None):
+
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
@@ -32,11 +35,11 @@ def get_tenders_list(request, page=1, item_id=None, my=None):
 
     if item_id is None:
         try:
-            tendersPage = _tendersContent(request, page, my)
+            tendersPage, filterAdv = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        tendersPage = _tenderDetailContent(request, item_id)
+        tendersPage, filterAdv = _tenderDetailContent(request, item_id)
 
     if not request.is_ajax():
         user = request.user
@@ -71,11 +74,11 @@ def get_tenders_list(request, page=1, item_id=None, my=None):
 
 def _tendersContent(request, page=1, my=None):
 
-
+    filterAdv = []
 
     #tenders = Tender.active.get_active().order_by('-pk')
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Tender)
@@ -159,12 +162,12 @@ def _tendersContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def _tenderDetailContent(request, item_id):
 
-
+     filterAdv = func.getDeatailAdv(item_id)
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -180,7 +183,8 @@ def _tenderDetailContent(request, item_id):
 
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context)
+
+     return template.render(context), filterAdv
 
 
 def tenderForm(request, action, item_id=None):
