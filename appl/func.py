@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.conf import settings
 from PIL import Image
+from django.template import RequestContext, loader
 
 def getPaginatorRange(page):
     '''
@@ -608,3 +609,83 @@ def getB2BcabinetValues(request):
         return cabinetValues
 
     return None
+
+def getBannersRight(request, places, site, template, filter=None):
+
+    bList = []
+
+    for place in places:
+        banner = AdvBanner.active.get_active().filter(c2p__parent__title=place, c2p__type="relation", sites=site)
+
+        if filter is not None:
+            banner = banner.filter(c2p__parent__in=filter, c2p__type='relation')
+
+        banner = banner.order_by('?').values_list('pk', flat=True)[:1]
+
+        if len(banner) == 1:
+            bList.append(banner[0])
+
+    bAttr = Item.getItemsAttributesValues(('NAME', 'SITE_NAME', 'IMAGE'), bList)
+
+    templateParams = {
+        'banners': bAttr
+    }
+
+    template = loader.get_template(template)
+
+
+    context = RequestContext(request, templateParams)
+
+    return template.render(context)
+
+def getTops(request, models, filter=None):
+
+    topList = []
+    modelTop = {}
+
+    for model, count in models.items():
+
+        sub = model.objects.all()
+        top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
+
+        if filter is not None:
+            top = top.filter(c2p__parent__in=filter, c2p__type='relation')
+
+        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(count)]
+
+        tops = list(top)
+
+        if len(tops) > 0:
+            topList += tops
+            modelTop[model] = tops
+
+
+    topAttr = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'SLUG'), topList)
+
+    tops = {}
+
+    for id, attrs in topAttr.items():
+
+        for model in models:
+
+            sModel = model.__name__
+
+            if model not in tops:
+                tops[sModel] = {}
+
+            if id in modelTop[model] :
+                tops[sModel][id] = attrs
+
+                break;
+
+
+    templateParams = {
+        'modelTop': tops
+    }
+
+    template = loader.get_template('AdvTop/tops.html')
+
+
+    context = RequestContext(request, templateParams)
+
+    return template.render(context)

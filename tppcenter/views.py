@@ -328,14 +328,10 @@ def jsonFilter(request):
 
 
 def test(request):
-    import datetime
+    a = AdvBanner.objects.filter(c2p__parent__in=[161, 194, 193], c2p__type="relation").values('c2p__parent', 'c2p__child')\
+        .annotate(Count('pk')).filter(c2p__parent__in=[40, 41 ,42 ,43 ,44, 32, 33 ,34 ,35 ,36 ,37 ,38 ,39]).order_by('?')
 
-    Country.objects.get(item2value__attr__title="NAME", item2value__title="Украина")
-
-    from unidecode import unidecode
     from django.http import StreamingHttpResponse
-    from django.template.defaultfilters import slugify
-    a = slugify(a)
     return StreamingHttpResponse(a)
 
 

@@ -1,0 +1,31 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% for model, tops in modelTop.items %}
+    <span class="titlesub">{{ model }}</span>
+    <ul class="list-ads">
+
+        {% for id, attrs in tops.items %}
+            {% with attrs.NAME|first as name %}
+            {% with attrs.SLUG|first as slug %}
+            {% with attrs.IMAGE|first as image %}
+
+                <li>
+                    <div class="top">
+                        <img src="{% static 'tppcenter/img/flag5.gif' %}" class="flag" />
+                        <a href="#" class="linkads">{{ name }}</a>
+                    </div>
+                    <div class="infoads">
+                    <a href="#">
+                        {% if image %}
+                            <img src="{{ MEDIA_URL }}th/{{ image }}" alt="" class="thumb" />
+                        {% endif %}
+                    </a>
+                    {{ name }}
+                    </div>
+                </li>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% endfor %}
+    </ul>
+{% endfor %}

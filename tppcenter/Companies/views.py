@@ -50,6 +50,8 @@ def get_companies_list(request, page=1, item_id=None, my=None):
 
         current_section = "Companies"
 
+        bRight = func.getBannersRight(request, ['Right 1', 'Right 2', 'Right 3'], settings.SITE_ID, 'AdvBanner/banners.html' , filter=[41])
+        tops = func.getTops(request, {Product: 5})
 
         templateParams = {
             'user_name': user_name,
@@ -60,7 +62,9 @@ def get_companies_list(request, page=1, item_id=None, my=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'current_company': current_company,
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'tops': tops
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))

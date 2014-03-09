@@ -505,7 +505,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     return True
 
 @transaction.atomic
-def addBannerAttr(post, files, user, site_id, ids):
+def addBannerAttr(post, files, user, site_id, ids, bType):
     values = {}
 
     values['NAME'] = post.get('NAME', "")
@@ -515,7 +515,10 @@ def addBannerAttr(post, files, user, site_id, ids):
     form = ItemForm('AdvBanner', values=values)
     form.clean()
 
-    item = form.save(user, site_id)
+    item = form.save(user, site_id, disableNotify=True)
+
+    if not item:
+        raise Exception('Error occurred while saving form')
 
     stDate = post.get('st_date')
     edDate = post.get('ed_date')
@@ -523,7 +526,8 @@ def addBannerAttr(post, files, user, site_id, ids):
     stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
     edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
 
-    item.update(start_date=stDate, end_date=edDate)
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
+    Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
 
     delta = edDate - stDate
     delta = delta.days
@@ -534,9 +538,10 @@ def addBannerAttr(post, files, user, site_id, ids):
     for id in ids:
         if not isinstance(costs[id], dict):
             costs[id] = {}
-            cost = costs[id].get('COST', [0])[0]
-            costs[id] = cost
-            total += int(cost) * delta
+
+        cost = costs[id].get('COST', [0])[0]
+        costs[id] = cost
+        total += float(cost) * delta
 
     history = {
         'costs': costs,
@@ -549,12 +554,9 @@ def addBannerAttr(post, files, user, site_id, ids):
     bulk = []
 
     for goal in advGoal:
-        bulk.append(Relationship(child=item, parent=goal, create_user=user))
+        bulk.append(Relationship(child=item, parent=goal, create_user=user, type="relation"))
 
     Relationship.objects.bulk_create(bulk)
-
-    ord = AdvOrder(create_user=user, sites=site_id)
-    ord.save()
 
     itemAttrs = item.getAttributeValues('IMAGE', 'SITE_NAME', 'NAME')
 
@@ -569,6 +571,81 @@ def addBannerAttr(post, files, user, site_id, ids):
         'NAME': itemAttrs.get('NAME', [''])[0]
     }
 
-    ord.setAttributeValue(attr, user)
+    form = ItemForm('AdvOrder', values=attr)
+    form.clean()
+
+    ord = form.save(user, site_id, disableNotify=True)
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
+
+
+@transaction.atomic
+def addTopAttr(post, object, user, site_id, ids):
+
+    form = ItemForm('AdvTop', values={})
+    form.clean()
+
+    item = AdvTop(create_user=user)
+    item.save()
+
+    if not item:
+        raise Exception('Error occurred while saving form')
+
+    item.sites.add(site_id)
+
+    stDate = post.get('st_date')
+    edDate = post.get('ed_date')
+
+    stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
+    edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
+
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
+    Relationship.setRelRelationship(parent=item, child=object, type="relation", user=user)
+
+    delta = edDate - stDate
+    delta = delta.days
+
+    costs = Item.getItemsAttributesValues('COST', ids)
+    total = 0
+
+    for id in ids:
+        if not isinstance(costs[id], dict):
+            costs[id] = {}
+
+        cost = costs[id].get('COST', [0])[0]
+        costs[id] = cost
+        total += float(cost) * delta
+
+    history = {
+        'costs': costs,
+        'ids': ids
+    }
+
+    history = json.dumps(history)
+
+    advGoal = Item.objects.filter(pk__in=ids)
+    bulk = []
+
+    for goal in advGoal:
+        bulk.append(Relationship(child=item, parent=goal, create_user=user, type="relation"))
+
+    Relationship.objects.bulk_create(bulk)
+
+    itemAttrs = object.getAttributeValues('NAME')
+
+    attr = {
+        'ORDER_HISTORY': history,
+        'ORDER_DAYS': delta,
+        'COST': total,
+        'START_EVENT_DATE': stDate,
+        'END_EVENT_DATE': edDate,
+        'NAME': itemAttrs[0]
+    }
+
+    form = ItemForm('AdvOrder', values=attr)
+    form.clean()
+
+    ord = form.save(user, site_id, disableNotify=True)
+
+    Relationship.setRelRelationship(item, ord, user=user, type="relation")
+
