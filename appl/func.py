@@ -382,7 +382,7 @@ def resize(img, box, fit, out):
             img = img.convert("RGB")
 
         #save it into a file-like object
-        img.save(out, "JPEG", quality=75)
+        img.save(out, "PNG")
 
 
 

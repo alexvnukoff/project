@@ -328,11 +328,15 @@ def jsonFilter(request):
 
 
 def test(request):
-    a = AdvBanner.objects.filter(c2p__parent__in=[161, 194, 193], c2p__type="relation").values('c2p__parent', 'c2p__child')\
-        .annotate(Count('pk')).filter(c2p__parent__in=[40, 41 ,42 ,43 ,44, 32, 33 ,34 ,35 ,36 ,37 ,38 ,39]).order_by('?')
+    from PIL import Image
+    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\1111082.gif'
+    z = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\test.png'
+    im = Image.open(a)
+    func.resize(im, (100, 100), False, z)
+
 
     from django.http import StreamingHttpResponse
-    return StreamingHttpResponse(a)
+    return StreamingHttpResponse('pong')
 
 
 def ping(request):
