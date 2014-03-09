@@ -70,7 +70,7 @@
                             </div>
                     </div>
                     <div class="innov-details">
-                    	<p>{{ content }}</p>
+                    	<p>{{ content|cleanHtml|safe }}</p>
                     </div>
                     <div class="goods-details-tab">
                         <div class="tab-cate">
@@ -112,7 +112,7 @@
                                         <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
 
                                         <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
-                                            <i class="imgnews zoom"></i><span class="zoomtext">увеличить</span></div>
+                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span></div>
                                         <div class="gray-img"></div>
                                     </div>
                                 </li>
@@ -127,7 +127,7 @@
                         </div>
                         {% for page in additionalPages %}
                         <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                              <div class="content-goods-tab">{{ page.getContent }}</div>
+                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
                          </div>
                         {% endfor %}
                     </div>

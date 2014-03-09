@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="container">
      <div class="companies">
                {% include "Companies/popupFilter.html" %}
@@ -21,18 +22,19 @@
                              <li>
                             <div class="title">
                                 <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
-                                <a href="#">
+                                <a href="{% url 'companies:detail' slug %}">
                                     {{ name }}
-                                    {% if inn %}
-                                     , {% trans 'VATIN' %} {{ inn }}
-                                    {% endif %}
+
+
                                 </a>
                             </div>
                             <div class="company-infor">
                                 <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
                                 <div class="desc">
-                                   {{ about_company|truncatewords:30 }}
-                                    {% if slug %}<a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>{% endif %}
+
+                                   {{ about_company|cleanHtml|safe|truncatewords:30 }}
+                                    <a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>
+
                                 </div>
                                 <div class="companycontact">
                                     <div class="line">

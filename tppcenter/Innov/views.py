@@ -206,7 +206,7 @@ def _innovDetailContent(request, item_id):
                                         'additionalPages': additionalPages})
      return template.render(context)
 
-
+@login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -273,7 +273,7 @@ def addProject(request):
     currency_slots = currency.getSlotsList()
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -290,7 +290,8 @@ def addProject(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('innov:main'))
 
 
@@ -335,7 +336,7 @@ def updateProject(request, item_id):
     form = ItemForm('InnovationProject', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -352,7 +353,8 @@ def updateProject(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewProject(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('innov:main'))
 
     template = loader.get_template('Innov/addForm.html')

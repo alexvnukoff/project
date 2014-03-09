@@ -168,7 +168,7 @@ def _tenderDetailContent(request, item_id):
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
-                                                 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3'))
+                                                 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'DETAIL_TEXT'))
 
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -182,7 +182,7 @@ def _tenderDetailContent(request, item_id):
                                         'additionalPages': additionalPages})
      return template.render(context)
 
-
+@login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -245,7 +245,7 @@ def addTender(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -260,7 +260,8 @@ def addTender(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
@@ -299,7 +300,7 @@ def updateTender(request, item_id):
     form = ItemForm('Tender', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -314,7 +315,8 @@ def updateTender(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewTender(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tenders:main'))
 
 

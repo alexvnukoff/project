@@ -28,7 +28,7 @@
                         	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
                     {% endwith %}
                     {% endwith %}
