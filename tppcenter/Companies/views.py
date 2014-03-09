@@ -302,7 +302,7 @@ def _tabsProducts(request, company, page=1):
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -359,7 +359,7 @@ def addCompany(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
 
 
@@ -376,7 +376,8 @@ def addCompany(request):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('companies:main'))
 
     template = loader.get_template('Companies/addForm.html')
@@ -428,7 +429,7 @@ def updateCompany(request, item_id):
         form = ItemForm('Company', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -442,7 +443,8 @@ def updateCompany(request, item_id):
         form.clean()
 
         if form.is_valid():
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('companies:main'))
 
 

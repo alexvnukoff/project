@@ -44,7 +44,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .styled-select2 select{ background: transparent; width: 220px; color: #9b9b9b; font-size:12px; line-height: 1; border: 0; border-radius: 0; height: 30px; padding:5px 0 5px 5px; border-top:0;
  -webkit-appearance: none; -ms-appearance: none;}
 .styled-select2 select option{background-color:#FFF; padding: 3px 5px;}
-.inputsearch{ position:relative; float:left; width:78%; font-size:14px; color:#9b9b9b; background-color:#FFF; margin:4px 0 0 0; padding:8px 5px; border:0;}
+.inputsearch{ position:relative; float:left; width:77%; font-size:14px; color:#9b9b9b; background-color:#FFF; margin:4px 0 0 0; padding:8px 5px; border:0;}
 .btns{ float:right; margin:4px 4px 0 0 ; display:inline; font-size:17px; color:#FFF; padding:5px 22px 9px 22px; border-radius:3px; box-shadow:0px 1px 1px #333333;
 background-color:#2186b8;
 background-image: -webkit-gradient(

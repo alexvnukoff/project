@@ -23,7 +23,7 @@
 
             {% block content %}
             <div class="blogin">
-				<h3>Авторизация</h3>
+				<h3>{% trans 'Authorization' %}</h3>
                 <form method='post' action=''>
                      {% csrf_token %}
 
@@ -44,7 +44,7 @@
                        {% if form.password.errors   %}<div class="formerror">{{ form.password.errors.as_text }}</div>{% endif %}
                     </li>
                     <li><input type="submit" name="Login"  class="btnlogin" value="{% trans "Sign in" %}"></li>
-                     <li><a href="{% url 'auth_password_reset' %}">Забыли пароль?</a></li>
+                     <li><a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a></li>
 
                 </ul>
                 </form>

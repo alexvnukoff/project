@@ -29,7 +29,7 @@ def home(request):
 
 
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('news:main'))
+        return HttpResponseRedirect(reverse('wall:main'))
 
     if request.POST.get('Register', None):
         return registration(request)
@@ -47,13 +47,13 @@ def home(request):
     products = Product.active.get_active_related().order_by('-pk')[:3]
 
     products_id = [product.pk for product in products]
-    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE'), products_id)
+    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
     func.addDictinoryWithCountryAndOrganization(products_id,productsList)
 
     services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
 
     services_id = [service.id for service in services]
-    serviceList = Item.getItemsAttributesValues(("NAME",), services_id)
+    serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
     func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
 
@@ -64,7 +64,7 @@ def home(request):
 
     exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
     exhibitions_id = [exhibition.pk for exhibition in exhibitions]
-    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE"), exhibitions_id)
+    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
     func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
     templateParams = {
@@ -122,7 +122,9 @@ def user_login(request):
                    user.is_manager = True
                    user.save()
                    group.user_set.add(user)
-          return HttpResponseRedirect(reverse('news:main'))
+                   return HttpResponseRedirect(reverse('profile:main'))
+               else:
+                   return HttpResponseRedirect(reverse('wall:main'))
 
     return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
 

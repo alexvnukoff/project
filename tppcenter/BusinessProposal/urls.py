@@ -17,7 +17,7 @@ urlpatterns = patterns('',
      url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.BusinessProposal.views.get_proposals_list,{'my':True}, name="my_main_paginator"),
      url(r'^add/$', tppcenter.BusinessProposal.views.proposalForm,{'action': "add"}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.BusinessProposal.views.proposalForm,{'action': "update"}, name="update"),
-     url(r'^[a-zA-z0-9-]+-(?P<item_id>[0-9]+).html$', tppcenter.BusinessProposal.views.get_proposals_list, name="detail"),
+     url(r'^([a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.BusinessProposal.views.get_proposals_list, name="detail"),
 
 
 

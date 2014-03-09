@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
 
@@ -16,7 +17,7 @@
                 <div class="deal-details">
                     <h3><img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" /> {{ name }}</h3>
                     <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="" />
-                    <p>{{ content }}</p>
+                    <p>{{ content|cleanHtml|safe }}</p>
                 </div>
                 <div class="social">
                     <a href="#"><i class="imgnews share-1"></i></a>

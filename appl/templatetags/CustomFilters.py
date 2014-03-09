@@ -63,7 +63,8 @@ def split(str, splitter):
 
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
-    return clean_html(value)
+    if len(value) > 0:
+        return clean_html(value)
 
 
 

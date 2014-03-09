@@ -4,8 +4,9 @@
  <div class="companies">
           	<div class="wall-title">{% trans 'Latest updates' %}</div>
 
-
+             {% if innovValues  %}
              <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
+
                <ul class="tender-list" id="afisha-list">
                 {% for id , attr in innovValues.items %}
                     {% with attr.NAME.0 as name %}
@@ -30,7 +31,7 @@
                         	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
                     {% endwith %}
                     {% endwith %}
@@ -47,7 +48,8 @@
                 {% endfor %}
 
              </ul>
-
+            {% endif %}
+            {% if exhibitionsValues %}
             <div class="wall-title-bg">{% trans 'Exhibitions' %}</div>
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in exhibitionsValues.items %}
@@ -89,7 +91,9 @@
                 {% endfor %}
 
             </ul>
+            {% endif %}
 
+            {% if proposalsValues %}
             <div class="wall-title-bg">{% trans 'Bussiness Proposals' %}</div>
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in proposalsValues.items %}
@@ -123,11 +127,12 @@
 
                 {% endfor %}
             </ul>
+            {% endif %}
 
 
 
 
-
+             {% if newsValues %}
              <div class="wall-title-bg">{% trans 'News' %}</div>
               <ul class="listnews">
                 {% for id , attr in newsValues.items %}
@@ -152,7 +157,7 @@
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
                             <p>{{ content|cleanHtml|safe|truncatewords:"30" }} </p>
-                           <!--noindex--><a href="#" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                           <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>
                     {% endwith %}
@@ -170,6 +175,8 @@
                 {% endfor %}
 
             </ul>
+            {% endif %}
+           {% if productsValues %}
           <div class="wall-title-bg">{% trans 'Products' %}</div>
             <ul class="listprd">
                 {% for id , attr in productsValues.items %}
@@ -202,6 +209,7 @@
                     {% endwith %}
                 {% endfor %}
             </ul>
+ {% endif %}
 
 
 

@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
 
@@ -35,7 +36,7 @@
                            {% endfor %}
                         </div>
                     </div>
-                    <p>{{ content }} </p>
+                    <p>{{ content|cleanHtml|safe }} </p>
                 </div>
                 <div class="social">
                 	<a href="#"><i class="imgnews share-1"></i></a>
