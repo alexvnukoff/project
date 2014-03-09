@@ -53,6 +53,8 @@ def get_companies_list(request, page=1, item_id=None, my=None):
 
         current_section = _("Companies")
 
+        bRight = func.getBannersRight(request, ['Right 1', 'Right 2', 'Right 3'], settings.SITE_ID, 'AdvBanner/banners.html' , filter=[41])
+        tops = func.getTops(request, {Product: 5})
 
         templateParams = {
             'user_name': user_name,
@@ -64,7 +66,8 @@ def get_companies_list(request, page=1, item_id=None, my=None):
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'cabinetValues': cabinetValues,
-            'addNew': reverse('companies:add')
+            'bannerRight': bRight,
+            'tops': tops
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -246,7 +249,7 @@ def _tabsTenders(request, company, page=1):
 
 
     }
-
+    
     return render_to_response('Companies/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, company, page=1):

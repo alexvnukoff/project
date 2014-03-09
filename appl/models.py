@@ -186,6 +186,14 @@ class AdvBannerType(Item):
     def __str__(self):
         return self.getName()
 
+class AdvTop(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
 class AdvBanner(Item):
 
     active = ItemManager()

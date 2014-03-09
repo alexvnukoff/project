@@ -265,8 +265,6 @@
 {% block center %}
 <div class="ads-details">
     <form enctype="multipart/form-data" method="post" action="" name="advForm">
-        {% with form.fields.NAME.initial as name %}
-        {% with form.fields.SITE_NAME.initial as url %}
 
         {% csrf_token %}
 
@@ -280,41 +278,12 @@
             {% endif %}
 
             <ul class="ads-line">
-                <li>
-                    <label>{% trans "Image file (Maximum 50KB)" %}</label>
-                    {% if form.errors.IMAGE %}
-                        <div class="error-handler"><div class="formserror">{{ form.errors.IMAGE }}</div></div>
-                    {% endif %}
-                    <div class="img-ads">
-                        <input type="file" name="IMAGE" />
-                        <div class="gray-img"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="clumn1">
-                        <label>{% trans "Link URL" %}</label>
-                        {% if form.errors.URL %}
-                            <div class="error-handler"><div class="formserror">{{ form.errors.URL }}</div></div>
-                        {% endif %}
-                        <input type="text" name="SITE_NAME" value="{{ url }}" placeholder="" class="text" />
-                    </div>
+                <li class="date-line">
                     <div class="clumn2">
                         <label>{% trans "Start date" %}</label>
                         <input value="{{ stDate }}" type="text" name="st_date" class="date" id="date-start" />
                     </div>
-                </li>
-                <li>
-                    <div class="clumn1">
-                        <label>{% trans "Image title" %}</label>
-                        {% if form.errors.NAME %}
-                            <div class="error-handler">
-                                <div class="formserror">{{ form.errors.NAME }}</div>
-                            </div>
-                        {% endif %}
 
-
-                        <textarea name="NAME" rows="3">{{ name }}</textarea>
-                    </div>
                     <div class="clumn2">
                         <label>{% trans "End date" %}</label>
                         <input type="text" value="{{ edDate }}" name="ed_date" class="date"  id="date-end" />
@@ -358,8 +327,6 @@
 
                 <input type="submit" class="btnprice" value="{% trans "Pay" %}">
             </div>
-        {% endwith %}
-        {% endwith %}
     </form>
 </div>
 {% endblock %}

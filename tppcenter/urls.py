@@ -18,6 +18,8 @@ import tppcenter.Messages.urls
 import tppcenter.Wall.urls
 import tppcenter.AdvBanner
 import tppcenter.AdvBanner.urls
+import tppcenter.AdvTop
+import tppcenter.AdvTop.urls
 
 
 admin.autodiscover()
@@ -42,6 +44,7 @@ urlpatterns = patterns('',
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
     url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
+    url(r'^advtop/', include(tppcenter.AdvTop.urls, namespace='adv_top')),
 
 
     # url(r'^blog/', include('blog.urls')),

@@ -258,7 +258,7 @@ rgb(33,136,187) 100%);}
 .ads-details{ position:relative; float:right; width:880px;}
 .ads-details-center{ position:relative; float:left; width:580px;}
 
-.ads-line{ float:left; width:100%;}
+.ads-line{  width:100%;}
 .ads-line li{ float:left; width:100%; margin:12px 0 0 0;}
 .ads-line li input.text, .ads-line li select, .ads-line li textarea{ float:left; width:97%; border:1px #bdbdbd solid; padding:5px;}
 .ads-line li select{ float:left; width:98%; padding:6px;}
@@ -268,7 +268,7 @@ rgb(33,136,187) 100%);}
 .ads-line li .clumn1{ float:left; width:385px;}
 .ads-line li .clumn2{ float:right; width:180px;}
 
-.img-ads{ position:relative; float:left; width:215px; height:72px;}
+.img-ads{ position:relative;  width:215px; height:72px;}
 .img-ads:hover .deleteimge{ display:block;}
 .tab-cate .tab-ads a{ padding:0 40px!important;}
 .cpn-details-tab .content-tab-ads{ position:relative; float:left; width:558px; margin:15px 10px 10px 10px; display:inline;}

@@ -19,7 +19,9 @@ urlpatterns = patterns('',
 
      url(r'^add/$', tppcenter.Tpp.views.tppForm,{'action': 'add'}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Tpp.views.tppForm,{'action': 'update'}, name="update"),
-     url(r'^([a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Tpp.views.get_tpp_list, name="detail"),
+
+     url(r'^([0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Tpp.views.get_tpp_list, name="detail"),
+
 
      url(r'^tabs/companies/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsCompanies, name="tab_companies"),
      url(r'^tabs/companies/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsCompanies, name="tab_companies_paged"),
