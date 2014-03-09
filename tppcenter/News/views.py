@@ -202,6 +202,7 @@ def newsForm(request, action, item_id=None):
 
 def addNews(request):
     current_company = request.session.get('current_company', None)
+
     if current_company:
         item = Organization.objects.get(pk=current_company)
         perm_list = item.getItemInstPermList(request.user)
@@ -210,7 +211,7 @@ def addNews(request):
     else:
         perm = request.user.get_all_permissions()
         if not {'appl.add_news'}.issubset(perm):
-             return render_to_response("permissionDenied.html")
+            return render_to_response("permissionDenied.html")
 
 
     form = None

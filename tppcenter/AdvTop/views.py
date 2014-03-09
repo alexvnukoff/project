@@ -10,51 +10,10 @@ from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from core.tasks import addBannerAttr
+from core.tasks import addTopAttr
 from django.core.files.images import ImageFile
 from django.db import transaction
 from copy import copy
-
-@login_required(login_url='/login/')
-def gatPositions(request):
-
-    bannerType = AdvBannerType.objects.all().values('pk', 'sites__name')
-
-    bannerType_ids = [btype['pk'] for btype in bannerType]
-    bannerNames = Item.getItemsAttributesValues('NAME', bannerType_ids)
-    sites = {}
-
-    for btype in bannerType:
-
-        if btype['sites__name'] not in sites:
-            sites[btype['sites__name']] = {}
-
-        if btype['pk'] in bannerNames:
-            sites[btype['sites__name']][btype['pk']] = bannerNames[btype['pk']]
-
-    cabinet = Cabinet.objects.get(user=request.user)
-    cabinetAttr = cabinet.getAttributeValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'))
-
-    user_name = ''
-
-    if len(cabinetAttr) != 0:
-        user_name = cabinetAttr.get('USER_FIRST_NAME', [''])[0] + ' ' + cabinetAttr.get('USER_MIDDLE_NAME', [''])[0] + ' '\
-                    + cabinetAttr.get('USER_LAST_NAME', [''])[0]
-
-    current_section = _('Banners')
-
-
-    notification = Notification.objects.filter(user=request.user, read=False).count()
-
-
-    templateParams = {
-        'sites': sites,
-        'user_name': user_name,
-        'current_section': current_section,
-        'notification': notification,
-    }
-
-    return render_to_response("AdvBanner/index.html", templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
@@ -123,9 +82,9 @@ def advJsonFilter(request):
 
 
 @login_required(login_url='/login/')
-def addBanner(request, bannerType):
+def addTop(request, item):
 
-    btype = get_object_or_404(AdvBannerType, pk=bannerType)
+    object = get_object_or_404(Item, pk=item)
 
     form = None
     stDate = ''
@@ -136,11 +95,6 @@ def addBanner(request, bannerType):
 
     if request.POST:
         user = request.user
-
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
 
         stDate = request.POST.get('st_date', '')
         edDate = request.POST.get('ed_date', '')
@@ -184,7 +138,7 @@ def addBanner(request, bannerType):
             filterAttr[id]['NAME'] = filterAttr[id].get('NAME', [''])[0]
             filterAttr[id]['COST'] = filterAttr[id].get('COST', [0])[0]
 
-        form = ItemForm('AdvBanner', values=values)
+        form = ItemForm('AdvTop', values={})
         form.clean()
 
         if form.is_valid():
@@ -194,36 +148,24 @@ def addBanner(request, bannerType):
 
             if form.is_valid():
 
-                #50 KB file
-                if form.is_valid() and (not values['IMAGE'] or values['IMAGE'].size > 50 * 1024):
-                    form.errors.update({"IMAGE": _("The image size cannot exceed 50 KB")})
+                try:
+                    startDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
+                    endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
+                except ValueError:
+                    form.errors.update({"DATE": _("You should choose a valid date range")})
 
                 if form.is_valid():
-                    im = ImageFile(values['IMAGE'])
+                    if not startDate or not endDate:
+                        form.errors.update({"DATE": _("You should choose a date range")})
 
-                    if im.height > 100 and im.width > 200:
-                        form.errors.update({"IMAGE": _("Image dimension should not exceed")})
+                    delta = endDate - startDate
 
-                if form.is_valid():
-                    try:
-                        startDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
-                        endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
-                    except ValueError:
+                    if delta.days <= 0:
                         form.errors.update({"DATE": _("You should choose a valid date range")})
-
-                    if form.is_valid():
-
-                        if not startDate or not endDate:
-                            form.errors.update({"DATE": _("You should choose a date range")})
-
-                        delta = endDate - startDate
-
-                        if delta.days <= 0:
-                            form.errors.update({"DATE": _("You should choose a valid date range")})
 
         if form.is_valid():
             try:
-                addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype)
+                addTopAttr(request.POST, object, user, settings.SITE_ID, ids)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 
@@ -234,14 +176,10 @@ def addBanner(request, bannerType):
 
     enable = {}
 
-    if btype.enableBranch:
-        enable['branch'] = _('Select branch')
 
-    if btype.enableCountry:
-        enable['country'] = _('Select country')
-
-    if btype.enableTpp:
-        enable['tpp'] = _('Select organization')
+    enable['branch'] = _('Select branch')
+    enable['country'] = _('Select country')
+    enable['tpp'] = _('Select organization')
 
 
     cabinet = Cabinet.objects.get(user=request.user)
@@ -270,4 +208,4 @@ def addBanner(request, bannerType):
         'filters': filter
     }
 
-    return render_to_response('AdvBanner/addForm.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('AdvTop/addForm.html', templateParams, context_instance=RequestContext(request))

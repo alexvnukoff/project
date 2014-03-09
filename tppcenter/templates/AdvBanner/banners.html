@@ -1,0 +1,13 @@
+{% for id, banner in banners.items %}
+    {% with banner.SITE_NAME|first as url %}
+    {% with banner.IMAGE|first as image %}
+    {% with banner.NAME|first as name %}
+    <div class="bannerleft">
+        <a href="{{ url }}" title="{{ name }}">
+            <img src="{{ MEDIA_URL }}original/{{ image }}" alt="{{ name }}" />
+        </a>
+    </div>
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% endfor %}

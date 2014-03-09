@@ -27,7 +27,7 @@ def add(imageFile=None, sizes=None):
 
     name = str(uuid.uuid4())
     i = now()
-    folder = "%s/%s/%s" % (i.day, i.month, i.year)
+    folder = "%s/%s/%s" % (i.year, i.month, i.day)
 
 
 
@@ -40,13 +40,18 @@ def add(imageFile=None, sizes=None):
             im = Image.open(imageFile)
             requests = []
 
+            x, y = im.size
+
+            if x > 800 or y > 800:
+                func.resize(im, (800, 800), False, imageFile)
+
             # Creating a pool connection
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
                                          endpoint='s3.amazonaws.com')
 
             for type, size in sizes.items():
-                path = '/' + type + '/'+ folder + '/' + name + '.jpg'
-                out = settings.MEDIA_ROOT + '/upload/' + type + '-' + name + '.jpg'
+                path = '/' + type + '/'+ folder + '/' + name + '.png'
+                out = settings.MEDIA_ROOT + '/upload/' + type + '-' + name + '.png'
                 func.resize(im, out=out, **size)
 
                 f = open(out, 'rb')
@@ -60,7 +65,7 @@ def add(imageFile=None, sizes=None):
             f = open(imageFile, 'rb')
 
 
-            requests.append(pool.upload('/original/' + folder + '/' + name + '.jpg', f, close=True))
+            requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f, close=True))
             pool.all_completed(requests)
 
 
@@ -71,7 +76,7 @@ def add(imageFile=None, sizes=None):
             if os.path.isfile(filename):
                     os.remove(filename)
             for key in sizes.keys():
-                filename = '%s/%s-%s' % ('upload/', key, name + '.jpg')
+                filename = '%s/%s-%s' % ('upload/', key, name + '.png')
                 filename = os.path.join(settings.MEDIA_ROOT, filename)
                 if os.path.isfile(filename):
                    os.remove(filename)
@@ -84,14 +89,14 @@ def add(imageFile=None, sizes=None):
             return False
 
 
-    return folder + '/' + name + '.jpg'
+    return folder + '/' + name + '.png'
 
 
 def addFile(file=None):
     ext = file.split('.')[-1]
     name = "%s.%s" % (uuid.uuid4(), ext)
     i = now()
-    folder = "%s/%s/%s" % (i.day, i.month, i.year)
+    folder = "%s/%s/%s" % (i.year, i.month, i.day)
 
 
 

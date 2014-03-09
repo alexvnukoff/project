@@ -11,6 +11,11 @@ class SearchIndexActive(indexes.SearchIndex):
     def index_queryset(self, using=None):
         return self.get_model().active.get_active()
 
+
+class SearchIndexActive(indexes.SearchIndex):
+    def index_queryset(self, using=None):
+        return self.get_model().active.get_active()
+
 ################## Exhibition Index #############################
 
 class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
@@ -567,10 +572,12 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
-    id = indexes.IntegerField()
+
     sites = indexes.MultiValueField(null=True)
     end_date = indexes.DateTimeField(null=True)
     start_date = indexes.DateTimeField()
+
+    id = indexes.IntegerField()
 
     def get_model(self):
         return Product

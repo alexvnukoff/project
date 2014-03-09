@@ -232,7 +232,7 @@ class ItemForm(forms.Form):
             return True
 
     @transaction.atomic
-    def save(self, user, site_id, dates=None):
+    def save(self, user, site_id, dates=None, disableNotify=False):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -287,6 +287,8 @@ class ItemForm(forms.Form):
         except Exception as e:
 
             transaction.savepoint_rollback(sid)
+
+
             func.notify("error_creating", 'notification', user=user)
             if len(self.to_delete_if_exception) > 0:
                  delete(self.to_delete_if_exception)

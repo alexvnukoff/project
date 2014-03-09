@@ -133,3 +133,9 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     width: 30px;
     height: 30px;
 }
+
+
+.ads-line .date-line .clumn2 {
+    float: left;
+    margin-right: 20px;
+}

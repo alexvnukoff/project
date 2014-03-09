@@ -330,15 +330,15 @@ def jsonFilter(request):
 
 
 def test(request):
-    import datetime
+    from PIL import Image
+    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\1111082.gif'
+    z = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\test.png'
+    im = Image.open(a)
+    func.resize(im, (100, 100), False, z)
 
-    Country.objects.get(item2value__attr__title="NAME", item2value__title="Украина")
 
-    from unidecode import unidecode
     from django.http import StreamingHttpResponse
-    from django.template.defaultfilters import slugify
-    a = slugify(a)
-    return StreamingHttpResponse(a)
+    return StreamingHttpResponse('pong')
 
 
 def ping(request):
