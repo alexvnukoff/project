@@ -1308,14 +1308,14 @@ def site2prod_DB_DB(request):
         try:
             leg_prod = L_Product.objects.get(btx_id=itm.btx_id)
         except:
-            print('Product does not exist in DB! Product btx_id:', itm.btx_id)
+            print('Product does not exist in buffer DB! Product btx_id:', itm.btx_id)
             i += 1
             continue
 
         try:
             prod = Product.objects.get(pk=leg_prod.tpp_id)
         except:
-            print('Product does not exist in DB! Product btx_id:', itm.btx_id)
+            print('Product does not exist in TPP DB! Product btx_id:', itm.btx_id)
             i += 1
             continue
 
