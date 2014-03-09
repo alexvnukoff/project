@@ -1078,8 +1078,8 @@ def pic2org_DB_DB(request):
     print('Reload products from buffer DB into TPP DB...')
     qty = L_Pic2Org.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
-    #pic_lst = L_Pic2Org.objects.filter(completed=False).all()
-    pic_lst = L_Pic2Org.objects.filter(completed=False)[:1000]
+    pic_lst = L_Pic2Org.objects.filter(completed=False).all()
+    #pic_lst = L_Pic2Org.objects.filter(completed=False)[:1000]
     i = 0
     count = 0;
     prev_btx_id = 0;
