@@ -1087,7 +1087,7 @@ def pic2org_DB_DB(request):
     for rec in pic_lst:
         if prev_btx_id != rec.btx_id:
             try:
-                leg_org = L_Product.objects.get(btx_id=rec.btx_id)
+                leg_org = L_Company.objects.get(btx_id=rec.btx_id)
             except:
                 try:
                     leg_org = L_TPP.objects.get(btx_id=rec.btx_id)
