@@ -31,7 +31,10 @@ def get_companies_list(request, page=1, item_id=None, my=None):
               settings.STATIC_URL + 'tppcenter/css/tpp.reset.css']
     scripts = []
     if not item_id:
-        newsPage = _companiesContent(request, page, my)
+        try:
+            newsPage = _companiesContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         newsPage = _companiesDetailContent(request, item_id)
 
@@ -48,7 +51,7 @@ def get_companies_list(request, page=1, item_id=None, my=None):
             user_name = None
             notification = None
 
-        current_section = "Companies"
+        current_section = _("Companies")
 
         bRight = func.getBannersRight(request, ['Right 1', 'Right 2', 'Right 3'], settings.SITE_ID, 'AdvBanner/banners.html' , filter=[41])
         tops = func.getTops(request, {Product: 5})
@@ -224,17 +227,36 @@ def _tabsNews(request, company, page=1):
 def _tabsTenders(request, company, page=1):
 
 
+    tenders = SearchQuerySet().models(Tender).filter(company=company)
+    attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+
+    result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
+
+
+    tendersList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "companies:tab_tenders_paged"
+
     templateParams = {
+        'tendersList': tendersList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company,
+
 
     }
-
+    
     return render_to_response('Companies/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, company, page=1):
 
 
     exhibition = SearchQuerySet().models(Exhibition).filter(company=company)
-    attr = ('NAME',)
+    attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
     result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
 
@@ -244,7 +266,7 @@ def _tabsExhibitions(request, company, page=1):
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "companies:tab_news_paged"
+    url_paginator = "companies:tab_exhibitions_paged"
 
     templateParams = {
         'exhibitionList': exhibitionList,
@@ -329,7 +351,7 @@ def addCompany(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not user.is_manager or not 'Company Creator' in user_groups:
-        raise PermissionError("you don't have permission to add company")
+        return render_to_response("permissionDenied.html")
 
     form = None
     branches = Branch.objects.all()
@@ -357,7 +379,7 @@ def addCompany(request):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, branch=branch)
+            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('companies:main'))
 
     template = loader.get_template('Companies/addForm.html')
@@ -423,7 +445,7 @@ def updateCompany(request, item_id):
         form.clean()
 
         if form.is_valid():
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('companies:main'))
 
 

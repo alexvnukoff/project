@@ -18,7 +18,7 @@
             var href = $('.goods-details-tab').find('a[href="#goods-tabs-4"]');
             (href).on('click',function(){
 
-                {% if position %}
+                {% if position|length > 3 %}
                   marker = new google.maps.Marker({
                     position: new google.maps.LatLng({{ position }})
                 });

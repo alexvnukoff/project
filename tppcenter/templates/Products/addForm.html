@@ -38,13 +38,13 @@ $(function() {
 
            	<div class="uploadimgage">
                   <div class="imgbig">
-                  	<label>Миниатюра</label>
+                  	<label>{% trans 'Image' %}</label>
                   {% if form.errors.IMAGE %}<div class="formserror">{{ form.errors.IMAGE }}</div>{% endif %}
                        {% if image %}
 
                     	<div class="b-img">
                     		 <img src="{{ MEDIA_URL }}th/{{ image.name }}"><br>
-                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span></div>
                              <div class="gray-img"></div>
                              <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
                         </div>
@@ -58,12 +58,12 @@ $(function() {
                         </div>
                     </div>
                      <div class="imgbig">
-               <label>Изображение <font color="#FF0000">*</font></label>
+               <label>{% trans 'Small image' %} <font color="#FF0000">*</font></label>
                  {% if small_image %}
                         <div class="b-img">
                             <img src="{{ MEDIA_URL }}th/{{ small_image.name }}"><br>
 
-                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span></div>
                              <input id="delete" type="checkbox" name="SMALL_IMAGE-CLEAR" value="{{ small_image }}" hidden="hidden" />
                          <div class="gray-img"></div>
                         </div>
@@ -108,23 +108,23 @@ $(function() {
                 <ul class="uploadconfig">
         	   <li>
                        <div class="clumn1">
-                            <label>Наименование <font color="#FF0000">*</font></label>
+                            <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
                             {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
                             <input type="text"  name="NAME"  placeholder="" class="text" style="width:92%;" value="{{ name }}" />
                         </div>
                         <div class="clumn2">
-                            <label>Артикул</label>
+                            <label>{% trans 'Article' %}</label>
                             <input type="text" name="SKU" value="{{sku }}" placeholder="" class="text" style="width:92%;" />
                         </div>
                     </li>
                     <li>
                         <div class="clumn1">
-                            <label>Цена <font color="#FF0000">*</font></label>
+                            <label>{% trans 'Cost' %} <font color="#FF0000">*</font></label>
                              {% if form.errors.COST %}<div class="formserror">{{ form.errors.COST }}</div>{% endif %}
                             <input type="text"  name="COST" value="{{ cost }}" placeholder="" class="text" style="width:92%;" />
                         </div>
                         <div class="clumn2">
-                            <label>Код валюты  <font color="#FF0000">*</font></label>
+                            <label>{% trans 'Currency' %}  <font color="#FF0000">*</font></label>
                            <select id="id_CURRENCY" name="CURRENCY">
                              {% for curr in currency_slots %}
                                <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected {% endif %}>{{ curr.title }}</option>
@@ -133,7 +133,7 @@ $(function() {
                         </div>
                     </li>
                     <li>
-                        <label>Категория <font color="#FF0000">*</font></label>
+                        <label>{% trans 'CAtegory' %} <font color="#FF0000">*</font></label>
                         <select name="CATEGORY">
 
 
@@ -168,7 +168,7 @@ $(function() {
                     </li>
                     <li>
                     	<div class="clumn1">
-                        	<label>Ед. измерения <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'Measerument unit' %} <font color="#FF0000">*</font></label>
                              <select id="id_MEASUREMENT_UNIT" name="MEASUREMENT_UNIT">
                                 {% for meas in measurement_slots %}
                                      <option value="{{ meas.id }}"{% if meas.id == meas_unit %} selected {% endif %}>{{ meas.title }}</option>
@@ -176,43 +176,43 @@ $(function() {
                          </select>
                         </div>
                         <div class="clumn2">
-                        	<label>Скидка, %</label>
+                        	<label>{% trans 'Discount' %}, %</label>
                             <input type="text"  name="DISCOUNT" value="{{ discount }}" placeholder="" class="text" style="width:92%;" />
                         </div>
                     </li>
                     <li>
                         <div class="clumn1">
-                            <label>Временная скидка, %</label>
+                            <label>{% trans 'Temporary discount' %}, %</label>
                             <input type="text" name="COUPON_DISCOUNT" value="{{ coupon_discount }}" placeholder="" class="text" />
                         </div>
                         <div class="clumn2">
                             <div class="clumn3">
-                                <label>С (дата)</label>
+                                <label>{% trans 'From(date)' %})</label>
                                 <input style="width:80px; " type="datetime" name="COUPON_DISCOUNT-START" value="{% if coupon_date.title %}{{ coupon_date.start_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" style="width:80%;" />
                             </div>
                             <div class="clumn4">
-                                <label>По (дата)</label>
+                                <label>{% trans 'To(date)' %}</label>
                                 <input style="width:80px;" type="datetime" name="COUPON_DISCOUNT-END" value="{% if coupon_date.title %}{{ coupon_date.end_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" style="width:80%;" />
                             </div>
                         </div>
                     </li>
                     <li>
                         <div class="clumn1">
-                            <label>Дата подключения</label>
+                            <label>{% trans 'Start date' %}</label>
                             <input type="datetime" name="START_DATE" placeholder="" class="date" value="{{ product.start_date|date:"m/d/Y" }}" />
                         </div>
                         <div class="clumn2">
-                            <label>Дата отключения</label>
+                            <label>{% trans 'End date' %}</label>
                             <input type="datetime" name="END_DATE" placeholder="" class="date" style="width:92%;" value="{{ product.end_date|date:"m/d/Y" }}" />
                         </div>
                     </li>
                     <li>
-                        <label>Краткое описание</label>
+                        <label>{% trans 'Anons' %}</label>
                          {% if form.errors.ANONS %}<div class="formserror">{{ form.errors.ANONS }}</div>{% endif %}
                         <textarea name="ANONS" >{{ anons }}</textarea>
                     </li>
                     <li>
-                        <label>Краткое описание</label>
+                        <label>{% trans 'Detail text' %}</label>
                           {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
                         <div class="">
                             <textarea class="tiny" style="height: 154px;width: 456px;" name="DETAIL_TEXT" >{{ text }}</textarea>
@@ -221,33 +221,33 @@ $(function() {
                     </li>
                     <li>
                         <div class="clumn1">
-                            <label>Документы</label>
+                            <label>{% trans 'Documents' %}</label>
                             {% if doc_1 %}
                                <div class="line">  <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a></div>
-                              <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}"  />Delete
+                              <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}"  />{% trans 'delete' %}
                            {% endif %}
                           <input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/>
 
                           {% if doc_2 %}
                                <div class="line">  <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 2</a></div>
-                              <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}"  />Delete
+                              <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}"  />{% trans 'delete' %}
                            {% endif %}
                           <input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/>
 
                           {% if doc_3 %}
                                <div class="line"> <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 1</a></div>
-                              <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}"  />Delete
+                              <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}"  />{% trans 'delete' %}
                            {% endif %}
                           <input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{doc_3  }}"/>
                         </div>
                         <div class="clumn2">
-                            <label>Ключи поиска</label>
+                            <label>{% trans 'Keywords' %}</label>
                             <textarea name="KEYWORD"  style="width:88%;">{{ keyword }}</textarea>
                         </div>
                     </li>
                 </ul>
           <div class="append-formin">
-                <div class="addpage-title">Дополнительные страницы</div>
+                <div class="addpage-title">{% trans 'Additional pages' %}</div>
                 <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
                 <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
                 <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
@@ -257,16 +257,16 @@ $(function() {
                     {% for page in  pages %}
                 <div class="addpage-form">
                     <div class="clumn1">
-                        <label>Заголовок</label>
+                        <label>{% trans 'Title' %}</label>
                         <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
                         {% if forloop.counter0 > 0 %}
-                          <a href="#" class="buttonclear  buttonremove">Remove</a>
+                          <a href="#" class="buttonclear  buttonremove">{% trans 'Remove' %}</a>
                         {% else %}
-                          <a href="#" class="buttonclear  add-advandce">Добавить</a>
+                          <a href="#" class="buttonclear  add-advandce">{% trans 'Add' %}</a>
                         {% endif %}
                     </div>
                     <div class="clumn2">
-                        <label>Описание</label>
+                        <label>{% trans 'Content' %}</label>
 
                         <div class="">
                             <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
@@ -279,13 +279,13 @@ $(function() {
 
                    <div class="addpage-form">
                     <div class="clumn1">
-                        <label>Заголовок</label>
+                        <label>{% trans 'Title' %}</label>
                         <input class="text" style="width:89%;" id="id_form-0-title"  name="pages-0-title" type="text" value="" />
 
                         <a href="#" class="buttonclear add-advandce">Добавить</a>
                     </div>
                     <div class="clumn2">
-                        <label>Описание</label>
+                        <label>{% trans 'Content' %}</label>
 
                         <div class="">
                             <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
@@ -298,7 +298,7 @@ $(function() {
         </div>
                          <div class="newform-button">
                             <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
-                            <a href="#" class="btntype1">Отменить</a>
+                            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
                         </div>
 
 

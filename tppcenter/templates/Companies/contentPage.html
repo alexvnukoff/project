@@ -32,7 +32,7 @@
                                 <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
                                 <div class="desc">
                                    {{ about_company|truncatewords:30 }}
-                                    <a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>
+                                    {% if slug %}<a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>{% endif %}
                                 </div>
                                 <div class="companycontact">
                                     <div class="line">

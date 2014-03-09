@@ -28,9 +28,11 @@ def get_news_list(request, page=1, my=None):
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-    newsPage = _newsContent(request, page, my)
-
+    try:
+        newsPage = _newsContent(request, page, my)
+    except ObjectDoesNotExist:
+        return render_to_response("permissionDen.html")
+    cabinetValues = func.getB2BcabinetValues(request)
     styles = []
     scripts = []
 
@@ -45,7 +47,7 @@ def get_news_list(request, page=1, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "News"
+        current_section = _("News")
 
         templateParams = {
             'user_name': user_name,
@@ -55,13 +57,14 @@ def get_news_list(request, page=1, my=None):
             'scripts': scripts,
             'current_company': current_company,
             'styles': styles,
-            'search': request.GET.get('q', '')
+            'search': request.GET.get('q', ''),
+            'addNew': reverse('news:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
-                                        'current_company':current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 def _newsContent(request, page=1, my=None):
 
@@ -236,7 +239,7 @@ def addNews(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company)
+            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('news:main'))
 
 
@@ -306,7 +309,7 @@ def updateNew(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('news:main'))
 
 
@@ -353,7 +356,8 @@ def detail(request, item_id):
         'newsPage': newsPage,
         'notification': notification,
         'styles': styles,
-        'scripts': scripts
+        'scripts': scripts,
+        'addNew': reverse('news:add')
     }
 
 

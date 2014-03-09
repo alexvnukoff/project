@@ -16,6 +16,7 @@ from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_news_list(request,page=1, id=None):
+    cabinetValues = func.getB2BcabinetValues(request)
 
 
     current_company = request.session.get('current_company', False)
@@ -23,7 +24,7 @@ def get_news_list(request,page=1, id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
-    current_section = "TPP-TV"
+    current_section = _("TPP-TV")
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
     scripts = []
@@ -59,14 +60,15 @@ def get_news_list(request,page=1, id=None):
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
-            'current_company': current_company
+            'current_company': current_company,
+            'addNew': reverse('tv:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage,
-                                        'current_company': current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
 
 
 
@@ -226,7 +228,7 @@ def addNews(request):
         form.clean()
 
         if form.is_valid():
-            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID)
+            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tv:main'))
 
     template = loader.get_template('TppTV/addForm.html')
@@ -284,7 +286,7 @@ def updateNew(request, item_id):
         form.clean()
 
         if form.is_valid():
-            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id)
+            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tv:main'))
 
 

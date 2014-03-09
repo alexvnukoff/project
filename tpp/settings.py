@@ -110,8 +110,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.oracle',
 
         'NAME': 'TPPDB',
-        'USER': 'tppProduction',
-        'PASSWORD': 'TrQwE123$%^;',
+        'USER': 'DDeath',
+        'PASSWORD': '123321',
         'HOST': 'tpp-production-db.cueshukzldr1.eu-west-1.rds.amazonaws.com',
         'PORT': '1521',
         #Section for Oracle
@@ -127,7 +127,7 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 

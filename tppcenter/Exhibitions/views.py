@@ -25,6 +25,8 @@ from django.conf import settings
 
 def get_exhibitions_list(request, page=1, item_id=None, my=None):
 
+    cabinetValues = func.getB2BcabinetValues(request)
+
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
@@ -33,7 +35,10 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None):
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
 
     if not item_id:
-        exhibitionPage = _exhibitionsContent(request, page, my)
+        try:
+            exhibitionPage = _exhibitionsContent(request, page, my)
+        except ObjectDoesNotExist:
+            return render_to_response("permissionDen.html")
     else:
         exhibitionPage = _exhibitionsDetailContent(request, item_id)
 
@@ -48,7 +53,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None):
         else:
             user_name = None
             notification = None
-        current_section = "Exhibitions"
+        current_section = _("Exhibitions")
 
 
 
@@ -60,13 +65,14 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None):
             'notification': notification,
             'search': request.GET.get('q', ''),
             'styles': styles,
-            'scripts': scripts
+            'scripts': scripts,
+            'addNew': reverse('exhibitions:add'),
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': exhibitionPage,
-                                        'current_company': current_company}))
+        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': exhibitionPage }))
 
 def _exhibitionsContent(request, page=1, my=None):
 
@@ -209,7 +215,7 @@ def exhibitionForm(request, action, item_id=None):
         user_name = None
         notification = None
 
-    current_section = _("Companies")
+    current_section = _("Exhibitions")
 
     if action == 'add':
         exhibitionPage = addExhibition(request)
@@ -265,7 +271,7 @@ def addExhibition(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company)
+            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
     template = loader.get_template('Exhibitions/addForm.html')
@@ -326,7 +332,7 @@ def updateExhibition(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch)
+            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
 

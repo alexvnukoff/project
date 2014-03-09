@@ -21,10 +21,12 @@ from registration.backends.default.views import RegistrationView
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
 
 from django.conf import settings
 
 def home(request):
+
 
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('news:main'))

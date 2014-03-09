@@ -249,6 +249,8 @@ $(document).ready(function() {
                 text = $(this).text();
                 ui.curPage.text(text);
 
+                $('.newslink .left .add-new').attr('href', url + 'add/');
+
                 ui.loading = ui.requester(url);
 
                 return false;

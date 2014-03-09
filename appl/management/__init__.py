@@ -1,10 +1,10 @@
 __author__ = 'Root'
-
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_syncdb
 from django.contrib.auth.models import Group, Permission
 import appl.models
 from appl.models import SystemMessages, Country
-from core.models import State, Attribute, Value, Slot, Dictionary, User
+from core.models import State, Attribute, Value, Slot, Dictionary, User, AttrTemplate
 
 def databaseInitialization(sender, **kwargs):
     '''
@@ -75,6 +75,7 @@ def databaseInitialization(sender, **kwargs):
                     'ANONS': 'Str',
                     'BANK_ACCOUNT': 'Chr',
                     'BANK_NAME': 'Chr',
+                    'CELLULAR': 'Chr',
                     'COST': 'Flo',
                     'COUPON_DISCOUNT': 'Flo',
                     'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
@@ -84,9 +85,14 @@ def databaseInitialization(sender, **kwargs):
                     'DOCUMENT_2': 'Ffl',
                     'DOCUMENT_3': 'Ffl',
                     'EMAIL': 'Chr',
+#TODO раскомментировать EMAIL 'Eml' (Ilya)
+                    #'EMAIL': 'Eml',
                     'FAX': 'Chr',
                     'FILE': 'Ffl',
                     'FLAG': 'Img',
+                    'GALLERY_TOPIC': 'Chr',
+                    'HEAD_PIC': 'Img',
+                    'ICQ': 'Chr',
                     'IMAGE': 'Img',
                     'IMAGE_SMALL': 'Img',
                     'INN': 'Chr',
@@ -94,6 +100,7 @@ def databaseInitialization(sender, **kwargs):
                     'KPP': 'Chr',
                     'MEASUREMENT_UNIT': {'type': 'Chr', 'slots': ['kg', 'piece']},
                     'MAP_POSITION': 'Chr',
+                    'MOBILE_NUMBER': 'Chr',
                     'NAME': 'Chr',
                     'NAME_FULL': 'Chr',
                     'NAME_DIRECTOR': 'Chr',
@@ -101,15 +108,13 @@ def databaseInitialization(sender, **kwargs):
                     'OKATO': 'Chr',
                     'OKVED': 'Chr',
                     'OKPO': 'Chr',
-                    'ORDER_DAYS': 'Str',
-                    'ORDER_HISTORY': 'Str',
                     'PERSONAL_FAX': 'Chr',
                     'PERSONAL_PHONE': 'Chr',
                     'PERSONAL_STATUS': {'type': 'Chr', 'slots': ['Individual', 'Businessman']},
                     'PERSONAL_WWW': 'Chr',
+                    'POSITION': 'Chr',
                     'PROFESSION': 'Chr',
                     'SEX': {'type': 'Chr', 'slots': ['Male', 'Female']},
-                    'POSITION': 'Chr',
                     'SITE_NAME': 'Chr',
                     'SKU': 'Chr',
                     'SLOGAN': 'Chr',
@@ -131,82 +136,82 @@ def databaseInitialization(sender, **kwargs):
     crt_usr = User.objects.get(pk=1)
     cntr, res = Country.objects.get_or_create(title='Azerbaydjan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Азербайджан'}
+        attr = {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Armeniya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Armenia', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Армения'}
+        attr = {'NAME': {'title': 'Armenia', 'title_ru': 'Армения'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Belarus', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Беларусь'}
+        attr = {'NAME': {'title': 'Belarus', 'title_ru': 'Беларусь'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Jordjiya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Georgia', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Грузия'}
+        attr = {'NAME': {'title': 'Georgia', 'title_ru': 'Грузия'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Israel', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Израиль'}
+        attr = {'NAME': {'title': 'Israel', 'title_ru': 'Израиль'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Kazakhstan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Казахстан'}
+        attr = {'NAME': {'title': 'Kazakhstan', 'title_ru': 'Казахстан'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Kyrgiziya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Kyrgyzstan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Киргизия'}
+        attr = {'NAME': {'title': 'Kyrgyzstan', 'title_ru': 'Киргизия'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Latviya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Latvia', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Латвия'}
+        attr = {'NAME': {'title': 'Latvia', 'title_ru': 'Латвия'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Litva', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Lithuania', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Литва'}
+        attr = {'NAME': {'title': 'Lithuania', 'title_ru': 'Литва'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Moldova', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Молдова'}
+        attr = {'NAME': {'title': 'Moldova', 'title_ru': 'Молдова'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Russia', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Россия'}
+        attr = {'NAME': {'title': 'Russia', 'title_ru': 'Россия'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Tadjikistan', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Tajikistan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Таджикистан'}
+        attr = {'NAME': {'title': 'Tajikistan', 'title_ru': 'Таджикистан'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Turkmeniya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Turkmenistan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Туркмения'}
+        attr = {'NAME': {'title': 'Turkmenistan', 'title_ru': 'Туркмения'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Uzbekistan', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Узбекистан'}
+        attr = {'NAME': {'title': 'Uzbekistan', 'title_ru': 'Узбекистан'}}
         cntr.setAttributeValue(attr, crt_usr)
 
     cntr, res = Country.objects.get_or_create(title='Ukraine', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Украина'}
+        attr = {'NAME': {'title': 'Ukraine', 'title_ru': 'Украина'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Estoniya', create_user = crt_usr)
+    cntr, res = Country.objects.get_or_create(title='Estonia', create_user = crt_usr)
     if res:
-        attr = {'NAME': 'Эстония'}
+        attr = {'NAME': {'title': 'Estonia', 'title_ru': 'Эстония'}}
         cntr.setAttributeValue(attr, crt_usr)
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)

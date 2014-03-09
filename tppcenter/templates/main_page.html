@@ -32,6 +32,8 @@
             });
         </script>
         <script>
+
+
             function noMatches(term) {
                 if (term.length > 0 && term.length < 3)
                    return '{% trans "Minimum length of search term is 3 characters" %}';
@@ -153,7 +155,6 @@
                 }
             }
             $(document).ready(function() {
-
                 ui.init();
                 uiDetail.init();
 
@@ -200,15 +201,15 @@
             {% if user.email %}
                 <div id="tabs-2">
                     <ul class="tab1-cate">
-                    	<li><a href="{%url 'news:my_main' %}">Новости</a></li>
-                        <li><a href="{% url 'products:my_main' %}">Товары</a></li>
+                    	<li><a href="{%url 'news:my_main' %}">{% trans 'News' %}</a></li>
+                        <li><a href="{% url 'products:my_main' %}">{% trans 'Products' %}</a></li>
                        <!-- <li><a href="#">Услуги</a></li>-->
-                        <li><a href="{% url "tpp:my_main" %}">ТПП</a></li>
-                        <li><a href="{% url "companies:my_main" %}">Компании</a></li>
-                        <li><a href="#">Инновационные проекты</a></li>
-                        <li><a href="{% url 'proposal:my_main' %}">Бизнес-предложения</a></li>
-                        <li><a href="#">Тендеры</a></li>
-                        <li><a href="{% url 'exhibitions:my_main' %}">Афиша</a></li>
+                        <li><a href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
+                        <li><a href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
+                        <li><a href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
+                        <li><a href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
+                        <li><a href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
+                        <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions' %}</a></li>
 
                         <!--<li><a href="#">ТПП ТВ </a></li>-->
                        <!-- <li><a href="#">Вакансии</a></li>-->

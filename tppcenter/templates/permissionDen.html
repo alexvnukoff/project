@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-   {% block title %}{% trans 'Permission Denied' %}{% endblock %}
+   {% block title %}{% trans 'No choosen organization' %}{% endblock %}
 
 
 
@@ -27,7 +27,7 @@
             <div class="blogin">
 				<h3>{% trans 'Perrmission denied' %}</h3>
            <div style="margin-top: 20px;">
-           <span style="font-size: 15px;"> {% trans 'Sorry but you cannot create this item , if you have created company you need choose it in you  ' %}
+           <span style="font-size: 15px;"> {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
                 <a href='{% url 'profile:main' %}'>{% trans 'profile' %}</a>, {% trans ' or create ' %}</span>
               <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a>
            </div>

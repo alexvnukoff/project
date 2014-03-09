@@ -15,11 +15,13 @@ from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 
 from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_wall_list(request):
+    cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -35,7 +37,7 @@ def get_wall_list(request):
     else:
         user_name = None
         notification = None
-    current_section = "Wall"
+    current_section = _("Wall")
 
 
     wallPage = _wallContent(request)
@@ -49,7 +51,7 @@ def get_wall_list(request):
 
     return render_to_response("Wall/index.html", {'user_name': user_name, 'current_section': current_section,
                                                   'wallPage': wallPage, 'notification': notification,
-                                                  'current_company': current_company},
+                                                  'current_company': current_company, 'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
 
 

@@ -9,6 +9,7 @@ from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
 
+
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,

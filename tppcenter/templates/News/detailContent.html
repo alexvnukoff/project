@@ -49,7 +49,7 @@
                 {% endif %}
                 </div>
                 <div class="related-news">
-                	<span class="title">Похожие новости</span>
+                	<span class="title">{% trans 'Similar news' %}</span>
                     <ul>
                      {% for id , attr in similarValues.items %}
                       {% with attr.NAME|first as sim_name %}
