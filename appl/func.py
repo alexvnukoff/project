@@ -390,6 +390,7 @@ def resize(img, box, fit, out):
 
 
 
+
 def findKeywords(tosearch):
     import string
     import difflib
