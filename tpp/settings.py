@@ -186,6 +186,8 @@ LANGUAGES = (
 )
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
+    'en': ('ru',),
+    'ru': ('en',),
     'he': ('en',),
     #'am': ('ru',),
     #'az': ('ru',),
