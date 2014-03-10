@@ -208,7 +208,7 @@ rgb(33,136,187) 100%);}
 .listprd{ float:left; width:100%;}
 .listprd li{ position:relative; float:left; width:150px; margin:20px 6px 0 0; padding:5px; background-color:#fafafa; color:#595959; line-height:16px;}
 .listprd li .thumb{ position:relative; float:left; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
-.listprd li .thumb img{max-width: 150px;max-height: 120px;position: absolute;margin: auto;left: 0;right: 0;bottom: 0;top: 0;}
+.listprd li .thumb img{max-width: 130px;max-height: 120px;position: absolute;margin: auto;left: 0;right: 0;bottom: 0;top: 0;}
 
 
 

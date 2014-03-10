@@ -143,7 +143,9 @@ def _proposalsContent(request, page=1, my=None):
 
         proposal = sqs.order_by(*order)
         url_paginator = "proposal:paginator"
-        params = {'sortField1': sortField1,
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
                     'sortField2': sortField2,
                     'order1': order1,
                     'order2': order2

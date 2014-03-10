@@ -684,11 +684,15 @@ def getTops(request, models, filter=None):
     for id, attrs in topAttr.items():
 
         for model in models:
+            
+            if model not in modelTop:
+                continue
 
             sModel = model.__name__
 
             if model not in tops:
                 tops[sModel] = {}
+
 
             if id in modelTop[model] :
                 tops[sModel][id] = attrs
@@ -713,7 +717,11 @@ def getDeatailAdv(item_id):
     filterAdv = []
     sqs = SearchQuerySet().filter(id=item_id)
 
-    filterAdv += sqs.branch
-    filterAdv += sqs.tpp
+
+    filterAdv += getattr(sqs, 'branch', [])
+    filterAdv += getattr(sqs, 'tpp', [])
+
+    if len(filterAdv) == 0:
+        filterAdv.append(item_id)
 
     return filterAdv

@@ -6,6 +6,7 @@ import tppcenter
 import tppcenter.views
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 

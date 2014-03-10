@@ -65,7 +65,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .table-deals tr:nth-child(2n+1){ background-color:#fcfcfc;}
 .table-deals tr.top{ background-color:#e8e8e8;}
 .table-deals tr.top td{ font-size:12px; font-weight:bold;}
-.deal-details{ position:relative; float:left; width:100%; background-color:#fafafa; padding:10px; margin:12px 0 0 0;}
+.deal-details{box-sizing: border-box; position:relative; float:left; width:100%; background-color:#fafafa; padding:10px; margin:12px 0 0 0;}
 .deal-details h3{ font-size:16px; font-weight:bold; padding-bottom:10px; float:left; width:100%;}
 .deal-details .thumb-deal{ float:left; width:150px; height:130px; background:url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom:4px; margin:0 10px 10px 0; color:#595959;}
 .deal-details .flag{ float:left; width:18px; height:12px; padding:4px 8px 0 0;}
@@ -215,7 +215,7 @@ border-style: solid; border-width: 4px 7px 4px 0; border-color: transparent #faf
 .custom-contentin .title{ float:left; width:100%; padding:8px 0; background-color:#e6e6e6; font-size:16px; font-weight:bold; text-indent:18px; margin-top:0; text-align:left; color:#000;}
 .customform{ position:relative; float:left; text-align:center; margin:12px 12px 0 12px; display:inline;}
 .customform .editor{ float:left; border:1px #bdbdbd solid; margin-bottom:10px;}
-.customform .btntype2{ font-size:17px; padding:8px 40px; border:0;
+.customform .btntype2, .btnprice{ font-size:17px; padding:8px 40px; border:0;
 background-color:#2186b8;
 background-image: -webkit-gradient(
 linear,
@@ -233,9 +233,34 @@ rgb(60,159,195) 49%,
 rgb(33,134,184) 50%,
 rgb(33,136,187) 100%);}
 .slimScrollBar{ background:#0089bc!important; width:4px!important; opacity:1!important;}
-.slimScrollRail{ width:4px!important;}
+.slimScrollRail{ width:4px!important; background:#d6d6d6!important; opacity:0.9!important}
 
 .gray-img{ position:absolute; width:150px; height:130px; top:0; left:0; z-index:99; background-color:#d7d7d7; display:none;}
+
+.portal-service{ position:relative; float:left; width:100%;}
+.portal-service li{ position:relative; float:left; width:100%; margin:10px 0 0 0; width:636px; padding:12px; background-color:#fafafa;}
+.portal-service li .titlemore, .portal-service li .titleless{ font-size:16px; font-weight:bold; color:#0089bc; text-decoration:underline; background:url(../img/more.png) no-repeat left center; padding-left:12px; display:block;}
+.portal-service li .titleless{ background:url(../img/less.png) no-repeat left center;}
+.portal-service li .contentportal{ position:relative; float:left; width:100%; color:#595959; display:none;}
+.portal-service li .contentportal p{ padding-top:14px;}
+
+/*---------------Tender-order----------*/
+.tenderorder{ position:relative; float:right; width:880px;}
+.tenderform{ position:relative; float:left; width:100%; padding-bottom:20px; margin:12px 0 0 0;}
+.tenderform .tenderline{ width:100%; margin:0; padding:0;}
+.tenderform .captcha{ float:left; margin-right:10px; display:inline;}
+.wall-title{ position:relative; float:left; width:100%; font-size:21px; font-weight:bold; color:#010101; margin:10px 0 0 0;}
+.wall-title-bg{ position:relative; float:left; width:100%; font-size:16px; font-weight:bold; color:#010101; margin:10px 0 0 0; padding:6px 0; background-color:#e6e6e6; text-indent:12px;}
+
+.contact-table{ width:584px; margin:0 auto;}
+.contact-tablein{ position:relative; float:left; width:100%; background-color:#FFF; border-radius:3px; padding:25px 0; margin-top:20%;}
+.contactform{ position:relative; float:left; width:100%;}
+.contactform li{ position:relative; float:left; width:80%; margin:15px 0 0 40px; color:#595959; display:inline;}
+.contactform li label{ position:relative; float:left; width:100%; font-weight:bold; padding-bottom:6px;}
+.contactform li .editor{ float:left; border:1px #bdbdbd solid;}
+.contactform li.end{ text-align:center;}
+.contactform li.end .btntype1, .contactform li.end .btntype2{ font-size:17px; padding:8px 40px;}
+.closecontact{ position:absolute;}
 
 .table-deals tr td.pr{ text-align:right;}
 .table-deals tr td.status{ text-align: center; padding-left:0;}

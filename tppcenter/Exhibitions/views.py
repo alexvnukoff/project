@@ -139,7 +139,9 @@ def _exhibitionsContent(request, page=1, my=None):
 
         exhibitions = sqs.order_by(*order)
         url_paginator = "exhibitions:paginator"
-        params = {'sortField1': sortField1,
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
                   'sortField2': sortField2,
                   'order1': order1,
                   'order2': order2}

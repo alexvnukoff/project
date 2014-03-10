@@ -64,7 +64,8 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'legacy_data',
-    'djcelery'
+    'djcelery',
+
 )
 
 
@@ -127,7 +128,7 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -156,7 +157,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
-MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
@@ -261,5 +262,7 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+
 
 

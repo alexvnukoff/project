@@ -37,6 +37,10 @@ def get_news_list(request,page=1, id=None):
     else:
         newsPage, filterAdv = _getdetailcontent(request, id)
 
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+
 
     if not request.is_ajax():
 
@@ -64,13 +68,26 @@ def get_news_list(request,page=1, id=None):
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('tv:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': newsPage,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 
@@ -308,7 +325,7 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, id):
 
-    filterAdv = func.getDeatailAdv(item_id)
+    filterAdv = func.getDeatailAdv(id)
 
     new = get_object_or_404(TppTV, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))

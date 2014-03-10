@@ -43,6 +43,11 @@ def get_product_list(request, page=1, item_id=None, my=None):
     styles = []
     scripts = []
 
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+
+
     if not request.is_ajax() or item_id:
         user = request.user
         if user.is_authenticated():
@@ -66,13 +71,26 @@ def get_product_list(request, page=1, item_id=None, my=None):
                 'styles': styles,
                 'search': request.GET.get('q', ''),
                 'addNew': reverse('products:add'),
-                'cabinetValues': cabinetValues
+                'cabinetValues': cabinetValues,
+                'bannerRight': bRight,
+                'bannerLeft': bLeft,
+                'tops': tops
         }
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': productsPage,
-                                        'current_company': current_company}))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': productsPage,
+            'current_company': current_company,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _productContent(request, page=1, my=None):
@@ -121,12 +139,14 @@ def _productContent(request, page=1, my=None):
                 order.append(sortFields[sortField2])
 
         products = sqs.order_by(*order)
+
         params = {
+        'filters': filters,
         'sortField1': sortField1,
         'sortField2': sortField2,
         'order1': order1,
         'order2': order2
-                        }
+        }
         url_paginator = "products:paginator"
     else:
          current_organization = request.session.get('current_company', False)

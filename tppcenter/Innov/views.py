@@ -39,6 +39,9 @@ def get_innov_list(request, page=1, item_id=None, my=None):
     else:
         newsPage, filterAdv = _innovDetailContent(request, item_id)
 
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
 
 
     if not request.is_ajax():
@@ -65,13 +68,26 @@ def get_innov_list(request, page=1, item_id=None, my=None):
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('innov:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': newsPage,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 
