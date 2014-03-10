@@ -376,6 +376,7 @@ def _tabsCompanies(request, tpp, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
+        'url_parameter': tpp
     }
 
     return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))

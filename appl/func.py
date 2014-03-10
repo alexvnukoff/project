@@ -356,6 +356,9 @@ def resize(img, box, fit, out):
         @param out: file-like-object - save the image into the output stream
         '''
         #preresize image with factor 2, 4, 8 and fast algorithm
+
+        img = Image.open(img)
+
         factor = 1
         while img.size[0]/factor > 2*box[0] and img.size[1]/factor > 2*box[1]:
             factor *=2
@@ -379,8 +382,8 @@ def resize(img, box, fit, out):
         #Resize the image with best quality algorithm ANTI-ALIAS
         img.thumbnail(box, Image.ANTIALIAS)
 
-        if img.mode != "RGB":
-            img = img.convert("RGB")
+        #if img.mode != "RGB":
+        #    img = img.convert("RGB")
 
         #save it into a file-like object
         img.save(out, "PNG")

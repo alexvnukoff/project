@@ -40,12 +40,14 @@ MANAGERS = ADMINS
 SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '.tppcenter.com', # Allow domain and subdomains
+    '.centerpokupok.ru', # Also allow FQDN and subdomains
+]
 
 # Application definition
 

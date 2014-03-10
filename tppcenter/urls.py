@@ -81,5 +81,6 @@ urlpatterns = patterns('',
 
     url(r'^filter/', tppcenter.views.jsonFilter),
 
-
+    url(r'^(upload/.+)$', tppcenter.views.redirectTo),
+    url(r'^(globus/.+)$', tppcenter.views.redirectTo),
 )
