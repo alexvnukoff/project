@@ -106,6 +106,8 @@ CACHES = {
     }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 DATABASES = {
     'default': {
         #'ENGINE': 'oraclepool',
@@ -184,6 +186,9 @@ LANGUAGES = (
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
 )
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
     'en': ('ru',),
