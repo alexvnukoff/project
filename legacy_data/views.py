@@ -1423,6 +1423,7 @@ def moder2comp_DB_DB(request):
     '''
     #for debugging - clear all ORG-XXXXXX groups from users
     time1 = datetime.datetime.now()
+    '''
     i = 0
     print('Removing users from ORG-xxxxxxx groups. Please, wait...')
     g_lst = Group.objects.filter(name__icontains='ORG-').all()
@@ -1502,7 +1503,7 @@ def moder2comp_DB_DB(request):
 
             i += 1
             print('Milestone: ', i)
-    '''
+
     print('Done. Quantity of processed strings:', i, 'Were added into DB:', count)
     time2 = datetime.datetime.now()
     time = time2-time1
