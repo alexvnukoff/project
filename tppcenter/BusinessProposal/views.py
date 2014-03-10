@@ -20,7 +20,10 @@ from haystack.query import SearchQuerySet, SQ
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
-def get_proposals_list(request, page=1, item_id=None,  my=None):
+def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -38,6 +41,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
 
     else:
         proposalsPage = _proposalDetailContent(request, item_id)
+
 
     if not request.is_ajax():
         user = request.user
@@ -170,8 +174,10 @@ def _proposalsContent(request, page=1, my=None):
 
 
 def _proposalDetailContent(request, item_id):
+
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
-     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3'))
+     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+
 
      photos = Gallery.objects.filter(c2p__parent=item_id)
 

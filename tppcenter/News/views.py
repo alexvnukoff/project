@@ -330,8 +330,10 @@ def updateNew(request, item_id):
 
 
 
-def detail(request, item_id):
-
+def detail(request, item_id, slug=None):
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 

@@ -15,7 +15,12 @@ import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
 
-def get_news_list(request,page=1, id=None):
+def get_news_list(request,page=1, id=None, slug=None):
+
+    if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
+
     cabinetValues = func.getB2BcabinetValues(request)
 
 

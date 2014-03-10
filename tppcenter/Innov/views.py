@@ -18,7 +18,10 @@ from haystack.query import SQ, SearchQuerySet
 import json
 
 
-def get_innov_list(request, page=1, item_id=None, my=None):
+def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
     if current_company:
