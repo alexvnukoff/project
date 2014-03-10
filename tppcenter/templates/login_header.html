@@ -83,7 +83,11 @@
             <div class="profile-title">{% trans 'User profile' %}</div>
             <div class="profile-main">
             	<div class="avatar">
-                	<img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" />
+                    {% if image %}
+                	    <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" />
+                    {% else %}
+                        <img src="{% static "tppcenter/img/profile.jpg" %}" alt="{{ user_last_name }}" />
+                    {% endif %}
                     <p class="name">{{ personal_status }}</p>
                 </div>
                 <ul class="profile-info">

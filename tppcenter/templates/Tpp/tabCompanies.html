@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load staticfiles %}
 <div class="tpp-dt-content">
     <table class="table-deals" cellpadding="0" cellpadding="0">
         <tr class="top">
@@ -20,7 +21,11 @@
                 <td>{{ id }}</td>
                 <td>
                     <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
-                        <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                        {% if logo %}
+                            <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                        {% else %}
+                            <img src="{% static "tppcenter/img/company.jpg"  %}" alt="{{ name }}" />
+                        {%endif %}
                     </a>
                 </td>
                 <td>

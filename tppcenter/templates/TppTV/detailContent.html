@@ -50,7 +50,12 @@
                       {% with attr.SLUG|first as sim_slug %}
                     	<li>
                         	<span class="date">{{ date|date:"d M y" }}</span>
-                        	<img src="{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
+                            {% if sim_image %}
+                        	    <img src="{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
+                            {% else %}
+                                <img src="{% static 'tppcenter/img/news.jpg' %}" alt="{{ sim_name }}" class="thumb" />
+                            {% endif %}
+
                             <a href="{% url  "tv:detail" sim_slug %}" class="more">{{ sim_name }} </a>
                         </li>
                          {% endwith %}

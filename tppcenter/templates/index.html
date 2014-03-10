@@ -241,7 +241,15 @@
                          {% with attr.COUNTRY_FLAG|first as flag %}
                          {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                    	<a href="{% url 'products:detail' slug %}"><div class="thumb"> <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" /></div></a>
+                    	<a href="{% url 'products:detail' slug %}">
+                            <div class="thumb">
+                                {% if picture %}
+                                     <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                                {% else %}
+                                     <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                                {% endif %}
+                            </div>
+                        </a>
                         <div class="location">
 
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
