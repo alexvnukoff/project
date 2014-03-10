@@ -35,7 +35,11 @@ $(function() {
                 <div class="goods-details-left">
                 	<div class="gallery">
                         <div id="panel">
-                            <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                            {% if image %}
+                              <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                            {% else %}
+                              <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
+                            {% endif %}
                         </div>
                         <div id="thumbs">
                             {% for photo in photos %}

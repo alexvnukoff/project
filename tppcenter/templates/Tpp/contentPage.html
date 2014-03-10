@@ -26,7 +26,11 @@
                             <a href="{% url 'tpp:detail' slug %}">{{ name }}</a>
                         </div>
                         <div class="company-infor">
-                            <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
+                            {% if image %}
+                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
+                            {% else %}
+                                 <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="logocompany" alt="" />
+                            {% endif %}
                             <div class="desc">
                                {{ about_company|cleanHtml|safe|truncatewords:30 }}
                                 <a href="{% url 'tpp:detail' slug %}">{% trans "More" %}...</a>
