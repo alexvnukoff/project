@@ -23,7 +23,10 @@ import json
 
 from django.conf import settings
 
-def get_exhibitions_list(request, page=1, item_id=None, my=None):
+def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
+    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+       return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
 
     filterAdv = []
 
@@ -218,7 +221,7 @@ def _exhibitionsDetailContent(request, item_id):
      return template.render(context), filterAdv
 
 
-
+@login_required(login_url='/login/')
 def exhibitionForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -281,7 +284,7 @@ def addExhibition(request):
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -298,7 +301,8 @@ def addExhibition(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
     template = loader.get_template('Exhibitions/addForm.html')
@@ -341,7 +345,7 @@ def updateExhibition(request, item_id):
     form = ItemForm('Exhibition', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
 
         user = request.user
@@ -359,7 +363,8 @@ def updateExhibition(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewExhibition(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
 

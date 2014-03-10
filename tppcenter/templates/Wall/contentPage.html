@@ -4,8 +4,9 @@
  <div class="companies">
           	<div class="wall-title">{% trans 'Latest updates' %}</div>
 
-
+             {% if innovValues  %}
              <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
+
                <ul class="tender-list" id="afisha-list">
                 {% for id , attr in innovValues.items %}
                     {% with attr.NAME.0 as name %}
@@ -30,7 +31,7 @@
                         	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
-                        <a href="#" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
                     {% endwith %}
                     {% endwith %}
@@ -47,7 +48,8 @@
                 {% endfor %}
 
              </ul>
-
+            {% endif %}
+            {% if exhibitionsValues %}
             <div class="wall-title-bg">{% trans 'Exhibitions' %}</div>
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in exhibitionsValues.items %}
@@ -89,7 +91,9 @@
                 {% endfor %}
 
             </ul>
+            {% endif %}
 
+            {% if proposalsValues %}
             <div class="wall-title-bg">{% trans 'Bussiness Proposals' %}</div>
             <ul class="tender-list" id="afisha-list">
                 {% for id , attr in proposalsValues.items %}
@@ -123,11 +127,12 @@
 
                 {% endfor %}
             </ul>
+            {% endif %}
 
 
 
 
-
+             {% if newsValues %}
              <div class="wall-title-bg">{% trans 'News' %}</div>
               <ul class="listnews">
                 {% for id , attr in newsValues.items %}
@@ -143,7 +148,15 @@
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                        <div class="thumb shadow"><a href="{% url "news:detail" slug %}"><img src="{{ MEDIA_URL }}small/{{ image }} " alt="{{ name }}" /></a></div>
+                        <div class="thumb shadow">
+                            <a href="{% url "news:detail" slug %}">
+                                {% if image %}
+                                    <img src="{{ MEDIA_URL }}small/{{ image }} " alt="{{ name }}" />
+                                {% else %}
+                                    <img src="{% static "tppcenter/img/news.jpg" %} " alt="{{ name }}" />
+                                {% endif %}
+                            </a>
+                        </div>
                         <div class="infoprd">
                             <a href="{% url "news:detail" slug %}" class="name">{{ name }}</a>
                             <p class="date">
@@ -152,7 +165,7 @@
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
                             <p>{{ content|cleanHtml|safe|truncatewords:"30" }} </p>
-                           <!--noindex--><a href="#" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                           <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>
                     {% endwith %}
@@ -170,6 +183,8 @@
                 {% endfor %}
 
             </ul>
+            {% endif %}
+           {% if productsValues %}
           <div class="wall-title-bg">{% trans 'Products' %}</div>
             <ul class="listprd">
                 {% for id , attr in productsValues.items %}
@@ -183,7 +198,15 @@
                     {% with attr.CURRENCY|first as currency %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                      <div class="thumb"><a href="{% url "products:detail" slug %}"><img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" /></a></div>
+                      <div class="thumb">
+                      <a href="{% url "products:detail" slug %}">
+                          {% if image %}
+                             <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" />
+                          {% else %}
+                               <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                          {% endif %}
+                      </a>
+                      </div>
                         <div class="link">
                     	<img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
@@ -202,6 +225,7 @@
                     {% endwith %}
                 {% endfor %}
             </ul>
+ {% endif %}
 
 
 

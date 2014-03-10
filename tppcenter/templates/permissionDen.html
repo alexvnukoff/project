@@ -26,8 +26,8 @@
             {% block content %}
             <div class="blogin">
 				<h3>{% trans 'Perrmission denied' %}</h3>
-           <div style="margin-top: 20px;">
-           <span style="font-size: 15px;"> {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
+           <div style="margin-top: 20px;padding: 10px 46px 20px 46px;font-size: 15px;">
+           <span > {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
                 <a href='{% url 'profile:main' %}'>{% trans 'profile' %}</a>, {% trans ' or create ' %}</span>
               <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a>
            </div>

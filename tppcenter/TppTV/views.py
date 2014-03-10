@@ -15,7 +15,13 @@ import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
 
-def get_news_list(request,page=1, id=None):
+def get_news_list(request,page=1, id=None, slug=None):
+
+    if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
+
+    cabinetValues = func.getB2BcabinetValues(request)
 
     filterAdv = []
 
@@ -181,7 +187,7 @@ def _newsContent(request, page=1):
 
     return template.render(context), filterAdv
 
-
+@login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -233,7 +239,7 @@ def addNews(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
         user = request.user
 
@@ -249,7 +255,8 @@ def addNews(request):
         form.clean()
 
         if form.is_valid():
-            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tv:main'))
 
     template = loader.get_template('TppTV/addForm.html')
@@ -291,7 +298,7 @@ def updateNew(request, item_id):
         form = ItemForm('TppTV', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
 
@@ -307,7 +314,8 @@ def updateNew(request, item_id):
         form.clean()
 
         if form.is_valid():
-            addTppAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tv:main'))
 
 

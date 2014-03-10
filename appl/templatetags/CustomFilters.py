@@ -64,10 +64,10 @@ def split(str, splitter):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
 
-    if value == '':
-        return value
+    if len(value) > 0:
+        return clean_html(value)
 
-    return clean_html(value)
+
 
 
 
@@ -143,7 +143,6 @@ def resolve(lookup, target):
 
     except Exception as e:
         return None
-
 
 
 

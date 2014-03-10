@@ -195,7 +195,7 @@ def save_image(file, path=''):
 
         file = '%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename))
         sizes = {
-            'big': {'box': (200, 200), 'fit': False},
+            'big': {'box': (120, 120), 'fit': False},
             'small': {'box': (100, 100), 'fit': False},
             'th': {'box': (80, 80), 'fit': True}
         }

@@ -10,6 +10,7 @@ class TPPUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
+
     list_display = ('email', 'username', 'is_admin',)
     list_filter = ('is_admin',)
     fieldsets = (
@@ -27,6 +28,7 @@ class TPPUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions')
+    raw_id_fields = ("groups",)
 
 class SlotsInLine(admin.TabularInline):
     model = Slot
@@ -36,20 +38,25 @@ class ParentRelationshipInLIne(admin.TabularInline):
     model = Relationship
     extra = 1
     fk_name = "parent"
+    raw_id_fields = ("create_user", 'child')
+
 
 
 class ChildtRelationshipInLIne(admin.TabularInline):
     model = Relationship
     extra = 1
     fk_name = "child"
+    raw_id_fields = ("create_user", 'parent')
 
 class DictioryAdmin(admin.ModelAdmin):
     fields = ['title']
     inlines = [SlotsInLine]
 
+
 class AttributesInline(admin.TabularInline):
     model = AttrTemplate
     extra = 5
+
 
 class ContentAdmin(admin.ModelAdmin):
     inlines = [AttributesInline]
@@ -57,10 +64,12 @@ class ContentAdmin(admin.ModelAdmin):
 class ValuesInline(admin.TabularInline):
     model = Value
     extra = 5
+    raw_id_fields = ("create_user", 'attr')
 
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ParentRelationshipInLIne, ChildtRelationshipInLIne, ValuesInline ]
+    raw_id_fields = ("create_user", 'update_user')
 
 
 

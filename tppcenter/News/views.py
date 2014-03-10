@@ -182,7 +182,7 @@ def _newsContent(request, page=1, my=None):
 
     return template.render(context), filterAdv
 
-
+@login_required(login_url='/login/')
 def newsForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -245,7 +245,7 @@ def addNews(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -262,7 +262,8 @@ def addNews(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('news:main'))
 
 
@@ -315,7 +316,7 @@ def updateNew(request, item_id):
         form = ItemForm('News', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -332,7 +333,8 @@ def updateNew(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addNewsAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('news:main'))
 
 
@@ -351,9 +353,13 @@ def updateNew(request, item_id):
 
 
 
-def detail(request, item_id):
+def detail(request, item_id, slug=None):
 
     filterAdv = func.getDeatailAdv(item_id)
+
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []

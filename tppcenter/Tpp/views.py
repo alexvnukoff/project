@@ -21,11 +21,13 @@ from core.tasks import addNewTpp
 from django.conf import settings
 
 
-
-
-def get_tpp_list(request, page=1, item_id=None, my=None):
+def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
     filterAdv = []
+
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -225,7 +227,7 @@ def _tppDetailContent(request, item_id):
 
     return template.render(context), filterAdv
 
-
+@login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -275,7 +277,7 @@ def addTpp(request):
           return render_to_response("permissionDenied.html")
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -287,7 +289,8 @@ def addTpp(request):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tpp:main'))
 
     template = loader.get_template('Tpp/addForm.html')
@@ -322,7 +325,7 @@ def updateTpp(request, item_id):
         form = ItemForm('Tpp', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -336,7 +339,8 @@ def updateTpp(request, item_id):
         form.clean()
 
         if form.is_valid() and pages.is_valid():
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('tpp:main'))
 
     template = loader.get_template('Tpp/addForm.html')
@@ -395,6 +399,7 @@ def _tabsCompanies(request, tpp, page=1):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
+        'url_parameter': tpp
     }
 
     return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))

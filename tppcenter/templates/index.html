@@ -41,22 +41,12 @@
             <div class="country-list">
             	<ul>
                 	<li>{% trans 'All countries' %}</li>
-                	<li><a href="#">Азербайджан</a></li>
-                    <li><a href="#">Армения</a></li>
-                    <li><a href="#">Беларусь</a></li>
-                    <li><a href="#">Грузия</a></li>
-                    <li><a href="#">Израиль</a></li>
-                    <li><a href="#">Казахстан</a></li>
-                    <li><a href="#">Киргизия</a></li>
-                    <li><a href="#">Латвия</a></li>
-                    <li><a href="#">Литва</a></li>
-                    <li><a href="#">Молдова</a></li>
-                    <li><a href="#">Россия</a></li>
-                    <li><a href="#">Таджикистан</a></li>
-                    <li><a href="#">Туркмения</a></li>
-                    <li><a href="#">Узбекистан</a></li>
-                    <li><a href="#">Украина</a></li>
-                    <li><a href="#">Эстония</a></li>
+
+                    <li><a href="#">{% trans 'Arminia' %}</a></li>
+                    <li><a href="#">{% trans 'Belarus' %}</a></li>
+                    <li><a href="#">{% trans 'Gruzia' %}</a></li>
+                    <li><a href="#">{% trans 'Israel' %}</a></li>
+
                 </ul>
             </div>
         </div>
@@ -64,47 +54,27 @@
         	<span class="texttype" id="type">–  {% trans 'Industry/branch' %}</span>
             <div class="type-list">
             	<ul>
-                	<li><input type="checkbox" name="" class="check" /><label>Все категории</label></li>
-                	<li><input type="checkbox" name="" class="check" /><label>Прицепы самосвальные</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Спецоборудование</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Средства защиты</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Все для авто</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Низкорамные тралы</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Аксессуары</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Запорная арматура</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Охранное оборудование</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Насосы</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Сауны</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Материалы для антикоррозионной защиты</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Путешествие и туризм</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Битовая Техниока</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Прицепы</label></li>
+                	<li><input type="checkbox" name="" class="check" /><label>{% trans 'All categories' %}</label></li>
+
                 </ul>
                 <ul>
-                	<li><input type="checkbox" name="" class="check" /><label>Все отрасли</label></li>
-                	<li><input type="checkbox" name="" class="check" /><label>Искусство и развлечения</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Юридические услуги</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Горнодобывающая промышленность и разработка карьеров</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Ремонт моторных транспортных средств</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Грузовые перевозки</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Обрабатывающая промышленность</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Услуги для домашних хозяйств, деятельность домашних хозяйств, нанимающих прислугу и производящих товары и услуги для собственного потребления</label></li>
-                    <li><input type="checkbox" name="" class="check" /><label>Полиграфия</label></li>
+                	<li><input type="checkbox" name="" class="check" /><label>{% trans 'All branches' %}</label></li>
+
                 </ul>
                 <div class="bottom-type">
-                	<a href="#" class="btntype2">Сбросить</a>
-                	<a href="#" class="btntype1">Сбросить</a>
+                	<a href="#" class="btntype2">{% trans 'Reset' %}</a>
+                	<a href="#" class="btntype1">{% trans 'Reset' %}</a>
                 </div>
             </div>
         </div>
         <div class="styled-select2">
             <select name="select">
-              <option value="1">–  Раздел</option>
-              <option value="2">–  Страна</option>
+              <option value="1">–  {% trans 'Branch' %}</option>
+              <option value="2">–  {% trans 'Country' %}</option>
             </select>
         </div>
-        <input type="text" class="inputsearch" placeholder="Поиск по сайту" />
-        <a href="#" class="btns"><i class="i-search icons"></i>Найти</a>
+        <input type="text" class="inputsearch" placeholder="{% trans 'Searching ' %}" />
+        <a href="#" class="btns"><i class="i-search icons"></i>{% trans 'Search' %}</a>
     </div>
     <div class="main">
     	<div class="sideleft">
@@ -115,11 +85,11 @@
                         {% for id,attr in organizationsList.items %}
                             {% with attr.NAME|first as name %}
                             {% with attr.FLAG|first as flag %}
-                                 {% if forloop.counter|divisibleby:"5" or forloop.counter0 == 0 %}
+                                 {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
                                  <a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
-                            	 {% if forloop.counter|divisibleby:"4" %}
+                            	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
                                  {% endif %}
                              {% endwith %}
@@ -131,31 +101,31 @@
             <ul class="services">
             	<li>
                     <div class="imgmain imgservice sv1"></div>
-                    <div class="nameservice"><a href="#">{% trans 'Producst and services' %}</a></div>
+                    <div class="nameservice"><a href="{% url 'products:main' %}">{% trans 'Producst and services' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv2"></div>
-                    <div class="nameservice"><a href="#">{% trans 'Members' %}</a></div>
+                    <div class="nameservice"><a href="{% url 'companies:main' %}">{% trans 'Members' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv3"></div>
-                    <div class="nameservice"><a href="#">{% trans "Partners" %}</a></div>
+                    <div class="nameservice"><a href="{% url 'tpp:main' %}">{% trans "Partners" %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv4"></div>
-                    <div class="nameservice"><a href="#">{% trans 'Tenders' %}</a></div>
+                    <div class="nameservice"><a href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></div>
                 </li>
                 <li>
                     <div class="imgmain imgservice sv5"></div>
-                    <div class="nameservice"><a href="#">{% trans 'Innovative projects' %}</a></div>
+                    <div class="nameservice"><a href="{% url 'innov:main' %}">{% trans 'Innovative projects' %}</a></div>
                 </li>
-                <li>
+                <!--<li>
                     <div class="imgmain imgservice sv6"></div>
                     <div class="nameservice"><a href="#">{% trans 'Jobs' %}</a></div>
-                </li>
+                </li>-->
                 <li>
                     <div class="imgmain imgservice sv7"></div>
-                    <div class="nameservice"><a href="#">{% trans "News" %}</a></div>
+                    <div class="nameservice"><a href="{% url 'news:main' %}">{% trans "News" %}</a></div>
                 </li>
             </ul>
         </div>
@@ -167,11 +137,11 @@
                       {% for id,attr in countriesList.items %}
                         {% with attr.NAME|first as name %}
                         {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|divisibleby:"26" or forloop.counter0 == 0 %}
+                           {% if forloop.counter|add:-1|divisibleby:"25" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
                             	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
-                             {% if forloop.counter|divisibleby:"25" %}
+                             {% if forloop.counter|divisibleby:"25" or forloop.counter == countriesList|length%}
                                 </li>
                             {% endif %}
 
@@ -263,6 +233,7 @@
                 	{% for id,attr in productsList.items %}
                          {% with attr.NAME|first as name %}
                          {% with attr.IMAGE|first as picture %}
+                         {% with attr.SLUG|first as slug %}
                          {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                          {% with attr.ORGANIZATION_NAME.0 as org_name %}
                          {% with attr.ORGANIZATION_ID.0 as org_id %}
@@ -270,13 +241,22 @@
                          {% with attr.COUNTRY_FLAG|first as flag %}
                          {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                    	<a href="#"><div class="thumb"> <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" /></div></a>
+                    	<a href="{% url 'products:detail' slug %}">
+                            <div class="thumb">
+                                {% if picture %}
+                                     <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                                {% else %}
+                                     <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                                {% endif %}
+                            </div>
+                        </a>
                         <div class="location">
 
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
-                            <a href="#">{{ name }}</a>
+                            <a href="{% url 'products:detail' slug %}">{{ name }}</a>
                         </div>
                     </li>
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}
@@ -296,6 +276,7 @@
                         {% with attr.NAME|first as name %}
                         {% with attr.COUNTRY|first as country %}
                         {% with attr.CITY|first as city %}
+                        {% with attr.SLUG|first as slug %}
                         {% with attr.START_EVENT_DATE|first as date_event %}
                         {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                         {% with attr.ORGANIZATION_NAME.0 as org_name %}
@@ -308,11 +289,12 @@
                                 	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
                                     <div class="date">
                                         <p><b>{{ date_event|makeDate|date:"d M Y"}}</b></p>
-                                        <p>{{ country }}, {{ city }}</p>
+                                        <p>{{ country }}  {{ city }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="#">{{ name }}</a></p>
+                                <p class="linkcm"><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></p>
                             </li>
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}
@@ -333,6 +315,7 @@
                         <ul class="listcm">
                       {% for id,attr in serviceList.items %}
                         {% with attr.NAME|first as name %}
+                         {% with attr.SLUG|first as slug %}
                         {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                         {% with attr.ORGANIZATION_NAME.0 as org_name %}
                         {% with attr.ORGANIZATION_ID.0 as org_id %}
@@ -348,8 +331,9 @@
                                         <p>{{ org_name }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="#">{{ name }}</a></p>
+                                <p class="linkcm"><a href="{% url 'proposal:detail' slug %}">{{ name }}</a></p>
                             </li>
+                            {% endwith %}
                             {% endwith %}
                             {% endwith %}
                             {% endwith %}
@@ -366,15 +350,15 @@
             </div>
             <div class="content-r">
             	<span class="titlevideo">{% trans 'Videoreference of V.Migirov' %} </span>
-                <div class="media"><img src="img/video.jpg" /></div>
+                <div class="media"><img src="{% static "tppcenter/img/video.jpg" %}" /></div>
                 <div class="testimonials">
                 	<i class="icons i-bullet"></i>
                 	 {% trans 'You get your own web site,opportunity to presentation of its of business proposals,products, services, without restrictions.' %}
                 </div>
                 <span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
-                <div class="media"><img src="img/video.jpg" /></div>
+                <div class="media"><img src="{% static 'tppcenter/img/video.jpg' %}" /></div>
                 <div class="pdfdownload">
-                	<img src="img/pdf.png" alt="" />
+                	<img src="{% static "tppcenter/img/pdf.png" %}" alt="" />
                     <span class="fileinfo">
                     	<a href="#">{% trans 'Download Guide Site' %} </a>
                         <p>(pdf-документ, 320 Кб)</p>
@@ -394,7 +378,7 @@
                   {% with attr.TPP|first as tpp %}
                   {% with attr.AUTHOR_NAME|first as name %}
                   {% with attr.POSITION|first as position %}
-                  {% if forloop.counter|divisibleby:"7" or forloop.counter0 == 0 %}
+                  {% if forloop.counter|add:-1|divisibleby:"6" or forloop.counter0 == 0 %}
                           <li>
                    {% endif %}
 
@@ -410,7 +394,7 @@
                         </div>
                     </div>
 
-                  {% if forloop.counter|divisibleby:"6" %}
+                  {% if forloop.counter|divisibleby:"6" or forloop.counter == greetingsList|length%}
                        </li>
                   {% endif %}
                   {% endwith %}

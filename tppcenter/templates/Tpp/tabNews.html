@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
 <div class="tpp-dt-content">
     <table class="table-big" cellpadding="0" cellpadding="0">
         {% for id, attr in newsList.items %}
@@ -17,11 +19,15 @@
             <tr>
                 <td>
                     <a href="{% url 'news:detail' slug %}" title="{{ name }}">
-                        <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                        {% if logo %}
+                             <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                        {% else %}
+                              <img src="{% static "tppcenter/img/news.jpg" %}" alt="{{ name }}" />
+                        {% endif %}
                     </a>
                 </td>
                 <td>
-                    {{ text|truncatewords:50 }}
+                    {{ text|cleanHtml|safe|truncatewords:50 }}
                 </td>
             </tr>
             {% endwith %}

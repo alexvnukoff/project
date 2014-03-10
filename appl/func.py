@@ -382,10 +382,12 @@ def resize(img, box, fit, out):
         #Resize the image with best quality algorithm ANTI-ALIAS
         img.thumbnail(box, Image.ANTIALIAS)
 
-
+        #if img.mode != "RGB":
+        #    img = img.convert("RGB")
 
         #save it into a file-like object
         img.save(out, "PNG")
+
 
 
 

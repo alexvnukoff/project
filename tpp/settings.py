@@ -40,12 +40,14 @@ MANAGERS = ADMINS
 SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '.tppcenter.com', # Allow domain and subdomains
+    '.centerpokupok.ru', # Also allow FQDN and subdomains
+]
 
 # Application definition
 
@@ -105,6 +107,8 @@ CACHES = {
     }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 DATABASES = {
     'default': {
         #'ENGINE': 'oraclepool',
@@ -138,7 +142,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = ("locale",)
+LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 
 
 # Static files (CSS, JavaScript, Images)
@@ -183,8 +187,13 @@ LANGUAGES = (
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
 )
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
+    'en': ('ru',),
+    'ru': ('en',),
     'he': ('en',),
     #'am': ('ru',),
     #'az': ('ru',),

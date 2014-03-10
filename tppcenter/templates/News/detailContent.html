@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 
 
 
@@ -27,7 +28,11 @@
                 <div class="content-news">
                 	<div class="gallery">
                         <div id="panel">
-                            <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                            {% if image %}
+                                <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                            {% else %}
+                                 <img id="largeImage" src="{% static "tppcenter/img/news.jpg" %}" alt="" />
+                            {% endif %}
                         </div>
                         <div id="thumbs">
                            {% for photo in photos %}
@@ -35,7 +40,7 @@
                            {% endfor %}
                         </div>
                     </div>
-                    <p>{{ content }} </p>
+                    <p>{{ content|cleanHtml|safe }} </p>
                 </div>
                 <div class="social">
                 	<a href="#"><i class="imgnews share-1"></i></a>
@@ -58,7 +63,12 @@
                       {% with attr.CREATE_DATE|first as sim_create_date %}
                       {% with attr.SLUG|first as sim_slug %}
                     	<li>
-                        	<img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="" class="thumb" />
+                            {% if sim_image %}
+                        	    <img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="" class="thumb" />
+                            {% else %}
+                                <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
+                            {% endif %}
+
                             <a href="{% url 'news:detail' sim_slug %}">{{ sim_name }}</a>
                             <span class="date">{{ sim_create_date|date:'d M Y' }}</span>
                             <p>{{ sim_content|truncatewords:12 }}</p>

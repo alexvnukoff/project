@@ -10,7 +10,7 @@ from tpp.SiteUrlMiddleWare import get_request
 
 
 class ProfileForm(forms.Form):
-      #TODO: Jenya Fix required field + messages (if successfully saved)
+
       image = forms.ImageField(required=False)
 
       last_name = forms.CharField(required=True, label=_("Last name"))
@@ -29,11 +29,11 @@ class ProfileForm(forms.Form):
 
       dictSex = Dictionary.objects.get(title='SEX')
       slots = tuple(dictSex.getSlotsList().values_list("id", "title"))
-      sex  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
+      sex = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
 
       dictStatus = Dictionary.objects.get(title='PERSONAL_STATUS')
       slots = tuple(dictStatus.getSlotsList().values_list("id", "title"))
-      personal_status  = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
+      personal_status = forms.ChoiceField(required=True, widget=forms.RadioSelect, choices=slots)
 
       site_name = forms.CharField(required=False, label=_("Site name"))
       site_name.widget.attrs.update({'class': 'text'})
@@ -43,8 +43,9 @@ class ProfileForm(forms.Form):
 
       skype = forms.CharField(required=False, label=_("Skype"))
       skype.widget.attrs.update({'class': 'text'})
-
-      birthday = forms.DateField(required=False, label=_("Birthday"))
+      formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%m/%d/%Y %H:%M:%S', '%m/%d/%Y %H:%M',  '%m/%d/%Y',
+                 '%m/%d/%y %H:%M:%S', '%m/%d/%y %H:%M', '%m/%d/%y']
+      birthday = forms.DateField(required=False, input_formats=formats, label=_("Birthday"))
       birthday.widget.attrs.update({'class': 'date'})
 
 

@@ -20,7 +20,10 @@ from haystack.query import SearchQuerySet, SQ
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
-def get_proposals_list(request, page=1, item_id=None,  my=None):
+def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
     filterAdv = []
@@ -46,6 +49,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None):
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+
 
     if not request.is_ajax():
         user = request.user
@@ -199,7 +203,8 @@ def _proposalDetailContent(request, item_id):
      filterAdv = func.getDeatailAdv(item_id)
 
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
-     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3'))
+     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+
 
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -216,7 +221,7 @@ def _proposalDetailContent(request, item_id):
      return template.render(context), filterAdv
 
 
-
+@login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
     current_company = request.session.get('current_company', False)
     if current_company:
@@ -283,7 +288,7 @@ def addBusinessProposal(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -311,7 +316,8 @@ def addBusinessProposal(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+            func.notify("item_creating", 'notification', user=request.user)
+            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
                                 current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 
@@ -364,7 +370,7 @@ def updateBusinessProposal(request, item_id):
         form = ItemForm('BusinessProposal', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -393,7 +399,8 @@ def updateBusinessProposal(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addBusinessPRoposal(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
+            func.notify("item_creating", 'notification', user=request.user)
+            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
                                 lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('proposal:main'))
 

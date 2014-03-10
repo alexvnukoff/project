@@ -22,9 +22,13 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def get_product_list(request, page=1, item_id=None, my=None):
+def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
     filterAdv = []
+
+    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
@@ -249,7 +253,7 @@ def _getDetailContent(request, item_id):
 
 
 
-
+@login_required(login_url='/login/')
 def productForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -324,7 +328,7 @@ def addProducts(request):
 
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -357,7 +361,8 @@ def addProducts(request):
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('products:main'))
 
 
@@ -417,7 +422,7 @@ def updateProduct(request, item_id):
     form = ItemForm('Product', id=item_id)
 
     if request.POST:
-        func.notify("item_creating", 'notification', user=request.user)
+
 
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -445,7 +450,8 @@ def updateProduct(request, item_id):
         form.clean()
 
         if gallery.is_valid() and form.is_valid():
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            func.notify("item_creating", 'notification', user=request.user)
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('products:main'))
 
 
