@@ -277,13 +277,12 @@ def databaseInitialization(sender, **kwargs):
     }
 
     for type, attributes in content_type.items():
-         object_id = ContentType.objects.get(model=str(type).lower())
-         for name, required in attributes.items():
-             try:
-                 attr = Attribute.objects.get(title=name)
-                 attribute, created = AttrTemplate.objects.get_or_create(classId=object_id, attrId=attr, required=bool(required))
-             except Exception:
-                 pass
-
+        object_id = ContentType.objects.get(model=str(type).lower())
+        for name, required in attributes.items():
+            try:
+                attr = Attribute.objects.get(title=name)
+                attribute, created = AttrTemplate.objects.get_or_create(classId=object_id, attrId=attr, required=bool(required))
+            except:
+                pass
 
 post_syncdb.connect(databaseInitialization, sender=appl.models)
