@@ -219,9 +219,9 @@
                 </div>
             {% endif %}
             </div>
-            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b1.jpg' %}" alt="" /></a></div>
-            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b2.jpg' %}" alt="" /></a></div>
-            <div class="bannerleft"><a href="#"><img src="{% static 'tppcenter/img/banner/b3.jpg' %}" alt="" /></a></div>
+             <div class="banner-wrapper-left">
+            {{ bannerLeft }}
+             </div>
         </div>
         {% block center %}
 <div class="news-center">
@@ -242,13 +242,15 @@
         {% endblock %}
         {% block right %}
             <div class="newsright">
-                <div class="bannerleft nomargin"><a href="#"><img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" /></a></div>
-
-                <div class="news-ads">
-                    <div class="title">{% trans "Paid ads" %}</div>
-                    {{ tops }}
+                <div class="bannerleft nomargin">
+                    <a href="#">
+                        <img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" />
+                    </a>
                 </div>
+                {{ tops }}
+                 <div class="banner-wrapper-right">
                 {{ bannerRight }}
+                 </div>
             </div>
         {% endblock %}
     </div>

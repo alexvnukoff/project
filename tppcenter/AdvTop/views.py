@@ -86,6 +86,8 @@ def addTop(request, item):
 
     object = get_object_or_404(Item, pk=item)
 
+    itemName = object.getAttributeValues('NAME')[0]
+
     form = None
     stDate = ''
     edDate = ''
@@ -177,9 +179,9 @@ def addTop(request, item):
     enable = {}
 
 
-    enable['branch'] = _('Select branch')
-    enable['country'] = _('Select country')
-    enable['tpp'] = _('Select organization')
+    enable['branch'] = {'placeholder': _('Select branch'), 'init': len(filter.get('branch', []))}
+    enable['country'] = {'placeholder': _('Select country'), 'init': len(filter.get('country', []))}
+    enable['tpp'] = {'placeholder': _('Select organization'), 'init': len(filter.get('tpp', []))}
 
 
     cabinet = Cabinet.objects.get(user=request.user)
@@ -205,7 +207,8 @@ def addTop(request, item):
         'stDate': stDate,
         'edDate': edDate,
         'filterAttr': filterAttr,
-        'filters': filter
+        'filters': filter,
+        'itemName': itemName
     }
 
     return render_to_response('AdvTop/addForm.html', templateParams, context_instance=RequestContext(request))

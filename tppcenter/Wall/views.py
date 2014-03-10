@@ -21,13 +21,18 @@ from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_wall_list(request):
+
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     user = request.user
+
     if user.is_authenticated():
         notification = Notification.objects.filter(user=request.user, read=False).count()
         if not user.first_name and not user.last_name:
@@ -101,15 +106,8 @@ def _wallContent(request):
     func.addDictinoryWithCountryAndOrganization(exhibitions, exhibitionsValues)
 
 
-
-
-
-
-
-
-
-
     template = loader.get_template('Wall/contentPage.html')
+
     context = RequestContext(request, {'newsValues': newsValues, 'exhibitionsValues': exhibitionsValues,
                                        'productsValues': productsValues, 'innovValues': innovValues,
                                        'proposalsValues': proposalsValues})

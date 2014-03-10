@@ -25,16 +25,25 @@ from django.conf import settings
 
 def get_news_list(request, page=1, my=None):
 
+    filterAdv = []
+
     current_company = request.session.get('current_company', False)
+
     if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company, filterAdv = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
-        newsPage = _newsContent(request, page, my)
+        newsPage, filterAdv = _newsContent(request, page, my)
+
     except ObjectDoesNotExist:
         return render_to_response("permissionDen.html")
+
     cabinetValues = func.getB2BcabinetValues(request)
     styles = []
     scripts = []
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -59,17 +68,32 @@ def get_news_list(request, page=1, my=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'addNew': reverse('news:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': newsPage,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 def _newsContent(request, page=1, my=None):
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #news = News.active.get_active().order_by('-pk')
 
@@ -155,9 +179,8 @@ def _newsContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
 
-
+    return template.render(context), filterAdv
 
 @login_required(login_url='/login/')
 def newsForm(request, action, item_id=None):
@@ -331,9 +354,13 @@ def updateNew(request, item_id):
 
 
 def detail(request, item_id, slug=None):
+
+    filterAdv = func.getDeatailAdv(item_id)
+
     if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title
          return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
+
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
 
@@ -366,7 +393,7 @@ def detail(request, item_id, slug=None):
 
 
 
-    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
+    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request)), filterAdv
 
 
 
