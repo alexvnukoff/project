@@ -139,7 +139,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = ("locale",)
+LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 
 
 # Static files (CSS, JavaScript, Images)
