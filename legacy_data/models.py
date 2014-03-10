@@ -7,6 +7,7 @@ class L_User(models.Model):
     username = models.CharField(max_length=1024)
     is_active = models.BooleanField()
     first_name = models.CharField(max_length=1024)
+    middle_name = models.CharField(max_length=1024)
     last_name = models.CharField(max_length=1024)
     email = models.CharField(max_length=1024)
     btx_id = models.CharField(max_length=10)
@@ -22,6 +23,7 @@ class L_User(models.Model):
     phone = models.CharField(max_length=1024)
     fax = models.CharField(max_length=1024)
     cellular = models.CharField(max_length=1024)
+    skype = models.CharField(max_length=1024)
     addr_street = models.CharField(max_length=1024)
     addr_city = models.CharField(max_length=1024)
     addr_state = models.CharField(max_length=1024)
@@ -183,3 +185,27 @@ class L_Site2Prod(models.Model):
 
     def __str__(self):
         return self.btx_id+'|'+self.product_name+'|'+self.section_name
+
+class L_Moder2Comp(models.Model):
+    '''
+        Defines buffer table for updating companies' moderators
+    '''
+    btx_id = models.CharField(max_length=10) # legacy company id
+    org_name = models.CharField(max_length=1024)
+    moder_btx_id = models.CharField(max_length=10) # legacy user as moderator id
+    completed = models.BooleanField(default=False) #update in True if item is processed
+
+    def __str__(self):
+        return self.btx_id+'|'+self.org_name
+
+class L_Moder2Tpp(models.Model):
+    '''
+        Defines buffer table for updating companies' moderators
+    '''
+    btx_id = models.CharField(max_length=10) # legacy company id
+    org_name = models.CharField(max_length=1024)
+    moder_btx_id = models.CharField(max_length=10) # legacy user as moderator id
+    completed = models.BooleanField(default=False) #update in True if item is processed
+
+    def __str__(self):
+        return self.btx_id+'|'+self.org_name
