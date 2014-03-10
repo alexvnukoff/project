@@ -846,7 +846,7 @@ msgstr "условиями"
 #: .\tppcenter\templates\main_header.html:9
 #: .\tppcenter\templates\registration\registration.html:59
 msgid "Sign up"
-msgstr "Зарегистрироваться"
+msgstr "Зарегестрируйтесь"
 
 #: .\core\models.py:82
 msgid "date joined"
@@ -1729,7 +1729,7 @@ msgstr "и получите портфель управления бизнесм
 
 #: .\tppcenter\templates\index.html:171
 msgid "on the portal will allow you to"
-msgstr "на портале вы сможете"
+msgstr "на портале даст вам возможность"
 
 #: .\tppcenter\templates\index.html:173
 msgid "run a business behalf of the company"
@@ -1745,7 +1745,7 @@ msgstr "привлечь внимание к своим проектам"
 
 #: .\tppcenter\templates\index.html:184
 msgid "and you will be able"
-msgstr "также вы сможете"
+msgstr "и вы сможете"
 
 #: .\tppcenter\templates\index.html:186
 msgid "create your own online shop"
@@ -2141,7 +2141,7 @@ msgstr "Ничего не найдено"
 #: .\tppcenter\templates\Companies\detailContent.html:60
 #: .\tppcenter\templates\Tpp\detailContent.html:34
 msgid "About"
-msgstr "О"
+msgstr "О компании"
 
 #: .\tppcenter\templates\BusinessProposal\detailContent.html:47
 #: .\tppcenter\templates\Exhibitions\detailContent.html:79
@@ -2525,7 +2525,7 @@ msgstr "Способ доставки"
 
 #: .\tppcenter\templates\Products\detailContent.html:107
 msgid "About company"
-msgstr "О компании"
+msgstr "Описание товара"
 
 #: .\tppcenter\templates\Products\detailContent.html:121
 #: .\tppcenter\templates\Products\detailContent.html:124

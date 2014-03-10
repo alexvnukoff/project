@@ -36,9 +36,10 @@ def add(imageFile=None, sizes=None):
             requests = []
 
             x, y = im.size
+            del im
 
             if x > 800 or y > 800:
-                func.resize(im, (800, 800), False, imageFile)
+                func.resize(imageFile, (800, 800), False, imageFile)
 
             # Creating a pool connection
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
@@ -59,6 +60,7 @@ def add(imageFile=None, sizes=None):
 
 
 
+
             f['original'] = open(imageFile, 'rb')
 
             requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f['original'], close=True))
@@ -66,8 +68,14 @@ def add(imageFile=None, sizes=None):
 
             filename = imageFile
 
+
+        except Exception as e:
+            return False
+
+        try:
             if os.path.isfile(filename):
-                os.remove(filename)
+                    os.remove(filename)
+
 
             for key in sizes.keys():
                 filename = '%s-%s' % (key, name + '.png')
@@ -76,12 +84,8 @@ def add(imageFile=None, sizes=None):
                 if os.path.isfile(filename):
                    os.remove(filename)
 
-
-
-
-
-        except Exception as e:
-            return False
+        except Exception:
+            pass
 
 
     return folder + '/' + name + '.png'

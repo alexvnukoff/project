@@ -2,8 +2,9 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="container">
-            {% include "Products/popupFilter.html" %}
+
            {% include "main/paginator.html" %}
+            {% include "Products/popupFilter.html" %}
              <ul class="listprd">
                 {% for id , attr in productsList.items %}
                     {% with attr.NAME.0 as name %}
@@ -16,7 +17,15 @@
                     {% with attr.CURRENCY|first as currency %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                      <div class="thumb"><a href="{% url "products:detail" slug %}"><img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" /></a></div>
+                      <div class="thumb">
+                          <a href="{% url "products:detail" slug %}">
+                              {% if image %}
+                                  <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" />
+                              {% else %}
+                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                              {% endif %}
+                          </a>
+                      </div>
                         <div class="link">
                     	<img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>

@@ -74,6 +74,7 @@ def databaseInitialization(sender, **kwargs):
                     'AUTHOR_NAME': 'Chr',
                     'ANONS': 'Str',
                     'ACCOUNTANT': 'Chr',
+                    'ACCOUNT_NUMBER': 'Chr',
                     'BANK_ACCOUNT': 'Chr',
                     'BANK_DETAILS': 'Str',
                     'BIRTHDAY': 'Dat',

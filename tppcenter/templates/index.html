@@ -85,11 +85,11 @@
                         {% for id,attr in organizationsList.items %}
                             {% with attr.NAME|first as name %}
                             {% with attr.FLAG|first as flag %}
-                                 {% if forloop.counter|divisibleby:"5" or forloop.counter0 == 0 %}
+                                 {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
                                  <a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
-                            	 {% if forloop.counter|divisibleby:"4" %}
+                            	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
                                  {% endif %}
                              {% endwith %}
@@ -137,11 +137,11 @@
                       {% for id,attr in countriesList.items %}
                         {% with attr.NAME|first as name %}
                         {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|divisibleby:"26" or forloop.counter0 == 0 %}
+                           {% if forloop.counter|add:-1|divisibleby:"25" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
                             	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
-                             {% if forloop.counter|divisibleby:"25" %}
+                             {% if forloop.counter|divisibleby:"25" or forloop.counter == countriesList|length%}
                                 </li>
                             {% endif %}
 
@@ -241,7 +241,15 @@
                          {% with attr.COUNTRY_FLAG|first as flag %}
                          {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                    	<a href="{% url 'products:detail' slug %}"><div class="thumb"> <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" /></div></a>
+                    	<a href="{% url 'products:detail' slug %}">
+                            <div class="thumb">
+                                {% if picture %}
+                                     <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                                {% else %}
+                                     <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                                {% endif %}
+                            </div>
+                        </a>
                         <div class="location">
 
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
@@ -370,7 +378,7 @@
                   {% with attr.TPP|first as tpp %}
                   {% with attr.AUTHOR_NAME|first as name %}
                   {% with attr.POSITION|first as position %}
-                  {% if forloop.counter|divisibleby:"7" or forloop.counter0 == 0 %}
+                  {% if forloop.counter|add:-1|divisibleby:"6" or forloop.counter0 == 0 %}
                           <li>
                    {% endif %}
 
@@ -386,7 +394,7 @@
                         </div>
                     </div>
 
-                  {% if forloop.counter|divisibleby:"6" %}
+                  {% if forloop.counter|divisibleby:"6" or forloop.counter == greetingsList|length%}
                        </li>
                   {% endif %}
                   {% endwith %}

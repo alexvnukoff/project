@@ -148,7 +148,6 @@ def resolve(lookup, target):
 
 
 
-
 class RangeNode(Node):
     def __init__(self, parser, range_args, context_name):
         self.template_parser = parser

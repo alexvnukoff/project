@@ -66,7 +66,8 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'legacy_data',
-    'djcelery'
+    'djcelery',
+
 )
 
 
@@ -105,6 +106,8 @@ CACHES = {
         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
     }
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 DATABASES = {
     'default': {
@@ -158,7 +161,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
-MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
@@ -184,6 +187,9 @@ LANGUAGES = (
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
 )
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
     'en': ('ru',),
@@ -265,5 +271,7 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+
 
 

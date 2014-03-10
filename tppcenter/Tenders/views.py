@@ -22,9 +22,12 @@ import json
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
+    filterAdv = []
+
     if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title
          return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -37,11 +40,16 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            tendersPage = _tendersContent(request, page, my)
+            tendersPage, filterAdv = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        tendersPage = _tenderDetailContent(request, item_id)
+        tendersPage, filterAdv = _tenderDetailContent(request, item_id)
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+
 
     if not request.is_ajax():
         user = request.user
@@ -66,21 +74,34 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'addNew': reverse('tenders:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tendersPage }))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': tendersPage,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _tendersContent(request, page=1, my=None):
 
-
+    filterAdv = []
 
     #tenders = Tender.active.get_active().order_by('-pk')
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Tender)
@@ -164,12 +185,12 @@ def _tendersContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def _tenderDetailContent(request, item_id):
 
-
+     filterAdv = func.getDeatailAdv(item_id)
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -185,7 +206,8 @@ def _tenderDetailContent(request, item_id):
 
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context)
+
+     return template.render(context), filterAdv
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
