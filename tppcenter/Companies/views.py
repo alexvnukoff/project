@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 
 from appl.models import *
 from django.http import HttpResponseRedirect, HttpResponse
-from core.models import Item
+from core.models import Item, Value
 from appl import func
 from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm, BasePages
@@ -17,7 +17,10 @@ import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-def get_companies_list(request, page=1, item_id=None, my=None):
+def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
+    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)

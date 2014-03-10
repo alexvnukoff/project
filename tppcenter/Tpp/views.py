@@ -23,7 +23,12 @@ from django.conf import settings
 
 
 
-def get_tpp_list(request, page=1, item_id=None, my=None):
+def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
+
+    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)

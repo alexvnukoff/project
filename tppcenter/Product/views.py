@@ -22,7 +22,12 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def get_product_list(request, page=1, item_id=None, my=None):
+def get_product_list(request, page=1, item_id=None, my=None, slug=None):
+
+    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+         return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
+
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
     if current_company:
