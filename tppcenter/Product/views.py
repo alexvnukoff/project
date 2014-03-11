@@ -172,7 +172,8 @@ def _productContent(request, page=1, my=None):
 
     productsList = result[0]
     products_ids = [id for id in productsList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=products_ids).values('p2c__child__p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__p2c__child__in=products_ids, p2c__type='dependence',
+                                       p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
