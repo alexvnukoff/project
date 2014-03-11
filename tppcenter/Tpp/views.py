@@ -218,7 +218,7 @@ def _tppDetailContent(request, item_id):
 
 
     if not tppValues.get('FLAG', False):
-       country = Country.objects.get(p2c__child=tpp).getAttributeValues(*('FLAG', 'NAME'))
+       country = Country.objects.get(p2c__child=tpp, p2c__type='relation').getAttributeValues(*('FLAG', 'NAME'))
     else:
        country = ""
 

@@ -20,6 +20,8 @@ from haystack.query import SearchQuerySet, SQ
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 
+from django.utils import timezone
+
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title

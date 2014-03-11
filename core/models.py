@@ -548,17 +548,10 @@ class Item(models.Model):
 
         valuesObj = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
                                          Q(start_date__lte=now()) | Q(start_date__isnull=True),
-                                         attr__title__in=attr, item__in=items)
-
-        getList = ["title", "attr__title", "item__title", "item", 'item__create_date']
-
-        if fullAttrVal:
-            getList += ['start_date', 'end_date']
+                                         attr__title__in=attr, item__in=items)\
+            .select_related('attr__title', 'item__create_date', 'item__title')
 
 
-
-
-        values = list(valuesObj.values(*getList))
 
         valuesAttribute = {}
 
@@ -576,43 +569,40 @@ class Item(models.Model):
         valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
         #TODO: Artur fix bug, when just one attribute and it's not exists, will return integer not dict
-        for valuesDict in values:
+        for valuesObj in valuesObj:
 
-            if valuesDict['item'] not in valuesAttribute:
+            itemPk = valuesObj.item.pk
+
+            if itemPk not in valuesAttribute:
                 continue
 
-            if not isinstance(valuesAttribute[valuesDict['item']], dict):
+            if not isinstance(valuesAttribute[itemPk], dict):
 
-                valuesAttribute[valuesDict['item']] = {}
+                valuesAttribute[itemPk] = {}
 
                 if fullAttrVal:
-                     valuesAttribute[valuesDict['item']]['CREATE_DATE'] = [{
-                    'start_date': None,
-                    'end_date': None,
-                    'title': valuesDict['item__create_date']}]
+                     valuesAttribute[itemPk]['CREATE_DATE'] = [{
+                        'start_date': None,
+                        'end_date': None,
+                        'title': valuesObj.item.create_date
+                    }]
 
-                     valuesAttribute[valuesDict['item']]['TITLE'] = [{
-                    'start_date': None,
-                    'end_date': None,
-                    'title': valuesDict['item__title']}]
                 else:
-                     valuesAttribute[valuesDict['item']]['CREATE_DATE'] = [valuesDict['item__create_date']]
-                     valuesAttribute[valuesDict['item']]['TITLE'] = [valuesDict['item__title']]
+                     valuesAttribute[itemPk]['CREATE_DATE'] = [valuesObj.item.create_date]
 
-
-            if valuesDict['attr__title'] not in valuesAttribute[valuesDict['item']]:
-                valuesAttribute[valuesDict['item']][valuesDict['attr__title']] = []
+            if valuesObj.attr.title not in valuesAttribute[itemPk]:
+                valuesAttribute[itemPk][valuesObj.attr.title] = []
 
 
             if fullAttrVal:
                 attrValDict = {
-                    'start_date': valuesDict['start_date'],
-                    'end_date': valuesDict['end_date'],
-                    'title': valuesDict['title']
+                    'start_date': valuesObj.start_date,
+                    'end_date': valuesObj.end_date,
+                    'title': valuesObj.title
                 }
-                valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(attrValDict)
+                valuesAttribute[itemPk][valuesObj.attr.title].append(attrValDict)
             else:
-                valuesAttribute[valuesDict['item']][valuesDict['attr__title']].append(valuesDict['title'])
+                valuesAttribute[itemPk][valuesObj.attr.title].append(valuesObj.title)
 
         return valuesAttribute
 
@@ -627,53 +617,36 @@ class Item(models.Model):
 
         values = Value.objects.filter(Q(end_date__gt=ctime) | Q(end_date__isnull=True),
                                       Q(start_date__lte=ctime) | Q(start_date__isnull=True),
-                                      attr__title__in=attr, item=self.id)
-        getList = ["title", "attr__title", 'item__create_date', 'item__title']
-
-        if fullAttrVal:
-            getList += ['start_date','end_date']
-
-        values = list(values.values(*getList))
+                                      attr__title__in=attr, item=self.id)\
+            .select_related('attr__title', 'item__create_date', 'item__title')
 
         valuesAttribute = {}
 
-        for valuesDict in values:
+        for valuesObj in values:
             if 'CREATE_DATE' not in valuesAttribute:
                 if fullAttrVal:
                     attrValDict = {
-                    'start_date': None,
-                    'end_date': None,
-                    'title': valuesDict['item__create_date']}
+                        'start_date': None,
+                        'end_date': None,
+                        'title': valuesObj.item.create_date
+                    }
                     valuesAttribute['CREATE_DATE'] = [attrValDict]
                 else:
-                    valuesAttribute['CREATE_DATE'] = [valuesDict['item__create_date']]
+                    valuesAttribute['CREATE_DATE'] = [valuesObj.item.create_date]
 
 
-            if 'TITLE' not in valuesAttribute:
-                 if fullAttrVal:
-                    attrValDict = {
-                    'start_date': None,
-                    'end_date': None,
-                    'title': valuesDict['item__create_date']}
-                    valuesAttribute['TITLE'] = [attrValDict]
-                 else:
-                    valuesAttribute['TITLE'] = [valuesDict['item__create_date']]
-
-
-
-            if valuesDict['attr__title'] not in valuesAttribute:
-                valuesAttribute[valuesDict['attr__title']] = []
-
+            if valuesObj.attr.title not in valuesAttribute:
+                valuesAttribute[valuesObj.attr.title] = []
 
             if fullAttrVal:
                 attrValDict = {
-                    'start_date': valuesDict['start_date'],
-                    'end_date': valuesDict['end_date'],
-                    'title': valuesDict['title']
+                    'start_date': valuesObj.start_date,
+                    'end_date': valuesObj.end_date,
+                    'title': valuesObj.title
                 }
-                valuesAttribute[valuesDict['attr__title']].append(attrValDict)
+                valuesAttribute[valuesObj.attr.title].append(attrValDict)
             else:
-                valuesAttribute[valuesDict['attr__title']].append(valuesDict['title'])
+                valuesAttribute[valuesObj.attr.title].append(valuesObj.title)
 
         if len(valuesAttribute) == 0:
             return []

@@ -1,11 +1,12 @@
 {% load CustomFilters %}
+{% load i18n %}
 {% if page.paginator.num_pages > 1 %}
        <div class="panaging">
              {%  if page.has_previous %}
-                    <a href="{% dynurl url_paginator url_parameter "1"  %}" >начало</a>
+                    <a href="{% dynurl url_paginator url_parameter "1"  %}" >{% transe "Start" %}</a>
                                     <a href="{% dynurl url_paginator url_parameter  page.previous_page_number  %}" >«</a>
             {% endif %}
-            <label>Страницы:</label>
+            <label>{% trans "pages" %}:</label>
 
 
                 {% for i in paginator_range %}
@@ -19,7 +20,7 @@
                {% endfor %}
                {%  if page.has_next %}
                                        <a href="{% dynurl url_paginator url_parameter page.next_page_number  %}" >»</a>
-                   <a href="{% dynurl url_paginator url_parameter  page.paginator.num_pages %}" >конец </a>
+                   <a href="{% dynurl url_paginator url_parameter  page.paginator.num_pages %}" >{% trans "End" %} </a>
                {% endif %}
                         </div>
 {% endif %}

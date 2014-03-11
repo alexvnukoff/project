@@ -61,25 +61,25 @@
 				<ul class="tenderline">
                     <li>
                         <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                          {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
+                          {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                         <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>{% trans 'Start event date' %}<font color="#FF0000">*</font></label>
-                             {% if form.errors.START_EVENT_DATE %}<div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>{% endif %}
+                             {% if form.errors.START_EVENT_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.START_EVENT_DATE }}</div></div>{% endif %}
                             <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
                         </div>
                         <div class="clumn2">
                         	<label>{% trans 'End event date' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.END_EVENT_DATE %}<div class="formserror">{{ form.errors.END_EVENT_DATE }}</div>{% endif %}
+                             {% if form.errors.END_EVENT_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.END_EVENT_DATE }}</div></div>{% endif %}
                             <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" style="width:94%;" />
                         </div>
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>{% trans 'City' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.CITY %}<div class="formserror">{{ form.errors.CITY }}</div>{% endif %}
+                             {% if form.errors.CITY %}<div class="error-handler"> <div class="formserror">{{ form.errors.CITY }}</div></div>{% endif %}
                             <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
                         </div>
                         <div class="clumn2">

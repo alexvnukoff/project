@@ -160,6 +160,8 @@ def registration(request):
 
 
 def set_news_list(request):
+    if not request.user.is_superuser:
+        raise PermissionError
     page = request.GET.get('page', 1)
     result = func.getItemsListWithPagination("News", "Name", "Detail_text", "Photo", page=page)
 
@@ -170,6 +172,8 @@ def set_news_list(request):
 
 
 def set_items_list(request):
+        if not request.user.is_superuser:
+            raise PermissionError
         app = get_app("appl")
         items = []
 
@@ -180,11 +184,15 @@ def set_items_list(request):
         return render_to_response("items.html", locals())
 
 def set_item_list(request, item):
+    if not request.user.is_superuser:
+        raise PermissionError
 
     item = item
     return render_to_response('list.html', locals())
 
 def showlist(request, item, page):
+    if not request.user.is_superuser:
+        raise PermissionError
     i = (globals()[item])
 
     if not issubclass(i, Item):
@@ -197,6 +205,9 @@ def showlist(request, item, page):
 
 
 def get_item(request, item):
+
+    if not request.user.is_superuser:
+        raise PermissionError
 
     i = request.POST
     if not i:
@@ -219,6 +230,8 @@ def get_item(request, item):
 
 
 def get_item_form(request, item):
+    if not request.user.is_superuser:
+        raise PermissionError
 
     i = request.POST
     if not i:
@@ -244,6 +257,8 @@ def get_item_form(request, item):
     return render_to_response('forelement.html', locals(), context_instance=RequestContext(request))
 
 def update_item(request, item, id):
+    if not request.user.is_superuser:
+        raise PermissionError
 
     i = request.POST
     if not i:
@@ -266,6 +281,8 @@ def update_item(request, item, id):
 
 
 def meth(request):
+    if not request.user.is_superuser:
+        raise PermissionError
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=2, fields=("photo", "title"))
     if not request.POST:
         form = Photo()

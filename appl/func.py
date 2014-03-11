@@ -480,12 +480,13 @@ def getAnalytic(params = None):
 
 def addDictinoryWithCountryAndOrganization(ids, itemList):
 
-    countries = Country.objects.filter(p2c__child__p2c__child__in=ids).values('p2c__child__p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__child__in=ids,
+                                       p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizations = Organization.objects.filter(p2c__child__in=ids).values('p2c__child', 'pk')
+    organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_ids)
     organizations_dict = {}
@@ -517,12 +518,13 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
 def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
-    countries = Country.objects.filter(p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__type='dependence',
+                                       p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizations = Organization.objects.filter(p2c__child=id).values('p2c__child', 'pk')
+    organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE'), organizations_ids)
     organizations_dict = {}
@@ -579,8 +581,8 @@ def filterLive(request):
             sqs = SearchQuerySet().models(Tpp).filter(id__in=filtersIDs[name])
 
             for tpp in sqs:
-                if tpp.country:
-                    filtersAdv.append(tpp.country)
+                if len(tpp.country) > 0:
+                    filtersAdv += tpp.country
 
 
     if len(ids) > 0:
