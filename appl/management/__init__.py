@@ -133,7 +133,7 @@ def databaseInitialization(sender, **kwargs):
                     'SLOGAN': 'Chr',
                     'SLUG': 'Chr',
                     'START_EVENT_DATE': 'Dat',
-
+                    'TARGET_AUDIENCE': 'Chr',
                     'TELEPHONE_NUMBER': 'Chr',
                     'TPP': 'Chr',
                     'YOUTUBE_CODE': 'Chr',

@@ -1815,7 +1815,7 @@ def innprj_DB_DB(request):
                 'NAME': leg_prj.prj_name,
                 'PRODUCT_NAME': leg_prj.prj_title,
                 'COST': 0,
-                'CURRENCY': '',
+                #'CURRENCY': '',
                 'TARGET_AUDIENCE': leg_prj.target_community,
                 'RELEASE_DATE': leg_prj.estim_date,
                 'SITE_NAME': leg_prj.site,
@@ -1865,7 +1865,6 @@ def innprj_DB_DB(request):
                 try:
                     gal = Gallery.objects.create(title='GALLERY_FOR_INN_PROJECT_ID:'+leg_prj.btx_id, create_user=create_usr)
                 except:
-                    i += 1
                     continue
 
                 gal.photo = add(img_root + pic)
@@ -1875,7 +1874,6 @@ def innprj_DB_DB(request):
                     print('Relationship between Innovative Project and Gallery was created! Project ID:', prj.pk)
                 except:
                     print('Can not create relationship! Project ID:', prj.pk)
-                    i += 1
                     continue
 
         i += 1
