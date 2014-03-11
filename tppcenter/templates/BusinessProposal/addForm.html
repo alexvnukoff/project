@@ -27,12 +27,12 @@
         <ul class="tenderline">
                   <li>
                         <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                       {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
+                       {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                         <input name="NAME" value="{{ name }}" type="text"  placeholder="" class="text" />
                     </li>
                     <li>
                     	<label>{% trans "Description" %} <font color="#FF0000">*</font></label>
-                        {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
+                        {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
                         <div class="tiny"><textarea rows="10"   name="DETAIL_TEXT" >{{ text }}</textarea></div>
                     </li>
                     <li>

@@ -132,7 +132,7 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 

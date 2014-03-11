@@ -72,6 +72,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'current_company': current_company,
+            'addNew': reverse('companies:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
             'bannerLeft': bLeft,
@@ -165,7 +166,7 @@ def _companiesContent(request, page=1, my=None):
 
     companyList = result[0]
     company_ids = [id for id in companyList.keys()]
-    countries = Country.objects.filter(p2c__child__in=company_ids).values('p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__in=company_ids, p2c__type='dependence').values('p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
@@ -210,7 +211,7 @@ def _companiesDetailContent(request, item_id):
     company = get_object_or_404(Company, pk=item_id)
     companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
 
-    country = Country.objects.get(p2c__child=company).getAttributeValues(*('FLAG', 'NAME'))
+    country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
 
 
     template = loader.get_template('Companies/detailContent.html')
@@ -373,7 +374,7 @@ def addCompany(request):
     user = request.user
 
     user_groups = user.groups.values_list('name', flat=True)
-    if not user.is_manager or not 'Company Creator' in user_groups:
+    if not 'Company Creator' in user_groups:
         return render_to_response("permissionDenied.html")
 
     form = None

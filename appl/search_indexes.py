@@ -557,7 +557,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_country(self, obj):
         try:
-            return Country.objects.get(p2c__child_id=obj.pk, p2c__type='relation').values_list('pk', flat=True)
+            return list(Country.objects.filter(p2c__child_id=obj.pk, p2c__type='dependence').values_list('pk', flat=True))
         except ObjectDoesNotExist:
             return None
 

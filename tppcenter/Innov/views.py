@@ -406,7 +406,7 @@ def _getValues(request):
     values['COST'] = request.POST.get('COST', "")
     values['CURRENCY'] = request.POST.get('CURRENCY', "")
     values['TARGET_AUDIENCE'] = request.POST.get('TARGET_AUDIENCE', "")
-    values['REALESE_DATE'] = request.POST.get('REALESE_DATE', "")
+    values['RELEASE_DATE'] = request.POST.get('RELEASE_DATE', "")
     values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
     values['KEYWORD'] = request.POST.get('KEYWORD', "")
     values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")

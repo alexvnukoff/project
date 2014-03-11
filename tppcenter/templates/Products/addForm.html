@@ -39,7 +39,7 @@ $(function() {
            	<div class="uploadimgage">
                   <div class="imgbig">
                   	<label>{% trans 'Image' %}</label>
-                  {% if form.errors.IMAGE %}<div class="formserror">{{ form.errors.IMAGE }}</div>{% endif %}
+                  {% if form.errors.IMAGE %}<div class="error-handler"> <div class="formserror">{{ form.errors.IMAGE }}</div></div>{% endif %}
                        {% if image %}
 
                     	<div class="b-img">
@@ -109,7 +109,7 @@ $(function() {
         	   <li>
                        <div class="clumn1">
                             <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                            {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
+                            {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                             <input type="text"  name="NAME"  placeholder="" class="text" style="width:92%;" value="{{ name }}" />
                         </div>
                         <div class="clumn2">
@@ -120,7 +120,7 @@ $(function() {
                     <li>
                         <div class="clumn1">
                             <label>{% trans 'Cost' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.COST %}<div class="formserror">{{ form.errors.COST }}</div>{% endif %}
+                             {% if form.errors.COST %}<div class="error-handler"> <div class="formserror">{{ form.errors.COST }}</div></div>{% endif %}
                             <input type="text"  name="COST" value="{{ cost }}" placeholder="" class="text" style="width:92%;" />
                         </div>
                         <div class="clumn2">
@@ -208,12 +208,12 @@ $(function() {
                     </li>
                     <li>
                         <label>{% trans 'Anons' %}</label>
-                         {% if form.errors.ANONS %}<div class="formserror">{{ form.errors.ANONS }}</div>{% endif %}
+                         {% if form.errors.ANONS %}<div class="error-handler"><div class="formserror">{{ form.errors.ANONS }}</div></div> {% endif %}
                         <textarea name="ANONS" >{{ anons }}</textarea>
                     </li>
                     <li>
                         <label>{% trans 'Detail text' %}</label>
-                          {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
+                          {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
                         <div class="">
                             <textarea class="tiny" style="height: 154px;width: 456px;" name="DETAIL_TEXT" >{{ text }}</textarea>
 

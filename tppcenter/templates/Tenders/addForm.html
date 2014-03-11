@@ -36,25 +36,25 @@
 
                     <li>
                         <label>{% trans 'Tender name' %} <font color="#FF0000">*</font></label>
-                           {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
+                           {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                         <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>{% trans 'Publication date' %} <font color="#FF0000">*</font></label>
-                               {% if form.errors.START_EVENT_DATE %}<div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>{% endif %}
+                               {% if form.errors.START_EVENT_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.START_EVENT_DATE }}</div></div>{% endif %}
                             <input type="text"  name="START_EVENT_DATE" value="{{ start_date }}"  placeholder="" class="date" />
                         </div>
                         <div class="clumn2">
                         	<label>  {% trans 'Deadline for receiving bids' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.END_EVENT_DATE %}<div class="formserror">{{ form.errors.END_EVENT_DATE }}</div>{% endif %}
+                              {% if form.errors.END_EVENT_DATE %}<div class="error-handler"><div class="formserror">{{ form.errors.END_EVENT_DATE }}</div></div> {% endif %}
                             <input type="text" name="END_EVENT_DATE" value="{{ end_date }}" placeholder="" class="date" style="width:94%;" />
                         </div>
                     </li>
                     <li>
                     	<div class="clumn1">
                         	<label>{% trans 'Starting price' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.COST %}<div class="formserror">{{ form.errors.COST }}</div>{% endif %}
+                              {% if form.errors.COST %}<div class="error-handler"> <div class="formserror">{{ form.errors.COST }}</div></div>{% endif %}
                             <input type="text" name="COST" value="{{ cost }}" placeholder="" class="text" />
                         </div>
                         <div class="clumn2">
@@ -68,7 +68,7 @@
                     </li>
                     <li>
                     	<label>{% trans 'Description' %} <font color="#FF0000">*</font></label>
-                          {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
+                          {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
                         <div class="">
                            <textarea class="tiny" style="width: 612px;height: 135;"  name="DETAIL_TEXT" >{{ text }}</textarea>
 

@@ -124,7 +124,7 @@ def databaseInitialization(sender, **kwargs):
                     'PROFESSION': 'Chr',
                     'ROUTE_DESCRIPTION': 'Str',
                     'PRODUCT_NAME': 'Chr',
-                    'REALESE_DATE': 'Dat',
+                    'RELEASE_DATE': 'Dat',
                     'SEX': {'type': 'Chr', 'slots': ['Male', 'Female']},
                     'SITE_NAME': 'Chr',
                     'SMALL_IMAGE': 'Img',
@@ -258,7 +258,7 @@ def databaseInitialization(sender, **kwargs):
                                    'ROUTE_DESCRIPTION': False, 'POSITION': False},
 
                     'InnovationProject': {'NAME': True, 'PRODUCT_NAME': True, 'COST': True, 'TARGET_AUDIENCE': False,
-                                          'REALESE_DATE': True, 'SITE_NAME': False, 'KEYWORD': False,
+                                          'RELEASE_DATE': True, 'SITE_NAME': False, 'KEYWORD': False,
                                           'DETAIL_TEXT': False, 'BUSINESS_PLAN': False, 'DOCUMENT_1': False,
                                           'CURRENCY': True},
 
