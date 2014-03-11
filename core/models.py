@@ -493,31 +493,46 @@ class Item(models.Model):
                 comp = Company.objects.get(pk=2)        # read comp from database
                 list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
-
         group_list = []
-        if user == self.create_user: # is user object's owner?
-            group_list.append('Owner')
-            group_list.append('Admin')
-            if self.status.perm: # is there permissions group for current object's state?
-                group_list.append(self.status.perm.name)
-            else: # no permissions group for current state, attach Staff group
-                group_list.append('Staff')
-        else:
-            if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
-                if user.is_manager: # has user content manager flag?
-                    group_list.append('Admin')
-                    if self.status.perm: # is there permissions group for current object's state?
-                        group_list.append(self.status.perm.name)
-                    else: # no permissions group for current state, attach Staff group
-                        group_list.append('Staff')
-                else:
-                    if self.status.perm: # is there permissions group for current object's state?
-                        group_list.append(self.status.perm.name)
-                    else: # no permissions group for current state, attach Staff group
-                        group_list.append('Staff')
-        # get all permissions from all related groups for current type of item
         obj_type = self.__class__.__name__ # get current object's type
         obj_type = obj_type.lower()
+
+        if user.is_superuser:
+            group_list.append('Owner')
+            group_list.append('Admin')
+            group_list.append('Staff')
+
+        else:
+            if user == self.create_user: # is user object's owner?
+                group_list.append('Owner')
+                group_list.append('Admin')
+                if self.status.perm: # is there permissions group for current object's state?
+                    group_list.append(self.status.perm.name)
+                else: # no permissions group for current state, attach Staff group
+                    group_list.append('Staff')
+            else:
+                if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
+                    if user.is_manager: # has user content manager flag?
+                        group_list.append('Admin')
+                        if self.status.perm: # is there permissions group for current object's state?
+                            group_list.append(self.status.perm.name)
+                        else: # no permissions group for current state, attach Staff group
+                            group_list.append('Staff')
+                    else:
+                        if self.status.perm: # is there permissions group for current object's state?
+                            group_list.append(self.status.perm.name)
+                        else: # no permissions group for current state, attach Staff group
+                            group_list.append('Staff')
+                else:
+                    if obj_type == 'company':
+                        #try to receive TPP for this company using Item class and Relationship and check is the user in Community
+                        if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
+                                        values('c2p__parent__organization__community__name')) and user.is_manager:
+                            group_list.append('Owner')
+                            group_list.append('Admin')
+                            group_list.append('Staff')
+
+        # get all permissions from all related groups for current type of item
         perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
                     ).values('permissions__codename')]
         # attach user's private permissions
