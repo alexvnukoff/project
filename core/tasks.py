@@ -471,8 +471,8 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
-    valPost = ('NAME', 'PRODUCT_NAME','COST', 'CURRENCY', 'TARGET_AUDIENCE', 'REALESE_DATE', 'DOCUMENT_1-CLEAR',
-               'REALESE_DATE', 'SITE_NAME', 'KEYWORD', 'DETAIL_TEXT', 'BUSINESS_PLAN')
+    valPost = ('NAME', 'PRODUCT_NAME','COST', 'CURRENCY', 'TARGET_AUDIENCE', 'RELEASE_DATE', 'DOCUMENT_1-CLEAR',
+                'SITE_NAME', 'KEYWORD', 'DETAIL_TEXT', 'BUSINESS_PLAN')
     valFiles = ('DOCUMENT_1', )
     values = {}
     for val in valPost:

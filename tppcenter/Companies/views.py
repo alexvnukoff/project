@@ -374,7 +374,7 @@ def addCompany(request):
     user = request.user
 
     user_groups = user.groups.values_list('name', flat=True)
-    if not user.is_manager or not 'Company Creator' in user_groups:
+    if not 'Company Creator' in user_groups:
         return render_to_response("permissionDenied.html")
 
     form = None
