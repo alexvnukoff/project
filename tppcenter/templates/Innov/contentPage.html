@@ -23,7 +23,7 @@
                            <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             <font class="name">{{ org_name }}, {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
-                        <h2><a href="{% url "innov:detail" slug %}">{{ name }}</a></h2>
+                        <h2><a href="{% url "innov:detail" slug %}">{{ name|truncatewords:14 }}</a></h2>
                         <div class="line">
                             {% if branch_name != 0  %}
                         	    <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
