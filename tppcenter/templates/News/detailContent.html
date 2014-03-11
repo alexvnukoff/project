@@ -69,9 +69,9 @@
                                 <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
                             {% endif %}
 
-                            <a href="{% url 'news:detail' sim_slug %}">{{ sim_name }}</a>
+                            <a href="{% url 'news:detail' sim_slug %}">{{ sim_name|truncatewords:6 }}</a>
                             <span class="date">{{ sim_create_date|date:'d M Y' }}</span>
-                            <p>{{ sim_content|truncatewords:12 }}</p>
+                            <p>{{ sim_content|cleanHtml|safe|truncatewords:12 }}</p>
                             <a href="{% url 'news:detail' sim_slug %}" class="more">{% trans 'More' %}...</a>
                         </li>
                       {% endwith %}

@@ -37,7 +37,11 @@ $(function() {
 					<span class="title">{{ name }}</span>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
+                        {% if org_flag or org_image %}
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                        {% else %}
+                            <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
+                        {% endif %}
                             <a href="#">{{ org_name }}</a>
                             </div>
                     </div>
@@ -65,7 +69,7 @@ $(function() {
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Industry' %}: </span>
-                                        <span class="right">{{ branch_name }} </span>
+                                        <span class="right">{% if branch_name != 0 %}{{ branch_name }}{% endif %} </span>
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Cost' %}: </span>

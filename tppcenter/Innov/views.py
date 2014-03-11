@@ -220,10 +220,13 @@ def _innovDetailContent(request, item_id):
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+     try:
+         branch = Branch.objects.get(p2c__child=item_id)
+         branchValues = branch.getAttributeValues('NAME')
+         innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
+     except ObjectDoesNotExist:
+          innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
-     branch = Branch.objects.get(p2c__child=item_id)
-     branchValues = branch.getAttributeValues('NAME')
-     innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
 
      func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
 
