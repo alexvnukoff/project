@@ -224,7 +224,7 @@ def _getDetailContent(request, item_id):
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-     country = Country.objects.get(p2c__child__p2c__child=item_id)
+     country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
 
 
 
