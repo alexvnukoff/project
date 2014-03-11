@@ -165,7 +165,7 @@ def _companiesContent(request, page=1, my=None):
 
     companyList = result[0]
     company_ids = [id for id in companyList.keys()]
-    countries = Country.objects.filter(p2c__child__in=company_ids).values('p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__in=company_ids, p2c__type='dependence').values('p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
@@ -210,7 +210,7 @@ def _companiesDetailContent(request, item_id):
     company = get_object_or_404(Company, pk=item_id)
     companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
 
-    country = Country.objects.get(p2c__child=company).getAttributeValues(*('FLAG', 'NAME'))
+    country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
 
 
     template = loader.get_template('Companies/detailContent.html')
