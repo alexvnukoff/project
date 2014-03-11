@@ -30,7 +30,7 @@ def get_news_list(request, page=1, my=None):
     current_company = request.session.get('current_company', False)
 
     if current_company:
-        current_company, filterAdv = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         newsPage, filterAdv = _newsContent(request, page, my)
 
