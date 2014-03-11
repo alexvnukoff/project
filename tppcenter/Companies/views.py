@@ -72,6 +72,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'current_company': current_company,
+            'addNew': reverse('companies:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
             'bannerLeft': bLeft,
