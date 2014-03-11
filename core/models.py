@@ -107,8 +107,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         if obj is None:
             return PermissionsMixin.has_perms(self, perm_list)
+
+        if self.is_superuser:
+            return True
         else:
             group_list = []
+            obj_type = obj.__class__.__name__ # get current object's type
+            obj_type = obj_type.lower()
+
             if self == obj.create_user: # is user object's owner?
                 group_list.append('Owner')
                 group_list.append('Admin')
@@ -129,9 +135,16 @@ class User(AbstractBaseUser, PermissionsMixin):
                             group_list.append(obj.status.perm.name)
                         else: # no permissions group for current state, attach Staff group
                             group_list.append('Staff')
+                else:
+                    if obj_type == 'company':
+                        #try to receive TPP for this company using Item class and Relationship and check is the user in Community
+                        if self.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=obj.pk).\
+                                    values('c2p__parent__organization__community__name')) and self.is_manager:
+                            group_list.append('Owner')
+                            group_list.append('Admin')
+                            group_list.append('Staff')
+
             # get all permissions from all related groups for current type of item
-            obj_type = obj.__class__.__name__ # get current object's type
-            obj_type = obj_type.lower()
             p_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
                             permissions__codename__contains=obj_type).values('permissions__codename')]
             # attach user's private permissions
