@@ -25,7 +25,9 @@
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name }}</a></h2>
                         <div class="line">
-                        	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
+                            {% if branch_name != 0  %}
+                        	    <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
+                            {% endif %}
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
                         <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
