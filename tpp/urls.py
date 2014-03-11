@@ -6,6 +6,7 @@ import tppcenter
 import tppcenter.views
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 
@@ -48,6 +49,12 @@ urlpatterns = patterns('',
 
     url(r'^legacy/site2prod/csvdb$', leg_v.site2prod_CSV_DB),
     url(r'^legacy/site2prod/dbdb$', leg_v.site2prod_DB_DB),
+
+    url(r'^legacy/moder2comp/csvdb$', leg_v.moder2comp_CSV_DB),
+    url(r'^legacy/moder2comp/dbdb$', leg_v.moder2comp_DB_DB),
+
+    url(r'^legacy/moder2tpp/csvdb$', leg_v.moder2tpp_CSV_DB),
+    url(r'^legacy/moder2tpp/dbdb$', leg_v.moder2tpp_DB_DB),
 
     url(r'^test/$', tppcenter.views.test),
 

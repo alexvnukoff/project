@@ -7,6 +7,7 @@ from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.db.models import Q
 import datetime
 import csv
 from tpp.SiteUrlMiddleWare import get_request
@@ -87,11 +88,14 @@ def users_reload_CSV_DB(request):
         company = bytearray(data[i][23]).decode(encoding='utf-8')
         department = bytearray(data[i][24]).decode(encoding='utf-8')
         position = bytearray(data[i][25]).decode(encoding='utf-8')
+        mid_name = bytearray(data[i][26]).decode(encoding='utf-8')
+        skp = bytearray(data[i][27]).decode(encoding='utf-8')
 
         try:
-            L_User.objects.get_or_create(username = username,\
+            leg_usr, created = L_User.objects.get_or_create(username = username,\
                                     is_active = is_active,\
                                     first_name = first_name,\
+                                    middle_name = mid_name,\
                                     last_name = last_name,\
                                     email = email,\
                                     btx_id = btx_id,\
@@ -107,6 +111,7 @@ def users_reload_CSV_DB(request):
                                     phone = phone,\
                                     fax = fax,\
                                     cellular = cellular,\
+                                    skype = skp,\
                                     addr_street = addr_street,\
                                     addr_city = addr_city,\
                                     addr_state = addr_state,\
@@ -115,6 +120,12 @@ def users_reload_CSV_DB(request):
                                     company = company,\
                                     department = department,\
                                     position = position)
+
+            if not created:
+                leg_usr.middle_name = mid_name
+                leg_usr.skype = skp
+                leg_usr.save()
+
         except:
             return HttpResponse('Migration process from CSV file into buffer DB was interrupted!\
                                 Possible reason is duplicated data.')
@@ -169,7 +180,7 @@ def users_reload_DB_DB(request):
         #create Cabinet for user
 
         try:
-            user_cab = Cabinet.objects.create(title='CABINET_USER_ID_' + str(new_user.pk), user = new_user, create_user = new_user)
+            user_cab = Cabinet.objects.get_or_create(title='CABINET_USER_ID_' + str(new_user.pk), user = new_user, create_user = new_user)
 
         except:
             User.objects.filter(pk = new_user.pk).delete()
@@ -179,15 +190,21 @@ def users_reload_DB_DB(request):
         address.strip()
 
         attr = {
-                'PROFESSION': usr.profession,
-                'PERSONAL_WWW': usr.personal_www,
-                'ICQ': usr.icq,
-                #'SEX': usr.gender,
-                'PERSONAL_PHONE': usr.phone,
-                'PERSONAL_FAX': usr.fax,
-                'CELLULAR': usr.cellular,
                 'ADDRESS': address,
+                'BIRTHDAY': usr.birth_date,
+                'ICQ': usr.icq,
+                #'IMAGE': photo_path,
+                'MOBILE_NUMBER': usr.cellular,
+                'PERSONAL_FAX': usr.fax,
                 'POSITION': usr.position,
+                'PROFESSION': usr.profession,
+                #'SEX': usr.gender,
+                'SITE_NAME': usr.personal_www,
+                'SKYPE': usr.skype,
+                'TELEPHONE_NUMBER': usr.phone,
+                'USER_FIRST_NAME': usr.first_name,
+                'USER_MIDDLE_NAME': usr.middle_name,
+                'USER_LAST_NAME': usr.last_name,
             }
 
         trans_real.activate('ru') #activate russian locale
@@ -1349,3 +1366,290 @@ def site2prod_DB_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Production sites were updated!')
+
+def moder2comp_CSV_DB(request):
+    '''
+        Reload company moderators from prepared CSV file named comp_moder_legacy.csv
+        into buffer DB table LEGACY_DATA_L_MODER2COMP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\comp_moder_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        moder_btx_id = bytearray(data[i][2]).decode(encoding='utf-8')
+
+        try:
+            L_Moder2Comp.objects.create( btx_id=btx_id,\
+                                        org_name=org_name,\
+                                        moder_btx_id=moder_btx_id)
+            count += 1
+        except:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Company moderators were migrated from CSV into buffer DB!')
+
+def moder2comp_DB_DB(request):
+    '''
+        Create relationships between companies and their moderators
+    '''
+    #for debugging - clear all ORG-XXXXXX groups from users
+    time1 = datetime.datetime.now()
+    '''
+    i = 0
+    print('Removing users from ORG-xxxxxxx groups. Please, wait...')
+    g_lst = Group.objects.filter(name__icontains='ORG-').all()
+    for g in g_lst:
+        usr_list = g.user_set.all()
+        for usr in usr_list:
+            g.user_set.remove(usr)
+            i += 1
+            if not i%200:
+                print('Removing Milestone:', i)
+    '''
+    print('Create relationships between Companies and their moderators.')
+    print('Verifying data. Please, wait...')
+    qty = L_Moder2Comp.objects.filter(~Q(moder_btx_id='')).count()
+    try:
+        L_Moder2Comp.objects.filter(moder_btx_id='').delete()
+        print('Were deleted', qty, 'items without moderator IDs.')
+    except:
+        pass
+
+    qty = L_Moder2Comp.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+
+    count = 0
+    flag = True
+    block_size = 1000
+    i = 0
+
+    while flag:
+        moder_lst = L_Moder2Comp.objects.filter(completed=False)[:block_size]
+        if len(moder_lst) < block_size: # it will last big loop
+            flag = False
+
+        for moder in moder_lst:
+            moder.completed = True
+            moder.save()
+            try:
+                leg_comp = L_Company.objects.get(btx_id=moder.btx_id)
+            except:
+                print('Company does not exist in buffer DB! Company btx_id:', moder.btx_id)
+                i += 1
+                continue
+
+            try:
+                comp = Company.objects.get(pk=leg_comp.tpp_id)
+            except:
+                print('Company does not exist in TPP DB! Company ID:', leg_comp.tpp_id)
+                i += 1
+                continue
+
+            try:
+                leg_user = L_User.objects.get(btx_id=moder.moder_btx_id)
+            except:
+                print('Legacy User does not exist in buffer DB! User btx_id:', moder.moder_btx_id)
+                i += 1
+                continue
+
+            try:
+                moder_user = User.objects.get(pk=leg_user.tpp_id)
+            except:
+                print('User does not exist in TPP DB! User ID:', leg_user.tpp_id)
+                i += 1
+                continue
+
+            # add moderator to company's community
+            try:
+                g = Group.objects.get(name=comp.community)
+                g.user_set.add(moder_user)
+            except:
+                print('Can not access to community! Company community:', comp.community)
+                i += 1
+                continue
+
+            moder_user.is_manager = True
+            moder_user.save()
+            count += 1
+
+            i += 1
+            print('Milestone: ', i)
+
+    print('Done. Quantity of processed strings:', i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Relationships between Companies and their moderators were created!')
+
+def moder2tpp_CSV_DB(request):
+    '''
+        Reload company moderators from prepared CSV file named tpp_moder_legacy.csv
+        into buffer DB table LEGACY_DATA_L_MODER2TPP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading data from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\tpp_moder_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        org_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        moder_btx_id = bytearray(data[i][2]).decode(encoding='utf-8')
+
+        try:
+            L_Moder2Tpp.objects.create( btx_id=btx_id,\
+                                        org_name=org_name,\
+                                        moder_btx_id=moder_btx_id)
+            count += 1
+        except:
+            #print('Milestone: ', i+1)
+            i += 1
+            print(btx_id, '##', org_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPP moderators were migrated from CSV into buffer DB!')
+
+def moder2tpp_DB_DB(request):
+    '''
+        Create relationships between TPPs and their moderators
+    '''
+    #for debugging - clear all ORG-XXXXXX groups from users
+    time1 = datetime.datetime.now()
+    '''
+    i = 0
+    print('Removing users from ORG-xxxxxxx groups. Please, wait...')
+    g_lst = Group.objects.filter(name__icontains='ORG-').all()
+    for g in g_lst:
+        usr_list = g.user_set.all()
+        for usr in usr_list:
+            g.user_set.remove(usr)
+            i += 1
+            if not i%200:
+                print('Removing Milestone:', i)
+    '''
+    print('Create relationships between TPPs and their moderators.')
+    print('Verifying data. Please, wait...')
+    qty = L_Moder2Tpp.objects.filter(~Q(moder_btx_id='')).count()
+    try:
+        L_Moder2Tpp.objects.filter(moder_btx_id='').delete()
+        print('Were deleted', qty, 'items without moderator IDs.')
+    except:
+        pass
+
+    qty = L_Moder2Tpp.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+
+    count = 0
+    flag = True
+    block_size = 1000
+    i = 0
+
+    while flag:
+        moder_lst = L_Moder2Tpp.objects.filter(completed=False)[:block_size]
+        if len(moder_lst) < block_size: # it will last big loop
+            flag = False
+
+        for moder in moder_lst:
+            moder.completed = True
+            moder.save()
+            try:
+                leg_tpp = L_TPP.objects.get(btx_id=moder.btx_id)
+            except:
+                print('TPP does not exist in buffer DB! TPP btx_id:', moder.btx_id)
+                i += 1
+                continue
+
+            try:
+                tpp = Tpp.objects.get(pk=leg_tpp.tpp_id)
+            except:
+                print('TPP does not exist in TPP DB! TPP ID:', leg_tpp.tpp_id)
+                i += 1
+                continue
+
+            try:
+                leg_user = L_User.objects.get(btx_id=moder.moder_btx_id)
+            except:
+                print('Legacy User does not exist in buffer DB! User btx_id:', moder.moder_btx_id)
+                i += 1
+                continue
+
+            try:
+                moder_user = User.objects.get(pk=leg_user.tpp_id)
+            except:
+                print('User does not exist in TPP DB! User ID:', leg_user.tpp_id)
+                i += 1
+                continue
+
+            # add moderator to TPP's community
+            try:
+                g = Group.objects.get(name=tpp.community)
+                g.user_set.add(moder_user)
+            except:
+                print('Can not access to community! TPP community:', tpp.community)
+                i += 1
+                continue
+
+            moder_user.is_manager = True
+            moder_user.save()
+            count += 1
+
+            i += 1
+            print('Milestone: ', i)
+
+    print('Done. Quantity of processed strings:', i, 'Were added into DB:', count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Relationships between TPPs and their moderators were created!')
+

@@ -66,7 +66,8 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'legacy_data',
-    'djcelery'
+    'djcelery',
+
 )
 
 
@@ -106,6 +107,8 @@ CACHES = {
     }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 DATABASES = {
     'default': {
         #'ENGINE': 'oraclepool',
@@ -139,7 +142,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = ("locale",)
+LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 
 
 # Static files (CSS, JavaScript, Images)
@@ -158,7 +161,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
-MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl/Static').replace('\\', '/'))
+MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
@@ -184,6 +187,9 @@ LANGUAGES = (
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
 )
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru', 'en'),
     'en': ('ru',),
@@ -265,5 +271,7 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+
 
 

@@ -21,7 +21,6 @@ import tppcenter.AdvBanner.urls
 import tppcenter.AdvTop
 import tppcenter.AdvTop.urls
 
-
 admin.autodiscover()
 
 
@@ -57,6 +56,7 @@ urlpatterns = patterns('',
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
     url(r'^admin/', include(admin.site.urls)),
+
 
     url(r'^items/$', tppcenter.views.set_items_list),
     url(r'^items/([a-zA-Z]+)/$', tppcenter.views.set_item_list),

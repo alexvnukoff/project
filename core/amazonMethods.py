@@ -60,6 +60,7 @@ def add(imageFile=None, sizes=None):
 
 
 
+
             f['original'] = open(imageFile, 'rb')
 
             requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f['original'], close=True))
@@ -68,17 +69,13 @@ def add(imageFile=None, sizes=None):
             filename = imageFile
 
 
-
-
-
-
-
         except Exception as e:
             return False
 
         try:
             if os.path.isfile(filename):
                     os.remove(filename)
+
 
             for key in sizes.keys():
                 filename = '%s-%s' % (key, name + '.png')

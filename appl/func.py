@@ -552,16 +552,20 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
 
 def filterLive(request):
+    from haystack.query import SearchQuerySet
+
     searchFilter = {}
     filtersIDs = {}
     filters = {}
     ids = []
+    filtersAdv = []
 
-    filterList=['tpp', 'country', 'branch', 'category']
+    filterList=['tpp', 'country', 'branch']
 
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
+
 
         for pk in request.GET.getlist('filter[' + name + '][]', []):
             try:
@@ -570,6 +574,16 @@ def filterLive(request):
                 continue
 
         ids += filtersIDs[name]
+
+        if name != 'tpp':
+            filtersAdv += filtersIDs[name]
+        else:
+            sqs = SearchQuerySet().models(Tpp).filter(id__in=filtersIDs[name])
+
+            for tpp in sqs:
+                if tpp.country:
+                    filtersAdv.append(tpp.country)
+
 
     if len(ids) > 0:
         attributes = Item.getItemsAttributesValues('NAME', ids)
@@ -587,7 +601,7 @@ def filterLive(request):
                     searchFilter[name + '__in'] = id
 
 
-    return filters, searchFilter
+    return filters, searchFilter, filtersAdv
 
 
 def getB2BcabinetValues(request):
@@ -624,7 +638,7 @@ def getBannersRight(request, places, site, template, filter=None):
     for place in places:
         banner = AdvBanner.active.get_active().filter(c2p__parent__title=place, c2p__type="relation", sites=site)
 
-        if filter is not None:
+        if filter is not None and len(filter) > 0:
             banner = banner.filter(c2p__parent__in=filter, c2p__type='relation')
 
         banner = banner.order_by('?').values_list('pk', flat=True)[:1]
@@ -674,11 +688,15 @@ def getTops(request, models, filter=None):
     for id, attrs in topAttr.items():
 
         for model in models:
+            
+            if model not in modelTop:
+                continue
 
             sModel = model.__name__
 
             if model not in tops:
                 tops[sModel] = {}
+
 
             if id in modelTop[model] :
                 tops[sModel][id] = attrs
@@ -696,3 +714,18 @@ def getTops(request, models, filter=None):
     context = RequestContext(request, templateParams)
 
     return template.render(context)
+
+def getDeatailAdv(item_id):
+    from haystack.query import SearchQuerySet
+
+    filterAdv = []
+    sqs = SearchQuerySet().filter(id=item_id)
+
+
+    filterAdv += getattr(sqs, 'branch', [])
+    filterAdv += getattr(sqs, 'tpp', [])
+
+    if len(filterAdv) == 0:
+        filterAdv.append(item_id)
+
+    return filterAdv

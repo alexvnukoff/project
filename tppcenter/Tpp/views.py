@@ -21,9 +21,9 @@ from core.tasks import addNewTpp
 from django.conf import settings
 
 
-
-
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
+
+    filterAdv = []
 
     if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title
@@ -32,24 +32,30 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-
     if item_id is None:
         try:
-            tppPage = _tppContent(request, page, my)
+            tppPage, filterAdv  = _tppContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        tppPage = _tppDetailContent(request, item_id)
+        tppPage, filterAdv = _tppDetailContent(request, item_id)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
         settings.STATIC_URL + 'tppcenter/css/tpp.reset.css'
     ]
+
     scripts = []
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+
 
     if not request.is_ajax():
         user = request.user
@@ -64,8 +70,6 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             notification = None
         current_section = _("Tpp")
 
-
-
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
@@ -76,20 +80,35 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'addNew': reverse('tpp:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': tppPage}))
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': tppPage,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Tpp)
 
@@ -130,7 +149,9 @@ def _tppContent(request, page=1, my=None):
 
         tpp = sqs.order_by(*order)
         url_paginator = "tpp:paginator"
-        params = {'sortField1': sortField1,
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
                     'sortField2': sortField2,
                     'order1': order1,
                     'order2': order2}
@@ -185,10 +206,12 @@ def _tppContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 def _tppDetailContent(request, item_id):
+
+    filterAdv = func.getDeatailAdv(item_id)
 
     tpp = get_object_or_404(Tpp, pk=item_id)
     tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
@@ -202,7 +225,7 @@ def _tppDetailContent(request, item_id):
     template = loader.get_template('Tpp/detailContent.html')
     context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):

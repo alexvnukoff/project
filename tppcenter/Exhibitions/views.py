@@ -28,9 +28,12 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
        slug = Value.objects.get(item=item_id, attr__title='SLUG').title
        return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
 
+    filterAdv = []
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -39,11 +42,15 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            exhibitionPage = _exhibitionsContent(request, page, my)
+            exhibitionPage, filterAdv = _exhibitionsContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        exhibitionPage = _exhibitionsDetailContent(request, item_id)
+        exhibitionPage, filterAdv = _exhibitionsDetailContent(request, item_id)
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -70,17 +77,32 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'scripts': scripts,
             'addNew': reverse('exhibitions:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops
         }
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': exhibitionPage }))
+
+        serialize = {
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops,
+            'styles': styles,
+            'scripts': scripts,
+            'content': exhibitionPage
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 def _exhibitionsContent(request, page=1, my=None):
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Exhibition)
 
@@ -120,7 +142,9 @@ def _exhibitionsContent(request, page=1, my=None):
 
         exhibitions = sqs.order_by(*order)
         url_paginator = "exhibitions:paginator"
-        params = {'sortField1': sortField1,
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
                   'sortField2': sortField2,
                   'order1': order1,
                   'order2': order2}
@@ -169,11 +193,14 @@ def _exhibitionsContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 
 def _exhibitionsDetailContent(request, item_id):
+
+     filterAdv = func.getDeatailAdv(item_id)
+
      exhibition = get_object_or_404(Exhibition, pk=item_id)
      exhibitionlValues = exhibition.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'START_EVENT_DATE', 'END_EVENT_DATE',
                                                          'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'CITY',
@@ -191,7 +218,7 @@ def _exhibitionsDetailContent(request, item_id):
 
      context = RequestContext(request, {'exhibitionlValues': exhibitionlValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context)
+     return template.render(context), filterAdv
 
 
 @login_required(login_url='/login/')

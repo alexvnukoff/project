@@ -245,6 +245,7 @@ class ItemForm(forms.Form):
         if not self.is_valid():
             raise ValidationError
         sid = transaction.savepoint()
+
         try:
             if not self.id:
                 site = site_id
@@ -258,6 +259,7 @@ class ItemForm(forms.Form):
                 self.obj.save()
             attrValues = {}
             attrValues_to_delte = []
+
             for title in self.fields:
                 if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
                         and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
@@ -275,6 +277,7 @@ class ItemForm(forms.Form):
 
 
             self.obj.setAttributeValue(attrValues, user)
+
             if len(attrValues_to_delte) > 0:
                 Value.objects.filter(item=self.obj, attr__title__in=attrValues_to_delte).delete()
 
@@ -288,12 +291,14 @@ class ItemForm(forms.Form):
 
             transaction.savepoint_rollback(sid)
 
+            if disableNotify is False:
+                func.notify("error_creating", 'notification', user=user)
 
-            func.notify("error_creating", 'notification', user=user)
             if len(self.to_delete_if_exception) > 0:
                  delete(self.to_delete_if_exception)
             if len(self.document_to_delete_if_exception) > 0:
                  deleteFile(self.document_to_delete)
+
             return False
 
         else:

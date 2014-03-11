@@ -246,7 +246,8 @@
                                  element.onChangeSet(e);
                             }
 
-                            callback(initial[name]);
+                            if ( initial[name].length > 0 )
+                                callback(initial[name]);
                         }
                     },
                     formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
@@ -264,6 +265,7 @@
 
 {% block center %}
 <div class="ads-details">
+<h1>{{ itemName }}</h1>
     <form enctype="multipart/form-data" method="post" action="" name="advForm">
 
         {% csrf_token %}
@@ -299,10 +301,12 @@
                     </div>
                 {% endif %}
 
-                {% for name, placeholder in enable.items %}
-                    <input value="60" name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
+                {% for name, filterDict in enable.items %}
+
+                    <input {% if filterDict.init %}value="{{ filterDict.init }}"{% endif %}  name="{{ name }}" placeholder="{{ filterDict.placeholder }}" type="hidden" />
                 {% endfor %}
             </div>
+
         </div>
         <div class="ads-details-right">
 
@@ -323,9 +327,7 @@
                 	<span class="left"><b>{% trans "Summary" %}:</b></span>
                     <span class="right"><b>0.00</b><b> $</b></span>
                 </div>
-
-
-                <input type="submit" class="btnprice" value="{% trans "Pay" %}">
+                <input type="submit" value="{% trans "Pay" %}" class="btnprice">
             </div>
     </form>
 </div>

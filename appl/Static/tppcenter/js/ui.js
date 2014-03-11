@@ -282,6 +282,10 @@ $(document).ready(function() {
             setPage: function(event, data){
                 ui.setFilters(data.filters);
 
+                $('.news-ads-wrapper').replaceWith(data.tops);
+                $('.banner-wrapper-left').html(data.bannerLeft);
+                $('.banner-wrapper-right').html(data.bannerRight);
+
                 $(ui.container).replaceWith( data.content );
                 ui.filter_form = $('form[name="filter-form"]');
                 ui.initFilters();

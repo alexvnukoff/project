@@ -23,23 +23,30 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
          return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     cabinetValues = func.getB2BcabinetValues(request)
 
+    filterAdv = []
+
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
 
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css',
               settings.STATIC_URL + 'tppcenter/css/company.css',
               settings.STATIC_URL + 'tppcenter/css/tpp.reset.css']
     scripts = []
+
     if not item_id:
         try:
-            newsPage = _companiesContent(request, page, my)
+            newsPage, filterAdv = _companiesContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        newsPage = _companiesDetailContent(request, item_id)
+        newsPage, filterAdv = _companiesDetailContent(request, item_id)
+
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
+    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -56,9 +63,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
         current_section = _("Companies")
 
-        bRight = func.getBannersRight(request, ['Right 1', 'Right 2', 'Right 3'], settings.SITE_ID, 'AdvBanner/banners.html' , filter=[41])
-        tops = func.getTops(request, {Product: 5})
-
         templateParams = {
             'user_name': user_name,
             'current_section': current_section,
@@ -70,19 +74,32 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'current_company': current_company,
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
+            'bannerLeft': bLeft,
             'tops': tops
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
 
     else:
-        return HttpResponse(json.dumps({'styles': styles, 'scripts': scripts, 'content': newsPage}))
+
+        serialize = {
+            'bannerRight': bRight,
+            'bannerLeft': bLeft,
+            'tops': tops,
+            'styles': styles,
+            'scripts': scripts,
+            'content': newsPage
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _companiesContent(request, page=1, my=None):
 
+    filterAdv = []
+
     if not my:
-        filters, searchFilter = func.filterLive(request)
+        filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Company)
@@ -181,12 +198,15 @@ def _companiesContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 
 
 def _companiesDetailContent(request, item_id):
+
+    filterAdv = func.getDeatailAdv(item_id)
+
     company = get_object_or_404(Company, pk=item_id)
     companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
 
@@ -196,7 +216,7 @@ def _companiesDetailContent(request, item_id):
     template = loader.get_template('Companies/detailContent.html')
     context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context)
+    return template.render(context), filterAdv
 
 
 
