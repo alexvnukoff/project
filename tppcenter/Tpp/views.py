@@ -152,7 +152,7 @@ def _tppContent(request, page=1, my=None):
 
     tppList = result[0]
     tpp_ids = [id for id in tppList.keys()]
-    countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
+    countries = Country.objects.filter(p2c__child__in=tpp_ids, p2c__type='relation').values('p2c__child', 'pk')
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
@@ -195,7 +195,7 @@ def _tppDetailContent(request, item_id):
 
 
     if not tppValues.get('FLAG', False):
-       country = Country.objects.get(p2c__child=tpp).getAttributeValues(*('FLAG', 'NAME'))
+       country = Country.objects.get(p2c__child=tpp, p2c__type='relation').getAttributeValues(*('FLAG', 'NAME'))
     else:
        country = ""
 
