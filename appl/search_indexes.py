@@ -26,13 +26,13 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
     start_event_date = indexes.DateField(null=True)
     end_event_date = indexes.DateField(null=True)
-    create_date = indexes.DateTimeField(null=True)
+    obj_create_date = indexes.DateTimeField(null=True)
 
-    def prepare_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def get_model(self):
@@ -69,8 +69,8 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -92,6 +92,8 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -159,11 +161,11 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
-    create_date = indexes.DateTimeField(null=True)
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_create_date = indexes.DateTimeField(null=True)
 
-    def prepate_create_date(self, obj):
+    def prepate_obj_create_date(self, obj):
         return obj.create_date
 
     def get_model(self):
@@ -195,8 +197,8 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -218,6 +220,8 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -375,11 +379,11 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     tpp = indexes.IntegerField(null=True)
     title_auto = indexes.NgramField(null=True)
     id = indexes.IntegerField()
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
-    create_date = indexes.DateTimeField(null=True)
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_create_date = indexes.DateTimeField()
 
-    def prepare_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def prepare_id(self, obj):
@@ -409,8 +413,8 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -432,6 +436,9 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
+
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -475,12 +482,12 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.MultiValueField(null=True)
     title_auto = indexes.NgramField(null=True)
     id = indexes.IntegerField()
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
-    create_date = indexes.DateTimeField(null=True)
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_create_date = indexes.DateTimeField()
 
-    def prepare_create_date(self, obj):
-        return obj.create_date
+    def prepare_obj_create_date(self, obj):
+        return  obj.create_date
 
     def prepare_id(self, obj):
         return obj.pk
@@ -509,8 +516,8 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -532,6 +539,9 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
+
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -568,14 +578,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     country = indexes.IntegerField(null=True)
-    create_date = indexes.DateTimeField(null=True)
+    obj_create_date = indexes.DateTimeField(null=True)
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
 
     sites = indexes.MultiValueField(null=True)
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
 
     id = indexes.IntegerField()
 
@@ -612,8 +622,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -635,6 +645,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
+
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -677,10 +690,6 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         #Country
         countryIndex = self.fields['country'].index_fieldname
         self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp.pk, p2c__type="dependence").pk
-
-        #Create Date
-        createIndex = self.fields['create_date'].index_fieldname
-        self.prepared_data[createIndex] = obj.create_date
 
         #Discount price
         discountPriceIndex = self.fields['discount_price'].index_fieldname
@@ -725,6 +734,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             return None
 
+    def prepare_obj_creae_date(self, obj):
+        return obj.create_date
+
     def prepare_sites(self, obj):
         return [site.pk for site in obj.sites.all()]
 
@@ -739,16 +751,13 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     categories = indexes.MultiValueField(null=True)
     branch = indexes.MultiValueField(null=True)
     id = indexes.IntegerField()
-    end_date = indexes.DateTimeField(null=True)
-    start_date = indexes.DateTimeField()
-    create_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_create_date = indexes.DateTimeField()
     video = indexes.BooleanField(default=False)
 
     def prepare_id(self, obj):
         return obj.pk
-
-    def prepare_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(NewsIndex, self).prepare(obj)
@@ -779,8 +788,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -802,6 +811,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -868,6 +879,9 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             return None
 
+    def prepare_obj_create_date(self, obj):
+        return obj.create_date
+
     def get_model(self):
         return News
 
@@ -881,17 +895,17 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     start_event_date = indexes.DateField(null=True)
     end_event_date = indexes.DateField(null=True)
-    start_date = indexes.DateTimeField()
-    end_date = indexes.DateTimeField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+    obj_create_date = indexes.DateTimeField()
     cost = indexes.FloatField(null=True)
-    create_date = indexes.DateTimeField()
 
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
         return obj.pk
 
-    def prepare_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def prepare(self, obj):
@@ -924,8 +938,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -947,6 +961,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -1007,9 +1023,9 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
-    create_date = indexes.DateTimeField()
-    start_date = indexes.DateTimeField()
-    end_date = indexes.DateTimeField(null=True)
+    obj_create_date = indexes.DateTimeField()
+    obj_start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
     branch = indexes.MultiValueField(null=True)
 
     id = indexes.IntegerField()
@@ -1017,7 +1033,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_id(self, obj):
         return obj.pk
 
-    def prepare_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def prepare(self, obj):
@@ -1043,8 +1059,8 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -1066,6 +1082,8 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -1076,6 +1094,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
                 self.prepared_data[startDateIndex] = parendStart
             else:
                 self.prepared_data[startDateIndex] = obj.start_date
+
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -1138,9 +1157,9 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
     country = indexes.IntegerField(null=True)
-    create_date = indexes.DateTimeField()
-    start_date = indexes.DateTimeField()
-    end_date = indexes.DateTimeField(null=True)
+    obj_create_date = indexes.DateTimeField()
+    obj_start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
     categories = indexes.MultiValueField(null=True)
 
     id = indexes.IntegerField()
@@ -1148,7 +1167,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
     def prepare_id(self, obj):
         return obj.pk
 
-    def prepare_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def prepare(self, obj):
@@ -1174,8 +1193,8 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0]
 
-        endDateIndex = self.fields['end_date'].index_fieldname
-        startDateIndex = self.fields['start_date'].index_fieldname
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
 
         #Get parent active date
         try:
@@ -1197,6 +1216,9 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
                     self.prepared_data[endDateIndex] = obj.end_date
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = 0
+
 
         #START DATE
         if not parendStart and obj.start_date:

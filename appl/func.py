@@ -579,8 +579,8 @@ def filterLive(request):
             sqs = SearchQuerySet().models(Tpp).filter(id__in=filtersIDs[name])
 
             for tpp in sqs:
-                if tpp.country:
-                    filtersAdv.append(tpp.country)
+                if len(tpp.country) > 0:
+                    filtersAdv += tpp.country
 
 
     if len(ids) > 0:
