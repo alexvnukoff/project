@@ -209,3 +209,44 @@ class L_Moder2Tpp(models.Model):
 
     def __str__(self):
         return self.btx_id+'|'+self.org_name
+
+class L_InnPrj(models.Model):
+    '''
+        Defines buffer table for reloading Innovation projects data from CSV file
+    '''
+    btx_id = models.CharField(max_length=10)
+    prj_name = models.CharField(max_length=1024)
+    detail_page_url = models.CharField(max_length=1024)
+    preview_picture = models.CharField(max_length=1024)
+    preview_text = models.TextField(max_length=4096)
+    detail_picture = models.CharField(max_length=1024)
+    detail_text = models.TextField(max_length=4096)
+    create_date = models.DateField(null=True, blank=True)
+    author = models.CharField(max_length=1024)
+    industry = models.CharField(max_length=1024)
+    company = models.CharField(max_length=1024)
+    tpp = models.CharField(max_length=1024)
+    prj_title = models.CharField(max_length=1024)
+    fax = models.CharField(max_length=1024)
+    phone = models.CharField(max_length=1024)
+    email = models.CharField(max_length=1024)
+    tech_info = models.CharField(max_length=1024)
+    deleted = models.BooleanField(default=False)
+    keywords = models.CharField(max_length=1024)
+    private_name = models.CharField(max_length=1024)
+    private_resume = models.CharField(max_length=1024)
+    country = models.CharField(max_length=1024)
+    site = models.CharField(max_length=1024)
+    project_name = models.CharField(max_length=1024)
+    project_point = models.CharField(max_length=1024)
+    target_community = models.CharField(max_length=1024)
+    prj_sum = models.CharField(max_length=1024)
+    estim_date = models.DateField(null=True, blank=True)
+    bp_decrip = models.CharField(max_length=1024)
+    bp_file = models.CharField(max_length=1024)
+    photos = models.CharField(max_length=1024)
+    completed = models.BooleanField(default=False) #update in True if is reloaded from buffer DB into TPP DB
+    tpp_id = models.CharField(max_length=10) #save generated id in TPP DB
+
+    def __str__(self):
+        return self.btx_id+'|'+self.prj_name
