@@ -19,6 +19,8 @@ from core.tasks import addNewTender
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
 import json
+from django.utils import timezone
+from datetime import datetime
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
@@ -104,7 +106,8 @@ def _tendersContent(request, page=1, my=None):
         filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
-        sqs = SearchQuerySet().models(Tender)
+        sqs = SearchQuerySet().models(Tender).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)

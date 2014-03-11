@@ -19,6 +19,8 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addNewTpp
 from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -110,7 +112,8 @@ def _tppContent(request, page=1, my=None):
     if not my:
         filters, searchFilter, filterAdv = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Tpp)
+        sqs = SearchQuerySet().models(Tpp).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)

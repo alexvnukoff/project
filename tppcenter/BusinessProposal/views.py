@@ -111,7 +111,8 @@ def _proposalsContent(request, page=1, my=None):
         filters, searchFilter, filterAdv = func.filterLive(request)
 
         #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
-        sqs = SearchQuerySet().models(BusinessProposal)
+        sqs = SearchQuerySet().models(BusinessProposal).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -211,7 +212,7 @@ def _proposalDetailContent(request, item_id):
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
+     a = additionalPages[0].getTitle()
 
 
      func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)

@@ -93,7 +93,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -221,7 +221,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -437,7 +437,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
 
         #START DATE
@@ -540,7 +540,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
 
         #START DATE
@@ -646,7 +646,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
 
         #START DATE
@@ -812,7 +812,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -962,7 +962,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -1083,7 +1083,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
         #START DATE
         if not parendStart and obj.start_date:
@@ -1217,7 +1217,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[endDateIndex] = parentRelEnd
         else:
-            self.prepared_data[endDateIndex] = 0
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
 
         #START DATE

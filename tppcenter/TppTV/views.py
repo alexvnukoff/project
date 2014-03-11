@@ -14,6 +14,8 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
 
 def get_news_list(request,page=1, id=None, slug=None):
 
@@ -107,7 +109,8 @@ def _newsContent(request, page=1):
     sqs = SearchQuerySet().models(TppTV)
 
     if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        sqs = sqs.filter(**searchFilter).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
     q = request.GET.get('q', '')
 
