@@ -39,7 +39,7 @@
 .related-news{ float:left; width:100%; margin:12px 0 0 0; background-color:#fafafa; padding:15px 0;}
 .related-news .title{ display:inline-block; width:100%; font-size:24px; font-weight:300; font-family: 'Roboto', sans-serif; text-indent:12px;}
 .related-news ul{ position:relative; float:left; width:100%;}
-.related-news ul li{ float:left; width:150px; border-right:1px #e9e9e9 solid; padding-right:7px; margin:12px 0 0 7px; display:inline; color:#595959;}
+.related-news ul li{ float:left; width:190px; border-right:1px #e9e9e9 solid; padding-right:7px; margin:12px 0 0 7px; display:inline; color:#595959;word-break: break-all;}
 .related-news ul li .thumb{ float:left; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
 .related-news ul li a{ display:block; font-size:16px; font-weight:bold;}
 .related-news ul li .date{ color:#9b9b9b;}
