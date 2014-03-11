@@ -56,6 +56,9 @@ urlpatterns = patterns('',
     url(r'^legacy/moder2tpp/csvdb$', leg_v.moder2tpp_CSV_DB),
     url(r'^legacy/moder2tpp/dbdb$', leg_v.moder2tpp_DB_DB),
 
+    url(r'^legacy/innprj/csvdb$', leg_v.innprj_CSV_DB),
+    url(r'^legacy/innprj/dbdb$', leg_v.innprj_DB_DB),
+
     url(r'^test/$', tppcenter.views.test),
 
 )

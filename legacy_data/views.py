@@ -1,8 +1,8 @@
 from django.http import HttpResponse, Http404
 from legacy_data.models import *
 from core.models import User, Relationship, Dictionary
-from core.amazonMethods import add
-from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery
+from core.amazonMethods import add, addFile
+from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery, InnovationProject
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
@@ -10,6 +10,7 @@ from django.conf import settings
 from django.db.models import Q
 import datetime
 import csv
+from dateutil import parser
 from tpp.SiteUrlMiddleWare import get_request
 import base64
 from django.utils.translation import trans_real
@@ -1653,3 +1654,235 @@ def moder2tpp_DB_DB(request):
     print('Elapsed time:', time)
     return HttpResponse('Relationships between TPPs and their moderators were created!')
 
+def innprj_CSV_DB(request):
+    '''
+        Reload Innovative Projects data from prepared CSV file named innov_prj_legacy.csv
+        into buffer DB table LEGACY_DATA_L_INNPRJ
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading Innovative Projects from CSV file into buffer table...')
+    with open('c:\\data\\innov_prj_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        prj_name = bytearray(data[i][1]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+        detail_page_url = bytearray(data[i][2]).decode(encoding='utf-8')
+        preview_picture = bytearray(data[i][3]).decode(encoding='utf-8')
+        preview_text = bytearray(data[i][4]).decode(encoding='utf-8')
+        detail_picture = bytearray(data[i][5]).decode(encoding='utf-8')
+        detail_text = bytearray(data[i][6]).decode(encoding='utf-8')
+
+        if not len(data[i][7]):
+            create_date = None
+        else:
+            create_date = datetime.datetime.strptime(bytearray(data[i][7]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+
+        author = bytearray(data[i][8]).decode(encoding='utf-8')
+        industry = bytearray(data[i][9]).decode(encoding='utf-8')
+        company = bytearray(data[i][10]).decode(encoding='utf-8')
+        tpp = bytearray(data[i][11]).decode(encoding='utf-8')
+        prj_title = bytearray(data[i][12]).decode(encoding='utf-8')
+        fax = bytearray(data[i][13]).decode(encoding='utf-8')
+        phone = bytearray(data[i][14]).decode(encoding='utf-8')
+        email = bytearray(data[i][15]).decode(encoding='utf-8')
+        tech_info = bytearray(data[i][16]).decode(encoding='utf-8')
+        deleted = bytearray(data[i][17]).decode(encoding='utf-8')
+        keywords = bytearray(data[i][18]).decode(encoding='utf-8')
+        private_name = bytearray(data[i][19]).decode(encoding='utf-8')
+        private_resume = bytearray(data[i][20]).decode(encoding='utf-8')
+        country = bytearray(data[i][21]).decode(encoding='utf-8')
+        site = bytearray(data[i][22]).decode(encoding='utf-8')
+        project_name = bytearray(data[i][23]).decode(encoding='utf-8')
+        project_point = bytearray(data[i][24]).decode(encoding='utf-8')
+        target_community = bytearray(data[i][25]).decode(encoding='utf-8')
+        prj_sum = bytearray(data[i][26]).decode(encoding='utf-8')
+
+        if not len(data[i][27]):
+            estim_date = None
+        else:
+            #estim_date = datetime.datetime.strptime(bytearray(data[i][27]).decode(encoding='utf-8'), "%d.%m.%Y %H:%M:%S")
+            estim_date = parser.parse(bytearray(data[i][27]).decode(encoding='utf-8'))
+
+        bp_decrip = bytearray(data[i][28]).decode(encoding='utf-8')
+        bp_file = bytearray(data[i][29]).decode(encoding='utf-8')
+        photos = bytearray(data[i][30]).decode(encoding='utf-8')
+
+
+        try:
+            L_InnPrj.objects.create(btx_id = btx_id,\
+                                prj_name = prj_name,\
+                                detail_page_url = detail_page_url,\
+                                preview_picture = preview_picture,\
+                                preview_text = preview_text,\
+                                detail_picture = detail_picture,\
+                                detail_text = detail_text,\
+                                create_date = create_date,\
+                                author = author,\
+                                industry = industry,\
+                                company = company,\
+                                tpp = tpp,\
+                                prj_title = prj_title,\
+                                fax = fax,\
+                                phone = phone,\
+                                email = email,\
+                                tech_info = tech_info,\
+                                deleted = deleted,\
+                                keywords = keywords,\
+                                private_name = private_name,\
+                                private_resume = private_resume,\
+                                country = country,\
+                                site = site,\
+                                project_name = project_name,\
+                                project_point = project_point,\
+                                target_community = target_community,\
+                                prj_sum = prj_sum,\
+                                estim_date = estim_date,\
+                                bp_decrip = bp_decrip,\
+                                bp_file = bp_file,\
+                                photos = photos)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            print(btx_id, '##', prj_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Innovative Projects were migrated from CSV into DB!')
+
+def innprj_DB_DB(request):
+    '''
+        Reload Innovative Projects from buffer DB table LEGACY_DATA_L_INNPRJ into TPP DB
+    '''
+    img_root = 'c:' #additional path to images
+    time1 = datetime.datetime.now()
+    print('Loading Innovative Projects from buffer DB into TPP DB...')
+    qty = L_InnPrj.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    i = 0
+    prj_lst = L_InnPrj.objects.filter(completed=False).all()
+    for leg_prj in prj_lst:
+        #set create_user (owner) for the Innovative Project
+        if leg_prj.author:
+            try:
+                l_user = L_User.objects.get(btx_id=leg_prj.author)
+                create_usr = User.objects.get(pk=l_user.tpp_id)
+            except:
+                create_usr = User.objects.get(pk=1)
+        else:
+            create_usr = User.objects.get(pk=1)
+
+        try:
+            prj = InnovationProject.objects.create(title='INN_PROJECT_LEG_ID:'+leg_prj.btx_id,
+                                                  create_user=create_usr)
+        except:
+            print(leg_prj.btx_id, '##', leg_prj.prj_name, '##', ' Count: ', i)
+            i += 1
+            continue
+        '''
+        if len(leg_prj.preview_picture):
+            img_small_path = add(img_root + leg_prj.preview_picture)
+        else:
+            img_small_path = ''
+        if len(leg_prj.detail_picture):
+            img_detail_path = add(img_root + leg_prj.detail_picture)
+        else:
+            img_detail_path = ''
+        '''
+        file_path = addFile(leg_prj.bp_file)
+
+        attr = {
+                'NAME': leg_prj.prj_name,
+                'PRODUCT_NAME': leg_prj.prj_title,
+                'COST': 0,
+                'CURRENCY': '',
+                'TARGET_AUDIENCE': leg_prj.target_community,
+                'RELEASE_DATE': leg_prj.estim_date,
+                'SITE_NAME': leg_prj.site,
+                'KEYWORD': leg_prj.keywords,
+                'DETAIL_TEXT': leg_prj.detail_text,
+                'BUSINESS_PLAN': leg_prj.bp_decrip,
+                'DOCUMENT_1': file_path,
+                }
+
+        trans_real.activate('ru') #activate russian locale
+        res = prj.setAttributeValue(attr, create_usr)
+        trans_real.deactivate() #deactivate russian locale
+        if res:
+            leg_prj.tpp_id = prj.pk
+            leg_prj.completed = True
+            leg_prj.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
+
+        # create relationship type=Dependence with business entity
+        try:
+            leg_ent = L_Company.objects.get(btx_id=leg_prj.company)
+            b_entity = Company.objects.get(pk=leg_ent.tpp_id)
+            Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
+        except:
+            try:
+                leg_ent = L_TPP.objects.get(btx_id=leg_prj.tpp)
+                b_entity = Tpp.objects.get(pk=leg_ent.tpp_id)
+                Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
+            except:
+                try:
+                    leg_ent = L_User.objects.get(btx_id=leg_prj.author)
+                    usr = User.objects.get(pk=leg_ent.tpp_id)
+                    b_entity = Cabinet.objects.get(user=usr.pk)
+                    Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
+                except:
+                    i += 1
+                    continue
+
+        #attache gallery to Innovative Project
+
+        if len(leg_prj.photos): #create relationship with Gallery
+            pic_lst = leg_prj.photos.split('#')
+            for pic in pic_lst:
+                try:
+                    gal = Gallery.objects.create(title='GALLERY_FOR_INN_PROJECT_ID:'+leg_prj.btx_id, create_user=create_usr)
+                except:
+                    i += 1
+                    continue
+
+                gal.photo = add(img_root + pic)
+                # create relationship
+                try:
+                    Relationship.objects.create(parent=prj, type='relation', child=gal, create_user=create_usr)
+                    print('Relationship between Innovative Project and Gallery was created! Project ID:', prj.pk)
+                except:
+                    print('Can not create relationship! Project ID:', prj.pk)
+                    i += 1
+                    continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Innovative Projects were migrated from buffer DB into TPP DB!')
