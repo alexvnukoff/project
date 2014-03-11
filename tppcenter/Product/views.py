@@ -20,6 +20,8 @@ import json
 from core.tasks import addProductAttrubute
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
@@ -106,7 +108,8 @@ def _productContent(request, page=1, my=None):
     if not my:
         filters, searchFilter, filterAdv = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Product)
+        sqs = SearchQuerySet().models(Product).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)

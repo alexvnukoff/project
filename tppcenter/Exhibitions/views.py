@@ -15,6 +15,8 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from tpp.SiteUrlMiddleWare import get_request
 from celery import shared_task, task
+from django.utils import timezone
+from datetime import datetime
 
 from core.tasks import addNewExhibition
 
@@ -104,7 +106,8 @@ def _exhibitionsContent(request, page=1, my=None):
     if not my:
         filters, searchFilter, filterAdv = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Exhibition)
+        sqs = SearchQuerySet().models(Exhibition).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)

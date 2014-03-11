@@ -18,6 +18,8 @@ from celery import shared_task, task
 from haystack.query import SQ, SearchQuerySet
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import datetime
 
 
 from core.tasks import addNewsAttrubute
@@ -97,7 +99,8 @@ def _newsContent(request, page=1, my=None):
 
         #news = News.active.get_active().order_by('-pk')
 
-        sqs = SearchQuerySet().models(News)
+        sqs = SearchQuerySet().models(News).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
