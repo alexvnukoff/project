@@ -212,7 +212,6 @@ def _proposalDetailContent(request, item_id):
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-     a = additionalPages[0].getTitle()
 
 
      func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)

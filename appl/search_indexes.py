@@ -1125,21 +1125,28 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
             self.prepared_data[companyIndex] = None
             self.prepared_data[tppIndexfield] = tpp.pk
 
-            country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+            try:
 
-            if country.exists():
-                country = country[0]
-                self.prepared_data[countryIndex] = country.pk
+                country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='dependence')
+
+                if country.exists():
+                    country = country[0]
+                    self.prepared_data[countryIndex] = country.pk
+            except:
+                self.prepared_data[countryIndex] = None
+
 
         elif cabinet.exists():
             cabinet = cabinet.all()
-
-            country = Country.objects.filter(p2c__child_id=tpp.pk, p2c__type='relation')
-
-            if country.exists():
-                country = country.all()
-                self.prepared_data[countryIndex] = country.pk
-
+            
+            try:
+                country = Country.objects.filter(p2c__child_id=cabinet.pk, p2c__type='relation')
+            
+                if country.exists():
+                    country = country.all()
+                    self.prepared_data[countryIndex] = country.pk
+            except:
+                self.prepared_data[countryIndex] = None
         return self.prepared_data
 
     def prepare_branch(self, obj):
