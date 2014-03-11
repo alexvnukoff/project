@@ -23,7 +23,7 @@
 
                  </label>
                 {% if current_company %}
-                            <label style="padding-left: 40px" > {% trans 'Your current organization: ' %}{{ current_company|first }}</label>
+                            <label style="padding-left: 40px" > {% trans 'Your current organization: ' %}{{ current_company|first|truncatewords:5 }}</label>
                 {% endif %}
                 <div class="notify">
                     <span><i class="imgnews i-note" id="showevent"></i> <a href="#" class="num">{{ notification }}</a>

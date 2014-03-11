@@ -89,7 +89,7 @@
                         </div>
                         <div>
                             <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.TELEPHONE_NUMBER %}<div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div>{% endif %}
+                             {% if form.errors.TELEPHONE_NUMBER %}<div class="error-handler"> <div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div></div>{% endif %}
                             <input type="text" class="text" placeholder="" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" />
 
                         </div>
@@ -99,7 +99,7 @@
                         </div>
                         <div>
                             <label class="sapce">E-mail <font color="#FF0000">*</font></label>
-                            {% if form.errors.EMAIL %}<div class="formserror">{{ form.errors.EMAIL }}</div>{% endif %}
+                            {% if form.errors.EMAIL %}<div class="error-handler"> <div class="formserror">{{ form.errors.EMAIL }}</div></div>{% endif %}
                             <input type="text" class="text" placeholder="" name="EMAIL" value="{{ email }}" />
                         </div>
                         <div>
@@ -111,7 +111,7 @@
                         <li>
                             <div class="clumn1">
                                 <label>{% trans 'CCI' %}  <font color="#FF0000">*</font></label>
-                                 {% if form.errors.INN %}<div class="formserror">{{ form.errors.INN }}</div>{% endif %}
+                                 {% if form.errors.INN %}<div class="error-handler"> <div class="formserror">{{ form.errors.INN }}</div></div>{% endif %}
                                 <input type="text" name="INN" value="{{ inn }}"placeholder="" class="text" style="width:94%;" />
                             </div>
                             <div class="clumn2">
@@ -128,20 +128,20 @@
                         </li>
                         <li>
                             <label>{% trans 'Organization name' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.NAME %}<div class="formserror">{{ form.errors.NAME }}</div>{% endif %}
+                              {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                             <input type="text" class="text" placeholder="" name="NAME" value="{{ name }}" />
                         </li>
 
 
                          <li>
                             <label>{% trans 'Anons' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.ANONS %}<div class="formserror">{{ form.errors.ANONS }}</div>{% endif %}
+                              {% if form.errors.ANONS %}<div class="error-handler"> <div class="formserror">{{ form.errors.ANONS }}</div></div>{% endif %}
                             <textarea name="ANONS">{{ anons }}</textarea>
                         </li>
                         <li>
                             <label>{% trans 'Detail description' %}</label>
                             <div class="">
-                                  {% if form.errors.DETAIL_TEXT %}<div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>{% endif %}
+                                  {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
                                 <textarea class="tiny" style="width: 456px;height: 90px;" name="DETAIL_TEXT">{{ text }}</textarea>
 
                             </div>
