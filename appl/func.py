@@ -8,7 +8,7 @@ from django.http import Http404
 from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
-
+from django.utils.translation import ugettext as _
 
 def getPaginatorRange(page):
     '''
@@ -386,7 +386,7 @@ def resize(img, box, fit, out):
         #    img = img.convert("RGB")
 
         #save it into a file-like object
-        img.save(out, "PNG")
+        img.save(out, "PNG", quality=95)
 
 
 
@@ -659,49 +659,76 @@ def getBannersRight(request, places, site, template, filter=None):
 
     return template.render(context)
 
-def getTops(request, models, filter=None):
+def getTops(request, filter=None):
+
+    models = {
+        Product: {
+            'count': 5,
+            'text': _('Products')
+        },
+        InnovationProject: {
+            'count': 5,
+            'text': _('Innovation Projects')
+        },
+        Company: {
+            'count': 5,
+            'text': _('Companies')
+        },
+        BusinessProposal: {
+            'count': 5,
+            'text': _('Business Proposals')
+        },
+    }
 
     topList = []
     modelTop = {}
 
-    for model, count in models.items():
+    for model, modelDict in models.items():
 
         sub = model.objects.all()
         top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
 
-        if filter is not None:
+        if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')
 
-        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(count)]
+        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(modelDict['count'])]
 
         tops = list(top)
 
+        sModel = model.__name__
+
         if len(tops) > 0:
             topList += tops
-            modelTop[model] = tops
+            modelTop[sModel] = tops
 
 
-    topAttr = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'SLUG'), topList)
+    topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
 
     tops = {}
 
     for id, attrs in topAttr.items():
 
+        if not isinstance(attrs, dict):
+            continue
+
         for model in models:
             
-            if model not in modelTop:
-                continue
 
             sModel = model.__name__
 
-            if model not in tops:
+            if sModel not in modelTop:
+                continue
+
+
+            if sModel not in tops:
                 tops[sModel] = {}
+                tops[sModel]['MODEL_NAME'] = models[model]['text']
+                tops[sModel]['elements'] = {}
 
+            if id in modelTop[sModel] :
+                tops[sModel]['elements'][id] = attrs
 
-            if id in modelTop[model] :
-                tops[sModel][id] = attrs
-
-                break;
+                break
 
 
     templateParams = {

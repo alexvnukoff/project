@@ -13,6 +13,7 @@
                     {% with attr.COUNTRY_NAME|first as country_name %}
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
+                    {% with attr.IMAGE|first as image %}
                 <li>
                 	<div class="title-tv">
                         {% if flag %}
@@ -20,12 +21,17 @@
                         {% endif %}
                         {{ date|date:'d M Y' }}</div>
                 	<div class="video">
-                        <iframe width="170" height="125" src="//www.youtube.com/embed/{{ youtube_code }}" frameborder="0" allowfullscreen></iframe>
+                        {% if image %}
+                            <img width="170" height="125" src="{{ MEDIA_URL }}small/{{ image }}" />
+                        {% else %}
+                            <img width="170" height="125" src="http://img.youtube.com/vi/{{ youtube_code }}/0.jpg" />
+                        {% endif %}
                 	</div>
                     <div class="link">
                         <a href="{%  url 'tv:detail' slug %}" class="name">{{ name }} </a>
                     </div>
                 </li>
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

@@ -19,6 +19,8 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addNewTpp
 from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -54,7 +56,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
 
     if not request.is_ajax():
@@ -110,7 +112,8 @@ def _tppContent(request, page=1, my=None):
     if not my:
         filters, searchFilter, filterAdv = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Tpp)
+        sqs = SearchQuerySet().models(Tpp).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -118,7 +121,7 @@ def _tppContent(request, page=1, my=None):
         q = request.GET.get('q', '')
 
         if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+            sqs = sqs.filter(title=q)
 
         sortFields = {
             'date': 'id',
@@ -218,7 +221,10 @@ def _tppDetailContent(request, item_id):
 
 
     if not tppValues.get('FLAG', False):
-       country = Country.objects.get(p2c__child=tpp, p2c__type='relation').getAttributeValues(*('FLAG', 'NAME'))
+       try:
+           country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+       except:
+           country = ""
     else:
        country = ""
 

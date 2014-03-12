@@ -50,7 +50,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
 
     if not request.is_ajax():
@@ -111,7 +111,8 @@ def _proposalsContent(request, page=1, my=None):
         filters, searchFilter, filterAdv = func.filterLive(request)
 
         #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
-        sqs = SearchQuerySet().models(BusinessProposal)
+        sqs = SearchQuerySet().models(BusinessProposal).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -211,7 +212,6 @@ def _proposalDetailContent(request, item_id):
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
 
 
      func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)

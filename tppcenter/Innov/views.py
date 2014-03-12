@@ -16,6 +16,8 @@ from core.tasks import addNewProject
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
 import json
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
@@ -44,7 +46,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
 
     if not request.is_ajax():
@@ -102,7 +104,8 @@ def _innovContent(request, page=1, my=None):
         filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
-        sqs = SearchQuerySet().models(InnovationProject)
+        sqs = SearchQuerySet().models(InnovationProject).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -217,10 +220,13 @@ def _innovDetailContent(request, item_id):
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+     try:
+         branch = Branch.objects.get(p2c__child=item_id)
+         branchValues = branch.getAttributeValues('NAME')
+         innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
+     except ObjectDoesNotExist:
+          innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
-     branch = Branch.objects.get(p2c__child=item_id)
-     branchValues = branch.getAttributeValues('NAME')
-     innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
 
      func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
 

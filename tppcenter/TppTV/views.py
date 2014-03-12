@@ -14,6 +14,8 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
 
 def get_news_list(request,page=1, id=None, slug=None):
 
@@ -45,7 +47,7 @@ def get_news_list(request,page=1, id=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
 
     if not request.is_ajax():
@@ -107,7 +109,8 @@ def _newsContent(request, page=1):
     sqs = SearchQuerySet().models(TppTV)
 
     if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
+        sqs = sqs.filter(**searchFilter).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
     q = request.GET.get('q', '')
 
@@ -143,7 +146,7 @@ def _newsContent(request, page=1):
 
     news = sqs.order_by(*order)
 
-    result = func.setPaginationForSearchWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
+    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
     #result = func.setPaginationForItemsWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
 
     newsList = result[0]

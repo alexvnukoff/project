@@ -20,6 +20,8 @@ import json
 from core.tasks import addProductAttrubute
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
@@ -49,7 +51,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
 
     if not request.is_ajax() or item_id:
@@ -106,7 +108,8 @@ def _productContent(request, page=1, my=None):
     if not my:
         filters, searchFilter, filterAdv = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Product)
+        sqs = SearchQuerySet().models(Product).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)

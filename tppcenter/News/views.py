@@ -18,6 +18,8 @@ from celery import shared_task, task
 from haystack.query import SQ, SearchQuerySet
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import datetime
 
 
 from core.tasks import addNewsAttrubute
@@ -30,7 +32,7 @@ def get_news_list(request, page=1, my=None):
     current_company = request.session.get('current_company', False)
 
     if current_company:
-        current_company, filterAdv = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
+        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         newsPage, filterAdv = _newsContent(request, page, my)
 
@@ -43,7 +45,7 @@ def get_news_list(request, page=1, my=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -97,7 +99,8 @@ def _newsContent(request, page=1, my=None):
 
         #news = News.active.get_active().order_by('-pk')
 
-        sqs = SearchQuerySet().models(News)
+        sqs = SearchQuerySet().models(News).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -383,7 +386,7 @@ def detail(request, item_id, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request , filter=filterAdv)
 
     templateParams = {
         'user_name': user_name,

@@ -28,7 +28,7 @@
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name }}</a></h2>
                         <div class="line">
-                        	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
+                        	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{% if branch_name != 0 %}{{ branch_name }}{% endif %}</font></span>
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
                         <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
@@ -164,7 +164,7 @@
                                <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
-                            <p>{{ content|cleanHtml|safe|truncatewords:"30" }} </p>
+                            <p>{{ content|cleanHtml|safe|truncatewords_html:"30" }} </p>
                            <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>

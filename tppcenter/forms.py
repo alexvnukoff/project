@@ -102,7 +102,9 @@ class ItemForm(forms.Form):
 
             #Date
             if(attr.type == "Dat") and dictr is None:
-                self.fields[title] = forms.DateField(required=bool(required))
+                formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%m/%d/%Y %H:%M:%S', '%m/%d/%Y %H:%M',  '%m/%d/%Y',
+                 '%m/%d/%y %H:%M:%S', '%m/%d/%y %H:%M', '%m/%d/%y']
+                self.fields[title] = forms.DateField(required=bool(required), input_formats=formats)
                 self.fields[title].widget.input_type = 'date'
                 self.fields[title].initial = value[0] if value and isinstance(value, list) else value
 

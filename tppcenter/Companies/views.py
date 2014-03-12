@@ -16,6 +16,8 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import datetime
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -46,7 +48,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
@@ -103,7 +105,8 @@ def _companiesContent(request, page=1, my=None):
         filters, searchFilter, filterAdv = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
-        sqs = SearchQuerySet().models(Company)
+        sqs = SearchQuerySet().models(Company).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
