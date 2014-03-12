@@ -18,20 +18,46 @@
                     {% with attr.COUNTRY_ID as country_id %}
                     {% with attr.BRANCH_NAME|first as branch_name %}
                     {% with attr.BRANCH_ID as branch_id %}
+                    {% with attr.CABINET_NAME|first as cabinet_name %}
+                    {% with attr.CABINET_LAST_NAME|first as cabinet_last_name %}
+                    {% with attr.CABINET_ID as cabinet_id %}
+                    {% with attr.CABINET_COUNTRY_NAME|first as cabinet_country_name %}
+                    {% with attr.CABINET_COUNTRY_FLAG|first as cabinet_country_flag %}
+                     {% with attr.CABINET_COUNTRY_ID as cabinet_country_id %}
+
                     <li>
                         <div class="title">
+                        {% if cabinet_country_flag %}
+                           <img src="{{ MEDIA_URL }}small/{{ cabinet_country_flag }}" class="flag" />
+                        {% else %}
                            <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
-                            <font class="name">{{ org_name }}, {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
+                        {% endif %}
+                            <font class="name">{{ org_name }}  {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name|truncatewords:14 }}</a></h2>
                         <div class="line">
                             {% if branch_name != 0  %}
                         	    <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
                             {% endif %}
-                        	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
+                        	<span class="clumn">{% trans 'Organizer' %}:
+                                <a href="#">
+                                    {% if  cabinet_name  %}
+                                         {{ cabinet_last_name }} {{ cabinet_name }}
+
+                                    {% else %}
+                                        {{ org_name }}
+                                    {% endif %}
+                                 </a>
+                            </span>
                         </div>
                         <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
