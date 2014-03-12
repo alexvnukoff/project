@@ -488,7 +488,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
     organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_ids)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -505,9 +505,16 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             item.update(toUpdate)
         if organizations_dict.get(id, False):
+            if organizationIsCompany(id):
+                url = 'companies:detail'
+            else:
+                url = 'tpp:detail'
+
             toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0)}
+                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                        'ORGANIZATION_URL': url}
             item.update(toUpdate)
 
 
@@ -526,7 +533,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE'), organizations_ids)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE', 'SLUG'), organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -543,13 +550,23 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             itemList.update(toUpdate)
     if organizations_dict.get(id, False):
+            if organizationIsCompany(id):
+                url = 'companies:detail'
+            else:
+                url = 'tpp:detail'
             toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0)}
+                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                        'ORGANIZATION_URL': url}
             itemList.update(toUpdate)
 
 
+def organizationIsCompany(item_id):
+    if Company.objects.filter(p2c__child=item_id, p2c__type='dependence').exists():
+        return True
+    return False
 
 def filterLive(request):
     from haystack.query import SearchQuerySet
