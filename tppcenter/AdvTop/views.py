@@ -1,19 +1,12 @@
 __author__ = 'user'
-from appl.models import AdvBannerType, AdvBanner, Cabinet
-from core.models import Item
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from appl.models import *
-from django.db.models import ObjectDoesNotExist, Count
-from appl import func
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from core.tasks import addTopAttr
-from django.core.files.images import ImageFile
-from django.db import transaction
-from copy import copy
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
@@ -85,6 +78,19 @@ def advJsonFilter(request):
 def addTop(request, item):
 
     object = get_object_or_404(Item, pk=item)
+
+    current_organization = request.session.get('current_company', False)
+
+    if current_organization is False:
+        return render_to_response("permissionDen.html")
+
+    org = Organization.objects.get(pk=current_organization)
+
+    perm_list = org.getItemInstPermList(request.user)
+
+    if 'add_tops' not in perm_list:
+         return render_to_response("permissionDenied.html")
+
 
     itemName = object.getAttributeValues('NAME')[0]
 
@@ -167,7 +173,7 @@ def addTop(request, item):
 
         if form.is_valid():
             try:
-                addTopAttr(request.POST, object, user, settings.SITE_ID, ids)
+                addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 
