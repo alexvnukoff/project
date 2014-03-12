@@ -234,7 +234,7 @@ def _getDetailContent(request, item_id):
 
 
      company = Company.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME')
+     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
      companyValues.update({'COMPANY_ID': company.id})
 
 
