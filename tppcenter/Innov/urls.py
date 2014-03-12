@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Innov.views.get_innov_list, name='main'),
 
-     url(r'^page/(?P<page>[0-9]+)?/$', tppcenter.Innov.views.get_innov_list, name="paginator"),
+     url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Innov.views.get_innov_list, name="paginator"),
      url(r'^my/$', tppcenter.Innov.views.get_innov_list,{'my':True}, name='my_main'),
      url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Innov.views.get_innov_list,{'my':True}, name="my_main_paginator"),
      url(r'^add/$', tppcenter.Innov.views.innovForm,{'action': 'add'}, name="add"),
