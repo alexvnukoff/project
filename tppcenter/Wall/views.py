@@ -48,16 +48,23 @@ def get_wall_list(request):
     wallPage = _wallContent(request)
 
 
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+    tops = func.getTops(request)
+
+    templateParams = {
+        'user_name': user_name,
+        'current_section': current_section,
+        'wallPage': wallPage, 'notification': notification,
+        'current_company': current_company,
+        'cabinetValues': cabinetValues,
+        'bannerRight': bRight,
+        'bannerLeft': bLeft,
+        'tops': tops
+    }
 
 
-
-
-
-
-    return render_to_response("Wall/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                  'wallPage': wallPage, 'notification': notification,
-                                                  'current_company': current_company, 'cabinetValues': cabinetValues},
-                              context_instance=RequestContext(request))
+    return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
 
 
 def _wallContent(request):
