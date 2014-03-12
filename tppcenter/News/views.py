@@ -192,7 +192,10 @@ def newsForm(request, action, item_id=None):
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
 
     user = request.user
 
@@ -222,7 +225,7 @@ def newsForm(request, action, item_id=None):
     return render_to_response('News/index.html', {'newsPage': newsPage, 'current_company':current_company,
                                                               'notification': notification, 'user_name': user_name,
                                                               'current_section': current_section,
-                                                              'cabinetValues': cabinetValues},
+                                                              'cabinetValues': cabinetValues, 'redactor': redactor},
                               context_instance=RequestContext(request))
 
 

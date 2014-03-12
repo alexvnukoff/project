@@ -394,6 +394,7 @@ def _getValues(request):
     values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
     values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
     values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
 
 
 

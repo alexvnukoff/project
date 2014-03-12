@@ -30,19 +30,32 @@ $(function() {
 
 
                <div class="tender-details-title">
-               		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
-                    <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
+               {% if countryUpdate %}
+               		<img src="{{ MEDIA_URL }}small/{{ countryUpdate.CABINET_COUNTRY_FLAG.0 }}" class="flag" />
+               {% else %}
+                   <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+               {% endif %}
+                    <font class="name">
+                        {% if country_name %}
+                            {{ country_name }}
+                        {% elif org_name %}
+                            {{ org_name }}
+                         {% else %}
+                            {{ countryUpdate.CABINET_COUNTRY_NAME|first  }}
+                        {% endif %}
+                    </font>
                </div>
                <div class="tender-info">
 					<span class="title">{{ name }}</span>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
+
                         {% if org_flag or org_image %}
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
                         {% else %}
                             <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
                         {% endif %}
-                            <a href="#">{{ org_name }}</a>
+                            <a href="#">{% if org_name %}{{ org_name }}{% else %} {{ cabinetUpdate.CABINET_FIRST_NAME.0 }} {{cabinetUpdate.CABINET_LAST_NAME.0  }}{% endif %}</a>
                             </div>
                     </div>
                     <div class="innov-details">

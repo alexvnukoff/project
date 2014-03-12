@@ -172,6 +172,38 @@ def _innovContent(request, page=1, my=None):
     innov_ids = [id for id in innovList.keys()]
 
 
+    cabinets = Cabinet.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
+
+    cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
+    countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
+
+    countries_id = [country['pk'] for country in countries]
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
+    country_dict = {}
+    for country in countries:
+        if country['pk']:
+           country_dict[country['p2c__child']] = country['pk']
+
+    cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
+
+    cabinets_dict = {}
+    for cabinet in cabinets:
+        cabinets_dict[cabinet['p2c__child']] = {'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                                                'CABINET_LAST_NAME' : cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                                                'CABINET_ID': cabinet['pk'],
+
+                                                'CABINET_COUNTRY_NAME':countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_FLAG':countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
+        }
+
+
+
+
+
+
+
     branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
     branches_ids = [branch['pk'] for branch in branches]
     branchesList = Item.getItemsAttributesValues(("NAME"), branches_ids)
@@ -184,9 +216,13 @@ def _innovContent(request, page=1, my=None):
 
     for id, innov in innovList.items():
 
-        toUpdate = {'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0 ) if branches_dict.get(id, 0) else [0],
-                    'BRANCH_ID': branches_dict.get(id, 0)}
+        toUpdate = {'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
+                    'BRANCH_ID': branches_dict.get(id, 0),
+
+                     }
         innov.update(toUpdate)
+        if cabinets_dict.get(id, 0):
+           innov.update(cabinets_dict.get(id, 0))
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
@@ -230,10 +266,32 @@ def _innovDetailContent(request, item_id):
 
      func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
 
+
+     cabinet = Cabinet.objects.filter(p2c__child=item_id)
+     if cabinet.exists():
+        cabinetList = cabinet[0].getAttributeValues("USER_FIRST_NAME", 'USER_LAST_NAME')
+        country = Country.objects.filter(p2c__child=cabinet)
+        if country.exists():
+            countriesList = country[0].getAttributeValues("NAME", 'FLAG')
+            countryUpdate = {'CABINET_COUNTRY_ID': country[0].pk, 'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
+                             'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])}
+        else:
+            countryUpdate = {}
+        cabinetUpdate = {'CABINET_ID': cabinet[0].pk, 'CABINET_FIRST_NAME': cabinetList.get('USER_FIRST_NAME', [0]),
+                         'CABINET_LAST_NAME': cabinetList.get('USER_LAST_NAME', [0])}
+
+     else:
+         cabinetUpdate = {}
+         countryUpdate = {}
+
+
+
+
      template = loader.get_template('Innov/detailContent.html')
 
      context = RequestContext(request, {'innovValues': innovValues, 'photos': photos,
-                                        'additionalPages': additionalPages})
+                                        'additionalPages': additionalPages, 'countryUpdate': countryUpdate,
+                                        'cabinetUpdate': cabinetUpdate})
 
      return template.render(context), filterAdv
 
