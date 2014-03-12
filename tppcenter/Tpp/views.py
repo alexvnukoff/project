@@ -121,7 +121,7 @@ def _tppContent(request, page=1, my=None):
         q = request.GET.get('q', '')
 
         if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+            sqs = sqs.filter(title=q)
 
         sortFields = {
             'date': 'id',
@@ -221,7 +221,10 @@ def _tppDetailContent(request, item_id):
 
 
     if not tppValues.get('FLAG', False):
-       country = Country.objects.get(p2c__child=tpp, p2c__type='relation').getAttributeValues(*('FLAG', 'NAME'))
+       try:
+           country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+       except:
+           country = ""
     else:
        country = ""
 

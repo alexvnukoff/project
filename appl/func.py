@@ -669,19 +669,21 @@ def getTops(request, models, filter=None):
         sub = model.objects.all()
         top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
 
-        if filter is not None:
+        if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')
 
         top = top.order_by('?').values_list('p2c__child', flat=True)[:int(count)]
 
         tops = list(top)
 
+        sModel = model.__name__
+
         if len(tops) > 0:
             topList += tops
-            modelTop[model] = tops
+            modelTop[sModel] = tops
 
 
-    topAttr = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'SLUG'), topList)
+    topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
 
     tops = {}
 
@@ -689,16 +691,18 @@ def getTops(request, models, filter=None):
 
         for model in models:
             
-            if model not in modelTop:
-                continue
 
             sModel = model.__name__
 
-            if model not in tops:
+            if sModel not in modelTop:
+                continue
+
+
+            if sModel not in tops:
                 tops[sModel] = {}
 
 
-            if id in modelTop[model] :
+            if id in modelTop[sModel] :
                 tops[sModel][id] = attrs
 
                 break;
