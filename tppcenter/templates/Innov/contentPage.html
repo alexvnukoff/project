@@ -46,7 +46,7 @@
                                     {% if  cabinet_name  %}
                                         <a href=""> {{ cabinet_last_name }} {{ cabinet_name }}</a>
 
-                                    {% else %}
+                                    {% elif org_name %}
                                        <a href="{% url org_url org_slug %}">  {{ org_name }} </a>
                                     {% endif %}
 
