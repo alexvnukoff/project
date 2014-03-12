@@ -1,6 +1,11 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
+<script>
+    $('.keyword').html('');
+</script>
+
  {% with companyValues.POSITION.0 as position %}
  <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 

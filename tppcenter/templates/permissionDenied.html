@@ -1,7 +1,7 @@
 {% extends 'main_page.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
-
+{% block keywords %}{% endblock %}
 
    {% block title %}{% trans 'Permission Denied' %}{% endblock %}
 
@@ -27,7 +27,7 @@
             <div class="blogin">
 				<h3>{% trans 'Perrmission denied' %}</h3>
            <div style="margin-top: 20px;">
-           <span style="font-size: 18px;padding-left: 30%;"> {% trans 'Sorry but you cannot modify this item ' %}<span>
+           <span style="font-size: 18px;padding-left: 20%;"> {% trans 'Sorry but you cannot modify this item ' %}</span>
 
            </div>
             </div>

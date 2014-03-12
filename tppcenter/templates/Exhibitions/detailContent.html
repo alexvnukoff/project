@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load CustomFilters %}
 
+<script>
+    $('.keyword').html('');
+</script>
+
 {% with exhibitionlValues.POSITION.0 as position %}
  <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
@@ -47,6 +51,8 @@
             {% with exhibitionlValues.DOCUMENT_3.0 as doc_3 %}
             {% with exhibitionlValues.ORGANIZATION_FLAG.0 as org_flag %}
             {% with exhibitionlValues.ORGANIZATION_NAME.0 as org_name %}
+            {% with exhibitionlValues.ORGANIZATION_SLUG.0 as org_slug %}
+            {% with exhibitionlValues.ORGANIZATION_URL as org_url %}
             {% with exhibitionlValues.ORGANIZATION_IMAGE.0 as org_image %}
             {% with exhibitionlValues.ORGANIZATION_ID.0 as org_id %}
             {% with exhibitionlValues.COUNTRY_NAME|first as country_name %}
@@ -66,7 +72,7 @@
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
                         	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
-                            <a href="#">{{ org_name }}</a>
+                            <a href="{% url org_url org_slug %}">{{ org_name }}</a>
                             </div>
                     </div>
                     <div class="innov-details">
@@ -134,6 +140,8 @@
                </div>
 
 
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
