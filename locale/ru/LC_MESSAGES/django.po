@@ -2229,7 +2229,7 @@ msgstr "Описание для анонса"
 #: .\tppcenter\templates\Companies\addForm.html:158
 #: .\tppcenter\templates\Products\addForm.html:215
 msgid "Detail text"
-msgstr "Детальное описанние"
+msgstr "Детальное описание"
 
 #: .\tppcenter\templates\Companies\addForm.html:171
 #: .\tppcenter\templates\Tpp\addForm.html:155
