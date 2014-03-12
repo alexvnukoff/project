@@ -1,6 +1,9 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
+{% block keywords %}{% endblock %}
+
 {% with form.fields.POSITION.initial as position %}
 
     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
