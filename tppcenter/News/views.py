@@ -386,7 +386,7 @@ def detail(request, item_id, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request , filter=filterAdv)
 
     templateParams = {
         'user_name': user_name,
