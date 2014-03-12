@@ -48,7 +48,9 @@
             </div>
             <div class="newslink">
                 <div class="left">
-                    <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% if addNew %}
+                        <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% endif %}
                     {% if current_company %}
                             <label style="padding: 150px;font-weight: bolder;" > {% trans 'Your current organization: ' %}{{ current_company|first }}</label>
                     {% endif %}
