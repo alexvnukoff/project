@@ -27,7 +27,7 @@
                                         <img src="{{ MEDIA_URL }}small/{{ image }}" alt="" class="thumb" />
                                     {% endif %}
                                 </a>
-                                {{ text|cleanHtml|safe|truncatewords:7 }}
+                                {{ text|cleanHtml|safe|truncatewords_html:7 }}
                                 </div>
                             </li>
                         {% endwith %}

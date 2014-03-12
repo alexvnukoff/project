@@ -71,7 +71,7 @@
 
                             <a href="{% url 'news:detail' sim_slug %}">{{ sim_name|truncatewords:3 }}</a>
                             <span class="date">{{ sim_create_date|date:'d M Y' }}</span>
-                            <p>{{ sim_content|cleanHtml|safe|truncatewords:12 }}</p>
+                            <p>{{ sim_content|cleanHtml|safe|truncatewords_html:12 }}</p>
                             <a href="{% url 'news:detail' sim_slug %}" class="more">{% trans 'More' %}...</a>
                         </li>
                       {% endwith %}

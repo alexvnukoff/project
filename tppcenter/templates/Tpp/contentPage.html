@@ -32,7 +32,7 @@
                                  <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="logocompany" alt="" />
                             {% endif %}
                             <div class="desc">
-                               {{ about_company|cleanHtml|safe|truncatewords:30 }}
+                               {{ about_company|cleanHtml|safe|truncatewords_html:30 }}
                                 <a href="{% url 'tpp:detail' slug %}">{% trans "More" %}...</a>
                             </div>
                             <div class="companycontact">

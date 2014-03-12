@@ -36,7 +36,7 @@
                         {{ name|truncatewords:2 }}
                     </a>
                 </td>
-                <td>{{ content|cleanHtml|safe|truncatewords:10 }}</td>
+                <td>{{ content|cleanHtml|safe|truncatewords_html:10 }}</td>
                 <td>{{ currency|getSymbol }} {{ cost }}</td>
 
             </tr>

@@ -22,7 +22,7 @@
                     </a>
                 </td>
                 <td>
-                    {{ text|cleanHtml|safe|truncatewords:50 }}
+                    {{ text|cleanHtml|safe|truncatewords_html:50 }}
                 </td>
             </tr>
             {% endwith %}
