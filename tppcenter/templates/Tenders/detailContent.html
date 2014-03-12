@@ -68,7 +68,7 @@ $(function() {
                                 <li><a href="#goods-tabs-2">{% trans 'Gallery' %}</a></li>
                                 <li><a href="#goods-tabs-3">{% trans 'Documents' %}</a></li>
                             {% for page in additionalPages %}
-                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle|truncatewords:2 }}</a></li>
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
                             {% endfor %}
                             </ul>
                         </div>
