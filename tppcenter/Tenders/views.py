@@ -26,9 +26,9 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     filterAdv = []
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
 
 
     cabinetValues = func.getB2BcabinetValues(request)
@@ -44,7 +44,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             tendersPage, filterAdv = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            tendersPage = func.emptyCompany()
     else:
         tendersPage, filterAdv = _tenderDetailContent(request, item_id)
 
@@ -255,7 +255,7 @@ def tenderForm(request, action, item_id=None):
 def addTender(request):
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -264,7 +264,7 @@ def addTender(request):
 
 
     if 'add_tender' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -307,7 +307,7 @@ def updateTender(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tender' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()

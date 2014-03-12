@@ -37,7 +37,7 @@ def get_news_list(request, page=1, my=None):
         newsPage, filterAdv = _newsContent(request, page, my)
 
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        newsPage = func.emptyCompany()
 
     cabinetValues = func.getB2BcabinetValues(request)
     styles = []
@@ -236,11 +236,11 @@ def addNews(request):
         item = Organization.objects.get(pk=current_company)
         perm_list = item.getItemInstPermList(request.user)
         if 'add_news' not in perm_list:
-             return render_to_response("permissionDenied.html")
+             return func.permissionDenied()
     else:
         perm = request.user.get_all_permissions()
         if not {'appl.add_news'}.issubset(perm):
-            return render_to_response("permissionDenied.html")
+            return func.permissionDenied()
 
 
     form = None
@@ -293,7 +293,7 @@ def updateNew(request, item_id):
     except Exception:
          perm = request.user.get_all_permissions()
          if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
-             return render_to_response("permissionDenied.html")
+             return func.permissionDenied()
 
 
 
@@ -363,9 +363,9 @@ def detail(request, item_id, slug=None):
 
     filterAdv = func.getDeatailAdv(item_id)
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []
