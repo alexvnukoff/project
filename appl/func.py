@@ -8,7 +8,7 @@ from django.http import Http404
 from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
-
+from django.utils.translation import ugettext as _
 
 def getPaginatorRange(page):
     '''
@@ -659,12 +659,31 @@ def getBannersRight(request, places, site, template, filter=None):
 
     return template.render(context)
 
-def getTops(request, models, filter=None):
+def getTops(request, filter=None):
+
+    models = {
+        Product: {
+            'count': 5,
+            'text': _('Products')
+        },
+        InnovationProject: {
+            'count': 5,
+            'text': _('Innovation Projects')
+        },
+        Company: {
+            'count': 5,
+            'text': _('Companies')
+        },
+        BusinessProposal: {
+            'count': 5,
+            'text': _('Business Proposals')
+        },
+    }
 
     topList = []
     modelTop = {}
 
-    for model, count in models.items():
+    for model, modelDict in models.items():
 
         sub = model.objects.all()
         top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
@@ -672,7 +691,7 @@ def getTops(request, models, filter=None):
         if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')
 
-        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(count)]
+        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(modelDict['count'])]
 
         tops = list(top)
 
@@ -689,6 +708,9 @@ def getTops(request, models, filter=None):
 
     for id, attrs in topAttr.items():
 
+        if not isinstance(attrs, dict):
+            continue
+
         for model in models:
             
 
@@ -700,12 +722,13 @@ def getTops(request, models, filter=None):
 
             if sModel not in tops:
                 tops[sModel] = {}
-
+                tops[sModel]['MODEL_NAME'] = models[model]['text']
+                tops[sModel]['elements'] = {}
 
             if id in modelTop[sModel] :
-                tops[sModel][id] = attrs
+                tops[sModel]['elements'][id] = attrs
 
-                break;
+                break
 
 
     templateParams = {

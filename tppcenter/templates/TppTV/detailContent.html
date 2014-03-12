@@ -51,7 +51,7 @@
                     	<li>
                         	<span class="date">{{ date|date:"d M y" }}</span>
                             {% if sim_image %}
-                        	    <img src="{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
+                        	    <img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
                             {% else %}
                                 <img src="{% static 'tppcenter/img/news.jpg' %}" alt="{{ sim_name }}" class="thumb" />
                             {% endif %}

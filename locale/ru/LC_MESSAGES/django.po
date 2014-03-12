@@ -2141,7 +2141,7 @@ msgstr "Ничего не найдено"
 #: .\tppcenter\templates\Companies\detailContent.html:60
 #: .\tppcenter\templates\Tpp\detailContent.html:34
 msgid "About"
-msgstr "О компании"
+msgstr "Описанние"
 
 #: .\tppcenter\templates\BusinessProposal\detailContent.html:47
 #: .\tppcenter\templates\Exhibitions\detailContent.html:79
@@ -2229,7 +2229,7 @@ msgstr "Описание для анонса"
 #: .\tppcenter\templates\Companies\addForm.html:158
 #: .\tppcenter\templates\Products\addForm.html:215
 msgid "Detail text"
-msgstr "Детальное описанние"
+msgstr "Детальное описание"
 
 #: .\tppcenter\templates\Companies\addForm.html:171
 #: .\tppcenter\templates\Tpp\addForm.html:155
@@ -2578,7 +2578,7 @@ msgstr "Название организации"
 #: .\tppcenter\templates\Tpp\addForm.html:142
 #: .\tppcenter\templates\TppTV\addForm.html:101
 msgid "Detail description"
-msgstr ""
+msgstr "Описание"
 
 #: .\tppcenter\templates\Tpp\addForm.html:173
 msgid "Detail"

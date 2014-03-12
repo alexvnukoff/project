@@ -48,7 +48,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, {Product: 5, InnovationProject: 5, Company: 5, BusinessProposal: 5}, filter=filterAdv)
+    tops = func.getTops(request, filter=filterAdv)
 
     if not request.is_ajax():
         user = request.user
