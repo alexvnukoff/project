@@ -146,7 +146,7 @@ def _newsContent(request, page=1):
 
     news = sqs.order_by(*order)
 
-    result = func.setPaginationForSearchWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
+    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
     #result = func.setPaginationForItemsWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
 
     newsList = result[0]
