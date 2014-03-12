@@ -776,3 +776,17 @@ def getDeatailAdv(item_id):
         filterAdv.append(item_id)
 
     return filterAdv
+
+def emptyCompany():
+     template = loader.get_template('permissionDen.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page
+
+def permissionDenied():
+     template = loader.get_template('permissionDenied.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page

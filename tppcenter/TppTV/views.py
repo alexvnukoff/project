@@ -19,9 +19,9 @@ from datetime import datetime
 
 def get_news_list(request,page=1, id=None, slug=None):
 
-    if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
+ #   if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
+  #       slug = Value.objects.get(item=id, attr__title='SLUG').title
+   #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -234,7 +234,7 @@ def addNews(request):
     current_company = request.session.get('current_company', None)
     perm = request.user.get_all_permissions()
     if not {'appl.add_tpptv'}.issubset(perm):
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
@@ -279,7 +279,7 @@ def updateNew(request, item_id):
 
     perm = request.user.get_all_permissions()
     if not {'appl.change_tpptv'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
-          return render_to_response("permissionDenied.html")
+          return func.permissionDenied()
 
     create_date = TppTV.objects.get(pk=item_id).create_date
 

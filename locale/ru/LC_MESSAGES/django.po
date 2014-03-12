@@ -253,8 +253,8 @@ msgstr "Добро пожаловать "
 
 #: centerpokupok/templates/Cabinet/index.html:23
 msgid "Here, you can change your data, shipment address and monitor orders."
-msgstr ""
-"Здесь вы можете изменять свои данные , адрес доставки и следить за заказами."
+msgstr "Здесь вы можете изменять свои данные , адрес доставки и следить за заказами."
+
 
 #: centerpokupok/templates/Cabinet/index.html:26
 msgid "My profile"
@@ -797,9 +797,9 @@ msgstr "Политика возврата и гарантия"
 #: centerpokupok/templates/registration/registration_complete.html:40
 msgid ""
 "Freezing of seller's funds till then buyer  confirm receipt of the goods"
-msgstr ""
-"Замораживание средств продавца до тех пор пока  покупатель подтвердите "
+msgstr "Замораживание средств продавца до тех пор пока  покупатель подтвердит "
 "получение товаров"
+
 
 #: centerpokupok/templates/Registr/registr.html:52
 #: centerpokupok/templates/registration/activation_complete.html:39
@@ -898,12 +898,12 @@ msgstr "Если вы получили это сообщение по ошибк
 #: tppcenter/templates/registration/activation_email.html:6
 msgid ""
 "In order to activate your account on the site, go, on the following link for "
-msgstr ""
+msgstr "Чтобы активировать ваш аккаунт , перейдите по следующей ссылке в течение "
 
 #: centerpokupok/templates/registration/activation_email.html:6
 #: tppcenter/templates/registration/activation_email.html:6
 msgid " days:"
-msgstr ""
+msgstr " дней"
 
 #: centerpokupok/templates/registration/activation_email.html:10
 #: tppcenter/templates/registration/activation_email.html:10
@@ -1562,11 +1562,11 @@ msgstr "Два поля пароль не соответствует"
 
 #: modules-mod/registration/forms.py:77
 msgid "I have read and agree to the Terms of Service"
-msgstr ""
+msgstr "Я прочитал и согласен с правилами использования"
 
 #: modules-mod/registration/forms.py:78
 msgid "You must agree to the terms to register"
-msgstr ""
+msgstr "Вы должны согласиться с правилами использования "
 
 #: modules-mod/registration/forms.py:94
 msgid ""
@@ -1729,15 +1729,15 @@ msgstr "Тендеры"
 #: tppcenter/Tpp/views.py:73 tppcenter/Tpp/views.py:260
 #: tppcenter/templates/Tpp/index.html:6
 msgid "Tpp"
-msgstr ""
+msgstr "ТПП"
 
 #: tppcenter/TppTV/views.py:37
 msgid "TPP-TV"
-msgstr "Тпп"
+msgstr "ТПП-ТВ"
 
 #: tppcenter/TppTV/views.py:217
 msgid "TppTv"
-msgstr "ТппТВ"
+msgstr "ТПП ТВ"
 
 #: tppcenter/Wall/views.py:45 tppcenter/templates/main_page.html:197
 #: tppcenter/templates/main_page.html:217
@@ -1840,7 +1840,7 @@ msgstr "Спросить сообщество"
 
 #: tppcenter/templates/base.html:67 tppcenter/templates/main_header.html:6
 msgid "FAQ"
-msgstr "FAQ"
+msgstr "Часто задаваемые вопросы"
 
 #: tppcenter/templates/base.html:76
 msgid "Visitor statistic"
@@ -1886,7 +1886,7 @@ msgstr "Применить"
 
 #: tppcenter/templates/index.html:7
 msgid "Tppcenter"
-msgstr ""
+msgstr "ТПП центер"
 
 #: tppcenter/templates/index.html:43
 msgid "All countries"
@@ -2182,7 +2182,7 @@ msgstr ""
 #: tppcenter/templates/permissionDen.html:31
 #: tppcenter/templates/registration/activate.html:6
 msgid "profile"
-msgstr "профиль"
+msgstr "в своем профиле"
 
 #: tppcenter/templates/permissionDen.html:31
 msgid " or create "
@@ -2198,7 +2198,7 @@ msgstr "Доступ запрещен!"
 
 #: tppcenter/templates/permissionDenied.html:30
 msgid "Sorry but you cannot modify this item "
-msgstr "К сожалению  но вы не можете изменить этот пункт"
+msgstr "К сожалению  вы не можете изменить этот пункт"
 
 #: tppcenter/templates/AdvBanner/addForm.html:284
 msgid "Image file (Maximum 50KB)"
@@ -2425,11 +2425,11 @@ msgstr "Слоган"
 #: tppcenter/templates/Companies/addForm.html:140
 #: tppcenter/templates/Tpp/addForm.html:113
 msgid "CCI"
-msgstr "Тпп"
+msgstr "ТПП"
 
 #: tppcenter/templates/Companies/addForm.html:142
 msgid "Choose CCI"
-msgstr "Выбрать Тпп"
+msgstr "Выбрать ТПП"
 
 #: tppcenter/templates/Companies/addForm.html:153
 msgid "Preview text"

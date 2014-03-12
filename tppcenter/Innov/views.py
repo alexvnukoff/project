@@ -21,9 +21,9 @@ from datetime import datetime
 
 
 def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
 
     filterAdv = []
     current_company = request.session.get('current_company', False)
@@ -40,7 +40,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             newsPage, filterAdv = _innovContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            newsPage = func.emptyCompany()
     else:
         newsPage, filterAdv = _innovDetailContent(request, item_id)
 
@@ -340,7 +340,7 @@ def addProject(request):
 
 
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -349,7 +349,7 @@ def addProject(request):
 
 
     if 'add_innovationproject' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
     form = None
@@ -398,7 +398,7 @@ def updateProject(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_innovationproject' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
