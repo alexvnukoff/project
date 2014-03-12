@@ -91,7 +91,9 @@ class DynUrlNode(template.Node):
     def __init__(self, *args):
         self.name_var = args[0]
         self.parametrs = args[1]
-        self.new_parametr = args[2]
+
+        if len(args) > 2:
+            self.new_parametr = args[2]
 
 
     def render(self, context):

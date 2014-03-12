@@ -7,7 +7,8 @@
         <div class="news-ads">
             <div class="title">{% trans "Paid ads" %}</div>
             {% for model, tops in modelTop.items %}
-                <span class="titlesub">{{ tops.MODEL_NAME }}</span>
+                {% with tops.MODEL as modelAttr %}
+                <span class="titlesub">{{ modelAttr.text }}</span>
                 <ul class="list-ads">
 
                     {% for id, attrs in tops.elements.items %}
@@ -18,12 +19,12 @@
 
                             <li>
                                 <div class="top">
-                                    <a href="#" class="linkads">{{ name }}</a>
+                                    <a title="{{ name }}" href="{% dynurl modelAttr.detailUrl slug %}" class="linkads">{{ name }}</a>
                                 </div>
                                 <div class="infoads">
-                                <a href="#">
+                                <a title="{{ name }}" href="{% dynurl modelAttr.detailUrl slug %}">
                                     {% if image %}
-                                        <img src="{{ MEDIA_URL }}small/{{ image }}" alt="" class="thumb" />
+                                        <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}<" class="thumb" />
                                     {% endif %}
                                 </a>
                                 {{ text|cleanHtml|safe|truncatewords_html:7 }}
@@ -35,6 +36,7 @@
                         {% endwith %}
                     {% endfor %}
                 </ul>
+                {% endwith %}
             {% endfor %}
         </div>
     {% endif %}

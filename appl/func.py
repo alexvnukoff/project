@@ -560,12 +560,11 @@ def filterLive(request):
     ids = []
     filtersAdv = []
 
-    filterList=['tpp', 'country', 'branch']
+    filterList = ['tpp', 'country', 'branch']
 
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
-
 
         for pk in request.GET.getlist('filter[' + name + '][]', []):
             try:
@@ -664,19 +663,23 @@ def getTops(request, filter=None):
     models = {
         Product: {
             'count': 5,
-            'text': _('Products')
+            'text': _('Products'),
+            'detailUrl': 'products:detail'
         },
         InnovationProject: {
             'count': 5,
-            'text': _('Innovation Projects')
+            'text': _('Innovation Projects'),
+            'detailUrl': 'innov:detail'
         },
         Company: {
             'count': 5,
-            'text': _('Companies')
+            'text': _('Companies'),
+            'detailUrl': 'companies:detail'
         },
         BusinessProposal: {
             'count': 5,
-            'text': _('Business Proposals')
+            'text': _('Business Proposals'),
+            'detailUrl': 'proposal:detail'
         },
     }
 
@@ -722,10 +725,10 @@ def getTops(request, filter=None):
 
             if sModel not in tops:
                 tops[sModel] = {}
-                tops[sModel]['MODEL_NAME'] = models[model]['text']
+                tops[sModel]['MODEL'] = models[model]
                 tops[sModel]['elements'] = {}
 
-            if id in modelTop[sModel] :
+            if id in modelTop[sModel]:
                 tops[sModel]['elements'][id] = attrs
 
                 break
