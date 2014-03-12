@@ -706,7 +706,7 @@ def getTops(request, filter=None):
     for model, modelDict in models.items():
 
         sub = model.objects.all()
-        top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
+        top = AdvTop.active.get_active().filter(p2c__child=sub, p2c__type="relation")
 
         if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')

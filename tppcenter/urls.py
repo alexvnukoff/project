@@ -20,6 +20,9 @@ import tppcenter.AdvBanner
 import tppcenter.AdvBanner.urls
 import tppcenter.AdvTop
 import tppcenter.AdvTop.urls
+import tppcenter.Project
+import tppcenter.Project.urls
+
 
 admin.autodiscover()
 
@@ -51,6 +54,8 @@ urlpatterns = patterns('',
     url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
     url(r'^registartion/', tppcenter.views.registration, name='register' ),
 
+    url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
+
 
     url(r'^test/', tppcenter.views.test),
     #url(r'^test2/', tppcenter.views.test2),
@@ -75,6 +80,8 @@ urlpatterns = patterns('',
     url(r'^accounts/password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+
 
 
 

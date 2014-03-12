@@ -19,10 +19,10 @@
 
                             <li>
                                 <div class="top">
-                                    <a title="{{ name }}" href="{% dynurl modelAttr.detailUrl slug %}" class="linkads">{{ name }}</a>
+                                    <a title="{{ name }}" href="{% url modelAttr.detailUrl slug %}" class="linkads">{{ name }}</a>
                                 </div>
                                 <div class="infoads">
-                                <a title="{{ name }}" href="{% dynurl modelAttr.detailUrl slug %}">
+                                <a title="{{ name }}" href="{% url modelAttr.detailUrl slug %}">
                                     {% if image %}
                                         <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}<" class="thumb" />
                                     {% endif %}
