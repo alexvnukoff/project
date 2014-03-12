@@ -531,10 +531,27 @@ class Item(models.Model):
                         group_list.append('Owner')
                         group_list.append('Admin')
                         group_list.append('Staff')
+                    else:
+                        #try to get parent Company for this Item and check is there User in Company's community
+                        if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
+                                        values('c2p__parent__organization__community__name')) and user.is_manager:
+                            group_list.append('Owner')
+                            group_list.append('Admin')
+                            group_list.append('Staff')
+                        else:
+                            #try to check Company's TPP for this Item and check is there User in TPP's community and manager
+                            prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False,\
+                                pk=self.pk).values('c2p__parent__id');
+                            for tpp in prnt_lst:
+                                if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False,\
+                                    pk=tpp.get('c2p__parent__id')).values('c2p__parent__organization__community__name'))\
+                                        and user.is_manager:
+                                    group_list.append('Owner')
+                                    group_list.append('Admin')
+                                    group_list.append('Staff')
 
         # get all permissions from all related groups for current type of item
-        perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
-                    ).values('permissions__codename')]
+        perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list).values('permissions__codename')]
         # attach user's private permissions
         perm_list += [p['codename'] for p in user.user_permissions.filter(codename__contains=obj_type).values('codename')]
         perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
