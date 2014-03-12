@@ -706,7 +706,7 @@ def getTops(request, filter=None):
     for model, modelDict in models.items():
 
         sub = model.objects.all()
-        top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
+        top = AdvTop.active.get_active().filter(p2c__child=sub, p2c__type="relation")
 
         if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')
@@ -776,3 +776,17 @@ def getDeatailAdv(item_id):
         filterAdv.append(item_id)
 
     return filterAdv
+
+def emptyCompany():
+     template = loader.get_template('permissionDen.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page
+
+def permissionDenied():
+     template = loader.get_template('permissionDenied.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page

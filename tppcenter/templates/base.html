@@ -48,23 +48,23 @@
         <div class="linkbottom">
             <ul class="clumn">
                 <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'About project' %}</a></li>
-                <li><a href="#">{% trans 'How the system works' %}</a></li>
-                <li><a href="#">{% trans 'Terms of use' %}</a></li>
-                <li><a href="#">{% trans 'Privacy' %}</a></li>
+                <li><a href="{% url "project:about" %}">{% trans 'About project' %}</a></li>
+                <li><a href="{% url "project:how" %}">{% trans 'How the system works' %}</a></li>
+                <li><a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a></li>
+                <li><a href="{% url "project:privacy" %}">{% trans 'Privacy' %}</a></li>
             </ul>
             <ul class="clumn">
-                <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'Create online shop' %}</a></li>
-                <li><a href="#">{% trans 'Post announcement event' %}</a></li>
-                <li><a href="#">{% trans 'Add a business proposal' %}</a></li>
-                <li><a href="#">{% trans 'Find a Business Partner' %}</a></li>
+                <li>{% trans 'Advices' %}</li>
+                <li><a href="{% url "project:shop" %}">{% trans 'Create online shop' %}</a></li>
+                <li><a href="{% url "project:event" %}">{% trans 'Post announcement event' %}</a></li>
+                <li><a href="{% url "project:proposal" %}">{% trans 'Add a business proposal' %}</a></li>
+                <li><a href="{% url "project:partner" %}">{% trans 'Find a Business Partner' %}</a></li>
             </ul>
             <ul class="clumn">
-                <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'Contuct us' %}</a></li>
-                <li><a href="#">{% trans 'Ask the community' %}</a></li>
-                <li><a href="#">{% trans 'FAQ' %}</a></li>
+                <li>{% trans 'Contacts' %}</li>
+                <li><a href="{% url "project:contact" %}">{% trans 'Contact us' %}</a></li>
+                <li><a href="{% url "project:community" %}">{% trans 'Ask the community' %}</a></li>
+                <li><a href="{% url "project:faq" %}">{% trans 'FAQ' %}</a></li>
             </ul>
             <ul class="clumn">
                 <li>

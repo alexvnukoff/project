@@ -1,0 +1,22 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/news.css"%}" />
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/company.css"%}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+<div class="companies">
+                <div class="deal-details">
+                    <h1>{% trans 'How the system works' %}</h1>
+
+                </div>
+
+            </div>
+
+{% endblock %}

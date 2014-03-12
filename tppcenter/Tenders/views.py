@@ -1,20 +1,14 @@
-from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from django.http import HttpResponseRedirect, HttpResponse
+from core.models import Value, Dictionary
 from appl import func
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
 from core.tasks import addNewTender
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
@@ -26,9 +20,9 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     filterAdv = []
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
 
 
     cabinetValues = func.getB2BcabinetValues(request)
@@ -44,7 +38,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             tendersPage, filterAdv = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            tendersPage = func.emptyCompany()
     else:
         tendersPage, filterAdv = _tenderDetailContent(request, item_id)
 
@@ -255,7 +249,7 @@ def tenderForm(request, action, item_id=None):
 def addTender(request):
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -264,7 +258,7 @@ def addTender(request):
 
 
     if 'add_tender' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -307,7 +301,7 @@ def updateTender(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tender' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
