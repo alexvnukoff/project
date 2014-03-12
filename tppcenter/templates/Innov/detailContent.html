@@ -56,7 +56,7 @@ $(function() {
                                 <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
                                 <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
                                 {% for page in additionalPages %}
-                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle }}</a></li>
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
