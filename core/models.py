@@ -524,13 +524,13 @@ class Item(models.Model):
                         else: # no permissions group for current state, attach Staff group
                             group_list.append('Staff')
                 else:
-                    if obj_type == 'company':
-                        #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-                        if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
+                    #if obj_type == 'company':
+                    #try to receive TPP for this company using Item class and Relationship and check is the user in Community
+                    if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
                                         values('c2p__parent__organization__community__name')) and user.is_manager:
-                            group_list.append('Owner')
-                            group_list.append('Admin')
-                            group_list.append('Staff')
+                        group_list.append('Owner')
+                        group_list.append('Admin')
+                        group_list.append('Staff')
 
         # get all permissions from all related groups for current type of item
         perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
