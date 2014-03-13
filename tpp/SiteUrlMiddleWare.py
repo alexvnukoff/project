@@ -9,7 +9,7 @@ import os
 class SiteUrlMiddleWare:
 
     def process_request(self, request):
-        current_domain = request.META['HTTP_HOST']
+        current_domain = request.META.get('HTTP_HOST', False)
         if current_domain[:4] == "www":
             current_domain = current_domain[4:]
         try:
