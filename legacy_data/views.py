@@ -2,7 +2,7 @@ from django.http import HttpResponse, Http404
 from legacy_data.models import *
 from core.models import User, Relationship, Dictionary
 from core.amazonMethods import add, addFile
-from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery, InnovationProject
+from appl.models import Company, Tpp, Product, Country, Cabinet, Gallery, InnovationProject, AdditionalPages
 from random import randint
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import Group
@@ -1870,7 +1870,7 @@ def innprj_DB_DB(request):
                 gal.photo = add(img_root + pic)
                 # create relationship
                 try:
-                    Relationship.objects.create(parent=prj, type='relation', child=gal, create_user=create_usr)
+                    Relationship.objects.create(parent=prj, type='dependence', child=gal, create_user=create_usr)
                     print('Relationship between Innovative Project and Gallery was created! Project ID:', prj.pk)
                 except:
                     print('Can not create relationship! Project ID:', prj.pk)
@@ -1884,3 +1884,223 @@ def innprj_DB_DB(request):
     time = time2-time1
     print('Elapsed time:', time)
     return HttpResponse('Innovative Projects were migrated from buffer DB into TPP DB!')
+
+def pages2comp_CSV_DB(request):
+    '''
+        Reload Companies' Additional Pages data from prepared CSV file named pages2comp_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PAGES2COMP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading Company additional pages from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pages2comp_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        page_name = bytearray(data[i][1]).decode(encoding='utf-8')
+        page_text = bytearray(data[i][2]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+
+        try:
+            L_Pages2Comp.objects.create(btx_id = btx_id,\
+                                page_name = page_name,\
+                                page_text = page_text)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            print(btx_id, '##', page_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Company additional pages were migrated from CSV into DB!')
+
+def pages2comp_DB_DB(request):
+    '''
+        Reload Company Additional Pages from buffer DB table LEGACY_DATA_L_PAGES2COMP into TPP DB
+    '''
+    time1 = datetime.datetime.now()
+    print('Loading Company additional pages from buffer DB into TPP DB...')
+    qty = L_Pages2Comp.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    i = 0
+    pgs_lst = L_Pages2Comp.objects.filter(completed=False).all()
+    create_usr = User.objects.get(pk=1)
+    for leg_pgs in pgs_lst:
+        try:
+            leg_comp = L_Company.objects.get(btx_id=leg_pgs.btx_id)
+            comp = Company.objects.get(pk=leg_comp.tpp_id)
+        except:
+            print('Could not find Company for this Additional Page. Company btx_id:', leg_pgs.btx_id)
+            i += 1
+            continue
+
+        try:
+            page = AdditionalPages.objects.create(title='ADD_PAGE_COMPANY_ID:'+str(comp.pk), create_user=create_usr)
+        except:
+            print(leg_pgs.btx_id, '##', leg_pgs.page_name, '##', ' Count: ', i)
+            i += 1
+            continue
+
+        attr = {
+                'NAME': leg_pgs.page_name,
+                'DETAIL_TEXT': leg_pgs.page_text,
+                }
+
+        trans_real.activate('ru') #activate russian locale
+        res = page.setAttributeValue(attr, create_usr)
+        trans_real.deactivate() #deactivate russian locale
+        if res:
+            leg_pgs.completed = True
+            leg_pgs.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
+
+        # create relationship type=Dependence with business entity
+        try:
+            Relationship.objects.create(parent=comp, type='dependence', child=page, create_user=create_usr)
+        except:
+            print('Can not create relationship for additional page. Page will delete.')
+            page.delete()
+            i += 1
+            continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('Company additional pages were migrated from buffer DB into TPP DB!')
+
+def pages2tpp_CSV_DB(request):
+    '''
+        Reload TPPs' Additional Pages data from prepared CSV file named pages2tpp_legacy.csv
+        into buffer DB table LEGACY_DATA_L_PAGES2TPP
+    '''
+    time1 = datetime.datetime.now()
+    #Upload from CSV file into buffer table
+    print('Loading Company additional pages from CSV file into buffer table...')
+    csv.field_size_limit(4000000)
+    with open('c:\\data\\pages2tpp_legacy.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=';')
+        data = [row for row in reader]
+
+    count = 0
+    bad_count = 0
+    sz = len(data)
+    for i in range(0, sz, 1):
+        sz1 = len(data[i])
+        for k in range(0, sz1, 1):
+            data[i][k] = base64.standard_b64decode(data[i][k])
+
+        if sz1 == 0:
+            print('The row# ', i+1, ' is wrong!')
+            bad_count += 1
+            continue
+
+        btx_id = bytearray(data[i][0]).decode(encoding='utf-8')
+        page_name = bytearray(data[i][1]).decode(encoding='utf-8')
+        page_text = bytearray(data[i][2]).decode(encoding='utf-8').replace("&quot;", '"').\
+                                replace("quot;", '"').replace("&amp;", "&").strip()
+
+        try:
+            L_Pages2Tpp.objects.create(btx_id = btx_id,\
+                                page_name = page_name,\
+                                page_text = page_text)
+            count += 1
+        except:
+            print('Milestone: ', i+1)
+            print(btx_id, '##', page_name, '##', ' Count: ', i+1)
+            continue
+
+        print('Milestone: ', i+1)
+
+    print('Done. Quantity of processed strings: ', i+1, ". Into buffer DB were added: ", count, ". Bad Qty: ", bad_count)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPP additional pages were migrated from CSV into DB!')
+
+def pages2tpp_DB_DB(request):
+    '''
+        Reload TPP Additional Pages from buffer DB table LEGACY_DATA_L_PAGES2TPP into TPP DB
+    '''
+    time1 = datetime.datetime.now()
+    print('Loading TPP additional pages from buffer DB into TPP DB...')
+    qty = L_Pages2Tpp.objects.filter(completed=True).count()
+    print('Before already were processed: ', qty)
+    i = 0
+    pgs_lst = L_Pages2Tpp.objects.filter(completed=False).all()
+    create_usr = User.objects.get(pk=1)
+    for leg_pgs in pgs_lst:
+        try:
+            leg_tpp = L_TPP.objects.get(btx_id=leg_pgs.btx_id)
+            tpp = Tpp.objects.get(pk=leg_tpp.tpp_id)
+        except:
+            print('Could not find TPP for this Additional Page. TPP btx_id:', leg_pgs.btx_id)
+            i += 1
+            continue
+
+        try:
+            page = AdditionalPages.objects.create(title='ADD_PAGE_COMPANY_ID:'+str(tpp.pk), create_user=create_usr)
+        except:
+            print(leg_pgs.btx_id, '##', leg_pgs.page_name, '##', ' Count: ', i)
+            i += 1
+            continue
+
+        attr = {
+                'NAME': leg_pgs.page_name,
+                'DETAIL_TEXT': leg_pgs.page_text,
+                }
+
+        trans_real.activate('ru') #activate russian locale
+        res = page.setAttributeValue(attr, create_usr)
+        trans_real.deactivate() #deactivate russian locale
+        if res:
+            leg_pgs.completed = True
+            leg_pgs.save()
+        else:
+            print('Problems with Attributes adding!')
+            i += 1
+            continue
+
+        # create relationship type=Dependence with business entity
+        try:
+            Relationship.objects.create(parent=tpp, type='dependence', child=page, create_user=create_usr)
+        except:
+            print('Can not create relationship for additional page. Page will delete.')
+            page.delete()
+            i += 1
+            continue
+
+        i += 1
+        print('Milestone: ', qty + i)
+
+    print('Done. Quantity of processed strings:', qty + i)
+    time2 = datetime.datetime.now()
+    time = time2-time1
+    print('Elapsed time:', time)
+    return HttpResponse('TPP additional pages were migrated from buffer DB into TPP DB!')
