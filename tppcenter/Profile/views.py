@@ -30,21 +30,8 @@ def getProfileForm(request):
 
     user = request.user
     if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
         cabinetValues = func.getB2BcabinetValues(request)
 
-
-
-
-    else:
-        user_name = None
-        notification = None
-        cabinetValues = None
     current_section = _("Profile")
 
 
@@ -63,8 +50,8 @@ def getProfileForm(request):
 
 
 
-    return render_to_response("Profile/index.html", {'user_name': user_name, 'current_section': current_section,
-                                                   'notification': notification, 'profilePage': profilePage,
+    return render_to_response("Profile/index.html", { 'current_section': current_section,
+                                                    'profilePage': profilePage,
                                                    'current_company': current_company, 'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
 

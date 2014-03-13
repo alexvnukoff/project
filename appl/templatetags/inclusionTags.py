@@ -1,9 +1,11 @@
 __author__ = 'user'
 
 from django import template
-from appl.models import Tpp, Company, Product
+from django.template import RequestContext, loader
+from appl.models import Tpp, Company, Product, Notification
+from django.utils.translation import ugettext as _
 
-register = template.libraries
+register = template.Library()
 
 @register.inclusion_tag('InclusionTags/bottomAnalytic.html')
 def setAnalytic():
@@ -12,3 +14,7 @@ def setAnalytic():
         'companiesCount': Company.objects.count(),
         'partnersCount': Tpp.objects.count()
     }
+
+
+
+

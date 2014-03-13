@@ -54,23 +54,14 @@ def get_news_list(request,page=1, id=None, slug=None):
 
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
 
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
         current_section = "TPP-TV"
 
         templatePramrams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'newsPage': newsPage,
-            'notification': notification,
+
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
@@ -201,18 +192,7 @@ def tvForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("TppTv")
 

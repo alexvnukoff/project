@@ -49,22 +49,14 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not request.is_ajax():
         user = request.user
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
         current_section = _("Tenders")
 
         templateParams =  {
-            'user_name': user_name,
+
             'current_section': current_section,
             'tendersPage': tendersPage,
-            'notification': notification,
+
             'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
@@ -217,18 +209,6 @@ def tenderForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Tenders")
 
@@ -241,7 +221,7 @@ def tenderForm(request, action, item_id=None):
         return tendersPage
 
     return render_to_response('Tenders/index.html', {'tendersPage': tendersPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))

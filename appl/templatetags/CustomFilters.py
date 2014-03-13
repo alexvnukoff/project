@@ -7,6 +7,7 @@ from tpp.SiteUrlMiddleWare import get_request
 import datetime
 from django.template import Node, TemplateSyntaxError
 from lxml.html.clean import clean_html
+from appl.models import Notification
 
 from urllib.parse import urlencode
 
@@ -211,3 +212,30 @@ def mkrange(parser, token):
     context_name = tokens.pop()
 
     return RangeNode(parser, range_args, context_name)
+
+
+@register.simple_tag(name='userName', takes_context=True)
+def setUserName(context):
+    request = context['request']
+    user = request.user
+    if user.is_authenticated():
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+    else:
+        user_name = None
+        notification = None
+    return user_name
+
+@register.simple_tag(name='notif',takes_context=True)
+def setNotification(context):
+    request = context['request']
+    user = request.user
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+    else:
+        notification = None
+    return notification
+
