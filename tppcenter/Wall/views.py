@@ -32,15 +32,7 @@ def get_wall_list(request):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
+
     current_section = _("Wall")
 
 
@@ -52,9 +44,9 @@ def get_wall_list(request):
     tops = func.getTops(request)
 
     templateParams = {
-        'user_name': user_name,
+
         'current_section': current_section,
-        'wallPage': wallPage, 'notification': notification,
+        'wallPage': wallPage,
         'current_company': current_company,
         'cabinetValues': cabinetValues,
         'bannerRight': bRight,

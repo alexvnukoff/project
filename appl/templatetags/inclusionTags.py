@@ -2,6 +2,9 @@ __author__ = 'user'
 
 from django import template
 from appl import func
+from django.template import RequestContext, loader
+from appl.models import Tpp, Company, Product, Notification
+from django.utils.translation import ugettext as _
 
 
 register = template.Library()
@@ -19,3 +22,4 @@ def getTopOnPage(context, item_id=None):
 
 
     return {'modelTop': func.getTops(request, filter=filterAdv) }
+

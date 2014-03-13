@@ -11,20 +11,12 @@ def about(request):
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
     user = request.user
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
+
 
     templateParams = {
-        'user_name': user_name,
+
         'current_section': _('About'),
-        'notification': notification,
+
         'bannerRight': bRight,
         'bannerLeft': bLeft
     }
@@ -193,20 +185,12 @@ def proposal(request):
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
     user = request.user
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
+
 
     templateParams = {
-        'user_name': user_name,
+
         'current_section': _('Add a business proposal'),
-        'notification': notification,
+
         'bannerRight': bRight,
         'bannerLeft': bLeft
     }
