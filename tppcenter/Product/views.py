@@ -26,11 +26,10 @@ from datetime import datetime
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
-    filterAdv = []
 
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
+   # if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
@@ -40,38 +39,29 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            productsPage, filterAdv = _productContent(request, page, my)
+            productsPage = _productContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            productsPage = func.emptyCompany()
     else:
-        productsPage, filterAdv = _getDetailContent(request, item_id)
+        productsPage  = _getDetailContent(request, item_id)
 
     styles = []
     scripts = []
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax() or item_id:
         user = request.user
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
         current_section = _("Products")
 
         templateParams = {
-                'user_name': user_name,
+
                 'current_section': current_section,
                 'productsPage': productsPage,
-                'notification': notification,
+
                 'current_company': current_company,
                 'scripts': scripts,
                 'styles': styles,
@@ -79,8 +69,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
                 'addNew': reverse('products:add'),
                 'cabinetValues': cabinetValues,
                 'bannerRight': bRight,
-                'bannerLeft': bLeft,
-                'tops': tops
+                'bannerLeft': bLeft
         }
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
@@ -92,8 +81,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
             'content': productsPage,
             'current_company': current_company,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -103,10 +91,9 @@ def _productContent(request, page=1, my=None):
     #TODO: Jenya change to get_active_related()
     #products = Product.active.get_active().order_by('-pk')
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Product).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
@@ -209,7 +196,7 @@ def _productContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
@@ -217,7 +204,6 @@ def _productContent(request, page=1, my=None):
 
 def _getDetailContent(request, item_id):
 
-     filterAdv = func.getDeatailAdv(item_id)
 
      product = get_object_or_404(Product, pk=item_id)
      productValues = product.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'IMAGE',
@@ -234,7 +220,7 @@ def _getDetailContent(request, item_id):
 
 
      company = Company.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME')
+     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
      companyValues.update({'COMPANY_ID': company.id})
 
 
@@ -253,7 +239,7 @@ def _getDetailContent(request, item_id):
      context = RequestContext(request, {'productValues': productValues, 'photos': photos,
                                         'additionalPages': additionalPages, 'companyValues': companyValues})
 
-     return template.render(context), filterAdv
+     return template.render(context)
 
 
 
@@ -268,18 +254,7 @@ def productForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Products")
 
@@ -292,7 +267,7 @@ def productForm(request, action, item_id=None):
         return productsPage
 
     return render_to_response('Products/index.html', {'productsPage': productsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -302,12 +277,12 @@ def addProducts(request):
     current_company = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     try:
         item = Company.objects.get(pk=current_company)
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        return func.emptyCompany()
 
 
     perm_list = item.getItemInstPermList(request.user)
@@ -315,7 +290,7 @@ def addProducts(request):
 
 
     if 'add_product' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -385,12 +360,12 @@ def updateProduct(request, item_id):
     try:
         item = Company.objects.get(p2c__child_id=item_id)
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        return func.emptyCompany()
 
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
     try:
         choosen_category = Category.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:

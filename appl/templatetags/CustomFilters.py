@@ -7,6 +7,9 @@ from tpp.SiteUrlMiddleWare import get_request
 import datetime
 from django.template import Node, TemplateSyntaxError
 from lxml.html.clean import clean_html
+from appl import func
+from appl.models import Tpp, Company, Product
+from appl.models import Notification
 
 from urllib.parse import urlencode
 
@@ -91,7 +94,9 @@ class DynUrlNode(template.Node):
     def __init__(self, *args):
         self.name_var = args[0]
         self.parametrs = args[1]
-        self.new_parametr = args[2]
+
+        if len(args) > 2:
+            self.new_parametr = args[2]
 
 
     def render(self, context):
@@ -209,3 +214,43 @@ def mkrange(parser, token):
     context_name = tokens.pop()
 
     return RangeNode(parser, range_args, context_name)
+
+@register.simple_tag
+def productCount():
+    return func.getActiveSQS().models(Product).count()
+
+@register.simple_tag
+def companiesCount():
+    return func.getActiveSQS().models(Company).count()
+
+@register.simple_tag
+def partnersCount():
+    return func.getActiveSQS().models(Tpp).count()
+
+
+@register.simple_tag(name='userName', takes_context=True)
+def setUserName(context):
+    request = context['request']
+    user = request.user
+    if user.is_authenticated():
+
+        if not user.first_name and not user.last_name:
+            user_name = user.email
+        else:
+            user_name = user.first_name + ' ' + user.last_name
+    else:
+        user_name = None
+        notification = None
+    return user_name
+
+@register.simple_tag(name='notif',takes_context=True)
+def setNotification(context):
+    request = context['request']
+    user = request.user
+    if user.is_authenticated():
+        notification = Notification.objects.filter(user=request.user, read=False).count()
+    else:
+        notification = None
+    return notification
+
+

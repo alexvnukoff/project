@@ -326,8 +326,9 @@
                         	<li>
                             	<div class="topcm">
                                 	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
-                                    <div class="date">
                                         <p><b>{{ country_name }}</b></p>
+                                    <div class="date">
+
                                         <p>{{ org_name }}</p>
                                     </div>
                                 </div>
@@ -349,18 +350,18 @@
                 </div>
             </div>
             <div class="content-r">
-            	<span class="titlevideo">{% trans 'Videoreference of V.Migirov' %} </span>
-                <div class="media"><img src="{% static "tppcenter/img/video.jpg" %}" /></div>
+            	<span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
+                <div class="media"><iframe width="220" height="160" src="//www.youtube.com/embed/akWSS74wIA4" frameborder="0" allowfullscreen></iframe></div>
                 <div class="testimonials">
                 	<i class="icons i-bullet"></i>
                 	 {% trans 'You get your own web site,opportunity to presentation of its of business proposals,products, services, without restrictions.' %}
                 </div>
-                <span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
-                <div class="media"><img src="{% static 'tppcenter/img/video.jpg' %}" /></div>
+                <span class="titlevideo">{% trans 'Videoreference of V.Migirov' %}</span>
+                <div class="media"><iframe width="220" height="160" src="//www.youtube.com/embed/7k3vT_J4aSw" frameborder="0" allowfullscreen></iframe></div>
                 <div class="pdfdownload">
                 	<img src="{% static "tppcenter/img/pdf.png" %}" alt="" />
                     <span class="fileinfo">
-                    	<a href="#">{% trans 'Download Guide Site' %} </a>
+                    	<a href="{% static "tppcenter/img/guide.pdf"%}">{% trans 'Download Guide Site' %} </a>
                         <p>(pdf-документ, 320 Кб)</p>
                     </span>
                 </div>

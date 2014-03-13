@@ -25,11 +25,10 @@ from datetime import datetime
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
-    filterAdv = []
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -40,11 +39,11 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            tppPage, filterAdv  = _tppContent(request, page, my)
+            tppPage = _tppContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            tppPage = func.emptyCompany()
     else:
-        tppPage, filterAdv = _tppDetailContent(request, item_id)
+        tppPage = _tppDetailContent(request, item_id)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -54,9 +53,9 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
     scripts = []
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+
 
 
     if not request.is_ajax():
@@ -83,9 +82,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'search': request.GET.get('q', ''),
             'addNew': reverse('tpp:add'),
             'cabinetValues': cabinetValues,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'item_id': item_id
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
@@ -96,8 +93,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'content': tppPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -107,10 +103,8 @@ def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
 
-    filterAdv = []
-
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Tpp).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
@@ -209,12 +203,10 @@ def _tppContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 def _tppDetailContent(request, item_id):
-
-    filterAdv = func.getDeatailAdv(item_id)
 
     tpp = get_object_or_404(Tpp, pk=item_id)
     tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
@@ -231,7 +223,7 @@ def _tppDetailContent(request, item_id):
     template = loader.get_template('Tpp/detailContent.html')
     context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):
@@ -280,7 +272,8 @@ def addTpp(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not user.is_manager or not 'Tpp Creator' in user_groups:
-          return render_to_response("permissionDenied.html")
+
+          return func.permissionDenied()
 
     if request.POST:
 
@@ -311,7 +304,8 @@ def updateTpp(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tpp' not in perm_list:
-        return render_to_response("permissionDenied.html")
+
+        return func.permissionDenied()
 
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)

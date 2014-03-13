@@ -28,7 +28,6 @@
 .new-details .date img.flag{ width:18px; height:12px;}
 .content-news{ position:relative; float:left; width:640px; padding:10px; background-color:#fafafa; color:#595959; margin:15px 0 0 0;}
 .content-news .gallery{ float:left; width:150px; margin:0px 8px 8px 0; display:inline;}
-.content-news p{ padding-top:10px;}
 .social{ position:relative; float:left; width:100%; margin:12px 0 0 0;}
 .social i{ display:inline-block; width:24px; height:26px; margin-right:6px;}
 .share-1{ background-position:0px -60px;}
@@ -38,20 +37,23 @@
 .video-details{ position:relative; float:left; width:100%; height:322px; margin:12px 0 0 0;}
 .related-news{ float:left; width:100%; margin:12px 0 0 0; background-color:#fafafa; padding:15px 0;}
 .related-news .title{ display:inline-block; width:100%; font-size:24px; font-weight:300; font-family: 'Roboto', sans-serif; text-indent:12px;}
-.related-news ul{ position:relative; float:left; width:100%;}
-.related-news ul li{ float:left; width:190px; border-right:1px #e9e9e9 solid; padding-right:7px; margin:12px 0 0 7px; display:inline; color:#595959;word-break: break-all;}
-.related-news ul li .thumb{ float:left; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
-.related-news ul li a{ display:block; font-size:16px; font-weight:bold;}
+.related-news ul{ padding-left: 20px; position:relative; float:left; width:100%;}
+.related-news ul li{ float:left; width:175px; border-right:1px #e9e9e9 solid; padding-right:25px; height: 240px; margin:12px 25px 0 0; display:inline; color:#595959;word-break: break-all; position: relative;}
+.related-news ul li .thumb-container { text-align: center;}
+.related-news ul li .thumb{  max-width:150px; height:100px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+.related-news ul li a{ display:block; font-size:13px; font-weight:bold;}
+.related-news ul li .description  { font-size: 11px; }
 .related-news ul li .date{ color:#9b9b9b;}
 .related-news ul li .date img.flag{ width:18px; height:12px; padding-right:4px;}
 .related-news ul li p{ padding-top:8px;}
-.related-news ul li a.more{ font-size:12px; font-weight:normal;}
+.related-news ul li a.more{ position: absolute; bottom: 10px; right: 10px; font-size:12px; font-weight:normal;}
 .related-news ul li:nth-child(4n){ border-right:0;}
+.related-news ul li:last-child { border-right: none; padding-right: 0; margin-right: 0;}
 .inputhide{width:115px; border:1px #bdbdbd solid; margin-right:8px; padding:2px;}
 #thumbs { padding-top: 10px;}
 #thumbs img, #largeImage { background-color: white; cursor: pointer; }
 #thumbs img { float: left; width:46px; height:40px; margin-right: 4px; box-shadow:0px 0px 2px #bcbcbc;}
-#panel { position: relative; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+#panel { position: relative; max-width:150px; max-height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
 
 .imgbig{ float:left; width:100%; margin:12px 0 0 0;}
 .b-img{ position:relative; float:left; width:150px; height:130px; border:1px #e4e4e4 solid; margin-top:10px;}
@@ -123,9 +125,9 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .panging a{ padding:0px 8px; text-decoration:underline;}
 .listnews{ float:left; width:100%;}
 .listnews li{ position:relative; float:left; width:100%; margin:10px 0 0 0; padding:10px 0; background-color:#fafafa; color:#595959; line-height:16px;}
-.listnews li .thumb{ position:relative; float:left; display:block; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; margin:0 10px; display:inline; padding-bottom:8px;}
-.listnews li .infoprd{ float:left; width:470px;}
-.listnews li .infoprd a.name{ font-size:16px; font-weight:bold; display:block; padding-bottom:3px;}
+.listnews li .thumb{ position:relative; float:left; display:block; max-width:150px; max-height:130px; background:url(../img/shadow.png) no-repeat left bottom; margin:0 10px; display:inline; padding-bottom:8px;}
+.listnews li .infoprd{ float:left; width:530px;}
+.listnews li .infoprd a.name{ font-size: 14px; font-weight:bold; display:block; padding-bottom:3px;}
 .listnews li .infoprd .date{ color:#9b9b9b;}
 .listnews li .infoprd .date img{ width:18px; height:12px;}
 .listnews li .infoprd a.more{ display:block; text-align:right; padding-top:2px;}
@@ -133,12 +135,12 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .nomargin{ margin:0;}
 .news-ads{ position:relative; float:left; width:198px; background-color:#e6e6e6; border-radius:3px; border:1px solid #d9d9d9; box-shadow:inset 0 0 3px #CCC; margin-top:18px;}
 .news-ads .title{ float:left; width:198px; height:35px; background-color:#4a4a4a; border-radius:2px 2px 0px 0px; line-height:35px; font-size:18px; font-weight:normal; color:#FFF; text-align:center;}
-.news-ads .titlesub{ float:left; width:178px; background-color:#f5f5f5; padding:10px; font-size:14px; font-weight:bold; color:#484848;}
+.news-ads .titlesub{ float:left; width:178px; background-color:#f5f5f5; padding:10px; font-size:13px; font-weight:bold; color:#484848;}
 .list-ads{ position:relative; float:left; width:178px; margin:0 10px; display:inline;}
 .list-ads li{ float:left; width:100%; padding:12px 0; border-top:1px #FFF solid; border-bottom:1px #cacaca solid;}
 .list-ads li .top{ float: left; width:100%;}
 .list-ads li .top .flag{ float:left; width:18px; height:12px; margin-right:5px;}
-.list-ads li .top a.linkads{ display:inline-block; max-width:150px; word-break:break-all;}
+.list-ads li .top a.linkads{ display:inline-block; max-width:150px; word-break:break-all; font-weight: bold;}
 .list-ads li .infoads{ float:left; width:100%; margin:5px 0 0 0; font-size:11px; color:#4a4a4a;}
 .list-ads li .infoads .thumb{ float:left; max-width:60px; max-height:52px; background:url(../img/shadow-ads.png) no-repeat bottom left; padding-bottom:2px; margin-right:8px; display:inline;}
 .list-ads li:first-child{ border-top:0;}
@@ -213,7 +215,7 @@ rgb(33,136,187) 100%);}
 
 
 #thumbs { padding-top: 10px;}
-#thumbs img, #largeImage {width:140px;height: 125px; background-color: white; cursor: pointer;  }
+#thumbs img, #largeImage {max-width:140px; max-height: 125px; background-color: white; cursor: pointer;  }
 #thumbs img { float: left; width:46px; height:40px; margin-right: 4px; box-shadow:0px 0px 2px #bcbcbc;}
 
 
@@ -250,7 +252,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#d
 .profile-clumn li .radio{ float:left; width:100%; height:28px;}
 .profilebutton{ position:relative; float:right; width:470px; text-align:center; margin:25px 0 0 0;}
 .profilebutton .btntype1, .profilebutton .btntype2{ font-size:16px;}
-.listnews img {max-width: 150px;height: 120px;}
+.listnews img {max-width: 100px; max-height: 120px;}
 .bigbuy{ border:0; padding:10px 30px; font-size:17px; font-weight:normal; color:#FFF; display:inline-block; border-radius:3px;
 background-color:#2186b8; text-shadow:0px -1px 1px #327da2; box-shadow:0px 1px 1px #b0b0b0;
 background-image: -webkit-gradient(
@@ -322,7 +324,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .addpage-form .buttonclear{ width: auto;  width: 150px; float: left; margin-top: 60px;}
 .addpage-form .editor{ float:left; border:1px #bdbdbd solid;}
 
-#tv-list{ float:left; width:100%;}
+#tv-list{ float:left; width:100%; padding-left: 60px;}
 #tv-list li{ position:relative; float:left; width:166px; margin:20px 20px 0 0; padding:8px 0; background-color:#fafafa; color:#595959; line-height:16px;}
 #tv-list li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0; padding-left:8px;}
 #tv-list li .title-tv{ float:left; width:100%; color:#9b9b9b;}
@@ -397,7 +399,7 @@ input.fileimg{
 #thumbs { padding-top: 10px;}
 #thumbs img, #largeImage { background-color: white; cursor: pointer; }
 #thumbs img { float: left; width:46px; height:40px; margin-right: 4px; box-shadow:0px 0px 2px #bcbcbc;}
-#panel { position: relative; width:150px; height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
+#panel { position: relative; max-width:150px; max-height:130px; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
 .delete-confirm{ position:absolute; width:250px; padding:12px 0; background-color:#f5f5f5; border-radius:5px; border:1px #d9d9d9 solid; border-top:1px #399ed0 solid; top:20px; left:-40px; z-index:9; display:none;}
 .delete-confirm:before{ position:absolute; content:""; width:0; height:0; top:-4px; left:62px; z-index:2;
 border-style: solid; border-width: 0 5px 4px 5px; border-color: transparent transparent #f5f5f5 transparent;}

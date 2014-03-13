@@ -19,12 +19,12 @@
         <div class="community">
             <div class="newstitle">
                 <label>
-                    Профиль: {{ user_name }} + </label><label class="cur-page">{{ current_section }}
+                    Профиль: {% userName %} + </label><label class="cur-page">{{ current_section }}
 
                  </label>
 
                 <div class="notify">
-                    <span><i class="imgnews i-note" id="showevent"></i> <a href="#" class="num">{{ notification }}</a>
+                    <span><i class="imgnews i-note" id="showevent"></i> <a href="#" class="num">{% notif %}</a>
                       <div class="formevent">
                         	<i class="close-event imgnews"></i>
                           <div id='load'><img style="width: 250px;" id="load" src="{% static "tppcenter/img/loading.gif" %}"></div>
@@ -48,7 +48,9 @@
             </div>
             <div class="newslink">
                 <div class="left">
-                    <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% if addNew %}
+                        <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% endif %}
                     {% if current_company %}
                             <label style="padding: 150px;font-weight: bolder;" > {% trans 'Your current organization: ' %}{{ current_company|first }}</label>
                     {% endif %}

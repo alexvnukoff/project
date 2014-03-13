@@ -1,14 +1,12 @@
-from django.db import models
 from core.models import *
 from appl.models import *
-from django.contrib.sites.models import get_current_site
 from django.db.models import Count, F
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
+from django.core.paginator import Paginator
 from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
+from haystack.query import SearchQuerySet, SQ
 
 def getPaginatorRange(page):
     '''
@@ -488,7 +486,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
     organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_ids)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -505,9 +503,16 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             item.update(toUpdate)
         if organizations_dict.get(id, False):
+            if organizationIsCompany(id):
+                url = 'companies:detail'
+            else:
+                url = 'tpp:detail'
+
             toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0)}
+                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                        'ORGANIZATION_URL': url}
             item.update(toUpdate)
 
 
@@ -526,7 +531,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE'), organizations_ids)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE', 'SLUG'), organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -543,29 +548,36 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             itemList.update(toUpdate)
     if organizations_dict.get(id, False):
+            if organizationIsCompany(id):
+                url = 'companies:detail'
+            else:
+                url = 'tpp:detail'
             toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0)}
+                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                        'ORGANIZATION_URL': url}
             itemList.update(toUpdate)
 
 
+def organizationIsCompany(item_id):
+    if Company.objects.filter(p2c__child=item_id, p2c__type='dependence').exists():
+        return True
+    return False
 
 def filterLive(request):
-    from haystack.query import SearchQuerySet
 
     searchFilter = {}
     filtersIDs = {}
     filters = {}
     ids = []
-    filtersAdv = []
 
-    filterList=['tpp', 'country', 'branch']
+    filterList = ['tpp', 'country', 'branch']
 
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
-
 
         for pk in request.GET.getlist('filter[' + name + '][]', []):
             try:
@@ -574,15 +586,6 @@ def filterLive(request):
                 continue
 
         ids += filtersIDs[name]
-
-        if name != 'tpp':
-            filtersAdv += filtersIDs[name]
-        else:
-            sqs = SearchQuerySet().models(Tpp).filter(id__in=filtersIDs[name])
-
-            for tpp in sqs:
-                if len(tpp.country) > 0:
-                    filtersAdv += tpp.country
 
 
     if len(ids) > 0:
@@ -601,7 +604,7 @@ def filterLive(request):
                     searchFilter[name + '__in'] = id
 
 
-    return filters, searchFilter, filtersAdv
+    return filters, searchFilter
 
 
 def getB2BcabinetValues(request):
@@ -664,19 +667,23 @@ def getTops(request, filter=None):
     models = {
         Product: {
             'count': 5,
-            'text': _('Products')
+            'text': _('Products'),
+            'detailUrl': 'products:detail'
         },
         InnovationProject: {
             'count': 5,
-            'text': _('Innovation Projects')
+            'text': _('Innovation Projects'),
+            'detailUrl': 'innov:detail'
         },
         Company: {
             'count': 5,
-            'text': _('Companies')
+            'text': _('Companies'),
+            'detailUrl': 'companies:detail'
         },
         BusinessProposal: {
             'count': 5,
-            'text': _('Business Proposals')
+            'text': _('Business Proposals'),
+            'detailUrl': 'proposal:detail'
         },
     }
 
@@ -686,7 +693,7 @@ def getTops(request, filter=None):
     for model, modelDict in models.items():
 
         sub = model.objects.all()
-        top = AdvTop.active.get_active().filter(p2c__child=sub, c2p__type="relation")
+        top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence")
 
         if filter is not None and len(filter) > 0:
             top = top.filter(c2p__parent__in=filter, c2p__type='relation')
@@ -712,7 +719,7 @@ def getTops(request, filter=None):
             continue
 
         for model in models:
-            
+
 
             sModel = model.__name__
 
@@ -722,31 +729,22 @@ def getTops(request, filter=None):
 
             if sModel not in tops:
                 tops[sModel] = {}
-                tops[sModel]['MODEL_NAME'] = models[model]['text']
+                tops[sModel]['MODEL'] = models[model]
                 tops[sModel]['elements'] = {}
 
-            if id in modelTop[sModel] :
+            if id in modelTop[sModel]:
                 tops[sModel]['elements'][id] = attrs
 
                 break
 
 
-    templateParams = {
-        'modelTop': tops
-    }
-
-    template = loader.get_template('AdvTop/tops.html')
-
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
+    return tops
 
 def getDeatailAdv(item_id):
-    from haystack.query import SearchQuerySet
+
 
     filterAdv = []
-    sqs = SearchQuerySet().filter(id=item_id)
+    sqs = getActiveSQS().filter(id=item_id)
 
 
     filterAdv += getattr(sqs, 'branch', [])
@@ -756,3 +754,49 @@ def getDeatailAdv(item_id):
         filterAdv.append(item_id)
 
     return filterAdv
+
+def getListAdv(request):
+    filtersAdv = []
+
+    filterList = ['tpp', 'country', 'branch']
+
+
+    for name in filterList:
+
+        ids = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                ids.append(int(pk))
+            except ValueError:
+                continue
+
+        if name != 'tpp':
+            filtersAdv += ids
+        else:
+            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+
+            for tpp in sqs:
+                if len(tpp.country) > 0:
+                    filtersAdv += tpp.country
+
+    return filtersAdv
+
+
+def getActiveSQS():
+
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
+def emptyCompany():
+     template = loader.get_template('permissionDen.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page
+
+def permissionDenied():
+     template = loader.get_template('permissionDenied.html')
+     request = get_request()
+     context = RequestContext(request, {})
+     page = template.render(context)
+     return page

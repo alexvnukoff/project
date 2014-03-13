@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
-
+{% load inclusionTags %}
 
    {% block title %}News{% endblock %}
 
@@ -175,8 +175,8 @@
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
                     <ul>
-                        <li><a href="#tabs-1">ТПП-Центр</a></li>
-                        {% if user.email %}<li><a href="#tabs-2">Мои</a></li>{% endif %}
+                        <li><a href="#tabs-1">{% trans "TPP-Center" %}</a></li>
+                        {% if user.email %}<li><a href="#tabs-2">{% trans "My" %}</a></li>{% endif %}
                     </ul>
                 </div>
                 <div id="tabs-1">
@@ -210,11 +210,13 @@
                         <li><a href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
                         <li><a href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions' %}</a></li>
+                        <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
+                        <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
 
                         <!--<li><a href="#">ТПП ТВ </a></li>-->
                        <!-- <li><a href="#">Вакансии</a></li>-->
                         <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
-                        <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+                        <!-- <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>-->
                     </ul>
                 </div>
             {% endif %}
@@ -226,15 +228,17 @@
         {% block center %}
 <div class="news-center">
         	<div  class="keyword">
-                <i class="icon-key imgnews" id="filter-link"></i>
-                <ul class="list-key">
-                </ul>
-                <div class="search-key">
-                <form action="" method="get" name="search">
-                	<input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
-                    <input type="submit" name="" value="" class="i-search imgnews" />
-                </form>
-                </div>
+                {% block keywords %}
+                    <i class="icon-key imgnews" id="filter-link"></i>
+                    <ul class="list-key">
+                    </ul>
+                    <div class="search-key">
+                    <form action="" method="get" name="search">
+                        <input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
+                        <input type="submit" name="" value="" class="i-search imgnews" />
+                    </form>
+                    </div>
+                {% endblock %}
             </div>
 
             {% block content %}{% endblock %}
@@ -247,7 +251,7 @@
                         <img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" />
                     </a>
                 </div>
-                {{ tops }}
+                {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
                 {{ bannerRight }}
                  </div>

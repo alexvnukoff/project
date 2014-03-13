@@ -19,13 +19,12 @@ from datetime import datetime
 
 def get_news_list(request,page=1, id=None, slug=None):
 
-    if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
+ #   if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
+  #       slug = Value.objects.get(item=id, attr__title='SLUG').title
+   #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
 
-    filterAdv = []
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -41,36 +40,26 @@ def get_news_list(request,page=1, id=None, slug=None):
 
 
     if not id:
-        newsPage, filterAdv = _newsContent(request, page)
+        newsPage = _newsContent(request, page)
     else:
-        newsPage, filterAdv = _getdetailcontent(request, id)
+        newsPage = _getdetailcontent(request, id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
 
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
 
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
         current_section = "TPP-TV"
 
         templatePramrams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'newsPage': newsPage,
-            'notification': notification,
+
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
@@ -78,8 +67,7 @@ def get_news_list(request,page=1, id=None, slug=None):
             'addNew': reverse('tv:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -91,8 +79,7 @@ def get_news_list(request,page=1, id=None, slug=None):
             'scripts': scripts,
             'content': newsPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -103,7 +90,7 @@ def _newsContent(request, page=1):
 
     #news = TppTV.active.get_active().order_by('-pk')
 
-    filters, searchFilter, filterAdv = func.filterLive(request)
+    filters, searchFilter = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
     sqs = SearchQuerySet().models(TppTV)
@@ -188,7 +175,7 @@ def _newsContent(request, page=1):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
@@ -201,18 +188,7 @@ def tvForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("TppTv")
 
@@ -234,7 +210,7 @@ def addNews(request):
     current_company = request.session.get('current_company', None)
     perm = request.user.get_all_permissions()
     if not {'appl.add_tpptv'}.issubset(perm):
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
@@ -279,7 +255,7 @@ def updateNew(request, item_id):
 
     perm = request.user.get_all_permissions()
     if not {'appl.change_tpptv'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
-          return render_to_response("permissionDenied.html")
+          return func.permissionDenied()
 
     create_date = TppTV.objects.get(pk=item_id).create_date
 
@@ -336,7 +312,6 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, id):
 
-    filterAdv = func.getDeatailAdv(id)
 
     new = get_object_or_404(TppTV, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
@@ -375,4 +350,4 @@ def _getdetailcontent(request, id):
 
     context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
 
-    return template.render(context), filterAdv
+    return template.render(context)

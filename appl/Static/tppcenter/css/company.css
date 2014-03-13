@@ -16,7 +16,7 @@
 .company-list li .company-infor .companycontact .line .nameinfo{ float: left; max-width: 150px;}
 .company-list li .company-infor .companycontact .line i{ display: inline-block; vertical-align: middle;}
 .company-list li .company-details{ display:inline-block; width:385px; padding-top:8px;}
-.company-list li p{ padding:12px 10px 0 10px; display:inline-block;}
+.company-list li p{ /*padding:12px 10px 0 10px;*/ display:inline-block;}
 .logo-details{ float:left; width:70px; height:60px; margin:8px 10px 10px 10px;}
 .payjoin{ position:relative; float:right; width:160px; background-color:#e8e8e8; border-radius:4px; margin:10px; display:inline;}
 .payjoin span{ display:inline-block; font-size:11px; color:#4a4a4a; padding:10px;}
@@ -192,6 +192,24 @@ box-shadow:inset 0 0 3px #CCC;}
 .b-img:hover .viewimge{ display:block;}
 #tpp-details-tab .panging{ padding-bottom:20px;}
 
+
+/*-------------Analytics----------*/
+.analytics{ position:relative; float:left; width:100%; margin:12px 0 0 0;}
+.analytics-top{ position:relative; float:left; width:100%; margin:12px 0 0 0;}
+.analytics-top span.clumn{ float:left; margin-right:8px; color:#595959; line-height:24px;}
+.analytics-top span.clumn label{ float:left; margin-right:4px;}
+.analytics-top span.clumn input.date{ float:left; min-width:70px; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
+.analytics .title{ float:left; width:100%; margin:24px 0 8px 0; font-size:18px; font-weight:normal;}
+
+.table-analytics{ float:left; width:100%; margin:12px 0 0 0;}
+.table-analytics tr td{ padding:8px 0 8px 8px;}
+.table-analytics tr:nth-child(2n+1){ background-color:#f5f5f5;}
+.table-analytics tr.top{ background-color:#e8e8e8;}
+.table-analytics tr.top td{ font-size:12px; font-weight:bold;}
+.table-analytics tr td.date{ position:relative; float:right; min-width:80px;}
+.avatar{ display:inline-block; width:24px; height:24px; background-color:#afafaf;}
+.table-analytics tr td.date .number{ position:absolute; width:20px; height:20px; border-radius:10px; background-color:#ff0000; text-align:center; line-height:20px; color:#FFF; left:-20px;}
+
 .messages-l{ position:relative; float:left; width:198px; border-right:1px #d8d8d8 solid; min-height:850px; background-color:#f5f5f5;}
 .messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
 .message-tabcontent{ position:relative; float:left; width:100%;}
@@ -306,7 +324,7 @@ rgb(33,136,187) 100%);}
 .cpn-details-tab .content-tab-ads .clumn ul li:nth-child(2n){ background:#FFF;}
 .ads-details-right{ position:relative; float:right; width:280px;}
 
-.screen{ position:relative; float:left; width:278x; border:1px #d7d7d7 solid; margin:12px 0 0 0; box-shadow:0px 0px 7px #d7d7d7;}
+.screen{ position:relative; float:left; width:278px; border:1px #d7d7d7 solid; margin:12px 0 0 0; box-shadow: 0 0 7px #d7d7d7;}
 .ads-details-right .title{ position:relative; float:left; width:100%; margin:25px 0 10px 0; display:inline; font-size:18px; font-weight:bold; color:#000;}
 .ads-price{ position:relative; float:left; width:100%;}
 .ads-pricein{position:relative; float:left; width:100%; height:270px;}
@@ -318,7 +336,7 @@ rgb(33,136,187) 100%);}
 .total-price.white{ background:#FFF;}
 .ads-details-right .btnprice{ color:#FFF; font-size:17px; border-radius:3px; margin-top:10px; display:inline-block;}
 .ads-details-right .btnprice:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
-.btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; color:#FFF; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
+.btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
 .btncatedt:hover{ opacity:0.9; filter:alpha(opacity=90); color:#FFF; text-decoration:none;}
 .social-l{ float:left; line-height:25px;}
 .social-l a{ padding:0 3px;}

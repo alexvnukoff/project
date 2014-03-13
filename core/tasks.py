@@ -412,7 +412,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
     valPost = ('NAME', 'CITY', 'KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
-               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', )
+               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', 'DETAIL_TEXT')
     valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
     for val in valPost:
@@ -507,7 +507,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     return True
 
 @transaction.atomic
-def addBannerAttr(post, files, user, site_id, ids, bType):
+def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     values = {}
 
     values['NAME'] = post.get('NAME', "")
@@ -545,20 +545,26 @@ def addBannerAttr(post, files, user, site_id, ids, bType):
         costs[id] = cost
         total += float(cost) * delta
 
+    if current_company:
+        dep = Item.objects.get(pk=current_company)
+    else:
+        dep = Cabinet.objects.get(user=user)
+
+
     history = {
         'costs': costs,
-        'ids': ids
+        'ids': ids,
+        'owner_id': dep.pk,
+        'owner': dep.getName()
     }
 
     history = json.dumps(history)
 
     advGoal = Item.objects.filter(pk__in=ids)
-    bulk = []
 
     for goal in advGoal:
-        bulk.append(Relationship(child=item, parent=goal, create_user=user, type="relation"))
+        Relationship.setRelRelationship(goal, item, user=user, type="relation")
 
-    Relationship.objects.bulk_create(bulk)
 
     itemAttrs = item.getAttributeValues('IMAGE', 'SITE_NAME', 'NAME')
 
@@ -579,10 +585,12 @@ def addBannerAttr(post, files, user, site_id, ids, bType):
     ord = form.save(user, site_id, disableNotify=True)
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
+    Relationship.setRelRelationship(dep, item, user=user, type="dependence")
+    Relationship.setRelRelationship(dep, ord, user=user, type="relation")
 
 
 @transaction.atomic
-def addTopAttr(post, object, user, site_id, ids):
+def addTopAttr(post, object, user, site_id, ids, org):
 
     form = ItemForm('AdvTop', values={})
     form.clean()
@@ -602,7 +610,7 @@ def addTopAttr(post, object, user, site_id, ids):
     edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
 
     Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
-    Relationship.setRelRelationship(parent=item, child=object, type="relation", user=user)
+    Relationship.setRelRelationship(object, item, user=user, type="dependence")
 
     delta = edDate - stDate
     delta = delta.days
@@ -618,20 +626,20 @@ def addTopAttr(post, object, user, site_id, ids):
         costs[id] = cost
         total += float(cost) * delta
 
+
     history = {
         'costs': costs,
-        'ids': ids
+        'ids': ids,
+        'owner_id': org.pk,
+        'owner': org.getName()
     }
 
     history = json.dumps(history)
 
     advGoal = Item.objects.filter(pk__in=ids)
-    bulk = []
 
     for goal in advGoal:
-        bulk.append(Relationship(child=item, parent=goal, create_user=user, type="relation"))
-
-    Relationship.objects.bulk_create(bulk)
+        Relationship.setRelRelationship(goal, item, user=user, type="relation")
 
     itemAttrs = object.getAttributeValues('NAME')
 
@@ -650,4 +658,4 @@ def addTopAttr(post, object, user, site_id, ids):
     ord = form.save(user, site_id, disableNotify=True)
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
-
+    Relationship.setRelRelationship(org, ord, user=user, type="relation")

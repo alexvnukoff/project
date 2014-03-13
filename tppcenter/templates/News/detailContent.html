@@ -2,7 +2,9 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-
+<script>
+    $('.keyword').html('');
+</script>
 
   <div class="new-details">
             {% with newValues.CREATE_DATE.0 as date %}
@@ -63,15 +65,17 @@
                       {% with attr.CREATE_DATE|first as sim_create_date %}
                       {% with attr.SLUG|first as sim_slug %}
                     	<li>
+			    <div class="thumb-container">
                             {% if sim_image %}
                         	    <img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="" class="thumb" />
                             {% else %}
                                 <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
                             {% endif %}
+                            </div>
 
-                            <a href="{% url 'news:detail' sim_slug %}">{{ sim_name|truncatewords:3 }}</a>
+                            <a href="{% url 'news:detail' sim_slug %}">{{ sim_name|truncatechars:23 }}</a>
                             <span class="date">{{ sim_create_date|date:'d M Y' }}</span>
-                            <p>{{ sim_content|cleanHtml|safe|truncatewords_html:12 }}</p>
+                            <div class="description">{{ sim_content|cleanHtml|safe|truncatewords_html:12 }}</div>
                             <a href="{% url 'news:detail' sim_slug %}" class="more">{% trans 'More' %}...</a>
                         </li>
                       {% endwith %}

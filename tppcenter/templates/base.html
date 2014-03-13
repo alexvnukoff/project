@@ -1,5 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,15 +22,25 @@
             <script type="application/javascript">
                 statciPath = '{% static "tppcenter/" %}'
             </script>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/jquery.history.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.js"></script>
+		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/jquery.history.min.js"></script>
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.js"></script>
 
-            <script type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
-            <script type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
-            <script type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
+            <script  type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
+            <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
+            <script  type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
+            <script  type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=ru" charset="utf-8"></script>
+            <script  type="text/javascript">
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-42990905-1', 'tppcenter.com');
+            </script>
+
         {% endblock %}
     {% endblock %}
     <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
@@ -48,23 +60,23 @@
         <div class="linkbottom">
             <ul class="clumn">
                 <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'About project' %}</a></li>
-                <li><a href="#">{% trans 'How the system works' %}</a></li>
-                <li><a href="#">{% trans 'Terms of use' %}</a></li>
-                <li><a href="#">{% trans 'Privacy' %}</a></li>
+                <li><a href="{% url "project:about" %}">{% trans 'About project' %}</a></li>
+                <li><a href="{% url "project:how" %}">{% trans 'How the system works' %}</a></li>
+                <li><a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a></li>
+                <li><a href="{% url "project:privacy" %}">{% trans 'Privacy' %}</a></li>
             </ul>
             <ul class="clumn">
-                <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'Create online shop' %}</a></li>
-                <li><a href="#">{% trans 'Post announcement event' %}</a></li>
-                <li><a href="#">{% trans 'Add a business proposal' %}</a></li>
-                <li><a href="#">{% trans 'Find a Business Partner' %}</a></li>
+                <li>{% trans 'Advices' %}</li>
+                <li><a href="{% url "project:shop" %}">{% trans 'Create online shop' %}</a></li>
+                <li><a href="{% url "project:event" %}">{% trans 'Post announcement event' %}</a></li>
+                <li><a href="{% url "project:proposal" %}">{% trans 'Add a business proposal' %}</a></li>
+                <li><a href="{% url "project:partner" %}">{% trans 'Find a Business Partner' %}</a></li>
             </ul>
             <ul class="clumn">
-                <li>{% trans 'About project' %}</li>
-                <li><a href="#">{% trans 'Contuct us' %}</a></li>
-                <li><a href="#">{% trans 'Ask the community' %}</a></li>
-                <li><a href="#">{% trans 'FAQ' %}</a></li>
+                <li>{% trans 'Contacts' %}</li>
+                <li><a href="{% url "project:contact" %}">{% trans 'Contact us' %}</a></li>
+                <li><a href="{% url "project:community" %}">{% trans 'Ask the community' %}</a></li>
+                <li><a href="{% url "project:faq" %}">{% trans 'FAQ' %}</a></li>
             </ul>
             <ul class="clumn">
                 <li>
@@ -74,17 +86,25 @@
                     <a href="#"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
                 <li><a href="#"><i class="icons i-stastic"></i>{% trans 'Visitor statistic' %}</a></li>
+
+                    <li>{% trans 'Products' %}: {% productCount %}</li>
+                    <li>{% trans 'Companies' %}: {% companiesCount %}</li>
+                    <li>{% trans 'Partners' %}: {% partnersCount %}</li>
+
             </ul>
         </div>
     </div>
  </div>
     <div id="footer">
         <div class="wrapper">
-            © 2010–2014 ТПП-Центр — центр торгово-промышленных палат, ассоциаций, союзов и гильдий предпринимателей и промышленников.
+            © 2010–2014 {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
         </div>
     </div>
 
  <div class="black_overlay" id="fade-profile"></div>
  {% endblock %}
+    <script type="text/javascript">
+     ga('send', 'pageview');
+    </script>
 </body>
 </html>

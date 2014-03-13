@@ -223,7 +223,8 @@ def addBanner(request, bannerType):
 
         if form.is_valid():
             try:
-                addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype)
+                current_company = request.session.get('current_company', False)
+                addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype, current_company)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 

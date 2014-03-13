@@ -20,12 +20,11 @@ from django.utils import timezone
 from datetime import datetime
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
+    #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      #   return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     cabinetValues = func.getB2BcabinetValues(request)
 
-    filterAdv = []
 
     current_company = request.session.get('current_company', False)
 
@@ -40,36 +39,27 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            newsPage, filterAdv = _companiesContent(request, page, my)
+            newsPage = _companiesContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            newsPage = func.emptyCompany()
     else:
-        newsPage, filterAdv = _companiesDetailContent(request, item_id)
+        newsPage = _companiesDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
 
         current_section = _("Companies")
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'newsPage': newsPage,
-            'notification': notification,
+
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
@@ -78,7 +68,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -88,7 +77,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         serialize = {
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops,
             'styles': styles,
             'scripts': scripts,
             'content': newsPage
@@ -99,10 +87,9 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _companiesContent(request, page=1, my=None):
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Company).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -202,14 +189,13 @@ def _companiesContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
 
 def _companiesDetailContent(request, item_id):
 
-    filterAdv = func.getDeatailAdv(item_id)
 
     company = get_object_or_404(Company, pk=item_id)
     companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
@@ -220,7 +206,7 @@ def _companiesDetailContent(request, item_id):
     template = loader.get_template('Companies/detailContent.html')
     context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
@@ -343,18 +329,7 @@ def companyForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Companies")
 
@@ -367,7 +342,7 @@ def companyForm(request, action, item_id=None):
         return newsPage
 
     return render_to_response('Companies/index.html', {'newsPage': newsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -378,7 +353,7 @@ def addCompany(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not 'Company Creator' in user_groups:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     form = None
     branches = Branch.objects.all()
@@ -428,7 +403,7 @@ def updateCompany(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_company' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:

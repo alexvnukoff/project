@@ -26,11 +26,10 @@ import json
 from django.conf import settings
 
 def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-       return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
+    #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #  slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      # return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
 
-    filterAdv = []
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -44,37 +43,29 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            exhibitionPage, filterAdv = _exhibitionsContent(request, page, my)
+            exhibitionPage = _exhibitionsContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            exhibitionPage = func.emptyCompany()
     else:
-        exhibitionPage, filterAdv = _exhibitionsDetailContent(request, item_id)
+        exhibitionPage = _exhibitionsDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+    tops = func.getTops(request)
 
     if not request.is_ajax():
         user = request.user
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
         current_section = _("Exhibitions")
 
 
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'exhibitionPage': exhibitionPage,
             'current_company': current_company,
-            'notification': notification,
+
             'search': request.GET.get('q', ''),
             'styles': styles,
             'scripts': scripts,
@@ -101,10 +92,9 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _exhibitionsContent(request, page=1, my=None):
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Exhibition).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
@@ -196,13 +186,12 @@ def _exhibitionsContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
 def _exhibitionsDetailContent(request, item_id):
 
-     filterAdv = func.getDeatailAdv(item_id)
 
      exhibition = get_object_or_404(Exhibition, pk=item_id)
      exhibitionlValues = exhibition.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -221,7 +210,7 @@ def _exhibitionsDetailContent(request, item_id):
 
      context = RequestContext(request, {'exhibitionlValues': exhibitionlValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context), filterAdv
+     return template.render(context)
 
 
 @login_required(login_url='/login/')
@@ -235,18 +224,7 @@ def exhibitionForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Exhibitions")
 
@@ -259,7 +237,7 @@ def exhibitionForm(request, action, item_id=None):
         return exhibitionPage
 
     return render_to_response('Exhibitions/index.html', {'exhibitionPage': exhibitionPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -270,7 +248,7 @@ def addExhibition(request):
     form = None
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -278,7 +256,7 @@ def addExhibition(request):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'add_exhibition' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -321,7 +299,7 @@ def updateExhibition(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
@@ -394,6 +372,7 @@ def _getValues(request):
     values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
     values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
     values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
 
 
 

@@ -23,12 +23,11 @@ from django.conf import settings
 from django.utils import timezone
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+    #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
-    filterAdv = []
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
@@ -41,42 +40,34 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
     if not item_id:
         try:
-            proposalsPage, filterAdv = _proposalsContent(request, page, my)
+            proposalsPage = _proposalsContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+
+            proposalsPage = func.emptyCompany()
+
+
 
     else:
-        proposalsPage, filterAdv = _proposalDetailContent(request, item_id)
+        proposalsPage = _proposalDetailContent(request, item_id, current_company)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
 
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-
-        else:
-            user_name = None
-            notification = None
 
 
         current_section = _("Business Proposal")
 
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'proposalsPage': proposalsPage,
-            'notification': notification,
+
             'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
@@ -85,7 +76,6 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'addNew': reverse('proposal:add'),
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -94,7 +84,6 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         serialize = {
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops,
             'styles': styles,
             'scripts': scripts,
             'content': proposalsPage
@@ -105,10 +94,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 def _proposalsContent(request, page=1, my=None):
 
-    filterAdv = []
-
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
         sqs = SearchQuerySet().models(BusinessProposal).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -197,13 +184,11 @@ def _proposalsContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
-def _proposalDetailContent(request, item_id):
-
-     filterAdv = func.getDeatailAdv(item_id)
+def _proposalDetailContent(request, item_id, current_company):
 
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
      proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
@@ -220,7 +205,7 @@ def _proposalDetailContent(request, item_id):
 
      context = RequestContext(request, {'proposalValues': proposalValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context), filterAdv
+     return template.render(context)
 
 
 @login_required(login_url='/login/')
@@ -234,17 +219,7 @@ def proposalForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-        user_name = None
-        notification = None
 
     current_section = _("Business Proposal")
 
@@ -257,7 +232,6 @@ def proposalForm(request, action, item_id=None):
         return proposalsPage
 
     return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -268,13 +242,16 @@ def proposalForm(request, action, item_id=None):
 def addBusinessProposal(request):
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
     perm_list = item.getItemInstPermList(request.user)
     if 'add_businessproposal' not in perm_list:
-         return render_to_response("permissionDenied.html")
+
+         return func.permissionDenied()
+
 
 
 
@@ -342,7 +319,7 @@ def updateBusinessProposal(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_businessproposal' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
 
     branches = Branch.objects.all()

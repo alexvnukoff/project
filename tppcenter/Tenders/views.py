@@ -1,20 +1,14 @@
-from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from django.http import HttpResponseRedirect, HttpResponse
+from core.models import Value, Dictionary
 from appl import func
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
 from core.tasks import addNewTender
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
@@ -24,11 +18,10 @@ from datetime import datetime
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
-    filterAdv = []
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
 
 
     cabinetValues = func.getB2BcabinetValues(request)
@@ -42,35 +35,26 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            tendersPage, filterAdv = _tendersContent(request, page, my)
+            tendersPage = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            tendersPage = func.emptyCompany()
     else:
-        tendersPage, filterAdv = _tenderDetailContent(request, item_id)
+        tendersPage = _tenderDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
         user = request.user
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
         current_section = _("Tenders")
 
         templateParams =  {
-            'user_name': user_name,
+
             'current_section': current_section,
             'tendersPage': tendersPage,
-            'notification': notification,
+
             'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
@@ -78,8 +62,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('tenders:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
@@ -90,8 +73,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'content': tendersPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -99,11 +81,10 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _tendersContent(request, page=1, my=None):
 
-    filterAdv = []
 
     #tenders = Tender.active.get_active().order_by('-pk')
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Tender).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -188,12 +169,10 @@ def _tendersContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 def _tenderDetailContent(request, item_id):
-
-     filterAdv = func.getDeatailAdv(item_id)
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -210,7 +189,7 @@ def _tenderDetailContent(request, item_id):
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
                                         'additionalPages': additionalPages})
 
-     return template.render(context), filterAdv
+     return template.render(context)
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
@@ -223,18 +202,6 @@ def tenderForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
-
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Tenders")
 
@@ -247,7 +214,7 @@ def tenderForm(request, action, item_id=None):
         return tendersPage
 
     return render_to_response('Tenders/index.html', {'tendersPage': tendersPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -255,7 +222,7 @@ def tenderForm(request, action, item_id=None):
 def addTender(request):
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -264,7 +231,7 @@ def addTender(request):
 
 
     if 'add_tender' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -307,7 +274,7 @@ def updateTender(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tender' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
