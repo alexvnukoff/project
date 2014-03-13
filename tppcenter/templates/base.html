@@ -1,5 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load inclusionTags %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -84,9 +86,7 @@
                     <a href="#"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
                 <li><a href="#"><i class="icons i-stastic"></i>{% trans 'Visitor statistic' %}</a></li>
-                <li>{% trans 'Products' %}: 100</li>
-                <li>{% trans 'Companies' %}: 100</li>
-                <li>{% trans 'Partners' %}: 100</li>
+                {% setAnalytic %}
             </ul>
         </div>
     </div>
