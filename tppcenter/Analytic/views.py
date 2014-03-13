@@ -9,11 +9,14 @@ from appl.models import Notification, Organization
 def main(request):
 
     current_organization = request.session.get('current_company', False)
+    current_organization =  221
 
-    #if current_organization is False:
-    #    return render_to_response("permissionDen.html")
+    if current_organization is False:
+        return render_to_response("permissionDen.html")
 
-    #org = Organization.objects.get(pk=current_organization)
+    org = Organization.objects.get(pk=current_organization)
+
+
 
     #perm_list = org.getItemInstPermList(request.user)
 
@@ -43,5 +46,10 @@ def main(request):
         'bannerLeft': bLeft,
         'tops': tops
     }
+
+    if getattr(org, 'Tpp', False):
+        templateParams['tpp'] = org.pk
+    else:
+        templateParams['company'] = org.pk
 
     return render_to_response("Analytic/main.html", templateParams)
