@@ -180,11 +180,11 @@ def _innovContent(request, page=1, my=None):
     cabinets_dict = {}
     for cabinet in cabinets:
         cabinets_dict[cabinet['p2c__child']] = {'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                                                'CABINET_LAST_NAME' : cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                                                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
                                                 'CABINET_ID': cabinet['pk'],
 
-                                                'CABINET_COUNTRY_NAME':countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                                                'CABINET_COUNTRY_FLAG':countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                                                 'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
         }
 
@@ -309,7 +309,7 @@ def innovForm(request, action, item_id=None):
         return newsPage
 
     return render_to_response('Innov/index.html', {'newsPage': newsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -435,10 +435,6 @@ def updateProject(request, item_id):
     newsPage = template.render(context)
 
 
-
-
-
-
     return newsPage
 
 
@@ -458,10 +454,6 @@ def _getValues(request):
     values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
     values['BUSINESS_PLAN'] = request.POST.get('BUSINESS_PLAN', "")
     values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-
-
-
-
 
     return values
 
