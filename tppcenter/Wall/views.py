@@ -22,7 +22,6 @@ from django.conf import settings
 
 def get_wall_list(request):
 
-    filterAdv = []
 
     cabinetValues = func.getB2BcabinetValues(request)
 

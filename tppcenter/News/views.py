@@ -27,14 +27,13 @@ from django.conf import settings
 
 def get_news_list(request, page=1, my=None):
 
-    filterAdv = []
 
     current_company = request.session.get('current_company', False)
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
-        newsPage, filterAdv = _newsContent(request, page, my)
+        newsPage = _newsContent(request, page, my)
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -43,9 +42,8 @@ def get_news_list(request, page=1, my=None):
     styles = []
     scripts = []
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
     if not request.is_ajax():
         user = request.user
@@ -58,6 +56,7 @@ def get_news_list(request, page=1, my=None):
         else:
             user_name = None
             notification = None
+
         current_section = _("News")
 
         templateParams = {
@@ -72,8 +71,7 @@ def get_news_list(request, page=1, my=None):
             'addNew': reverse('news:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -84,18 +82,16 @@ def get_news_list(request, page=1, my=None):
             'scripts': scripts,
             'content': newsPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
 
 def _newsContent(request, page=1, my=None):
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #news = News.active.get_active().order_by('-pk')
 
@@ -183,7 +179,7 @@ def _newsContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 @login_required(login_url='/login/')
 def newsForm(request, action, item_id=None):
@@ -361,7 +357,6 @@ def updateNew(request, item_id):
 
 def detail(request, item_id, slug=None):
 
-    filterAdv = func.getDeatailAdv(item_id)
 
    # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
     #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
@@ -387,9 +382,9 @@ def detail(request, item_id, slug=None):
     newsPage = _getdetailcontent(request, item_id)
 
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request , filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+    tops = func.getTops(request)
 
     templateParams = {
         'user_name': user_name,

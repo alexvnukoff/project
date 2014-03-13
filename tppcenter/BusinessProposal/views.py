@@ -28,7 +28,6 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
-    filterAdv = []
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
@@ -41,7 +40,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
     if not item_id:
         try:
-            proposalsPage, filterAdv = _proposalsContent(request, page, my)
+            proposalsPage = _proposalsContent(request, page, my)
         except ObjectDoesNotExist:
 
             proposalsPage = func.emptyCompany()
@@ -49,11 +48,10 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
     else:
-        proposalsPage, filterAdv = _proposalDetailContent(request, item_id, current_company)
+        proposalsPage = _proposalDetailContent(request, item_id, current_company)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
@@ -78,7 +76,6 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'addNew': reverse('proposal:add'),
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -87,7 +84,6 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         serialize = {
             'bannerRight': bRight,
             'bannerLeft': bLeft,
-            'tops': tops,
             'styles': styles,
             'scripts': scripts,
             'content': proposalsPage
@@ -98,10 +94,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 def _proposalsContent(request, page=1, my=None):
 
-    filterAdv = []
-
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #proposal = BusinessProposal.active.get_active_related().order_by('-pk')
         sqs = SearchQuerySet().models(BusinessProposal).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -190,13 +184,11 @@ def _proposalsContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
 def _proposalDetailContent(request, item_id, current_company):
-
-     filterAdv = func.getDeatailAdv(item_id)
 
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
      proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
@@ -213,7 +205,7 @@ def _proposalDetailContent(request, item_id, current_company):
 
      context = RequestContext(request, {'proposalValues': proposalValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context), filterAdv
+     return template.render(context)
 
 
 @login_required(login_url='/login/')

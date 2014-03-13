@@ -7,6 +7,8 @@ from tpp.SiteUrlMiddleWare import get_request
 import datetime
 from django.template import Node, TemplateSyntaxError
 from lxml.html.clean import clean_html
+from appl import func
+from appl.models import Tpp, Company, Product
 from appl.models import Notification
 
 from urllib.parse import urlencode
@@ -213,6 +215,18 @@ def mkrange(parser, token):
 
     return RangeNode(parser, range_args, context_name)
 
+@register.simple_tag
+def productCount():
+    return func.getActiveSQS().models(Product).count()
+
+@register.simple_tag
+def companiesCount():
+    return func.getActiveSQS().models(Company).count()
+
+@register.simple_tag
+def partnersCount():
+    return func.getActiveSQS().models(Tpp).count()
+
 
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
@@ -238,4 +252,5 @@ def setNotification(context):
     else:
         notification = None
     return notification
+
 

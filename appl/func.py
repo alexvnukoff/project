@@ -1,14 +1,12 @@
-from django.db import models
 from core.models import *
 from appl.models import *
-from django.contrib.sites.models import get_current_site
 from django.db.models import Count, F
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
+from django.core.paginator import Paginator
 from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
+from haystack.query import SearchQuerySet, SQ
 
 def getPaginatorRange(page):
     '''
@@ -569,13 +567,11 @@ def organizationIsCompany(item_id):
     return False
 
 def filterLive(request):
-    from haystack.query import SearchQuerySet
 
     searchFilter = {}
     filtersIDs = {}
     filters = {}
     ids = []
-    filtersAdv = []
 
     filterList = ['tpp', 'country', 'branch']
 
@@ -590,15 +586,6 @@ def filterLive(request):
                 continue
 
         ids += filtersIDs[name]
-
-        if name != 'tpp':
-            filtersAdv += filtersIDs[name]
-        else:
-            sqs = SearchQuerySet().models(Tpp).filter(id__in=filtersIDs[name])
-
-            for tpp in sqs:
-                if len(tpp.country) > 0:
-                    filtersAdv += tpp.country
 
 
     if len(ids) > 0:
@@ -617,7 +604,7 @@ def filterLive(request):
                     searchFilter[name + '__in'] = id
 
 
-    return filters, searchFilter, filtersAdv
+    return filters, searchFilter
 
 
 def getB2BcabinetValues(request):
@@ -732,7 +719,7 @@ def getTops(request, filter=None):
             continue
 
         for model in models:
-            
+
 
             sModel = model.__name__
 
@@ -751,22 +738,13 @@ def getTops(request, filter=None):
                 break
 
 
-    templateParams = {
-        'modelTop': tops
-    }
-
-    template = loader.get_template('AdvTop/tops.html')
-
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
+    return tops
 
 def getDeatailAdv(item_id):
-    from haystack.query import SearchQuerySet
+
 
     filterAdv = []
-    sqs = SearchQuerySet().filter(id=item_id)
+    sqs = getActiveSQS().filter(id=item_id)
 
 
     filterAdv += getattr(sqs, 'branch', [])
@@ -777,6 +755,38 @@ def getDeatailAdv(item_id):
 
     return filterAdv
 
+def getListAdv(request):
+    filtersAdv = []
+
+    filterList = ['tpp', 'country', 'branch']
+
+
+    for name in filterList:
+
+        ids = []
+
+        for pk in request.GET.getlist('filter[' + name + '][]', []):
+            try:
+                ids.append(int(pk))
+            except ValueError:
+                continue
+
+        if name != 'tpp':
+            filtersAdv += ids
+        else:
+            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+
+            for tpp in sqs:
+                if len(tpp.country) > 0:
+                    filtersAdv += tpp.country
+
+    return filtersAdv
+
+
+def getActiveSQS():
+
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
+                                                               obj_start_date__lt=timezone.now())
 def emptyCompany():
      template = loader.get_template('permissionDen.html')
      request = get_request()

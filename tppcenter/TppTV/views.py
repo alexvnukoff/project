@@ -25,7 +25,6 @@ def get_news_list(request,page=1, id=None, slug=None):
 
     cabinetValues = func.getB2BcabinetValues(request)
 
-    filterAdv = []
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -41,13 +40,12 @@ def get_news_list(request,page=1, id=None, slug=None):
 
 
     if not id:
-        newsPage, filterAdv = _newsContent(request, page)
+        newsPage = _newsContent(request, page)
     else:
-        newsPage, filterAdv = _getdetailcontent(request, id)
+        newsPage = _getdetailcontent(request, id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
@@ -69,8 +67,7 @@ def get_news_list(request,page=1, id=None, slug=None):
             'addNew': reverse('tv:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -82,8 +79,7 @@ def get_news_list(request,page=1, id=None, slug=None):
             'scripts': scripts,
             'content': newsPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -94,7 +90,7 @@ def _newsContent(request, page=1):
 
     #news = TppTV.active.get_active().order_by('-pk')
 
-    filters, searchFilter, filterAdv = func.filterLive(request)
+    filters, searchFilter = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
     sqs = SearchQuerySet().models(TppTV)
@@ -179,7 +175,7 @@ def _newsContent(request, page=1):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
@@ -316,7 +312,6 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, id):
 
-    filterAdv = func.getDeatailAdv(id)
 
     new = get_object_or_404(TppTV, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
@@ -355,4 +350,4 @@ def _getdetailcontent(request, id):
 
     context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
 
-    return template.render(context), filterAdv
+    return template.render(context)
