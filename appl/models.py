@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
-from django.db.models import Count, F
+from django.db.models import Count, F, ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from itertools import chain
@@ -96,11 +96,20 @@ class Company(Organization):
         desc = self.getAttributeValues('TEXT_DETAIL')
         return desc[0] if desc else ''
 
+    def getTpp(self):
+        try:
+            return Tpp.objects.get(p2c__child=self.pk, p2c__type="relation")
+        except ObjectDoesNotExist:
+            return None
+
     def getCountry(self):
-        return 100
+            return Country.objects.get(p2c__child=self.pk, p2c__type="dependence")
 
     def getBranches(self):
-        return 1
+        try:
+            return Branch.objects.filter(p2c__child=self.pk, p2c__type="relation")
+        except ObjectDoesNotExist:
+            return None
 
     def reindexItem(self):
         super(Company, self).reindexItem()
@@ -112,21 +121,6 @@ class Company(Organization):
 
             for obj in objects:
                 obj.reindexItem()
-
-    @staticmethod
-    def isCompany(instance):
-        from django.core.exceptions import ObjectDoesNotExist
-
-        if isinstance(instance, Company):
-            return True
-        #or
-        try:
-            if hasattr(instance.organization, 'company'):
-                return True
-        except ObjectDoesNotExist:
-            return False
-
-        return False
 
     def getDepartments(self):
         '''

@@ -49,7 +49,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
     else:
-        proposalsPage, filterAdv = _proposalDetailContent(request, item_id)
+        proposalsPage, filterAdv = _proposalDetailContent(request, item_id, current_company)
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
@@ -59,27 +59,17 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
 
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-
-        else:
-            user_name = None
-            notification = None
 
 
         current_section = _("Business Proposal")
 
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'proposalsPage': proposalsPage,
-            'notification': notification,
+
             'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
@@ -204,7 +194,7 @@ def _proposalsContent(request, page=1, my=None):
 
 
 
-def _proposalDetailContent(request, item_id):
+def _proposalDetailContent(request, item_id, current_company):
 
      filterAdv = func.getDeatailAdv(item_id)
 
@@ -237,17 +227,7 @@ def proposalForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-        user_name = None
-        notification = None
 
     current_section = _("Business Proposal")
 
@@ -260,7 +240,6 @@ def proposalForm(request, action, item_id=None):
         return proposalsPage
 
     return render_to_response('BusinessProposal/index.html', {'proposalsPage': proposalsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))

@@ -51,23 +51,13 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not request.is_ajax():
         user = request.user
-        if user.is_authenticated():
-            notification = len(Notification.objects.filter(user=request.user, read=False))
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
 
         current_section = _("Innovation Project")
 
         templateParams = {
             'newsPage': newsPage,
             'current_section': current_section,
-            'notification': notification,
-            'user_name': user_name,
+
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
@@ -190,11 +180,11 @@ def _innovContent(request, page=1, my=None):
     cabinets_dict = {}
     for cabinet in cabinets:
         cabinets_dict[cabinet['p2c__child']] = {'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                                                'CABINET_LAST_NAME' : cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                                                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
                                                 'CABINET_ID': cabinet['pk'],
 
-                                                'CABINET_COUNTRY_NAME':countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                                                'CABINET_COUNTRY_FLAG':countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                                                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                                                 'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
         }
 
@@ -306,18 +296,7 @@ def innovForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Innovation Project")
 
@@ -330,7 +309,7 @@ def innovForm(request, action, item_id=None):
         return newsPage
 
     return render_to_response('Innov/index.html', {'newsPage': newsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
@@ -394,7 +373,10 @@ def addProject(request):
 
 
 def updateProject(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    try:
+        item = Organization.objects.get(p2c__child_id=item_id)
+    except ObjectDoesNotExist:
+        item = Cabinet.objects.get(p2c__child_id=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_innovationproject' not in perm_list:
@@ -453,10 +435,6 @@ def updateProject(request, item_id):
     newsPage = template.render(context)
 
 
-
-
-
-
     return newsPage
 
 
@@ -476,10 +454,6 @@ def _getValues(request):
     values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
     values['BUSINESS_PLAN'] = request.POST.get('BUSINESS_PLAN', "")
     values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-
-
-
-
 
     return values
 

@@ -53,23 +53,15 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
 
         current_section = _("Companies")
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
             'newsPage': newsPage,
-            'notification': notification,
+
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
@@ -343,18 +335,7 @@ def companyForm(request, action, item_id=None):
 
     user = request.user
 
-    if user.is_authenticated():
-        notification = Notification.objects.filter(user=request.user, read=False).count()
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-
-    else:
-
-        user_name = None
-        notification = None
 
     current_section = _("Companies")
 
@@ -367,7 +348,7 @@ def companyForm(request, action, item_id=None):
         return newsPage
 
     return render_to_response('Companies/index.html', {'newsPage': newsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
+
                                                               'current_section': current_section,
                                                               'cabinetValues': cabinetValues},
                               context_instance=RequestContext(request))
