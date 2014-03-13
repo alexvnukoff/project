@@ -36,7 +36,7 @@ def get_news_list(request, page=1, my=None):
         newsPage = _newsContent(request, page, my)
 
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        newsPage = func.emptyCompany()
 
     cabinetValues = func.getB2BcabinetValues(request)
     styles = []
@@ -188,7 +188,10 @@ def newsForm(request, action, item_id=None):
     current_company = request.session.get('current_company', False)
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
 
     user = request.user
 
@@ -218,7 +221,7 @@ def newsForm(request, action, item_id=None):
     return render_to_response('News/index.html', {'newsPage': newsPage, 'current_company':current_company,
                                                               'notification': notification, 'user_name': user_name,
                                                               'current_section': current_section,
-                                                              'cabinetValues': cabinetValues},
+                                                              'cabinetValues': cabinetValues, 'redactor': redactor},
                               context_instance=RequestContext(request))
 
 
@@ -229,11 +232,11 @@ def addNews(request):
         item = Organization.objects.get(pk=current_company)
         perm_list = item.getItemInstPermList(request.user)
         if 'add_news' not in perm_list:
-             return render_to_response("permissionDenied.html")
+             return func.permissionDenied()
     else:
         perm = request.user.get_all_permissions()
         if not {'appl.add_news'}.issubset(perm):
-            return render_to_response("permissionDenied.html")
+            return func.permissionDenied()
 
 
     form = None
@@ -286,7 +289,7 @@ def updateNew(request, item_id):
     except Exception:
          perm = request.user.get_all_permissions()
          if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
-             return render_to_response("permissionDenied.html")
+             return func.permissionDenied()
 
 
 
@@ -355,9 +358,9 @@ def updateNew(request, item_id):
 def detail(request, item_id, slug=None):
 
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
     scripts = []

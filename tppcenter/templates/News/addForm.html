@@ -76,7 +76,8 @@ $(function() {
                 </div>
         </div>
          <ul class="uploadconfig">
-                	<li>
+                {% if redactor %}
+                    <li>
                     	<div class="clumn1">
                         	<label>{% trans 'Category' %}</label>
                             <select id="id_news_category" name="NEWS_CATEGORY">
@@ -100,6 +101,7 @@ $(function() {
                             </select>
                         </div>
                     </li>
+                   {% endif %}
                 	<li>
                     	<label>{% trans 'Title' %}</label>
                          {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
@@ -119,12 +121,14 @@ $(function() {
                             <input type="text" name="KEYWORD" placeholder="" class="text" style="width:89%;" />
                         </div>
                     </li>
+                  {% if redactor %}
                 	<li>
                     	<label>{% trans 'Youtube code' %}</label>
                         {% if form.errors.CREATE_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.CREATE_DATE }}</div></div>{% endif %}
                         <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
 
                     </li>
+                  {% endif %}
                     <li>
                     	<label>{% trans 'Content' %}</label>
                           {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}

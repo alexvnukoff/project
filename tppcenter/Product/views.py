@@ -27,9 +27,9 @@ from datetime import datetime
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
 
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
+   # if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
@@ -41,7 +41,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             productsPage = _productContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            productsPage = func.emptyCompany()
     else:
         productsPage  = _getDetailContent(request, item_id)
 
@@ -228,7 +228,7 @@ def _getDetailContent(request, item_id):
 
 
      company = Company.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME')
+     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
      companyValues.update({'COMPANY_ID': company.id})
 
 
@@ -296,12 +296,12 @@ def addProducts(request):
     current_company = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     try:
         item = Company.objects.get(pk=current_company)
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        return func.emptyCompany()
 
 
     perm_list = item.getItemInstPermList(request.user)
@@ -309,7 +309,7 @@ def addProducts(request):
 
 
     if 'add_product' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -379,12 +379,12 @@ def updateProduct(request, item_id):
     try:
         item = Company.objects.get(p2c__child_id=item_id)
     except ObjectDoesNotExist:
-        return render_to_response("permissionDen.html")
+        return func.emptyCompany()
 
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
     try:
         choosen_category = Category.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:

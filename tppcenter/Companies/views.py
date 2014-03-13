@@ -20,9 +20,9 @@ from django.utils import timezone
 from datetime import datetime
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
+    #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      #   return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     cabinetValues = func.getB2BcabinetValues(request)
 
 
@@ -41,7 +41,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             newsPage = _companiesContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            newsPage = func.emptyCompany()
     else:
         newsPage = _companiesDetailContent(request, item_id)
 
@@ -372,7 +372,7 @@ def addCompany(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not 'Company Creator' in user_groups:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     form = None
     branches = Branch.objects.all()
@@ -422,7 +422,7 @@ def updateCompany(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_company' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:

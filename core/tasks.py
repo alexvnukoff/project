@@ -412,7 +412,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
     valPost = ('NAME', 'CITY', 'KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
-               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', )
+               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', 'DETAIL_TEXT')
     valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
     for val in valPost:

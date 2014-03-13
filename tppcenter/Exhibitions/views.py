@@ -26,9 +26,9 @@ import json
 from django.conf import settings
 
 def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
-    if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-       return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
+    #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #  slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      # return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
 
 
     cabinetValues = func.getB2BcabinetValues(request)
@@ -45,7 +45,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             exhibitionPage = _exhibitionsContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            exhibitionPage = func.emptyCompany()
     else:
         exhibitionPage = _exhibitionsDetailContent(request, item_id)
 
@@ -267,7 +267,7 @@ def addExhibition(request):
     form = None
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
@@ -275,7 +275,7 @@ def addExhibition(request):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'add_exhibition' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return func.permissionDenied()
 
 
 
@@ -318,7 +318,7 @@ def updateExhibition(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_exhibition' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
@@ -391,6 +391,7 @@ def _getValues(request):
     values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
     values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
     values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
+    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
 
 
 

@@ -23,9 +23,9 @@ from django.conf import settings
 from django.utils import timezone
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+    #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+     #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+      #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
 
@@ -42,7 +42,10 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         try:
             proposalsPage = _proposalsContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+
+            proposalsPage = func.emptyCompany()
+
+
 
     else:
         proposalsPage = _proposalDetailContent(request, item_id, current_company)
@@ -260,13 +263,16 @@ def proposalForm(request, action, item_id=None):
 def addBusinessProposal(request):
     current_company = request.session.get('current_company', False)
     if not request.session.get('current_company', False):
-         return render_to_response("permissionDen.html")
+
+         return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
     perm_list = item.getItemInstPermList(request.user)
     if 'add_businessproposal' not in perm_list:
-         return render_to_response("permissionDenied.html")
+
+         return func.permissionDenied()
+
 
 
 
@@ -334,7 +340,7 @@ def updateBusinessProposal(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_businessproposal' not in perm_list:
-        return render_to_response("permissionDenied.html")
+        return func.permissionDenied()
 
 
     branches = Branch.objects.all()

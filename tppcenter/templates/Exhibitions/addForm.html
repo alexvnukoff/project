@@ -55,6 +55,7 @@
     {% with form.fields.END_EVENT_DATE.initial as end_event %}
     {% with form.fields.KEYWORD.initial as keyword %}
     {% with form.fields.ROUTE_DESCRIPTION.initial as route %}
+    {% with form.fields.DETAIL_TEXT.initial as text %}
 
     {% with form.fields.DOCUMENT_1.initial as doc_1 %}
     {% with form.fields.DOCUMENT_2.initial as doc_2 %}
@@ -94,7 +95,12 @@
                             </select>
                         </div>
                     </li>
-                         <li>
+                    <li>
+                    	<label>{% trans "Description" %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
+                        <div class="tiny"><textarea rows="10"  class="tiny"  name="DETAIL_TEXT" >{{ text }}</textarea></div>
+                    </li>
+                    <li>
                     	<div class="clumn1">
                         	<label>{% trans 'Keywords' %}</label>
                             <textarea name="KEYWORD"  rows="7">{{ keyword }}</textarea>
@@ -209,6 +215,7 @@
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
                 <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
                 </div>
+        {% endwith %}
         {% endwith %}
         {% endwith %}
         {% endwith %}

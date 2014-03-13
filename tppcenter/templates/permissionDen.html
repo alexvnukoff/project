@@ -1,35 +1,16 @@
-{% extends 'main_page.html' %}
-{% load static from staticfiles %}
+
 {% load i18n %}
-
-{% block keywords %}{% endblock %}
-   {% block title %}{% trans 'No choosen organization' %}{% endblock %}
-
-
-
-    {% block header %}
-        {% include "login_header.html" %}
-    {% endblock %}
-
-    {% block styles %}
-         {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-
-    {% endblock %}
-
 
 
 
 
             {% block content %}
             <div class="blogin">
-				<h3>{% trans 'Perrmission denied' %}</h3>
+
            <div style="margin-top: 20px;padding: 10px 46px 20px 46px;font-size: 15px;">
-           <span > {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
-                <a href='{% url 'profile:main' %}'>{% trans 'profile' %}</a>, {% trans ' or create ' %}</span>
-              <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a>
+           <div style="margin: 40px;font-size: 15px;font-weight: bold;" > {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
+                <a href='{% url 'profile:main' %}'>{% trans 'profile' %}</a>, {% trans ' or create ' %}
+              <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a></div>
            </div>
             </div>
           {% endblock %}

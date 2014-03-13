@@ -26,9 +26,9 @@ from datetime import datetime
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
 
-    if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-         slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-         return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
+   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+     #    return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -41,7 +41,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         try:
             tppPage = _tppContent(request, page, my)
         except ObjectDoesNotExist:
-            return render_to_response("permissionDen.html")
+            tppPage = func.emptyCompany()
     else:
         tppPage = _tppDetailContent(request, item_id)
 
@@ -272,7 +272,8 @@ def addTpp(request):
 
     user_groups = user.groups.values_list('name', flat=True)
     if not user.is_manager or not 'Tpp Creator' in user_groups:
-          return render_to_response("permissionDenied.html")
+
+          return func.permissionDenied()
 
     if request.POST:
 
@@ -303,7 +304,8 @@ def updateTpp(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tpp' not in perm_list:
-        return render_to_response("permissionDenied.html")
+
+        return func.permissionDenied()
 
     try:
         choosen_country = Country.objects.get(p2c__child__id=item_id)
