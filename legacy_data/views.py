@@ -2046,66 +2046,42 @@ def pages2tpp_CSV_DB(request):
 
 def pages2tpp_DB_DB(request):
     '''
-        Reload Innovative Projects from buffer DB table LEGACY_DATA_L_INNPRJ into TPP DB
+        Reload TPP Additional Pages from buffer DB table LEGACY_DATA_L_PAGES2TPP into TPP DB
     '''
-    img_root = 'c:' #additional path to images
     time1 = datetime.datetime.now()
-    print('Loading Innovative Projects from buffer DB into TPP DB...')
-    qty = L_InnPrj.objects.filter(completed=True).count()
+    print('Loading TPP additional pages from buffer DB into TPP DB...')
+    qty = L_Pages2Tpp.objects.filter(completed=True).count()
     print('Before already were processed: ', qty)
     i = 0
-    prj_lst = L_InnPrj.objects.filter(completed=False).all()
-    for leg_prj in prj_lst:
-        #set create_user (owner) for the Innovative Project
-        if leg_prj.author:
-            try:
-                l_user = L_User.objects.get(btx_id=leg_prj.author)
-                create_usr = User.objects.get(pk=l_user.tpp_id)
-            except:
-                create_usr = User.objects.get(pk=1)
-        else:
-            create_usr = User.objects.get(pk=1)
-
+    pgs_lst = L_Pages2Tpp.objects.filter(completed=False).all()
+    create_usr = User.objects.get(pk=1)
+    for leg_pgs in pgs_lst:
         try:
-            prj = InnovationProject.objects.create(title='INN_PROJECT_LEG_ID:'+leg_prj.btx_id,
-                                                  create_user=create_usr)
+            leg_tpp = L_TPP.objects.get(btx_id=leg_pgs.btx_id)
+            tpp = Tpp.objects.get(pk=leg_tpp.tpp_id)
         except:
-            print(leg_prj.btx_id, '##', leg_prj.prj_name, '##', ' Count: ', i)
+            print('Could not find TPP for this Additional Page. TPP btx_id:', leg_pgs.btx_id)
             i += 1
             continue
-        '''
-        if len(leg_prj.preview_picture):
-            img_small_path = add(img_root + leg_prj.preview_picture)
-        else:
-            img_small_path = ''
-        if len(leg_prj.detail_picture):
-            img_detail_path = add(img_root + leg_prj.detail_picture)
-        else:
-            img_detail_path = ''
-        '''
-        file_path = addFile(leg_prj.bp_file)
+
+        try:
+            page = AdditionalPages.objects.create(title='ADD_PAGE_COMPANY_ID:'+str(tpp.pk), create_user=create_usr)
+        except:
+            print(leg_pgs.btx_id, '##', leg_pgs.page_name, '##', ' Count: ', i)
+            i += 1
+            continue
 
         attr = {
-                'NAME': leg_prj.prj_name,
-                'PRODUCT_NAME': leg_prj.prj_title,
-                'COST': 0,
-                #'CURRENCY': '',
-                'TARGET_AUDIENCE': leg_prj.target_community,
-                'RELEASE_DATE': leg_prj.estim_date,
-                'SITE_NAME': leg_prj.site,
-                'KEYWORD': leg_prj.keywords,
-                'DETAIL_TEXT': leg_prj.detail_text,
-                'BUSINESS_PLAN': leg_prj.bp_decrip,
-                'DOCUMENT_1': file_path,
+                'NAME': leg_pgs.page_name,
+                'DETAIL_TEXT': leg_pgs.page_text,
                 }
 
         trans_real.activate('ru') #activate russian locale
-        res = prj.setAttributeValue(attr, create_usr)
+        res = page.setAttributeValue(attr, create_usr)
         trans_real.deactivate() #deactivate russian locale
         if res:
-            leg_prj.tpp_id = prj.pk
-            leg_prj.completed = True
-            leg_prj.save()
+            leg_pgs.completed = True
+            leg_pgs.save()
         else:
             print('Problems with Attributes adding!')
             i += 1
@@ -2113,42 +2089,12 @@ def pages2tpp_DB_DB(request):
 
         # create relationship type=Dependence with business entity
         try:
-            leg_ent = L_Company.objects.get(btx_id=leg_prj.company)
-            b_entity = Company.objects.get(pk=leg_ent.tpp_id)
-            Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
+            Relationship.objects.create(parent=tpp, type='dependence', child=page, create_user=create_usr)
         except:
-            try:
-                leg_ent = L_TPP.objects.get(btx_id=leg_prj.tpp)
-                b_entity = Tpp.objects.get(pk=leg_ent.tpp_id)
-                Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
-            except:
-                try:
-                    leg_ent = L_User.objects.get(btx_id=leg_prj.author)
-                    usr = User.objects.get(pk=leg_ent.tpp_id)
-                    b_entity = Cabinet.objects.get(user=usr.pk)
-                    Relationship.objects.create(parent=b_entity, type='dependence', child=prj, create_user=create_usr)
-                except:
-                    i += 1
-                    continue
-
-        #attache gallery to Innovative Project
-
-        if len(leg_prj.photos): #create relationship with Gallery
-            pic_lst = leg_prj.photos.split('#')
-            for pic in pic_lst:
-                try:
-                    gal = Gallery.objects.create(title='GALLERY_FOR_INN_PROJECT_ID:'+leg_prj.btx_id, create_user=create_usr)
-                except:
-                    continue
-
-                gal.photo = add(img_root + pic)
-                # create relationship
-                try:
-                    Relationship.objects.create(parent=prj, type='relation', child=gal, create_user=create_usr)
-                    print('Relationship between Innovative Project and Gallery was created! Project ID:', prj.pk)
-                except:
-                    print('Can not create relationship! Project ID:', prj.pk)
-                    continue
+            print('Can not create relationship for additional page. Page will delete.')
+            page.delete()
+            i += 1
+            continue
 
         i += 1
         print('Milestone: ', qty + i)
@@ -2157,4 +2103,4 @@ def pages2tpp_DB_DB(request):
     time2 = datetime.datetime.now()
     time = time2-time1
     print('Elapsed time:', time)
-    return HttpResponse('Innovative Projects were migrated from buffer DB into TPP DB!')
+    return HttpResponse('TPP additional pages were migrated from buffer DB into TPP DB!')
