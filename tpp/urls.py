@@ -59,6 +59,12 @@ urlpatterns = patterns('',
     url(r'^legacy/innprj/csvdb$', leg_v.innprj_CSV_DB),
     url(r'^legacy/innprj/dbdb$', leg_v.innprj_DB_DB),
 
+    url(r'^legacy/pages2comp/csvdb$', leg_v.pages2comp_CSV_DB),
+    url(r'^legacy/pages2comp/dbdb$', leg_v.pages2comp_DB_DB),
+
+    url(r'^legacy/pages2tpp/csvdb$', leg_v.pages2tpp_CSV_DB),
+    url(r'^legacy/pages2tpp/dbdb$', leg_v.pages2tpp_DB_DB),
+
     url(r'^test/$', tppcenter.views.test),
 
 )

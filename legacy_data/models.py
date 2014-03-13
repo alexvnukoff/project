@@ -250,3 +250,27 @@ class L_InnPrj(models.Model):
 
     def __str__(self):
         return self.btx_id+'|'+self.prj_name
+
+class L_Pages2Comp(models.Model):
+    '''
+        Defines buffer table for updating companies' additional pages
+    '''
+    btx_id = models.CharField(max_length=10) # legacy company id
+    page_name = models.CharField(max_length=1024)
+    page_text = models.TextField()
+    completed = models.BooleanField(default=False) #update in True if item is processed
+
+    def __str__(self):
+        return self.btx_id+'|'+self.page_name
+
+class L_Pages2Tpp(models.Model):
+    '''
+        Defines buffer table for updating TPPs' additional pages
+    '''
+    btx_id = models.CharField(max_length=10) # legacy TPP id
+    page_name = models.CharField(max_length=1024)
+    page_text = models.TextField()
+    completed = models.BooleanField(default=False) #update in True if item is processed
+
+    def __str__(self):
+        return self.btx_id+'|'+self.page_name
