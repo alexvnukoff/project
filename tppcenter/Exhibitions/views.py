@@ -30,7 +30,6 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
        slug = Value.objects.get(item=item_id, attr__title='SLUG').title
        return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
 
-    filterAdv = []
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -44,15 +43,15 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            exhibitionPage, filterAdv = _exhibitionsContent(request, page, my)
+            exhibitionPage = _exhibitionsContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        exhibitionPage, filterAdv = _exhibitionsDetailContent(request, item_id)
+        exhibitionPage = _exhibitionsDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+    tops = func.getTops(request)
 
     if not request.is_ajax():
         user = request.user
@@ -101,10 +100,9 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _exhibitionsContent(request, page=1, my=None):
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         sqs = SearchQuerySet().models(Exhibition).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
@@ -196,13 +194,12 @@ def _exhibitionsContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 
 def _exhibitionsDetailContent(request, item_id):
 
-     filterAdv = func.getDeatailAdv(item_id)
 
      exhibition = get_object_or_404(Exhibition, pk=item_id)
      exhibitionlValues = exhibition.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -221,7 +218,7 @@ def _exhibitionsDetailContent(request, item_id):
 
      context = RequestContext(request, {'exhibitionlValues': exhibitionlValues, 'photos': photos,
                                         'additionalPages': additionalPages})
-     return template.render(context), filterAdv
+     return template.render(context)
 
 
 @login_required(login_url='/login/')

@@ -85,6 +85,7 @@ def addTop(request, item):
         return render_to_response("permissionDen.html")
 
     org = Organization.objects.get(pk=current_organization)
+    #org = Organization.objects.get(pk=114)
 
     perm_list = org.getItemInstPermList(request.user)
 

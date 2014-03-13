@@ -25,7 +25,6 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title
          return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
 
-    filterAdv = []
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -38,15 +37,15 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            newsPage, filterAdv = _innovContent(request, page, my)
+            newsPage = _innovContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        newsPage, filterAdv = _innovDetailContent(request, item_id)
+        newsPage = _innovDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
+    tops = func.getTops(request)
 
 
     if not request.is_ajax():
@@ -98,10 +97,9 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _innovContent(request, page=1, my=None):
 
-    filterAdv = []
 
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(InnovationProject).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -206,12 +204,10 @@ def _innovContent(request, page=1, my=None):
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 def _innovDetailContent(request, item_id):
-
-     filterAdv = func.getDeatailAdv(item_id)
 
      innov = get_object_or_404(InnovationProject, pk=item_id)
      innovValues = innov.getAttributeValues(*('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN',
@@ -235,7 +231,7 @@ def _innovDetailContent(request, item_id):
      context = RequestContext(request, {'innovValues': innovValues, 'photos': photos,
                                         'additionalPages': additionalPages})
 
-     return template.render(context), filterAdv
+     return template.render(context)
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):

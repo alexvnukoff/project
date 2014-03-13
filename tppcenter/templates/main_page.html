@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
-
+{% load inclusionTags %}
 
    {% block title %}News{% endblock %}
 
@@ -251,7 +251,7 @@
                         <img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" />
                     </a>
                 </div>
-                {{ tops }}
+                {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
                 {{ bannerRight }}
                  </div>

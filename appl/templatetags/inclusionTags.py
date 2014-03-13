@@ -1,14 +1,21 @@
 __author__ = 'user'
 
 from django import template
-from appl.models import Tpp, Company, Product
+from appl import func
 
-register = template.libraries
 
-@register.inclusion_tag('InclusionTags/bottomAnalytic.html')
-def setAnalytic():
-    return {
-        'productCount': Product.objects.count(),
-        'companiesCount': Company.objects.count(),
-        'partnersCount': Tpp.objects.count()
-    }
+register = template.Library()
+
+@register.inclusion_tag('AdvTop/tops.html', takes_context=True)
+def getTopOnPage(context, item_id=None):
+
+    request = context.get('request')
+
+
+    if item_id:
+        filterAdv = func.getDeatailAdv(item_id)
+    else:
+        filterAdv = func.getListAdv(request)
+
+
+    return {'modelTop': func.getTops(request, filter=filterAdv) }

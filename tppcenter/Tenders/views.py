@@ -18,7 +18,6 @@ from datetime import datetime
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
-    filterAdv = []
 
     if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
          slug = Value.objects.get(item=item_id, attr__title='SLUG').title
@@ -36,15 +35,14 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            tendersPage, filterAdv = _tendersContent(request, page, my)
+            tendersPage = _tendersContent(request, page, my)
         except ObjectDoesNotExist:
             return render_to_response("permissionDen.html")
     else:
-        tendersPage, filterAdv = _tenderDetailContent(request, item_id)
+        tendersPage = _tenderDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
-    tops = func.getTops(request, filter=filterAdv)
+    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
+    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
 
 
     if not request.is_ajax():
@@ -72,8 +70,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('tenders:add'),
             'cabinetValues': cabinetValues,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
@@ -84,8 +81,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'content': tendersPage,
             'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -93,11 +89,10 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _tendersContent(request, page=1, my=None):
 
-    filterAdv = []
 
     #tenders = Tender.active.get_active().order_by('-pk')
     if not my:
-        filters, searchFilter, filterAdv = func.filterLive(request)
+        filters, searchFilter = func.filterLive(request)
 
         #companies = Company.active.get_active().order_by('-pk')
         sqs = SearchQuerySet().models(Tender).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
@@ -182,12 +177,10 @@ def _tendersContent(request, page=1, my=None):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context), filterAdv
+    return template.render(context)
 
 
 def _tenderDetailContent(request, item_id):
-
-     filterAdv = func.getDeatailAdv(item_id)
 
      tender = get_object_or_404(Tender, pk=item_id)
      tenderValues = tender.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
@@ -204,7 +197,7 @@ def _tenderDetailContent(request, item_id):
      context = RequestContext(request, {'tenderValues': tenderValues, 'photos': photos,
                                         'additionalPages': additionalPages})
 
-     return template.render(context), filterAdv
+     return template.render(context)
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):

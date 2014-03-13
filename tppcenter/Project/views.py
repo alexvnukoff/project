@@ -9,7 +9,6 @@ def about(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -27,8 +26,7 @@ def about(request):
         'current_section': _('About'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/about.html", templateParams)
@@ -37,7 +35,6 @@ def how(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -55,8 +52,7 @@ def how(request):
         'current_section': _('How the system works'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/how.html", templateParams)
@@ -65,7 +61,6 @@ def terms(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -83,8 +78,7 @@ def terms(request):
         'current_section': _('Terms of use'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/terms.html", templateParams)
@@ -93,7 +87,6 @@ def partner(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -111,8 +104,7 @@ def partner(request):
         'current_section': _('Find a Business Partner'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/partner.html", templateParams)
@@ -121,7 +113,6 @@ def privacy(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -139,8 +130,7 @@ def privacy(request):
         'current_section': _('Privacy'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/privacy.html", templateParams)
@@ -149,7 +139,6 @@ def shop(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -167,8 +156,7 @@ def shop(request):
         'current_section': _('Create online shop'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/shop.html", templateParams)
@@ -177,7 +165,6 @@ def event(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -195,8 +182,7 @@ def event(request):
         'current_section': _('Post announcement event'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/event.html", templateParams)
@@ -205,7 +191,6 @@ def proposal(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -223,8 +208,7 @@ def proposal(request):
         'current_section': _('Add a business proposal'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/proposal.html", templateParams)
@@ -233,7 +217,6 @@ def contact(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -252,7 +235,6 @@ def contact(request):
         'notification': notification,
         'bannerRight': bRight,
         'bannerLeft': bLeft,
-        'tops': tops
     }
 
     return render_to_response("Project/contact.html", templateParams)
@@ -261,7 +243,6 @@ def community(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -279,8 +260,7 @@ def community(request):
         'current_section': _('Ask the community'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/community.html", templateParams)
@@ -289,7 +269,6 @@ def faq(request):
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
 
     user = request.user
     if user.is_authenticated():
@@ -307,8 +286,7 @@ def faq(request):
         'current_section': _('FAQ'),
         'notification': notification,
         'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
+        'bannerLeft': bLeft
     }
 
     return render_to_response("Project/faq.html", templateParams)

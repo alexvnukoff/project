@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
-{% load inclusionTags %}
+{% load CustomFilters %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -86,7 +86,11 @@
                     <a href="#"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
                 <li><a href="#"><i class="icons i-stastic"></i>{% trans 'Visitor statistic' %}</a></li>
-                {% setAnalytic %}
+
+                    <li>{% trans 'Products' %}: {% productCount %}</li>
+                    <li>{% trans 'Companies' %}: {% companiesCount %}</li>
+                    <li>{% trans 'Partners' %}: {% partnersCount %}</li>
+
             </ul>
         </div>
     </div>
