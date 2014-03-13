@@ -23,8 +23,6 @@ def get_news_list(request,page=1, id=None, slug=None):
   #       slug = Value.objects.get(item=id, attr__title='SLUG').title
    #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -32,8 +30,6 @@ def get_news_list(request,page=1, id=None, slug=None):
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-    current_section = _("TPP-TV")
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
     scripts = []
@@ -44,30 +40,20 @@ def get_news_list(request,page=1, id=None, slug=None):
     else:
         newsPage = _getdetailcontent(request, id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-
 
     if not request.is_ajax():
-
-        user = request.user
-
 
         current_section = "TPP-TV"
 
         templatePramrams = {
-
             'current_section': current_section,
             'newsPage': newsPage,
-
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('tv:add'),
-            'cabinetValues': cabinetValues,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft
+            'cabinetValues': cabinetValues
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -78,8 +64,6 @@ def get_news_list(request,page=1, id=None, slug=None):
             'styles': styles,
             'scripts': scripts,
             'content': newsPage,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -93,11 +77,10 @@ def _newsContent(request, page=1):
     filters, searchFilter = func.filterLive(request)
 
     #companies = Company.active.get_active().order_by('-pk')
-    sqs = SearchQuerySet().models(TppTV)
+    sqs = func.getActiveSQS().models(TppTV)
 
     if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
-                                                               obj_start_date__lt=timezone.now())
+        sqs = sqs.filter(**searchFilter)
 
     q = request.GET.get('q', '')
 
@@ -134,7 +117,6 @@ def _newsContent(request, page=1):
     news = sqs.order_by(*order)
 
     result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
-    #result = func.setPaginationForItemsWithValues(news, *('NAME', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
 
     newsList = result[0]
     news_ids = [id for id in newsList.keys()]
@@ -154,7 +136,6 @@ def _newsContent(request, page=1):
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-
 
 
     url_paginator = "tv:paginator"
@@ -179,16 +160,13 @@ def _newsContent(request, page=1):
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-
-    user = request.user
-
-
 
     current_section = _("TppTv")
 
@@ -200,17 +178,22 @@ def tvForm(request, action, item_id=None):
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
         return newsPage
 
-    return render_to_response('TppTV/index.html', {'newsPage': newsPage, 'current_company':current_company,
-                                                              'notification': notification, 'user_name': user_name,
-                                                              'current_section': current_section,
-                                                              'cabinetValues': cabinetValues},
-                              context_instance=RequestContext(request))
+    templateParams = {
+        'newsPage': newsPage,
+        'current_company':current_company,
+        'current_section': current_section,
+        'cabinetValues': cabinetValues
+    }
+
+    return render_to_response('TppTV/index.html', templateParams, context_instance=RequestContext(request))
 
 def addNews(request):
-    current_company = request.session.get('current_company', None)
+
     perm = request.user.get_all_permissions()
+
     if not {'appl.add_tpptv'}.issubset(perm):
          return func.permissionDenied()
+
     form = None
 
     categories = func.getItemsList('NewsCategories', 'NAME')
@@ -218,10 +201,7 @@ def addNews(request):
 
 
     if request.POST:
-
         user = request.user
-        user = request.user
-
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
@@ -242,11 +222,6 @@ def addNews(request):
     context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
     newsPage = template.render(context)
 
-
-
-
-
-
     return newsPage
 
 
@@ -254,6 +229,7 @@ def addNews(request):
 def updateNew(request, item_id):
 
     perm = request.user.get_all_permissions()
+
     if not {'appl.change_tpptv'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
           return func.permissionDenied()
 
@@ -270,15 +246,11 @@ def updateNew(request, item_id):
 
     countries = func.getItemsList("Country", 'NAME')
     categories = func.getItemsList('NewsCategories', 'NAME')
+
     if request.method != 'POST':
-
-
-
         form = ItemForm('TppTV', id=item_id)
 
     if request.POST:
-
-
         user = request.user
 
 
@@ -294,31 +266,40 @@ def updateNew(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+                                  lang_code=settings.LANGUAGE_CODE)
+
             return HttpResponseRedirect(reverse('tv:main'))
 
 
     template = loader.get_template('TppTV/addForm.html')
-    context = RequestContext(request, {'form': form, 'choosen_category': choosen_category, 'categories': categories,
-                                       'create_date': create_date,'choosen_country':choosen_country,
-                                       'countries': countries})
-    newsPage = template.render(context)
 
+    templateParams = {
+        'form': form,
+        'choosen_category': choosen_category,
+        'categories': categories,
+        'create_date': create_date,
+        'choosen_country':choosen_country,
+        'countries': countries
+    }
+
+    context = RequestContext(request, templateParams)
+    newsPage = template.render(context)
 
     return newsPage
 
 
 
 
-def _getdetailcontent(request, id):
+def _getdetailcontent(request, item_id):
 
-
-    new = get_object_or_404(TppTV, pk=id)
+    new = get_object_or_404(TppTV, pk=item_id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
 
     organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
+
     try:
-        newsCategory = NewsCategories.objects.get(p2c__child=id)
+        newsCategory = NewsCategories.objects.get(p2c__child=item_id)
         category_value = newsCategory.getAttributeValues('NAME')
         newValues.update({'CATEGORY_NAME': category_value})
         similar_news = TppTV.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
@@ -334,6 +315,7 @@ def _getdetailcontent(request, id):
         toUpdate = {'COUNTRY_NAME': countriesList[organizations['c2p__parent__country']].get('NAME', [""]),
                     'COUNTRY_FLAG': countriesList[organizations['c2p__parent__country']].get('FLAG', [""]),
                     'COUNTRY_ID': organizations['c2p__parent__country']}
+
         newValues.update(toUpdate)
 
 
@@ -342,6 +324,7 @@ def _getdetailcontent(request, id):
         toUpdate = {'ORG_NAME': organizationsList[organizations['pk']].get('NAME', [""]),
                     'ORG_FLAG': organizationsList[organizations['pk']].get('FLAG', [""]),
                     'ORG_ID': organizations['pk']}
+
         newValues.update(toUpdate)
 
 

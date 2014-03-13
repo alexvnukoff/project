@@ -1,13 +1,10 @@
-
-from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from django.http import HttpResponseRedirect, HttpResponse
+from core.models import Item, Dictionary
 from appl import func
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
@@ -16,8 +13,6 @@ from core.tasks import addNewProject
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
 import json
-from django.utils import timezone
-from datetime import datetime
 
 
 def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
@@ -32,7 +27,11 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     cabinetValues = func.getB2BcabinetValues(request)
 
-    styles = [settings.STATIC_URL + 'tppcenter/css/news.css', settings.STATIC_URL + 'tppcenter/css/company.css']
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
     scripts = []
 
     if item_id is None:
@@ -43,29 +42,20 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
     else:
         newsPage = _innovDetailContent(request, item_id)
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
-
-
     if not request.is_ajax():
-        user = request.user
 
         current_section = _("Innovation Project")
 
         templateParams = {
             'newsPage': newsPage,
             'current_section': current_section,
-
             'scripts': scripts,
             'styles': styles,
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('innov:add'),
             'cabinetValues': cabinetValues,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'item_id': item_id
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
@@ -75,10 +65,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
         serialize = {
             'styles': styles,
             'scripts': scripts,
-            'content': newsPage,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft,
-            'tops': tops
+            'content': newsPage
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -91,9 +78,7 @@ def _innovContent(request, page=1, my=None):
     if not my:
         filters, searchFilter = func.filterLive(request)
 
-        #companies = Company.active.get_active().order_by('-pk')
-        sqs = SearchQuerySet().models(InnovationProject).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
-                                                               obj_start_date__lt=timezone.now())
+        sqs = func.getActiveSQS().models(InnovationProject)
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -132,33 +117,32 @@ def _innovContent(request, page=1, my=None):
 
         innov_projects = sqs.order_by(*order)
         url_paginator = "innov:paginator"
-        params = {'filters': filters,
-                  'sortField1': sortField1,
-                  'sortField2': sortField2,
-                  'order1': order1,
-                  'order2': order2
+
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
+            'sortField2': sortField2,
+            'order1': order1,
+            'order2': order2
         }
+
     else:
         current_organization = request.session.get('current_company', False)
 
         if current_organization:
-             innov_projects = SearchQuerySet().models(InnovationProject).\
-                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
+            innov_projects = SearchQuerySet().models(InnovationProject)
+            innov_projects = innov_projects.filter(SQ(tpp=current_organization) | SQ(company=current_organization))
 
-             url_paginator = "innov:my_main_paginator"
-             params = {}
+            url_paginator = "innov:my_main_paginator"
+            params = {}
+
         else: #TODO Jenya do block try
-             raise ObjectDoesNotExist('you need check company')
+            raise ObjectDoesNotExist('you need check company')
 
     result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
-    #innov_projects = InnovationProject.active.get_active().order_by('-pk')
-
-
-    #result = func.setPaginationForItemsWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
 
     innovList = result[0]
     innov_ids = [id for id in innovList.keys()]
-
 
     cabinets = Cabinet.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
 
@@ -169,6 +153,7 @@ def _innovContent(request, page=1, my=None):
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
     country_dict = {}
+
     for country in countries:
         if country['pk']:
            country_dict[country['p2c__child']] = country['pk']
@@ -176,27 +161,23 @@ def _innovContent(request, page=1, my=None):
     cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
 
     cabinets_dict = {}
+
     for cabinet in cabinets:
-        cabinets_dict[cabinet['p2c__child']] = {'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                                                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                                                'CABINET_ID': cabinet['pk'],
-
-                                                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]] .get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                                                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]] .get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                                                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
+        cabinets_dict[cabinet['p2c__child']] = {
+            'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+            'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+            'CABINET_ID': cabinet['pk'],
+            'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+            'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+            'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
         }
-
-
-
-
-
-
 
     branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
     branches_ids = [branch['pk'] for branch in branches]
     branchesList = Item.getItemsAttributesValues(("NAME"), branches_ids)
 
     branches_dict = {}
+
     for branch in branches:
         branches_dict[branch['p2c__child']] = branch['pk']
 
@@ -204,19 +185,18 @@ def _innovContent(request, page=1, my=None):
 
     for id, innov in innovList.items():
 
-        toUpdate = {'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
-                    'BRANCH_ID': branches_dict.get(id, 0),
+        toUpdate = {
+            'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
+            'BRANCH_ID': branches_dict.get(id, 0),
+        }
 
-                     }
         innov.update(toUpdate)
+
         if cabinets_dict.get(id, 0):
            innov.update(cabinets_dict.get(id, 0))
 
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
-
-
-
 
     template = loader.get_template('Innov/contentPage.html')
 
@@ -227,6 +207,7 @@ def _innovContent(request, page=1, my=None):
         'url_paginator': url_paginator,
 
     }
+
     templateParams.update(params)
 
     context = RequestContext(request, templateParams)
@@ -235,64 +216,75 @@ def _innovContent(request, page=1, my=None):
 
 def _innovDetailContent(request, item_id):
 
-     innov = get_object_or_404(InnovationProject, pk=item_id)
-     innovValues = innov.getAttributeValues(*('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN',
-                                                 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT'))
+    innov = get_object_or_404(InnovationProject, pk=item_id)
 
-     photos = Gallery.objects.filter(c2p__parent=item_id)
+    attr = ('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN', 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT')
 
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-     try:
-         branch = Branch.objects.get(p2c__child=item_id)
-         branchValues = branch.getAttributeValues('NAME')
-         innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
-     except ObjectDoesNotExist:
-          innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
+    innovValues = innov.getAttributeValues(*attr)
+
+    photos = Gallery.objects.filter(c2p__parent=item_id)
+
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+    try:
+        branch = Branch.objects.get(p2c__child=item_id)
+        branchValues = branch.getAttributeValues('NAME')
+        innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
+    except ObjectDoesNotExist:
+        innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
 
-     func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
+    func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
 
+    cabinet = Cabinet.objects.filter(p2c__child=item_id)
 
-     cabinet = Cabinet.objects.filter(p2c__child=item_id)
-     if cabinet.exists():
+    if cabinet.exists():
         cabinetList = cabinet[0].getAttributeValues("USER_FIRST_NAME", 'USER_LAST_NAME')
         country = Country.objects.filter(p2c__child=cabinet)
+
         if country.exists():
             countriesList = country[0].getAttributeValues("NAME", 'FLAG')
-            countryUpdate = {'CABINET_COUNTRY_ID': country[0].pk, 'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
-                             'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])}
+            countryUpdate = {
+                'CABINET_COUNTRY_ID': country[0].pk,
+                'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
+                'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])
+            }
         else:
             countryUpdate = {}
-        cabinetUpdate = {'CABINET_ID': cabinet[0].pk, 'CABINET_FIRST_NAME': cabinetList.get('USER_FIRST_NAME', [0]),
-                         'CABINET_LAST_NAME': cabinetList.get('USER_LAST_NAME', [0])}
 
-     else:
-         cabinetUpdate = {}
-         countryUpdate = {}
+        cabinetUpdate = {
+            'CABINET_ID': cabinet[0].pk,
+            'CABINET_FIRST_NAME': cabinetList.get('USER_FIRST_NAME', [0]),
+            'CABINET_LAST_NAME': cabinetList.get('USER_LAST_NAME', [0])
+        }
+
+    else:
+        cabinetUpdate = {}
+        countryUpdate = {}
 
 
+    template = loader.get_template('Innov/detailContent.html')
 
+    templateParams = {
+        'innovValues': innovValues,
+        'photos': photos,
+        'additionalPages': additionalPages,
+        'countryUpdate': countryUpdate,
+        'cabinetUpdate': cabinetUpdate
+    }
 
-     template = loader.get_template('Innov/detailContent.html')
+    context = RequestContext(request, templateParams)
 
-     context = RequestContext(request, {'innovValues': innovValues, 'photos': photos,
-                                        'additionalPages': additionalPages, 'countryUpdate': countryUpdate,
-                                        'cabinetUpdate': cabinetUpdate})
-
-     return template.render(context)
+    return template.render(context)
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-
-    user = request.user
-
-
 
     current_section = _("Innovation Project")
 
@@ -304,15 +296,17 @@ def innovForm(request, action, item_id=None):
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
         return newsPage
 
-    return render_to_response('Innov/index.html', {'newsPage': newsPage, 'current_company':current_company,
+    templateParams = {
+        'newsPage': newsPage,
+        'current_company':current_company,
+        'current_section': current_section,
+        'cabinetValues': cabinetValues
+    }
 
-                                                              'current_section': current_section,
-                                                              'cabinetValues': cabinetValues},
-                              context_instance=RequestContext(request))
+    return render_to_response('Innov/index.html', templateParams, context_instance=RequestContext(request))
 
 def addProject(request):
     current_company = request.session.get('current_company', False)
-
 
     if not request.session.get('current_company', False):
          return func.emptyCompany()

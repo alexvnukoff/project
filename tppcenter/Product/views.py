@@ -1,27 +1,18 @@
-from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from django.http import HttpResponseRedirect, HttpResponse
+from core.models import Item, Dictionary
 from appl import func
-from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
 from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addProductAttrubute
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone
-from datetime import datetime
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
@@ -48,31 +39,24 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
     styles = []
     scripts = []
 
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-
 
     if not request.is_ajax() or item_id:
-        user = request.user
-
         current_section = _("Products")
 
         templateParams = {
-
-                'current_section': current_section,
-                'productsPage': productsPage,
-
-                'current_company': current_company,
-                'scripts': scripts,
-                'styles': styles,
-                'search': request.GET.get('q', ''),
-                'addNew': reverse('products:add'),
-                'cabinetValues': cabinetValues,
-                'bannerRight': bRight,
-                'bannerLeft': bLeft
+            'current_section': current_section,
+            'productsPage': productsPage,
+            'current_company': current_company,
+            'scripts': scripts,
+            'styles': styles,
+            'search': request.GET.get('q', ''),
+            'addNew': reverse('products:add'),
+            'cabinetValues': cabinetValues,
+            'item_id': item_id
         }
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
+
     else:
 
         serialize = {
@@ -80,8 +64,6 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'content': productsPage,
             'current_company': current_company,
-            'bannerRight': bRight,
-            'bannerLeft': bLeft
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -95,8 +77,7 @@ def _productContent(request, page=1, my=None):
     if not my:
         filters, searchFilter = func.filterLive(request)
 
-        sqs = SearchQuerySet().models(Product).filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime(1 , 1, 1)),
-                                                               obj_start_date__lt=timezone.now())
+        sqs = func.getActiveSQS().models(Product)
 
         if len(searchFilter) > 0:
             sqs = sqs.filter(**searchFilter)
@@ -135,13 +116,15 @@ def _productContent(request, page=1, my=None):
         products = sqs.order_by(*order)
 
         params = {
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
+            'filters': filters,
+            'sortField1': sortField1,
+            'sortField2': sortField2,
+            'order1': order1,
+            'order2': order2
         }
+
         url_paginator = "products:paginator"
+
     else:
          current_organization = request.session.get('current_company', False)
 
@@ -151,19 +134,19 @@ def _productContent(request, page=1, my=None):
 
              url_paginator = "products:my_main_paginator"
              params = {}
+
          else:
              raise ObjectDoesNotExist('you need check company')
 
-
-
-
-    result = func.setPaginationForSearchWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
-    #result = func.setPaginationForItemsWithValues(products, *('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), page_num=12, page=page)
+    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
+    result = func.setPaginationForSearchWithValues(products, *attr, page_num=12, page=page)
 
     productsList = result[0]
     products_ids = [id for id in productsList.keys()]
+
     countries = Country.objects.filter(p2c__child__p2c__child__in=products_ids, p2c__type='dependence',
                                        p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
+
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
     country_dict = {}
@@ -180,9 +163,6 @@ def _productContent(request, page=1, my=None):
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
-
-
-
     template = loader.get_template('Products/contentPage.html')
 
     templateParams = {
@@ -190,7 +170,6 @@ def _productContent(request, page=1, my=None):
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-
     }
 
     templateParams.update(params)
@@ -204,57 +183,60 @@ def _productContent(request, page=1, my=None):
 
 def _getDetailContent(request, item_id):
 
+    product = get_object_or_404(Product, pk=item_id)
 
-     product = get_object_or_404(Product, pk=item_id)
-     productValues = product.getAttributeValues(*('NAME', 'COST', 'CURRENCY', 'IMAGE',
-                                                'DETAIL_TEXT', 'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
-                                                'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'))
+    attr = (
+        'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
+        'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
+        'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
+    )
 
-     photos = Gallery.objects.filter(c2p__parent=item_id)
+    productValues = product.getAttributeValues(*attr)
 
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+    photos = Gallery.objects.filter(c2p__parent=item_id)
 
-     country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
+    country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
 
-
-
-     company = Company.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
-     companyValues.update({'COMPANY_ID': company.id})
-
-
-     countriesList = country.getAttributeValues("NAME", 'FLAG')
-     toUpdate = {'COUNTRY_NAME': countriesList.get('NAME', 0),
-                 'COUNTRY_FLAG': countriesList.get('FLAG', 0),
-                 'COUNTRY_ID':  country.id}
-     companyValues.update(toUpdate)
+    company = Company.objects.get(p2c__child=item_id)
+    companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
+    companyValues.update({'COMPANY_ID': company.id})
 
 
+    countriesList = country.getAttributeValues("NAME", 'FLAG')
 
+    toUpdate = {
+        'COUNTRY_NAME': countriesList.get('NAME', 0),
+        'COUNTRY_FLAG': countriesList.get('FLAG', 0),
+        'COUNTRY_ID':  country.id
+    }
 
+    companyValues.update(toUpdate)
 
-     template = loader.get_template('Products/detailContent.html')
+    template = loader.get_template('Products/detailContent.html')
 
-     context = RequestContext(request, {'productValues': productValues, 'photos': photos,
-                                        'additionalPages': additionalPages, 'companyValues': companyValues})
+    templateParams = {
+        'productValues': productValues,
+        'photos': photos,
+        'additionalPages': additionalPages,
+        'companyValues': companyValues
+    }
 
-     return template.render(context)
+    context = RequestContext(request, templateParams)
 
+    return template.render(context)
 
 
 @login_required(login_url='/login/')
 def productForm(request, action, item_id=None):
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-
-    user = request.user
-
-
 
     current_section = _("Products")
 
@@ -266,11 +248,14 @@ def productForm(request, action, item_id=None):
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
         return productsPage
 
-    return render_to_response('Products/index.html', {'productsPage': productsPage, 'current_company':current_company,
+    templateParams = {
+        'productsPage': productsPage,
+        'current_company':current_company,
+        'current_section': current_section,
+        'cabinetValues': cabinetValues
+    }
 
-                                                              'current_section': current_section,
-                                                              'cabinetValues': cabinetValues},
-                              context_instance=RequestContext(request))
+    return render_to_response('Products/index.html', templateParams, context_instance=RequestContext(request))
 
 
 def addProducts(request):
@@ -287,23 +272,22 @@ def addProducts(request):
 
     perm_list = item.getItemInstPermList(request.user)
 
-
-
     if 'add_product' not in perm_list:
          return func.permissionDenied()
-
-
 
     form = None
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
+
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
+
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
 
     if request.POST:
@@ -315,8 +299,6 @@ def addProducts(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
-
-
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
@@ -334,29 +316,36 @@ def addProducts(request):
         values['SKU'] = request.POST.get('SKU', "")
 
 
-
-
         form = ItemForm('Product', values=values)
         form.clean()
 
         if gallery.is_valid() and form.is_valid() and pages.is_valid():
+
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
+                                      current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+
             return HttpResponseRedirect(reverse('products:main'))
 
 
     template = loader.get_template('Products/addForm.html')
-    context = RequestContext(request, {'form': form, 'measurement_slots': measurement_slots,
-                                                        'currency_slots': currency_slots,
-                                                        'categotySelect': categotySelect})
-    productsPage = template.render(context)
 
+    templateParams = {
+        'form': form,
+        'measurement_slots': measurement_slots,
+        'currency_slots': currency_slots,
+        'categotySelect': categotySelect
+    }
+
+    context = RequestContext(request, templateParams)
+    productsPage = template.render(context)
 
     return productsPage
 
 
-
 def updateProduct(request, item_id):
+
     try:
         item = Company.objects.get(p2c__child_id=item_id)
     except ObjectDoesNotExist:
@@ -364,22 +353,29 @@ def updateProduct(request, item_id):
 
 
     perm_list = item.getItemInstPermList(request.user)
+
     if 'change_exhibition' not in perm_list:
         return func.permissionDenied()
+
     try:
         choosen_category = Category.objects.get(p2c__child__id=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
+
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
 
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
+
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
+
     product = Product.objects.get(pk=item_id)
 
 
@@ -434,16 +430,24 @@ def updateProduct(request, item_id):
             return HttpResponseRedirect(reverse('products:main'))
 
 
-
-
     template = loader.get_template('Products/addForm.html')
-    context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form, 'coupon_date':
-                                                    coupon_date, 'measurement_slots': measurement_slots,
-                                                    'currency_slots': currency_slots, 'pages': pages,
-                                                    'product': product, 'choosen_category': choosen_category,
-                                                     'categotySelect': categotySelect})
-    productsPage = template.render(context)
 
+    templateParams =  {
+        'gallery': gallery,
+        'photos': photos,
+        'form': form,
+        'coupon_date': coupon_date,
+        'measurement_slots': measurement_slots,
+        'currency_slots': currency_slots,
+        'pages': pages,
+        'product': product,
+        'choosen_category': choosen_category,
+        'categotySelect': categotySelect
+    }
+
+    context = RequestContext(request, templateParams)
+
+    productsPage = template.render(context)
 
     return productsPage
 
