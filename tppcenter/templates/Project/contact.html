@@ -1,0 +1,57 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/news.css"%}" />
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/company.css"%}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+<div class="companies">
+                <div class="deal-details">
+                    <h1>{% trans 'Contact us' %}</h1>
+                    <p>Вы можете обратиться к нам по телефону, по электронной почте или договориться о встрече в нашем офисе. Будем рады помочь вам и ответить на все ваши вопросы.
+  <br>
+</p>
+
+<p>Россия, 107023, г. Москва, Ленинградский проспект, д. 31А, строение 1, офис. 56 "БЦ Монарх"
+  <br>
+тел.: +7 (495) 230-00-38, e-mail: migirov@tppcenter.com, www.Tppcenter.com
+  <br>
+Представительства: Израиль, Украина, Белоруссия, Азербайджан, Армения, Грузия, Россия(Москва, Краснодар) &nbsp;</p>
+
+
+<div style="float: left; margin-right: 10px;">
+  <p><b>Телефоны</b></p>
+
+  <p>
+
+  <ul>
+    <li >+7 (495) 230-00-38</li>
+
+    <li >(+972) 72-250-22-37</li>
+   </ul>
+</p>
+  <p><b>Email</b></p>
+    <p>
+
+      <ul>
+        <li ><b>migirov@tppcenter.com</b> — Работа с палатами, ассоциациями и гильдиями</li>
+
+        <li ><b>office@tppcenter.com</b> — Общие вопросы, &nbsp;Московский офис ТПП-Центр</li>
+
+        <li><b>info@tppcenter.com</b> — Маркетинг/мероприятия/PR</li>
+
+        <li ><b>admin@tppcenter.com</b> — Техническая поддержка</li>
+       </ul>
+    </p>
+
+                                  </div>
+
+            </div>
+</div>
+{% endblock %}

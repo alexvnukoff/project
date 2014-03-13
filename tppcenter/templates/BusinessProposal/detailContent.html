@@ -5,10 +5,13 @@
 $(function() {
 	 $(".goods-details-tab").tabs();});
 </script>
-
-{% block keywords %}{% endblock %}
-
-
+<script>
+    $('.keyword').html('');
+</script>
+<script>
+    ga('set', 'dimension1', {{ company }});
+    ga('set', 'dimension2', 'proposal');
+</script>
 
   <div class="tender">
             {% with proposalValues.NAME.0 as name %}

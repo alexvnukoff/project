@@ -49,7 +49,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
     else:
-        proposalsPage, filterAdv = _proposalDetailContent(request, item_id)
+        proposalsPage, filterAdv = _proposalDetailContent(request, item_id, current_company)
 
     bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
     bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html', filter=filterAdv)
@@ -204,7 +204,7 @@ def _proposalsContent(request, page=1, my=None):
 
 
 
-def _proposalDetailContent(request, item_id):
+def _proposalDetailContent(request, item_id, current_company):
 
      filterAdv = func.getDeatailAdv(item_id)
 
