@@ -2,9 +2,7 @@ __author__ = 'user'
 
 from django import template
 from appl import func
-from django.template import RequestContext, loader
-from appl.models import Tpp, Company, Product, Notification
-from django.utils.translation import ugettext as _
+from django.conf import settings
 
 
 register = template.Library()
@@ -21,10 +19,10 @@ def getTopOnPage(context, item_id=None):
         filterAdv = func.getListAdv(request)
 
 
-    return {'modelTop': func.getTops(request, filter=filterAdv) }
+    return {'modelTop': func.getTops(request, filterAdv) }
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
-def getTopOnPage(context, item_id=None):
+def getBanners(context, item_id=None, *places):
 
     request = context.get('request')
 
@@ -33,6 +31,7 @@ def getTopOnPage(context, item_id=None):
     else:
         filterAdv = func.getListAdv(request)
 
+    return {'banners': func.getBanners(places, settings.SITE_ID, filterAdv)}
 
-    return {'modelTop': func.getTops(request, filter=filterAdv) }
+
 

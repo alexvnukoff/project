@@ -59,8 +59,8 @@
     <div class="wrapper">
         <div class="linkbottom">
             <ul class="clumn">
-                <li>{% trans 'About project' %}</li>
-                <li><a href="{% url "project:about" %}">{% trans 'About project' %}</a></li>
+                <li>{% trans 'About' %}</li>
+                <li><a href="{% url "project:about" %}">{% trans 'About' %}</a></li>
                 <li><a href="{% url "project:how" %}">{% trans 'How the system works' %}</a></li>
                 <li><a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a></li>
                 <li><a href="{% url "project:privacy" %}">{% trans 'Privacy' %}</a></li>
@@ -85,8 +85,6 @@
                     <a href="#"><i class="imgmain iconsocial i-tweet"></i></a>
                     <a href="#"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
-                <li><a href="#"><i class="icons i-stastic"></i>{% trans 'Visitor statistic' %}</a></li>
-
                     <li>{% trans 'Products' %}: {% productCount %}</li>
                     <li>{% trans 'Companies' %}: {% companiesCount %}</li>
                     <li>{% trans 'Partners' %}: {% partnersCount %}</li>

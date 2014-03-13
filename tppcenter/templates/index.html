@@ -9,10 +9,14 @@
          {% block styles %}
              {{ block.super }}
              <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}" >
+             <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" >
+
+
          {% endblock %}
 
         {% block js %}
              {{  block.super }}
+             <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js" >
             <script type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
             <script type="text/javascript">
                 $(document).ready(function(){
@@ -24,6 +28,19 @@
                   });
                   $('.greetings').bxSlider();
                    });
+            $(document).ready(function() {
+                $(".various").fancybox({
+                    maxWidth	: 800,
+                    maxHeight	: 600,
+                    fitToView	: false,
+                    width		: '70%',
+                    height		: '70%',
+                    autoSize	: false,
+                    closeClick	: false,
+                    openEffect	: 'none',
+                    closeEffect	: 'none'
+                });
+            });
             </script>
         {% endblock %}
 
@@ -351,13 +368,19 @@
             </div>
             <div class="content-r">
             	<span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
-                <div class="media"><iframe width="220" height="160" src="//www.youtube.com/embed/akWSS74wIA4" frameborder="0" allowfullscreen></iframe></div>
+                <div class="media">
+                    <a class="various fancybox.iframe" href="http://www.youtube.com/embed/akWSS74wIA4?autoplay=1">
+                 <img width="220" height="160" src="http://img.youtube.com/vi/akWSS74wIA4/0.jpg" /></a>
+                </div>
                 <div class="testimonials">
                 	<i class="icons i-bullet"></i>
                 	 {% trans 'You get your own web site,opportunity to presentation of its of business proposals,products, services, without restrictions.' %}
                 </div>
                 <span class="titlevideo">{% trans 'Videoreference of V.Migirov' %}</span>
-                <div class="media"><iframe width="220" height="160" src="//www.youtube.com/embed/7k3vT_J4aSw" frameborder="0" allowfullscreen></iframe></div>
+                <div class="media">
+                          <a class="various fancybox.iframe" href="http://www.youtube.com/embed/7k3vT_J4aSw?autoplay=1">
+                         <img width="220" height="160" src="http://img.youtube.com/vi/7k3vT_J4aSw/0.jpg" /></a>
+                 </div>
                 <div class="pdfdownload">
                 	<img src="{% static "tppcenter/img/pdf.png" %}" alt="" />
                     <span class="fileinfo">

@@ -436,7 +436,7 @@ class BasePhotoGallery(BaseModelFormSet):
             bulkInsert = []
             item = Item.objects.get(pk=parent)
             for instance in instances:
-                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
+                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
             if bulkInsert:
                 Relationship.objects.bulk_create(bulkInsert)
         except Exception:
@@ -512,7 +512,7 @@ class BasePages(BaseModelFormSet):
             bulkInsert = []
             item = Item.objects.get(pk=parent)
             for instance in instances:
-                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='relation'))
+                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
             if bulkInsert:
                 Relationship.objects.bulk_create(bulkInsert)
         except Exception as e:

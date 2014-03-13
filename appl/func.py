@@ -634,15 +634,15 @@ def getB2BcabinetValues(request):
 
     return None
 
-def getBannersRight(request, places, site, template, filter=None):
+def getBanners(places, site, filterAdv=None):
 
     bList = []
 
     for place in places:
         banner = AdvBanner.active.get_active().filter(c2p__parent__title=place, c2p__type="relation", sites=site)
 
-        if filter is not None and len(filter) > 0:
-            banner = banner.filter(c2p__parent__in=filter, c2p__type='relation')
+        if filterAdv is not None and len(filterAdv) > 0:
+            banner = banner.filter(c2p__parent__in=filterAdv, c2p__type='relation')
 
         banner = banner.order_by('?').values_list('pk', flat=True)[:1]
 
@@ -651,18 +651,9 @@ def getBannersRight(request, places, site, template, filter=None):
 
     bAttr = Item.getItemsAttributesValues(('NAME', 'SITE_NAME', 'IMAGE'), bList)
 
-    templateParams = {
-        'banners': bAttr
-    }
+    return bAttr
 
-    template = loader.get_template(template)
-
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
-
-def getTops(request, filter=None):
+def getTops(request, filterAdv=None):
 
     models = {
         Product: {
@@ -695,8 +686,8 @@ def getTops(request, filter=None):
         sub = model.objects.all()
         top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence")
 
-        if filter is not None and len(filter) > 0:
-            top = top.filter(c2p__parent__in=filter, c2p__type='relation')
+        if filterAdv is not None and len(filterAdv) > 0:
+            top = top.filter(c2p__parent__in=filterAdv, c2p__type='relation')
 
         top = top.order_by('?').values_list('p2c__child', flat=True)[:int(modelDict['count'])]
 

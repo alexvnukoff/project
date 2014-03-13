@@ -78,7 +78,9 @@ REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -87,8 +89,13 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.GlobalRequest',
 
 
+
+
+
+
 )
 
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 
 ROOT_URLCONF = 'tpp.urls'
 
@@ -104,6 +111,11 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
+        'TIMEOUT': 300,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY ': 2,
+        }
     }
 }
 
