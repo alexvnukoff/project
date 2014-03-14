@@ -8,6 +8,7 @@ from appl.models import (Article, Basket, Company, Cabinet, Department, Document
 
 from django.contrib import admin
 
+
 admin.site.register(Article)
 admin.site.register(Basket)
 admin.site.register(Company)

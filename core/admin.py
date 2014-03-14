@@ -69,7 +69,7 @@ class ValuesInline(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ParentRelationshipInLIne, ChildtRelationshipInLIne, ValuesInline ]
-    raw_id_fields = ("create_user", 'update_user')
+    raw_id_fields = ("create_user", 'update_user', 'community')
 
 
 
