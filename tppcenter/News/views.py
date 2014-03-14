@@ -16,14 +16,24 @@ from django.core.exceptions import ObjectDoesNotExist
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, my=None):
+def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     current_company = request.session.get('current_company', False)
+
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
+    scripts = []
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
-        newsPage = _newsContent(request, page, my)
+        if not item_id:
+            newsPage = _newsContent(request, page, my)
+        else:
+            newsPage = _getdetailcontent(request, item_id)
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -36,22 +46,14 @@ def get_news_list(request, page=1, my=None):
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
 
         current_section = _("News")
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
-            'notification': notification,
+
             'newsPage': newsPage,
             'scripts': scripts,
             'current_company': current_company,
@@ -340,49 +342,7 @@ def updateNew(request, item_id):
     return newsPage
 
 
-def detail(request, item_id, slug=None):
 
-
-   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
-
-    styles = [
-        settings.STATIC_URL + 'tppcenter/css/news.css',
-        settings.STATIC_URL + 'tppcenter/css/company.css'
-    ]
-
-    scripts = []
-
-    user = request.user
-
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-
-    current_section = "News"
-
-    newsPage = _getdetailcontent(request, item_id)
-
-    templateParams = {
-        'user_name': user_name,
-        'current_section': current_section,
-        'newsPage': newsPage,
-        'notification': notification,
-        'styles': styles,
-        'scripts': scripts,
-        'addNew': reverse('news:add'),
-        'item_id': item_id
-    }
-
-    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
 
 
 
