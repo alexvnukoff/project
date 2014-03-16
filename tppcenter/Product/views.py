@@ -30,7 +30,10 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            productsPage = _productContent(request, page, my)
+            attr  = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
+            productsPage = func.setContent(request, Product, attr, 'products', 'Products/contentPage.html', 12,
+                                           page=page, my=my)
+
         except ObjectDoesNotExist:
             productsPage = func.emptyCompany()
     else:
@@ -69,113 +72,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
         return HttpResponse(json.dumps(serialize))
 
 
-def _productContent(request, page=1, my=None):
-    #TODO: Jenya change to get_active_related()
-    #products = Product.active.get_active().order_by('-pk')
 
-
-    if not my:
-        filters, searchFilter = func.filterLive(request)
-
-        sqs = func.getActiveSQS().models(Product)
-
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
-
-        q = request.GET.get('q', '')
-
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
-
-        order = []
-
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
-
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
-            else:
-                order.append(sortFields[sortField1])
-        else:
-            order.append('-id')
-
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
-
-        products = sqs.order_by(*order)
-
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
-        }
-
-        url_paginator = "products:paginator"
-
-    else:
-         current_organization = request.session.get('current_company', False)
-
-         if current_organization:
-             products = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID).\
-                 filter(SQ(tpp=current_organization)|SQ(company=current_organization))
-
-             url_paginator = "products:my_main_paginator"
-             params = {}
-
-         else:
-             raise ObjectDoesNotExist('you need check company')
-
-    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
-    result = func.setPaginationForSearchWithValues(products, *attr, page_num=12, page=page)
-
-    productsList = result[0]
-    products_ids = [id for id in productsList.keys()]
-
-    countries = Country.objects.filter(p2c__child__p2c__child__in=products_ids, p2c__type='dependence',
-                                       p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
-
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-
-    for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
-
-    for id, product in productsList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        product.update(toUpdate)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    template = loader.get_template('Products/contentPage.html')
-
-    templateParams = {
-        'productsList': productsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-    return template.render(context)
 
 
 
