@@ -17,10 +17,10 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
 
-def get_news_list(request,page=1, id=None, slug=None):
+def get_news_list(request,page=1, item_id=None, slug=None):
 
- #   if slug and not Value.objects.filter(item=id, attr__title='SLUG', title=slug).exists():
-  #       slug = Value.objects.get(item=id, attr__title='SLUG').title
+ #   if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+  #       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
    #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
 
 
@@ -35,11 +35,13 @@ def get_news_list(request,page=1, id=None, slug=None):
     scripts = []
 
 
-    if not id:
+
+    if not item_id:
         attr = ('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG')
         newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
+
     else:
-        newsPage = _getdetailcontent(request, id)
+        newsPage = _getdetailcontent(request, item_id)
 
 
     if not request.is_ajax():

@@ -684,12 +684,12 @@ def getTops(request, filterAdv=None):
     for model, modelDict in models.items():
 
         sub = model.objects.all()
-        top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence")
+        top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence").values_list('c2p__parent', flat=True)
 
         if filterAdv is not None and len(filterAdv) > 0:
             top = top.filter(c2p__parent__in=filterAdv, c2p__type='relation')
 
-        top = top.order_by('?').values_list('p2c__child', flat=True)[:int(modelDict['count'])]
+        top = top.order_by('?')[:int(modelDict['count'])]
 
         tops = list(top)
 
