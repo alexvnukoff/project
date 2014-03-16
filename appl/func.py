@@ -7,7 +7,8 @@ from PIL import Image
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet, SQ
-
+import lxml
+from lxml.html.clean import clean_html
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -890,3 +891,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     context = RequestContext(request, templateParams)
     return template.render(context)
 
+def cleanFromHtml(value):
+
+    if len(value) > 0:
+        document = lxml.html.document_fromstring(value)
+        raw_text = document.text_content()
+        return raw_text
+    else:
+        return  ""

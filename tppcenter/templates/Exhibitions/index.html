@@ -6,6 +6,16 @@
    {% block title %}{% trans 'Exhibitions' %}{% endblock %}
 
 
+    {% block description %}
+        {% if description %}
+             <meta name="description" content="{{ description|truncatewords:30 }}"/>
+            {% else %}
+            {{ block.super }}
+         {% endif %}
+           {% endblock %}
+
+
+
 
     {% block header %}
         {% include "login_header.html" %}

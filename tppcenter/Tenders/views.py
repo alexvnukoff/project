@@ -23,7 +23,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 
     cabinetValues = func.getB2BcabinetValues(request)
-
+    description = ""
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -44,7 +44,9 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             tendersPage = func.emptyCompany()
     else:
-        tendersPage = _tenderDetailContent(request, item_id)
+        result = _tenderDetailContent(request, item_id)
+        tendersPage = result[0]
+        description = result[1]
 
     if not request.is_ajax():
         current_section = _("Tenders")
@@ -58,7 +60,8 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'search': request.GET.get('q', ''),
             'addNew': reverse('tenders:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
@@ -87,6 +90,9 @@ def _tenderDetailContent(request, item_id):
 
      tenderValues = tender.getAttributeValues(*attr)
 
+     description = tenderValues.get('DETAIL_TEXT', False)[0] if tenderValues.get('DETAIL_TEXT', False) else ""
+     description = func.cleanFromHtml(description)
+
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
@@ -103,7 +109,7 @@ def _tenderDetailContent(request, item_id):
 
      context = RequestContext(request, templateParams)
 
-     return template.render(context)
+     return template.render(context), description
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
