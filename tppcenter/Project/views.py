@@ -1,5 +1,6 @@
 __author__ = 'user'
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 def project(request, template, section):
 
