@@ -183,32 +183,16 @@ def addTop(request, item):
 
 
 
-    enable = {}
-
-
-    enable['branch'] = {'placeholder': _('Select branch'), 'init': len(filter.get('branch', []))}
-    enable['country'] = {'placeholder': _('Select country'), 'init': len(filter.get('country', []))}
-    enable['tpp'] = {'placeholder': _('Select organization'), 'init': len(filter.get('tpp', []))}
-
-
-    cabinet = Cabinet.objects.get(user=request.user)
-    cabinetAttr = cabinet.getAttributeValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'))
-
-    user_name = ''
-
-    if len(cabinetAttr) != 0:
-        user_name = cabinetAttr.get('USER_FIRST_NAME', [''])[0] + ' ' + cabinetAttr.get('USER_MIDDLE_NAME', ['']) + ' '\
-                    + cabinetAttr.get('USER_LAST_NAME', [''])[0]
-
-
-    notification = Notification.objects.filter(user=request.user, read=False).count()
+    enable = {
+        'branch': {'placeholder': _('Select branch'), 'init': len(filter.get('branch', []))},
+        'country': {'placeholder': _('Select country'), 'init': len(filter.get('country', []))},
+        'tpp': {'placeholder': _('Select organization'), 'init': len(filter.get('tpp', []))}
+    }
 
     current_section = _('Banners')
 
     templateParams = {
-        'user_name': user_name,
         'current_section': current_section,
-        'notification': notification,
         'enable': enable,
         'form': form,
         'stDate': stDate,

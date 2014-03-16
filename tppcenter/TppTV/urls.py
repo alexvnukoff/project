@@ -15,10 +15,5 @@ urlpatterns = patterns('',
      url(r'^page(?P<page>[0-9]+)?/$', tppcenter.TppTV.views.get_news_list, name="paginator"),
      url(r'^add/$', tppcenter.TppTV.views.tvForm,{'action': 'add'}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.TppTV.views.tvForm,{'action': 'update'}, name="update"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<id>[0-9]+))\.html$', tppcenter.TppTV.views.get_news_list, name="detail"),
-
-
-
-
-
+     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.TppTV.views.get_news_list, name="detail"),
 )

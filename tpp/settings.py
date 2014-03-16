@@ -47,6 +47,8 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
+    'BC-CIS.COM', # Also allow FQDN and subdomains
+    'B24ONLINE.COM', # Also allow FQDN and subdomains
 ]
 
 # Application definition
@@ -78,15 +80,15 @@ REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 
 
 
@@ -119,7 +121,7 @@ CACHES = {
     }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 DATABASES = {
     'default': {

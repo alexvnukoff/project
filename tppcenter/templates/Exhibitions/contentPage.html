@@ -8,7 +8,7 @@
           {% include "Exhibitions/popupFilter.html" %}
            {% include "main/paginator.html" %}
             <ul class="tender-list" id="afisha-list">
-                {% for id , attr in exhibitionsList.items %}
+                {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
                     {% with attr.CITY.0 as city %}
                     {% with attr.SLUG.0 as slug %}

@@ -1,11 +1,8 @@
 __author__ = 'user'
 
 from django.shortcuts import render_to_response
-from django.utils.translation import ugettext as _
-from django.conf import settings
-from appl import func
-from appl.models import Notification, Organization
-from django.template import RequestContext, loader
+from django.template import RequestContext
+
 def main(request):
 
     #current_organization = request.session.get('current_company', False)
@@ -19,10 +16,6 @@ def main(request):
 
     #if 'view_analytic' not in perm_list:
     #     return render_to_response("permissionDenied.html")
-
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-
 
     templateParams = {}
 

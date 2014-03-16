@@ -1,27 +1,12 @@
-from django.shortcuts import render
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from appl.models import *
-from django.http import Http404, HttpResponseRedirect
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
+from core.models import Item
 from appl import func
-from django.core.exceptions import ValidationError
-from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
 from django.template import RequestContext, loader
-from datetime import datetime
-from django.utils.timezone import now
-from django.core.urlresolvers import reverse
-from tpp.SiteUrlMiddleWare import get_request
-from celery import shared_task, task
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
-
-from core.tasks import addTppAttrubute
 from django.conf import settings
 
 def get_wall_list(request):
-
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -30,30 +15,16 @@ def get_wall_list(request):
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    user = request.user
-
-
     current_section = _("Wall")
-
 
     wallPage = _wallContent(request)
 
-
-    bRight = func.getBannersRight(request, ['Right 1', 'Right 2'], settings.SITE_ID, 'AdvBanner/banners.html')
-    bLeft = func.getBannersRight(request, ['Left 1', 'Left 2', 'Left 3'], settings.SITE_ID, 'AdvBanner/banners.html')
-    tops = func.getTops(request)
-
     templateParams = {
-
         'current_section': current_section,
         'wallPage': wallPage,
         'current_company': current_company,
         'cabinetValues': cabinetValues,
-        'bannerRight': bRight,
-        'bannerLeft': bLeft,
-        'tops': tops
     }
-
 
     return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
 
@@ -68,6 +39,7 @@ def _wallContent(request):
     branchesList = Item.getItemsAttributesValues(("NAME"), branches_ids)
 
     branches_dict = {}
+
     for branch in branches:
         branches_dict[branch['p2c__child']] = branch['pk']
 
@@ -75,8 +47,11 @@ def _wallContent(request):
 
     for id, innov in innovValues.items():
 
-        toUpdate = {'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
-                    'BRANCH_ID': branches_dict.get(id, 0)}
+        toUpdate = {
+            'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
+            'BRANCH_ID': branches_dict.get(id, 0)
+        }
+
         innov.update(toUpdate)
 
 
@@ -106,9 +81,16 @@ def _wallContent(request):
 
     template = loader.get_template('Wall/contentPage.html')
 
-    context = RequestContext(request, {'newsValues': newsValues, 'exhibitionsValues': exhibitionsValues,
-                                       'productsValues': productsValues, 'innovValues': innovValues,
-                                       'proposalsValues': proposalsValues})
+    templateParams = {
+        'newsValues': newsValues,
+        'exhibitionsValues': exhibitionsValues,
+        'productsValues': productsValues,
+        'innovValues': innovValues,
+        'proposalsValues': proposalsValues
+    }
+
+    context = RequestContext(request, templateParams)
+
     return template.render(context)
 
 
