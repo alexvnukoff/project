@@ -35,8 +35,11 @@ def get_news_list(request,page=1, item_id=None, slug=None):
     scripts = []
 
 
+
     if not item_id:
-        newsPage = _newsContent(request, page)
+        attr = ('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG')
+        newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
+
     else:
         newsPage = _getdetailcontent(request, item_id)
 
@@ -70,93 +73,6 @@ def get_news_list(request,page=1, item_id=None, slug=None):
 
 
 
-def _newsContent(request, page=1):
-
-    #news = TppTV.active.get_active().order_by('-pk')
-
-    filters, searchFilter = func.filterLive(request)
-
-    #companies = Company.active.get_active().order_by('-pk')
-    sqs = func.getActiveSQS().models(TppTV)
-
-    if len(searchFilter) > 0:
-        sqs = sqs.filter(**searchFilter)
-
-    q = request.GET.get('q', '')
-
-    if q != '':
-        sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-    sortFields = {
-        'date': 'id',
-        'name': 'title'
-    }
-
-    order = []
-
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
-
-    if sortField1 and sortField1 in sortFields:
-        if order1 == 'desc':
-            order.append('-' + sortFields[sortField1])
-        else:
-            order.append(sortFields[sortField1])
-    else:
-        order.append('-id')
-
-    if sortField2 and sortField2 in sortFields:
-        if order2 == 'desc':
-            order.append('-' + sortFields[sortField2])
-        else:
-            order.append(sortFields[sortField2])
-
-
-    news = sqs.order_by(*order)
-
-    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG'), page_num=9, page=page)
-
-    newsList = result[0]
-    news_ids = [id for id in newsList.keys()]
-    countries = Country.objects.filter(p2c__child__p2c__child__in=news_ids).values('p2c__child__p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-
-    for country in countries:
-        country_dict[country['p2c__child__p2c__child']] = country['pk']
-
-    for id, new in newsList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        new.update(toUpdate)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-
-    url_paginator = "tv:paginator"
-    template = loader.get_template('TppTV/contentPage.html')
-
-
-    templateParams = {
-        'newsList': newsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2
-    }
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):

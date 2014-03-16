@@ -791,3 +791,102 @@ def permissionDenied():
      context = RequestContext(request, {})
      page = template.render(context)
      return page
+
+def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
+
+    if not my:
+        filters, searchFilter = filterLive(request)
+
+        sqs = getActiveSQS().models(model)
+
+        if len(searchFilter) > 0:
+            sqs = sqs.filter(**searchFilter)
+
+        q = request.GET.get('q', '')
+
+        if q != '':
+            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+        sortFields = {
+            'date': 'id',
+            'name': 'title'
+        }
+
+        order = []
+
+        sortField1 = request.GET.get('sortField1', 'date')
+        sortField2 = request.GET.get('sortField2', None)
+        order1 = request.GET.get('order1', 'desc')
+        order2 = request.GET.get('order2', None)
+
+        if sortField1 and sortField1 in sortFields:
+            if order1 == 'desc':
+                order.append('-' + sortFields[sortField1])
+            else:
+                order.append(sortFields[sortField1])
+        else:
+            order.append('-id')
+
+        if sortField2 and sortField2 in sortFields:
+            if order2 == 'desc':
+                order.append('-' + sortFields[sortField2])
+            else:
+                order.append(sortFields[sortField2])
+
+        proposal = sqs.order_by(*order)
+        url_paginator = "%s:paginator" % (url)
+
+        params = {
+            'filters': filters,
+            'sortField1': sortField1,
+            'sortField2': sortField2,
+            'order1': order1,
+            'order2': order2
+        }
+
+    else:
+        current_organization = request.session.get('current_company', False)
+
+        if current_organization:
+           if model != Tpp:
+                proposal = SearchQuerySet().models(model).\
+                    filter(SQ(tpp=current_organization) | SQ(company=current_organization))
+           else:
+                proposal = SearchQuerySet().models(model).\
+                    filter(SQ(id=current_organization) | SQ(company=current_organization))
+
+           url_paginator = "%s:my_main_paginator" % url
+           params = {}
+        else:
+             raise ObjectDoesNotExist('you need check company')
+
+
+    result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
+
+
+
+    proposalList = result[0]
+    proposal_ids = [id for id in proposalList.keys()]
+
+    addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
+
+    page = result[1]
+    paginator_range = getPaginatorRange(page)
+
+
+
+
+    template = loader.get_template(template_page)
+
+    templateParams = {
+        'proposalList': proposalList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+
+    }
+    templateParams.update(params)
+
+    context = RequestContext(request, templateParams)
+    return template.render(context)
+

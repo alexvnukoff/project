@@ -37,7 +37,8 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            newsPage = _companiesContent(request, page, my)
+            newsPage = _companiesContent(request, page=page, my=my)
+
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:

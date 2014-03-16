@@ -10,8 +10,10 @@ class SiteUrlMiddleWare:
 
     def process_request(self, request):
         
+
         #if request.GET.get('_', False):
         #    del request.GET['_']       
+
         
         current_domain = request.META.get('HTTP_HOST', False)
         

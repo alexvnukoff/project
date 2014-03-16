@@ -6,7 +6,7 @@
            {% include "main/paginator.html" %}
             {% include "Products/popupFilter.html" %}
              <ul class="listprd">
-                {% for id , attr in productsList.items %}
+                {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
                     {% with attr.IMAGE.0 as image %}
                     {% with attr.CREATE_DATE.0 as date%}

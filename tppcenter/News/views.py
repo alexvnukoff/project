@@ -31,7 +31,9 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         if not item_id:
-            newsPage = _newsContent(request, page, my)
+            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
+
         else:
             newsPage = _getdetailcontent(request, item_id)
 
@@ -74,94 +76,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
         return HttpResponse(json.dumps(serialize))
 
-def _newsContent(request, page=1, my=None):
 
-
-    if not my:
-        filters, searchFilter = func.filterLive(request)
-
-        sqs = func.getActiveSQS().models(News)
-
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
-
-        q = request.GET.get('q', '')
-
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
-
-        order = []
-
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
-
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
-            else:
-                order.append(sortFields[sortField1])
-        else:
-            order.append('-id')
-
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
-
-        news = sqs.order_by(*order)
-        url_paginator = "news:paginator"
-
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
-        }
-    else:
-
-        current_organization = request.session.get('current_company', False)
-
-        if current_organization:
-             news = SearchQuerySet().models(News).filter(SQ(tpp=current_organization)|SQ(company=current_organization))
-
-             url_paginator = "news:my_main_paginator"
-             params = {}
-        else:
-             raise ObjectDoesNotExist('you need check company')
-
-    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
-
-    newsList = result[0]
-    news_ids = [id for id in newsList.keys()]
-
-    func.addDictinoryWithCountryAndOrganization(news_ids, newsList)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    template = loader.get_template('News/contentPage.html')
-
-    templateParams = {
-        'newsList': newsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 @login_required(login_url='/login/')
 def newsForm(request, action, item_id=None):
