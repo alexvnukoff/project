@@ -24,7 +24,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-
+    description = ""
     cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [
@@ -39,11 +39,15 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
               proposalsPage = func.setContent(request, BusinessProposal, ('NAME', 'SLUG'), 'proposal',
                                               'BusinessProposal/contentPage.html', 5, page=page, my=my)
 
+
         except ObjectDoesNotExist:
 
             proposalsPage = func.emptyCompany()
     else:
-        proposalsPage = _proposalDetailContent(request, item_id, current_company)
+        result = _proposalDetailContent(request, item_id, current_company)
+        proposalsPage = result[0]
+
+        description = result[1]
 
 
     if not request.is_ajax():
@@ -59,7 +63,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'search': request.GET.get('q', ''),
             'cabinetValues': cabinetValues,
             'addNew': reverse('proposal:add'),
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description,
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -82,7 +87,8 @@ def _proposalDetailContent(request, item_id, current_company):
 
     proposal = get_object_or_404(BusinessProposal, pk=item_id)
     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
-
+    description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
 
     photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -100,7 +106,7 @@ def _proposalDetailContent(request, item_id, current_company):
     }
 
     context = RequestContext(request, templateParams)
-    return template.render(context)
+    return template.render(context), description
 
 
 @login_required(login_url='/login/')

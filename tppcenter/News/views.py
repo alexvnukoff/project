@@ -19,7 +19,7 @@ from django.conf import settings
 def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     current_company = request.session.get('current_company', False)
-
+    description = ""
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -35,7 +35,9 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
 
         else:
-            newsPage = _getdetailcontent(request, item_id)
+            result = _getdetailcontent(request, item_id)
+            newsPage = result[0]
+            description = result[1]
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -62,7 +64,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'search': request.GET.get('q', ''),
             'addNew': reverse('news:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'description': description
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -264,6 +267,8 @@ def updateNew(request, item_id):
 def _getdetailcontent(request, id):
     new = get_object_or_404(News, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
+    description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
     photos = Gallery.objects.filter(c2p__parent=new)
 
     try:
@@ -283,4 +288,4 @@ def _getdetailcontent(request, id):
 
     context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
 
-    return template.render(context)
+    return template.render(context), description

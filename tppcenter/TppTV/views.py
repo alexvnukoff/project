@@ -23,7 +23,7 @@ def get_news_list(request,page=1, item_id=None, slug=None):
   #       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
    #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
 
-
+    description = ''
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
@@ -41,7 +41,9 @@ def get_news_list(request,page=1, item_id=None, slug=None):
         newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
 
     else:
-        newsPage = _getdetailcontent(request, item_id)
+        result = _getdetailcontent(request, item_id)
+        newsPage = result[0]
+        description = result[1]
 
 
     if not request.is_ajax():
@@ -56,7 +58,8 @@ def get_news_list(request,page=1, item_id=None, slug=None):
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('tv:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'description': description
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -211,6 +214,8 @@ def _getdetailcontent(request, item_id):
 
     new = get_object_or_404(TppTV, pk=item_id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
+    description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
 
     organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
 
@@ -249,4 +254,4 @@ def _getdetailcontent(request, item_id):
 
     context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
 
-    return template.render(context)
+    return template.render(context), description

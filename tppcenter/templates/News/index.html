@@ -5,6 +5,14 @@
 
    {% block title %}{% trans 'News' %}{% endblock %}
 
+   {% block description %}
+        {% if description %}
+             <meta name="description" content="{{ description|truncatewords:30 }}"/>
+        {% else %}
+            {{ block.super }}
+         {% endif %}
+   {% endblock %}
+
 
 
     {% block header %}
