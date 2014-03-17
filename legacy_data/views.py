@@ -15,6 +15,7 @@ from tpp.SiteUrlMiddleWare import get_request
 import base64
 from django.utils.translation import trans_real
 from django.utils.translation import get_language, ugettext_lazy as _
+
 def users_reload_CSV_DB(request):
     '''
         Reload user's data from prepared CSV file named users_legacy.csv

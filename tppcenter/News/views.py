@@ -11,19 +11,39 @@ from django.core.urlresolvers import reverse
 from haystack.query import SQ, SearchQuerySet
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.syndication.views import Feed
+from django.utils import feedgenerator
+from django.utils.feedgenerator import Rss201rev2Feed
 
+from datetime import datetime, timedelta
+from pytz import timezone
+import pytz
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, my=None):
+def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     current_company = request.session.get('current_company', False)
+    description = ""
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
+    scripts = []
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
-        newsPage = _newsContent(request, page, my)
+        if not item_id:
+            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
+
+        else:
+            result = _getdetailcontent(request, item_id)
+            newsPage = result[0]
+            description = result[1]
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -36,29 +56,22 @@ def get_news_list(request, page=1, my=None):
     if not request.is_ajax():
         user = request.user
 
-        if user.is_authenticated():
-            notification = Notification.objects.filter(user=request.user, read=False).count()
-            if not user.first_name and not user.last_name:
-                user_name = user.email
-            else:
-                user_name = user.first_name + ' ' + user.last_name
-        else:
-            user_name = None
-            notification = None
+
 
         current_section = _("News")
 
         templateParams = {
-            'user_name': user_name,
+
             'current_section': current_section,
-            'notification': notification,
+
             'newsPage': newsPage,
             'scripts': scripts,
             'current_company': current_company,
             'styles': styles,
             'search': request.GET.get('q', ''),
             'addNew': reverse('news:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'description': description
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -72,94 +85,7 @@ def get_news_list(request, page=1, my=None):
 
         return HttpResponse(json.dumps(serialize))
 
-def _newsContent(request, page=1, my=None):
 
-
-    if not my:
-        filters, searchFilter = func.filterLive(request)
-
-        sqs = func.getActiveSQS().models(News)
-
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
-
-        q = request.GET.get('q', '')
-
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
-
-        order = []
-
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
-
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
-            else:
-                order.append(sortFields[sortField1])
-        else:
-            order.append('-id')
-
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
-
-        news = sqs.order_by(*order)
-        url_paginator = "news:paginator"
-
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
-        }
-    else:
-
-        current_organization = request.session.get('current_company', False)
-
-        if current_organization:
-             news = SearchQuerySet().models(News).filter(SQ(tpp=current_organization)|SQ(company=current_organization))
-
-             url_paginator = "news:my_main_paginator"
-             params = {}
-        else:
-             raise ObjectDoesNotExist('you need check company')
-
-    result = func.setPaginationForSearchWithValues(news, *('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), page_num=5, page=page)
-
-    newsList = result[0]
-    news_ids = [id for id in newsList.keys()]
-
-    func.addDictinoryWithCountryAndOrganization(news_ids, newsList)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    template = loader.get_template('News/contentPage.html')
-
-    templateParams = {
-        'newsList': newsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 @login_required(login_url='/login/')
 def newsForm(request, action, item_id=None):
@@ -171,10 +97,7 @@ def newsForm(request, action, item_id=None):
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    if 'Redactor' in request.user.groups.values_list('name', flat=True):
-        redactor = True
-    else:
-        redactor = False
+
 
     current_section = _("News")
 
@@ -191,13 +114,18 @@ def newsForm(request, action, item_id=None):
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues,
-        'redactor': redactor
+       
     }
 
     return render_to_response('News/index.html', templateParams, context_instance=RequestContext(request))
 
 
 def addNews(request):
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
+
     current_company = request.session.get('current_company', None)
 
     if current_company:
@@ -246,7 +174,7 @@ def addNews(request):
 
     template = loader.get_template('News/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
+    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries, 'redactor': redactor})
 
     newsPage = template.render(context)
 
@@ -255,6 +183,10 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
 
     try:
         item = Organization.objects.get(p2c__child_id=item_id)
@@ -331,7 +263,8 @@ def updateNew(request, item_id):
         'categories': categories,
         'countries': countries,
         'choosen_country': choosen_country,
-        'create_date':create_date
+        'create_date':create_date,
+        'redactor': redactor
     }
 
     context = RequestContext(request, templateParams)
@@ -340,55 +273,15 @@ def updateNew(request, item_id):
     return newsPage
 
 
-def detail(request, item_id, slug=None):
 
-
-   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('news:detail',  args=[slug]))
-
-    styles = [
-        settings.STATIC_URL + 'tppcenter/css/news.css',
-        settings.STATIC_URL + 'tppcenter/css/company.css'
-    ]
-
-    scripts = []
-
-    user = request.user
-
-    if user.is_authenticated():
-        notification = len(Notification.objects.filter(user=request.user, read=False))
-
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
-    else:
-        user_name = None
-        notification = None
-
-    current_section = "News"
-
-    newsPage = _getdetailcontent(request, item_id)
-
-    templateParams = {
-        'user_name': user_name,
-        'current_section': current_section,
-        'newsPage': newsPage,
-        'notification': notification,
-        'styles': styles,
-        'scripts': scripts,
-        'addNew': reverse('news:add'),
-        'item_id': item_id
-    }
-
-    return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
 
 
 
 def _getdetailcontent(request, id):
     new = get_object_or_404(News, pk=id)
     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
+    description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
     photos = Gallery.objects.filter(c2p__parent=new)
 
     try:
@@ -408,4 +301,89 @@ def _getdetailcontent(request, id):
 
     context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
 
-    return template.render(context)
+    return template.render(context), description
+
+
+
+
+class CustomFeedGenerator(Rss201rev2Feed):
+    def rss_attributes(self):
+        super(CustomFeedGenerator, self).rss_attributes()
+        return {"version": self._version,
+                'xmlns:media': "http://search.yahoo.com/mrss/",
+                "xmlns:yandex": "http://news.yandex.ru"}
+
+
+    def add_root_elements(self, handler):
+        handler.addQuickElement("title", self.feed['title'])
+        handler.addQuickElement("link", self.feed['link'])
+        handler.addQuickElement("description", self.feed['description'])
+        handler.startElement('image', {})
+        handler.addQuickElement("url", 'http://tppcenter.com')
+        handler.addQuickElement("title", "Tppcenter news")
+        handler.addQuickElement("link", 'http://www.tppcenter.com')
+        handler.endElement('image')
+
+
+        return False
+
+
+
+
+    def add_item_elements(self, handler, item):
+            super(CustomFeedGenerator, self).add_item_elements(handler, item)
+            # Добавление кастомного тега в RSS-ленту
+            handler.addQuickElement(u"yandex:full-text", item["content"])
+
+
+
+
+
+
+class NewsFeed(Feed):
+    title = "Police beat site news"
+    link = "/sitenews/"
+    description = "Updates on changes and additions to police beat central."
+    feed_url = None
+
+    unique_id_is_permalink = None
+
+    feed_type = CustomFeedGenerator
+
+
+    def items(self):
+        group = Group.objects.get(name='Redactor')
+        users = group.user_set.all()
+        return News.objects.filter(create_user__in=users)
+
+
+    def item_title(self, item):
+        return item.getName()
+
+
+    def item_description(self, item):
+        pass
+
+    def item_guid(self, obj):
+        pass
+
+
+    def item_link(self, item):
+        slug = item.getAttributeValues('SLUG')[0]
+        return reverse('news:detail', args=[slug])
+
+
+    def item_pubdate(self, item):
+        moscow = timezone("Europe/Moscow")
+        utc = pytz.utc
+
+        utc_dt = utc.localize(datetime.utcfromtimestamp(item.create_date.timestamp()))
+
+        mos_dt = utc_dt.astimezone(moscow)
+        return mos_dt
+
+    def item_extra_kwargs(self, item):
+        return {
+            "content": item.getAttributeValues('DETAIL_TEXT')[0],
+        }
+

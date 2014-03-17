@@ -47,6 +47,8 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
+    'BC-CIS.COM', # Also allow FQDN and subdomains
+    'B24ONLINE.COM', # Also allow FQDN and subdomains
 ]
 
 # Application definition

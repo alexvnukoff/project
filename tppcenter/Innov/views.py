@@ -21,7 +21,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
      #    return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
 
     current_company = request.session.get('current_company', False)
-
+    description = ''
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -40,7 +40,9 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:
-        newsPage = _innovDetailContent(request, item_id)
+       result  = _innovDetailContent(request, item_id)
+       newsPage = result[0]
+       description = result[1]
 
     if not request.is_ajax():
 
@@ -55,7 +57,8 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
             'current_company': current_company,
             'addNew': reverse('innov:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
@@ -221,6 +224,8 @@ def _innovDetailContent(request, item_id):
     attr = ('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN', 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT')
 
     innovValues = innov.getAttributeValues(*attr)
+    description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
 
     photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -275,7 +280,7 @@ def _innovDetailContent(request, item_id):
 
     context = RequestContext(request, templateParams)
 
-    return template.render(context)
+    return template.render(context), description
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):

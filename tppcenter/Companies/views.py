@@ -20,7 +20,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
       #   return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     cabinetValues = func.getB2BcabinetValues(request)
 
-
+    description = ""
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -37,12 +37,14 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            newsPage = _companiesContent(request, page, my)
+            newsPage = _companiesContent(request, page=page, my=my)
+
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:
-        newsPage = _companiesDetailContent(request, item_id)
-
+        result = _companiesDetailContent(request, item_id)
+        newsPage = result[0]
+        description = result[1]
     if not request.is_ajax():
 
         current_section = _("Companies")
@@ -56,7 +58,8 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'current_company': current_company,
             'addNew': reverse('companies:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -184,6 +187,8 @@ def _companiesDetailContent(request, item_id):
 
     company = get_object_or_404(Company, pk=item_id)
     companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
+    description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
 
     country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
 
@@ -191,7 +196,7 @@ def _companiesDetailContent(request, item_id):
 
     context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
 
-    return template.render(context)
+    return template.render(context), description
 
 
 def _tabsNews(request, company, page=1):

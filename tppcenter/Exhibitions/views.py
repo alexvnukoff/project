@@ -21,7 +21,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
-
+    description = ""
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -33,11 +33,16 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            exhibitionPage = _exhibitionsContent(request, page, my)
+            attr = ('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE', 'END_EVENT_DATE', 'SLUG')
+            exhibitionPage = func.setContent(request, Exhibition, attr, 'exhibitions', 'Exhibitions/contentPage.html',
+                                             5, page=page, my=my)
+
         except ObjectDoesNotExist:
             exhibitionPage = func.emptyCompany()
     else:
-        exhibitionPage = _exhibitionsDetailContent(request, item_id)
+        result = _exhibitionsDetailContent(request, item_id)
+        exhibitionPage = result[0]
+        description = result[1]
 
     if not request.is_ajax():
 
@@ -52,7 +57,8 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'addNew': reverse('exhibitions:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
@@ -67,98 +73,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
         return HttpResponse(json.dumps(serialize))
 
-def _exhibitionsContent(request, page=1, my=None):
 
-    if not my:
-        filters, searchFilter = func.filterLive(request)
-
-        sqs = func.getActiveSQS().models(Exhibition)
-
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
-
-        q = request.GET.get('q', '')
-
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
-
-        order = []
-
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
-
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
-            else:
-                order.append(sortFields[sortField1])
-        else:
-            order.append('-id')
-
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
-
-        exhibitions = sqs.order_by(*order)
-
-        url_paginator = "exhibitions:paginator"
-
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
-        }
-    else:
-
-         current_organization = request.session.get('current_company', False)
-
-         if current_organization:
-             exhibitions = SearchQuerySet().models(Exhibition).\
-                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
-
-             url_paginator = "exhibitions:my_main_paginator"
-             params = {}
-         else:
-             raise ObjectDoesNotExist('you need check company')
-
-    attr = ('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE', 'END_EVENT_DATE', 'SLUG')
-
-    result = func.setPaginationForSearchWithValues(exhibitions, *attr, page_num=5, page=page)
-
-    exhibitionsList = result[0]
-    exhibitions_ids = [id for id in exhibitionsList.keys()]
-
-    func.addDictinoryWithCountryAndOrganization(exhibitions_ids, exhibitionsList)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-
-    template = loader.get_template('Exhibitions/contentPage.html')
-
-    templateParams = {
-        'exhibitionsList': exhibitionsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-
-    }
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 
 def _exhibitionsDetailContent(request, item_id):
@@ -172,6 +87,8 @@ def _exhibitionsDetailContent(request, item_id):
      )
 
      exhibitionlValues = exhibition.getAttributeValues(*attr)
+     description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
+     description = func.cleanFromHtml(description)
 
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -190,7 +107,7 @@ def _exhibitionsDetailContent(request, item_id):
 
      context = RequestContext(request, templateParams)
 
-     return template.render(context)
+     return template.render(context), description
 
 
 @login_required(login_url='/login/')

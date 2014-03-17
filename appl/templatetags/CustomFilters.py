@@ -10,7 +10,7 @@ from lxml.html.clean import clean_html
 from appl import func
 from appl.models import Tpp, Company, Product
 from appl.models import Notification
-
+import lxml
 from urllib.parse import urlencode
 
 register = template.Library()
@@ -62,6 +62,8 @@ def getSymbol(value):
 @register.filter(name='split')
 def split(str, splitter):
     return str.split(splitter)
+
+
 
 
 @register.filter(name='cleanHtml')

@@ -23,7 +23,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 
     cabinetValues = func.getB2BcabinetValues(request)
-
+    description = ""
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -38,11 +38,15 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id is None:
         try:
-            tendersPage = _tendersContent(request, page, my)
+            attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
+            tendersPage = func.setContent(request, Tender, attr, 'tenders', 'Tenders/contentPage.html', 5, page=page,
+                                          my=my)
         except ObjectDoesNotExist:
             tendersPage = func.emptyCompany()
     else:
-        tendersPage = _tenderDetailContent(request, item_id)
+        result = _tenderDetailContent(request, item_id)
+        tendersPage = result[0]
+        description = result[1]
 
     if not request.is_ajax():
         current_section = _("Tenders")
@@ -56,7 +60,8 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
             'search': request.GET.get('q', ''),
             'addNew': reverse('tenders:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
@@ -71,98 +76,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
         return HttpResponse(json.dumps(serialize))
 
 
-def _tendersContent(request, page=1, my=None):
 
-
-    #tenders = Tender.active.get_active().order_by('-pk')
-    if not my:
-        filters, searchFilter = func.filterLive(request)
-
-        #companies = Company.active.get_active().order_by('-pk')
-        sqs = func.getActiveSQS().models(Tender)
-
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
-
-        q = request.GET.get('q', '')
-
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
-
-        order = []
-
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
-
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
-            else:
-                order.append(sortFields[sortField1])
-        else:
-            order.append('-id')
-
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
-
-
-        tenders = sqs.order_by(*order)
-        url_paginator = "tenders:paginator"
-
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
-        }
-
-    else:
-        current_organization = request.session.get('current_company', False)
-
-        if current_organization:
-             tenders = SearchQuerySet().models(Tender).\
-                 filter(SQ(tpp=current_organization) | SQ(company=current_organization))
-
-             url_paginator = "tenders:my_main_paginator"
-             params = {}
-        else:
-             raise ObjectDoesNotExist('you need check company')
-
-
-    result = func.setPaginationForSearchWithValues(tenders, *('NAME', 'COST', 'CURRENCY', 'SLUG'), page_num=5, page=page)
-
-    tendersList = result[0]
-    tenders_ids = [id for id in tendersList.keys()]
-    func.addDictinoryWithCountryAndOrganization(tenders_ids, tendersList)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    template = loader.get_template('Tenders/contentPage.html')
-
-    templateParams = {
-        'tendersList': tendersList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 
 def _tenderDetailContent(request, item_id):
@@ -175,6 +89,9 @@ def _tenderDetailContent(request, item_id):
      )
 
      tenderValues = tender.getAttributeValues(*attr)
+
+     description = tenderValues.get('DETAIL_TEXT', False)[0] if tenderValues.get('DETAIL_TEXT', False) else ""
+     description = func.cleanFromHtml(description)
 
      photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -192,7 +109,7 @@ def _tenderDetailContent(request, item_id):
 
      context = RequestContext(request, templateParams)
 
-     return template.render(context)
+     return template.render(context), description
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
