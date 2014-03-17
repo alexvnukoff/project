@@ -87,8 +87,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
 
 
 
