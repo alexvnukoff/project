@@ -11,12 +11,13 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.forms.models import modelformset_factory
 from django.db import transaction
 from core.amazonMethods import add, delete, addFile, deleteFile
 from appl import func
 from django.db.models import Q
+from PIL import Image
 
 
 
@@ -181,7 +182,9 @@ class ItemForm(forms.Form):
                  value = value[0] if value and isinstance(value, list) else value
 
                  if value:
-                    if not isinstance(value, InMemoryUploadedFile):
+                    if isinstance(value, TemporaryUploadedFile):
+                        self.fields[title].initial = value
+                    elif not isinstance(value, InMemoryUploadedFile):
                            self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(), name=value)
                     else:
                            self.fields[title].initial = value
@@ -216,8 +219,11 @@ class ItemForm(forms.Form):
         self._errors = {}
         for title in self.fields:
             try:
+                if isinstance(self.fields[title].initial, TemporaryUploadedFile):
+                  self._errors[title] = _('Image size must be less than 2 mb ')
                 if ((isinstance(self.fields[title], forms.ImageField) or isinstance(self.fields[title], forms.FileField))
                     and not isinstance(self.fields[title].initial, InMemoryUploadedFile) and self.fields[title].initial):
+
 
                     continue
                 self.fields[title].clean(self.fields[title].initial)

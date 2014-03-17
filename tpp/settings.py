@@ -162,7 +162,10 @@ LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
+FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
+                        "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 
 STATIC_URL = '/static/'
 

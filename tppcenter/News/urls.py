@@ -4,6 +4,7 @@ from django.contrib import admin
 import tppcenter.News.views
 import tppcenter.views
 
+
 admin.autodiscover()
 
 
@@ -16,4 +17,5 @@ urlpatterns = patterns('',
      url(r'^add/$', tppcenter.News.views.newsForm,{'action': 'add'} , name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.News.views.newsForm,{'action': 'update'}, name="update"),
      url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.News.views.get_news_list, name="detail"),
+
 )
