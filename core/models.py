@@ -105,44 +105,53 @@ class User(AbstractBaseUser, PermissionsMixin):
         object is passed, it checks if the user has all required perms for this
         object.
         """
-        if obj is None:
-            return PermissionsMixin.has_perms(self, perm_list)
+        #if obj is None:
+            #return PermissionsMixin.has_perms(self, perm_list)
 
         if self.is_superuser:
             return True
         else:
             group_list = []
-            obj_type = obj.__class__.__name__ # get current object's type
-            obj_type = obj_type.lower()
+            #obj_type = obj.__class__.__name__ # get current object's type
+            #obj_type = obj_type.lower()
 
-            if self == obj.create_user: # is user object's owner?
+            if obj:
+                obj_type = obj.__class__.__name__ # get current object's type
+                obj_type = obj_type.lower()
+
+                if self == obj.create_user: # is user object's owner?
+                    group_list.append('Owner')
+                    group_list.append('Admin')
+                    if obj.status.perm: # is there permissions group for current object's state?
+                        group_list.append(obj.status.perm.name)
+                    else: # no permissions group for current state, attach Staff group
+                        group_list.append('Staff')
+                else:
+                    if self == obj.update_user or self.groups.filter(name=obj.community.name): # is user community member?
+                        if self.is_manager: # has user content manager flag?
+                            group_list.append('Admin')
+                            if obj.status.perm: # is there permissions group for current object's state?
+                                group_list.append(obj.status.perm.name)
+                            else: # no permissions group for current state, attach Staff group
+                                group_list.append('Staff')
+                        else:
+                            if obj.status.perm: # is there permissions group for current object's state?
+                                group_list.append(obj.status.perm.name)
+                            else: # no permissions group for current state, attach Staff group
+                                group_list.append('Staff')
+                    else:
+                        if obj_type == 'company':
+                            #try to receive TPP for this company using Item class and Relationship and check is the user in Community
+                            if self.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=obj.pk).\
+                                        values('c2p__parent__organization__community__name')) and self.is_manager:
+                                group_list.append('Owner')
+                                group_list.append('Admin')
+                                group_list.append('Staff')
+            else:
+                obj_type = '_'
                 group_list.append('Owner')
                 group_list.append('Admin')
-                if obj.status.perm: # is there permissions group for current object's state?
-                    group_list.append(obj.status.perm.name)
-                else: # no permissions group for current state, attach Staff group
-                    group_list.append('Staff')
-            else:
-                if self == obj.update_user or self.groups.filter(name=obj.community.name): # is user community member?
-                    if self.is_manager: # has user content manager flag?
-                        group_list.append('Admin')
-                        if obj.status.perm: # is there permissions group for current object's state?
-                            group_list.append(obj.status.perm.name)
-                        else: # no permissions group for current state, attach Staff group
-                            group_list.append('Staff')
-                    else:
-                        if obj.status.perm: # is there permissions group for current object's state?
-                            group_list.append(obj.status.perm.name)
-                        else: # no permissions group for current state, attach Staff group
-                            group_list.append('Staff')
-                else:
-                    if obj_type == 'company':
-                        #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-                        if self.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=obj.pk).\
-                                    values('c2p__parent__organization__community__name')) and self.is_manager:
-                            group_list.append('Owner')
-                            group_list.append('Admin')
-                            group_list.append('Staff')
+                group_list.append('Staff')
 
             # get all permissions from all related groups for current type of item
             p_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
@@ -150,6 +159,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             # attach user's private permissions
             p_list += [p['codename'] for p in self.user_permissions.filter(codename__contains=obj_type).values('codename')]
             p_list = list(set(p_list)) #remove duplicated keys in permissions list
+            #print(p_list)
             for i in perm_list:
                 if i not in p_list:
                     return False
