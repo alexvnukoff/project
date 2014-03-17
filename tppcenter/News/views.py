@@ -114,7 +114,7 @@ def newsForm(request, action, item_id=None):
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues,
-       
+
     }
 
     return render_to_response('News/index.html', templateParams, context_instance=RequestContext(request))
@@ -215,16 +215,15 @@ def updateNew(request, item_id):
     categories = func.getItemsList('NewsCategories', 'NAME')
     countries = func.getItemsList("Country", 'NAME')
 
-    if request.method != 'POST':
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
 
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+    if gallery.queryset:
+       photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
 
-        form = ItemForm('News', id=item_id)
+    form = ItemForm('News', id=item_id)
 
     if request.POST:
 
@@ -319,8 +318,8 @@ class CustomFeedGenerator(Rss201rev2Feed):
         handler.addQuickElement("link", self.feed['link'])
         handler.addQuickElement("description", self.feed['description'])
         handler.startElement('image', {})
-        handler.addQuickElement("url", 'http://tppcenter.com')
-        handler.addQuickElement("title", "Tppcenter news")
+        handler.addQuickElement("url", 'http://tppcenter.com/static/tppcenter/img/logo.png')
+        handler.addQuickElement("title", "ТПП-Центер новости")
         handler.addQuickElement("link", 'http://www.tppcenter.com')
         handler.endElement('image')
 
@@ -333,7 +332,13 @@ class CustomFeedGenerator(Rss201rev2Feed):
     def add_item_elements(self, handler, item):
             super(CustomFeedGenerator, self).add_item_elements(handler, item)
             # Добавление кастомного тега в RSS-ленту
-            handler.addQuickElement(u"yandex:full-text", item["content"])
+            handler.addQuickElement("yandex:full-text", item["content"])
+            if item.get('video_url', False):
+                handler.addQuickElement("enclosure", "", {'type': "video/x-ms-asf",'url':'http://tppcenter.com' +  item['video_url']})
+            if item.get('image'):
+
+                handler.addQuickElement("enclosure", "", {'type': "image/png", 'url':item['image']})
+
 
 
 
@@ -341,9 +346,9 @@ class CustomFeedGenerator(Rss201rev2Feed):
 
 
 class NewsFeed(Feed):
-    title = "Police beat site news"
-    link = "/sitenews/"
-    description = "Updates on changes and additions to police beat central."
+    title = "Информационный отдел ТПП Центра"
+    link = "/"
+    description = "Новостная лента ТПП-Центра."
     feed_url = None
 
     unique_id_is_permalink = None
@@ -354,7 +359,7 @@ class NewsFeed(Feed):
     def items(self):
         group = Group.objects.get(name='Redactor')
         users = group.user_set.all()
-        return News.objects.filter(create_user__in=users)
+        return News.active.get_active().filter(create_user__in=users)[:20]
 
 
     def item_title(self, item):
@@ -383,7 +388,13 @@ class NewsFeed(Feed):
         return mos_dt
 
     def item_extra_kwargs(self, item):
-        return {
-            "content": item.getAttributeValues('DETAIL_TEXT')[0],
-        }
+        video_url = reverse('news:detail', args=[item.getAttributeValues('SLUG')[0]]) if item.getAttributeValues('YOUTUBE_CODE') else False
+        image = (settings.MEDIA_URL + 'big/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues('IMAGE') else False
+
+        return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
+
+
+
+
+
 
