@@ -11,7 +11,13 @@ from django.core.urlresolvers import reverse
 from haystack.query import SQ, SearchQuerySet
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.syndication.views import Feed
+from django.utils import feedgenerator
+from django.utils.feedgenerator import Rss201rev2Feed
 
+from datetime import datetime, timedelta
+from pytz import timezone
+import pytz
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
@@ -91,10 +97,7 @@ def newsForm(request, action, item_id=None):
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    if 'Redactor' in request.user.groups.values_list('name', flat=True):
-        redactor = True
-    else:
-        redactor = False
+
 
     current_section = _("News")
 
@@ -118,6 +121,11 @@ def newsForm(request, action, item_id=None):
 
 
 def addNews(request):
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
+
     current_company = request.session.get('current_company', None)
 
     if current_company:
@@ -166,7 +174,7 @@ def addNews(request):
 
     template = loader.get_template('News/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
+    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries, 'redactor': redactor})
 
     newsPage = template.render(context)
 
@@ -175,6 +183,10 @@ def addNews(request):
 
 
 def updateNew(request, item_id):
+    if 'Redactor' in request.user.groups.values_list('name', flat=True):
+        redactor = True
+    else:
+        redactor = False
 
     try:
         item = Organization.objects.get(p2c__child_id=item_id)
@@ -251,7 +263,8 @@ def updateNew(request, item_id):
         'categories': categories,
         'countries': countries,
         'choosen_country': choosen_country,
-        'create_date':create_date
+        'create_date':create_date,
+        'redactor': redactor
     }
 
     context = RequestContext(request, templateParams)
@@ -289,3 +302,88 @@ def _getdetailcontent(request, id):
     context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
 
     return template.render(context), description
+
+
+
+
+class CustomFeedGenerator(Rss201rev2Feed):
+    def rss_attributes(self):
+        super(CustomFeedGenerator, self).rss_attributes()
+        return {"version": self._version,
+                'xmlns:media': "http://search.yahoo.com/mrss/",
+                "xmlns:yandex": "http://news.yandex.ru"}
+
+
+    def add_root_elements(self, handler):
+        handler.addQuickElement("title", self.feed['title'])
+        handler.addQuickElement("link", self.feed['link'])
+        handler.addQuickElement("description", self.feed['description'])
+        handler.startElement('image', {})
+        handler.addQuickElement("url", 'http://tppcenter.com')
+        handler.addQuickElement("title", "Tppcenter news")
+        handler.addQuickElement("link", 'http://www.tppcenter.com')
+        handler.endElement('image')
+
+
+        return False
+
+
+
+
+    def add_item_elements(self, handler, item):
+            super(CustomFeedGenerator, self).add_item_elements(handler, item)
+            # Добавление кастомного тега в RSS-ленту
+            handler.addQuickElement(u"yandex:full-text", item["content"])
+
+
+
+
+
+
+class NewsFeed(Feed):
+    title = "Police beat site news"
+    link = "/sitenews/"
+    description = "Updates on changes and additions to police beat central."
+    feed_url = None
+
+    unique_id_is_permalink = None
+
+    feed_type = CustomFeedGenerator
+
+
+    def items(self):
+        group = Group.objects.get(name='Redactor')
+        users = group.user_set.all()
+        return News.objects.filter(create_user__in=users)
+
+
+    def item_title(self, item):
+        return item.getName()
+
+
+    def item_description(self, item):
+        pass
+
+    def item_guid(self, obj):
+        pass
+
+
+    def item_link(self, item):
+        slug = item.getAttributeValues('SLUG')[0]
+        return reverse('news:detail', args=[slug])
+
+
+    def item_pubdate(self, item):
+        moscow = timezone("Europe/Moscow")
+        utc = pytz.utc
+
+        utc_dt = utc.localize(datetime.utcfromtimestamp(item.create_date.timestamp()))
+
+        mos_dt = utc_dt.astimezone(moscow)
+        return mos_dt
+
+    def item_extra_kwargs(self, item):
+        return {
+            "content": item.getAttributeValues('DETAIL_TEXT')[0],
+        }
+
