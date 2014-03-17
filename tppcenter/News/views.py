@@ -114,7 +114,7 @@ def newsForm(request, action, item_id=None):
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues,
-        'redactor': redactor
+       
     }
 
     return render_to_response('News/index.html', templateParams, context_instance=RequestContext(request))
