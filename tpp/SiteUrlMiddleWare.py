@@ -1,8 +1,8 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
-from threading import local
 from threading import current_thread
 import os
+from django.shortcuts import Http404
 
 
 
@@ -16,6 +16,9 @@ class SiteUrlMiddleWare:
 
         
         current_domain = request.META.get('HTTP_HOST', False)
+
+        if current_domain is False:
+            Http404()
         
         if current_domain[:4] == "www":
             current_domain = current_domain[4:]

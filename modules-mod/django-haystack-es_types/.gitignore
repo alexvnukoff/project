@@ -1,0 +1,15 @@
+.settings
+*.pyc
+.DS_Store
+_build
+.*.sw[po]
+*.egg-info
+dist
+build
+MANIFEST
+.tox
+env
+env3
+
+# Because I'm ghetto like that.
+tests/pyelasticsearch.py
