@@ -73,6 +73,9 @@ $(function() {
             </div>
             <div>
                 <label class="sapce">{% trans 'Date' %}</label>
+                 {% if form.errors.CREATE_DATE %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.CREATE_DATE }}</div></div>
+                {% endif %}
                 <input type="datetime" name="CREATE_DATE" placeholder="" class="date" value="{{ create_date|date:"m/d/Y" }}" />
             </div>
             <div>
@@ -84,7 +87,10 @@ $(function() {
             </div>
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
-                <textarea name="keywords" rows="4"></textarea>
+                {% if form.errors.KEYWORD %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                {% endif %}
+                <textarea name="KEYWORD" rows="4"></textarea>
             </div>
         </div>
         <ul class="uploadconfig">

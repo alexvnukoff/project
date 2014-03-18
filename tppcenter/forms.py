@@ -476,6 +476,7 @@ class BasePages(BaseModelFormSet):
         __init__ of BasePhotoGallery
         parent_id = items that in relationship with Gallery
         """
+
         self.toDelete = []
         self.files_to_delete = []
         super(BasePages, self).__init__(*args, **kwargs)
@@ -485,17 +486,14 @@ class BasePages(BaseModelFormSet):
         if post and post.getlist("del[]"):
             self.toDelete.extend(post.getlist("del[]"))
 
-        if post and files:
-            for i in range(0, int(post['pages-TOTAL_FORMS'])):
-
-                if post.get('form-'+str(i), False) and files.get('form-'+str(i)+'-document', False):
-                    item = post['form-'+str(i)]
-                    self.toDelete.append(item)
 
 
 
 
-        self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
+        if post.get('pages-0-content', False):
+            super(BasePages, self).save(False)
+        else:
+            self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
 
 
     @transaction.atomic

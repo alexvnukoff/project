@@ -363,7 +363,7 @@ def addProject(request):
 
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -373,6 +373,8 @@ def addProject(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
 
         values = _getValues(request)
 
@@ -388,7 +390,7 @@ def addProject(request):
 
 
     template = loader.get_template('Innov/addForm.html')
-    context = RequestContext(request, {'form': form, 'branches': branches, 'currency_slots': currency_slots})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'currency_slots': currency_slots, 'pages': pages})
     newsPage = template.render(context)
 
 
@@ -416,7 +418,10 @@ def updateProject(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -436,9 +441,6 @@ def updateProject(request, item_id):
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
         values = _getValues(request)
 

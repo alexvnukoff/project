@@ -207,6 +207,7 @@ def addProducts(request):
 
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
+    pages = None
 
     if request.POST:
 
@@ -217,6 +218,10 @@ def addProducts(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
+
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
@@ -253,7 +258,8 @@ def addProducts(request):
         'form': form,
         'measurement_slots': measurement_slots,
         'currency_slots': currency_slots,
-        'categotySelect': categotySelect
+        'categotySelect': categotySelect,
+        'pages': pages
     }
 
     context = RequestContext(request, templateParams)
@@ -299,7 +305,11 @@ def updateProduct(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -321,8 +331,7 @@ def updateProduct(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")

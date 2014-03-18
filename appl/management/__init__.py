@@ -232,7 +232,7 @@ def databaseInitialization(sender, **kwargs):
         attr = {'NAME': {'title': 'Estonia', 'title_ru': 'Эстония'}}
         cntr.setAttributeValue(attr, crt_usr)
 
-    content_type = {'News': {'NAME': True, 'IMAGE': True, 'DETAIL_TEXT': True, 'YOUTUBE_CODE': False},
+    content_type = {'News': {'NAME': True, 'IMAGE': True, 'DETAIL_TEXT': True, 'YOUTUBE_CODE': False, 'ANONS': False},
 
                     'BusinessProposal': {'NAME': True, 'DETAIL_TEXT': True, 'KEYWORD': False, 'DOCUMENT_1': False,
                                          'DOCUMENT_2': False, 'DOCUMENT_3': False},

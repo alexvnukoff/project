@@ -278,15 +278,12 @@ def addTpp(request):
     if request.POST:
         user = request.user
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-
         values = _getValues(request)
 
         form = ItemForm('Tpp', values=values)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
@@ -300,6 +297,7 @@ def addTpp(request):
 
 
 def updateTpp(request, item_id):
+
     item = Organization.objects.get(pk=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
@@ -316,13 +314,10 @@ def updateTpp(request, item_id):
     countries = func.getItemsList("Country", 'NAME')
     tpp = Tpp.objects.get(pk=item_id)
 
+    form = ItemForm('Tpp', id=item_id)
 
-    if request.method != 'POST':
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
 
-        form = ItemForm('Tpp', id=item_id)
+
 
     if request.POST:
         user = request.user
@@ -345,7 +340,6 @@ def updateTpp(request, item_id):
 
     templateParams = {
         'form': form,
-        'pages': pages,
         'choosen_country': choosen_country,
         'countries': countries,
         'tpp': tpp

@@ -351,7 +351,7 @@ def companyForm(request, action, item_id=None):
 
     templatePrarams = {
         'formContent': newsPage,
-        'current_company':current_company,
+        'current_company': current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
@@ -378,8 +378,7 @@ def addCompany(request):
 
 
     if request.POST:
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
+
 
         values = _getValues(request)
         branch = request.POST.get('BRANCH', "")
@@ -387,7 +386,7 @@ def addCompany(request):
         form = ItemForm('Company', values=values)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
 
             func.notify("item_creating", 'notification', user=request.user)
 
@@ -437,16 +436,13 @@ def updateCompany(request, item_id):
         except Exception:
             currentBranch = ""
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
+
 
         form = ItemForm('Company', id=item_id)
 
     if request.POST:
         user = request.user
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
+
 
 
         values = _getValues(request)
@@ -467,7 +463,6 @@ def updateCompany(request, item_id):
         'form': form,
         'branches': branches,
         'currentBranch': currentBranch,
-        'pages': pages,
         'company': company,
         'choosen_country': choosen_country,
         'countries': countries,

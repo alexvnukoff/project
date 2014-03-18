@@ -38,7 +38,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         if not item_id:
-            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
 
         else:
@@ -152,13 +152,9 @@ def addNews(request):
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'IMAGE': request.FILES.get('IMAGE', "")
-        }
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
 
         form = ItemForm('News', values=values)
@@ -232,14 +228,9 @@ def updateNew(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'IMAGE': request.FILES.get('IMAGE', ""),
-            'IMAGE-CLEAR': request.POST.get('IMAGE-CLEAR', " ")
-        }
-
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         form = ItemForm('News', values=values, id=item_id)
         form.clean()
 

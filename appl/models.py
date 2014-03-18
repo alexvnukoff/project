@@ -562,11 +562,11 @@ class AdditionalPages(Item):
 
       def getTitle(self):
         title = self.getAttributeValues('NAME')
-        return title[0] if title else ''
+        return title[0] if title else self.title
 
       def getContent(self):
         content = self.getAttributeValues('DETAIL_TEXT')
-        return content[0] if content else ''
+        return content[0] if content else self.content
 
 
 class Exhibition(Item):
