@@ -22,9 +22,11 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.cache import cache_page
 
 from django.conf import settings
 
+@cache_page(60 * 5)
 def home(request):
 
 

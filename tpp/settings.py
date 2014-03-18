@@ -87,8 +87,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 
 
 
@@ -97,7 +95,7 @@ MIDDLEWARE_CLASSES = (
 
 )
 
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
 
 ROOT_URLCONF = 'tpp.urls'
 
@@ -115,8 +113,9 @@ CACHES = {
         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
         'TIMEOUT': 300,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY ': 2,
+            'MAX_ENTRIES': 10000,
+            'CULL_FREQUENCY:': 2
+
         }
     }
 }
