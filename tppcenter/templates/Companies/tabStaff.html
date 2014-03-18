@@ -1,0 +1,51 @@
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Image" %}</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Description" %}</td>
+           <td>{% trans "Price" %}</td>
+
+
+        </tr>
+
+       {% for id, attr in productsList.items %}
+            {% with attr.NAME|first as name %}
+            {% with attr.SLUG|first as slug %}
+            {% with attr.DETAIL_TEXT|first as content %}
+            {% with attr.IMAGE|first as logo %}
+            {% with attr.COST|first as cost %}
+            {% with attr.CURRENCY|first as currency %}
+            <tr>
+                <td>{{ id }}</td>
+                <td>
+                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
+                        {% if logo %}
+                             <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                        {% else %}
+                             <img src="{% static "tppcenter/img/item.jpg"  %}" alt="{{ name }}" />
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
+                        {{ name|truncatewords:2 }}
+                    </a>
+                </td>
+                <td>{{ content|cleanHtml|safe|truncatewords_html:10 }}</td>
+                <td>{{ currency|getSymbol }} {{ cost }}</td>
+
+            </tr>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "main/paginator.html" %}
+</div>

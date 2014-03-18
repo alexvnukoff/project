@@ -6,13 +6,13 @@
     $('.keyword').html('');
 </script>
 
- {% with companyValues.POSITION.0 as position %}
- <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+{% with companyValues.POSITION.0 as position %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
- <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
- <script type="text/javascript">
-  var marker;
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<script type="text/javascript">
+    var marker;
         $(document).ready(function($) {
             $( '#tpp-details-tab' ).tabs();
             var href = $('#tpp-details-tab').find('a[href="#cpn-tabs-contacts"]');
@@ -27,13 +27,23 @@
              initialize(false);
 
             })});
-
-
-
-
-    </script>
-
-
+</script>
+<!-- script for Company-details-structure right buttons menu -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click', ".sitemap li a", function(){
+		    if ($(this).parent().find(".sub").is(":hidden")){
+			    $(this).parent().find(".sub").show();
+				$(this).addClass('lesssitemap')
+			}
+			else{
+			    $(this).parent().find(".sub").hide();
+				$(this).removeClass('lesssitemap')
+			}
+            return false;
+        });
+	});
+</script>
 
   <div class="companies">
 
@@ -107,12 +117,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#cpn-tabs-structure">
+                                <a data-id="structure-tab" href="{% url "companies:tab_structure" item_id %}">
                                     {% trans "Structure" %}
                                 </a>
                             </li>
                             <li>
-                                <a href="#cpn-tabs-staff">
+                                <a data-id="staff-tab" href="{% url "companies:tab_staff" item_id %}">
                                     {% trans "Staff" %}
                                 </a>
                             </li>
@@ -140,16 +150,8 @@
                     <div id="cpn-tabs-gallery">
                         <div class="tpp-dt-content"></div>
                     </div>
-                    <div id="cpn-tabs-structure">
-                        <div class="tpp-dt-content"></div>
-                    </div>
-                    <div id="cpn-tabs-staff">
-                        <div class="tpp-dt-content"></div>
-                    </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
-
-
                               <div id="map-canvas"></div>
                         </div>
                     </div>

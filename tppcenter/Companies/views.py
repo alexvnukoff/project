@@ -300,6 +300,52 @@ def _tabsProducts(request, company, page=1):
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
+#TODO complete this view (Ilya)
+def _tabsStructure(request, company, page=1):
+
+    departments = Department.objects.filter(c2p__parent=company, c2p__type='hierarchy')
+    attr = ('NAME', 'SLUG')
+
+    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=5, page=page)
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "companies:tab_structure_paged"
+
+    templateParams = {
+        'departmentsList': departmentsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company,
+    }
+
+    return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
+
+#TODO complete this view (Ilya)
+def _tabsStaff(request, company, page=1):
+
+    products = func.getActiveSQS().models(Product).filter(company=company)
+    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG', 'DETAIL_TEXT')
+
+    result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+    productsList = result[0]
+
+    page = result[1]
+    paginator_range = func.getPaginatorRange(page)
+
+    url_paginator = "companies:tab_products_paged"
+
+    templateParams = {
+        'productsList': productsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company
+    }
+
+    return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
+
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
 

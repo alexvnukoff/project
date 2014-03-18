@@ -160,6 +160,103 @@ $(document).ready(function() {
 
        return false;
     });
+
+	$(document).on("click", ".less", function(){
+		$(this).addClass("btnprofile");
+		$(this).removeClass("less");
+		$("#fade-profile").hide();
+		$("#light-profile").slideUp();
+	});
+	$(".company li").click(function(){
+		$(".company li").removeClass("selected");
+		$(this).addClass("selected");
+	});
+	$("#delete-news").click(function(){
+		if($(".delete-confirm").is(":hidden")){
+			$(".delete-confirm").show();
+		}
+		else{
+			$(".delete-confirm").hide();
+		}
+	});
+	$(".close-this").click(function(){
+		$(".delete-confirm").hide();
+	});
+	$("i.delete-key").click(function(){
+		$(this).parent("div").hide();
+	});
+	$(".innov-coba li").click(function(){
+		$(".innov-coba li").removeClass("selected");
+		$(this).addClass("selected");
+	});
+	$(".deleteimge").click(function(){
+		$(this).parent().find(".gray-img").show();
+		$(this).hide();
+		$(this).parent().find("img").hide();
+	});
+	$(".imggoods").click(function(){
+		$(this).parent().hide();
+	});
+	$(".viewimge").on('click',function(){
+		$(".white_gallery, .black_gallery").show();
+	});
+	$(".black_gallery").click(function(){
+		$(".white_gallery, .black_gallery").hide();
+	});
+
+	$(document).on("click", ".titlemore", function(){
+		$(".titleless").removeClass("titleless").addClass("titlemore");
+		$(this).addClass("titleless");
+		$(this).removeClass("titlemore");
+		$(".contentportal").slideUp();
+		$(this).parent().find(".contentportal").slideDown();
+	});
+	$(document).on("click", ".titleless", function(){
+		$(this).addClass("titlemore");
+		$(this).removeClass("titleless");
+		$(this).parent().find(".contentportal").slideUp();
+	});
+
+
+	$(document).on("click", ".date", function(){
+
+        var picker = $(".ui-datepicker");
+
+    	if(picker.is(":hidden")){
+			picker.show();
+		}
+		else{
+			picker.hide();
+		}
+	});
+
+	$(document).on("click", ".add-advandce", function() {
+		$(".append-formin:eq(0)").clone().appendTo(".append-form");
+		$('.append-formin:gt(0)').addClass('apended');
+	});
+
+	$(document).on("click", ".buttonremove", function() {
+		$(".append-formin").has(this).remove();
+	});
+
+	$(document).on('click', ".showmenu", function(){
+		$(this).addClass("selected");
+        var menu =  $(".menucategories");
+
+		if(menu.is(":hidden")){
+			menu.show();
+		}
+		else{
+			menu.hide();
+		}
+	});
+
+	$(document).on('click', ".addform" , function(){
+		$(".staffadd, #fade-profile").show();
+	});
+	$(document).on('click', ".close-formadd" ,function(){
+		$(".staffadd, #fade-profile").hide();
+	});
 });
 
 function UpdateQueryString(key, value, url) {

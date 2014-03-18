@@ -776,7 +776,7 @@ def getListAdv(request):
 
 def getActiveSQS():
 
-    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1, 1, 1)),
                                                                obj_start_date__lt=timezone.now())
 def emptyCompany():
      template = loader.get_template('permissionDen.html')
