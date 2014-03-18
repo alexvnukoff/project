@@ -13,6 +13,7 @@ import json
 from haystack.query import SQ, SearchQuerySet
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
+from django.core.cache import cache
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -85,28 +86,43 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 def _proposalDetailContent(request, item_id, current_company):
 
-    proposal = get_object_or_404(BusinessProposal, pk=item_id)
-    proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
-    description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
 
-    photos = Gallery.objects.filter(c2p__parent=item_id)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
 
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+        proposal = get_object_or_404(BusinessProposal, pk=item_id)
+        proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+        description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
+
+        photos = Gallery.objects.filter(c2p__parent=item_id)
+
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
 
-    func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
+        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
 
-    template = loader.get_template('BusinessProposal/detailContent.html')
+        template = loader.get_template('BusinessProposal/detailContent.html')
 
-    templateParams = {
-        'proposalValues': proposalValues,
-        'photos': photos,
-        'additionalPages': additionalPages
-    }
+        templateParams = {
+            'proposalValues': proposalValues,
+            'photos': photos,
+            'additionalPages': additionalPages
+        }
 
-    context = RequestContext(request, templateParams)
-    return template.render(context), description
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
+
 
 
 @login_required(login_url='/login/')

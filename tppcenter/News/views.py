@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.utils import feedgenerator
 from django.utils.feedgenerator import Rss201rev2Feed
+from django.core.cache import cache
 
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -277,30 +278,45 @@ def updateNew(request, item_id):
 
 
 def _getdetailcontent(request, id):
-    new = get_object_or_404(News, pk=id)
-    newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
-    description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
-    photos = Gallery.objects.filter(c2p__parent=new)
 
-    try:
-        newsCategory = NewsCategories.objects.get(p2c__child=id)
-        category_value = newsCategory.getAttributeValues('NAME')
-        newValues.update({'CATEGORY_NAME': category_value})
-        similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
-        similar_news_ids = [sim_news.pk for sim_news in similar_news]
-        similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
-    except ObjectDoesNotExist:
-        similarValues = None
-        pass
+    cache_name = "detail_%s" % id
+    description_cache_name = "description_%s" % id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
+        new = get_object_or_404(News, pk=id)
+        newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
+        description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
+        photos = Gallery.objects.filter(c2p__parent=new)
 
-    func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
+        try:
+            newsCategory = NewsCategories.objects.get(p2c__child=id)
+            category_value = newsCategory.getAttributeValues('NAME')
+            newValues.update({'CATEGORY_NAME': category_value})
+            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
+            similar_news_ids = [sim_news.pk for sim_news in similar_news]
+            similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
+        except ObjectDoesNotExist:
+            similarValues = None
+            pass
 
-    template = loader.get_template('News/detailContent.html')
+        func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
 
-    context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
+        template = loader.get_template('News/detailContent.html')
 
-    return template.render(context), description
+        context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
+
+
 
 
 

@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from core.tasks import addNewTender
 from django.conf import settings
 from haystack.query import SQ, SearchQuerySet
+from django.core.cache import cache
 import json
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
@@ -81,35 +82,50 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _tenderDetailContent(request, item_id):
 
-     tender = get_object_or_404(Tender, pk=item_id)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
 
-     attr = (
-         'NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
-        'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'DETAIL_TEXT'
-     )
+    cached = cache.get(cache_name)
+    if not cached:
 
-     tenderValues = tender.getAttributeValues(*attr)
+         tender = get_object_or_404(Tender, pk=item_id)
 
-     description = tenderValues.get('DETAIL_TEXT', False)[0] if tenderValues.get('DETAIL_TEXT', False) else ""
-     description = func.cleanFromHtml(description)
+         attr = (
+             'NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
+            'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'DETAIL_TEXT'
+         )
 
-     photos = Gallery.objects.filter(c2p__parent=item_id)
+         tenderValues = tender.getAttributeValues(*attr)
 
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+         description = tenderValues.get('DETAIL_TEXT', False)[0] if tenderValues.get('DETAIL_TEXT', False) else ""
+         description = func.cleanFromHtml(description)
 
-     func.addToItemDictinoryWithCountryAndOrganization(tender.id, tenderValues)
+         photos = Gallery.objects.filter(c2p__parent=item_id)
 
-     template = loader.get_template('Tenders/detailContent.html')
+         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-     templateParams = {
-         'tenderValues': tenderValues,
-         'photos': photos,
-        'additionalPages': additionalPages
-     }
+         func.addToItemDictinoryWithCountryAndOrganization(tender.id, tenderValues)
 
-     context = RequestContext(request, templateParams)
+         template = loader.get_template('Tenders/detailContent.html')
 
-     return template.render(context), description
+         templateParams = {
+             'tenderValues': tenderValues,
+             'photos': photos,
+            'additionalPages': additionalPages
+         }
+
+         context = RequestContext(request, templateParams)
+         rendered = template.render(context)
+         cache.set(cache_name, rendered, 60*60*24*7)
+         cache.set(description_cache_name, description, 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
+
+
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
