@@ -1,25 +1,6 @@
 
 $(document).ready(function() {
 
-
-        $(document).on("click", ".add-advandce", function() {
-            var formin = $('.append-formin');
-            var num =  parseInt(formin.find("#count").val()) ;
-            var dataPost = {"NUMBER": num};
-            if (num >= 5)
-                return false
-
-              $.get('/addPage/get/',dataPost, function(data) {
-                     $(".append-formin").append(data);
-                     formin.find("#count").val(num + 1);
-
-                }, 'html');
-
-
-            return false
-        });
-
-
         $(document).on("click", ".buttonremove", function() {
             $(this).parents(".addpage-form").remove();
             var formin = $('.append-formin');

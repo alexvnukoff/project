@@ -227,13 +227,13 @@ def tppForm(request, action, item_id=None):
         return tppPage
 
     templateParams = {
-        'tppPage': tppPage,
+        'formContent': tppPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('Tpp/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 def addTpp(request):
 

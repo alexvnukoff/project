@@ -1,21 +1,22 @@
 {% load i18n %}
-     <script>
-        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
-      </script>
-                <div class="addpage-form">
-                    <div class="clumn1">
-                        <label>{% trans 'Title' %}</label>
-                        <input class="text" style="width:89%;" id="id_form-{{ i }}-title"  name="pages-{{ i }}-title" type="text" value="" />
+     <div class="addpage-form">
+        <div class="clumn1">
+            <label>{% trans 'Title' %}</label>
+            <input class="text" style="width:89%;" id="id_form-{{ i }}-title"  name="pages-{{ i }}-title" type="text" value="{{ page.getTitle }}" />
 
-                        <a href="#" class="buttonclear buttonremove">{% trans 'Remove' %}</a>
+                        {% if i > 0 %}
+                          <a href="#" class="buttonclear  buttonremove">{% trans 'Remove' %}</a>
+                        {% else %}
+                          <a href="#" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+                        {% endif %}
+
                     </div>
                     <div class="clumn2">
-                        <label>{% trans 'Content' %}</label>
+                        <div style="margin-bottom: 20px"><label>{% trans 'Content' %}</label></div>
 
                         <div class="">
-                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{ i }}-content" name="pages-{{ i }}-content"></textarea>
-
+                            <textarea class="tiny"  id="id_form-{{ i }}-content" name="pages-{{ i }}-content">{{ page.getContent }}</textarea>
                         </div>
 
                     </div>
-                </div>
+     </div>

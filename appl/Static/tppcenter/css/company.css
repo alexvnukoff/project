@@ -51,7 +51,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .newsform label.sapce{ margin-top:8px;}
 
 .uploadimgage input.text, .uploadimgage select, .uploadimgage textarea{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
-.uploadimgage select{ float:left; width:98%; padding:6px;}
+.uploadimgage select{  padding:6px;}
 .uploadimgage input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
 .uploadconfig .company{ float:left; width:168px; border:1px #bdbdbd solid; background-color:#FFF;}
 .uploadconfig .company li{ display:block; padding:3px 8px 4px 8px; color:#484848; margin-bottom:0; width:152px; cursor:pointer; margin:0;}
@@ -76,7 +76,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .deals-info-left li label{ float:left; width:90px; margin-top:3px;}
 .deals-info-left li .right{ float:left; font-size:15px; font-weight:bold; color:#000;}
 
-.tenderline{ float:left; width:620px; padding:10px 20px 20px 20px;}
+.tenderline{ width: 95%; padding:10px 20px 20px 20px;}
 .tenderline li{ float:left; width:100%; margin:12px 0 0 0;}
 .tenderline li input.text, .tenderline li select, .tenderline li textarea{ float:left; width:97%; border:1px #bdbdbd solid; padding:5px;}
 .tenderline li select{ float:left; width:98%; padding:6px;}

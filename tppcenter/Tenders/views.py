@@ -132,13 +132,13 @@ def tenderForm(request, action, item_id=None):
         return tendersPage
 
     templateParams = {
-        'tendersPage': tendersPage,
+        'formContent': tendersPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('Tenders/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 def addTender(request):
 
