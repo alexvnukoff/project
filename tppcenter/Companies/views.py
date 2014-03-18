@@ -350,13 +350,13 @@ def companyForm(request, action, item_id=None):
         return newsPage
 
     templatePrarams = {
-        'newsPage': newsPage,
+        'formContent': newsPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('Companies/index.html', templatePrarams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templatePrarams, context_instance=RequestContext(request))
 
 
 def addCompany(request):

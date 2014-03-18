@@ -147,13 +147,13 @@ def exhibitionForm(request, action, item_id=None):
         return exhibitionPage
 
     templateParams = {
-        'exhibitionPage': exhibitionPage,
+        'formContent': exhibitionPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('Exhibitions/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 def addExhibition(request):
 

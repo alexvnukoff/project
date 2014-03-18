@@ -225,25 +225,29 @@
             {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
              </div>
         </div>
+
         {% block center %}
-<div class="news-center">
-        	<div  class="keyword">
-                {% block keywords %}
-                    <i class="icon-key imgnews" id="filter-link"></i>
-                    <ul class="list-key">
-                    </ul>
-                    <div class="search-key">
-                    <form action="" method="get" name="search">
-                        <input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
-                        <input type="submit" name="" value="" class="i-search imgnews" />
-                    </form>
-                    </div>
-                {% endblock %}
+            <div class="news-center">
+                <div  class="keyword">
+                    {% block keywords %}
+                        <i class="icon-key imgnews" id="filter-link"></i>
+                        <ul class="list-key">
+                        </ul>
+                        <div class="search-key">
+                        <form action="" method="get" name="search">
+                            <input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
+                            <input type="submit" name="" value="" class="i-search imgnews" />
+                        </form>
+                        </div>
+                    {% endblock %}
+                </div>
+
+                {% block content %}{% endblock %}
+
             </div>
 
-            {% block content %}{% endblock %}
-        </div>
         {% endblock %}
+
         {% block right %}
             <div class="newsright">
                 <div class="bannerleft nomargin">
@@ -257,6 +261,8 @@
                  </div>
             </div>
         {% endblock %}
+
     </div>
+
 {% endblock %}
 
