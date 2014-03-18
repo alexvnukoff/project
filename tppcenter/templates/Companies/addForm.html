@@ -1,15 +1,10 @@
     {% load static %}
     {% load i18n %}
     {% load CustomFilters %}
+    {% load set_var %}
+
     {% with form.fields.POSITION.initial as position %}
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
      <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-        <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-     <script>
-        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
-      </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
@@ -17,6 +12,7 @@
         $(function() {
 
             $( ".date" ).datepicker();
+            setTiny('textarea[class="tiny"]');
 
         });
 
@@ -30,10 +26,8 @@
          google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
-    {% block keywords %}{% endblock %}
-
     <div class="newsform">
-    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+    <form enctype="multipart/form-data" method="post" onkeypress="return event.keyCode != 13;" action="" xmlns="http://www.w3.org/1999/html">
 
 
     {% csrf_token %}
@@ -58,30 +52,48 @@
         {% with form.fields.ACCOUNT_NUMBER.initial as acoount_number %}
         {% with form.fields.BANK_DETAILS.initial as bank_detail %}
 
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label class="sapce">{% trans 'Image' %}</label>
 
+                {% if form.errors.IMAGE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.IMAGE }}</div></div>
+                {% endif %}
+                {% if image %}
+                    <div class="b-img">
+                        <img src="{{ MEDIA_URL }}big/{{ image.name }}">
+                        <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                        <div class="gray-img"></div>
+                        <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
+                    </div>
+                {% endif %}
 
-
-
-            <div class="uploadimgage">
-                        <div class="imgbig">
-                            <label>{% trans 'Image' %}</label>
-                        {% if form.errors.IMAGE %}<div class="error-handler"> <div class="formserror">{{ form.errors.IMAGE }}</div></div>{% endif %}
-                              {% if image %}
-                                 <div class="b-img">
-                                <img src="{{ MEDIA_URL }}big/{{ image.name }}">
-                                <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
-                                <div class="gray-img"></div>
-                                <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
-                                 </div>
-                             {% endif %}
-
-                            <div class="fileinputs">
-                                <input name="IMAGE" type="file" class="fileimg" />
-                                <div class="fakefile">
-                                    <input class="inputhide" />
-                                    <img src="{% static "tppcenter/img/file.png" %}" />
-                                </div>
-                            </div>
+                <div class="fileinputs">
+                    <input name="IMAGE" type="file" class="fileimg" />
+                    <div class="fakefile">
+                        <input class="inputhide" />
+                        <img src="{% static "tppcenter/img/file.png" %}" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                <select name="COUNTRY">
+                    {% for id , atrr in countries.items %}
+                        {% with atrr.NAME|first as country  %}
+                        <option value="{{ id }}"{% if choosen_country.id == id %} selected="selected" {% endif %}>
+                            {{ country }}
+                        </option>
+                        {% endwith %}
+                    {% endfor %}
+                </select>
+            </div>
+                        <div>
+                            <label class="sapce">{% trans 'Vatin' %}  <font color="#FF0000">*</font></label>
+                            {% if form.errors.INN %}
+                                <div class="error-handler"> <div class="formserror">{{ form.errors.INN }}</div></div>
+                            {% endif %}
+                            <input type="text" name="INN" value="{{ inn }}"placeholder="" class="text" />
                         </div>
                         <div>
                             <label class="sapce">{% trans 'Start date' %}</label>
@@ -98,6 +110,14 @@
 
                         </div>
                         <div>
+                            <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                            <input type="text" name="DIRECTOR" value="{{ director }}" placeholder="" class="text" />
+                        </div>
+                        <div>
+                                <label>{% trans 'Slogan' %}</label>
+                                <input type="text" name="SLOGAN" value="{{ slogan }}"placeholder="" class="text" />
+                        </div>
+                        <div>
                             <label class="sapce">{% trans 'Fax' %}</label>
                             <input type="text" class="text" placeholder="" name="FAX" value="{{ fax }}" />
                         </div>
@@ -110,58 +130,31 @@
                             <label class="sapce">{% trans 'WWW' %}</label>
                             <input type="text" class="text" placeholder="" name="SITE_NAME" value="{{ site_name }}"/>
                         </div>
+                        <div>
+                                <label>{% trans 'Keywords' %}</label>
+                                <textarea name="KEYWORD"  rows="4">{{ keyword }}</textarea>
+                        </div>
                     </div>
                   <ul class="uploadconfig">
-                        <li>
-                            <div class="clumn1">
-                                <label>{% trans 'Vatin' %}  <font color="#FF0000">*</font></label>
-                                  {% if form.errors.INN %}<div class="error-handler"> <div class="formserror">{{ form.errors.INN }}</div></div>{% endif %}
-                                <input type="text" name="INN" value="{{ inn }}"placeholder="" class="text" style="width:94%;" />
-                            </div>
-                            <div class="clumn2">
-                                <label>{% trans 'Country' %}  <font color="#FF0000">*</font></label>
-                                   <select style="width:94%;"  name="COUNTRY">
-                                         {% for id , atrr in countries.items %}
-                                         {% with atrr.NAME|first as country  %}
-                                              <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
-                                         {% endwith %}
-                                        {% endfor %}
-                                   </select>
-                            </div>
-                        </li>
                         <li>
                             <label>{% trans 'Company name' %} <font color="#FF0000">*</font></label>
                             {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
                             <input type="text" class="text" placeholder="" name="NAME" value="{{ name }}" />
                         </li>
-                        <li>
-                            <div class="clumn1">
-                                <label>{% trans 'Slogan' %}</label>
-                                <input type="text" name="SLOGAN" value="{{ slogan }}"placeholder="" class="text" style="width:89%;" />
-                            </div>
-                            <div class="clumn2">
-                                <label>{% trans 'CCI' %}</label>
-                                  <select style="width:94%;"  name="TPP">
-                                        <option value="">{% trans "Choose CCI" %}</option>
-                                        {% for id , atrr in tpp.items %}
-                                         {% with atrr.NAME|first as tpp  %}
-                                              <option value="{{ id }}"{% if choosen_tpp.id == id %} selected {% endif %}>{{ tpp }}</option>
-                                         {% endwith %}
-                                        {% endfor %}
-                                   </select>
-                            </div>
-                        </li>
-
                          <li>
                             <label>{% trans 'Preview text' %} <font color="#FF0000">*</font></label>
                               {% if form.errors.ANONS %}<div class="error-handler"><div class="formserror">{{ form.errors.ANONS }}</div></div> {% endif %}
-                            <textarea name="ANONS">{{ anons }}</textarea>
+                            <textarea style="height: 80px;" name="ANONS">{{ anons }}</textarea>
                         </li>
                         <li>
-                            <label>{% trans 'Detail text' %}</label>
-                            {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
-                            <div class="">
-                                <textarea class="tiny" style="width: 456px;height: 90px;" name="DETAIL_TEXT">{{ text }}</textarea>
+                            <label>{% trans 'Detail text' %}<font color="#FF0000">*</font></label>
+                            {% if form.errors.DETAIL_TEXT %}<div class="error-handler">
+                                <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <div class="detail">
+                                <textarea class="tiny" name="DETAIL_TEXT">{{ text }}</textarea>
 
                             </div>
                         </li>
@@ -171,31 +164,35 @@
                         </li>
 
                         <li>
-                            <label>{% trans 'Director name' %} <font color="#FF0000">*</font></label>
-                            <input type="text" name="DIRECTOR" value="{{ director }}" placeholder="" class="text" />
-                        </li>
-                        <li>
-                            <div class="clumn1">
                                 <label>{% trans 'Industry' %}<font color="#FF0000">*</font></label>
                                 <select id="id_BRANCH" name="BRANCH">
                                      {% for id, branch in branches.items %}
-                                       <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >{{ branch.NAME|first }}</option>
+                                       <option value="{{ id }}" {% if currentBranch.id == id %}selected="selected"{% endif %} >
+                                           {{ branch.NAME|first }}
+                                       </option>
                                      {% endfor %}
                                 </select>
-                            </div>
-                            <div class="clumn2">
-                                <label>{% trans 'Keywords' %}</label>
-                                <textarea name="KEYWORD"  rows="4" style="width:90%;">{{ keyword }}</textarea>
-                            </div>
                         </li>
-                  </ul>
-                    <div class="addpage-form">
-
+                        <li>
+                            <label>{% trans 'CCI' %}</label>
+                            <select style="width:94%;"  name="TPP">
+                                <option value="">{% trans "Choose CCI" %}</option>
+                                {% for id , atrr in tpp.items %}
+                                    {% with atrr.NAME|first as tpp  %}
+                                        <option value="{{ id }}"{% if choosen_tpp.id == id %} selected="selected" {% endif %}>
+                                            {{ tpp }}
+                                        </option>
+                                    {% endwith %}
+                                {% endfor %}
+                            </select>
+                        </li>
+                        <li></li>
+                    </ul>
+                    <div style="padding: 0 10px;">
                             <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
-                             <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                                <div style="width: 650px;" id="map-canvas"></div>
-
-                    </div>
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map-canvas"></div>
+                   </div>
                     <div class="addpage-title">{% trans 'Details' %}</div>
                     <div class="addpage-form">
                         <div class="clumn1">
@@ -217,56 +214,6 @@
                             <textarea name="BANK_DETAILS"  rows="11" style="width:95%;">{{bank_detail }}</textarea>
                         </div>
                     </div>
-            <div class="append-formin">
-                    <div class="addpage-title">{% trans 'Additioanl pages' %}</div>
-                    <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
-                    <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
-                    <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
-                    <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
-
-                    {% if  pages|length >  0 %}
-                        {% for page in  pages %}
-                    <div class="addpage-form">
-                        <div class="clumn1">
-                            <label>{% trans 'Title' %}</label>
-                            <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTotle }}" />
-                            {% if forloop.counter0 > 0 %}
-                              <a href="#" class="buttonclear  buttonremove">Remove</a>
-                            {% else %}
-                              <a href="#" class="buttonclear  add-advandce">Добавить</a>
-                            {% endif %}
-                        </div>
-                        <div class="clumn2">
-                            <label>{% trans 'Content' %}</label>
-
-                            <div class="">
-                                <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
-
-                            </div>
-                        </div>
-                       </div>
-                              {% endfor %}
-                             {% else %}
-
-                       <div class="addpage-form">
-                        <div class="clumn1">
-                            <label>{% trans 'Title' %}</label>
-                            <input class="text" style="width:89%;" id="id_form-0-title"  name="pages-0-title" type="text" value="" />
-
-                            <a href="#" class="buttonclear add-advandce">Добавить</a>
-                        </div>
-                        <div class="clumn2">
-                            <label>{% trans 'Content' %}</label>
-
-                            <div class="">
-                                <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
-
-                            </div>
-
-                        </div>
-                    </div>
-             {% endif %}
-            </div>
             <div class="newform-button">
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
                 <a href="#" class="btntype1">{% trans 'Cancel' %}</a>

@@ -1,23 +1,18 @@
-    {% load static %}
-    {% load i18n %}
-    {% load CustomFilters %}
-    {% with form.fields.POSITION.initial as position %}
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-        <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-     <script>
-        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
-      </script>
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% with form.fields.POSITION.initial as position %}
+{% load set_var %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-    <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
         $(function() {
 
             $( ".date" ).datepicker();
-
+            setTiny('textarea[class="tiny"]');
         });
 
      var marker;
@@ -28,7 +23,7 @@
         });
         {% endif %}
          google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+</script>
 
      {% block keywords %}{% endblock %}
 
@@ -58,58 +53,67 @@
         {% with form.fields.ACCOUNT_NUMBER.initial as acoount_number %}
         {% with form.fields.BANK_DETAILS.initial as bank_detail %}
 
-
-
-
-
-            <div class="uploadimgage">
-                        <div class="imgbig">
-                            <label>{% trans 'Image' %}</label>
-                              {% if image %}
-                                 <div class="b-img">
-                                <img src="{{ MEDIA_URL }}big/{{ image.name }}">
-                                <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span></div>
-                                <div class="gray-img"></div>
-                                <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
-                                 </div>
-                             {% endif %}
-
-                            <div class="fileinputs">
-                                <input name="IMAGE" type="file" class="fileimg" />
-                                <div class="fakefile">
-                                    <input class="inputhide" />
-                                    <img src="{% static "tppcenter/img/file.png" %}" />
-                                </div>
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label>{% trans 'Image' %}</label>
+                    {% if image %}
+                        <div class="b-img">
+                            <img src="{{ MEDIA_URL }}big/{{ image.name }}">
+                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">
+                                {% trans 'delete' %}</span>
                             </div>
+                            <div class="gray-img"></div>
+                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
                         </div>
-                        <div>
-                            <label class="sapce">{% trans 'Start date' %}</label>
-                            <input type="text" class="date" placeholder="" name="START_DATE" value="{{ tpp.start_date|date:"m/d/Y" }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'End date' %}</label>
-                            <input type="text" class="date" placeholder="" name="END_DATE" value="{{ tpp.end_date|date:"m/d/Y" }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.TELEPHONE_NUMBER %}<div class="error-handler"> <div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div></div>{% endif %}
-                            <input type="text" class="text" placeholder="" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" />
+                    {% endif %}
 
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Fax' %}</label>
-                            <input type="text" class="text" placeholder="" name="FAX" value="{{ fax }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">E-mail <font color="#FF0000">*</font></label>
-                            {% if form.errors.EMAIL %}<div class="error-handler"> <div class="formserror">{{ form.errors.EMAIL }}</div></div>{% endif %}
-                            <input type="text" class="text" placeholder="" name="EMAIL" value="{{ email }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'WWW' %}</label>
-                            <input type="text" class="text" placeholder="" name="SITE_NAME" value="{{ site_name }}"/>
+                    <div class="fileinputs">
+                        <input name="IMAGE" type="file" class="fileimg" />
+                        <div class="fakefile">
+                            <input class="inputhide" />
+                            <img src="{% static "tppcenter/img/file.png" %}" />
                         </div>
                     </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                <input type="text" name="DIRECTOR" value="{{ director }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Start date' %}</label>
+                <input type="text" class="date" placeholder="" name="START_DATE" value="{{ tpp.start_date|date:"m/d/Y" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'End date' %}</label>
+                <input type="text" class="date" placeholder="" name="END_DATE" value="{{ tpp.end_date|date:"m/d/Y" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.TELEPHONE_NUMBER %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Fax' %}</label>
+                <input type="text" class="text" placeholder="" name="FAX" value="{{ fax }}" />
+            </div>
+            <div>
+                <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                {% if form.errors.EMAIL %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.EMAIL }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="EMAIL" value="{{ email }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'WWW' %}</label>
+                <input type="text" class="text" placeholder="" name="SITE_NAME" value="{{ site_name }}"/>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                <textarea name="KEYWORD"  rows="4" >{{ keyword }}</textarea>
+            </div>
+        </div>
                   <ul class="uploadconfig">
                         <li>
                             <div class="clumn1">
@@ -131,48 +135,42 @@
                         </li>
                         <li>
                             <label>{% trans 'Organization name' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
+                              {% if form.errors.NAME %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>
+                              {% endif %}
                             <input type="text" class="text" placeholder="" name="NAME" value="{{ name }}" />
                         </li>
 
-
                          <li>
-                            <label>{% trans 'Anons' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.ANONS %}<div class="error-handler"> <div class="formserror">{{ form.errors.ANONS }}</div></div>{% endif %}
-                            <textarea name="ANONS">{{ anons }}</textarea>
+                            <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
+                              {% if form.errors.ANONS %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.ANONS }}</div></div>
+                              {% endif %}
+                            <textarea rows="5" name="ANONS">{{ anons }}</textarea>
                         </li>
                         <li>
                             <label>{% trans 'Detail description' %}</label>
-                            <div class="">
-                                  {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
-                                <textarea class="tiny" style="width: 456px;height: 90px;" name="DETAIL_TEXT">{{ text }}</textarea>
-
+                            {% if form.errors.DETAIL_TEXT %}
+                                <div class="error-handler">
+                                    <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div>
+                                </div>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <div class="detail">
+                                <textarea class="tiny" name="DETAIL_TEXT">{{ text }}</textarea>
                             </div>
                         </li>
                          <li>
                             <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
                             <input type="text" name="ADDRESS" value="{{ address }}" placeholder="" class="text" />
                         </li>
-
-                        <li>
-                            <label>{% trans 'Director name' %} <font color="#FF0000">*</font></label>
-                            <input type="text" name="DIRECTOR" value="{{ director }}" placeholder="" class="text" />
-                        </li>
-                        <li>
-
-                            <div class="clumn1">
-                                <label>{% trans 'Keywords' %}</label>
-                                <textarea name="KEYWORD"  rows="4" style="width:450px;">{{ keyword }}</textarea>
-                            </div>
-                        </li>
                   </ul>
-                    <div class="addpage-form">
-
-                            <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
-                             <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                                <div style="width: 650px;" id="map-canvas"></div>
-
-                    </div>
+                    <div style="padding: 0 10px;">
+                            <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map-canvas"></div>
+                   </div>
                     <div class="addpage-title">{% trans 'Detail' %}</div>
                     <div class="addpage-form">
                         <div class="clumn1">
@@ -201,48 +199,15 @@
                     <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
                     <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
 
-                    {% if  pages|length >  0 %}
-                        {% for page in  pages %}
-                    <div class="addpage-form">
-                        <div class="clumn1">
-                            <label>{% trans 'Title' %}</label>
-                            <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
-                            {% if forloop.counter0 > 0 %}
-                              <a href="#" class="buttonclear  buttonremove">{% trans 'Remove' %}</a>
-                            {% else %}
-                              <a href="#" class="buttonclear  add-advandce">{% trans 'Add' %}</a>
-                            {% endif %}
-                        </div>
-                        <div class="clumn2">
-                            <label>{% trans 'Content' %}</label>
-
-                            <div class="">
-                                <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
-
-                            </div>
-                        </div>
-                       </div>
-                              {% endfor %}
-                             {% else %}
-
-                       <div class="addpage-form">
-                        <div class="clumn1">
-                            <label>{% trans 'Title' %}</label>
-                            <input class="text" style="width:89%;" id="id_form-0-title"  name="pages-0-title" type="text" value="" />
-
-                            <a href="#" class="buttonclear add-advandce">{% trans 'Add' %}</a>
-                        </div>
-                        <div class="clumn2">
-                            <label>{% trans 'Content' %}</label>
-
-                            <div class="">
-                                <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
-
-                            </div>
-
-                        </div>
-                    </div>
-             {% endif %}
+                {% if  pages|length >  0 %}
+                    {% for page in  pages %}
+                        {% set i = forloop.counter0 %}
+                        {% include "additionalPage.html" %}
+                    {% endfor %}
+                {% else %}
+                    {% set i = 0 %}
+                    {% include "additionalPage.html" %}
+                {% endif %}
             </div>
             <div class="newform-button">
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
