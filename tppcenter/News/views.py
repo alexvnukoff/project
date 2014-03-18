@@ -38,7 +38,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         if not item_id:
-            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
 
         else:
@@ -157,6 +157,7 @@ def addNews(request):
             'NAME': request.POST.get('NAME', ""),
             'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
             'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
+            'ANONS': request.POST.get('ANONS', ""),
             'IMAGE': request.FILES.get('IMAGE', "")
         }
 
@@ -237,6 +238,7 @@ def updateNew(request, item_id):
             'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
             'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
             'IMAGE': request.FILES.get('IMAGE', ""),
+            'ANONS': request.POST.get('ANONS', ""),
             'IMAGE-CLEAR': request.POST.get('IMAGE-CLEAR', " ")
         }
 
