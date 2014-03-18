@@ -13,6 +13,7 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.cache import cache
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -76,111 +77,123 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 def _companiesContent(request, page=1, my=None):
+    cached = False
+    cache_name = "company_list_result_page_%s" % (page)
+    query = request.GET.urlencode()
+    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
+        cached = cache.get(cache_name)
+    if not cached:
 
-    if not my:
-        filters, searchFilter = func.filterLive(request)
+        if not my:
+            filters, searchFilter = func.filterLive(request)
 
-        sqs = func.getActiveSQS().models(Company)
+            sqs = func.getActiveSQS().models(Company)
 
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
+            if len(searchFilter) > 0:
+                sqs = sqs.filter(**searchFilter)
 
-        q = request.GET.get('q', '')
+            q = request.GET.get('q', '')
 
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+            if q != '':
+                sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
+            sortFields = {
+                'date': 'id',
+                'name': 'title'
+            }
 
-        order = []
+            order = []
 
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
+            sortField1 = request.GET.get('sortField1', 'date')
+            sortField2 = request.GET.get('sortField2', None)
+            order1 = request.GET.get('order1', 'desc')
+            order2 = request.GET.get('order2', None)
 
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
+            if sortField1 and sortField1 in sortFields:
+                if order1 == 'desc':
+                    order.append('-' + sortFields[sortField1])
+                else:
+                    order.append(sortFields[sortField1])
             else:
-                order.append(sortFields[sortField1])
+                order.append('-id')
+
+            if sortField2 and sortField2 in sortFields:
+                if order2 == 'desc':
+                    order.append('-' + sortFields[sortField2])
+                else:
+                    order.append(sortFields[sortField2])
+
+            companies = sqs.order_by(*order)
+
+            url_paginator = "companies:paginator"
+
+            params = {
+                'filters': filters,
+                'sortField1': sortField1,
+                'sortField2': sortField2,
+                'order1': order1,
+                'order2': order2
+            }
+
         else:
-            order.append('-id')
+            current_organization = request.session.get('current_company', False)
 
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
+            if current_organization:
+                companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
+
+                url_paginator = "companies:my_main_paginator"
+
+                params = {}
+
             else:
-                order.append(sortFields[sortField2])
+                raise ObjectDoesNotExist('you need check company')
 
-        companies = sqs.order_by(*order)
 
-        url_paginator = "companies:paginator"
+        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG')
 
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
+        result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
+
+        companyList = result[0]
+        company_ids = [id for id in companyList.keys()]
+        countries = Country.objects.filter(p2c__child__in=company_ids, p2c__type='dependence').values('p2c__child', 'pk')
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        country_dict = {}
+
+        for country in countries:
+            country_dict[country['p2c__child']] = country['pk']
+
+        for id, company in companyList.items():
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            company.update(toUpdate)
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+
+        template = loader.get_template('Companies/contentPage.html')
+
+        templateParams = {
+            'companyList': companyList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+
         }
+
+        templateParams.update(params)
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
+           cache.set(cache_name, rendered)
 
     else:
-        current_organization = request.session.get('current_company', False)
+        rendered = cache.get(cache_name)
+    return rendered
 
-        if current_organization:
-            companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
-
-            url_paginator = "companies:my_main_paginator"
-
-            params = {}
-
-        else:
-            raise ObjectDoesNotExist('you need check company')
-
-
-    attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG')
-
-    result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
-
-    companyList = result[0]
-    company_ids = [id for id in companyList.keys()]
-    countries = Country.objects.filter(p2c__child__in=company_ids, p2c__type='dependence').values('p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-
-    for country in countries:
-        country_dict[country['p2c__child']] = country['pk']
-
-    for id, company in companyList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        company.update(toUpdate)
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-
-    template = loader.get_template('Companies/contentPage.html')
-
-    templateParams = {
-        'companyList': companyList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-
-    }
-
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 
 def _companiesDetailContent(request, item_id):
