@@ -17,12 +17,9 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     gallery = Photo(post, files)
 
     values = {}
-    values['NAME'] = post.get('NAME', "")
-    values['DETAIL_TEXT'] = post.get('DETAIL_TEXT', "")
-    values['YOUTUBE_CODE'] = post.get('YOUTUBE_CODE', "")
-    values['ANONS'] = post.get('ANONS', ""),
-    values['IMAGE'] = files.get('IMAGE', "")
-    values['IMAGE-CLEAR'] = post.get('IMAGE-CLEAR', "")
+    values.update(post)
+    values.update(files)
+
     category = post.get('NEWS_CATEGORY', "")
     category = NewsCategories.objects.get(pk=category) if category else False
     country = post.get('COUNTRY', False)

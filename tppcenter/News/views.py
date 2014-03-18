@@ -152,14 +152,9 @@ def addNews(request):
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'ANONS': request.POST.get('ANONS', ""),
-            'IMAGE': request.FILES.get('IMAGE', "")
-        }
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
 
         form = ItemForm('News', values=values)
@@ -233,15 +228,9 @@ def updateNew(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'IMAGE': request.FILES.get('IMAGE', ""),
-            'ANONS': request.POST.get('ANONS', ""),
-            'IMAGE-CLEAR': request.POST.get('IMAGE-CLEAR', " ")
-        }
-
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         form = ItemForm('News', values=values, id=item_id)
         form.clean()
 

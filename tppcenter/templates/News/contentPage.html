@@ -39,7 +39,7 @@
                             {% if anons %}
                             <p>
                                 {% autoescape off %}
-                                     {{ anons|linebreaks|force_escape }}
+                                     {{ anons|force_escape|linebreaks }}
                                 {% endautoescape %}
                             {% else %}
                                 {{ content|cleanHtml|safe|truncatewords_html:"30" }}
