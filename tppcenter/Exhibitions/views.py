@@ -173,7 +173,7 @@ def addExhibition(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -183,6 +183,8 @@ def addExhibition(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
 
         values = _getValues(request)
 
@@ -199,7 +201,7 @@ def addExhibition(request):
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
     template = loader.get_template('Exhibitions/addForm.html')
-    context = RequestContext(request,  {'form': form, 'branches': branches})
+    context = RequestContext(request,  {'form': form, 'branches': branches, 'pages': pages})
     exhibitionPage = template.render(context)
 
     return exhibitionPage
@@ -224,7 +226,10 @@ def updateExhibition(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -241,8 +246,6 @@ def updateExhibition(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
         values = _getValues(request)
 

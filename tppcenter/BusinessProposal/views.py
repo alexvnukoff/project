@@ -174,7 +174,7 @@ def addBusinessProposal(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -184,6 +184,8 @@ def addBusinessProposal(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
 
         values = {
             'NAME': request.POST.get('NAME', ""),
@@ -210,7 +212,7 @@ def addBusinessProposal(request):
 
     template = loader.get_template('BusinessProposal/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages})
 
     proposalsPage = template.render(context)
 

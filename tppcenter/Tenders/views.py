@@ -173,7 +173,7 @@ def addTender(request):
     form = None
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -183,6 +183,9 @@ def addTender(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+            pages = pages.new_objects
+
 
         values = _getValues(request)
 
@@ -197,7 +200,7 @@ def addTender(request):
             return HttpResponseRedirect(reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
-    context = RequestContext(request, {'form': form, 'currency_slots': currency_slots})
+    context = RequestContext(request, {'form': form, 'currency_slots': currency_slots, 'pages': pages})
     tendersPage = template.render(context)
 
     return tendersPage
@@ -217,7 +220,10 @@ def updateTender(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -232,9 +238,6 @@ def updateTender(request, item_id):
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
         values = _getValues(request)
 

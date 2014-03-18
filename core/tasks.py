@@ -184,9 +184,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
 @shared_task
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(post, files, prefix="pages")
-    pages.clean()
+
 
     valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
                'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
@@ -244,7 +242,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
 
 
-        pages.save(parent=company.id, user=user)
+
         func.notify("item_created", 'notification', user=user)
 
     trans_real.deactivate()
@@ -303,9 +301,7 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 @shared_task
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(post, files, prefix="pages")
-    pages.clean()
+
 
     valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'FLAG-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
                'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
@@ -348,7 +344,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
 
         tpp.reindexItem()
 
-        pages.save(parent=tpp.id, user=user)
+
         func.notify("item_created", 'notification', user=user)
 
     trans_real.deactivate()
