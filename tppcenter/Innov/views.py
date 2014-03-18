@@ -233,68 +233,83 @@ def _innovContent(request, page=1, my=None):
 
 def _innovDetailContent(request, item_id):
 
-    innov = get_object_or_404(InnovationProject, pk=item_id)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
 
-    attr = ('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN', 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT')
+        innov = get_object_or_404(InnovationProject, pk=item_id)
 
-    innovValues = innov.getAttributeValues(*attr)
-    description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+        attr = ('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN', 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT')
 
-    photos = Gallery.objects.filter(c2p__parent=item_id)
+        innovValues = innov.getAttributeValues(*attr)
+        description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+        photos = Gallery.objects.filter(c2p__parent=item_id)
 
-    try:
-        branch = Branch.objects.get(p2c__child=item_id)
-        branchValues = branch.getAttributeValues('NAME')
-        innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
-    except ObjectDoesNotExist:
-        innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+        try:
+            branch = Branch.objects.get(p2c__child=item_id)
+            branchValues = branch.getAttributeValues('NAME')
+            innovValues.update({'BRANCH_NAME': branchValues, 'BRANCH_ID': branch.id})
+        except ObjectDoesNotExist:
+            innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
 
-    func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
+        func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
 
-    cabinet = Cabinet.objects.filter(p2c__child=item_id)
+        cabinet = Cabinet.objects.filter(p2c__child=item_id)
 
-    if cabinet.exists():
-        cabinetList = cabinet[0].getAttributeValues("USER_FIRST_NAME", 'USER_LAST_NAME')
-        country = Country.objects.filter(p2c__child=cabinet)
+        if cabinet.exists():
+            cabinetList = cabinet[0].getAttributeValues("USER_FIRST_NAME", 'USER_LAST_NAME')
+            country = Country.objects.filter(p2c__child=cabinet)
 
-        if country.exists():
-            countriesList = country[0].getAttributeValues("NAME", 'FLAG')
-            countryUpdate = {
-                'CABINET_COUNTRY_ID': country[0].pk,
-                'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
-                'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])
+            if country.exists():
+                countriesList = country[0].getAttributeValues("NAME", 'FLAG')
+                countryUpdate = {
+                    'CABINET_COUNTRY_ID': country[0].pk,
+                    'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
+                    'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])
+                }
+            else:
+                countryUpdate = {}
+
+            cabinetUpdate = {
+                'CABINET_ID': cabinet[0].pk,
+                'CABINET_FIRST_NAME': cabinetList.get('USER_FIRST_NAME', [0]),
+                'CABINET_LAST_NAME': cabinetList.get('USER_LAST_NAME', [0])
             }
+
         else:
+            cabinetUpdate = {}
             countryUpdate = {}
 
-        cabinetUpdate = {
-            'CABINET_ID': cabinet[0].pk,
-            'CABINET_FIRST_NAME': cabinetList.get('USER_FIRST_NAME', [0]),
-            'CABINET_LAST_NAME': cabinetList.get('USER_LAST_NAME', [0])
+
+        template = loader.get_template('Innov/detailContent.html')
+
+        templateParams = {
+            'innovValues': innovValues,
+            'photos': photos,
+            'additionalPages': additionalPages,
+            'countryUpdate': countryUpdate,
+            'cabinetUpdate': cabinetUpdate
         }
 
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
     else:
-        cabinetUpdate = {}
-        countryUpdate = {}
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
 
 
-    template = loader.get_template('Innov/detailContent.html')
-
-    templateParams = {
-        'innovValues': innovValues,
-        'photos': photos,
-        'additionalPages': additionalPages,
-        'countryUpdate': countryUpdate,
-        'cabinetUpdate': cabinetUpdate
-    }
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context), description
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):

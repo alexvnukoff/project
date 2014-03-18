@@ -197,19 +197,32 @@ def _companiesContent(request, page=1, my=None):
 
 
 def _companiesDetailContent(request, item_id):
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
+        company = get_object_or_404(Company, pk=item_id)
+        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
+        description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
-    company = get_object_or_404(Company, pk=item_id)
-    companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
-    description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+        country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
 
-    country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+        template = loader.get_template('Companies/detailContent.html')
 
-    template = loader.get_template('Companies/detailContent.html')
+        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
 
-    context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
 
-    return template.render(context), description
+    return rendered, description
+
+
 
 
 def _tabsNews(request, company, page=1):

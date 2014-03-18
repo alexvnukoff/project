@@ -202,24 +202,38 @@ def _tppContent(request, page=1, my=None):
 
 def _tppDetailContent(request, item_id):
 
-    tpp = get_object_or_404(Tpp, pk=item_id)
-    tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
-    description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
+
+        tpp = get_object_or_404(Tpp, pk=item_id)
+        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+        description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
 
-    if not tppValues.get('FLAG', False):
-       try:
-           country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
-       except:
+        if not tppValues.get('FLAG', False):
+           try:
+               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+           except:
+               country = ""
+        else:
            country = ""
+
+        template = loader.get_template('Tpp/detailContent.html')
+        context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
     else:
-       country = ""
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
 
-    template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+    return rendered, description
 
-    return template.render(context), description
+
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):

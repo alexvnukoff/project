@@ -18,6 +18,7 @@ from core.hierarchy import hierarchyManager
 from random import randint
 from tpp.SiteUrlMiddleWare import get_request
 from unidecode import unidecode
+from django.core.cache import cache
 
 import warnings
 import datetime
@@ -809,6 +810,12 @@ class Item(models.Model):
                             }
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
+        item_id = self.pk
+        cache_name = "detail_%s" % item_id
+        description_cache_name = "description_%s" % item_id
+
+        cache.delete(cache_name)
+        cache.delete(description_cache_name)
 
         #check if valid dictionary given
         if not isinstance(attrWithValues, dict) or not attrWithValues:
