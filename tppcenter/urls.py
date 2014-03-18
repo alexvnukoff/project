@@ -65,7 +65,7 @@ urlpatterns = patterns('',
     url(r'^test/', tppcenter.views.test),
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/tpp/', include(admin.site.urls)),
 
 
     url(r'^items/$', tppcenter.views.set_items_list),
