@@ -45,7 +45,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
             proposalsPage = func.emptyCompany()
     else:
-        result = _proposalDetailContent(request, item_id, current_company)
+        result = _proposalDetailContent(request, item_id)
         proposalsPage = result[0]
 
         description = result[1]
@@ -84,7 +84,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
 
-def _proposalDetailContent(request, item_id, current_company):
+def _proposalDetailContent(request, item_id):
 
 
     cache_name = "detail_%s" % item_id
@@ -100,7 +100,6 @@ def _proposalDetailContent(request, item_id, current_company):
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
 
         func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
 
@@ -122,7 +121,6 @@ def _proposalDetailContent(request, item_id, current_company):
         description = cache.get(description_cache_name)
 
     return rendered, description
-
 
 
 @login_required(login_url='/login/')

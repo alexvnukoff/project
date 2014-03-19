@@ -124,8 +124,6 @@ def _exhibitionsDetailContent(request, item_id):
     return rendered, description
 
 
-
-
 @login_required(login_url='/login/')
 def exhibitionForm(request, action, item_id=None):
 

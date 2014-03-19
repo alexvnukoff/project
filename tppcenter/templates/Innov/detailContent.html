@@ -11,6 +11,19 @@ $(function() {
     $('.keyword').html('');
 </script>
 
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'innov');
+</script>
+
   <div class="tender">
             {% with innovValues.NAME.0 as name %}
             {% with innovValues.COST.0 as cost %}

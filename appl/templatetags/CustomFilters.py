@@ -229,6 +229,26 @@ def companiesCount():
 def partnersCount():
     return func.getActiveSQS().models(Tpp).count()
 
+@register.assignment_tag
+def getOwner(item):
+
+    if not item:
+        return None
+
+    obj = func.getActiveSQS().filter(django_id=item)[0]
+
+    if not obj:
+        return None
+
+    if obj.tpp:
+        return {'type': 'tpp', 'id': obj.tpp}
+
+
+    if obj.company:
+        return {'type': 'company', 'id': obj.company}
+
+    return None
+
 
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):

@@ -201,6 +201,7 @@ def _companiesDetailContent(request, item_id):
     description_cache_name = "description_%s" % item_id
     query = request.GET.urlencode()
     cached = cache.get(cache_name)
+
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
         companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
@@ -221,8 +222,6 @@ def _companiesDetailContent(request, item_id):
         description = cache.get(description_cache_name)
 
     return rendered, description
-
-
 
 
 def _tabsNews(request, company, page=1):
