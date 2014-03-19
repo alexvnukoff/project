@@ -88,7 +88,8 @@ urlpatterns = patterns('',
 
 
 
-
+    url(r'^adv/tops/', tppcenter.views.getLiveTop),
+    url(r'^adv/bann/', tppcenter.views.getLiveBanner),
     url(r'^filter/', tppcenter.views.jsonFilter),
 
     url(r'^(upload/.+)$', tppcenter.views.redirectTo),

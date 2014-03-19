@@ -78,36 +78,35 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _exhibitionsDetailContent(request, item_id):
 
-     exhibition = get_object_or_404(Exhibition, pk=item_id)
+    exhibition = get_object_or_404(Exhibition, pk=item_id)
 
-     attr = (
-         'NAME', 'DETAIL_TEXT', 'START_EVENT_DATE',
-         'END_EVENT_DATE', 'DOCUMENT_1', 'DOCUMENT_2',
-         'DOCUMENT_3', 'CITY','ROUTE_DESCRIPTION', 'POSITION'
-     )
+    attr = (
+        'NAME', 'DETAIL_TEXT', 'START_EVENT_DATE',
+        'END_EVENT_DATE', 'DOCUMENT_1', 'DOCUMENT_2',
+        'DOCUMENT_3', 'CITY','ROUTE_DESCRIPTION', 'POSITION'
+    )
 
-     exhibitionlValues = exhibition.getAttributeValues(*attr)
-     description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
-     description = func.cleanFromHtml(description)
+    exhibitionlValues = exhibition.getAttributeValues(*attr)
+    description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
+    description = func.cleanFromHtml(description)
 
-     photos = Gallery.objects.filter(c2p__parent=item_id)
+    photos = Gallery.objects.filter(c2p__parent=item_id)
 
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
+    func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
 
-     func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
+    template = loader.get_template('Exhibitions/detailContent.html')
 
-     template = loader.get_template('Exhibitions/detailContent.html')
+    templateParams = {
+       'exhibitionlValues': exhibitionlValues,
+       'photos': photos,
+       'additionalPages': additionalPages
+    }
 
-     templateParams = {
-        'exhibitionlValues': exhibitionlValues,
-        'photos': photos,
-        'additionalPages': additionalPages
-     }
+    context = RequestContext(request, templateParams)
 
-     context = RequestContext(request, templateParams)
-
-     return template.render(context), description
+    return template.render(context), description
 
 
 @login_required(login_url='/login/')

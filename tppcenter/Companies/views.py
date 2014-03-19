@@ -194,7 +194,13 @@ def _companiesDetailContent(request, item_id):
 
     template = loader.get_template('Companies/detailContent.html')
 
-    context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+    templateParams = {
+        'companyValues': companyValues,
+        'country': country,
+        'item_id': item_id,
+    }
+
+    context = RequestContext(request, templateParams)
 
     return template.render(context), description
 

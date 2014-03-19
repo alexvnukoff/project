@@ -5,6 +5,18 @@
 <script>
     $('.keyword').html('');
 </script>
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'news');
+</script>
 
   <div class="new-details">
             {% with newValues.CREATE_DATE.0 as date %}

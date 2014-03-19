@@ -6,10 +6,10 @@
 	<div class="news">
     	<div class="tophead-l">
         	<a href="/"><i class="imgnews news-logo"></i></a>
-        	<a href="#" title="">{% trans 'About project' %}</a> | <a href="#" title="">{% trans 'Service' %}</a> | <a href="#" title="">{% trans 'Help' %}</a>
+        	<a href="{% url "project:about" %}" title="">{% trans 'About' %}</a> | <a href="{% url "project:faq" %}" title="">{% trans 'FAQ' %}</a> | <a href="{% url "project:contact" %}" title="">{% trans 'Contact' %}</a>
         </div>
         <div class="tophead-r">
-        	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}{% endif %}</a>
+        	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>{% endif %}
         </div>
     </div>
 </div>

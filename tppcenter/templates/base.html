@@ -84,7 +84,7 @@
             </ul>
             <ul class="clumn">
                 <li>{% trans 'Contacts' %}</li>
-                <li><a href="{% url "project:contact" %}">{% trans 'Contact us' %}</a></li>
+                <li><a href="{% url "project:contact" %}">{% trans 'Contac' %}</a></li>
                 <li><a href="{% url "project:community" %}">{% trans 'Ask the community' %}</a></li>
                 <li><a href="{% url "project:faq" %}">{% trans 'FAQ' %}</a></li>
             </ul>
@@ -112,6 +112,11 @@
  <div class="black_overlay" id="fade-profile"></div>
  {% endblock %}
     <script type="text/javascript">
+     if ( ui ){
+         $(document).bind(ui.signals['end_load'], function(event, url, data, history) {
+             ga('send', 'pageview', {page: history});
+         });
+     }
      ga('send', 'pageview');
     </script>
 </body>

@@ -1,29 +1,21 @@
-from django.shortcuts import render
-from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, Http404
-from appl.models import *
-
+from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship, Slot
-
-from appl import func
-from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
 from django.template import RequestContext, loader
 from django.views.decorators.csrf import ensure_csrf_cookie
-from datetime import datetime
-from django.views.decorators.cache import cache_page
-from django.utils.timezone import now
-from registration.forms import RegistrationFormUniqueEmail
 from django.contrib.auth.forms import AuthenticationForm
-from registration.backends.default.views import RegistrationView
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-from django.contrib.contenttypes.models import ContentType
-
 from django.conf import settings
+from registration.backends.default.views import RegistrationView
+from registration.forms import RegistrationFormUniqueEmail
+from tppcenter.forms import ItemForm, BasePhotoGallery
+from appl import func
+from appl.models import *
+from core.models import Item
+
 
 def home(request):
 
@@ -370,6 +362,29 @@ def test(request):
     from django.http import StreamingHttpResponse
     return StreamingHttpResponse(a)
 
+def getLiveTop(request):
+
+    filterAdv = func.getListAdv(request)
+
+    templateParams = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'modelTop': func.getTops(request, filterAdv)
+    }
+
+    return render_to_response("AdvTop/tops.html", templateParams)
+
+def getLiveBanner(request):
+
+    filterAdv = func.getListAdv(request)
+
+    places = request.POST.getlist('places[]', [])
+
+    templateParams = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'banners': func.getBanners(places, settings.SITE_ID, filterAdv)
+    }
+
+    return render_to_response("AdvBanner/banners.html", templateParams)
 
 def ping(request):
     from django.http import StreamingHttpResponse

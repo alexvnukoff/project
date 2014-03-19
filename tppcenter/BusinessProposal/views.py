@@ -44,7 +44,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
             proposalsPage = func.emptyCompany()
     else:
-        result = _proposalDetailContent(request, item_id, current_company)
+        result = _proposalDetailContent(request, item_id)
         proposalsPage = result[0]
 
         description = result[1]
@@ -83,7 +83,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
 
-def _proposalDetailContent(request, item_id, current_company):
+def _proposalDetailContent(request, item_id):
 
     proposal = get_object_or_404(BusinessProposal, pk=item_id)
     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
@@ -98,6 +98,8 @@ def _proposalDetailContent(request, item_id, current_company):
     func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
 
     template = loader.get_template('BusinessProposal/detailContent.html')
+
+
 
     templateParams = {
         'proposalValues': proposalValues,

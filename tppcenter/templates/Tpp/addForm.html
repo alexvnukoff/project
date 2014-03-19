@@ -2,7 +2,6 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% with form.fields.POSITION.initial as position %}
-{% load set_var %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -192,23 +191,6 @@
                             <textarea name="BANK_DETAILS"  rows="11" style="width:95%;">{{bank_detail }}</textarea>
                         </div>
                     </div>
-            <div class="append-formin">
-                    <div class="addpage-title">{% trans 'Additional pages' %}</div>
-                    <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
-                    <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
-                    <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
-                    <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
-
-                {% if  pages|length >  0 %}
-                    {% for page in  pages %}
-                        {% set i = forloop.counter0 %}
-                        {% include "additionalPage.html" %}
-                    {% endfor %}
-                {% else %}
-                    {% set i = 0 %}
-                    {% include "additionalPage.html" %}
-                {% endif %}
-            </div>
             <div class="newform-button">
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
                 <a href="#" class="btntype1">{% trans 'Cancel' %}</a>

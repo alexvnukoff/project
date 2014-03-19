@@ -9,7 +9,15 @@ $(function() {
     $('.keyword').html('');
 </script>
 <script>
-    ga('set', 'dimension1', {{ company }});
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
     ga('set', 'dimension2', 'proposal');
 </script>
 

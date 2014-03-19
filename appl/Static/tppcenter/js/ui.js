@@ -66,6 +66,11 @@ $(document).ready(function() {
             curPage: null,
             scripts: [],
             styles: [],
+            bann: {
+                right: null,
+                left: null
+            },
+            tops: null,
 
            filters: {
 
@@ -256,7 +261,7 @@ $(document).ready(function() {
                 return false;
             },
 
-            loadScripts: function(event, url, data) { //load addition scripts
+            loadScripts: function(event, url, data, history) { //load addition scripts
                 var head = $('head');
 
                 styles = data['styles'];
@@ -282,11 +287,8 @@ $(document).ready(function() {
             setPage: function(event, data){
                 ui.setFilters(data.filters);
 
-                $('.news-ads-wrapper').replaceWith(data.tops);
-                $('.banner-wrapper-left').html(data.bannerLeft);
-                $('.banner-wrapper-right').html(data.bannerRight);
-
                 $(ui.container).replaceWith( data.content );
+
                 ui.filter_form = $('form[name="filter-form"]');
                 ui.initFilters();
             },
@@ -344,6 +346,67 @@ $(document).ready(function() {
                     ui.initFilters()
            },
 
+           getAdvTop: function(params) {
+
+               if (ui.tops != null)
+                    ui.tops.abort();
+
+               ui.tops = $.ajax('/adv/tops/', {
+                   data: params,
+                   type: "GET",
+                   success: function(data) {
+                        ui.tops = null;
+                        $('.news-ads-wrapper').replaceWith(data);
+                   },
+                   cache: false,
+                   dataType: 'html'
+               });
+           },
+
+           getAdvBanners: function(params) {
+
+               var url = '/adv/bann/';
+
+               if (ui.bann.left != null)
+                    ui.bann.left.abort();
+
+               if (ui.bann.right != null)
+                    ui.bann.right.abort();
+
+               places = {
+                   right: ["Right 1", "Right 2"],
+                   left: ["Left 1", "Left 2", "Left 2"]
+               }
+
+               ui.bann.left = $.ajax(url + '?' + params, {
+                   data: {
+                       places: places.left
+                   },
+                   type: "POST",
+                   success: function(data) {
+                        ui.bann.left = null;
+                        $('.banner-wrapper-left').html(data);
+                   },
+                   cache: false,
+                   dataType: 'html',
+                   async: true
+               });
+
+               ui.bann.right = $.ajax(url + '?' + params, {
+                   data: {
+                       places: places.right
+                   },
+                   type: "POST",
+                   success: function(data) {
+                        ui.bann.right = null;
+                        $('.banner-wrapper-right').html(data);
+                   },
+                   cache: false,
+                   dataType: 'html',
+                   async: true
+               });
+           },
+
            requester: function(url, params, pagination) {//get content from the server
 
                 if (ui.loading != null)
@@ -355,7 +418,7 @@ $(document).ready(function() {
                if (!pagination)
                     url = url.replace(/page[0-9]*\/$/i, '');
 
-                history = url
+               var history = url;
 
                 if (params)
                     history = history + '?' + params;
@@ -363,12 +426,15 @@ $(document).ready(function() {
                 History.pushState(null, null, history);
                 $(document).trigger(ui.signals['start_load']);
 
+               ui.getAdvBanners(params);
+               ui.getAdvTop(params);
 
                return $.ajax(url, {
                    data: params,
                    type: "GET",
                    success: function(data) {
-                        $(document).trigger(ui.signals['end_load'], [url, data]);
+                        ui.loading = null;
+                        $(document).trigger(ui.signals['end_load'], [url, data, history]);
                    },
                    cache: false,
                    dataType: 'json'
@@ -585,6 +651,7 @@ var messagesUI = {
                 type: 'GET'
             });
         },
+
 
         init: function() {
             $( ".messages-l" ).tabs({

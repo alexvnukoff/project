@@ -174,7 +174,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
 
-MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
+MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
