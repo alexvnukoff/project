@@ -380,7 +380,9 @@ def addCompany(request):
     if request.POST:
 
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('Company', values=values)
@@ -445,7 +447,9 @@ def updateCompany(request, item_id):
 
 
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('Company', values=values, id=item_id)
@@ -476,28 +480,3 @@ def updateCompany(request, item_id):
     return newsPage
 
 
-def _getValues(request):
-    values = {}
-
-    values['ANONS'] = request.POST.get('ANONS', "")
-    values['NAME'] = request.POST.get('NAME', "")
-    values['IMAGE'] = request.FILES.get('IMAGE', "")
-    values['ADDRESS'] = request.POST.get('ADDRESS', "")
-    values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
-    values['TELEPHONE_NUMBER'] = request.POST.get('TELEPHONE_NUMBER', "")
-    values['FAX'] = request.POST.get('FAX', "")
-    values['INN'] = request.POST.get('INN', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-    values['SLOGAN'] = request.POST.get('SLOGAN', "")
-    values['EMAIL'] = request.POST.get('EMAIL', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['DIRECTOR'] = request.POST.get('DIRECTOR', "")
-    values['KPP'] = request.POST.get('KPP', "")
-    values['OKPO'] = request.POST.get('OKPO', "")
-    values['OKATO'] = request.POST.get('OKATO', "")
-    values['OKVED'] = request.POST.get('OKVED', "")
-    values['ACCOUNTANT'] = request.POST.get('ACCOUNTANT', "")
-    values['ACCOUNT_NUMBER'] = request.POST.get('ACCOUNT_NUMBER', "")
-    values['BANK_DETAILS'] = request.POST.get('BANK_DETAILS', "")
-
-    return values

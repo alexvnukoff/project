@@ -23,6 +23,7 @@
         {% with form.fields.DETAIL_TEXT.initial as text %}
         {% with form.fields.ANONS.initial as anons %}
         {% with form.fields.YOUTUBE_CODE.initial as youtube_code %}
+        {% with form.fields.KEYWORD.initial as keyword %}
 
 
         <div class="uploadimgage">
@@ -145,7 +146,7 @@
                 {% if form.errors.KEYWORD %}
                     <div class="error-handler"><div class="formserror">{{ form.errors.KEYWORD }}</div></div>
                 {% endif %}
-                <textarea name="KEYWORD" rows="5"></textarea>
+                <textarea name="KEYWORD" rows="5">{{ keyword }}</textarea>
             </div>
         </div>
 
@@ -184,7 +185,7 @@
             </li>
         </ul>
 
-
+        {% endwith %}
         {% endwith %}
         {% endwith %}
         {% endwith %}

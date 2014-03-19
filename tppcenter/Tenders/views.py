@@ -187,12 +187,14 @@ def addTender(request):
             pages = pages.new_objects
 
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tender', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
                                lang_code=settings.LANGUAGE_CODE)
@@ -239,7 +241,9 @@ def updateTender(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tender', values=values, id=item_id)
         form.clean()
@@ -267,20 +271,6 @@ def updateTender(request, item_id):
     return tendersPage
 
 
-def _getValues(request):
 
-    values = {}
-    values['NAME'] = request.POST.get('NAME', "")
-    values['COST'] = request.POST.get('COST', "")
-    values['CURRENCY'] = request.POST.get('CURRENCY', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-    values['START_EVENT_DATE'] = request.POST.get('START_EVENT_DATE', "")
-    values['END_EVENT_DATE'] = request.POST.get('END_EVENT_DATE', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-    values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
-    values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
-
-    return values
 
 

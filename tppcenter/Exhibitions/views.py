@@ -186,14 +186,16 @@ def addExhibition(request):
         if getattr(pages, 'new_objects', False):
            pages = pages.new_objects
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('Exhibition', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
                                    current_company=current_company, lang_code=settings.LANGUAGE_CODE)
@@ -247,7 +249,9 @@ def updateExhibition(request, item_id):
         gallery = Photo(request.POST, request.FILES)
 
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         branch = request.POST.get('BRANCH', "")
 
@@ -279,21 +283,6 @@ def updateExhibition(request, item_id):
     return exhibitionPage
 
 
-def _getValues(request):
-
-    values = {}
-    values['NAME'] = request.POST.get('NAME', "")
-    values['CITY'] = request.POST.get('CITY', "")
-    values['START_EVENT_DATE'] = request.POST.get('START_EVENT_DATE', "")
-    values['END_EVENT_DATE'] = request.POST.get('END_EVENT_DATE', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['ROUTE_DESCRIPTION'] = request.POST.get('ROUTE_DESCRIPTION', "")
-    values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-    values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
-    values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-
-    return values
 
 
 

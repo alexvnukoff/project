@@ -376,14 +376,16 @@ def addProject(request):
         if getattr(pages, 'new_objects', False):
            pages = pages.new_objects
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('InnovationProject', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(reverse('innov:main'))
@@ -442,7 +444,9 @@ def updateProject(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         branch = request.POST.get('BRANCH', "")
 
@@ -466,21 +470,5 @@ def updateProject(request, item_id):
 
 
 
-def _getValues(request):
-
-    values = {}
-    values['NAME'] = request.POST.get('NAME', "")
-    values['PRODUCT_NAME'] = request.POST.get('PRODUCT_NAME', "")
-    values['COST'] = request.POST.get('COST', "")
-    values['CURRENCY'] = request.POST.get('CURRENCY', "")
-    values['TARGET_AUDIENCE'] = request.POST.get('TARGET_AUDIENCE', "")
-    values['RELEASE_DATE'] = request.POST.get('RELEASE_DATE', "")
-    values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-    values['BUSINESS_PLAN'] = request.POST.get('BUSINESS_PLAN', "")
-    values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-
-    return values
 
 
