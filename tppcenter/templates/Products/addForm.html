@@ -257,18 +257,18 @@
                 <div class="clumn2">
                     <div class="clumn3">
                         <label>{% trans 'From(date)' %}</label>
-                        {% if form.errors.COUPON_DISCOUNT-START %}
+                        {% if form.errors.COUPON_DISCOUNT_START %}
                             <div class="error-handler">
-                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT-START }}</div>
+                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT_START }}</div>
                             </div>
                         {% endif %}
                         <input type="datetime" name="COUPON_DISCOUNT-START" value="{% if coupon_date.title %}{{ coupon_date.start_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" />
                     </div>
                     <div class="clumn4">
                         <label>{% trans 'To(date)' %}</label>
-                         {% if form.errors.COUPON_DISCOUNT-END %}
+                         {% if form.errors.COUPON_DISCOUNT_END %}
                             <div class="error-handler">
-                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT-END }}</div>
+                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT_END }}</div>
                             </div>
                          {% endif %}
                         <input type="datetime" name="COUPON_DISCOUNT-END" value="{% if coupon_date.title %}{{ coupon_date.end_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" />
