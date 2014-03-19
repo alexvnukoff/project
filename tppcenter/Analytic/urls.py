@@ -9,5 +9,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Analytic.views.main, name='main'),
+     url(r'^get/$', tppcenter.Analytic.views.getAnalytic, name='get_analytic'),
 
 )

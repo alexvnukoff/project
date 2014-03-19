@@ -474,6 +474,8 @@ def getAnalytic(params = None):
     if 'start_date' not in params:
         params['start_date'] = '2014-01-01'
 
+    params['metrics'] = 'ga:visitors'
+
     return get_results(**params)
 
 

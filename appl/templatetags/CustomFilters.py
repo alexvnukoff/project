@@ -8,10 +8,9 @@ import datetime
 from django.template import Node, TemplateSyntaxError
 from lxml.html.clean import clean_html
 from appl import func
-from appl.models import Tpp, Company, Product
-from appl.models import Notification
-import lxml
+from appl.models import *
 from urllib.parse import urlencode
+from haystack.query import SQ
 
 register = template.Library()
 
@@ -218,16 +217,16 @@ def mkrange(parser, token):
     return RangeNode(parser, range_args, context_name)
 
 @register.simple_tag
-def productCount():
-    return func.getActiveSQS().models(Product).count()
+def modelCount(model, owner=None):
 
-@register.simple_tag
-def companiesCount():
-    return func.getActiveSQS().models(Company).count()
+    klass = (globals()[model])
 
-@register.simple_tag
-def partnersCount():
-    return func.getActiveSQS().models(Tpp).count()
+    sqs = func.getActiveSQS().models(klass)
+
+    if isinstance(owner, int):
+        sqs.filter(SQ(tpp=owner) | SQ(company=owner))
+
+    return sqs.count()
 
 @register.assignment_tag
 def getOwner(item):
@@ -253,6 +252,7 @@ def getOwner(item):
 def setUserName(context):
     request = context['request']
     user = request.user
+
     if user.is_authenticated():
 
         if not user.first_name and not user.last_name:
@@ -261,7 +261,7 @@ def setUserName(context):
             user_name = user.first_name + ' ' + user.last_name
     else:
         user_name = None
-        notification = None
+
     return user_name
 
 @register.simple_tag(name='notif',takes_context=True)

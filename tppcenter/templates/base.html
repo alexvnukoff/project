@@ -42,6 +42,37 @@
             <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
             <script  type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
             <script  type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=ru" charset="utf-8"></script>
+
+                <!-- Yandex.Metrika counter -->
+                <script type="text/javascript">
+                (function (d, w, c) {
+                    (w[c] = w[c] || []).push(function() {
+                        try {
+                            w.yaCounter22547614 = new Ya.Metrika({id:22547614,
+                                    webvisor:true,
+                                    clickmap:true,
+                                    trackLinks:true,
+                                    accurateTrackBounce:true});
+                        } catch(e) { }
+                    });
+
+                    var n = d.getElementsByTagName("script")[0],
+                        s = d.createElement("script"),
+                        f = function () { n.parentNode.insertBefore(s, n); };
+                    s.type = "text/javascript";
+                    s.async = true;
+                    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+                    if (w.opera == "[object Opera]") {
+                        d.addEventListener("DOMContentLoaded", f, false);
+                    } else { f(); }
+                })(document, window, "yandex_metrika_callbacks");
+                </script>
+                <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+                <!-- /Yandex.Metrika counter -->
+
+
+            <!-- Google analytics -->
             <script  type="text/javascript">
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -50,6 +81,7 @@
 
               ga('create', 'UA-42990905-1', 'tppcenter.com');
             </script>
+            <!-- /Google analytics -->
 
         {% endblock %}
     {% endblock %}
@@ -95,9 +127,9 @@
                     <a href="#"><i class="imgmain iconsocial i-tweet"></i></a>
                     <a href="#"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
-                    <li>{% trans 'Products' %}: {% productCount %}</li>
-                    <li>{% trans 'Companies' %}: {% companiesCount %}</li>
-                    <li>{% trans 'Partners' %}: {% partnersCount %}</li>
+                    <li>{% trans 'Products' %}: {% modelCount "Product" %}</li>
+                    <li>{% trans 'Companies' %}: {% modelCount "Company" %}</li>
+                    <li>{% trans 'Partners' %}: {% modelCount "Tpp" %}</li>
 
             </ul>
         </div>

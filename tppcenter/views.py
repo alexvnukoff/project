@@ -16,7 +16,7 @@ from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from appl.models import *
 from core.models import Item
-
+import json
 
 @cache_page(60 * 5)
 def home(request):
@@ -341,23 +341,8 @@ def jsonFilter(request):
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-
 def test(request):
-    from PIL import Image
-    from core.amazonMethods import add
-
-    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\078279f0100c6ea1d7692338d59719d2.jpg'
-    z = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\test.png'
-
-    sizes = {
-            'big': {'box': (150, 140), 'fit': False},
-            'small': {'box': (70, 70), 'fit': False},
-            'th': {'box':(30, 30), 'fit': True}
-    }
-
-    a = add(a, sizes=sizes)
-
-    #func.resize(im, sizes['big']['box'], False, z)
+    a = func.getAnalytic({'dimensions': 'ga:dimension2'})
 
 
 
