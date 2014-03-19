@@ -44,7 +44,7 @@ def home(request):
     organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
     organizations_id = [organization.pk for organization in organizations]
 
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_id)
 
     products = Product.active.get_active_related().order_by('-pk')[:3]
 
