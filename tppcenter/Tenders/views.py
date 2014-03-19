@@ -109,9 +109,10 @@ def _tenderDetailContent(request, item_id):
          template = loader.get_template('Tenders/detailContent.html')
 
          templateParams = {
-             'tenderValues': tenderValues,
-             'photos': photos,
-            'additionalPages': additionalPages
+            'tenderValues': tenderValues,
+            'photos': photos,
+            'additionalPages': additionalPages,
+            'item_id': item_id
          }
 
          context = RequestContext(request, templateParams)

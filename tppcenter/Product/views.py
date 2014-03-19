@@ -170,7 +170,8 @@ def productForm(request, action, item_id=None):
         'formContent': productsPage,
         'current_company':current_company,
         'current_section': current_section,
-        'cabinetValues': cabinetValues
+        'cabinetValues': cabinetValues,
+        'item_id': item_id
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))

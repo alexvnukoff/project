@@ -108,7 +108,8 @@ def _proposalDetailContent(request, item_id):
         templateParams = {
             'proposalValues': proposalValues,
             'photos': photos,
-            'additionalPages': additionalPages
+            'additionalPages': additionalPages,
+            'item_id': item_id
         }
 
         context = RequestContext(request, templateParams)

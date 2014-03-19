@@ -109,7 +109,8 @@ def _exhibitionsDetailContent(request, item_id):
          templateParams = {
             'exhibitionlValues': exhibitionlValues,
             'photos': photos,
-            'additionalPages': additionalPages
+            'additionalPages': additionalPages,
+            'item_id': item_id
          }
 
          context = RequestContext(request, templateParams)

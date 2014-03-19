@@ -268,21 +268,21 @@ def updateNew(request, item_id):
 
 
 
-def _getdetailcontent(request, id):
+def _getdetailcontent(request, item_id):
 
-    cache_name = "detail_%s" % id
-    description_cache_name = "description_%s" % id
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
     query = request.GET.urlencode()
     cached = cache.get(cache_name)
     if not cached:
-        new = get_object_or_404(News, pk=id)
+        new = get_object_or_404(News, pk=item_id)
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
         description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
         photos = Gallery.objects.filter(c2p__parent=new)
 
         try:
-            newsCategory = NewsCategories.objects.get(p2c__child=id)
+            newsCategory = NewsCategories.objects.get(p2c__child=item_id)
             category_value = newsCategory.getAttributeValues('NAME')
             newValues.update({'CATEGORY_NAME': category_value})
             similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
@@ -292,11 +292,18 @@ def _getdetailcontent(request, id):
             similarValues = None
             pass
 
-        func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
+        func.addToItemDictinoryWithCountryAndOrganization(item_id, newValues)
 
         template = loader.get_template('News/detailContent.html')
 
-        context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
+        templateParams = {
+            'newValues': newValues,
+            'photos': photos,
+            'similarValues': similarValues,
+            'item_id': item_id
+        }
+
+        context = RequestContext(request, templateParams)
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
         cache.set(description_cache_name, description, 60*60*24*7)

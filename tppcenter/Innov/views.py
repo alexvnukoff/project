@@ -235,8 +235,8 @@ def _innovDetailContent(request, item_id):
 
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
-    query = request.GET.urlencode()
     cached = cache.get(cache_name)
+
     if not cached:
 
         innov = get_object_or_404(InnovationProject, pk=item_id)
@@ -295,7 +295,8 @@ def _innovDetailContent(request, item_id):
             'photos': photos,
             'additionalPages': additionalPages,
             'countryUpdate': countryUpdate,
-            'cabinetUpdate': cabinetUpdate
+            'cabinetUpdate': cabinetUpdate,
+            'item_id': item_id
         }
 
         context = RequestContext(request, templateParams)
