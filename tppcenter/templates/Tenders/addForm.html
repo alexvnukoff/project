@@ -65,6 +65,17 @@
                 </div>
                 <div>
                     <label class="sapce">{% trans 'Documents' %}</label>
+                    {% if form.errors.DOCUMENT_1 %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_1 }}</div></div>
+                    {% endif %}
+                    {% if form.errors.DOCUMENT_2 %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_2 }}</div></div>
+                    {% endif %}
+                    {% if form.errors.DOCUMENT_3 %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_3 }}</div></div>
+                    {% endif %}
+
+
                     <div class="line">
                         {% if doc_1 %}
                             <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a>
@@ -109,6 +120,9 @@
                 </div>
                 <div>
                     <label class="sapce">{% trans 'Keywords'  %}</label>
+                     {% if form.errors.KEYWORD %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                     {% endif %}
                     <textarea rows="5" name="KEYWORD" >{{ keyword }}</textarea>
                 </div>
 

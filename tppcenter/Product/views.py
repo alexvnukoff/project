@@ -13,6 +13,7 @@ import json
 from core.tasks import addProductAttrubute
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.cache import cache
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
@@ -82,53 +83,67 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 def _getDetailContent(request, item_id):
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
 
-    product = get_object_or_404(Product, pk=item_id)
+        product = get_object_or_404(Product, pk=item_id)
 
-    attr = (
-        'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
-        'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
-        'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
-    )
+        attr = (
+            'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
+            'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
+            'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
+        )
 
-    productValues = product.getAttributeValues(*attr)
+        productValues = product.getAttributeValues(*attr)
 
-    description = productValues.get('DETAIL_TEXT', False)[0] if productValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+        description = productValues.get('DETAIL_TEXT', False)[0] if productValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
-    photos = Gallery.objects.filter(c2p__parent=item_id)
+        photos = Gallery.objects.filter(c2p__parent=item_id)
 
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-    country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
+        country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
 
-    company = Company.objects.get(p2c__child=item_id)
-    companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
-    companyValues.update({'COMPANY_ID': company.id})
+        company = Company.objects.get(p2c__child=item_id)
+        companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
+        companyValues.update({'COMPANY_ID': company.id})
 
 
-    countriesList = country.getAttributeValues("NAME", 'FLAG')
+        countriesList = country.getAttributeValues("NAME", 'FLAG')
 
-    toUpdate = {
-        'COUNTRY_NAME': countriesList.get('NAME', 0),
-        'COUNTRY_FLAG': countriesList.get('FLAG', 0),
-        'COUNTRY_ID':  country.id
-    }
+        toUpdate = {
+            'COUNTRY_NAME': countriesList.get('NAME', 0),
+            'COUNTRY_FLAG': countriesList.get('FLAG', 0),
+            'COUNTRY_ID':  country.id
+        }
 
-    companyValues.update(toUpdate)
+        companyValues.update(toUpdate)
 
-    template = loader.get_template('Products/detailContent.html')
+        template = loader.get_template('Products/detailContent.html')
 
-    templateParams = {
-        'productValues': productValues,
-        'photos': photos,
-        'additionalPages': additionalPages,
-        'companyValues': companyValues
-    }
+        templateParams = {
+            'productValues': productValues,
+            'photos': photos,
+            'additionalPages': additionalPages,
+            'companyValues': companyValues
+        }
 
-    context = RequestContext(request, templateParams)
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
 
-    return template.render(context), description
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
+
+
 
 
 @login_required(login_url='/login/')
@@ -192,6 +207,7 @@ def addProducts(request):
 
     categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
+    pages = None
 
     if request.POST:
 
@@ -202,6 +218,10 @@ def addProducts(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
+
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")
@@ -238,7 +258,8 @@ def addProducts(request):
         'form': form,
         'measurement_slots': measurement_slots,
         'currency_slots': currency_slots,
-        'categotySelect': categotySelect
+        'categotySelect': categotySelect,
+        'pages': pages
     }
 
     context = RequestContext(request, templateParams)
@@ -284,7 +305,11 @@ def updateProduct(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -306,8 +331,7 @@ def updateProduct(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
+
 
         values = {}
         values['NAME'] = request.POST.get('NAME', "")

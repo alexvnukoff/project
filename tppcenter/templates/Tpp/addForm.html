@@ -55,6 +55,9 @@
         <div class="uploadimgage">
             <div class="imgbig">
                 <label>{% trans 'Image' %}</label>
+                {% if form.errors.IMAGE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.IMAGE }}</div></div>
+                {% endif %}
                     {% if image %}
                         <div class="b-img">
                             <img src="{{ MEDIA_URL }}big/{{ image.name }}">
@@ -76,14 +79,23 @@
             </div>
             <div>
                 <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.DIRECTOR %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.DIRECTOR }}</div></div>
+                {% endif %}
                 <input type="text" name="DIRECTOR" value="{{ director }}" placeholder="" class="text" />
             </div>
             <div>
                 <label class="sapce">{% trans 'Start date' %}</label>
+                {% if form.errors.START_DATE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.START_DATE }}</div></div>
+                {% endif %}
                 <input type="text" class="date" placeholder="" name="START_DATE" value="{{ tpp.start_date|date:"m/d/Y" }}" />
             </div>
             <div>
                 <label class="sapce">{% trans 'End date' %}</label>
+                {% if form.errors.END_DATE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.END_DATE }}</div></div>
+                {% endif %}
                 <input type="text" class="date" placeholder="" name="END_DATE" value="{{ tpp.end_date|date:"m/d/Y" }}" />
             </div>
             <div>
@@ -95,6 +107,9 @@
             </div>
             <div>
                 <label class="sapce">{% trans 'Fax' %}</label>
+                {% if form.errors.FAX %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.FAX }}</div></div>
+                {% endif %}
                 <input type="text" class="text" placeholder="" name="FAX" value="{{ fax }}" />
             </div>
             <div>
@@ -106,10 +121,16 @@
             </div>
             <div>
                 <label class="sapce">{% trans 'WWW' %}</label>
+                {% if form.errors.SITE_NAME %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.SITE_NAME }}</div></div>
+                {% endif %}
                 <input type="text" class="text" placeholder="" name="SITE_NAME" value="{{ site_name }}"/>
             </div>
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.KEYWORD %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                {% endif %}
                 <textarea name="KEYWORD"  rows="4" >{{ keyword }}</textarea>
             </div>
         </div>
@@ -162,6 +183,9 @@
                         </li>
                          <li>
                             <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
+                             {% if form.errors.ADDRESS %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.ADDRESS }}</div></div>
+                            {% endif %}
                             <input type="text" name="ADDRESS" value="{{ address }}" placeholder="" class="text" />
                         </li>
                   </ul>
@@ -174,20 +198,27 @@
                     <div class="addpage-form">
                         <div class="clumn1">
                             <label>{% trans 'RRC' %}</label>
+                             {% if form.errors.KPP %}<div class="error-handler"> <div class="formserror">{{ form.errors.KPP }}</div></div>{% endif %}
                             <input type="text" name="KPP" value="{{kpp}}" placeholder="" class="text" style="width:89%;" />
                             <label>{% trans 'RCEO' %}</label>
+                            {% if form.errors.OKPO %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKPO }}</div></div>{% endif %}
                             <input type="text" name="OKPO" value="{{okpo}}" placeholder="" class="text" style="width:89%;" />
                             <label>{% trans 'RCOSD' %}</label>
+                            {% if form.errors.OKATO %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKATO }}</div></div>{% endif %}
                             <input type="text" name="OKATO" value="{{okato }}" placeholder="" class="text" style="width:89%;" />
                             <label>{% trans 'ARCEA' %}</label>
+                            {% if form.errors.OKVED %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKVED }}</div></div>{% endif %}
                             <input type="text" name="OKVED" value="{{okved }}" placeholder="" class="text" style="width:89%;" />
                             <label>{% trans 'Accountant name' %}</label>
+                             {% if form.errors.ACCOUNTANT %}<div class="error-handler"> <div class="formserror">{{ form.errors.ACCOUNTANT }}</div></div>{% endif %}
                             <input type="text"  name="ACCOUNTANT" value="{{accountant }}" placeholder="" class="text" style="width:89%;" />
                         </div>
                         <div class="clumn2">
                             <label>{% trans 'Account number' %}</label>
+                            {% if form.errors.ACCOUNT_NUMBER %}<div class="error-handler"> <div class="formserror">{{ form.errors.ACCOUNT_NUMBER }}</div></div>{% endif %}
                             <input type="text" name="ACCOUNT_NUMBER" value="{{acoount_number }}" placeholder="" class="text" style="width:95%;" />
                             <label>{% trans 'Bank details' %}</label>
+                            {% if form.errors.BANK_DETAILS %}<div class="error-handler"> <div class="formserror">{{ form.errors.BANK_DETAILS }}</div></div>{% endif %}
                             <textarea name="BANK_DETAILS"  rows="11" style="width:95%;">{{bank_detail }}</textarea>
                         </div>
                     </div>

@@ -87,8 +87,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 
 
 
@@ -97,7 +95,7 @@ MIDDLEWARE_CLASSES = (
 
 )
 
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
 
 ROOT_URLCONF = 'tpp.urls'
 
@@ -115,8 +113,9 @@ CACHES = {
         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
         'TIMEOUT': 300,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY ': 2,
+            'MAX_ENTRIES': 10000,
+            'CULL_FREQUENCY:': 2
+
         }
     }
 }
@@ -162,7 +161,10 @@ LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
+FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
+                        "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 
 STATIC_URL = '/static/'
 

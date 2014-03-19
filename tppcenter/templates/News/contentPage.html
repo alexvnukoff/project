@@ -7,6 +7,7 @@
             <ul class="listnews">
                 {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
+                    {% with attr.ANONS.0 as anons %}
                     {% with attr.IMAGE.0 as image %}
                     {% with attr.SLUG.0 as slug %}
                     {% with attr.DETAIL_TEXT.0 as content %}
@@ -35,10 +36,19 @@
                                <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
-                            <p>{{ content|cleanHtml|safe|truncatewords_html:"30" }} </p>
+                            {% if anons %}
+                            <p>
+                                {% autoescape off %}
+                                     {{ anons|force_escape|linebreaks }}
+                                {% endautoescape %}
+                            {% else %}
+                                {{ content|cleanHtml|safe|truncatewords_html:"30" }}
+                            </p>
+                           {% endif %}
                            <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                         </div>
                     </li>
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

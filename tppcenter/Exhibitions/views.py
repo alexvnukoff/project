@@ -13,6 +13,7 @@ from core.tasks import addNewExhibition
 from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
+from django.core.cache import cache
 
 def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -78,35 +79,49 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _exhibitionsDetailContent(request, item_id):
 
-    exhibition = get_object_or_404(Exhibition, pk=item_id)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
 
-    attr = (
-        'NAME', 'DETAIL_TEXT', 'START_EVENT_DATE',
-        'END_EVENT_DATE', 'DOCUMENT_1', 'DOCUMENT_2',
-        'DOCUMENT_3', 'CITY','ROUTE_DESCRIPTION', 'POSITION'
-    )
+         exhibition = get_object_or_404(Exhibition, pk=item_id)
 
-    exhibitionlValues = exhibition.getAttributeValues(*attr)
-    description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+         attr = (
+             'NAME', 'DETAIL_TEXT', 'START_EVENT_DATE',
+             'END_EVENT_DATE', 'DOCUMENT_1', 'DOCUMENT_2',
+             'DOCUMENT_3', 'CITY','ROUTE_DESCRIPTION', 'POSITION'
+         )
 
-    photos = Gallery.objects.filter(c2p__parent=item_id)
+         exhibitionlValues = exhibition.getAttributeValues(*attr)
+         description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
+         description = func.cleanFromHtml(description)
 
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+         photos = Gallery.objects.filter(c2p__parent=item_id)
 
-    func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
+         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-    template = loader.get_template('Exhibitions/detailContent.html')
 
-    templateParams = {
-       'exhibitionlValues': exhibitionlValues,
-       'photos': photos,
-       'additionalPages': additionalPages
-    }
+         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
 
-    context = RequestContext(request, templateParams)
+         template = loader.get_template('Exhibitions/detailContent.html')
 
-    return template.render(context), description
+         templateParams = {
+            'exhibitionlValues': exhibitionlValues,
+            'photos': photos,
+            'additionalPages': additionalPages
+         }
+
+         context = RequestContext(request, templateParams)
+         rendered = template.render(context)
+         cache.set(cache_name, rendered, 60*60*24*7)
+         cache.set(description_cache_name, description, 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
 
 
 @login_required(login_url='/login/')
@@ -156,7 +171,7 @@ def addExhibition(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -166,6 +181,8 @@ def addExhibition(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
 
         values = _getValues(request)
 
@@ -182,7 +199,7 @@ def addExhibition(request):
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
     template = loader.get_template('Exhibitions/addForm.html')
-    context = RequestContext(request,  {'form': form, 'branches': branches})
+    context = RequestContext(request,  {'form': form, 'branches': branches, 'pages': pages})
     exhibitionPage = template.render(context)
 
     return exhibitionPage
@@ -207,7 +224,10 @@ def updateExhibition(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    pages = pages.queryset
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(parent_id=item_id)
@@ -224,8 +244,6 @@ def updateExhibition(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
         values = _getValues(request)
 

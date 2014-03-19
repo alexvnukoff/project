@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.utils import feedgenerator
 from django.utils.feedgenerator import Rss201rev2Feed
+from django.core.cache import cache
 
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -37,7 +38,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         if not item_id:
-            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
 
         else:
@@ -114,7 +115,7 @@ def newsForm(request, action, item_id=None):
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues,
-       
+
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
@@ -151,13 +152,9 @@ def addNews(request):
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'IMAGE': request.FILES.get('IMAGE', "")
-        }
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
 
         form = ItemForm('News', values=values)
@@ -215,16 +212,15 @@ def updateNew(request, item_id):
     categories = func.getItemsList('NewsCategories', 'NAME')
     countries = func.getItemsList("Country", 'NAME')
 
-    if request.method != 'POST':
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
 
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+    if gallery.queryset:
+       photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
 
-        form = ItemForm('News', id=item_id)
+    form = ItemForm('News', id=item_id)
 
     if request.POST:
 
@@ -232,14 +228,9 @@ def updateNew(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'YOUTUBE_CODE': request.POST.get('YOUTUBE_CODE', ""),
-            'IMAGE': request.FILES.get('IMAGE', ""),
-            'IMAGE-CLEAR': request.POST.get('IMAGE-CLEAR', " ")
-        }
-
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         form = ItemForm('News', values=values, id=item_id)
         form.clean()
 
@@ -278,30 +269,45 @@ def updateNew(request, item_id):
 
 
 def _getdetailcontent(request, id):
-    new = get_object_or_404(News, pk=id)
-    newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
-    description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
-    photos = Gallery.objects.filter(c2p__parent=new)
 
-    try:
-        newsCategory = NewsCategories.objects.get(p2c__child=id)
-        category_value = newsCategory.getAttributeValues('NAME')
-        newValues.update({'CATEGORY_NAME': category_value})
-        similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
-        similar_news_ids = [sim_news.pk for sim_news in similar_news]
-        similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
-    except ObjectDoesNotExist:
-        similarValues = None
-        pass
+    cache_name = "detail_%s" % id
+    description_cache_name = "description_%s" % id
+    query = request.GET.urlencode()
+    cached = cache.get(cache_name)
+    if not cached:
+        new = get_object_or_404(News, pk=id)
+        newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
+        description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
+        photos = Gallery.objects.filter(c2p__parent=new)
 
-    func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
+        try:
+            newsCategory = NewsCategories.objects.get(p2c__child=id)
+            category_value = newsCategory.getAttributeValues('NAME')
+            newValues.update({'CATEGORY_NAME': category_value})
+            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
+            similar_news_ids = [sim_news.pk for sim_news in similar_news]
+            similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
+        except ObjectDoesNotExist:
+            similarValues = None
+            pass
 
-    template = loader.get_template('News/detailContent.html')
+        func.addToItemDictinoryWithCountryAndOrganization(id, newValues)
 
-    context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
+        template = loader.get_template('News/detailContent.html')
 
-    return template.render(context), description
+        context = RequestContext(request, {'newValues': newValues, 'photos': photos, 'similarValues': similarValues})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
+
+    return rendered, description
+
+
 
 
 
@@ -319,8 +325,8 @@ class CustomFeedGenerator(Rss201rev2Feed):
         handler.addQuickElement("link", self.feed['link'])
         handler.addQuickElement("description", self.feed['description'])
         handler.startElement('image', {})
-        handler.addQuickElement("url", 'http://tppcenter.com')
-        handler.addQuickElement("title", "Tppcenter news")
+        handler.addQuickElement("url", 'http://tppcenter.com/static/tppcenter/img/logo.png')
+        handler.addQuickElement("title", "ТПП-Центер новости")
         handler.addQuickElement("link", 'http://www.tppcenter.com')
         handler.endElement('image')
 
@@ -333,7 +339,13 @@ class CustomFeedGenerator(Rss201rev2Feed):
     def add_item_elements(self, handler, item):
             super(CustomFeedGenerator, self).add_item_elements(handler, item)
             # Добавление кастомного тега в RSS-ленту
-            handler.addQuickElement(u"yandex:full-text", item["content"])
+            handler.addQuickElement("yandex:full-text", item["content"])
+            if item.get('video_url', False):
+                handler.addQuickElement("enclosure", "", {'type': "video/x-ms-asf",'url':'http://tppcenter.com' +  item['video_url']})
+            if item.get('image'):
+
+                handler.addQuickElement("enclosure", "", {'type': "image/png", 'url':item['image']})
+
 
 
 
@@ -341,9 +353,9 @@ class CustomFeedGenerator(Rss201rev2Feed):
 
 
 class NewsFeed(Feed):
-    title = "Police beat site news"
-    link = "/sitenews/"
-    description = "Updates on changes and additions to police beat central."
+    title = "Информационный отдел ТПП Центра"
+    link = "/"
+    description = "Новостная лента ТПП-Центра."
     feed_url = None
 
     unique_id_is_permalink = None
@@ -354,7 +366,7 @@ class NewsFeed(Feed):
     def items(self):
         group = Group.objects.get(name='Redactor')
         users = group.user_set.all()
-        return News.objects.filter(create_user__in=users)
+        return News.active.get_active().filter(create_user__in=users)[:20]
 
 
     def item_title(self, item):
@@ -383,7 +395,13 @@ class NewsFeed(Feed):
         return mos_dt
 
     def item_extra_kwargs(self, item):
-        return {
-            "content": item.getAttributeValues('DETAIL_TEXT')[0],
-        }
+        video_url = reverse('news:detail', args=[item.getAttributeValues('SLUG')[0]]) if item.getAttributeValues('YOUTUBE_CODE') else False
+        image = (settings.MEDIA_URL + 'big/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues('IMAGE') else False
+
+        return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
+
+
+
+
+
 

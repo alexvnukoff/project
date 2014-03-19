@@ -109,8 +109,8 @@
                 <div>
                     <label class="sapce">{% trans 'Youtube code' %}</label>
 
-                    {% if form.errors.CREATE_DATE %}
-                        <div class="error-handler"><div class="formserror">{{ form.errors.CREATE_DATE }}</div></div>
+                    {% if form.errors.YOUTUBE_CODE %}
+                        <div class="error-handler"><div class="formserror">{{ form.errors.YOUTUBE_CODE }}</div></div>
                     {% endif %}
                     <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
                 </div>

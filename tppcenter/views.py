@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from django.views.decorators.cache import cache_page
 from django.conf import settings
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
@@ -17,6 +18,7 @@ from appl.models import *
 from core.models import Item
 
 
+@cache_page(60 * 5)
 def home(request):
 
 

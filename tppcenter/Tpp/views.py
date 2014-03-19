@@ -15,6 +15,7 @@ from core.tasks import addNewTpp
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
+from django.core.cache import cache
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -81,130 +82,158 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
+    cached = False
+    cache_name = "tpp_list_result_page_%s" % page
+    query = request.GET.urlencode()
+    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
+        cached = cache.get(cache_name)
+    if not cached:
 
-    if not my:
-        filters, searchFilter = func.filterLive(request)
+        if not my:
+            filters, searchFilter = func.filterLive(request)
 
-        sqs = func.getActiveSQS().models(Tpp)
+            sqs = func.getActiveSQS().models(Tpp)
 
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
+            if len(searchFilter) > 0:
+                sqs = sqs.filter(**searchFilter)
 
-        q = request.GET.get('q', '')
+            q = request.GET.get('q', '')
 
-        if q != '':
-            sqs = sqs.filter(title=q)
+            if q != '':
+                sqs = sqs.filter(title=q)
 
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
+            sortFields = {
+                'date': 'id',
+                'name': 'title'
+            }
 
-        order = []
+            order = []
 
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
+            sortField1 = request.GET.get('sortField1', 'date')
+            sortField2 = request.GET.get('sortField2', None)
+            order1 = request.GET.get('order1', 'desc')
+            order2 = request.GET.get('order2', None)
 
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
+            if sortField1 and sortField1 in sortFields:
+                if order1 == 'desc':
+                    order.append('-' + sortFields[sortField1])
+                else:
+                    order.append(sortFields[sortField1])
             else:
-                order.append(sortFields[sortField1])
+                order.append('-id')
+
+            if sortField2 and sortField2 in sortFields:
+                if order2 == 'desc':
+                    order.append('-' + sortFields[sortField2])
+                else:
+                    order.append(sortFields[sortField2])
+
+
+            tpp = sqs.order_by(*order)
+            url_paginator = "tpp:paginator"
+
+            params = {
+                'filters': filters,
+                'sortField1': sortField1,
+                'sortField2': sortField2,
+                'order1': order1,
+                'order2': order2
+            }
         else:
-            order.append('-id')
+             current_organization = request.session.get('current_company', False)
 
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
+             if current_organization:
+                 tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
+
+                 url_paginator = "tpp:my_main_paginator"
+                 params = {}
+             else:
+                 raise ObjectDoesNotExist('you need check company')
+
+        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(tpp, *attr, page_num=5, page=page)
+
+        tppList = result[0]
+        tpp_ids = [id for id in tppList.keys()]
+        countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        country_dict = {}
+
+        for country in countries:
+            country_dict[country['p2c__child']] = country['pk']
+
+        for id, tpp in tppList.items():
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            tpp.update(toUpdate)
 
 
-        tpp = sqs.order_by(*order)
-        url_paginator = "tpp:paginator"
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
+
+        template = loader.get_template('Tpp/contentPage.html')
+
+        templateParams = {
+            'tppList': tppList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
         }
+
+        templateParams.update(params)
+
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
+           cache.set(cache_name, rendered)
+
     else:
-         current_organization = request.session.get('current_company', False)
+        rendered = cache.get(cache_name)
 
-         if current_organization:
-             tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
-
-             url_paginator = "tpp:my_main_paginator"
-             params = {}
-         else:
-             raise ObjectDoesNotExist('you need check company')
-
-    attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
-
-    result = func.setPaginationForSearchWithValues(tpp, *attr, page_num=5, page=page)
-
-    tppList = result[0]
-    tpp_ids = [id for id in tppList.keys()]
-    countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-
-    for country in countries:
-        country_dict[country['p2c__child']] = country['pk']
-
-    for id, tpp in tppList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        tpp.update(toUpdate)
+    return rendered
 
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-
-    template = loader.get_template('Tpp/contentPage.html')
-
-    templateParams = {
-        'tppList': tppList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 
 def _tppDetailContent(request, item_id):
 
-    tpp = get_object_or_404(Tpp, pk=item_id)
-    tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
-    description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
-    description = func.cleanFromHtml(description)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
+
+        tpp = get_object_or_404(Tpp, pk=item_id)
+        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+        description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
 
-    if not tppValues.get('FLAG', False):
-       try:
-           country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
-       except:
+        if not tppValues.get('FLAG', False):
+           try:
+               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+           except:
+               country = ""
+        else:
            country = ""
+
+        template = loader.get_template('Tpp/detailContent.html')
+        context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
     else:
-       country = ""
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
 
-    template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+    return rendered, description
 
-    return template.render(context), description
+
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):
@@ -249,15 +278,12 @@ def addTpp(request):
     if request.POST:
         user = request.user
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-
         values = _getValues(request)
 
         form = ItemForm('Tpp', values=values)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
@@ -271,6 +297,7 @@ def addTpp(request):
 
 
 def updateTpp(request, item_id):
+
     item = Organization.objects.get(pk=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
@@ -287,13 +314,10 @@ def updateTpp(request, item_id):
     countries = func.getItemsList("Country", 'NAME')
     tpp = Tpp.objects.get(pk=item_id)
 
+    form = ItemForm('Tpp', id=item_id)
 
-    if request.method != 'POST':
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
 
-        form = ItemForm('Tpp', id=item_id)
+
 
     if request.POST:
         user = request.user
@@ -316,7 +340,6 @@ def updateTpp(request, item_id):
 
     templateParams = {
         'form': form,
-        'pages': pages,
         'choosen_country': choosen_country,
         'countries': countries,
         'tpp': tpp
