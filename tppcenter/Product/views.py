@@ -224,25 +224,13 @@ def addProducts(request):
 
 
         values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['COST'] = request.POST.get('COST', "")
-        values['CURRENCY'] = request.POST.get('CURRENCY', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['COUPON_DISCOUNT'] = request.POST.get('COUPON_DISCOUNT', "")
-        values['DISCOUNT'] = request.POST.get('DISCOUNT', "")
-        values['MEASUREMENT_UNIT'] = request.POST.get('MEASUREMENT_UNIT', "")
-        values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-        values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
-        values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
-        values['SMALL_IMAGE'] = request.FILES.get('SMALL_IMAGE', "")
-        values['SKU'] = request.POST.get('SKU', "")
-
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Product', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
 
             func.notify("item_creating", 'notification', user=request.user)
 
@@ -334,19 +322,8 @@ def updateProduct(request, item_id):
 
 
         values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['COST'] = request.POST.get('COST', "")
-        values['CURRENCY'] = request.POST.get('CURRENCY', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['COUPON_DISCOUNT'] = request.POST.get('COUPON_DISCOUNT', "")
-        values['DISCOUNT'] = request.POST.get('DISCOUNT', "")
-        values['MEASUREMENT_UNIT'] = request.POST.get('MEASUREMENT_UNIT', "")
-        values['DOCUMENT_1'] = request.FILES.get('DOCUMENT_1', "")
-        values['DOCUMENT_2'] = request.FILES.get('DOCUMENT_2', "")
-        values['DOCUMENT_3'] = request.FILES.get('DOCUMENT_3', "")
-        values['SMALL_IMAGE'] = request.FILES.get('SMALL_IMAGE', "")
-        values['SKU'] = request.POST.get('SKU', "")
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Product', values=values, id=item_id)
         form.clean()

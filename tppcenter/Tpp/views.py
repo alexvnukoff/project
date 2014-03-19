@@ -278,7 +278,9 @@ def addTpp(request):
     if request.POST:
         user = request.user
 
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tpp', values=values)
         form.clean()
@@ -321,15 +323,16 @@ def updateTpp(request, item_id):
 
     if request.POST:
         user = request.user
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
-        values = _getValues(request)
+
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tpp', values=values, id=item_id)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                             lang_code=settings.LANGUAGE_CODE)
@@ -351,30 +354,7 @@ def updateTpp(request, item_id):
     return tppPage
 
 
-def _getValues(request):
-    values = {}
-    values['NAME'] = request.POST.get('NAME', "")
-    values['IMAGE'] = request.FILES.get('IMAGE', "")
-    values['FLAG'] = request.FILES.get('FLAG', "")
-    values['ADDRESS'] = request.POST.get('ADDRESS', "")
-    values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
-    values['TELEPHONE_NUMBER'] = request.POST.get('TELEPHONE_NUMBER', "")
-    values['FAX'] = request.POST.get('FAX', "")
-    values['INN'] = request.POST.get('INN', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-    values['SLOGAN'] = request.POST.get('SLOGAN', "")
-    values['EMAIL'] = request.POST.get('EMAIL', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['DIRECTOR'] = request.POST.get('DIRECTOR', "")
-    values['KPP'] = request.POST.get('KPP', "")
-    values['OKPO'] = request.POST.get('OKPO', "")
-    values['OKATO'] = request.POST.get('OKATO', "")
-    values['OKVED'] = request.POST.get('OKVED', "")
-    values['ACCOUNTANT'] = request.POST.get('ACCOUNTANT', "")
-    values['ACCOUNT_NUMBER'] = request.POST.get('ACCOUNT_NUMBER', "")
-    values['BANK_DETAILS'] = request.POST.get('BANK_DETAILS', "")
 
-    return values
 
 
 def _tabsCompanies(request, tpp, page=1):
