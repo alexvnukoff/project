@@ -240,12 +240,11 @@ def getOwner(item):
     if not obj:
         return None
 
-    if obj.tpp:
-        return {'type': 'tpp', 'id': obj.tpp}
-
-
     if obj.company:
         return {'type': 'company', 'id': obj.company}
+
+    if obj.tpp:
+        return {'type': 'tpp', 'id': obj.tpp}
 
     return None
 
