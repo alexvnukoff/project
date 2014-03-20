@@ -31,7 +31,7 @@
 
 					<li>
 						<div class="thumb">
-							<img src="{% static picture %}" alt="{{ name }}" class="thumb" />
+							<img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
 						    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>

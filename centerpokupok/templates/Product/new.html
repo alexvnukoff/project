@@ -165,7 +165,7 @@
                             <div class="shadow"></div>
                             <div class="img_block">
 
-                                <img src="{% static picture %}" alt="{{ name }}" >
+                                <img src="{{ MEDIA_URL }}big/{{ picture }} " alt="{{ name }}" >
                             </div>
                         </div>
                     </a>
@@ -183,7 +183,7 @@
                                 <i class="icons icon-chat"></i>
                             </a>
                             <div class="salepopup">
-                                <img src="{% static company_image %}" class="avatar" alt="{{ company }}" />
+                                <img src="{{ MEDIA_URL }}small/{{ company_image }}" class="avatar" alt="{{ company }}" />
                                 <div class="infosale">
                                     <i class="icons icon-status status-online"></i>
                                     <a href="#">{{ company }}</a>

@@ -41,7 +41,7 @@
                         {% with productValues.CURRENCY|first as product_currency %}
                         {% with productValues.COST|first as product_cost %}
 						<div class="thumb">
-							<img src="{% static product_picture%}" alt="{{ product_name }}" class="thumb" />
+							<img src="{{ MEDIA_URL }}small/{{ product_picture }}" alt="{{ product_name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
 							<p>{{ product_name }}</p>

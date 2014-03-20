@@ -6,6 +6,7 @@ from appl import func
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.db.models import Count
+from django.template import RequestContext
 
 
 def storeMain(request, company, category=None):
@@ -63,7 +64,8 @@ def storeMain(request, company, category=None):
                                                      'coupons': coupons,'productsSale': productsSale,
                                                      'newProducrList': newProducrList, 'topPoductList': topPoductList,
                                                      'popular': popular, 'menu': 'main',
-                                                     'store_url': 'companies:category', 'user': request.user})
+                                                     'store_url': 'companies:category', 'user': request.user},
+                              context_instance=RequestContext(request))
 
 def about(request, company):
     companyObj = get_object_or_404(Company, pk=company)
@@ -83,7 +85,8 @@ def about(request, company):
 
     return render_to_response("Company/about.html", {'companyID': company, 'name': name, 'picture': picture,
                                                      'menu': 'about', 'detail_text': detail_text, 'popular': popular,
-                                                     'user': request.user})
+                                                     'user': request.user},
+                              context_instance=RequestContext(request))
 
 def contact(request, company):
     companyObj = get_object_or_404(Company, pk=company)
@@ -94,7 +97,8 @@ def contact(request, company):
     picture = attr['IMAGE'][0]
 
     return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'picture': picture,
-                                                       'menu': 'contact', 'user': request.user})
+                                                       'menu': 'contact', 'user': request.user},
+                              context_instance=RequestContext(request))
 
 def products(request, company, category=None, page=1):
     companyObj = get_object_or_404(Company, pk=company)
@@ -163,7 +167,8 @@ def products(request, company, category=None, page=1):
                                                         'menu': 'products','store_url': 'companies:products_category',
                                                         'page': page, 'paginator_range': paginator_range,
                                                         'url_paginator': url_paginator, 'url_parameter':url_parameter,
-                                                        'popular': popular, 'user': request.user})
+                                                        'popular': popular, 'user': request.user},
+                              context_instance=RequestContext(request))
 
 
 def coupons(request, company, category=None, page=1):
@@ -221,4 +226,5 @@ def coupons(request, company, category=None, page=1):
                                                        'store_url': 'companies:coupons_category', 'page': page,
                                                        'paginator_range': paginator_range, 'url_paginator':url_paginator,
                                                        'url_parameter': url_parameter, 'coupons': coupons,
-                                                       'popular': popular, 'user': request.user})
+                                                       'popular': popular, 'user': request.user},
+                              context_instance=RequestContext(request))

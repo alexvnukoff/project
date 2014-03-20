@@ -56,14 +56,6 @@ def home(request, country=None):
         level = node['LEVEL']
 
 
-    #----LIST OF COUNTRIES IN HEADER SEARCH--------#
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id  = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
-
-
-
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
     if not country:
@@ -98,10 +90,9 @@ def home(request, country=None):
     user = request.user
 
     return render_to_response("index.html", {'sortedHierarchyStructure': sortedHierarchyStructure,
-                                             'categotySelect': categotySelect, 'coupons': coupons,
-                                              'countryList': countryList,
-                                             "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale, 'user': user, 'url_country': url_country,
+                                             'coupons': coupons, "newProducrList": newProducrList,
+                                             "topPoductList": topPoductList, "productsSale": productsSale,
+                                             'user': user, 'url_country': url_country,
                                              'country': country}, context_instance=RequestContext(request))
 
 
@@ -158,15 +149,6 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
-   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-   categories_id = [cat['ID'] for cat in hierarchyStructure]
-   categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-   categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
-
-   contrySorted = func.sortByAttr("Country", "NAME")
-   sorted_id = [coun.id for coun in contrySorted]
-   countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
    if request.POST.get('Register', None):
      form = RegistrationFormUniqueEmail(request.POST)
@@ -199,7 +181,8 @@ def registration(request, form, auth_form):
 
           return HttpResponseRedirect(request.GET.get('next', '/'))
 
-   return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
+   return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request),
+                              context_instance=RequestContext(request))
 
 
 

@@ -1,0 +1,35 @@
+  {% load i18n %}
+  {% load CustomFilters %}
+    <div class="styled-select">
+                            <select name="select">
+                              <option value="">{% trans "Choose category"%}</option>
+                             {% for parent_name , dict  in categotySelect|sort  %}
+
+
+
+
+                             {%  for name , item in  dict|sort%}
+                                   {% with  item.ID as id%}
+                                   {% with  item.LEVEL as  level %}
+
+
+                                {% if name == "@Parent" %}
+                                         <option value="{{ id }}">{{ parent_name }}</option>
+
+                                 {% endif %}
+                                  {% if level == 2 %}
+                                         <option value="{{ id }}">-{{name}}</option>
+
+                                 {% endif %}
+                                 {% if level == 3 %}
+                                         <option value="{{ id }}">--{{name}}</option>
+
+                                 {% endif %}
+                                 {% endwith %}
+                                 {% endwith %}
+                             {% endfor %}
+
+                            {% endfor %}
+
+                             </select>
+    </div>
