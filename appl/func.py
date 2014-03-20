@@ -572,7 +572,7 @@ def organizationIsCompany(item_id):
 
 def filterLive(request):
 
-    searchFilter = {}
+    searchFilter = []
     filtersIDs = {}
     filters = {}
     ids = []
@@ -601,12 +601,23 @@ def filterLive(request):
                 continue
 
             for name, id in filtersIDs.items():
+
                 if pk in id:
                     filters[name].append({'id': pk, 'text': attr['NAME'][0]})
 
-                if len(id):
-                    searchFilter[name + '__in'] = id
+                newIDs = []
+                #Security
+                for i in id:
+                    try:
+                        newIDs.append(str(int(i)))
+                    except ValueError:
+                        continue
 
+                if len(newIDs) > 0:
+                    searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
+
+    if len(searchFilter) > 0:
+        searchFilter = eval(' | '.join(searchFilter))
 
     return filters, searchFilter
 
@@ -774,6 +785,7 @@ def getListAdv(request):
             if len(ids) > 0:
                 sqs = sqs.filter(django_id__in=ids)
 
+
             for tpp in sqs:
                 if len(tpp.country) > 0:
                     filtersAdv += tpp.country
@@ -814,7 +826,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             sqs = getActiveSQS().models(model)
 
             if len(searchFilter) > 0:
-                sqs = sqs.filter(**searchFilter)
+                sqs = sqs.filter(searchFilter)
 
             q = request.GET.get('q', '')
 

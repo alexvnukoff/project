@@ -91,7 +91,7 @@ def _innovContent(request, page=1, my=None):
             sqs = func.getActiveSQS().models(InnovationProject)
 
             if len(searchFilter) > 0:
-                sqs = sqs.filter(**searchFilter)
+                sqs = sqs.filter(searchFilter)
 
             q = request.GET.get('q', '')
 
