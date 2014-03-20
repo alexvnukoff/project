@@ -4,8 +4,9 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext
 import json
 from appl import func
-from appl.models import Organization
+from appl.models import Organization, login_required
 
+@login_required(login_url='/login/')
 def main(request):
 
     current_organization = request.session.get('current_company', False)
@@ -33,7 +34,7 @@ def getAnalytic(request):
     current_company = request.session.get('current_company', False)
 
     if current_company is False:
-        return HttpResponse('da')
+        return HttpResponse('')
 
     params = {'dimensions': 'ga:dimension2'}
 
