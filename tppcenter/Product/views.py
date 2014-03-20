@@ -129,7 +129,8 @@ def _getDetailContent(request, item_id):
             'productValues': productValues,
             'photos': photos,
             'additionalPages': additionalPages,
-            'companyValues': companyValues
+            'companyValues': companyValues,
+            'item_id': item_id
         }
 
         context = RequestContext(request, templateParams)

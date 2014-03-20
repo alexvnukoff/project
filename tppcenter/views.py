@@ -16,7 +16,6 @@ from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from appl.models import *
 from core.models import Item
-import json
 
 @cache_page(60 * 5)
 def home(request):
