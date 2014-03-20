@@ -11,6 +11,7 @@ from appl import func
 from appl.models import *
 from urllib.parse import urlencode
 from haystack.query import SQ
+from django.template import RequestContext, loader
 
 register = template.Library()
 
@@ -264,7 +265,7 @@ def setUserName(context):
 
     return user_name
 
-@register.simple_tag(name='notif',takes_context=True)
+@register.simple_tag(name='notif', takes_context=True)
 def setNotification(context):
     request = context['request']
     user = request.user
@@ -273,5 +274,31 @@ def setNotification(context):
     else:
         notification = None
     return notification
+
+@register.simple_tag(name='flags', takes_context=True)
+def setFlags(context, country, url_country, url_country_parametr):
+
+  request = context['request']
+  if len(url_country) > 0:
+      url_country = url_country
+  else:
+      url_country  = 'home_country'
+
+  country = country
+  if len(url_country_parametr) > 0:
+        url_country_parametr = url_country_parametr
+  else:
+      url_country_parametr = []
+  flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+  template = loader.get_template('main/Flags.html')
+  context = RequestContext(request, {'flagList': flagList, 'url_country': url_country, 'country': country,
+                                     'url_country_parametr': url_country_parametr})
+  flags = template.render(context)
+
+  return flags
+
+
+
 
 

@@ -185,21 +185,15 @@ def addBusinessProposal(request):
         if getattr(pages, 'new_objects', False):
            pages = pages.new_objects
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'KEYWORD': request.POST.get('KEYWORD', ""),
-            'DOCUMENT_1': request.FILES.get('DOCUMENT_1', ""),
-            'DOCUMENT_2': request.FILES.get('DOCUMENT_2', ""),
-            'DOCUMENT_3': request.FILES.get('DOCUMENT_3', ""),
-        }
-
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('BusinessProposal', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
 
             func.notify("item_creating", 'notification', user=request.user)
 
@@ -237,7 +231,10 @@ def updateBusinessProposal(request, item_id):
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
+        if getattr(pages, 'new_objects', False):
+             pages = pages.new_objects
+        else:
+             pages = pages.queryset
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(parent_id=item_id)
@@ -255,19 +252,12 @@ def updateBusinessProposal(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
 
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'KEYWORD': request.POST.get('KEYWORD', ""),
-            'DOCUMENT_1': request.FILES.get('DOCUMENT_1', ""),
-            'DOCUMENT_2': request.FILES.get('DOCUMENT_2', ""),
-            'DOCUMENT_3': request.FILES.get('DOCUMENT_3', "")
-        }
 
         branch = request.POST.get('BRANCH', "")
 

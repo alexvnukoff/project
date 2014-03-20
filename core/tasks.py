@@ -73,15 +73,9 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     pages.clean()
 
 
-    valPost = ('NAME', 'COST', 'CURRENCY', 'ANONS', 'KEYWORD', 'DETAIL_TEXT', 'COUPON_DISCOUNT', 'DISCOUNT',
-               'MEASUREMENT_UNIT', 'ANONS', 'SKU', 'IMAGE-CLEAR', 'DOCUMENT_1-CLEAR', 'DOCUMENT_2-CLEAR',
-               'DOCUMENT_3-CLEAR', 'SMALL_IMAGE-CLEAR')
-    valFiles = ('IMAGE', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SMALL_IMAGE')
     values = {}
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
@@ -140,17 +134,9 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
-
-    valPost = ('NAME', 'DETAIL_TEXT', 'DOCUMENT_1-CLEAR', 'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', 'KEYWORD')
-    valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
-
-
-
+    values.update(post)
+    values.update(files)
 
 
     form = ItemForm('BusinessProposal', values=values, id=item_id, addAttr=addAttr)
@@ -184,17 +170,9 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     trans_real.activate(lang_code)
 
 
-    valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
-               'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
-               'ACCOUNT_NUMBER', 'BANK_DETAILS', 'ANONS')
-    valFiles = ('IMAGE',)
-
     values = {}
-
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     if post.get('Lat', ''):
         values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
@@ -301,17 +279,9 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
     trans_real.activate(lang_code)
 
 
-    valPost = ('NAME', 'DETAIL_TEXT', 'IMAGE-CLEAR', 'FLAG-CLEAR', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX',
-               'INN', 'SLOGAN', 'EMAIL', 'KEYWORD', 'DIRECTOR', 'KPP', 'OKPO', 'OKATO', 'OKVED', 'ACCOUNTANT',
-               'ACCOUNT_NUMBER', 'BANK_DETAILS', 'ANONS')
-    valFiles = ('IMAGE', 'FLAG')
-
     values = {}
-
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     if post.get('Lat', ''):
         values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
@@ -360,14 +330,9 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     pages.clean()
 
 
-    valPost = ('NAME', 'COST', 'CURRENCY', 'KEYWORD', 'DETAIL_TEXT', 'DOCUMENT_1-CLEAR', 'DOCUMENT_2-CLEAR',
-               'DOCUMENT_3-CLEAR', 'START_EVENT_DATE', 'END_EVENT_DATE')
-    valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     form = ItemForm('Tender', values=values, id=item_id, addAttr=addAttr)
     form.clean()
@@ -405,14 +370,9 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     pages.clean()
 
 
-    valPost = ('NAME', 'CITY', 'KEYWORD', 'ROUTE_DESCRIPTION', 'START_EVENT_DATE', 'END_EVENT_DATE', 'DOCUMENT_1-CLEAR',
-               'DOCUMENT_2-CLEAR', 'DOCUMENT_3-CLEAR', 'DETAIL_TEXT')
-    valFiles = ('DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3')
     values = {}
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     if post.get('Lat', ''):
         values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
@@ -465,14 +425,9 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
-    valPost = ('NAME', 'PRODUCT_NAME','COST', 'CURRENCY', 'TARGET_AUDIENCE', 'RELEASE_DATE', 'DOCUMENT_1-CLEAR',
-                'SITE_NAME', 'KEYWORD', 'DETAIL_TEXT', 'BUSINESS_PLAN')
-    valFiles = ('DOCUMENT_1', )
     values = {}
-    for val in valPost:
-        values[val] = post.get(val, "")
-    for val in valFiles:
-        values[val] = files.get(val, "")
+    values.update(post)
+    values.update(files)
 
     form = ItemForm('InnovationProject', values=values, id=item_id, addAttr=addAttr)
     form.clean()

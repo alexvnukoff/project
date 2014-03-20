@@ -273,8 +273,12 @@ BUCKET = 'uploadstg'
 
 
 ##################### Celery settings ####################################
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_REDIS_HOST = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+CELERY_RESULT_BACKEND ='djcelery.backends.database:DatabaseBackend'
+CELERY_REDIS = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+
+
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 
 import djcelery
 djcelery.setup_loader()

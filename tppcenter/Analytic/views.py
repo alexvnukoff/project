@@ -23,7 +23,8 @@ def main(request):
 
     if func.organizationIsCompany(org):
         templateParams = {'tpp': org.getTpp()}
-
+    else:
+        templateParams = {}
     #if getattr(org, 'Tpp', False):
     #    templateParams['tpp'] = org.pk
     #else:

@@ -8,7 +8,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-from django.views.decorators.cache import cache_page
 from django.conf import settings
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
@@ -16,8 +15,14 @@ from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from appl.models import *
 from core.models import Item
+import json
+from django.core.cache import cache
+from django.template import RequestContext, loader
+from django.core.context_processors import csrf
 
-@cache_page(60 * 5)
+from django.views.decorators.csrf import csrf_protect
+
+@csrf_protect
 def home(request):
 
 
@@ -26,50 +31,64 @@ def home(request):
 
     if request.POST.get('Register', None):
         return registration(request)
+    cache_name = 'home_page'
+    cached = cache.get(cache_name)
+    c = {}
+    c.update(csrf(request))
+    if not cached:
 
-    countries = Country.active.get_active()
-    countries_id = [country.pk for country in countries]
+        countries = Country.active.get_active()
+        countries_id = [country.pk for country in countries]
 
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
-    organizations_id = [organization.pk for organization in organizations]
+        organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+        organizations_id = [organization.pk for organization in organizations]
 
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
+        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_id)
 
-    products = Product.active.get_active_related().order_by('-pk')[:3]
+        products = Product.active.get_active_related().order_by('-pk')[:3]
 
-    products_id = [product.pk for product in products]
-    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-    func.addDictinoryWithCountryAndOrganization(products_id,productsList)
+        products_id = [product.pk for product in products]
+        productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
+        func.addDictinoryWithCountryAndOrganization(products_id,productsList)
 
-    services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
+        services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
 
-    services_id = [service.id for service in services]
-    serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
-    func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
+        services_id = [service.id for service in services]
+        serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
+        func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
 
 
-    greetings = Greeting.active.get_active().all()
-    greetings_id = [greeting.id for greeting in greetings]
-    greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
+        greetings = Greeting.active.get_active().all()
+        greetings_id = [greeting.id for greeting in greetings]
+        greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
 
-    exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
-    exhibitions_id = [exhibition.pk for exhibition in exhibitions]
-    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
-    func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
+        exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
+        exhibitions_id = [exhibition.pk for exhibition in exhibitions]
+        exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
+        func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
-    templateParams = {
-        "countriesList": countriesList,
-        'organizationsList': organizationsList,
-        'productsList': productsList,
-        'serviceList': serviceList,
-        'greetingsList': greetingsList,
-        'exhibitionsList': exhibitionsList
-    }
+        templateParams = {
+            "countriesList": countriesList,
+            'organizationsList': organizationsList,
+            'productsList': productsList,
+            'serviceList': serviceList,
+            'greetingsList': greetingsList,
+            'exhibitionsList': exhibitionsList,
+            'c': c,
+        }
 
-    return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
+        template = loader.get_template('index.html')
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        cache.set(cache_name, rendered)
+    else:
+        rendered = cache.get(cache_name)
+
+
+    return HttpResponse(rendered, c)
 
 
 @ensure_csrf_cookie
