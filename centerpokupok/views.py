@@ -181,8 +181,8 @@ def registration(request, form, auth_form):
 
           return HttpResponseRedirect(request.GET.get('next', '/'))
 
-   return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request),
-                              context_instance=RequestContext(request))
+   return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
+
 
 
 
