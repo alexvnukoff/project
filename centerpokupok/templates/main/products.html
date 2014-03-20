@@ -49,8 +49,10 @@
                                     </font>
                                 </p>
                                 <p>
-                                    <a href="{% url "products:category" category_id %}" class="viewall">
+                                    {% if category_id %}
+                                         <a href="{% url "products:category" category_id %}" class="viewall">
                                         {{ category_name }}
+                                    {% endif %}
                                     </a>
                                 </p>
                             </li>
