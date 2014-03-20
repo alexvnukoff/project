@@ -19,7 +19,9 @@ import json
 from django.core.cache import cache
 from django.template import RequestContext, loader
 
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
 def home(request):
 
 
