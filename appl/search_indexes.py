@@ -53,7 +53,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -66,7 +66,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 if field_name == 'start_event_date' or field_name == 'end_event_date':
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
                 else:
-                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
@@ -185,7 +185,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -195,7 +195,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -296,15 +296,15 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
         attr = obj.getAttributeValues('NAME')
 
-        if len(attr) == 0 or attr[0] == '':
+        if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
 
-        self.prepared_data[textIndex] = attr[0]
-        self.prepared_data[titleAutoIndex] = attr[0]
+        self.prepared_data[textIndex] = attr[0].strip()
+        self.prepared_data[titleAutoIndex] = attr[0].strip()
 
         return self.prepared_data
 
@@ -327,15 +327,15 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
 
         attr = obj.getAttributeValues('NAME')
 
-        if len(attr) == 0 or attr[0] == '':
+        if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
 
-        self.prepared_data[textIndex] = attr[0]
-        self.prepared_data[titleAutoIndex] = attr[0]
+        self.prepared_data[textIndex] = attr[0].strip()
+        self.prepared_data[titleAutoIndex] = attr[0].strip()
 
         return self.prepared_data
 
@@ -357,15 +357,15 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
 
         attr = obj.getAttributeValues('NAME')
 
-        if len(attr) == 0 or attr[0] == '':
+        if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
 
-        self.prepared_data[textIndex] = attr[0]
-        self.prepared_data[titleAutoIndex] = attr[0]
+        self.prepared_data[textIndex] = attr[0].strip()
+        self.prepared_data[titleAutoIndex] = attr[0].strip()
 
         return self.prepared_data
 
@@ -401,7 +401,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -411,7 +411,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -504,7 +504,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -514,7 +514,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -607,7 +607,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -620,7 +620,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr is "COST":
                     self.prepared_data[field.index_fieldname] = float(attributes[attr][0])
                 else:
-                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -770,7 +770,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -786,7 +786,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
                     else:
                         self.prepared_data[field.index_fieldname] = True
                 else:
-                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -923,7 +923,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -936,7 +936,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
                 if field_name == 'start_event_date' or field_name == 'end_event_date':
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
                 else:
-                    self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -1047,7 +1047,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -1057,7 +1057,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -1160,7 +1160,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
         return InnovationProject
 
 
-class TppTv(indexes.SearchIndex, indexes.Indexable):
+class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
     country = indexes.IntegerField(null=True)
@@ -1179,7 +1179,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
 
     def prepare(self, obj):
 
-        self.prepared_data = super(TppTv, self).prepare(obj)
+        self.prepared_data = super(TppTvIndex, self).prepare(obj)
 
         field_to_attr = {
             'title': 'NAME',
@@ -1188,7 +1188,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues(*field_to_attr.values())
 
-        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0]) == 0:
+        if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
         for field_name, field in self.fields.items():
@@ -1198,7 +1198,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
                 if attr not in attributes:
                     continue
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0]
+                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -1264,3 +1264,76 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return TppTV
 
+class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    country = indexes.IntegerField(null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+
+    id = indexes.IntegerField()
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+
+        self.prepared_data = super(CabinetIndex, self).prepare(obj)
+
+        attributes = obj.getAttributeValues('USER_MIDDLE_NAME', 'USER_FIRST_NAME', 'USER_LAST_NAME')
+
+        if not isinstance(attributes, dict):
+            return self.prepared_data
+
+        name = []
+
+        try:
+            name.append(attributes['USER_FIRST_NAME'][0])
+        except KeyError:
+            pass
+
+        try:
+            name.append(attributes['USER_MIDDLE_NAME'][0])
+        except KeyError:
+            pass
+
+        try:
+            name.append(attributes['USER_LAST_NAME'][0])
+        except KeyError:
+            pass
+
+        if len(name) == 0:
+            return self.prepared_data
+
+        name = ' '.join(name)
+
+        textIndex = self.fields['text'].index_fieldname
+        self.prepared_data[textIndex] = name
+
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
+
+        #Get parent active date
+        parendStart = None
+
+        #END DATE
+        if not obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        else:
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
+
+        #START DATE
+        self.prepared_data[startDateIndex] = obj.start_date
+
+        #country
+        countryIndex = self.fields['country'].index_fieldname
+
+        try:
+            self.prepared_data[countryIndex] = Country.objects.get(p2c__child=obj.pk, p2c__type='relation').pk
+        except ObjectDoesNotExist:
+            self.prepared_data[countryIndex] = None
+
+        return self.prepared_data
+
+
+    def get_model(self):
+        return Cabinet

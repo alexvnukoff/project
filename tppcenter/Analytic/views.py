@@ -21,10 +21,11 @@ def main(request):
     #if 'view_analytic' not in perm_list:
     #     return render_to_response("permissionDenied.html")
 
+    templateParams = {'current_company': current_organization}
+
     if func.organizationIsCompany(org):
-        templateParams = {'tpp': org.getTpp()}
-    else:
-        templateParams = {}
+        templateParams['tpp'] = org.getTpp()
+
     #if getattr(org, 'Tpp', False):
     #    templateParams['tpp'] = org.pk
     #else:
