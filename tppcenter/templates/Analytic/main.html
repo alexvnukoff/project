@@ -12,15 +12,15 @@
     {{ block.super }}
     <script>
     $(document).ready(function() {
-        analytic = {
-            proposal: 0,
-            company: 0,
-            exhibition: 0,
-            innov: 0,
-            news: 0,
-            product: 0,
-            tender: 0,
-            tpp: 0
+        var analytic = {
+            	proposal: 0,
+            	company: 0,
+            	exhibition: 0,
+            	innov: 0,
+            	news: 0,
+            	product: 0,
+            	tender: 0,
+            	tpp: 0
         }
 
         $.ajax("{% url "analytic:get_analytic" %}", {
@@ -82,12 +82,17 @@
                   </tr>
                 {% if tpp %}
                   <tr>
-                    <td>{% trans "Companies" %}</td>
+                    <td>{% trans "Company" %}</td>
                     <td id="analytic-company"><img src="{% static "tppcenter/img/analytic-loader.gif" %}"></td>
                   </tr>
+
                 {% else %}
                   <tr>
-                    <td>{% trans "Company" %}</td>
+                    <td>{% trans "Main" %}</td>
+                    <td id="analytic-tpp"><img src="{% static "tppcenter/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Companies" %}</td>
                     <td id="analytic-company"><img src="{% static "tppcenter/img/analytic-loader.gif" %}"></td>
                   </tr>
                 {% endif %}
