@@ -4,16 +4,15 @@ from django.http import HttpResponseRedirect
 from core.models import Item
 from appl import func
 from django.utils.translation import ugettext as _
-from django.core.exceptions import  ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
-import json
-from haystack.query import SQ, SearchQuerySet
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 from django.core.cache import cache
+import json
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
