@@ -4,7 +4,7 @@
 {% load CustomFilters %}
 
 
-               {% block title %}Order Step Two{% endblock %}
+               {% block title %}{% trans 'Order step two' %}{% endblock %}
 
 
 
@@ -33,7 +33,7 @@
 			</div>
 
 			<div class="listitemcart">
-				<span class="title">Order summary</span>
+				<span class="title">{% trans 'Order summary' %}</span>
 				{% with productValues.COST|first as cost %}
                 {% with productValues.CURRENCY|first as currency %}
                 {% with productValues.NAME|first as name %}

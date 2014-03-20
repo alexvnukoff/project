@@ -67,8 +67,8 @@
                                 <div class="discount"><i class="icons i-after"></i> спеццена</div>
                                 <a href="#"><img alt="" src="{% static "centerpokupok/images/products/pr8.jpg" %}"></a>
                                 <div class="coupon-info">
-                                    <p><a href="#">Распродажа</a></p>
-                                    <p>осенней коллекции</p>
+                                    <p><a href="#">{% trans 'Sale' %}</a></p>
+                                    <p>{% trans 'winter collection' %}</p>
                                 </div>
                             </li>
                         </ul>
@@ -76,11 +76,11 @@
                 </div>
                 <ul id="subscribe">
                     <li class="top">
-                        <i class="imgshop i-subs"></i>Подписаться на рассылку
+                        <i class="imgshop i-subs"></i>{% trans 'Subscribe to newsletter' %}
                     </li>
-                    <li>Получайте каждую неделю наши анонсы и обзоры новинок</li>
+                    <li>{% trans 'Receive our weekly announcements and reviews of new products' %}</li>
                     <li><input type="text" class="text" placeholder="Ваш E-mail" name=""></li>
-                    <li><a href="#" class="btnreg">Подписаться</a></li>
+                    <li><a href="#" class="btnreg">{% trans 'Subscripe' %}</a></li>
                 </ul>
             </div>
             <div id="main-r">
@@ -299,7 +299,7 @@
                 </div>
                 <div id="bestprice-cpn">
                     <div id="bestprice">
-                        <h3>Выгодные предложения</h3>
+                        <h3>{% trans 'Best deals' %}</h3>
                         <ul id="bestproduct">
                             {% for id, attr in productsSale.items %}
                                 {% with attr.NAME|first as name  %}
