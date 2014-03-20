@@ -232,7 +232,7 @@ rgb(33,136,187) 100%);}
 /*---------User- Profile--------------*/
 .user-profile{ position:relative; float:left; width:630px; padding:15px 15px 50px 15px; background-color:#fafafa; margin:15px 0 0 0;}
 .profile-l{ float:left; width:150px;}
-.profile-l .avatar{ float:left; width:150px; background:url(../img/shadow.png) no-repeat bottom left; padding-bottom:75px;}
+.profile-l .avatar{ float:left; width:150px; background:url(../img/shadow.png) no-repeat bottom left; padding-bottom:130px;}
 .profile-l .line{ float:left; width:100%; margin:8px 0 5px 0px; color:#484848;}
 .profile-l .line input{ padding:0; margin: 0 10px 0 0;}
 .profile-l .btnbb{ float:left; margin-top:5px; border:1px #a4a4a4 solid; border-radius:2px; background-color:#e9e9e9; padding:4px 10px; color:#4a4a4a;
