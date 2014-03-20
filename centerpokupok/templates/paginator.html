@@ -3,7 +3,7 @@
 {% if page.paginator.num_pages > 1 %}
        <div class="panaging">
              {%  if page.has_previous %}
-                    <a href="{% dynurl url_paginator url_parameter "1"  %}" >{% transe "Start" %}</a>
+                    <a href="{% dynurl url_paginator url_parameter "1"  %}" >{% trans "Start" %}</a>
                                     <a href="{% dynurl url_paginator url_parameter  page.previous_page_number  %}" >«</a>
             {% endif %}
             <label>{% trans "pages" %}:</label>

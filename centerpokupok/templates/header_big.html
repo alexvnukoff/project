@@ -152,25 +152,4 @@
                     </div>
                     <a href="#" class="btns">Поиск</a>
                 </div>
-               {% if country %}<div id="flag">{% else %}<div id="flag-var">{% endif %}
-                    <ul>
-
-                             {% for id, flag  in flagList.items %}
-                             {% with flag.NAME|first as name  %}
-                              {% with flag.FLAG|first  as flag  %}
-
-
-
-                     <li {% if country == id|slugify %} class="active"{% endif %}>
-
-                              <i class="iflag">
-                             <a href="{% dynurl url_country id url_country_parametr  %}"> <img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}"></a>
-                                </i>
-                         {% if not country %} <a href="{% dynurl url_country id url_country_parametr  %}">{{ name }}</a>{% endif %}
-                        </li>
-
-                        {% endwith %}
-                    {% endwith %}
-                    {% endfor %}
-                    </ul>
-                </div>
+                 {% flags country url_country url_country_parametr %}

@@ -16,6 +16,7 @@ def categoryList(request):
 
     dictStructured = func.setStructureForHiearhy(hierarchyStructure, categories)
     categotySelect = dictStructured
+    url_country = "home_country"
 
 
 

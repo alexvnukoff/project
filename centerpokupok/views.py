@@ -86,8 +86,8 @@ def home(request, country=None):
     productsSale_ids = [prod.pk for prod in productsSale]
     productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
 
-    #---------FLAGS IN HEADER----------#
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
+
 
     url_country = "home_country"
 
@@ -98,7 +98,7 @@ def home(request, country=None):
     user = request.user
 
     return render_to_response("index.html", {'sortedHierarchyStructure': sortedHierarchyStructure,
-                                             'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
+                                             'categotySelect': categotySelect, 'coupons': coupons,
                                               'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
                                              "productsSale": productsSale, 'user': user, 'url_country': url_country,
