@@ -17,8 +17,7 @@ from django.conf import settings
 
 def home(request, country=None):
 
-    #----NEWSLIST------#
-    newsList = func.getItemsList("News", "NAME", "IMAGE", qty=3)
+
     #----NEW PRODUCT LIST -----#
     if country:
         productQuery = Product.active.get_active_related().filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
@@ -64,10 +63,7 @@ def home(request, country=None):
 
 
 
-    #-------PARTNERS SLIDER ---------_#
-    tppList = func.getItemsList("Tpp", "NAME", "IMAGE")
-    #-------------REVIEWS-----------#
-    reviewList = func.getItemsList("Review", "NAME", "IMAGE", "Photo", qty=3)
+
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
     if not country:
@@ -101,12 +97,12 @@ def home(request, country=None):
 
     user = request.user
 
-    return render_to_response("index.html", {'newsList': newsList, 'sortedHierarchyStructure': sortedHierarchyStructure,
+    return render_to_response("index.html", {'sortedHierarchyStructure': sortedHierarchyStructure,
                                              'categotySelect': categotySelect, 'coupons': coupons, 'flagList': flagList,
-                                             'tppList': tppList, 'countryList': countryList,
+                                              'countryList': countryList,
                                              "newProducrList": newProducrList, "topPoductList": topPoductList,
                                              "productsSale": productsSale, 'user': user, 'url_country': url_country,
-                                             'country': country})
+                                             'country': country}, context_instance=RequestContext(request))
 
 
 def about(request):
