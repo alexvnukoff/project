@@ -136,15 +136,15 @@
 						<div class="imgout">
 							<div id="imagebig">
                                 <a href="#" data-index="0" class="bzoom"><i class="icons i-zoom"></i></a>
-								<img src="{% static picture %}" border="0" />
+								<img src="{{ MEDIA_URL }}big/{{ picture }}" border="0" />
 							</div>
 						</div>
 						<ul class="allthumb">
 							<li>
-                                <a href="#"  data-big="{% static picture %}" class="image">
-                                    <img src="{% static picture %}" class="imagesmall" border="0"/>
+                                <a href="#"  data-big="{{ MEDIA_URL }}big/{{ picture }}" class="image">
+                                    <img src="{{ MEDIA_URL }}small/{{ picture }}" class="imagesmall" border="0"/>
                                 </a>
-                                <a href="{% static picture %}" class="fancybox" rel="gallery" style="display: none;"></a>
+                                <a href="{{ MEDIA_URL }}big/{{ picture }}" class="fancybox" rel="gallery" style="display: none;"></a>
                             </li>
 						</ul>
 					</div>
@@ -335,7 +335,7 @@
                                 <div class="img_prod_slider">
                                     <div class="shadow"></div>
                                     <div class="img_block">
-                                        <img src="{% static picture %}" alt="{{ name }}">
+                                        <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}">
 
                                     </div>
                                 </div>

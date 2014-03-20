@@ -19,7 +19,7 @@
 </div>
 <div class="container">
 	<div id="company-header">
-    	<a href="{% url "main" %}" id="company-logo"><img src="{% static picture %}" alt="{{ name }}" /></a>
+    	<a href="{% url "main" %}" id="company-logo"><img src="{{ MEDIA_URL }}big/{{picture}}" alt="{{ name }}" /></a>
         <div id="company-info">
         	<span class="company-name">{{ name }}</span>
             <p><font class="cpn-no">{% trans "Store No" %}.{{ companyID }}</font></p>
