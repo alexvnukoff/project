@@ -18,6 +18,7 @@ from core.models import Item
 import json
 from django.core.cache import cache
 from django.template import RequestContext, loader
+from django.core.context_processors import csrf
 
 from django.views.decorators.csrf import csrf_protect
 
@@ -32,6 +33,8 @@ def home(request):
         return registration(request)
     cache_name = 'home_page'
     cached = cache.get(cache_name)
+    c = {}
+    c.update(csrf(request))
     if not cached:
 
         countries = Country.active.get_active()
@@ -73,7 +76,8 @@ def home(request):
             'productsList': productsList,
             'serviceList': serviceList,
             'greetingsList': greetingsList,
-            'exhibitionsList': exhibitionsList
+            'exhibitionsList': exhibitionsList,
+            'c': c,
         }
 
         template = loader.get_template('index.html')
@@ -84,7 +88,7 @@ def home(request):
         rendered = cache.get(cache_name)
 
 
-    return HttpResponse(rendered)
+    return HttpResponse(rendered, c)
 
 
 @ensure_csrf_cookie
