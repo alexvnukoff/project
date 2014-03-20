@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% block title %}Shopcenter{% endblock %}
+{% block title %}{% trans 'Shopcenter' %}{% endblock %}
 
 
 
@@ -90,33 +90,6 @@
                         </ul>
                     </div>
                 </div>
-                {% include "main/products_discount.html" %}
-                <div id="productreview">
-                    {% include "main/reviews.html" %}
-                    {% include "main/news.html" %}
-                    <div class="items-coupon">
-                        <ul>
-                            <li>
-                                <div class="discount"><i class="icons i-after"></i> спеццена</div>
-                                <a href="#"><img alt="" src="images/products/pr8.jpg"></a>
-                                <div class="coupon-info">
-                                    <p><a href="#">Распродажа</a></p>
-                                    <p>осенней коллекции</p>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="alldeal"><a href="#">Все спецпредложения ?</a></div>
-                    </div>
 
-
-
-
-
-        <div id="partner">
-        {% include "main/partner.html" %}
-        </div>
-
-
-            </div>
             </div>
         {% endblock %}
