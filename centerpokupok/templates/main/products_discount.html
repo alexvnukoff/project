@@ -17,7 +17,7 @@
                 <div class="clumn-best">
                     <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
                     <a href="{% url "products:detail" id %}">
-                        <img width="180" height="135" alt="{{ name }}" src="{% static picture %}" class="thumb" />
+                        <img width="180" height="135" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }}" class="thumb" />
                     </a>
                     <a href="{% url "products:detail" id %}" class="name">{{ name }}</a>
                 </div>

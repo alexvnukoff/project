@@ -164,7 +164,7 @@
                      <li {% if country == id|slugify %} class="active"{% endif %}>
 
                               <i class="iflag">
-                             <a href="{% dynurl url_country id url_country_parametr  %}"> <img src="{% static flag %}" alt="{{ name }}"></a>
+                             <a href="{% dynurl url_country id url_country_parametr  %}"> <img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}"></a>
                                 </i>
                          {% if not country %} <a href="{% dynurl url_country id url_country_parametr  %}">{{ name }}</a>{% endif %}
                         </li>
