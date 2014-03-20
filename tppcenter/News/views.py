@@ -8,7 +8,6 @@ from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm,BasePhotoGallery
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
-from haystack.query import SQ, SearchQuerySet
 import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
@@ -55,9 +54,6 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
     scripts = []
 
     if not request.is_ajax():
-        user = request.user
-
-
 
         current_section = _("News")
 

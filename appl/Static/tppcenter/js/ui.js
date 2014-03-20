@@ -125,10 +125,11 @@ $(document).ready(function() {
             search: function() {
                 var val = $(this).find('input[name="q"]').val();
 
+
                 if (val.length > 0 && val.length < 3)
                     return false;
 
-                url = UpdateQueryString("q", val);
+                url = updateURLParameter("q", val);
                 params = url.replace(window.location.origin + window.location.pathname, '');
                 ui.requester(window.location.pathname, params.substr(1));
 
