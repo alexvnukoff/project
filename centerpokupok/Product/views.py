@@ -50,7 +50,7 @@ def productDetail(request, item_id, page=1):
     except ObjectDoesNotExist:
         pass
 
-    #flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
     #----------- Popular Products ----------------#
 
@@ -286,7 +286,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
 
 
@@ -297,10 +297,10 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
                                                       'categotySelect':categotySelect, 'countryList':countryList,
                                                       'categories': categories, 'currentCat': currentCatName,
                                                      'breadCrumbs': breadCrumbs, 'category_url': category_url,
-                                                     'flagList': flagList, 'url_country': url_country,
+                                                    'url_country': url_country,
                                                      'url_country_parametr': url_country_parametr,
                                                      'category_parameters': category_parameters, 'country': country,
-                                                     'user': request.user})
+                                                     'user': request.user}, context_instance=RequestContext(request))
 
 
 def getAllNewProducts(request, page=1):
@@ -349,7 +349,7 @@ def getAllNewProducts(request, page=1):
     sorted_id = [coun.id for coun in contrySorted]
     countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
+
 
 
 
@@ -357,7 +357,7 @@ def getAllNewProducts(request, page=1):
     return render_to_response("Product/new.html", {'products_list': products_list, 'page': page,
                                                    'paginator_range':paginator_range, 'url_paginator': url_paginator,
                                                    'categotySelect': categotySelect, 'countryList': countryList,
-                                                   'flagList': flagList, 'user': request.user})
+                                                   'user': request.user})
 
 
 
