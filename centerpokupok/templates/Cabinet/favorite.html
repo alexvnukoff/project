@@ -35,12 +35,12 @@
 						</div>
 						<div class="infoproduct">
 						    <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
-							<p class="id">Product ID: {{ id }}</p>
+							<p class="id">{% trans 'Product ID' %} : {{ id }}</p>
 
 						</div>
 						<div class="code">
-							<p><font class="grey">Размер:</font> XS</p>
-							<p><font class="grey">Цвет:</font> красный</p>
+							<p><font class="grey">{% trans 'Size' %}:</font> XS</p>
+							<p><font class="grey">{% trans 'Color' %}:</font> красный</p>
 						</div>
 						<div class="numberoder">
                             {% if real_cost > 0 %}

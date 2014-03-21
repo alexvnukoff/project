@@ -90,8 +90,8 @@
 							<div class="discount"><i class="icons i-after"></i> спеццена</div>
 							<a href="#"><img src="images/products/pr8.jpg" alt=""></a>
 							<div class="coupon-info">
-								<p><a href="#">Распродажа</a></p>
-								<p>осенней коллекции</p>
+								<p><a href="#">{% trans 'Sale' %}</a></p>
+								<p>{% trans 'winter collection' %}</p>
 							</div>
 						</li>
 					</ul>
@@ -253,7 +253,7 @@
 					</div>
 
 					<div class="feedback">
-						<h3>Transaction History & Feedback</h3>
+						<h3>{% trans 'Transaction History & Feedback' %}</h3>
                     {% for id , attr  in commentsList.items %}
 
                         {% with attr.DETAIL_TEXT|first as content  %}

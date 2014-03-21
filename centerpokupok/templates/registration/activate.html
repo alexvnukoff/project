@@ -1,10 +1,13 @@
 {% extends "registration/registration_base.html" %}
-{% block title %}{% if account %}Регистрация завершена{% else %}Activation problem{% endif %}{% endblock %}
+{% load i18n %}
+{% block title %}{% if account %}{% trans 'Registration completed' %}{% else %}{% trans 'Activation problem' %}{% endif %}{% endblock %}
 {% block body %}
     {% if account %}
-        Спасибо, {{ account }}! Ваша регистрация на портале завершена!  Вы можете войти в <a href='{% url auth_login %}'>личный кабинет</a>, используя имя и пароль, указанные при регистрации.
+         {{ account }}! {% trans 'Your registration complited' %}!  {% trans 'You can sign in' %} <a href='{% url auth_login %}'>{% trans 'profile' %}</a>
     {% else %}
-        Извините, но Ваш ключ активации неверен! Проверьте, пожалуйста, Вашу ссылку.
+        {% trans 'Sorry but you activation key is invalid' %}
+
     {% endif %}
 {% endblock %}
+
 
