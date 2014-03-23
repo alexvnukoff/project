@@ -272,7 +272,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
             companyList[item["p2c__child_id"]] = {}
             companyList[item["p2c__child_id"]].update(
                 {"COMPANY_NAME": itemsWithAttribute[item['p2c__child_id']]['NAME']})
-            companyList[item["p2c__child_id"]].update({"COMPANY_IMAGE": itemsWithAttribute[item['p2c__child_id']]['IMAGE']})
+            companyList[item["p2c__child_id"]].update({"COMPANY_IMAGE": itemsWithAttribute[item['p2c__child_id']].get('IMAGE',[''])})
             companyList[item["p2c__child_id"]].update({"COUNTRY_NAME": itemsWithAttribute[item['pk']]['NAME']})
             companyList[item['p2c__child_id']].update({'COUNTRY_ID': item['pk']})
 
