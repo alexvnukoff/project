@@ -71,14 +71,17 @@ def home(request, country=None):
                                                                   coupon_end__lt=now()).order_by("coupon_end")[:3]
 
     else:
-        couponsObj =  func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, country=country,
+        couponsObj = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, country=country,
                                                                   coupon_start__gt=now(),
                                                                   coupon_end__lt=now()).order_by("coupon_end")[:3]
     coupons_ids = [cat.id for cat in couponsObj]
 
-    coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
-                                               fullAttrVal=True)
-    coupons = func._setCouponsStructure(coupons)
+    if len(coupons_ids) > 0 :
+        coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
+                                                   fullAttrVal=True)
+        coupons = func._setCouponsStructure(coupons)
+    else:
+        coupons = {}
 
     #----------- Products with discount -------------#
     if not country:
@@ -86,9 +89,12 @@ def home(request, country=None):
     else:
           productsSale = Product.getProdWithDiscount(productQuery)
 
-    productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
-    productsSale_ids = [prod.pk for prod in productsSale]
-    productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
+    if productsSale:
+        productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
+        productsSale_ids = [prod.pk for prod in productsSale]
+        productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
+    else:
+        productsSale = {}
 
 
 
