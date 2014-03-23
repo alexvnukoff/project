@@ -339,13 +339,15 @@ def _tabsStaff(request, company, page=1):
     if cabinetToDetach > 0:
         userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
         comp = Company.objects.get(pk=company)
+        #create list of pk for Company's Organizations
         cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
         cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        # create cross list for Cabinet IDs and Organization IDs - list of tuples
         corelation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
 
         for t in corelation:
             if t[1] == cabinetToDetach:
-                comp = Company.objects.get(pk=t[0])
+                comp = Organization.objects.get(pk=t[0])
                 communityGroup = Group.objects.get(pk=comp.community_id)
                 communityGroup.user_set.remove(userToDetach)
 
