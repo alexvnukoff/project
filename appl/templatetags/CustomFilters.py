@@ -341,7 +341,7 @@ def setCountries(context):
   request = context['request']
 
   sqs = func.getActiveSQS().models(TppTV).order_by('-id')[0]
-  tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME'), [sqs.id])
+  tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
   template = loader.get_template('main/tv.html')
   context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
   tv = template.render(context)
