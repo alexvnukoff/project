@@ -22,7 +22,7 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if country:
-        productQuery = Product.active.get_active_related()
+        productQuery = Product.active.get_active_related().filter(sites=settings.SITE_ID).order_by("-id")
         products = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID).order_by("-id")[:4]
 
 
@@ -85,13 +85,16 @@ def home(request, country=None):
 
     #----------- Products with discount -------------#
     if not country:
-          productsSale = Product.getProdWithDiscount()
-    else:
-          productsSale = Product.getProdWithDiscount(productQuery)
+          productsSale = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, discount__gt=0,
+                                                                    coupon=0).order_by("-discount")[:15]
 
-    if productsSale:
-        productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
-        productsSale_ids = [prod.pk for prod in productsSale]
+    else:
+          productsSale = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID,
+                                                                    discount__gt=0, coupon=0).order_by("-discount")[:15]
+
+    if productsSale.count():
+
+        productsSale_ids = [prod.id for prod in productsSale]
         productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
     else:
         productsSale = {}
