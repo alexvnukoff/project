@@ -13,6 +13,7 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from itertools import chain
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -302,7 +303,9 @@ def _tabsProducts(request, company, page=1):
 
 #TODO complete this view (Ilya)
 def _tabsStructure(request, company, page=1):
-
+    '''
+        Show content of the Company-details-structure panel
+    '''
     departments = Department.objects.filter(c2p__parent=company, c2p__type='hierarchy')
     attr = ('NAME', 'SLUG')
 
@@ -322,29 +325,70 @@ def _tabsStructure(request, company, page=1):
 
 #TODO complete this view (Ilya)
 def _tabsStaff(request, company, page=1):
+    '''
+        Show content of the Company-details-staff panel
+    '''
+    # get Cabinet ID if user should be detach from Organization
+    cabinetToDetach = request.POST.get('cabinetID', 0)
 
-    products = func.getActiveSQS().models(Product).filter(company=company)
-    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG', 'DETAIL_TEXT')
+    try:
+        cabinetToDetach = int(cabinetToDetach)
+    except ValueError:
+        cabinetToDetach = 0
 
-    result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+    if cabinetToDetach > 0:
+        userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
+        comp = Company.objects.get(pk=company)
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        corelation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
 
+        for t in corelation:
+            if t[1] == cabinetToDetach:
+                comp = Company.objects.get(pk=t[0])
+                communityGroup = Group.objects.get(pk=comp.community_id)
+                communityGroup.user_set.remove(userToDetach)
 
-    productsList = result[0]
+        return HttpResponse('Ok')
+    else:
+        comp = Company.objects.get(pk=company)
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        cabinets = Cabinet.objects.filter(pk__in=cab_lst)
+        workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
 
-    url_paginator = "companies:tab_products_paged"
+        # add Department, Joined_date and Status fields
+        dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+        org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
+        #create corelation list between Organization IDs and Cabinet IDs
+        corelation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
 
-    templateParams = {
-        'productsList': productsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company
-    }
+        for cab_id, cab_att in workersList.items(): #get Cabinet ID
+            for t in corelation: #lookup into corelation list
+                if t[1] == cab_id: #if Cabinet ID then...
+                    dep_id = t[0] #...get Organization ID
+                    for org_id, org_attr in org_lst.items(): #from OrderedDict...
+                        if org_id == dep_id:    #if found the same Organization ID then...
+                            #... set additional attributes for Users (Cabinets) befor sending to web form
+                            cab_att['DEPARTMENT'] = org_attr['NAME']
+                            cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
+                            cab_att['STATUS'] = ['Active']
+                            break
 
-    return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
+        paginator_range = func.getPaginatorRange(page)
+        url_paginator = "companies:tab_staff_paged"
+
+        templateParams = {
+            'workersList': workersList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company,
+        }
+
+        return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):

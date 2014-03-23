@@ -1,51 +1,91 @@
-<div class="tpp-dt-content">
-    <table class="table-deals" cellpadding="0" cellpadding="0">
-        <tr class="top">
-            <td>№</td>
-            <td>{% trans "Image" %}</td>
-            <td>{% trans "Name" %}</td>
-            <td>{% trans "Description" %}</td>
-           <td>{% trans "Price" %}</td>
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+<div id="staff-tabs" class="tpp-dt-content">
+    <div class="content-staff">
+        <div class="content-staffin">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff">
+                <tr class="top">
+                    <td width="24">&nbsp;</td>
+                    <td>{% trans "Name" %}</td>
+                    <td>{% trans "Department" %}</td>
+                    <td>{% trans "E-mail" %}</td>
+                    <td>{% trans "Join Date" %}</td>
+                    <td class="status">{% trans "Status" %}</td>
+                </tr>
+
+                {% for id, attr in workersList.items %}
+                    {% with attr.IMAGE|first as avatar %}
+                    {% with attr.USER_FIRST_NAME|first as f_name %}
+                    {% with attr.USER_MIDDLE_NAME|first as m_name %}
+                    {% with attr.USER_LAST_NAME|first as l_name %}
+                    {% with attr.EMAIL|first as email %}
+                    {% with attr.DEPARTMENT|first as department %}
+                    {% with attr.JOINED_DATE|first|date:"d-M-y" as joined_date %}
+                    {% with attr.STATUS|first as status %}
 
 
-        </tr>
+                    <tr data-cabinet="{{ id }}">
+                        <td>
+                            <div class="avatar">
+                                {% if avatar %}
+                                     <img src="{{ MEDIA_URL }}small/{{ avatar }}" alt="{{ l_name }}" />
+                                {% else %}
+                                     <img src="{% static "tppcenter/img/profile_24x24.jpg"  %}" alt="{{ l_name }}" />
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td><a href="#" title="{{ f_name }} {{ m_name }} {{ l_name }}">{{ f_name }} {{ m_name }} {{ l_name }}</a></td>
+                        <td>{{ department }}</td>
+                        <td><a href="#">{{ email }}</a></td>
+                        <td>{{ joined_date }}</td>
+                        <td>{{ status }} <i class="btnremove-small imgnews"></i></td>
+                    </tr>
 
-       {% for id, attr in productsList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.DETAIL_TEXT|first as content %}
-            {% with attr.IMAGE|first as logo %}
-            {% with attr.COST|first as cost %}
-            {% with attr.CURRENCY|first as currency %}
-            <tr>
-                <td>{{ id }}</td>
-                <td>
-                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
-                        {% if logo %}
-                             <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
-                        {% else %}
-                             <img src="{% static "tppcenter/img/item.jpg"  %}" alt="{{ name }}" />
-                        {% endif %}
-                    </a>
-                </td>
-                <td>
-                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:2 }}
-                    </a>
-                </td>
-                <td>{{ content|cleanHtml|safe|truncatewords_html:10 }}</td>
-                <td>{{ currency|getSymbol }} {{ cost }}</td>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
 
-            </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-        {% empty %}
-            <div class="no-results">{% trans "No results found" %}</div>
-        {% endfor %}
-    </table>
+                {% empty %}
+                    <div class="no-results">{% trans "No Staff found." %}</div>
+                {% endfor %}
+
+            </table>
+            <div class="btn-clumn">
+                <i class="btnadd btnaction imgnews addform"></i>
+                <!-- <i class="btnremove btnaction imgnews"></i> -->
+            </div>
+        </div>
+    </div>
     {% include "main/paginator.html" %}
+</div>
+<!-- Person add popup window -->
+<div class="staffadd">
+    <i class="close-formadd imgnews"></i>
+   	<div class="title">Добавление пользователей</div>
+    <div class="staffaddin">
+        <label>{% trans "Department" %}</label>
+        <select style="width:62%;"><option value="1"></option></select>
+        <div class="inputadd">
+            <input type="text" name="" value="" class="text" />
+        	<span class="button-add">+</span>
+        </div>
+        <div class="keyword-formadd">
+            <ul class="list-key">
+                <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
+                <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
+                <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
+            </ul>
+        </div>
+        <div class="formadd-button">
+            <a class="btntype2" href="#">Добавить</a>
+            <a class="btntype1" href="#">Отменить</a>
+        </div>
+    </div>
 </div>

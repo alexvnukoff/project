@@ -156,7 +156,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .bussiness-tab{ min-height:580px;}
 
 #tpp-details-tab .ui-tabs-nav li a { padding:0 15px;}
-.tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; min-height: 460px; color: #595959;}
+.tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; color: #595959;}
 .tpp-gallery{ float:left; width:100%; padding-bottom:20px;}
 .tpp-gallery li{float:left; width:150px; margin:20px 0 0 12px; display:inline;}
 .tpp-gallery li .b-img{ border:0; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
@@ -180,7 +180,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .wall-title-bg{ position:relative; float:left; width:100%; font-size:16px; font-weight:bold; color:#010101; margin:10px 0 0 0; padding:6px 0; background-color:#e6e6e6; text-indent:12px;}
 
 #tpp-details-tab .ui-tabs-nav li a { padding:0 15px;}
-.tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; min-height: 460px; color: #595959;}
+.tpp-dt-content{ position: relative; float: left; padding:10px; width:638px; color: #595959;}
 .tpp-gallery{ float:left; width:100%; padding-bottom:20px;}
 .tpp-gallery li{float:left; width:150px; margin:20px 0 0 12px; display:inline;}
 .tpp-gallery li .b-img{ border:0; background:url(../img/shadow.png) no-repeat left bottom; padding-bottom:8px;}
