@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2014-03-23 17:20+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.6.4\n"
 
 #: appl/func.py:676 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Product/detail.html:114
@@ -151,7 +151,6 @@ msgid "How the system works"
 msgstr "Как работает система"
 
 #: centerpokupok/templates/base.html:44
-#, fuzzy
 msgid "Announcements and product reviews"
 msgstr "Все обзоры продуктов"
 
@@ -172,12 +171,10 @@ msgid "How to pay"
 msgstr "Как оплатить"
 
 #: centerpokupok/templates/base.html:51
-#, fuzzy
 msgid "Delivery option"
 msgstr "Метод доставки"
 
 #: centerpokupok/templates/base.html:52
-#, fuzzy
 msgid "Customers protection"
 msgstr "защита прав потребителей"
 
@@ -207,12 +204,10 @@ msgid "FAQ"
 msgstr "Часто задаваемые вопросы"
 
 #: centerpokupok/templates/base.html:59
-#, fuzzy
 msgid "Ask about community"
 msgstr "Спросить сообщество"
 
 #: centerpokupok/templates/base.html:60
-#, fuzzy
 msgid "Partner program"
 msgstr "Партнер"
 
@@ -261,13 +256,11 @@ msgid "Ask a question"
 msgstr "Задать вопрос"
 
 #: centerpokupok/templates/header_big.html:9
-#, fuzzy
 msgid "Comsumer protection"
 msgstr "защита прав потребителей"
 
 #: centerpokupok/templates/header_big.html:11
 #: centerpokupok/templates/Company/header.html:11
-#, fuzzy
 msgid "sign out"
 msgstr "Выйти"
 
@@ -284,12 +277,10 @@ msgstr "Войти"
 #: centerpokupok/templates/header_small.html:16
 #: centerpokupok/templates/index.html:4
 #: centerpokupok/templates/Company/header.html:7
-#, fuzzy
 msgid "Shopcenter"
 msgstr "ТПП центер"
 
 #: centerpokupok/templates/header_big.html:90
-#, fuzzy
 msgid "Your workplace"
 msgstr "Ваш заказ"
 
@@ -303,12 +294,10 @@ msgid "Sign out"
 msgstr "Выйти"
 
 #: centerpokupok/templates/header_big.html:94
-#, fuzzy
 msgid "Sign up now"
 msgstr "Зарегестрируйтесь"
 
 #: centerpokupok/templates/header_big.html:95
-#, fuzzy
 msgid "Seller"
 msgstr "Галерея"
 
@@ -317,7 +306,6 @@ msgid "Customer"
 msgstr "Клиент"
 
 #: centerpokupok/templates/header_big.html:104
-#, fuzzy
 msgid "Search Products"
 msgstr "Похожие товары"
 
@@ -330,7 +318,6 @@ msgstr "Исакть"
 
 #: centerpokupok/templates/header_small.html:6
 #: tppcenter/templates/base.html:22
-#, fuzzy
 msgid "Main page"
 msgstr "Домашняя страница"
 
@@ -349,17 +336,14 @@ msgstr "защита прав потребителей"
 
 #: centerpokupok/templates/index.html:66
 #: centerpokupok/templates/News/detail.html:46
-#, fuzzy
 msgid "Special price"
 msgstr "Специальная цена"
 
 #: centerpokupok/templates/paginator.html:6
-#, fuzzy
 msgid "Start"
 msgstr "Домашняя страница"
 
 #: centerpokupok/templates/paginator.html:9
-#, fuzzy
 msgid "pages"
 msgstr "Изображения"
 
@@ -420,7 +404,6 @@ msgid "My profile"
 msgstr "Мой профиль "
 
 #: centerpokupok/templates/Cabinet/index.html:28
-#, fuzzy
 msgid "User details "
 msgstr "Пользовательские данные"
 
@@ -482,7 +465,6 @@ msgid "All categories"
 msgstr "Все категории"
 
 #: centerpokupok/templates/Company/about.html:25
-#, fuzzy
 msgid "special price"
 msgstr "Специальная цена"
 
@@ -495,7 +477,6 @@ msgstr "Распродажа"
 #: centerpokupok/templates/Company/about.html:29
 #: centerpokupok/templates/Company/index.html:71
 #: centerpokupok/templates/Product/detail.html:94
-#, fuzzy
 msgid "winter collection"
 msgstr "защита прав потребителей"
 
@@ -517,7 +498,6 @@ msgstr "Купоны"
 
 #: centerpokupok/templates/Company/coupons.html:55
 #: centerpokupok/templates/Company/products.html:36
-#, fuzzy
 msgid "Best buy products"
 msgstr "Популярные продукты"
 
@@ -530,7 +510,6 @@ msgstr "Время до окончания"
 
 #: centerpokupok/templates/Company/coupons.html:119
 #: centerpokupok/templates/Coupons/index.html:144
-#, fuzzy
 msgid "You save"
 msgstr "Вы экономите"
 
@@ -546,7 +525,6 @@ msgstr "Купить"
 
 #: centerpokupok/templates/Company/coupons.html:150
 #: centerpokupok/templates/Coupons/index.html:244
-#, fuzzy
 msgid "Till the end"
 msgstr "Время до окончания"
 
@@ -555,7 +533,6 @@ msgid "Store No"
 msgstr "Магазин номер"
 
 #: centerpokupok/templates/Company/header.html:30
-#, fuzzy
 msgid "Search in the store"
 msgstr "Поиск"
 
@@ -570,12 +547,10 @@ msgid "Salesman online"
 msgstr "Продавец online"
 
 #: centerpokupok/templates/Company/header.html:41
-#, fuzzy
 msgid "Write"
 msgstr "Избранное"
 
 #: centerpokupok/templates/Company/header.html:46
-#, fuzzy
 msgid "Store main page"
 msgstr "Домашняя страница"
 
@@ -646,7 +621,6 @@ msgid "Store Categories"
 msgstr "Категории магазина"
 
 #: centerpokupok/templates/Coupons/index.html:159
-#, fuzzy
 msgid "Sort By"
 msgstr "Сортировать по"
 
@@ -658,13 +632,11 @@ msgstr "Скидка"
 
 #: centerpokupok/templates/Coupons/index.html:174
 #: centerpokupok/templates/Coupons/index.html:178
-#, fuzzy
 msgid "End Date"
 msgstr "Дата окончания"
 
 #: centerpokupok/templates/Coupons/index.html:185
 #: centerpokupok/templates/Coupons/index.html:189
-#, fuzzy
 msgid "Create Date"
 msgstr "Дата созданния"
 
@@ -680,7 +652,6 @@ msgid "Price"
 msgstr "Цена"
 
 #: centerpokupok/templates/Coupons/index.html:206
-#, fuzzy
 msgid "All "
 msgstr "Все сделки"
 
@@ -719,14 +690,12 @@ msgid "About company"
 msgstr "Описание товара"
 
 #: centerpokupok/templates/News/detail.html:40
-#, fuzzy
 msgid "Company products"
 msgstr "Похожие товары"
 
 #: centerpokupok/templates/News/detail.html:41
 #: tppcenter/templates/base.html:119 tppcenter/templates/login_header.html:9
 #: tppcenter/templates/main_header.html:6
-#, fuzzy
 msgid "Contact"
 msgstr "Контакты"
 
@@ -837,7 +806,6 @@ msgid "Similar products"
 msgstr "Похожие товары"
 
 #: centerpokupok/templates/Product/index.html:28
-#, fuzzy
 msgid "Best discounts"
 msgstr "Скидка"
 
@@ -866,7 +834,6 @@ msgid "Write to salesman"
 msgstr "Написать продавцу"
 
 #: centerpokupok/templates/Product/index.html:259
-#, fuzzy
 msgid "Sellers"
 msgstr "Анонсы магазинов"
 
@@ -918,7 +885,6 @@ msgid "Continue"
 msgstr "Продолжить"
 
 #: centerpokupok/templates/Product/orderStepThree.html:6
-#, fuzzy
 msgid "Order Step three"
 msgstr "Заказ шаг 1"
 
@@ -937,7 +903,6 @@ msgid "you can view your order history"
 msgstr "вы можете просмотреть историю заказов"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:7
-#, fuzzy
 msgid "Order step two"
 msgstr "Заказ шаг 1"
 
@@ -950,7 +915,6 @@ msgid "Step One"
 msgstr "Первы шаг"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:36
-#, fuzzy
 msgid "Order summary"
 msgstr "История заказов"
 
@@ -1071,7 +1035,6 @@ msgid "Choose category"
 msgstr "Выбрать категорию"
 
 #: centerpokupok/templates/main/Country.html:7
-#, fuzzy
 msgid "Choose region"
 msgstr "Выбрать категорию"
 
@@ -1200,7 +1163,6 @@ msgstr " дней"
 
 #: centerpokupok/templates/registration/activation_email.html:10
 #: tppcenter/templates/registration/activation_email.html:10
-#, fuzzy
 msgid "Sincerely, Administration of, "
 msgstr "С уважением, Администрация,"
 
@@ -1211,7 +1173,6 @@ msgstr "Регистрация на "
 
 #: centerpokupok/templates/registration/login.html:3
 #: centerpokupok/templates/registration/registration_form.html:9
-#, fuzzy
 msgid "Create new account"
 msgstr "Создать онлайн магазин"
 
@@ -1362,7 +1323,6 @@ msgid "Registration error. Please try again "
 msgstr "Ошибка регистрации. Попробуйте еще раз."
 
 #: centerpokupok/templates/registration/registration_complete.html:7
-#, fuzzy
 msgid "Registartion complete"
 msgstr "Регистрация завершена"
 
@@ -2129,16 +2089,14 @@ msgid "Content"
 msgstr "Описание"
 
 #: tppcenter/templates/base.html:111
-#, fuzzy
 msgid "Advices"
-msgstr "Услуги"
+msgstr "Советы"
 
 #: tppcenter/templates/base.html:132 tppcenter/templates/index.html:131
 msgid "Partners"
 msgstr "Партнеры"
 
 #: tppcenter/templates/base.html:140 tppcenter/templates/main_page.html:208
-#, fuzzy
 msgid "TPP-Center"
 msgstr "ТПП-Центр"
 
@@ -2526,7 +2484,6 @@ msgstr "Мои разделы"
 
 #: tppcenter/templates/Analytic/main.html:60
 #: tppcenter/templates/Analytic/main.html:107
-#, fuzzy
 msgid "Section name"
 msgstr "ФИО руководителя"
 
@@ -2869,7 +2826,6 @@ msgid "Currency"
 msgstr "Валюта"
 
 #: tppcenter/templates/Innov/addForm.html:116
-#, fuzzy
 msgid "Project name"
 msgstr "Название продукта"
 
@@ -2940,7 +2896,6 @@ msgstr "Выбрать странну"
 
 #: tppcenter/templates/News/addForm.html:163
 #: tppcenter/templates/Products/addForm.html:229
-#, fuzzy
 msgid "Preview description"
 msgstr "Описание"
 
@@ -2973,7 +2928,6 @@ msgid "Small image"
 msgstr "Миниатюра"
 
 #: tppcenter/templates/Products/addForm.html:219
-#, fuzzy
 msgid "Part number"
 msgstr "Партнер"
 
@@ -3054,7 +3008,6 @@ msgid "Organization name"
 msgstr "Название организации"
 
 #: tppcenter/templates/Tpp/addForm.html:165
-#, fuzzy
 msgid "Preview description "
 msgstr "Описание"
 
@@ -3133,7 +3086,6 @@ msgstr "регистрация"
 msgid "Products reviews"
 msgstr "Обзоры товаров"
 
-#, fuzzy
 msgid "Contac"
 msgstr "Контакты"
 
