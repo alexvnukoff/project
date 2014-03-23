@@ -54,552 +54,568 @@ $(document).ready(function() {
 
 });
 
+var ui =
+{ //One-Page site ui script (including filters + adv)
+    loading: null,
+    loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
+    container: ".news-center .container",
+    keywords: null,
+    filter_form: null,
+    search_form: null,
+    curPage: null,
+    scripts: [],
+    styles: [],
+
+    bann:
+    {
+        right: null,
+        left: null
+    },
+
+    tops: null,
+
+    filters:
+    { //filters selectors + field names
+        country:
+        {
+            selector: '#filter-country',
+            name: 'filter[country]'
+        },
+
+        tpp:
+        {
+            selector: '#filter-tpp',
+            name: 'filter[tpp]'
+        },
+
+        branch:
+        {
+            selector: '#filter-branch',
+            name: 'filter[branch]'
+        }
+    },
+
+    signals:
+    {
+        start_load: 'startPageLoad', //Before requesting the page from server
+        end_load: 'pageLoaded', //Got the data from the server(scripts not loaded yet)
+        link_click: 'linkClicked', //Menu link just clicked
+        scripts_loaded: 'scriptsLoaded', // CSS + JS already loaded
+        filter_removed: 'filterRemoved' //Filter removed from filter bar / search bar
+    },
+
+    init: function()
+    {
+        ui.curPage = $('.cur-page');
+        ui.keywords = $('.keyword .list-key');
+        ui.filter_form = $('form[name="filter-form"]');
+        ui.search_form = $('form[name="search"]');
+
+        if (ui.filter_form.length == 0)
+            return false;
+
+        //Set filter from query string
+        ui.initFilters();
+
+        //Custom events
+        $(document).bind(ui.signals['end_load'], ui.loadScripts);
+        $(document).bind(ui.signals['scripts_loaded'], ui.setPage);
+        $(document).bind(ui.signals['filter_removed'], ui.filterPageLoad);
+
+        //JS events
+        $(document).on('click', '.single-page', ui.onClick);
+        $(document).on('click', '.filter-remove', ui.onRemove);
+        $(document).on('click', '#save-filter', ui.saveFilter);
+        $(document).on('click', ui.container + ' .panging a', ui.pageNav);
+        $(document).on('submit', 'form[name="search"]', ui.search);
+    },
 
-       var ui = {
+    search: function()
+    { //On search request
 
-            loading: null,
-            loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
-            container: ".news-center .container",
-            keywords: null,
-            filter_form: null,
-            search_form: null,
-            curPage: null,
-            scripts: [],
-            styles: [],
-            bann: {
-                right: null,
-                left: null
-            },
-            tops: null,
+        //Search condition
+        var val = $(this).find('input[name="q"]').val();
 
-           filters: {
+        //Clear search or search when search condition length is more than 3 symbols
+        if (val.length > 0 && val.length < 3)
+            return false;
 
-               country: {
-                   selector: '#filter-country',
-                   name: 'filter[country]' //hidden input name
-               },
+        //Update query string (needed when we already have old search condition)
+        url = updateURLParameter("q", val);
 
-               tpp: {
-                   selector: '#filter-tpp',
-                   name: 'filter[tpp]' //hidden input name
-               },
+        //remove host + path from the new url
+        params = url.replace(window.location.origin + window.location.pathname, '');
 
-               branch: {
-                   selector: '#filter-branch',
-                   name: 'filter[branch]' //hidden input name
-               }
-           },
+        //Search request , substr used to ignore the leading "?" symbol
+        ui.requester(window.location.pathname, params.substr(1));
 
+        return false;
+    },
 
-            signals: {
-                start_load: 'startPageLoad',
-                end_load: 'pageLoaded',
-                link_click: 'linkClicked',
-                scripts_loaded: 'scriptsLoaded',
-                filter_removed: 'filterRemoved'
-            },
+    pageNav: function()
+    { //Live pagination handler
 
-            init: function() {
+        url = $(this).attr('href');
 
-                ui.curPage = $('.cur-page');
-                ui.keywords = $('.keyword .list-key');
-                ui.filter_form = $('form[name="filter-form"]');
-                ui.search_form = $('form[name="search"]');
+        ui.requester(url, '', true);
 
-                if (ui.filter_form.length == 0)
-                    return false;
+        return false;
+    },
 
-                ui.initFilters();
+    saveFilter: function()
+    { //Apply filters
 
-                $(document).bind(ui.signals['end_load'], ui.loadScripts);
-                $(document).bind(ui.signals['scripts_loaded'], ui.setPage);
-                $(document).bind(ui.signals['filter_removed'], ui.filterPageLoad);
+        var filters = {};
 
-                $(document).on('click', '.single-page', ui.onClick);
-                $(document).on('click', '.filter-remove', ui.onRemove);
-                $(document).on('click', '#save-filter', ui.saveFilter);
-                $(document).on('click', ui.container + ' .panging a', ui.pageNav);
-                $(document).on('submit', 'form[name="search"]', ui.search);
-            },
+        for (filter in ui.filters)
+        {
+            field = $(ui.filters[filter].selector);
 
-            search: function() {
-                var val = $(this).find('input[name="q"]').val();
+            //No filter selector on the popup for this type of item
+            if (field.length == 0)
+                continue;
 
+            //Get filter values for this type of item
+            var values = field.select2('data');
 
-                if (val.length > 0 && val.length < 3)
-                    return false;
+            if (values && values.length > 0)
+            {//if filter exists add to filter object
+                filters[filter] = values;
+            }
+        }
 
-                url = updateURLParameter("q", val);
-                params = url.replace(window.location.origin + window.location.pathname, '');
-                ui.requester(window.location.pathname, params.substr(1));
+        ui.setFilters(filters, true);
 
-                return false;
-            },
+        $(".filter-form, #fade-profile").hide();
 
-            pageNav: function() {
+        ui.filterPageLoad();
+    },
 
-                url = $(this).attr('href');
+    filterPageLoad: function()
+    { //Load filtered date including search condition
+        var params = ui.filter_form.serialize();
+        var search = ui.search_form.serialize();
 
-                ui.requester(url, '', true);
+        if (params != '')
+            params += '&' + search;
+        else
+            params = search;
 
-                return false;
-            },
+        ui.requester(window.location.pathname, params)
 
-            saveFilter: function() {
+    },
 
-                var filters = {};
+    onRemove: function()
+    { //Filter removed from filter bar / search bar
 
-                for (filter in ui.filters)
-                {
-                    field = $(ui.filters[filter].selector);
+        link = $(this).parent();
+        id = link.data('id');
 
-                    if (field.length == 0)
-                        continue;
+        //remove the filter from the form
+        ui.filter_form.find('input[value="' + id + '"].filter-item').remove();
 
-                    var values = field.select2('data');
+        link.parent().remove();
 
-                    if (values && values.length > 0)
-                    {
-                        filters[filter] = values;
-                    }
-                }
+        $(document).trigger(ui.signals.filter_removed);
+    },
 
-                ui.setFilters(filters, true);
-                $(".filter-form, #fade-profile").hide();
-                ui.filterPageLoad();
+    initFilters: function()
+    {//initial values for filter popup
+        var filter_keys = [];
 
-            },
+        for (filter in ui.filters)
+        {//Init filters in select2 fields form the form hidden fields
+            if (!options.hasOwnProperty(filter))
+                continue;
 
-            filterPageLoad: function() {
-                var params = ui.filter_form.serialize();
-                var search = ui.search_form.serialize();
 
-                if (params != '')
-                    params += '&' + search;
-                else
-                    params = search;
+            field = $(ui.filters[filter].selector);
 
-                ui.requester(window.location.pathname, params)
+            if (field.length == 0)
+                continue;
 
-            },
+            field.data('name', filter).select2(options[filter]);
 
-            onRemove: function() { //Filter key removed
+            var data = []
 
-                link = $(this).parent();
-                id = link.data('id');
-                ui.filter_form.find('input[value="' + id + '"].filter-item').remove();
-                link.parent().remove();
-
-                //ui.initFilters();
-                $(document).trigger(ui.signals.filter_removed);
-
-            },
-
-            initFilters: function() {//initial values for filter popup
-                var filter_keys = [];
-
-                for (filter in ui.filters)
-                {
-                    if (!options.hasOwnProperty(filter))
-                        continue;
-
-
-                    field = $(ui.filters[filter].selector);
-
-                    if (field.length == 0)
-                        continue;
-
-                    field.data('name', filter).select2(options[filter]);
-
-                    var data = []
-
-                    $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
-                            data.push({id: $(this).val(), title: $(this).data('text')});
-                            filter_keys.push(data[data.length - 1]);
-                    });
-
-                    if (data.length > 0)
-                            field.select2('data', data);
-                    else //clear filter
-                        $(ui.filters[filter].selector).select2('val', '');
-                }
-
-                ui.setKeyFilters(filter_keys);
-            },
-
-            setKeyFilters: function(data) { //Removable filters
-                keys = ''
-
-                if (data.length > 0)
-                {
-
-                    for(i=0, len = data.length - 1; i < 5; i++)
-                    {
-                        keys += '<li>' + data[i].title + '<a href="#" data-id="' + data[i].id + '">' +
-                            '<i class="i-close filter-remove imgnews"></i></a></li>';
-
-                        if (len == i)
-                            break
-                    }
-
-                }
-
-                ui.keywords.html(keys);
-            },
-
-            onClick: function() { //On menu click
-                $(document).trigger(ui.signals.link_click, $(this));
-                ui.search_form.find('input[name="q"]').val('');
-
-                url = $(this).attr('href');
-                text = $(this).text();
-                ui.curPage.text(text);
-
-                $('.newslink .left .add-new').attr('href', url + 'add/');
-
-                ui.loading = ui.requester(url);
-
-                return false;
-            },
-
-            loadScripts: function(event, url, data, history) { //load addition scripts
-                var head = $('head');
-
-                styles = data['styles'];
-                scripts = data['scripts'];
-
-                for (i in styles)
-                {
-                    $('<link>').attr({
-                      rel:  "stylesheet",
-                      type: "text/css",
-                      href: styles[i]
-                    }).appendTo(head);
-                }
-
-                if (scripts.length > 0)
-                    $.getScript(scripts);
-
-                setTimeout(function() {
-                    $(document).trigger(ui.signals['scripts_loaded'], [data])
-                }, 500);
-            },
-
-            setPage: function(event, data){
-                ui.setFilters(data.filters);
-
-                $(ui.container).replaceWith( data.content );
-
-                ui.filter_form = $('form[name="filter-form"]');
-                ui.initFilters();
-            },
-
-            clearer: function() { //clear all filters
-                ui.filter_form.find('input[name].filter-item').remove();
-            },
-
-           setFilters: function(filters, disableInit)
-           { //Set filters on page
-
-               ui.clearer();
-
-               for (filter in filters)
-               {
-                   switch (filter)
-                   {
-                       case "property":
-
-                       break;
-
-                       case "order1":
-
-                       break;
-
-                       case "order2":
-
-                        break;
-
-                       case "sort1":
-
-                       break;
-
-                       case "sort2":
-
-                        break;
-
-                       default:
-                           if (!ui.filters.hasOwnProperty(filter))
-                                 break;
-
-                           for (i in filters[filter])
-                           {
-                               $('<input type="hidden" />').attr({
-                                   name: 'filter[' + filter + '][]',
-                                   value: filters[filter][i].id,
-                                   class: 'filter-item'
-                               }).data('text', filters[filter][i].text).appendTo(ui.filter_form);
-                           }
-                        break;
-                   }
-               }
-
-               if (!disableInit)
-                    ui.initFilters()
-           },
-
-           getAdvTop: function(params) {
-
-               if (ui.tops != null)
-                    ui.tops.abort();
-
-               ui.tops = $.ajax('/adv/tops/', {
-                   data: params,
-                   type: "GET",
-                   success: function(data) {
-                        ui.tops = null;
-                        $('.news-ads-wrapper').replaceWith(data);
-                   },
-                   cache: false,
-                   dataType: 'html'
-               });
-           },
-
-           getAdvBanners: function(params) {
-
-               var url = '/adv/bann/';
-
-               if (ui.bann.left != null)
-                    ui.bann.left.abort();
-
-               if (ui.bann.right != null)
-                    ui.bann.right.abort();
-
-               places = {
-                   right: ["Right 1", "Right 2"],
-                   left: ["Left 1", "Left 2", "Left 2"]
-               }
-
-               ui.bann.left = $.ajax(url + '?' + params, {
-                   data: {
-                       places: places.left
-                   },
-                   type: "POST",
-                   success: function(data) {
-                        ui.bann.left = null;
-                        $('.banner-wrapper-left').html(data);
-                   },
-                   cache: false,
-                   dataType: 'html',
-                   async: true
-               });
-
-               ui.bann.right = $.ajax(url + '?' + params, {
-                   data: {
-                       places: places.right
-                   },
-                   type: "POST",
-                   success: function(data) {
-                        ui.bann.right = null;
-                        $('.banner-wrapper-right').html(data);
-                   },
-                   cache: false,
-                   dataType: 'html',
-                   async: true
-               });
-           },
-
-           requester: function(url, params, pagination) {//get content from the server
-
-                if (ui.loading != null)
-                    ui.loading.abort();
-
-                $(ui.container).html(ui.loader);
-                ui.clearer();
-
-               if (!pagination)
-                    url = url.replace(/page[0-9]*\/$/i, '');
-
-               var history = url;
-
-                if (params)
-                    history = history + '?' + params;
-
-                History.pushState(null, null, history);
-                $(document).trigger(ui.signals['start_load']);
-
-               ui.getAdvBanners(params);
-               ui.getAdvTop(params);
-
-               return $.ajax(url, {
-                   data: params,
-                   type: "GET",
-                   success: function(data) {
-                        ui.loading = null;
-                        $(document).trigger(ui.signals['end_load'], [url, data, history]);
-                   },
-                   cache: false,
-                   dataType: 'json'
-               });
-           }
-       };
-
-
-var uiDetail = {
-        tabs: ".cpn-details-tab",
-
-        loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
-
-
-
-        tabContent: '.tpp-dt-content',
-
-        init: function () {
-            tabs = $(uiDetail.tabs);
-
-            if (tabs.length == 0)
-                return false;
-
-            tabs.tabs({
-                beforeLoad: function(event, ui) {
-                    uiDetail.setLoader(ui.panel);
-                },
-                load: uiDetail.cacheData
+            $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
+                data.push({id: $(this).val(), title: $(this).data('text')});
+                filter_keys.push(data[data.length - 1]);
             });
 
-            $(document).on('click', uiDetail.tabContent + ' .panging a', uiDetail.pageNav);
-        },
-
-        setLoader: function (content) {
-            content.html(uiDetail.loader);
-        },
-
-        cacheData: function( event, ui ) {
-            var tabLink = ui.tab.find('a');
-            var id = tabLink.data('id');
-            var tab = $('<div></div>').attr('id', id).append(ui.panel);
-
-            tabLink.attr('href', '#' + id);
-            $(this).append(tab);
-        },
-
-        pageNav: function() {
-            var content = $(this).parents(uiDetail.tabContent).parent();
-            var link = $(this).attr('href');
-            uiDetail.setLoader(content);
-            content.load( link );
-
-            return false;
+            if (data.length > 0)
+                field.select2('data', data);
+            else //clear filter
+                $(ui.filters[filter].selector).select2('val', '');
         }
+
+        ui.setKeyFilters(filter_keys);
+    },
+
+    setKeyFilters: function(data)
+    { //Removable filters
+        keys = ''
+
+        if (data.length > 0)
+        {
+            for(i=0, len = data.length - 1; i < 5; i++)
+            {//Set 5 random selected filters to filter bar / search bar
+                keys += '<li>' + data[i].title + '<a href="#" data-id="' + data[i].id + '">' +
+                            '<i class="i-close filter-remove imgnews"></i></a></li>';
+
+                if (len == i) // if there is less then 5 filters selected
+                    break
+            }
+        }
+
+        ui.keywords.html(keys);
+    },
+
+    onClick: function()
+    { //On menu click
+        $(document).trigger(ui.signals.link_click, $(this));
+
+        ui.search_form.find('input[name="q"]').val('');
+
+        var url = $(this).attr('href');
+        var text = $(this).text();
+        //Set current page to processing menu (top menu)
+        ui.curPage.text(text);
+
+        $('.newslink .left .add-new').attr('href', url + 'add/');
+
+        ui.loading = ui.requester(url);
+
+        return false;
+    },
+
+    loadScripts: function(event, url, data, history)
+    { //load addition scripts
+        var head = $('head');
+
+        styles = data['styles'];
+        scripts = data['scripts'];
+
+        for (i in styles)
+        {
+            $('<link>').attr({
+                rel:  "stylesheet",
+                type: "text/css",
+                href: styles[i]
+            }).appendTo(head);
+        }
+
+        if (scripts.length > 0)
+            $.getScript(scripts);
+
+        setTimeout(function() {//Wait 500 ms untill css MAY be loaded
+            $(document).trigger(ui.signals['scripts_loaded'], [data])
+        }, 500);
+    },
+
+    setPage: function(event, data)
+    {//Put the loaded html on the screen
+        ui.setFilters(data.filters);
+
+        $(ui.container).replaceWith( data.content );
+
+        ui.filter_form = $('form[name="filter-form"]');
+        ui.initFilters();
+    },
+
+    clearer: function()
+    { //clear all filters
+        ui.filter_form.find('input[name].filter-item').remove();
+    },
+
+    setFilters: function(filters, disableInit)
+    { //Set hidden inputs containing filters to form
+
+        ui.clearer();
+
+        for (filter in filters)
+        {
+            if (!ui.filters.hasOwnProperty(filter))
+                break;
+
+            for (i in filters[filter])
+            {
+                $('<input type="hidden" />').attr({
+                    name: 'filter[' + filter + '][]',
+                    value: filters[filter][i].id,
+                    class: 'filter-item'
+                }).data('text', filters[filter][i].text).appendTo(ui.filter_form);
+            }
+
+        }
+
+        if (!disableInit)
+            ui.initFilters()
+    },
+
+    getAdvTop: function(params)
+    {//Async load adv tops when the page was loaded
+
+        if (ui.tops != null)
+            ui.tops.abort();
+
+        ui.tops = $.ajax('/adv/tops/', {
+            data: params,
+            type: "GET",
+            success: function(data) {
+                ui.tops = null;
+                $('.news-ads-wrapper').replaceWith(data);
+            },
+            cache: false,
+            dataType: 'html'
+        });
+    },
+
+    getAdvBanners: function(params)
+    {//Async load banners when the page was loaded
+
+        var url = '/adv/bann/';
+
+        if (ui.bann.left != null)
+            ui.bann.left.abort();
+
+        if (ui.bann.right != null)
+            ui.bann.right.abort();
+
+        places =
+        {
+            right: ["Right 1", "Right 2"],
+            left: ["Left 1", "Left 2", "Left 2"]
+        };
+
+        ui.bann.left = $.ajax(url + '?' + params, {
+            data: {
+                places: places.left
+            },
+            type: "POST",
+            success: function(data) {
+                ui.bann.left = null;
+                $('.banner-wrapper-left').html(data);
+            },
+            cache: false,
+            dataType: 'html',
+            async: true
+        });
+
+        ui.bann.right = $.ajax(url + '?' + params, {
+            data:
+            {
+                places: places.right
+            },
+            type: "POST",
+            success: function(data)
+            {
+                ui.bann.right = null;
+                $('.banner-wrapper-right').html(data);
+            },
+            cache: false,
+            dataType: 'html',
+            async: true
+        });
+    },
+
+    requester: function(url, params, pagination)
+    {//get content from the server
+
+        if (ui.loading != null)
+            ui.loading.abort();
+
+        $(ui.container).html(ui.loader);
+        ui.clearer();
+
+        if (!pagination)
+            url = url.replace(/page[0-9]*\/$/i, '');
+
+        var history = url;
+
+        if (params)
+            history = history + '?' + params;
+
+        History.pushState(null, null, history);
+        $(document).trigger(ui.signals['start_load']);
+
+        ui.getAdvBanners(params);
+        ui.getAdvTop(params);
+
+        return $.ajax(url, {
+            data: params,
+            type: "GET",
+            success: function(data) {
+                ui.loading = null;
+                $(document).trigger(ui.signals['end_load'], [url, data, history]);
+            },
+            cache: false,
+            dataType: 'json'
+        });
+    }
+};
+
+
+var uiDetail =
+{// Detail page tabs
+    tabs: ".cpn-details-tab",
+
+    loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
+
+    tabContent: '.tpp-dt-content',
+
+    init: function()
+    {
+        tabs = $(uiDetail.tabs);
+
+        if (tabs.length == 0)
+            return false;
+
+        tabs.tabs({
+            beforeLoad: function(event, ui) {
+                uiDetail.setLoader(ui.panel);
+            },
+            load: uiDetail.cacheData
+        });
+
+        $(document).on('click', uiDetail.tabContent + ' .panging a', uiDetail.pageNav);
+    },
+
+    setLoader: function (content)
+    {//Set loader gif
+        content.html(uiDetail.loader);
+    },
+
+    cacheData: function( event, ui )
+    {//Not load the tab again if was already loaded
+        var tabLink = ui.tab.find('a');
+        var id = tabLink.data('id');
+        var tab = $('<div></div>').attr('id', id).append(ui.panel);
+
+        tabLink.attr('href', '#' + id);
+        $(this).append(tab);
+    },
+
+    pageNav: function()
+    { //Pagination in tabs
+        var content = $(this).parents(uiDetail.tabContent).parent();
+        var link = $(this).attr('href');
+
+        uiDetail.setLoader(content);
+        content.load( link );
+
+        return false;
+    }
 };
 
 var messagesUI = {
 
-        curChat: 'mess-cur' ,
-        chatList: '.message-tabcontent',
-        messageLine: '.customline',
-        messageBox: '.custom-contentin',
-        messageList: '.message-list',
-        textarea: '#message-box-',
-        chatWindow: 'custom-content-',
+    curChat: 'mess-cur' ,
+    chatList: '.message-tabcontent',
+    messageLine: '.customline',
+    messageBox: '.custom-contentin',
+    messageList: '.message-list',
+    textarea: '#message-box-',
+    chatWindow: 'custom-content-',
 
 
-        onScrollTop: function( el ) {
+    onScrollTop: function( el )
+    {//Load older messages when scrolled to top
 
-            el.unbind( 'scroll' );
+        el.unbind( 'scroll' );
 
-            if ( el.find( '.last' ).length )
-                return true;
+        if ( el.find( '.last' ).length )
+            return true;
 
-            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
+        var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
 
-            el.find( '.dateline:first' ).replaceWith( '<div class="message-paging-loader">' +
+        el.find( '.dateline:first' ).replaceWith( '<div class="message-paging-loader">' +
                                                         '<img class="im-test" src="/static/tppcenter/img/messages-loader.gif" />' +
                                                     '</div>' );
 
-            var last_message = el.find( messagesUI.messageLine + ':first' );
-            var date = last_message.data( 'date' );
-            var lid =  last_message.data( 'message' );
-            var url = '/messages/' + active_id + '/';
+        var last_message = el.find( messagesUI.messageLine + ':first' );
+        var date = last_message.data( 'date' );
+        var lid =  last_message.data( 'message' );
+        var url = '/messages/' + active_id + '/';
 
-            $.ajaxQueue({
+        $.ajaxQueue({//Add the request to queue
+            url: url,
+            data: {
+                page: 2,
+                lid: lid,
+                date: date
+            },
 
-                url: url,
-                data: {
-                    page: 2,
-                    lid: lid,
-                    date: date
-                },
+            success: function(data)
+            {
+                messagesUI.bindScroll();
+                el.find( '.message-paging-loader' ).replaceWith( data );
+            },
+            type: 'GET'
+        });
+    },
 
-                success: function(data) {
+    bindScroll: function()
+    {//Set listener for scroll event on the message list holder
 
-                    messagesUI.bindSccroll();
+        $( messagesUI.messageBox ).unbind( 'scroll' );
 
-                    el.find( '.message-paging-loader' ).replaceWith( data );
-                },
+        $( messagesUI.messageBox + ':visible' ).bind( 'scroll', function() {
 
-                type: 'GET'
-            });
-        },
+            if( $(this).scrollTop() == 0 )
+                messagesUI.onScrollTop( $(this) );
+        });
+    },
 
-        bindSccroll: function() {
+    scroollMessageDown: function()
+    {//Scroll the message holder last message
 
-            $( messagesUI.messageBox ).unbind( 'scroll' );
+        var content = $( messagesUI.messageBox + ':visible' );
+        var height = content.find( messagesUI.messageList ).height();
 
-            $( messagesUI.messageBox + ':visible' ).bind( 'scroll', function() {
+        content.scrollTop( height );
 
-                 if( $(this).scrollTop() == 0 )
-                    messagesUI.onScrollTop( $(this) );
-            });
-        },
+    },
 
-        scroollMessageDown: function() {
+    sendMessage: function()
+    {
+        var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
 
-            var content = $( messagesUI.messageBox + ':visible' );
-            var height = content.find( messagesUI.messageList ).height();
+        if ( !active_id )
+            return false;
 
-            content.scrollTop( height );
+        var textarea = $( messagesUI.textarea + active_id );
+        var val = textarea.val();
 
-        },
+        if ( val == '' ) //prevent sending empty message
+            return false;
 
-        sendMessage: function() {
+        textarea.attr( 'disabled', 'disabled' );
 
-            var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
+        $.ajaxQueue({
 
-            if ( !active_id )
-                return false;
+            url: '/messages/add/',
+            data: {
+                text: val,
+                active: active_id
+            },
 
-            var textarea = $( messagesUI.textarea + active_id );
-            var val = textarea.val();
+            success: function( data ) {
 
-            if ( val == '' )
-                return false;
+                messagesUI.getMessages( active_id );
+                textarea.val( '' );
+                textarea.removeAttr( 'disabled' );
 
-            textarea.attr( 'disabled', 'disabled' );
+            },
 
-            $.ajaxQueue({
-
-                url: '/messages/add/',
-                data: {
-                    text: val,
-                    active: active_id
-                },
-
-                success: function( data ) {
-
-                    messagesUI.getMessages( active_id );
-                    textarea.val( '' );
-                    textarea.removeAttr( 'disabled' );
-
-                },
-
-                type: 'POST'
-            });
+            type: 'POST'
+        });
 
            return false;
 
-        },
+    },
 
-        getMessages: function( coll ) {
+    getMessages: function( coll ) {
             var selector = $( '#' + messagesUI.chatWindow + coll );
 
             if ( selector.length == 0 )
@@ -626,9 +642,9 @@ var messagesUI = {
                 dataType: 'html',
                 type: 'GET'
             });
-        },
+    },
 
-        getMessageBox: function( coll, newPanel ) {
+    getMessageBox: function( coll, newPanel ) {
 
             var url = '/messages/' + coll + '/';
             var content = ''
@@ -644,17 +660,17 @@ var messagesUI = {
 
                     newPanel.html( data );
                     messagesUI.scroollMessageDown();
-                    messagesUI.bindSccroll()
+                    messagesUI.bindScroll()
 
                 },
 
                 dataType: 'html',
                 type: 'GET'
             });
-        },
+    },
 
 
-        init: function() {
+    init: function() {
             $( ".messages-l" ).tabs({
                 beforeActivate: function( event, ui ) {
 
@@ -688,7 +704,7 @@ var messagesUI = {
                     $(this).append( tab );
 
                     messagesUI.scroollMessageDown();
-                    messagesUI.bindSccroll();
+                    messagesUI.bindScroll();
                 },
 
                 activate: function( event, ui) {
@@ -715,8 +731,107 @@ var messagesUI = {
             });
 
             messagesUI.scroollMessageDown();
-            messagesUI.bindSccroll();
+            messagesUI.bindScroll();
 
+    }
+};
+
+uiEvents = {
+
+    loader: '<li class="event-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></li>',
+    type: null,
+    holder: null,
+    form: null,
+    contentBox: null,
+    num: 0,
+    numHolder: null,
+    boxParent: null,
+
+
+
+    init: function() {
+        $(".showevent").click(uiEvents.showEventBox);
+    },
+
+    showEventBox: function() {
+        uiEvents.holder = $(this).parents('.event-holder');
+        uiEvents.form = uiEvents.holder.find('.formevent');
+        uiEvents.contentBox = uiEvents.form.find('ul');
+        uiEvents.boxParent = uiEvents.contentBox.parent();
+        uiEvents.numHolder = uiEvents.holder.find('.num');
+        var content = uiEvents.form.find('li');
+        var first = 0;
+
+        if ( content.length > 0 ) { //Some content already loaded
+
+            uiEvents.num = parseInt(uiEvents.numHolder.text());
+
+            if ( uiEvents.num == 0 )
+            {
+                uiEvents.form.show();
+                uiEvents.bindScroll( $(this) );
+
+                return false
+
+            }
+
+            first = content.first().data('id');
         }
 
-    };
+        uiEvents.type = uiEvents.form.attr('id'); //event type
+        uiEvents.contentBox.prepend(uiEvents.loader);
+
+        uiEvents.form.show();
+
+        uiEvents.requester({first: first, type: uiEvents.type});
+
+        return false;
+    },
+
+    requester: function(data) {
+
+        $.get('/notification/get/', data, function(data) {
+            uiEvents.contentBox.find('li.event-loader').replaceWith(data.data);
+
+            if ( uiEvents.num > 0 )
+            {
+                if ( uiEvents.num > data.count )
+                    uiEvents.num = 0;
+                else
+                    uiEvents.num = uiEvents.num - data.count;
+
+                uiEvents.numHolder.text(uiEvents.num);
+            }
+            uiEvents.bindScroll();
+        }, 'json');
+    },
+
+    onScrollDown: function( el ) {
+        uiEvents.boxParent.unbind( 'scroll' );
+
+        var last = uiEvents.boxParent.find('ul li:last').data('id');
+
+        uiEvents.contentBox.append(uiEvents.loader);
+
+        uiEvents.requester({type: uiEvents.type, last: last});
+
+    },
+
+    bindScroll: function() {
+
+        uiEvents.boxParent.unbind( 'scroll' );
+
+        if ( uiEvents.contentBox.find('.last').length > 0 )
+            return false;
+
+
+        var top = uiEvents.contentBox.height() - uiEvents.boxParent.height();
+
+
+        uiEvents.boxParent.bind( 'scroll', function() {
+
+            if( uiEvents.boxParent.scrollTop() == top )
+                uiEvents.onScrollDown();
+        });
+    }
+};

@@ -81,22 +81,23 @@ $(document).ready(function() {
         $(".btntype2").click(function(){
             $(".type-list").slideUp(100);
         });
-	
-	$("#showevent").click(function() {
-        var num = $(".imgnews.i-note").siblings(".num").text()
-        var formev = $(".formevent")
+	/*
+	$(".showevent").click(function() {
+        var num = $(".imgnews.i-note").siblings(".num");
+        var formev = $(".formevent");
+        var notify_count = parseInt(num.text());
 
-		if(formev.is(":hidden") && parseInt(num)>0)
+		if(formev.is(":hidden"))
         {
-
             formev.find('#not-content').empty()
             formev.show();
             formev.find('#load').show()
 
 
             $.get('/notification/get/', function(data) {
-                     formev.find('#load').hide()
-                     formev.find('#not-content').append(data)
+                     formev.find('#load').hide();
+                     formev.find('#not-content').append(data);
+                     num.text(0);
                 }, 'html'
             );
 		}
@@ -105,7 +106,7 @@ $(document).ready(function() {
 			formev.hide();
 		}
 	});
-
+    */
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
