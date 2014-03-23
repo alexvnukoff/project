@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.utils.timezone import now
+
 
 
 def home(request, country=None):
@@ -20,10 +22,14 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if country:
-        productQuery = Product.active.get_active_related().filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
-        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        productQuery = Product.active.get_active_related()
+        products = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID).order_by("-id")[:4]
+
+
     if not country:
-        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
+
+    products = [product.id for product in products]
 
 
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
@@ -31,7 +37,8 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if not country:
-        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        products = products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
+        products = [product.id for product in products]
     else:
         products = Product.getTopSales(productQuery)[:4]
 
@@ -59,10 +66,15 @@ def home(request, country=None):
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
     if not country:
-         couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
+         couponsObj =  func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID,
+                                                                  coupon_start__gt=now(),
+                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
+
     else:
-        couponsObj = Product.getCoupons(querySet=productQuery).order_by('item2value__end_date')[:3]
-    coupons_ids = [cat.pk for cat in couponsObj]
+        couponsObj =  func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, country=country,
+                                                                  coupon_start__gt=now(),
+                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
+    coupons_ids = [cat.id for cat in couponsObj]
 
     coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
                                                fullAttrVal=True)
