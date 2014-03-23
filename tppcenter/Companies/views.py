@@ -343,9 +343,9 @@ def _tabsStaff(request, company, page=1):
         cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
         cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
         # create cross list for Cabinet IDs and Organization IDs - list of tuples
-        corelation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
 
-        for t in corelation:
+        for t in correlation:
             if t[1] == cabinetToDetach:
                 comp = Organization.objects.get(pk=t[0])
                 communityGroup = Group.objects.get(pk=comp.community_id)
@@ -364,11 +364,11 @@ def _tabsStaff(request, company, page=1):
         # add Department, Joined_date and Status fields
         dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
         org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
-        #create corelation list between Organization IDs and Cabinet IDs
-        corelation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+        #create correlation list between Organization IDs and Cabinet IDs
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
 
         for cab_id, cab_att in workersList.items(): #get Cabinet ID
-            for t in corelation: #lookup into corelation list
+            for t in correlation: #lookup into corelation list
                 if t[1] == cab_id: #if Cabinet ID then...
                     dep_id = t[0] #...get Organization ID
                     for org_id, org_attr in org_lst.items(): #from OrderedDict...
