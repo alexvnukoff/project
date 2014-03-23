@@ -45,7 +45,7 @@ def productDetail(request, item_id, page=1):
         attr = company.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
 
         name = attr['NAME'][0]
-        picture = attr['IMAGE'][0]
+        picture = attr.get('IMAGE', [''])[0]
         companyID = company.pk
     except ObjectDoesNotExist:
         pass
