@@ -143,7 +143,7 @@ msgstr "О проекте"
 
 #: centerpokupok/templates/base.html:42
 msgid "About system"
-msgstr ""
+msgstr "О системе"
 
 #: centerpokupok/templates/base.html:43 tppcenter/Project/urls.py:11
 #: tppcenter/templates/base.html:106 tppcenter/templates/Project/how.html:16
@@ -157,19 +157,19 @@ msgstr "Все обзоры продуктов"
 
 #: centerpokupok/templates/base.html:45
 msgid "Public offer"
-msgstr ""
+msgstr "Публичная оферта"
 
 #: centerpokupok/templates/base.html:48
 msgid "How to buy"
-msgstr ""
+msgstr "Как купить"
 
 #: centerpokupok/templates/base.html:49
 msgid "Subscribe to updates"
-msgstr ""
+msgstr "Подпишитесь на обновления"
 
 #: centerpokupok/templates/base.html:50
 msgid "How to pay"
-msgstr ""
+msgstr "Как оплатить"
 
 #: centerpokupok/templates/base.html:51
 #, fuzzy
@@ -220,21 +220,21 @@ msgstr "Партнер"
 #: centerpokupok/templates/Company/about.html:37
 #: centerpokupok/templates/Company/index.html:79
 msgid "Subscribe to newsletter"
-msgstr ""
+msgstr "Подпишитесь на обновления"
 
 #: centerpokupok/templates/base.html:66
 #: centerpokupok/templates/Company/about.html:39
 #: centerpokupok/templates/Company/index.html:81
 msgid "Receive our weekly announcements and reviews of new products"
-msgstr ""
+msgstr "Получайте наши объявления и отзывы о новых продуктах еженедельно"
 
 #: centerpokupok/templates/base.html:68
 msgid "Subscribe"
-msgstr ""
+msgstr "Подписаться"
 
 #: centerpokupok/templates/base.html:74
 msgid "Shopping center - buy with pleasure all over the world"
-msgstr ""
+msgstr "Центр покупок покупай с удовольствием по всему миру"
 
 #: centerpokupok/templates/header_big.html:7
 #: centerpokupok/templates/Cabinet/favorite.html:17
@@ -326,7 +326,7 @@ msgstr "Похожие товары"
 #: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
 #: tppcenter/templates/index.html:94
 msgid "Search"
-msgstr ""
+msgstr "Исакть"
 
 #: centerpokupok/templates/header_small.html:6
 #: tppcenter/templates/base.html:22
@@ -391,12 +391,12 @@ msgstr "ID товара"
 #: centerpokupok/templates/Cabinet/favorite.html:42
 #: centerpokupok/templates/Cabinet/orderHistory.html:44
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 #: centerpokupok/templates/Cabinet/favorite.html:43
 #: centerpokupok/templates/Cabinet/orderHistory.html:45
 msgid "Color"
-msgstr ""
+msgstr "Цвет"
 
 #: centerpokupok/templates/Cabinet/favorite.html:71
 #: tppcenter/templates/BusinessProposal/addForm.html:46
@@ -490,7 +490,7 @@ msgstr "Специальная цена"
 #: centerpokupok/templates/Company/index.html:70
 #: centerpokupok/templates/Product/detail.html:93
 msgid "Sale"
-msgstr ""
+msgstr "Распродажа"
 
 #: centerpokupok/templates/Company/about.html:29
 #: centerpokupok/templates/Company/index.html:71
@@ -502,7 +502,7 @@ msgstr "защита прав потребителей"
 #: centerpokupok/templates/Company/about.html:41
 #: centerpokupok/templates/Company/index.html:83
 msgid "Subscripe"
-msgstr ""
+msgstr "Подписаться"
 
 #: centerpokupok/templates/Company/coupons.html:6
 #: centerpokupok/templates/Company/header.html:49
@@ -561,7 +561,7 @@ msgstr "Поиск"
 
 #: centerpokupok/templates/Company/header.html:33
 msgid "Advanced search"
-msgstr ""
+msgstr "Расширенный поиск"
 
 #: centerpokupok/templates/Company/header.html:39
 #: centerpokupok/templates/Product/index.html:87
@@ -639,7 +639,7 @@ msgstr "Лучшие предложения"
 #: centerpokupok/templates/Product/index.html:208
 #: centerpokupok/templates/Product/new.html:210
 msgid "Sales"
-msgstr ""
+msgstr "Скидки"
 
 #: centerpokupok/templates/Company/store_categories.html:4
 msgid "Store Categories"
@@ -826,7 +826,7 @@ msgstr "Полное описание"
 
 #: centerpokupok/templates/Product/detail.html:256
 msgid "Transaction History & Feedback"
-msgstr ""
+msgstr "История транзакций и Обратная связь"
 
 #: centerpokupok/templates/Product/detail.html:312
 msgid "Post"
@@ -844,7 +844,7 @@ msgstr "Скидка"
 #: centerpokupok/templates/Product/index.html:83
 #: centerpokupok/templates/Product/new.html:115
 msgid "Show only"
-msgstr ""
+msgstr "Показать только"
 
 #: centerpokupok/templates/Product/index.html:92
 #: centerpokupok/templates/Product/new.html:124
@@ -858,12 +858,12 @@ msgstr "Бесплатная доставка"
 
 #: centerpokupok/templates/Product/index.html:186
 msgid "positive feedback"
-msgstr ""
+msgstr "положительные отзывы"
 
 #: centerpokupok/templates/Product/index.html:187
 #: centerpokupok/templates/Product/new.html:193
 msgid "Write to salesman"
-msgstr ""
+msgstr "Написать продавцу"
 
 #: centerpokupok/templates/Product/index.html:259
 #, fuzzy
@@ -2438,7 +2438,7 @@ msgstr "Тпп ТВ"
 
 #: tppcenter/templates/main_page.html:244
 msgid "Analytic"
-msgstr ""
+msgstr "Аналитика"
 
 #: tppcenter/templates/main_page.html:272
 msgid "Find.."
@@ -3127,60 +3127,60 @@ msgstr "Я прочитал и согласен с "
 msgid "the terms of use"
 msgstr "правилами использования "
 
-#~ msgid "registration"
-#~ msgstr "регистрация"
+msgid "registration"
+msgstr "регистрация"
 
-#~ msgid "Products reviews"
-#~ msgstr "Обзоры товаров"
+msgid "Products reviews"
+msgstr "Обзоры товаров"
 
 #, fuzzy
-#~ msgid "Contac"
-#~ msgstr "Контакты"
+msgid "Contac"
+msgstr "Контакты"
 
-#~ msgid "Portal services"
-#~ msgstr "Услуги портала"
+msgid "Portal services"
+msgstr "Услуги портала"
 
-#~ msgid "Service"
-#~ msgstr "Услуги"
+msgid "Service"
+msgstr "Услуги"
 
-#~ msgid "Help"
-#~ msgstr "Помощь"
+msgid "Help"
+msgstr "Помощь"
 
-#~ msgid "Additioanl pages"
-#~ msgstr "Дополнительные страницы"
+msgid "Additioanl pages"
+msgstr "Дополнительные страницы"
 
-#~ msgid "Article"
-#~ msgstr "Артикул"
+msgid "Article"
+msgstr "Артикул"
 
-#~ msgid "CAtegory"
-#~ msgstr "Категория"
+msgid "CAtegory"
+msgstr "Категория"
 
-#~ msgid "Anons"
-#~ msgstr "Анонс"
+msgid "Anons"
+msgstr "Анонс"
 
-#~ msgid "TPP-TV"
-#~ msgstr "ТПП-ТВ"
+msgid "TPP-TV"
+msgstr "ТПП-ТВ"
 
-#~ msgid "Contuct us"
-#~ msgstr "Связаться с нами"
+msgid "Contuct us"
+msgstr "Связаться с нами"
 
-#~ msgid "Visitor statistic"
-#~ msgstr "Статистика посещяемости"
+msgid "Visitor statistic"
+msgstr "Статистика посещяемости"
 
-#~ msgid "No choosen organization"
-#~ msgstr "Организация не выбранна"
+msgid "No choosen organization"
+msgstr "Организация не выбранна"
 
-#~ msgid "Perrmission denied"
-#~ msgstr "Доступ запрещен"
+msgid "Perrmission denied"
+msgstr "Доступ запрещен"
 
-#~ msgid "Permission Denied"
-#~ msgstr "Доступ запрещен!"
+msgid "Permission Denied"
+msgstr "Доступ запрещен!"
 
-#~ msgid "Close"
-#~ msgstr "Закрыть"
+msgid "Close"
+msgstr "Закрыть"
 
-#~ msgid "Joined"
-#~ msgstr "Присоединился "
+msgid "Joined"
+msgstr "Присоединился "
 
-#~ msgid "Field is required"
-#~ msgstr "Это поле обязательно"
+msgid "Field is required"
+msgstr "Это поле обязательно"
