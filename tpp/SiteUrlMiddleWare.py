@@ -12,13 +12,11 @@ class SiteUrlMiddleWare:
         
 
         #if request.GET.get('_', False):
-        #    del request.GET['_']       
-
-        
+        #    del request.GET['_']
         current_domain = request.META.get('HTTP_HOST', False)
 
         if current_domain is False:
-            Http404()
+            return Http404()
         
         if current_domain[:4] == "www":
             current_domain = current_domain[4:]

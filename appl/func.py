@@ -572,7 +572,7 @@ def organizationIsCompany(item_id):
 
 def filterLive(request):
 
-    searchFilter = {}
+    searchFilter = []
     filtersIDs = {}
     filters = {}
     ids = []
@@ -601,12 +601,23 @@ def filterLive(request):
                 continue
 
             for name, id in filtersIDs.items():
+
                 if pk in id:
                     filters[name].append({'id': pk, 'text': attr['NAME'][0]})
 
-                if len(id):
-                    searchFilter[name + '__in'] = id
+                newIDs = []
+                #Security
+                for i in id:
+                    try:
+                        newIDs.append(str(int(i)))
+                    except ValueError:
+                        continue
 
+                if len(newIDs) > 0:
+                    searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
+
+    if len(searchFilter) > 0:
+        searchFilter = eval(' | '.join(searchFilter))
 
     return filters, searchFilter
 
@@ -769,7 +780,11 @@ def getListAdv(request):
         if name != 'tpp':
             filtersAdv += ids
         else:
-            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+            sqs = getActiveSQS().models(Tpp)
+
+            if len(ids) > 0:
+                sqs = sqs.filter(django_id__in=ids)
+
 
             for tpp in sqs:
                 if len(tpp.country) > 0:
@@ -779,7 +794,6 @@ def getListAdv(request):
 
 
 def getActiveSQS():
-
     return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
 def emptyCompany():
@@ -797,11 +811,14 @@ def permissionDenied():
      return page
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
+
     cached = False
     cache_name = "%s_list_result_page_%s" % (model.__name__, page)
     query = request.GET.urlencode()
+
     if query.find('filter') == -1 and not my and not request.user.is_authenticated():
         cached = cache.get(cache_name)
+
     if not cached:
         if not my:
             filters, searchFilter = filterLive(request)
@@ -809,7 +826,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             sqs = getActiveSQS().models(model)
 
             if len(searchFilter) > 0:
-                sqs = sqs.filter(**searchFilter)
+                sqs = sqs.filter(searchFilter)
 
             q = request.GET.get('q', '')
 

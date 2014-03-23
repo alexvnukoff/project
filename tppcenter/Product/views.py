@@ -76,12 +76,6 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
         return HttpResponse(json.dumps(serialize))
 
 
-
-
-
-
-
-
 def _getDetailContent(request, item_id):
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id

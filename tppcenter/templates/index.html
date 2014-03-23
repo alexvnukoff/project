@@ -156,11 +156,11 @@
                       {% for id,attr in countriesList.items %}
                         {% with attr.NAME|first as name %}
                         {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|add:-1|divisibleby:"25" or forloop.counter0 == 0 %}
+                           {% if forloop.counter|add:-1|divisibleby:"17" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
                             	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
-                             {% if forloop.counter|divisibleby:"25" or forloop.counter == countriesList|length%}
+                             {% if forloop.counter|divisibleby:"17" or forloop.counter == countriesList|length%}
                                 </li>
                             {% endif %}
 

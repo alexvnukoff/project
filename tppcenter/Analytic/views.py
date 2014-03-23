@@ -14,14 +14,17 @@ def main(request):
     if current_organization is False:
         return render_to_response("permissionDen.html")
 
-    org = Organization.objects.get(pk=current_organization)
+    current_organization = Organization.objects.get(pk=current_organization)
 
-    perm_list = org.getItemInstPermList(request.user)
+    perm_list = current_organization.getItemInstPermList(request.user)
 
     #if 'view_analytic' not in perm_list:
     #     return render_to_response("permissionDenied.html")
 
-    templateParams = {}
+    templateParams = {'current_company': current_organization.getAttributeValues("NAME")}
+
+    if func.organizationIsCompany(current_organization):
+        templateParams['tpp'] = current_organization.getTpp()
 
     #if getattr(org, 'Tpp', False):
     #    templateParams['tpp'] = org.pk
