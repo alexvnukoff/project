@@ -669,7 +669,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if 'DISCOUNT' in attributes:
             self.prepared_data[discountIndex] = float(attributes['DISCOUNT'][0]['title'])
         else:
-            self.prepared_data[discountIndex] = None
+            self.prepared_data[discountIndex] = 0
 
 
         couponIndex = self.fields['coupon'].index_fieldname
@@ -701,7 +701,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             discount_price = price - (price * discount / 100)
             self.prepared_data[discountPriceIndex] = float(discount_price)
         else:
-            self.prepared_data[discountPriceIndex] = None
+            self.prepared_data[discountPriceIndex] = 0
 
         #TPP
         tppIndexfield = self.fields['tpp'].index_fieldname

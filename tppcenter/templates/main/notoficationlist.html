@@ -1,13 +1,10 @@
 {% load staticfiles %}
 {% load i18n %}
-<ul>
-        <li>
-             <h4>{% trans 'Notifications'  %}</h4>
-        </li>
+
     {% for id, attr in notifDict.items %}
         {% with attr.DETAIL_TEXT|first as message  %}
 
-        <li>
+        <li data-id="{{ id }}">
 
             <img src="{% static 'tppcenter/img/imgnone.png' %}" class="image" alt="" />
             <div class="info">{{ message }}</div>
@@ -16,5 +13,9 @@
 
         {% endwith %}
     {% endfor %}
-   <li><a href="#" class="viewmore">{% trans 'See all' %}…</a></li>
-</ul>
+
+    {% if lastLine %}
+        <li class="last"></li>
+    {% endif %}
+
+

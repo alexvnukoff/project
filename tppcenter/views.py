@@ -1,26 +1,24 @@
+from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from django.template import RequestContext, loader
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
+from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.translation import ugettext as _
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from appl.models import *
 from core.models import Item
+from collections import OrderedDict
 import json
-from django.core.cache import cache
-from django.template import RequestContext, loader
-from django.core.context_processors import csrf
-
-from django.views.decorators.csrf import csrf_protect
 
 @csrf_protect
 def home(request):
@@ -94,24 +92,50 @@ def home(request):
 @ensure_csrf_cookie
 def getNotifList(request):
 
+
     if request.is_ajax():
-        notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
+
+        #Older notifications
+        last = int(request.GET.get('last', 0))
+
+        #New notifications
+        first = int(request.GET.get('first', 0))
+
+        #Disable loading of empty list
+        lastLine = False
+
+        notifications = Notification.objects.filter(user=request.user).select_related('message__pk')
+
+        if last != 0:
+            notifications = notifications.filter(pk__lt=last).order_by("-pk")[:3]
+
+            if len(notifications) < 3:
+                lastLine = True
+        elif first != 0:
+            notifications = notifications.filter(pk__gt=first).order_by("-pk")[:20]
+        else:
+            notifications = notifications.order_by("-pk")[:3]
+
+
         messages_id = [notification.message.pk for notification in notifications]
         notifications_id = [notification.pk for notification in notifications]
 
         notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
-        notifDict = {}
+        notifDict = OrderedDict()
 
         for notification in notifications:
             notifDict[notification.pk] = notificationsValues[notification.message.pk]
 
-        Notification.objects.filter(pk__in=notifications_id)  .update(read=True)
+        unread = Notification.objects.filter(pk__in=notifications_id, read=False)
 
+        unreadCount = unread.count()
+        unread.update(read=True)
 
         template = loader.get_template('main/notoficationlist.html')
-        context = RequestContext(request, {'notifDict': notifDict})
+        context = RequestContext(request, {'notifDict': notifDict, 'lastLine': lastLine})
+        data = template.render(context)
 
-        return HttpResponse(template.render(context))
+        return HttpResponse(json.dumps({'data': data, 'count': unreadCount}))
 
 
 def user_login(request):
