@@ -333,3 +333,17 @@ def setCountries(context):
   categories_select = template.render(context)
 
   return categories_select
+
+
+@register.simple_tag(name='right_tv', takes_context=True)
+def setCountries(context):
+
+  request = context['request']
+
+  sqs = func.getActiveSQS().models(TppTV).order_by('-id')[0]
+  tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME'), [sqs.id])
+  template = loader.get_template('main/tv.html')
+  context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
+  tv = template.render(context)
+
+  return tv
