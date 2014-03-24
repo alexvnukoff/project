@@ -76,7 +76,7 @@ def home(request, country=None):
                                                                   coupon_end__lt=now()).order_by("coupon_end")[:3]
     coupons_ids = [cat.id for cat in couponsObj]
 
-    if len(coupons_ids) > 0 :
+    if len(coupons_ids) > 0:
         coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
                                                    fullAttrVal=True)
         coupons = func._setCouponsStructure(coupons)
@@ -92,9 +92,11 @@ def home(request, country=None):
           productsSale = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID,
                                                                     discount__gt=0, coupon=0).order_by("-discount")[:15]
 
-    if productsSale.count():
 
-        productsSale_ids = [prod.id for prod in productsSale]
+
+    productsSale_ids = [prod.id for prod in productsSale]
+
+    if len(productsSale_ids) > 0:
         productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
     else:
         productsSale = {}

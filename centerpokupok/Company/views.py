@@ -92,11 +92,11 @@ def contact(request, company):
     companyObj = get_object_or_404(Company, pk=company)
 
     #------------------- Company Details --------------------#
-    attr = companyObj.getAttributeValues('NAME', 'IMAGE')
+    attr = companyObj.getAttributeValues('NAME', 'IMAGE', 'SITE_NAME', 'EMAIL', 'TELEPHONE_NUMBER')
     name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
 
-    return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'picture': picture,
+
+    return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'attr': attr,
                                                        'menu': 'contact', 'user': request.user},
                               context_instance=RequestContext(request))
 
