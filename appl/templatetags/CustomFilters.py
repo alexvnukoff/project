@@ -252,7 +252,7 @@ def getOwner(item):
 
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
-    request = context['request']
+    request = context.get('request')
     user = request.user
 
     if user.is_authenticated():
@@ -268,7 +268,7 @@ def setUserName(context):
 
 @register.simple_tag(name='notif', takes_context=True)
 def setNotification(context):
-    request = context['request']
+    request = context.get('request')
     user = request.user
     if user.is_authenticated():
         notification = Notification.objects.filter(user=request.user, read=False).count()
@@ -279,7 +279,7 @@ def setNotification(context):
 @register.simple_tag(name='flags', takes_context=True)
 def setFlags(context, country, url_country, url_country_parametr):
 
-  request = context['request']
+  request = context.get('request')
   if len(url_country) > 0:
       url_country = url_country
   else:
@@ -306,7 +306,7 @@ def setFlags(context, country, url_country, url_country_parametr):
 @register.simple_tag(name='categories', takes_context=True)
 def setCategories(context):
 
-  request = context['request']
+  request = context.get('request')
   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
   categories_id = [cat['ID'] for cat in hierarchyStructure]
   categories = Item.getItemsAttributesValues(("NAME",), categories_id)
@@ -322,7 +322,7 @@ def setCategories(context):
 @register.simple_tag(name='countries', takes_context=True)
 def setCountries(context):
 
-  request = context['request']
+  request = context.get('request')
 
   contrySorted = func.sortByAttr("Country", "NAME")
   sorted_id = [coun.id for coun in contrySorted]
@@ -336,14 +336,20 @@ def setCountries(context):
 
 
 @register.simple_tag(name='right_tv', takes_context=True)
-def setCountries(context):
+def rightTv(context):
 
-  request = context['request']
+  request = context.get('request')
 
-  sqs = func.getActiveSQS().models(TppTV).order_by('-id')[0]
-  tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
-  template = loader.get_template('main/tv.html')
-  context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
-  tv = template.render(context)
+  sqs = func.getActiveSQS().models(TppTV)
 
-  return tv
+  if sqs.count() > 0:
+    sqs = sqs.order_by('-id')[0]
+    tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
+    template = loader.get_template('main/tv.html')
+    context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
+    tv = template.render(context)
+
+    return tv
+
+  else:
+      return ''

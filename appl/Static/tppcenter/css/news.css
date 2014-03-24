@@ -472,3 +472,11 @@ rgb(33,136,187) 100%);}
 background: -webkit-gradient(linear, left top, left bottom, from(#41a6d8), to(#2589bb)); background: -moz-linear-gradient(top, #41a6d8, #2589bb);}
 .btn-size:hover{ opacity:0.9; filter:alpha(opacity=90); color:#FFF; text-decoration:none;}
 
+
+.current-company{ position:relative; float:left; width:184px; padding:8px; color:#FFF; background-color:#4a4a4a; border-radius:3px; margin-bottom:20px; font-size:11px;}
+.current-company .cpn-current{ display:block; background:url(../img/arrow-white.png) no-repeat right center; font-size:12px; font-weight:bold; color:#FFF; margin-top:3px;}
+
+.list-cpn{position: absolute; width: 184px; padding: 8px; background-color: #4a4a4a; border-radius: 0px 0px 3px 3px; left: 0; top: 49px; display: none; z-index: 9;}
+.list-cpn li{ position: relative; float: left; width: 100%; padding: 5px 0; font-size: 12px;}
+.list-cpn li a{ color: #FFF;}
+
