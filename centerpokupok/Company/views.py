@@ -192,7 +192,7 @@ def coupons(request, company, category=None, page=1):
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE')
     name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
+    picture = attr.get('IMAGE', [''])[0]
 
     #-------------- Store Categories ---------------#
     storeCategories = companyObj.getStoreCategories(coupons)
