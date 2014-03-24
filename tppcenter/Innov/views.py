@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Item, Dictionary
 from appl import func
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,6 +20,11 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
    # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
     #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
      #    return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
+
+
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
     description = ''
@@ -233,6 +238,7 @@ def _innovContent(request, page=1, my=None):
 
 def _innovDetailContent(request, item_id):
 
+
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
@@ -259,7 +265,8 @@ def _innovDetailContent(request, item_id):
             innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
 
-        func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
+        func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues, withContacts=True)
+
 
         cabinet = Cabinet.objects.filter(p2c__child=item_id)
 

@@ -525,7 +525,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
 
 
-def addToItemDictinoryWithCountryAndOrganization(id, itemList):
+def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=False):
 
     countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__type='dependence',
                                        p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
@@ -535,7 +535,10 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE', 'SLUG'), organizations_ids)
+    attr = ("NAME", 'FLAG', 'IMAGE', 'SLUG')
+    if withContacts:
+        attr = attr + ('EMAIL', 'SITE_NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'FAX')
+    organizationsList = Item.getItemsAttributesValues(attr, organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -560,6 +563,11 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_ID': organizations_dict.get(id, 0),
                         'ORGANIZATION_URL': url}
             itemList.update(toUpdate)
