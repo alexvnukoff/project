@@ -2,8 +2,8 @@
 {% with tvValues.YOUTUBE_CODE|first as youtube_code %}
 {% with tvValues.SLUG|first as slug %}
 
-    <a  href="{% url 'tv:detail' slug %}">
-       <img width="200" height="100" src="http://img.youtube.com/vi/{{ youtube_code }}/0.jpg" alt="{{ name }}" />
+    <a title="{{ name }}"  href="{% url 'tv:detail' slug %}">
+       <img style="width: 200px;" src="http://img.youtube.com/vi/{{ youtube_code }}/0.jpg" alt="{{ name }}" />
     </a>
 
 {% endwith %}
