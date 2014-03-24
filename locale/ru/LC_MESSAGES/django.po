@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: 2014-03-23 17:20+0200\n"
+"PO-Revision-Date: 2014-03-24 11:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -314,7 +314,7 @@ msgstr "Похожие товары"
 #: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
 #: tppcenter/templates/index.html:94
 msgid "Search"
-msgstr "Исакть"
+msgstr "Искать"
 
 #: centerpokupok/templates/header_small.html:6
 #: tppcenter/templates/base.html:22
@@ -787,7 +787,7 @@ msgstr "Правила возврата"
 
 #: centerpokupok/templates/Product/detail.html:234
 msgid "Short description"
-msgstr "Краткое описанние"
+msgstr "Краткое описание"
 
 #: centerpokupok/templates/Product/detail.html:238
 msgid "Complete description"
@@ -3018,7 +3018,7 @@ msgstr "Описание"
 
 #: tppcenter/templates/Tpp/addForm.html:197
 msgid "Detail"
-msgstr "Детальное описанние"
+msgstr "Детальное описание"
 
 #: tppcenter/templates/Tpp/tabCompanies.html:7
 msgid "Logo"
