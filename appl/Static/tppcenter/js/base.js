@@ -1,3 +1,49 @@
+function updateURLParameter(param, paramVal, url)
+{
+    if (!url) url = window.location.href;
+    var TheAnchor = null;
+    var newAdditionalURL = "";
+    var tempArray = url.split("?");
+    var baseURL = tempArray[0];
+    var additionalURL = tempArray[1];
+    var temp = "";
+
+    if (additionalURL)
+    {
+        var tmpAnchor = additionalURL.split("#");
+        var TheParams = tmpAnchor[0];
+            TheAnchor = tmpAnchor[1];
+        if(TheAnchor)
+            additionalURL = TheParams;
+
+        tempArray = additionalURL.split("&");
+
+        for (i=0; i<tempArray.length; i++)
+        {
+            if(tempArray[i].split('=')[0] != param)
+            {
+                newAdditionalURL += temp + tempArray[i];
+                temp = "&";
+            }
+        }
+    }
+    else
+    {
+        var tmpAnchor = baseURL.split("#");
+        var TheParams = tmpAnchor[0];
+            TheAnchor  = tmpAnchor[1];
+
+        if(TheParams)
+            baseURL = TheParams;
+    }
+
+    if(TheAnchor)
+        paramVal += "#" + TheAnchor;
+
+    var rows_txt = temp + "" + param + "=" + paramVal;
+    return baseURL + "?" + newAdditionalURL + rows_txt;
+}
+
 
 $(document).ready(function() {
 
@@ -143,50 +189,31 @@ $(document).ready(function() {
        return false;
     });
 
+	$(".cpn-current").click(function(){
+        var list = $(".list-cpn")
+		if(list.is(":hidden")){
+			list.slideDown();
+		}
+		else{
+			list.slideUp();
+		}
+	});
+
+	$(document).on("click", ".list-cpn li a", function(){
+
+        var selected = $(this);
+
+		$(".cpn-current").html( selected.html() );
+
+		$(".list-cpn").slideUp(function() {
+
+            var id = selected.parent().data('org');
+
+            var newURL = updateURLParameter('current-org', id);
+
+            location.replace(newURL);
+        });
+	});
+
 });
 
-function updateURLParameter(param, paramVal, url)
-{
-    if (!url) url = window.location.href;
-    var TheAnchor = null;
-    var newAdditionalURL = "";
-    var tempArray = url.split("?");
-    var baseURL = tempArray[0];
-    var additionalURL = tempArray[1];
-    var temp = "";
-
-    if (additionalURL)
-    {
-        var tmpAnchor = additionalURL.split("#");
-        var TheParams = tmpAnchor[0];
-            TheAnchor = tmpAnchor[1];
-        if(TheAnchor)
-            additionalURL = TheParams;
-
-        tempArray = additionalURL.split("&");
-
-        for (i=0; i<tempArray.length; i++)
-        {
-            if(tempArray[i].split('=')[0] != param)
-            {
-                newAdditionalURL += temp + tempArray[i];
-                temp = "&";
-            }
-        }
-    }
-    else
-    {
-        var tmpAnchor = baseURL.split("#");
-        var TheParams = tmpAnchor[0];
-            TheAnchor  = tmpAnchor[1];
-
-        if(TheParams)
-            baseURL = TheParams;
-    }
-
-    if(TheAnchor)
-        paramVal += "#" + TheAnchor;
-
-    var rows_txt = temp + "" + param + "=" + paramVal;
-    return baseURL + "?" + newAdditionalURL + rows_txt;
-}

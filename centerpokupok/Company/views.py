@@ -58,7 +58,7 @@ def storeMain(request, company, category=None):
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE')
     name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
+    picture = attr.get('IMAGE', [''])[0]
 
     return render_to_response("Company/index.html", {'companyID': company, 'name': name, 'picture': picture,
                                                      'coupons': coupons,'productsSale': productsSale,
@@ -120,7 +120,7 @@ def products(request, company, category=None, page=1):
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE')
     name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
+    picture = attr.get('IMAGE', [''])[0]
 
     #-------------- Store Categories ---------------#
     storeCategories = companyObj.getStoreCategories()
@@ -192,7 +192,7 @@ def coupons(request, company, category=None, page=1):
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE')
     name = attr['NAME'][0]
-    picture = attr['IMAGE'][0]
+    picture = attr.get('IMAGE', [''])[0]
 
     #-------------- Store Categories ---------------#
     storeCategories = companyObj.getStoreCategories(coupons)
