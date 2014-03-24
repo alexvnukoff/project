@@ -12,6 +12,10 @@
 
 
         {% endwith %}
+    {% empty %}
+        <li data-id="{{ id }}">
+            {% trans "No results found" %}
+        </li>
     {% endfor %}
 
     {% if lastLine %}
