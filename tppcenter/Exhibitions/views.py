@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.core.exceptions import ObjectDoesNotExist
@@ -19,6 +19,9 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #  slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       # return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)

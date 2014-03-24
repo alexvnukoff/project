@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.utils.translation import ugettext as _
@@ -18,6 +18,9 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 
@@ -100,7 +103,7 @@ def _proposalDetailContent(request, item_id):
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
+        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues, withContacts=True)
 
         template = loader.get_template('BusinessProposal/detailContent.html')
 
