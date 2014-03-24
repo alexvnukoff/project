@@ -82,6 +82,38 @@
 		});
 	});
 </script>
+<!-- script for staff saving -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','#btn-add-user', function(){
+            alert('Here User should be attached to Department.')
+            return false;
+		});
+	});
+</script>
+<!-- script for Department adding -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','#btn-add-depart', function()
+        {
+            var inputField = $('#dep-name');
+            var departmentName = inputField.val();
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+
+            contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+
+            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName}, function(data){
+                        contentHolder.replaceWith(data);
+                    }, 'html');
+
+            inputField.empty();
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+	});
+</script>
+
 
   <div class="companies">
 

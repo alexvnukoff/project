@@ -306,10 +306,19 @@ def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
-    departments = Department.objects.filter(c2p__parent=company, c2p__type='hierarchy')
+    departmentToAdd = request.POST.get('departmentName', '')
+
+    if len(departmentToAdd):
+        obj_dep = Department.objects.create(title=departmentToAdd, create_user=request.user)
+        obj_dep.setAttributeValue({'NAME': departmentToAdd}, request.user)
+        Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+        obj_dep.reindexItem()
+
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
     attr = ('NAME', 'SLUG')
 
-    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=5, page=page)
+    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
+
     paginator_range = func.getPaginatorRange(page)
     url_paginator = "companies:tab_structure_paged"
 
@@ -382,8 +391,16 @@ def _tabsStaff(request, company, page=1):
         paginator_range = func.getPaginatorRange(page)
         url_paginator = "companies:tab_staff_paged"
 
+        #create full list of Company's departments
+        dep_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('pk', flat=True))
+        if len(dep_lst) == 0:
+            dep_lst = comp.community.pk # if Company w/o Departments
+
+        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+
         templateParams = {
             'workersList': workersList,
+            'departmentsList': departmentsList, #list for add user form
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
