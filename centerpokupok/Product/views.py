@@ -45,7 +45,7 @@ def productDetail(request, item_id, page=1):
         attr = company.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
 
         name = attr['NAME'][0]
-        picture = attr['IMAGE'][0]
+        picture = attr.get('IMAGE',[''])[0]
         companyID = company.pk
     except ObjectDoesNotExist:
         pass
@@ -64,7 +64,7 @@ def productDetail(request, item_id, page=1):
     hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
 
 
     #----------- Store Categories ----------------#
@@ -189,7 +189,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     #Main search by categories
     categories_id = [cat['ID'] for cat in hierarchyStructure]
     categoriesAttr = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categoriesAttr)
+
 
     #Related categories list with descendants
     category_ids = [cat['ID'] for cat in categories]
@@ -254,10 +254,10 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     companyList = {}
 
     for item in items:
-        toUpdate = {'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']]['NAME'],
-                    'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']]['IMAGE'],
+        toUpdate = {'COMPANY_NAME': itemsWithAttribute[item['p2c__child_id']].get('NAME', [0]),
+                    'COMPANY_IMAGE': itemsWithAttribute[item['p2c__child_id']].get('IMAGE', [0]),
                     'COMPANY_ID': item['p2c__child_id'],
-                    'COUNTRY_NAME': itemsWithAttribute[item['pk']]['NAME'],
+                    'COUNTRY_NAME': itemsWithAttribute[item['pk']].get('NAME', [0]),
                     'COUNTRY_ID': item['pk'],
                     'COMMENTS': comment_dict.get(item['p2c__child__p2c__child'], 0),
                     'FAVORITE': favorites_dict.get(item['p2c__child__p2c__child'], 0)}
@@ -272,7 +272,7 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
             companyList[item["p2c__child_id"]] = {}
             companyList[item["p2c__child_id"]].update(
                 {"COMPANY_NAME": itemsWithAttribute[item['p2c__child_id']]['NAME']})
-            companyList[item["p2c__child_id"]].update({"COMPANY_IMAGE": itemsWithAttribute[item['p2c__child_id']]['IMAGE']})
+            companyList[item["p2c__child_id"]].update({"COMPANY_IMAGE": itemsWithAttribute[item['p2c__child_id']].get('IMAGE',[''])})
             companyList[item["p2c__child_id"]].update({"COUNTRY_NAME": itemsWithAttribute[item['pk']]['NAME']})
             companyList[item['p2c__child_id']].update({'COUNTRY_ID': item['pk']})
 
@@ -281,25 +281,19 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
-    #Country list in header
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
 
 
 
 
 
     return render_to_response("Product/index.html", {'products_list': products_list,'companyList': companyList,
-                                                      'page': page, 'paginator_range': paginator_range,
-                                                      'url_paginator': url_paginator, 'url_parameter':url_parameter,
-                                                      'categotySelect':categotySelect, 'countryList':countryList,
-                                                      'categories': categories, 'currentCat': currentCatName,
-                                                     'breadCrumbs': breadCrumbs, 'category_url': category_url,
-                                                    'url_country': url_country,
+                                                     'page': page, 'paginator_range': paginator_range,
+                                                     'url_paginator': url_paginator, 'url_parameter':url_parameter,
+                                                     'categories': categories, 'country': country,
+                                                     'currentCat': currentCatName, 'breadCrumbs': breadCrumbs,
+                                                     'category_url': category_url, 'url_country': url_country,
                                                      'url_country_parametr': url_country_parametr,
-                                                     'category_parameters': category_parameters, 'country': country,
+                                                     'category_parameters': category_parameters,
                                                      'user': request.user}, context_instance=RequestContext(request))
 
 
@@ -339,15 +333,10 @@ def getAllNewProducts(request, page=1):
     url_paginator = "products:products_paginator"
 
 
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
 
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+
 
 
 
@@ -356,8 +345,7 @@ def getAllNewProducts(request, page=1):
 
     return render_to_response("Product/new.html", {'products_list': products_list, 'page': page,
                                                    'paginator_range':paginator_range, 'url_paginator': url_paginator,
-                                                   'categotySelect': categotySelect, 'countryList': countryList,
-                                                   'user': request.user})
+                                                   'user': request.user}, context_instance=RequestContext(request))
 
 
 
@@ -385,10 +373,6 @@ def orderProduct(request, step=1):
     if not request.user.is_authenticated():
         url_product = reverse("products:detail", args=[request.POST.get('product', 1)])
         return HttpResponseRedirect("/registration/?next=%s" %url_product)
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
 
     contrySorted = func.sortByAttr("Country", "NAME")
@@ -437,8 +421,7 @@ def orderProduct(request, step=1):
 
         return render_to_response("Product/orderStepOne.html", {'address': address, 'user': user, "orderForm": orderForm,
                                                                 'productValues': productValues ,'totalCost': totalCost,
-                                                                'curr_url': curr_url, 'categotySelect': categotySelect,
-                                                                'countryList': countryList},
+                                                                'curr_url': curr_url, 'countryList': countryList},
                                                                  context_instance=RequestContext(request))
 
     elif step == '2':
@@ -461,7 +444,6 @@ def orderProduct(request, step=1):
         return render_to_response("Product/orderStepTwo.html", {'qty': qty, 'productValues': productValues,
                                                                 'orderDetails': orderDetails, 'totalSum': totalSum,
                                                                 "user": user,'curr_url': curr_url,
-                                                                'categotySelect': categotySelect,
                                                                 'countryList': countryList})
     else:
         #-----Step three , cleaning of sessions , and creatin of new order object that related to cabinet of user ---#
@@ -496,8 +478,8 @@ def orderProduct(request, step=1):
             return HttpResponseRedirect("/")
 
         return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url,
-                                                                  'categotySelect': categotySelect,
-                                                                  'countryList': countryList})
+                                                                   'countryList': countryList},
+                                  context_instance=RequestContext(request))
 
 
 

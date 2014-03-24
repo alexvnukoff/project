@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-               <title>{% block title %}News Detail{% endblock %}</title>
+               <title>{% block title %}{% trans 'Registration complete' %}{% endblock %}</title>
 
 
 
@@ -47,8 +47,8 @@
 				</div>
 			</div>
 
-          <span style="font-size: 20px;"> Спасибо, что Вы завершили регистрацию! Сейчас Вы можете войти в
-              <a href='{% url 'register' %}'>личный кабинет</a>, используя имя и пароль, которые Вы указали при регистрации.</span>
+          <span style="font-size: 20px;"> {% trans 'Thank you that you have completed the registration! Now you can  ' %}
+              <a href='{% url 'register' %}'>{% trans 'sign in' %}</a>, {% trans 'using the email and password you provided during registration.' %}</span>
 
 
 			</div>

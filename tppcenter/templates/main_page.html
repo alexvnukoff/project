@@ -2,6 +2,7 @@
 {% load static from staticfiles %}
 {% load i18n %}
 {% load inclusionTags %}
+{% load CustomFilters %}
 
    {% block title %}{% endblock %}
 
@@ -285,9 +286,7 @@
         {% block right %}
             <div class="newsright">
                 <div class="bannerleft nomargin">
-                    <a href="#">
-                        <img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" />
-                    </a>
+                   {% right_tv %}
                 </div>
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">

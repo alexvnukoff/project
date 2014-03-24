@@ -3,8 +3,7 @@ from django.shortcuts import render_to_response
 from appl.models import News, Category
 from core.models import Value, Item, Attribute, Dictionary
 from appl import func
-from django.http import Http404
-from django.core.exceptions import ObjectDoesNotExist
+from django.template import RequestContext
 
 from django.conf import settings
 
@@ -21,7 +20,7 @@ def categoryList(request):
 
 
 
-    return render_to_response("Categories/index.html", locals())
+    return render_to_response("Categories/index.html", locals(), context_instance=RequestContext(request))
 
 
 

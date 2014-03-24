@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.utils.timezone import now
+
 
 
 def home(request, country=None):
@@ -20,10 +22,14 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if country:
-        productQuery = Product.active.get_active_related().filter(c2p__parent__c2p__parent=country, c2p__parent__in=Company.objects.all())
-        products = Product.getNew(productQuery).filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        productQuery = Product.active.get_active_related().filter(sites=settings.SITE_ID).order_by("-id")
+        products = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID).order_by("-id")[:4]
+
+
     if not country:
-        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
+
+    products = [product.id for product in products]
 
 
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
@@ -31,7 +37,8 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if not country:
-        products = Product.getNew().filter(sites=settings.SITE_ID).order_by("-pk")[:4]
+        products = products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
+        products = [product.id for product in products]
     else:
         products = Product.getTopSales(productQuery)[:4]
 
@@ -56,35 +63,43 @@ def home(request, country=None):
         level = node['LEVEL']
 
 
-    #----LIST OF COUNTRIES IN HEADER SEARCH--------#
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id  = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
-
-
-
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
     if not country:
-         couponsObj = Product.getCoupons().order_by('item2value__end_date')[:3]
-    else:
-        couponsObj = Product.getCoupons(querySet=productQuery).order_by('item2value__end_date')[:3]
-    coupons_ids = [cat.pk for cat in couponsObj]
+         couponsObj =  func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID,
+                                                                  coupon_start__gt=now(),
+                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
 
-    coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
-                                               fullAttrVal=True)
-    coupons = func._setCouponsStructure(coupons)
+    else:
+        couponsObj = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, country=country,
+                                                                  coupon_start__gt=now(),
+                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
+    coupons_ids = [cat.id for cat in couponsObj]
+
+    if len(coupons_ids) > 0:
+        coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
+                                                   fullAttrVal=True)
+        coupons = func._setCouponsStructure(coupons)
+    else:
+        coupons = {}
 
     #----------- Products with discount -------------#
     if not country:
-          productsSale = Product.getProdWithDiscount()
-    else:
-          productsSale = Product.getProdWithDiscount(productQuery)
+          productsSale = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, discount__gt=0,
+                                                                    coupon=0).order_by("-discount")[:15]
 
-    productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
-    productsSale_ids = [prod.pk for prod in productsSale]
-    productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
+    else:
+          productsSale = func.getActiveSQS().models(Product).filter(country=country, sites=settings.SITE_ID,
+                                                                    discount__gt=0, coupon=0).order_by("-discount")[:15]
+
+
+
+    productsSale_ids = [prod.id for prod in productsSale]
+
+    if len(productsSale_ids) > 0:
+        productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
+    else:
+        productsSale = {}
 
 
 
@@ -98,10 +113,9 @@ def home(request, country=None):
     user = request.user
 
     return render_to_response("index.html", {'sortedHierarchyStructure': sortedHierarchyStructure,
-                                             'categotySelect': categotySelect, 'coupons': coupons,
-                                              'countryList': countryList,
-                                             "newProducrList": newProducrList, "topPoductList": topPoductList,
-                                             "productsSale": productsSale, 'user': user, 'url_country': url_country,
+                                             'coupons': coupons, "newProducrList": newProducrList,
+                                             "topPoductList": topPoductList, "productsSale": productsSale,
+                                             'user': user, 'url_country': url_country,
                                              'country': country}, context_instance=RequestContext(request))
 
 
@@ -158,15 +172,6 @@ def _sortList(dict):
 def registration(request, form, auth_form):
    if request.user.is_authenticated():
       return HttpResponseRedirect("/")
-   hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-   categories_id = [cat['ID'] for cat in hierarchyStructure]
-   categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-   categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
-
-   contrySorted = func.sortByAttr("Country", "NAME")
-   sorted_id = [coun.id for coun in contrySorted]
-   countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
    if request.POST.get('Register', None):
      form = RegistrationFormUniqueEmail(request.POST)
@@ -200,6 +205,7 @@ def registration(request, form, auth_form):
           return HttpResponseRedirect(request.GET.get('next', '/'))
 
    return  render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
+
 
 
 

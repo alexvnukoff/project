@@ -15,16 +15,10 @@ from django.utils.translation import ugettext as _
 
 @login_required(login_url=("/registration/"))
 def get_profile(request):
-    #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
-    #Counrty list in header
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+
+
    #---Form for main data of ptofile ------#
 
     user = request.user
@@ -46,22 +40,13 @@ def get_profile(request):
 
 
     return render_to_response("Cabinet/index.html", {'user_form': user_form, 'user': user,
-                                                     'succsefull_save': succsefull_save, 'curr_url': curr_url,
-                                                     'categotySelect': categotySelect, 'countryList': countryList},
+                                                     'succsefull_save': succsefull_save, 'curr_url': curr_url },
                                                       context_instance=RequestContext(request))
 
 @login_required(login_url=("/registration/"))
 def get_shipping_detail(request):
-     #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
-    #Counrty list in header
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
     #----form for shipping data in profile -----#
     user = request.user
     succsefull_save = ""
@@ -96,25 +81,11 @@ def get_shipping_detail(request):
 
 
     return render_to_response("Cabinet/shippingAddress.html", {'order_form': order_form, 'user': user,
-                                                               'succsefull_save': succsefull_save, 'curr_url': curr_url,
-                                                               'categotySelect': categotySelect,
-                                                               'countryList': countryList},
+                                                               'succsefull_save': succsefull_save, 'curr_url': curr_url},
                                                                 context_instance=RequestContext(request))
 @login_required(login_url=("/registration/"))
 def get_order_history(request, page=1):
     #------order history of user with pagination-----#
-
-    #Categories list in header
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
-    #Counrty list in header
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
 
     user = request.user
     curr_url = "order_history"
@@ -129,27 +100,18 @@ def get_order_history(request, page=1):
     url_paginator = "profile:paginator"
 
     return render_to_response("Cabinet/orderHistory.html", {"user": user, 'curr_url': curr_url,
-                                                            'categotySelect': categotySelect, 'countryList': countryList,
                                                             'orderList': orderList, 'paginator_range': paginator_range,
-                                                            'url_paginator': url_paginator, 'page': page})
+                                                            'url_paginator': url_paginator, 'page': page},
+                              context_instance=RequestContext(request))
 @login_required(login_url=("/registration/"))
 def get_favorite(request, page=1):
-    #Categories list in header
+
     if request.POST:
         if len(request.POST) > 1:
             toDelete = request.POST.getlist("del[]")
             cabinet = Cabinet.objects.filter(user=request.user)
             favorites = Favorite.objects.filter(c2p__parent=cabinet, p2c__child__in=toDelete)
             favorites.delete()
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
-    #Counrty list in header
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
     user = request.user
     curr_url = "favorite"
@@ -171,11 +133,11 @@ def get_favorite(request, page=1):
 
 
 
-    return render_to_response('Cabinet/favorite.html', {'categotySelect': categotySelect, 'countryList':countryList,
-                                                       'user': user, 'curr_url': curr_url, 'favoriteList': favoriteList,
-                                                       'page': page, 'paginator_range': paginator_range,
-                                                       'url_paginator': url_paginator},
-                                                        context_instance=RequestContext(request))
+    return render_to_response('Cabinet/favorite.html', {'user': user, 'curr_url': curr_url,
+                                                        'favoriteList': favoriteList, 'page': page,
+                                                        'paginator_range': paginator_range,
+                                                        'url_paginator': url_paginator},
+                                                         context_instance=RequestContext(request))
 
 
 

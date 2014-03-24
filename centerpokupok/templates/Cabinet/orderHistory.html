@@ -31,18 +31,18 @@
                         {% with order.ADDRESS|first as address %}
 					<li>
 						<div class="thumb">
-							<img src="{% static picture %}" alt="{{ name }}" class="thumb" />
+							<img src="{{ MEDIA_URL }}small/{{ picture }} }" alt="{{ name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
 							<p>{{ name }}</p>
-							<p class="id">Product ID: {{ id }}</p>
+							<p class="id">{% trans 'Product ID' %}: {{ id }}</p>
 							<p>
                               <font class="note"> {{ city }}, {{ country }}, {{ address }}</font>
 							</p>
 						</div>
 						<div class="code">
-							<p><font class="grey">Размер:</font> XS</p>
-							<p><font class="grey">Цвет:</font> красный</p>
+							<p><font class="grey">{% trans 'Size' %}:</font> XS</p>
+							<p><font class="grey">{% trans 'Color' %}:</font> красный</p>
 						</div>
 						<div class="numberoder">
 							<p><font class="grey">{% trans "Quantity" %}:</font> {{ qty }}</p>

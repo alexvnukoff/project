@@ -165,7 +165,7 @@
                             <div class="shadow"></div>
                             <div class="img_block">
 
-                                <img src="{% static picture %}" alt="{{ name }}" >
+                                <img src="{{ MEDIA_URL }}big/{{ picture }} " alt="{{ name }}" >
                             </div>
                         </div>
                     </a>
@@ -183,14 +183,14 @@
                                 <i class="icons icon-chat"></i>
                             </a>
                             <div class="salepopup">
-                                <img src="{% static company_image %}" class="avatar" alt="{{ company }}" />
+                                <img src="{{ MEDIA_URL }}small/{{ company_image }}" class="avatar" alt="{{ company }}" />
                                 <div class="infosale">
                                     <i class="icons icon-status status-online"></i>
                                     <a href="#">{{ company }}</a>
                                     <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
                                     <p>{{ country }}</p>
                                     <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">positive feedback</a></p>
-                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>Написать продавцу </a></p>
+                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>{% trans 'Write to salesman' %}</a></p>
                                 </div>
                             </div>
                         </div>
@@ -207,7 +207,7 @@
                 </ul>
 
                 <div class="items-coupon">
-                    <h3>Акции и распродажи</h3>
+                    <h3>{% trans 'Sales' %}</h3>
                     <ul>
                         <li>
                             <div class="discount"><i class="icons i-after"></i> 30%</div>

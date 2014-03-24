@@ -12,6 +12,7 @@ from appl.models import *
 from urllib.parse import urlencode
 from haystack.query import SQ
 from django.template import RequestContext, loader
+from django.conf import settings
 
 register = template.Library()
 
@@ -302,3 +303,47 @@ def setFlags(context, country, url_country, url_country_parametr):
 
 
 
+@register.simple_tag(name='categories', takes_context=True)
+def setCategories(context):
+
+  request = context['request']
+  hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+  categories_id = [cat['ID'] for cat in hierarchyStructure]
+  categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+  categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+
+
+  template = loader.get_template('main/Category.html')
+  context = RequestContext(request, {'categotySelect': categotySelect})
+  categories_select = template.render(context)
+
+  return categories_select
+
+@register.simple_tag(name='countries', takes_context=True)
+def setCountries(context):
+
+  request = context['request']
+
+  contrySorted = func.sortByAttr("Country", "NAME")
+  sorted_id = [coun.id for coun in contrySorted]
+  countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+
+  template = loader.get_template('main/Country.html')
+  context = RequestContext(request, {'countryList': countryList})
+  categories_select = template.render(context)
+
+  return categories_select
+
+
+@register.simple_tag(name='right_tv', takes_context=True)
+def setCountries(context):
+
+  request = context['request']
+
+  sqs = func.getActiveSQS().models(TppTV).order_by('-id')[0]
+  tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
+  template = loader.get_template('main/tv.html')
+  context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
+  tv = template.render(context)
+
+  return tv

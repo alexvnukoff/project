@@ -44,7 +44,44 @@
             <div id="main-r">
             <div class="textright">
                 <div class="title-items">
-                    <h2>{{ name }}</h2>
+                  <div class="listitemcart">
+                    <span class="title">{{ name }}</span>
+                  <div class="titleform">
+                         {% trans 'Contact us' %}  <span style="font-weight: bolder; color: red;"></span>
+
+
+                  </div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                  <ul class="bgform">
+
+                        <li>
+                            <label class="control-left"><label for="id_first_name">{% trans 'Your name' %}:</label></label>
+                            <div class="control">
+                                <input class="textcheck" id="id_first_name" name="first_name" type="text">
+                            </div>
+                        </li>
+
+                        <li>
+                            <label class="control-left"><label for="id_last_name">{% trans 'Your email' %}:</label></label>
+                            <div class="control">
+                                <input class="textcheck" id="id_last_name" name="last_name" type="text">
+                            </div>
+                        </li>
+
+                        <li>
+                            <label class="control-left"><label for="id_birthday">{% trans 'Message' %}:</label></label>
+                            <div class="control">
+                                <textarea rows="10" class="textcheck"></textarea>
+
+                            </div>
+                        </li>
+
+                   </ul>
+                   <div class="rows-check"><input type="submit" class="btnreg" value="Save"></div>
+                 </form>
+                </div>
                 </div>
                 <div class="pagetext">{{ detail_text }}</div>
             </div>
