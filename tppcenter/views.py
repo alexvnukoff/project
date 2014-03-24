@@ -31,8 +31,7 @@ def home(request):
         return registration(request)
     cache_name = 'home_page'
     cached = cache.get(cache_name)
-    c = {}
-    c.update(csrf(request))
+
     if not cached:
 
         countries = Country.active.get_active()
@@ -75,18 +74,21 @@ def home(request):
             'serviceList': serviceList,
             'greetingsList': greetingsList,
             'exhibitionsList': exhibitionsList,
-            'c': c,
+
         }
 
-        template = loader.get_template('index.html')
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-        cache.set(cache_name, rendered)
+
+
+        cache.set(cache_name, templateParams)
     else:
-        rendered = cache.get(cache_name)
+        templateParams = cache.get(cache_name)
+
+    template = loader.get_template('index.html')
+    context = RequestContext(request, templateParams)
+    rendered = template.render(context)
 
 
-    return HttpResponse(rendered, c)
+    return HttpResponse(rendered)
 
 
 @ensure_csrf_cookie
