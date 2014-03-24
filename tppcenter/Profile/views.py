@@ -48,7 +48,7 @@ def _profileContent(request):
 
     user_groups = request.user.groups.values_list('pk', flat=True)
 
-    companies_ids = Organization.active.get_active_related().filter(community__in=user_groups).values_list('pk', flat=True)
+    companies_ids = Organization.objects.filter(community__in=user_groups).values_list('pk', flat=True)
 
     companies = Item.getItemsAttributesValues('NAME', companies_ids)
     saved = 0

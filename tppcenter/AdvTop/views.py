@@ -40,7 +40,7 @@ def advJsonFilter(request):
             if not q:
                 sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
             else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title')
 
             paginator = Paginator(sqs, 10)
 

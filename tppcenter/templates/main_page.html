@@ -203,6 +203,10 @@
 {% block body %}
 <div class="news-main">
          <div class="news-left">
+
+            {% if user.email %}
+                {% getMyCompaniesList %}
+            {% endif %}
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
                     <ul>

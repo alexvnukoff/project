@@ -87,12 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-
-
-
-
-
-
+    'tpp.SiteUrlMiddleWare.setCurrCompany',
 )
 
 
