@@ -57,7 +57,7 @@
 		});
 	});
 </script>
-<!-- script for staff deletion -->
+<!-- script for Staff deletion -->
 <script type="text/javascript">
     $(function(){
 	    $(document).on('click','.btnremove-small', function(){
@@ -82,7 +82,33 @@
 		});
 	});
 </script>
-<!-- script for staff saving -->
+<!-- script for Staff deletion -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','.btnremove-small', function(){
+            var tr = $(this).parents('tr');
+            var cabinetID = tr.data('cabinet');
+            var color  = $(this).css("background-color");
+            tr.css("background-color","#FF3700");
+
+            if (confirm('Do you want to delete this record?'))
+            {
+                tr.fadeOut(400, function(){
+                    <!-- send to server Cabinet ID of detached User -->
+                    $.post("{% url "companies:tab_staff" item_id %}", {cabinetID: cabinetID});
+                    tr.remove();
+                });
+            }
+            else
+            {
+                 tr.css("background", color);
+            }
+            return false;
+		});
+	});
+</script>
+
+<!-- script for Staff saving -->
 <script type="text/javascript">
     $(function(){
 	    $(document).on('click','#btn-add-user', function(){
@@ -110,6 +136,65 @@
             $('.staffadd').hide();      <!-- hide pop-up window -->
             $('#fade-profile').hide();  <!-- switch off gray background -->
             return false;
+		});
+	});
+</script>
+<!-- script for Department deletion -->
+<script type="text/javascript">
+    $(function(){
+        var bkgr_color  = 0;
+        var font_color = 0;
+        var departmentID = 0;
+
+	    $(document).on('mouseenter','.sitemap li', function(){
+            var currentRow = $(this);
+            if(departmentID == 0)
+            {
+                bkgr_color = currentRow.css("background-color");
+                font_color = currentRow.children('a').css("color");
+                currentRow.css("background-color","#E6E6E6");
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    bkgr_color = currentRow.css("background-color");
+                    font_color = currentRow.children('a').css("color");
+                    currentRow.css("background-color","#E6E6E6");
+                }
+            }
+        });
+
+        $(document).on('mouseleave', '.sitemap li', function(){
+            var currentRow = $(this);
+            if(departmentID == 0)
+            {
+                currentRow.css("background-color", bkgr_color);
+                currentRow.children('a').css("color", font_color);
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    currentRow.css("background-color", bkgr_color);
+                    currentRow.children('a').css("color", font_color);
+                }
+            }
+		});
+        $(document).on('click', '.sitemap li', function(){
+		    var currentRow = $(this);
+            currentRow.css("background-color", "#3397C9");
+            currentRow.children('a').css("color", "white");
+            <!-- deselect previous selection if it was -->
+            var newSelectedRow = currentRow.data('department');
+            if(departmentID != 0 && departmentID != newSelectedRow)
+            {
+                var lastSelectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+                lastSelectedRow.css("background-color", bkgr_color);
+                lastSelectedRow.children('a').css("color", font_color);
+            }
+
+            departmentID = newSelectedRow;
 		});
 	});
 </script>

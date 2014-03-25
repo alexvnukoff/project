@@ -9,7 +9,7 @@
                 {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as name %}
 
-                    <li>
+                    <li data-department="{{ id }}">
                         <a href="#" title="{{ name }}">{{ name }}</a>
                     </li>
                     {% endwith %}
