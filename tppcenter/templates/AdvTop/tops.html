@@ -27,11 +27,11 @@
 
                                     {% if cabinet_flag %}
                                         <img class="flag" src="{{ MEDIA_URL}}th/{{cabinet_flag }} ">
+                                    {% elif country_flag %}
+                                          <img class="flag" src="{{ MEDIA_URL}}th/{{country_flag }} ">
                                     {% elif org_flag %}
-                                          <img class="flag" src="{{ MEDIA_URL}}th/{{org_flag }} ">
-                                     {% elif country_flag %}
-                                           <img class="flag" src="{{ MEDIA_URL}}th/{{country_flag }} ">
-                                         {% endif %}
+                                           <img class="flag" src="{{ MEDIA_URL}}th/{{org_flag }} ">
+                                    {% endif %}
 
                                     <a title="{{ name }}" href="{% url modelAttr.detailUrl slug %}" class="linkads">{{ name }}</a>
                                 </div>
