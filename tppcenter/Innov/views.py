@@ -293,6 +293,10 @@ def _innovDetailContent(request, item_id):
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
+    if item_id:
+       if not InnovationProject.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)

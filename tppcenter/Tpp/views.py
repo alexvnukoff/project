@@ -240,6 +240,9 @@ def _tppDetailContent(request, item_id):
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):
+    if item_id:
+       if not Tpp.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 
