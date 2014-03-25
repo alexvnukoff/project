@@ -1268,7 +1268,7 @@ class TppTv(indexes.SearchIndex, indexes.Indexable):
 
 
 class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True, null=True)
+    text = indexes.CharField(document=True, null=True, stored=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
     company = indexes.IntegerField()

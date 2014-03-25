@@ -306,6 +306,18 @@ def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
+    #check if there Department for deletion
+    departmentForDeletion = request.POST.get('departmentID', 0)
+
+    try:
+        departmentForDeletion = int(departmentForDeletion)
+    except ValueError:
+        departmentForDeletion = 0
+
+    if departmentForDeletion > 0:
+        Department.objects.filter(pk=departmentForDeletion).delete()
+
+    #check if there Department for adding
     departmentToAdd = request.POST.get('departmentName', '')
 
     if len(departmentToAdd):
