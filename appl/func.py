@@ -522,6 +522,62 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
 
 
+def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
+
+        cabinets = Cabinet.objects.filter(p2c__child__in=ids,).values('p2c__child', 'pk')
+
+        cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
+        countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
+
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
+        country_dict = {}
+
+        for country in countries:
+            if country['pk']:
+               country_dict[country['p2c__child']] = country['pk']
+
+        cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
+
+        cabinets_dict = {}
+
+        for cabinet in cabinets:
+            cabinets_dict[cabinet['p2c__child']] = {
+                'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                'CABINET_ID': cabinet['pk'],
+                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
+            }
+
+        addDictinoryWithCountryAndOrganization(ids, itemList)
+
+
+        for id, innov in itemList.items():
+            if cabinets_dict.get(id, 0):
+                innov.update(cabinets_dict.get(id, 0))
+
+
+
+def addDictinoryWithCountryToCompany(ids, itemList):
+
+        countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        country_dict = {}
+
+        for country in countries:
+            country_dict[country['p2c__child']] = country['pk']
+
+        for id, company in itemList.items():
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            company.update(toUpdate)
+
+
 
 
 
@@ -745,11 +801,22 @@ def getTops(request, filterAdv=None):
                 tops[sModel] = {}
                 tops[sModel]['MODEL'] = models[model]
                 tops[sModel]['elements'] = {}
+                tops[sModel]['ids'] = []
 
             if id in modelTop[sModel]:
                 tops[sModel]['elements'][id] = attrs
+                tops[sModel]['ids'].append(id)
 
                 break
+
+    for name, attr in tops.items():
+       if name == BusinessProposal.__name__ or Product.__name__ == name:
+           addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
+       if name == InnovationProject.__name__:
+           addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
+       if name == Company.__name__:
+           addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
+
 
 
     return tops

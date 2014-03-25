@@ -89,7 +89,7 @@ def addTop(request, item):
 
     perm_list = org.getItemInstPermList(request.user)
 
-    if 'add_tops' not in perm_list:
+    if 'add_advtop' not in perm_list:
          return render_to_response("permissionDenied.html")
 
 

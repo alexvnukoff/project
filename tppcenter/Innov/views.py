@@ -159,33 +159,6 @@ def _innovContent(request, page=1, my=None):
         innovList = result[0]
         innov_ids = [id for id in innovList.keys()]
 
-        cabinets = Cabinet.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
-
-        cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
-        countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
-
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-
-        country_dict = {}
-
-        for country in countries:
-            if country['pk']:
-               country_dict[country['p2c__child']] = country['pk']
-
-        cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
-
-        cabinets_dict = {}
-
-        for cabinet in cabinets:
-            cabinets_dict[cabinet['p2c__child']] = {
-                'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_ID': cabinet['pk'],
-                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
-            }
 
         branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
         branches_ids = [branch['pk'] for branch in branches]
@@ -196,7 +169,7 @@ def _innovContent(request, page=1, my=None):
         for branch in branches:
             branches_dict[branch['p2c__child']] = branch['pk']
 
-        func.addDictinoryWithCountryAndOrganization(innov_ids, innovList)
+
 
         for id, innov in innovList.items():
 
@@ -207,8 +180,7 @@ def _innovContent(request, page=1, my=None):
 
             innov.update(toUpdate)
 
-            if cabinets_dict.get(id, 0):
-               innov.update(cabinets_dict.get(id, 0))
+        func.addDictinoryWithCountryAndOrganizationToInnov(innov_ids, innovList)
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
