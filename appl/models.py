@@ -182,6 +182,7 @@ class AdvBannerType(Item):
 
 class AdvTop(Item):
 
+
     active = ItemManager()
     objects = models.Manager()
 
