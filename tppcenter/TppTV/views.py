@@ -83,6 +83,9 @@ def get_news_list(request, page=1, item_id=None, slug=None):
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
+    if item_id:
+       if not TppTV.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 

@@ -323,6 +323,9 @@ def _tabsProducts(request, company, page=1):
 
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
+    if item_id:
+       if not Company.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 

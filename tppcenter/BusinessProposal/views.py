@@ -128,6 +128,9 @@ def _proposalDetailContent(request, item_id):
 
 @login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
+    if item_id:
+       if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 

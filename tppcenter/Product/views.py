@@ -146,6 +146,9 @@ def _getDetailContent(request, item_id):
 
 @login_required(login_url='/login/')
 def productForm(request, action, item_id=None):
+    if item_id:
+       if not Product.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 
