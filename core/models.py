@@ -665,7 +665,7 @@ class Item(models.Model):
     def getAttributeValues(self, *attr, fullAttrVal=False):
         '''
            Return values of attribute list for specific Item
-           Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")
+           Example item = self.getAttributeValues("NAME", "DETAIL_TEXT")
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 

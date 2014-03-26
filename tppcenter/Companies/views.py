@@ -13,6 +13,7 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from itertools import chain
 from django.core.cache import cache
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
@@ -342,6 +343,126 @@ def _tabsProducts(request, company, page=1):
         templateParams = cached
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
+
+#TODO complete this view (Ilya)
+def _tabsStructure(request, company, page=1):
+    '''
+        Show content of the Company-details-structure panel
+    '''
+    #check if there Department for deletion
+    departmentForDeletion = request.POST.get('departmentID', 0)
+
+    try:
+        departmentForDeletion = int(departmentForDeletion)
+    except ValueError:
+        departmentForDeletion = 0
+
+    if departmentForDeletion > 0:
+        Department.objects.filter(pk=departmentForDeletion).delete()
+
+    #check if there Department for adding
+    departmentToAdd = request.POST.get('departmentName', '')
+
+    if len(departmentToAdd):
+        obj_dep = Department.objects.create(title=departmentToAdd, create_user=request.user)
+        obj_dep.setAttributeValue({'NAME': departmentToAdd}, request.user)
+        Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+        obj_dep.reindexItem()
+
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+    attr = ('NAME', 'SLUG')
+
+    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
+
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "companies:tab_structure_paged"
+
+    templateParams = {
+        'departmentsList': departmentsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company,
+    }
+
+    return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
+
+#TODO complete this view (Ilya)
+def _tabsStaff(request, company, page=1):
+    '''
+        Show content of the Company-details-staff panel
+    '''
+    # get Cabinet ID if user should be detach from Organization
+    cabinetToDetach = request.POST.get('cabinetID', 0)
+
+    try:
+        cabinetToDetach = int(cabinetToDetach)
+    except ValueError:
+        cabinetToDetach = 0
+
+    if cabinetToDetach > 0:
+        userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
+        comp = Company.objects.get(pk=company)
+        #create list of pk for Company's Organizations
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        # create cross list for Cabinet IDs and Organization IDs - list of tuples
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+        for t in correlation:
+            if t[1] == cabinetToDetach:
+                comp = Organization.objects.get(pk=t[0])
+                communityGroup = Group.objects.get(pk=comp.community_id)
+                communityGroup.user_set.remove(userToDetach)
+
+        return HttpResponse('Ok')
+    else:
+        comp = Company.objects.get(pk=company)
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
+
+        cabinets = Cabinet.objects.filter(pk__in=cab_lst)
+        workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+
+        # add Department, Joined_date and Status fields
+        dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+        org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
+        #create correlation list between Organization IDs and Cabinet IDs
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+        for cab_id, cab_att in workersList.items(): #get Cabinet ID
+            for t in correlation: #lookup into corelation list
+                if t[1] == cab_id: #if Cabinet ID then...
+                    dep_id = t[0] #...get Organization ID
+                    for org_id, org_attr in org_lst.items(): #from OrderedDict...
+                        if org_id == dep_id:    #if found the same Organization ID then...
+                            #... set additional attributes for Users (Cabinets) befor sending to web form
+                            cab_att['DEPARTMENT'] = org_attr['NAME']
+                            cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
+                            cab_att['STATUS'] = ['Active']
+                            break
+
+        paginator_range = func.getPaginatorRange(page)
+        url_paginator = "companies:tab_staff_paged"
+
+        #create full list of Company's departments
+        dep_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('pk', flat=True))
+        if len(dep_lst) == 0:
+            dep_lst = comp.community.pk # if Company w/o Departments
+
+        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+
+        templateParams = {
+            'workersList': workersList,
+            'departmentsList': departmentsList, #list for add user form
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company,
+        }
+
+        return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
