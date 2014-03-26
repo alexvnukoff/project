@@ -351,7 +351,6 @@ def _tabsProducts(request, company, page=1):
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
-#TODO complete this view (Ilya)
 def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
@@ -368,12 +367,19 @@ def _tabsStructure(request, company, page=1):
         Department.objects.filter(pk=departmentForDeletion).delete()
 
     #check if there Department for adding
-    departmentToAdd = request.POST.get('departmentName', '')
+    departmentToChange = request.POST.get('departmentName', '')
 
-    if len(departmentToAdd):
-        obj_dep = Department.objects.create(title=departmentToAdd, create_user=request.user)
-        obj_dep.setAttributeValue({'NAME': departmentToAdd}, request.user)
-        Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+    if len(departmentToChange):
+        #if update department we receive previous name
+        prevDepName = request.POST.get('prevDepName', '')
+        try:
+            #check is there department with 'old' name
+            obj_dep = Department.objects.get(item2value__attr__title="NAME", item2value__title=prevDepName)
+        except:
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
+            Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
         obj_dep.reindexItem()
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
@@ -394,7 +400,6 @@ def _tabsStructure(request, company, page=1):
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
 
-#TODO complete this view (Ilya)
 def _tabsStaff(request, company, page=1):
     '''
         Show content of the Company-details-staff panel
@@ -454,7 +459,10 @@ def _tabsStaff(request, company, page=1):
         url_paginator = "companies:tab_staff_paged"
 
         #create full list of Company's departments
-        dep_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('pk', flat=True))
+        departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+
+        dep_lst = [dep.pk for dep in departments]
+
         if len(dep_lst) == 0:
             dep_lst = comp.community.pk # if Company w/o Departments
 

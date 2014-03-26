@@ -130,9 +130,11 @@
 		});
 	});
 </script>
-<!-- script for Department adding -->
+<!-- script for Department adding (popup window)-->
 <script type="text/javascript">
+    var prevDepName = '';
     $(function(){
+        <!-- press Add button -->
 	    $(document).on('click','#btn-add-depart', function()
         {
             var inputField = $('#dep-name');
@@ -141,15 +143,24 @@
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName}, function(data){
+            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName, prevDepName: prevDepName}, function(data){
                         contentHolder.replaceWith(data);
                     }, 'html');
 
             inputField.empty();
+            prevDepName = '';
             $('.staffadd').hide();      <!-- hide pop-up window -->
             $('#fade-profile').hide();  <!-- switch off gray background -->
             return false;
 		});
+        <!-- press Cancel button -->
+	    $(document).on('click','.btntype1', function()
+        {
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+
 	});
 </script>
 <!-- script for Department selection -->
@@ -158,10 +169,11 @@
         var bkgr_color  = 0;
         var font_color = 0;
         var departmentID = 0;
+        var currentRow = -1;
 
-        <!-- row selection -->
+        <!-- select row -->
         $(document).on('mouseenter','.sitemap li', function(){
-            var currentRow = $(this);
+            currentRow = $(this);
             if(departmentID == 0)
             {
                 bkgr_color = currentRow.css("background-color");
@@ -178,9 +190,9 @@
                 }
             }
         });
-
+        <!-- deselect row -->
         $(document).on('mouseleave', '.sitemap li', function(){
-            var currentRow = $(this);
+            currentRow = $(this);
             if(departmentID == 0)
             {
                 currentRow.css("background-color", bkgr_color);
@@ -195,11 +207,12 @@
                 }
             }
 		});
+        <!-- mark row in Company-structure -->
         $(document).on('click', '.sitemap li', function(){
-		    var currentRow = $(this);
+		    currentRow = $(this);
             currentRow.css("background-color", "#3397C9");
             currentRow.children('a').css("color", "white");
-            <!-- deselect previous selection if it was -->
+            <!-- deselect previous selection if it is -->
             var newSelectedRow = currentRow.data('department');
             if(departmentID != 0 && departmentID != newSelectedRow)
             {
@@ -212,6 +225,17 @@
             $('#dep-remove-button').css('visibility', 'visible');
             $('#dep-edit-button').css('visibility', 'visible');
 		});
+
+        <!-- edit Department -->
+        $(document).on('click','#dep-edit-button', function(){
+            var selectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+            prevDepName = selectedRow.context.innerText;
+            $('#dep-name').val(prevDepName);
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+
         <!-- remove Department -->
         $(document).on('click','#dep-remove-button', function()
         {
