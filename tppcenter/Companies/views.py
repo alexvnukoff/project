@@ -301,7 +301,6 @@ def _tabsProducts(request, company, page=1):
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
-#TODO complete this view (Ilya)
 def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
@@ -351,7 +350,6 @@ def _tabsStructure(request, company, page=1):
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
 
-#TODO complete this view (Ilya)
 def _tabsStaff(request, company, page=1):
     '''
         Show content of the Company-details-staff panel
