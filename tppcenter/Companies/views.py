@@ -409,7 +409,10 @@ def _tabsStaff(request, company, page=1):
         url_paginator = "companies:tab_staff_paged"
 
         #create full list of Company's departments
-        dep_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('pk', flat=True))
+        departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+
+        dep_lst = [dep.pk for dep in departments]
+
         if len(dep_lst) == 0:
             dep_lst = comp.community.pk # if Company w/o Departments
 
