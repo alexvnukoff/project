@@ -199,7 +199,7 @@
 		    currentRow = $(this);
             currentRow.css("background-color", "#3397C9");
             currentRow.children('a').css("color", "white");
-            <!-- deselect previous selection if it was -->
+            <!-- deselect previous selection if it is -->
             var newSelectedRow = currentRow.data('department');
             if(departmentID != 0 && departmentID != newSelectedRow)
             {
