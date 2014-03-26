@@ -225,7 +225,7 @@ def _companiesDetailContent(request, item_id):
 
 
 def _tabsNews(request, company, page=1):
-    cache_name = "News_tab_company_%s_page_%s" % company, page
+    cache_name = "News_tab_company_%s_page_%s" % (company, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -256,7 +256,7 @@ def _tabsNews(request, company, page=1):
 
 
 def _tabsTenders(request, company, page=1):
-    cache_name = "Tenders_tab_company_%s_page_%s" % company, page
+    cache_name = "Tenders_tab_company_%s_page_%s" % (company, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -290,7 +290,7 @@ def _tabsTenders(request, company, page=1):
     return render_to_response('Companies/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, company, page=1):
-    cache_name = "Exhibitions_tab_company_%s_page_%s" % company, page
+    cache_name = "Exhibitions_tab_company_%s_page_%s" % (company, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -321,7 +321,7 @@ def _tabsExhibitions(request, company, page=1):
 
 
 def _tabsProducts(request, company, page=1):
-    cache_name = "Products_tab_company_%s_page_%s" % company, page
+    cache_name = "Products_tab_company_%s_page_%s" % (company, page)
     cached = cache.get(cache_name)
 
     if not cached:
