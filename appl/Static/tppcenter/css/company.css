@@ -353,8 +353,8 @@ rgb(33,136,187) 100%);}
 .btn-clumn{ position:absolute; width:26px; right:-20px; top:0;}
 .btnaction{display:inline-block; width:26px; height:26px; margin-top:5px; cursor:pointer;}
 .btnadd{ background-position:0px -130px;}
-.btnremove{ background-position:-26px -130px;}
-.btnedit{ background-position:-65px -130px;}
+.btnremove{ background-position:-26px -130px; visibility: hidden;}
+.btnedit{ background-position:-65px -130px; visibility: hidden;}
 .btnremove-small{ width:13px; height:13px; background-position:-52px -130px; margin-right:3px; float:right; display:none; cursor:pointer;}
 .table-staff td.status{ width:65px;}
 

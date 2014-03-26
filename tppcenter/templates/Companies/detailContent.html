@@ -146,7 +146,8 @@
         var font_color = 0;
         var departmentID = 0;
 
-	    $(document).on('mouseenter','.sitemap li', function(){
+        <!-- row selection -->
+        $(document).on('mouseenter','.sitemap li', function(){
             var currentRow = $(this);
             if(departmentID == 0)
             {
@@ -195,6 +196,8 @@
             }
 
             departmentID = newSelectedRow;
+            $('#dep-remove-button').css('visibility', 'visible');
+            $('#dep-edit-button').css('visibility', 'visible');
 		});
         <!-- remove Department -->
         $(document).on('click','#dep-remove-button', function()
