@@ -3,7 +3,13 @@
 {% load i18n %}
 
 
-   {% block title %}{% trans 'Tenders' %}{% endblock %}
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'Tenders' %}
+       {% endif %}
+   {% endblock %}
 
     {% block description %}
         {% if description %}

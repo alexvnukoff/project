@@ -30,6 +30,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 
     cabinetValues = func.getB2BcabinetValues(request)
     description = ''
+    title = ''
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -44,6 +45,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         result = _tppDetailContent(request, item_id)
         tppPage = result[0]
         description = result[1]
+        title = result[2]
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -67,7 +69,8 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('tpp:add'),
             'cabinetValues': cabinetValues,
             'item_id': item_id,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
@@ -214,6 +217,7 @@ def _tppDetailContent(request, item_id):
         tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
         description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
+        title = tppValues.get('NAME', False)[0] if tppValues.get('NAME', False) else ""
 
 
         if not tppValues.get('FLAG', False):
@@ -228,13 +232,15 @@ def _tppDetailContent(request, item_id):
         context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 

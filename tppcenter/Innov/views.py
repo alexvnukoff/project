@@ -28,6 +28,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     current_company = request.session.get('current_company', False)
     description = ''
+    title = ''
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -49,7 +50,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
        result  = _innovDetailContent(request, item_id)
        newsPage = result[0]
        description = result[1]
-
+       title = result[2]
     if not request.is_ajax():
 
         current_section = _("Innovation Project")
@@ -64,7 +65,8 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('innov:add'),
             'cabinetValues': cabinetValues,
             'item_id': item_id,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
@@ -224,7 +226,7 @@ def _innovDetailContent(request, item_id):
         innovValues = innov.getAttributeValues(*attr)
         description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
-
+        title = innovValues.get('NAME', False)[0] if innovValues.get('NAME', False) else ""
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
@@ -281,13 +283,15 @@ def _innovDetailContent(request, item_id):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 

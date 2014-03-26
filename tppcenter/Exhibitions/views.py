@@ -26,6 +26,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
     description = ""
+    title = ""
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -47,6 +48,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
         result = _exhibitionsDetailContent(request, item_id)
         exhibitionPage = result[0]
         description = result[1]
+        title = result[2]
 
     if not request.is_ajax():
 
@@ -62,7 +64,8 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('exhibitions:add'),
             'cabinetValues': cabinetValues,
             'item_id': item_id,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
@@ -99,6 +102,7 @@ def _exhibitionsDetailContent(request, item_id):
          exhibitionlValues = exhibition.getAttributeValues(*attr)
          description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
          description = func.cleanFromHtml(description)
+         title = exhibitionlValues.get('NAME', False)[0] if exhibitionlValues.get('NAME', False) else ""
 
          photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -119,13 +123,15 @@ def _exhibitionsDetailContent(request, item_id):
          context = RequestContext(request, templateParams)
          rendered = template.render(context)
          cache.set(cache_name, rendered, 60*60*24*7)
-         cache.set(description_cache_name, description, 60*60*24*7)
+         cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 @login_required(login_url='/login/')

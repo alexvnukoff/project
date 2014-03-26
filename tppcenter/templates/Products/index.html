@@ -3,7 +3,13 @@
 {% load i18n %}
 
 
-   {% block title %}{% trans 'Products' %}{% endblock %}
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'Products' %}
+       {% endif %}
+   {% endblock %}
 
     {% block description %}
         {% if description %}
