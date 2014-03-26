@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: 2014-03-26 12:16+0200\n"
+"PO-Revision-Date: 2014-03-26 15:50+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2090,7 +2090,7 @@ msgstr "Описание"
 
 #: tppcenter/templates/base.html:111
 msgid "Advices"
-msgstr "Советы"
+msgstr "Помощь"
 
 #: tppcenter/templates/base.html:132 tppcenter/templates/index.html:131
 msgid "Partners"
@@ -2868,11 +2868,11 @@ msgstr "Инновационный проект"
 
 #: tppcenter/templates/Messages/contentBox.html:8
 msgid "Send private message"
-msgstr "Послать личное сообщение"
+msgstr "Отправить личное сообщение"
 
 #: tppcenter/templates/Messages/contentBox.html:13
 msgid "Send"
-msgstr "Послать"
+msgstr "Отправить"
 
 #: tppcenter/templates/Messages/index.html:41
 msgid "Users"
