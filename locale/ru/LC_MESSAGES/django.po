@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: 2014-03-24 11:56+0200\n"
+"PO-Revision-Date: 2014-03-26 08:33+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -563,7 +563,7 @@ msgstr "Домашняя страница"
 #: tppcenter/templates/Project/about.html:16
 #: tppcenter/templates/Tpp/detailContent.html:44
 msgid "About"
-msgstr "Описанние"
+msgstr "Описание"
 
 #: centerpokupok/templates/Company/header.html:50
 #: tppcenter/templates/base.html:118
