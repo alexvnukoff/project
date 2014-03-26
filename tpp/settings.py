@@ -47,8 +47,9 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
-    'BC-CIS.COM', # Also allow FQDN and subdomains
-    'B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.BC-CIS.COM', # Also allow FQDN and subdomains
+    '.B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.centerpokupok.com'
 ]
 
 # Application definition
@@ -69,10 +70,11 @@ INSTALLED_APPS = (
     'appl',
     'legacy_data',
     'djcelery',
+    'loginas',
 
 )
 
-
+CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
@@ -87,17 +89,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
-
-
-
-
-
-
+    'tpp.SiteUrlMiddleWare.setCurrCompany',
 )
 
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
 
 ROOT_URLCONF = 'tpp.urls'
 
@@ -115,8 +110,9 @@ CACHES = {
         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
         'TIMEOUT': 300,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY ': 2,
+            'MAX_ENTRIES': 10000,
+            'CULL_FREQUENCY:': 2
+
         }
     }
 }
@@ -162,7 +158,10 @@ LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
+FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
+                        "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 
 STATIC_URL = '/static/'
 
@@ -174,7 +173,7 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
 
-MEDIA_URL = 'https://d3aopmh1eu9y5c.cloudfront.net/'
+MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
@@ -271,8 +270,12 @@ BUCKET = 'uploadstg'
 
 
 ##################### Celery settings ####################################
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_REDIS_HOST = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+CELERY_RESULT_BACKEND ='djcelery.backends.database:DatabaseBackend'
+CELERY_REDIS = 'celeryredis.wlj5jm.0001.euw1.cache.amazonaws.com'
+
+
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 
 import djcelery
 djcelery.setup_loader()

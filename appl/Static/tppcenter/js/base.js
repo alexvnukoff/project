@@ -1,24 +1,51 @@
+function updateURLParameter(param, paramVal, url)
+{
+    if (!url) url = window.location.href;
+    var TheAnchor = null;
+    var newAdditionalURL = "";
+    var tempArray = url.split("?");
+    var baseURL = tempArray[0];
+    var additionalURL = tempArray[1];
+    var temp = "";
+
+    if (additionalURL)
+    {
+        var tmpAnchor = additionalURL.split("#");
+        var TheParams = tmpAnchor[0];
+            TheAnchor = tmpAnchor[1];
+        if(TheAnchor)
+            additionalURL = TheParams;
+
+        tempArray = additionalURL.split("&");
+
+        for (i=0; i<tempArray.length; i++)
+        {
+            if(tempArray[i].split('=')[0] != param)
+            {
+                newAdditionalURL += temp + tempArray[i];
+                temp = "&";
+            }
+        }
+    }
+    else
+    {
+        var tmpAnchor = baseURL.split("#");
+        var TheParams = tmpAnchor[0];
+            TheAnchor  = tmpAnchor[1];
+
+        if(TheParams)
+            baseURL = TheParams;
+    }
+
+    if(TheAnchor)
+        paramVal += "#" + TheAnchor;
+
+    var rows_txt = temp + "" + param + "=" + paramVal;
+    return baseURL + "?" + newAdditionalURL + rows_txt;
+}
+
 
 $(document).ready(function() {
-
-
-        $(document).on("click", ".add-advandce", function() {
-            var formin = $('.append-formin');
-            var num =  parseInt(formin.find("#count").val()) ;
-            var dataPost = {"NUMBER": num};
-            if (num >= 5)
-                return false
-
-              $.get('/addPage/get/',dataPost, function(data) {
-                     $(".append-formin").append(data);
-                     formin.find("#count").val(num + 1);
-
-                }, 'html');
-
-
-            return false
-        });
-
 
         $(document).on("click", ".buttonremove", function() {
             $(this).parents(".addpage-form").remove();
@@ -100,22 +127,23 @@ $(document).ready(function() {
         $(".btntype2").click(function(){
             $(".type-list").slideUp(100);
         });
-	
-	$("#showevent").click(function() {
-        var num = $(".imgnews.i-note").siblings(".num").text()
-        var formev = $(".formevent")
+	/*
+	$(".showevent").click(function() {
+        var num = $(".imgnews.i-note").siblings(".num");
+        var formev = $(".formevent");
+        var notify_count = parseInt(num.text());
 
-		if(formev.is(":hidden") && parseInt(num)>0)
+		if(formev.is(":hidden"))
         {
-
             formev.find('#not-content').empty()
             formev.show();
             formev.find('#load').show()
 
 
             $.get('/notification/get/', function(data) {
-                     formev.find('#load').hide()
-                     formev.find('#not-content').append(data)
+                     formev.find('#load').hide();
+                     formev.find('#not-content').append(data);
+                     num.text(0);
                 }, 'html'
             );
 		}
@@ -124,7 +152,7 @@ $(document).ready(function() {
 			formev.hide();
 		}
 	});
-
+    */
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
@@ -160,130 +188,35 @@ $(document).ready(function() {
 
        return false;
     });
+    
+	$(".cpn-current").click(function(){
+        var list = $(".list-cpn");
 
-	$(document).on("click", ".less", function(){
-		$(this).addClass("btnprofile");
-		$(this).removeClass("less");
-		$("#fade-profile").hide();
-		$("#light-profile").slideUp();
-	});
-	$(".company li").click(function(){
-		$(".company li").removeClass("selected");
-		$(this).addClass("selected");
-	});
-	$("#delete-news").click(function(){
-		if($(".delete-confirm").is(":hidden")){
-			$(".delete-confirm").show();
+		if(list.is(":hidden"))
+        {
+			list.slideDown();
 		}
-		else{
-			$(".delete-confirm").hide();
-		}
-	});
-	$(".close-this").click(function(){
-		$(".delete-confirm").hide();
-	});
-	$("i.delete-key").click(function(){
-		$(this).parent("div").hide();
-	});
-	$(".innov-coba li").click(function(){
-		$(".innov-coba li").removeClass("selected");
-		$(this).addClass("selected");
-	});
-	$(".deleteimge").click(function(){
-		$(this).parent().find(".gray-img").show();
-		$(this).hide();
-		$(this).parent().find("img").hide();
-	});
-	$(".imggoods").click(function(){
-		$(this).parent().hide();
-	});
-	$(".viewimge").on('click',function(){
-		$(".white_gallery, .black_gallery").show();
-	});
-	$(".black_gallery").click(function(){
-		$(".white_gallery, .black_gallery").hide();
-	});
-
-	$(document).on("click", ".titlemore", function(){
-		$(".titleless").removeClass("titleless").addClass("titlemore");
-		$(this).addClass("titleless");
-		$(this).removeClass("titlemore");
-		$(".contentportal").slideUp();
-		$(this).parent().find(".contentportal").slideDown();
-	});
-	$(document).on("click", ".titleless", function(){
-		$(this).addClass("titlemore");
-		$(this).removeClass("titleless");
-		$(this).parent().find(".contentportal").slideUp();
-	});
-
-
-	$(document).on("click", ".date", function(){
-
-        var picker = $(".ui-datepicker");
-
-    	if(picker.is(":hidden")){
-			picker.show();
-		}
-		else{
-			picker.hide();
+		else
+        {
+			list.slideUp();
 		}
 	});
 
-	$(document).on("click", ".add-advandce", function() {
-		$(".append-formin:eq(0)").clone().appendTo(".append-form");
-		$('.append-formin:gt(0)').addClass('apended');
+	$(document).on("click", ".list-cpn li a", function(){
+
+        var selected = $(this);
+
+		$(".cpn-current").html( selected.html() );
+
+		$(".list-cpn").slideUp(function() {
+
+            var id = selected.parent().data('org');
+
+            var newURL = updateURLParameter('current-org', id);
+
+            location.replace(newURL);
+        });
 	});
 
-	$(document).on("click", ".buttonremove", function() {
-		$(".append-formin").has(this).remove();
-	});
-
-	$(document).on('click', ".showmenu", function(){
-		$(this).addClass("selected");
-        var menu =  $(".menucategories");
-
-		if(menu.is(":hidden")){
-			menu.show();
-		}
-		else{
-			menu.hide();
-		}
-	});
-
-	$(document).on('click', ".addform" , function(){
-		$(".staffadd, #fade-profile").show();
-	});
-	$(document).on('click', ".close-formadd" ,function(){
-		$(".staffadd, #fade-profile").hide();
-	});
 });
 
-function UpdateQueryString(key, value, url) {
-    if (!url) url = window.location.href;
-    var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi");
-
-    if (re.test(url)) {
-        if (typeof value !== 'undefined' && value !== null)
-            return url.replace(re, '$1' + key + "=" + value + '$2$3');
-        else {
-            var hash = url.split('#');
-            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
-            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
-                url += '#' + hash[1];
-            return url;
-        }
-    }
-    else {
-        if (typeof value !== 'undefined' && value !== null) {
-            var separator = url.indexOf('?') !== -1 ? '&' : '?',
-                hash = url.split('#');
-            url = hash[0] + separator + key + '=' + value;
-            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
-                url += '#' + hash[1];
-            return url;
-        }
-        else
-            return url;
-    }
-}

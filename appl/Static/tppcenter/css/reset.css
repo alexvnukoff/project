@@ -139,3 +139,14 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
     float: left;
     margin-right: 20px;
 }
+
+.forms-content {
+    float: left;
+    width: 880px;
+    margin: 0 0 0 18px;
+    display: inline;
+}
+
+.uploadconfig .detail textarea {
+    height: 200px;
+}

@@ -29,9 +29,12 @@ def get_first_profile_id(service):
 
 def get_results(**kwargs):
 
-  service = analytic_auth.initialize_service()
-  profile_id = get_first_profile_id(service)
-  # Use the Analytics Service Object to query the Core Reporting API
-  results = service.data().ga().get(ids='ga:' + profile_id, **kwargs).execute()
+    service = analytic_auth.initialize_service()
+    profile_id = get_first_profile_id(service)
+    # Use the Analytics Service Object to query the Core Reporting API
+    try:
+        results = service.data().ga().get(ids='ga:' + profile_id, **kwargs).execute()
+    except:
+        return None
 
-  return results.get('rows')
+    return results.get('rows')

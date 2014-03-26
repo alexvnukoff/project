@@ -102,13 +102,15 @@
                         {% for id,attr in organizationsList.items %}
                             {% with attr.NAME|first as name %}
                             {% with attr.FLAG|first as flag %}
+                            {% with attr.SLUG|first as slug %}
                                  {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
-                                 <a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
+                                 <a href="{% url 'tpp:detail' slug %}" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
                                  {% endif %}
+                             {% endwith %}
                              {% endwith %}
                              {% endwith %}
                         {% endfor %}
@@ -154,11 +156,11 @@
                       {% for id,attr in countriesList.items %}
                         {% with attr.NAME|first as name %}
                         {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|add:-1|divisibleby:"25" or forloop.counter0 == 0 %}
+                           {% if forloop.counter|add:-1|divisibleby:"17" or forloop.counter0 == 0 %}
                                 <li>
                             {% endif %}
                             	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
-                             {% if forloop.counter|divisibleby:"25" or forloop.counter == countriesList|length%}
+                             {% if forloop.counter|divisibleby:"17" or forloop.counter == countriesList|length%}
                                 </li>
                             {% endif %}
 
@@ -378,8 +380,8 @@
                 </div>
                 <span class="titlevideo">{% trans 'Videoreference of V.Migirov' %}</span>
                 <div class="media">
-                          <a class="various fancybox.iframe" href="http://www.youtube.com/embed/7k3vT_J4aSw?autoplay=1">
-                         <img width="220" height="160" src="http://img.youtube.com/vi/7k3vT_J4aSw/0.jpg" /></a>
+                          <a class="various fancybox.iframe" href="http://www.youtube.com/embed/q9a0bDMf2qM?autoplay=1">
+                         <img width="220" height="160" src="http://img.youtube.com/vi/q9a0bDMf2qM/0.jpg" /></a>
                  </div>
                 <div class="pdfdownload">
                 	<img src="{% static "tppcenter/img/pdf.png" %}" alt="" />

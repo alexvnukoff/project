@@ -1,0 +1,31 @@
+{% load CustomFilters %}
+{% load i18n %}
+
+    <div class="current-company">
+        {% trans "Current organization: " %}
+        {% if current %}
+            {% with current.NAME|first as name %}
+                <a href="#" class="cpn-current">{{ name }}</a>
+            {% endwith %}
+        {% else %}
+            <a href="#" class="cpn-current">{{ user }}</a>
+        {% endif %}
+        <ul class="list-cpn" style="display: none;">
+
+            {% if current %}
+                <li data-org="cabinet"><a href="#">{{ user }}</a></li>
+            {% endif %}
+
+            {% for id, org in companies.items %}
+
+                {% if id != currentId %}
+
+                    {% with org.NAME|first as name %}
+                        <li data-org="{{ id }}"><a href="#">{{ name }}</a></li>
+                    {% endwith %}
+
+                {% endif %}
+            {% endfor %}
+
+        </ul>
+    </div>

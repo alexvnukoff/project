@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
 
 from django.utils.translation import ugettext as _
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
 
 from appl import func
@@ -16,14 +16,19 @@ from core.tasks import addTppAttrubute
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
+from django.core.cache import cache
 
-def get_news_list(request,page=1, item_id=None, slug=None):
+def get_news_list(request, page=1, item_id=None, slug=None):
 
  #   if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
   #       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
    #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
-
+    description = ''
+    title = ''
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
@@ -41,7 +46,10 @@ def get_news_list(request,page=1, item_id=None, slug=None):
         newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
 
     else:
-        newsPage = _getdetailcontent(request, item_id)
+        result = _getdetailcontent(request, item_id)
+        newsPage = result[0]
+        description = result[1]
+        title = result[2]
 
 
     if not request.is_ajax():
@@ -56,7 +64,9 @@ def get_news_list(request,page=1, item_id=None, slug=None):
             'search': request.GET.get('q', ''),
             'current_company': current_company,
             'addNew': reverse('tv:add'),
-            'cabinetValues': cabinetValues
+            'cabinetValues': cabinetValues,
+            'description': description,
+            'title': title
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -76,6 +86,9 @@ def get_news_list(request,page=1, item_id=None, slug=None):
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
+    if item_id:
+       if not TppTV.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -95,13 +108,13 @@ def tvForm(request, action, item_id=None):
         return newsPage
 
     templateParams = {
-        'newsPage': newsPage,
+        'formContent': newsPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('TppTV/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 def addNews(request):
 
@@ -209,44 +222,64 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, item_id):
 
-    new = get_object_or_404(TppTV, pk=item_id)
-    newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
 
-    organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
+        new = get_object_or_404(TppTV, pk=item_id)
+        newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
+        description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
+        title = newValues.get('NAME', False)[0] if newValues.get('NAME', False) else ""
 
-    try:
-        newsCategory = NewsCategories.objects.get(p2c__child=item_id)
-        category_value = newsCategory.getAttributeValues('NAME')
-        newValues.update({'CATEGORY_NAME': category_value})
-        similar_news = TppTV.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
-        similar_news_ids = [sim_news.pk for sim_news in similar_news]
-        similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
-    except ObjectDoesNotExist:
-        similarValues = None
-        pass
+        organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
 
-
-    if organizations.get('c2p__parent__country', False):
-        countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['c2p__parent__country'])
-        toUpdate = {'COUNTRY_NAME': countriesList[organizations['c2p__parent__country']].get('NAME', [""]),
-                    'COUNTRY_FLAG': countriesList[organizations['c2p__parent__country']].get('FLAG', [""]),
-                    'COUNTRY_ID': organizations['c2p__parent__country']}
-
-        newValues.update(toUpdate)
-
-
-    if organizations.get('pk', False):
-        organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['pk'])
-        toUpdate = {'ORG_NAME': organizationsList[organizations['pk']].get('NAME', [""]),
-                    'ORG_FLAG': organizationsList[organizations['pk']].get('FLAG', [""]),
-                    'ORG_ID': organizations['pk']}
-
-        newValues.update(toUpdate)
+        try:
+            newsCategory = NewsCategories.objects.get(p2c__child=item_id)
+            category_value = newsCategory.getAttributeValues('NAME')
+            newValues.update({'CATEGORY_NAME': category_value})
+            similar_news = TppTV.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
+            similar_news_ids = [sim_news.pk for sim_news in similar_news]
+            similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
+        except ObjectDoesNotExist:
+            similarValues = None
+            pass
 
 
+        if organizations.get('c2p__parent__country', False):
+            countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['c2p__parent__country'])
+            toUpdate = {'COUNTRY_NAME': countriesList[organizations['c2p__parent__country']].get('NAME', [""]),
+                        'COUNTRY_FLAG': countriesList[organizations['c2p__parent__country']].get('FLAG', [""]),
+                        'COUNTRY_ID': organizations['c2p__parent__country']}
 
-    template = loader.get_template('TppTV/detailContent.html')
+            newValues.update(toUpdate)
 
-    context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
 
-    return template.render(context)
+        if organizations.get('pk', False):
+            organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['pk'])
+            toUpdate = {'ORG_NAME': organizationsList[organizations['pk']].get('NAME', [""]),
+                        'ORG_FLAG': organizationsList[organizations['pk']].get('FLAG', [""]),
+                        'ORG_ID': organizations['pk']}
+
+            newValues.update(toUpdate)
+
+
+
+        template = loader.get_template('TppTV/detailContent.html')
+
+        context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
+
+    return rendered, description, title
+
+
+

@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-{% block title %}News Detail{% endblock %}
+{% block title %}{% trans 'Products' %}{% endblock %}
 
 {% block js %}
     {{ block.super }}
@@ -25,7 +25,7 @@
                 {% include "related_categories.html" %}
                     <div class="bestbuy">
                         <div class="items-coupon">
-                            <h3>Самые выгодные купоны</h3>
+                            <h3>{% trans 'Best discounts' %}</h3>
                             <ul>
                                 <li>
                                     <div class="discount"><i class="icons i-after"></i> -30%</div>
@@ -142,7 +142,7 @@
                             <div class="shadow"></div>
                             <div class="img_block">
 
-                                <img src="{% static picture %}" alt="{{ name }}" >
+                                <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" >
                             </div>
                         </div>
                     </a>
@@ -183,8 +183,8 @@
                                     <a href="{% url "companies:main" company_id %}">{{ company }}</a>
                                     <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
                                     <p>{{ country }}</p>
-                                    <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">positive feedback</a></p>
-                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>Написать продавцу </a></p>
+                                    <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">{% trans 'positive feedback' %}</a></p>
+                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>{% trans 'Write to salesman' %} </a></p>
                                 </div>
                             </div>
                         </div>
@@ -205,7 +205,7 @@
 
                 </ul>
                 <div class="items-coupon">
-                    <h3>Акции и распродажи</h3>
+                    <h3>{% trans "Sales" %}</h3>
                     <ul>
                         <li>
                             <div class="discount"><i class="icons i-after"></i> 30%</div>
@@ -270,7 +270,7 @@
                             <div class="img_slider">
                             <div class="shadow"></div>
                             <div class="img_block">
-                                <img  src="{% static picture %}" alt="{{ name }}">
+                                <img  src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}">
                                 </div>
                             </div>
                                 <div class="infopeople">

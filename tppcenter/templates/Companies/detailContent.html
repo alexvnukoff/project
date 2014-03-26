@@ -5,6 +5,18 @@
 <script>
     $('.keyword').html('');
 </script>
+<script>
+    {% getOwner item_id as owner %}
+
+
+    ga('set', 'dimension1', {{ item_id }});
+
+    {% if owner %}
+        ga('set', 'dimension3', {{ owner.id }});
+    {% endif %}
+
+    ga('set', 'dimension2', 'company');
+</script>
 
 {% with companyValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
@@ -14,8 +26,9 @@
 <script type="text/javascript">
     var marker;
         $(document).ready(function($) {
-            $( '#tpp-details-tab' ).tabs();
-            var href = $('#tpp-details-tab').find('a[href="#cpn-tabs-contacts"]');
+            var tabs = $( '#tpp-details-tab' )
+            tabs.tabs();
+            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
             (href).on('click',function(){
 
                 {% if position %}
@@ -245,6 +258,11 @@
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
             {% with companyValues.IMAGE.0 as image %}
+            {% with companyValues.ADDRESS.0 as address %}
+            {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
+            {% with companyValues.EMAIL.0 as email %}
+            {% with companyValues.FAX.0 as fax %}
+            {% with companyValues.SITE_NAME.0 as site_name %}
 
             {% with country.FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
@@ -347,10 +365,42 @@
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
-                              <div id="map-canvas"></div>
+
+                             <div class="org-contacts">
+                               <ul>
+                                	<li>
+                                    	<span class="left">{% trans 'Address' %}: </span>
+                                        <span class="right">{{ address }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Telephone number' %}: </span>
+                                        <span class="right">{{ telephone_number }} </span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Fax' %}: </span>
+                                        <span class="right">{{ fax }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ email }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'WWW' %}: </span>
+                                        <span class="right">{{ site_name }}</span>
+                                    </li>
+                                </ul>
+                             </div>
+
+                              <div class="org-map"> <div   id="map-canvas"></div></div>
+
                         </div>
                     </div>
                 </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

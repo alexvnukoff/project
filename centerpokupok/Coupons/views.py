@@ -129,7 +129,6 @@ def couponsList(request, currentCat = None, page=1, country=None):
         url_country = 'coupons:category_country'
         url_country_parametr = [currentCat]
 
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
 
     return render_to_response("Coupons/index.html", {'coupons': coupons, 'paginator_range': paginator_range,
@@ -140,5 +139,5 @@ def couponsList(request, currentCat = None, page=1, country=None):
                                                      'url_country': url_country,
                                                      'url_country_parametr':url_country_parametr,
                                                      'category_url': category_url,
-                                                     'category_parameters': category_parameters, 'flagList': flagList},
+                                                     'category_parameters': category_parameters},
                                                      context_instance=RequestContext(request))

@@ -1,30 +1,34 @@
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.utils.translation import ugettext as _
-from django.core.exceptions import  ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
-import json
-from haystack.query import SQ, SearchQuerySet
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
+from django.core.cache import cache
+import json
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-
+    description = ""
+    title = ""
     cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [
@@ -39,11 +43,16 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
               proposalsPage = func.setContent(request, BusinessProposal, ('NAME', 'SLUG'), 'proposal',
                                               'BusinessProposal/contentPage.html', 5, page=page, my=my)
 
+
         except ObjectDoesNotExist:
 
             proposalsPage = func.emptyCompany()
     else:
-        proposalsPage = _proposalDetailContent(request, item_id, current_company)
+        result = _proposalDetailContent(request, item_id)
+        proposalsPage = result[0]
+
+        description = result[1]
+        title = result[2]
 
 
     if not request.is_ajax():
@@ -59,7 +68,9 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'search': request.GET.get('q', ''),
             'cabinetValues': cabinetValues,
             'addNew': reverse('proposal:add'),
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description,
+            'title': title
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -78,33 +89,54 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 
 
-def _proposalDetailContent(request, item_id, current_company):
-
-    proposal = get_object_or_404(BusinessProposal, pk=item_id)
-    proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+def _proposalDetailContent(request, item_id):
 
 
-    photos = Gallery.objects.filter(c2p__parent=item_id)
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
 
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+        proposal = get_object_or_404(BusinessProposal, pk=item_id)
+        proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+        description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
+        title = proposalValues.get('NAME', False)[0] if proposalValues.get('NAME', False) else ""
 
+        photos = Gallery.objects.filter(c2p__parent=item_id)
 
-    func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-    template = loader.get_template('BusinessProposal/detailContent.html')
+        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues, withContacts=True)
 
-    templateParams = {
-        'proposalValues': proposalValues,
-        'photos': photos,
-        'additionalPages': additionalPages
-    }
+        template = loader.get_template('BusinessProposal/detailContent.html')
 
-    context = RequestContext(request, templateParams)
-    return template.render(context)
+        templateParams = {
+            'proposalValues': proposalValues,
+            'photos': photos,
+            'additionalPages': additionalPages,
+            'item_id': item_id
+        }
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+    else:
+        rendered = cache.get(cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
+
+    return rendered, description, title
 
 
 @login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
+    if item_id:
+       if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 
@@ -125,13 +157,13 @@ def proposalForm(request, action, item_id=None):
 
 
     templateParams = {
-        'proposalsPage': proposalsPage,
+        'formContent': proposalsPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('BusinessProposal/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 
 def addBusinessProposal(request):
@@ -152,7 +184,7 @@ def addBusinessProposal(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-
+    pages = None
     if request.POST:
 
         user = request.user
@@ -162,22 +194,18 @@ def addBusinessProposal(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+           pages = pages.new_objects
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'KEYWORD': request.POST.get('KEYWORD', ""),
-            'DOCUMENT_1': request.FILES.get('DOCUMENT_1', ""),
-            'DOCUMENT_2': request.FILES.get('DOCUMENT_2', ""),
-            'DOCUMENT_3': request.FILES.get('DOCUMENT_3', ""),
-        }
-
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
         form = ItemForm('BusinessProposal', values=values)
         form.clean()
 
-        if gallery.is_valid() and form.is_valid() and pages.is_valid():
+        if gallery.is_valid() and form.is_valid():
 
             func.notify("item_creating", 'notification', user=request.user)
 
@@ -188,7 +216,7 @@ def addBusinessProposal(request):
 
     template = loader.get_template('BusinessProposal/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages})
 
     proposalsPage = template.render(context)
 
@@ -215,7 +243,10 @@ def updateBusinessProposal(request, item_id):
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
+        if getattr(pages, 'new_objects', False):
+             pages = pages.new_objects
+        else:
+             pages = pages.queryset
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(parent_id=item_id)
@@ -233,19 +264,12 @@ def updateBusinessProposal(request, item_id):
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
 
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
-        values = {
-            'NAME': request.POST.get('NAME', ""),
-            'DETAIL_TEXT': request.POST.get('DETAIL_TEXT', ""),
-            'KEYWORD': request.POST.get('KEYWORD', ""),
-            'DOCUMENT_1': request.FILES.get('DOCUMENT_1', ""),
-            'DOCUMENT_2': request.FILES.get('DOCUMENT_2', ""),
-            'DOCUMENT_3': request.FILES.get('DOCUMENT_3', "")
-        }
 
         branch = request.POST.get('BRANCH', "")
 

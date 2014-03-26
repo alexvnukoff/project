@@ -2,127 +2,124 @@
 {% load i18n %}
 {% load CustomFilters %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-<script>
-        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
-</script>
 <script type="text/javascript">
-
 $(function() {
-
+    setTiny('textarea[class="tiny"]');
 	$( ".date" ).datepicker();
 });
 </script>
 
+<div class="newsform">
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 
-{% block keywords %}{% endblock %}
+        {% csrf_token %}
+        {% with form.fields.NAME.initial as name %}
+        {% with form.fields.IMAGE.initial as image %}
+        {% with form.fields.DETAIL_TEXT.initial as text %}
+        {% with form.fields.YOUTUBE_CODE.initial as youtube_code %}
 
-  <div class="newsform">
-<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label class="sapce">{% trans 'Image' %}</label>
+                {% if form.errors.IMAGE %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.IMAGE }}</div></div>
+                {% endif %}
 
-
-{% csrf_token %}
-    {% with form.fields.NAME.initial as name %}
-    {% with form.fields.IMAGE.initial as image %}
-    {% with form.fields.DETAIL_TEXT.initial as text %}
-    {% with form.fields.YOUTUBE_CODE.initial as youtube_code %}
-
-
-
-
-   <div class="uploadimgage">
-         	<div class="imgbig">
-                    	<label>{% trans 'Image' %}</label>
-                         {% if form.errors.IMAGE %}<div class="error-handler"><div class="formserror">{{ form.errors.IMAGE }}</div></div> {% endif %}
-                          {% if image %}
-                             <div class="b-img">
-                    		<img src="{{ MEDIA_URL }}big/{{ image.name }}">
-                            <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span></div>
-                            <div class="gray-img"></div>
-                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
-                             </div>
-                         {% endif %}
-
-                        <div class="fileinputs">
-                            <input name="IMAGE" type="file" class="fileimg" />
-                            <div class="fakefile">
-                                <input class="inputhide" />
-                                <img src="{% static "tppcenter/img/file.png" %}" />
-                            </div>
+                {% if image %}
+                    <div class="b-img">
+                        <img src="{{ MEDIA_URL }}big/{{ image.name }}" />
+                        <div class="deleteimge">
+                            <i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>
                         </div>
+                        <div class="gray-img"></div>
+                        <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
                     </div>
+                {% endif %}
 
-        </div>
-         <ul class="uploadconfig">
-                	<li>
-                    	<div class="clumn1">
-                        	<label>{% trans 'Category' %}</label>
-                            <select id="id_news_category" name="NEWS_CATEGORY">
-                             <option value="">{% trans "Choose category" %}</option>
-                              {% for id , atrr in categories.items %}
-                              {% with atrr.NAME|first as category  %}
-                                  <option value="{{ id }}"{% if choosen_category.id == id %} selected {% endif %}>{{ category }}</option>
-                             {% endwith %}
-                            {% endfor %}
-                            </select>
-                        </div>
-                        <div class="clumn2">
-                        	<label>{% trans 'Country' %}</label>
-                            <select  name="COUNTRY">
-                             <option value="">{% trans "Choose Country" %}</option>
-                              {% for id , atrr in countries.items %}
-                              {% with atrr.NAME|first as country  %}
-                                  <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
-                             {% endwith %}
-                            {% endfor %}
-                            </select>
-                        </div>
-                    </li>
-                	<li>
-                    	<label>{% trans 'Title' %}</label>
-                            {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
-                        <input type="text" id="id_name" name="NAME" value="{{ name }}" class="text"/>
-
-                    </li>
-                    <li>
-                    	<div class="clumn1">
-                        	<label>{% trans 'Date' %}</label>
-                            <input type="datetime" name="CREATE_DATE" placeholder="" class="date" value="{{ create_date|date:"m/d/Y" }}" />
-                        </div>
-                        <div class="clumn2">
-                        	<label>{% trans 'Keywords' %}</label>
-                            <input type="text" name="" placeholder="" class="text" style="width:89%;" />
-                        </div>
-                    </li>
-                	<li>
-                    	<label>{% trans 'Youtube code' %}</label>
-                            {% if form.errors.YOUTUBE_CODE %}<div class="error-handler"> <div class="formserror">{{ form.errors.YOUTUBE_CODE }}</div></div>{% endif %}
-                        <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
-
-                    </li>
-                    <li>
-                    	<label>{% trans 'Detail description' %}</label>
-                          {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
-                        <div >
-                            <textarea class="tiny" cols="40" rows="30" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>
-                        </div>
-                    </li>
-                </ul>
-                 <div class="newform-button">
-                    <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}">
-                    <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+                <div class="fileinputs">
+                    <input name="IMAGE" type="file" class="fileimg" />
+                    <div class="fakefile">
+                        <input class="inputhide" />
+                        <img src="{% static "tppcenter/img/file.png" %}" />
+                    </div>
                 </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Category' %}</label>
+                <select id="id_news_category" name="NEWS_CATEGORY">
+                <option value="">{% trans "Choose category" %}</option>
+                {% for id , atrr in categories.items %}
+                    {% with atrr.NAME|first as category  %}
+                        <option value="{{ id }}"{% if choosen_category.id == id %} selected="selected" {% endif %}>
+                            {{ category }}
+                        </option>
+                    {% endwith %}
+                {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Country' %}</label>
+
+                <select  name="COUNTRY">
+                    <option value="">{% trans "Choose Country" %}</option>
+                    {% for id , atrr in countries.items %}
+                        {% with atrr.NAME|first as country  %}
+                            <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>
+                                {{ country }}
+                            </option>
+                        {% endwith %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Date' %}</label>
+                 {% if form.errors.CREATE_DATE %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.CREATE_DATE }}</div></div>
+                {% endif %}
+                <input type="datetime" name="CREATE_DATE" placeholder="" class="date" value="{{ create_date|date:"m/d/Y" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Youtube code' %}</label>
+                {% if form.errors.YOUTUBE_CODE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.YOUTUBE_CODE }}</div></div>
+                {% endif %}
+                <input class="text" type="text" id="id_youtube_code" name="YOUTUBE_CODE" value="{{ youtube_code }}"/>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.KEYWORD %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                {% endif %}
+                <textarea name="KEYWORD" rows="4"></textarea>
+            </div>
+        </div>
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Title' %}</label>
+                {% if form.errors.NAME %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>
+                {% endif %}
+                <input type="text" id="id_name" name="NAME" value="{{ name }}" class="text"/>
+            </li>
+            <li>
+                <label>{% trans 'Detail description' %}</label>
+                {% if form.errors.DETAIL_TEXT %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                {% endif %}
+            </li>
+            <li>
+                <textarea style="height: 220px;" class="tiny" id="id_detail_text"  name="DETAIL_TEXT" >{{ text }}</textarea>
+            </li>
+        </ul>
+        <div class="newform-button">
+            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
 
 
-
-
-
-
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-
-
-</form>
+    </form>
 </div>
