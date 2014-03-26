@@ -117,10 +117,11 @@
 		});
 	});
 </script>
-<!-- script for Department adding -->
+<!-- script for Department adding (popup window)-->
 <script type="text/javascript">
     var prevDepName = '';
     $(function(){
+        <!-- press Add button -->
 	    $(document).on('click','#btn-add-depart', function()
         {
             var inputField = $('#dep-name');
@@ -139,6 +140,14 @@
             $('#fade-profile').hide();  <!-- switch off gray background -->
             return false;
 		});
+        <!-- press Cancel button -->
+	    $(document).on('click','.btntype1', function()
+        {
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+
 	});
 </script>
 <!-- script for Department selection -->
@@ -149,7 +158,7 @@
         var departmentID = 0;
         var currentRow = -1;
 
-        <!-- row selection -->
+        <!-- select row -->
         $(document).on('mouseenter','.sitemap li', function(){
             currentRow = $(this);
             if(departmentID == 0)
@@ -168,7 +177,7 @@
                 }
             }
         });
-
+        <!-- deselect row -->
         $(document).on('mouseleave', '.sitemap li', function(){
             currentRow = $(this);
             if(departmentID == 0)
@@ -185,6 +194,7 @@
                 }
             }
 		});
+        <!-- mark row in Company-structure -->
         $(document).on('click', '.sitemap li', function(){
 		    currentRow = $(this);
             currentRow.css("background-color", "#3397C9");
