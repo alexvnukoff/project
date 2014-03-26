@@ -18,13 +18,13 @@
     ga('set', 'dimension2', 'company');
 </script>
 
- {% with companyValues.POSITION.0 as position %}
- <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+{% with companyValues.POSITION.0 as position %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
- <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
- <script type="text/javascript">
-  var marker;
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<script type="text/javascript">
+    var marker;
         $(document).ready(function($) {
             var tabs = $( '#tpp-details-tab' )
             tabs.tabs();
@@ -40,13 +40,194 @@
              initialize(false);
 
             })});
+</script>
+<!-- script for Company-details-structure right buttons menu -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click', ".sitemap li a", function(){
+		    if ($(this).parent().find(".sub").is(":hidden")){
+			    $(this).parent().find(".sub").show();
+				$(this).addClass('lesssitemap')
+			}
+			else{
+			    $(this).parent().find(".sub").hide();
+				$(this).removeClass('lesssitemap')
+			}
+            return false;
+        });
+	});
+</script>
+<!-- script for Company-details-staff delete content button -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('mouseenter','.table-staff tr', function(){
 
+		    $(this).children().find(".btnremove-small").show();
+		});
+        
+        $(document).on('mouseleave', '.table-staff tr', function(){
+		    $(this).children().find(".btnremove-small").hide();
+		});
+	});
+</script>
+<!-- script for Staff deletion -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','.btnremove-small', function(){
+            var tr = $(this).parents('tr');
+            var cabinetID = tr.data('cabinet');
+            var color  = $(this).css("background-color");
+            tr.css("background-color","#FF3700");
 
+            if (confirm('Do you want to delete this record?'))
+            {
+                tr.fadeOut(400, function(){
+                    <!-- send to server Cabinet ID of detached User -->
+                    $.post("{% url "companies:tab_staff" item_id %}", {cabinetID: cabinetID});
+                    tr.remove();
+                });
+            }
+            else
+            {
+                 tr.css("background", color);
+            }
+            return false;
+		});
+	});
+</script>
+<!-- script for Staff deletion -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','.btnremove-small', function(){
+            var tr = $(this).parents('tr');
+            var cabinetID = tr.data('cabinet');
+            var color  = $(this).css("background-color");
+            tr.css("background-color","#FF3700");
 
+            if (confirm('Do you want to delete this record?'))
+            {
+                tr.fadeOut(400, function(){
+                    <!-- send to server Cabinet ID of detached User -->
+                    $.post("{% url "companies:tab_staff" item_id %}", {cabinetID: cabinetID});
+                    tr.remove();
+                });
+            }
+            else
+            {
+                 tr.css("background", color);
+            }
+            return false;
+		});
+	});
+</script>
 
-    </script>
+<!-- script for Staff saving -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','#btn-add-user', function(){
+            alert('Here User should be attached to Department.')
+            return false;
+		});
+	});
+</script>
+<!-- script for Department adding -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','#btn-add-depart', function()
+        {
+            var inputField = $('#dep-name');
+            var departmentName = inputField.val();
+            var contentHolder = $('#structure-tab .tpp-dt-content');
 
+            contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
+            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName}, function(data){
+                        contentHolder.replaceWith(data);
+                    }, 'html');
+
+            inputField.empty();
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+	});
+</script>
+<!-- script for Department selection -->
+<script type="text/javascript">
+    $(function(){
+        var bkgr_color  = 0;
+        var font_color = 0;
+        var departmentID = 0;
+
+        <!-- row selection -->
+        $(document).on('mouseenter','.sitemap li', function(){
+            var currentRow = $(this);
+            if(departmentID == 0)
+            {
+                bkgr_color = currentRow.css("background-color");
+                font_color = currentRow.children('a').css("color");
+                currentRow.css("background-color","#E6E6E6");
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    bkgr_color = currentRow.css("background-color");
+                    font_color = currentRow.children('a').css("color");
+                    currentRow.css("background-color","#E6E6E6");
+                }
+            }
+        });
+
+        $(document).on('mouseleave', '.sitemap li', function(){
+            var currentRow = $(this);
+            if(departmentID == 0)
+            {
+                currentRow.css("background-color", bkgr_color);
+                currentRow.children('a').css("color", font_color);
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    currentRow.css("background-color", bkgr_color);
+                    currentRow.children('a').css("color", font_color);
+                }
+            }
+		});
+        $(document).on('click', '.sitemap li', function(){
+		    var currentRow = $(this);
+            currentRow.css("background-color", "#3397C9");
+            currentRow.children('a').css("color", "white");
+            <!-- deselect previous selection if it was -->
+            var newSelectedRow = currentRow.data('department');
+            if(departmentID != 0 && departmentID != newSelectedRow)
+            {
+                var lastSelectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+                lastSelectedRow.css("background-color", bkgr_color);
+                lastSelectedRow.children('a').css("color", font_color);
+            }
+
+            departmentID = newSelectedRow;
+            $('#dep-remove-button').css('visibility', 'visible');
+            $('#dep-edit-button').css('visibility', 'visible');
+		});
+        <!-- remove Department -->
+        $(document).on('click','#dep-remove-button', function()
+        {
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+
+            if (confirm('Do you want to delete this Department?'))
+            {
+                contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+                $.post("{% url "companies:tab_structure" item_id %}", {departmentID: departmentID}, function(data){
+                            contentHolder.replaceWith(data);
+                        }, 'html');
+            }
+            return false;
+		});
+	});
+</script>
 
   <div class="companies">
 
@@ -125,12 +306,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#cpn-tabs-structure">
+                                <a data-id="structure-tab" href="{% url "companies:tab_structure" item_id %}">
                                     {% trans "Structure" %}
                                 </a>
                             </li>
                             <li>
-                                <a href="#cpn-tabs-staff">
+                                <a data-id="staff-tab" href="{% url "companies:tab_staff" item_id %}">
                                     {% trans "Staff" %}
                                 </a>
                             </li>
@@ -158,14 +339,9 @@
                     <div id="cpn-tabs-gallery">
                         <div class="tpp-dt-content"></div>
                     </div>
-                    <div id="cpn-tabs-structure">
-                        <div class="tpp-dt-content"></div>
-                    </div>
-                    <div id="cpn-tabs-staff">
-                        <div class="tpp-dt-content"></div>
-                    </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
+
                              <div class="org-contacts">
                                <ul>
                                 	<li>
@@ -192,6 +368,7 @@
                              </div>
 
                               <div class="org-map"> <div   id="map-canvas"></div></div>
+
                         </div>
                     </div>
                 </div>
