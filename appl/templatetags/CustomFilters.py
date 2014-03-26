@@ -70,8 +70,10 @@ def split(str, splitter):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
 
-    if len(value) > 0:
+    if len(value) > 0 and value is not None:
         return clean_html(value)
+    else:
+        return ""
 
 
 
