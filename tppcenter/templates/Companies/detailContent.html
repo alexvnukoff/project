@@ -119,6 +119,7 @@
 </script>
 <!-- script for Department adding -->
 <script type="text/javascript">
+    var prevDepName = '';
     $(function(){
 	    $(document).on('click','#btn-add-depart', function()
         {
@@ -128,11 +129,12 @@
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName}, function(data){
+            $.post("{% url "companies:tab_structure" item_id %}", {departmentName: departmentName, prevDepName: prevDepName}, function(data){
                         contentHolder.replaceWith(data);
                     }, 'html');
 
             inputField.empty();
+            prevDepName = '';
             $('.staffadd').hide();      <!-- hide pop-up window -->
             $('#fade-profile').hide();  <!-- switch off gray background -->
             return false;
@@ -145,10 +147,11 @@
         var bkgr_color  = 0;
         var font_color = 0;
         var departmentID = 0;
+        var currentRow = -1;
 
         <!-- row selection -->
         $(document).on('mouseenter','.sitemap li', function(){
-            var currentRow = $(this);
+            currentRow = $(this);
             if(departmentID == 0)
             {
                 bkgr_color = currentRow.css("background-color");
@@ -167,7 +170,7 @@
         });
 
         $(document).on('mouseleave', '.sitemap li', function(){
-            var currentRow = $(this);
+            currentRow = $(this);
             if(departmentID == 0)
             {
                 currentRow.css("background-color", bkgr_color);
@@ -183,7 +186,7 @@
             }
 		});
         $(document).on('click', '.sitemap li', function(){
-		    var currentRow = $(this);
+		    currentRow = $(this);
             currentRow.css("background-color", "#3397C9");
             currentRow.children('a').css("color", "white");
             <!-- deselect previous selection if it was -->
@@ -199,6 +202,17 @@
             $('#dep-remove-button').css('visibility', 'visible');
             $('#dep-edit-button').css('visibility', 'visible');
 		});
+
+        <!-- edit Department -->
+        $(document).on('click','#dep-edit-button', function(){
+            var selectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+            prevDepName = selectedRow.context.innerText;
+            $('#dep-name').val(prevDepName);
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+
         <!-- remove Department -->
         $(document).on('click','#dep-remove-button', function()
         {

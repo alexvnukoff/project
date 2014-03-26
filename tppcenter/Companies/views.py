@@ -318,12 +318,19 @@ def _tabsStructure(request, company, page=1):
         Department.objects.filter(pk=departmentForDeletion).delete()
 
     #check if there Department for adding
-    departmentToAdd = request.POST.get('departmentName', '')
+    departmentToChange = request.POST.get('departmentName', '')
 
-    if len(departmentToAdd):
-        obj_dep = Department.objects.create(title=departmentToAdd, create_user=request.user)
-        obj_dep.setAttributeValue({'NAME': departmentToAdd}, request.user)
-        Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+    if len(departmentToChange):
+        #if update department we receive previous name
+        prevDepName = request.POST.get('prevDepName', '')
+        try:
+            #check is there department with 'old' name
+            obj_dep = Department.objects.get(item2value__attr__title="NAME", item2value__title=prevDepName)
+        except:
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
+            Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
         obj_dep.reindexItem()
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
