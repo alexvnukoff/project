@@ -364,7 +364,7 @@ def updateTpp(request, item_id):
 
 
 def _tabsCompanies(request, tpp, page=1):
-    cache_name = "Companies_tab_tpp_%s_page_%s" % tpp, page
+    cache_name = "Companies_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -395,7 +395,7 @@ def _tabsCompanies(request, tpp, page=1):
     return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsNews(request, tpp, page=1):
-    cache_name = "News_tab_tpp_%s_page_%s" % tpp, page
+    cache_name = "News_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -427,7 +427,7 @@ def _tabsNews(request, tpp, page=1):
 
 
 def _tabsTenders(request, tpp, page=1):
-    cache_name = "Tenders_tab_tpp_%s_page_%s" % tpp, page
+    cache_name = "Tenders_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
 
     if not cached:
@@ -458,7 +458,7 @@ def _tabsTenders(request, tpp, page=1):
     return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, tpp, page=1):
-    cache_name = "Exhibitions_tab_tpp_%s_page_%s" % tpp, page
+    cache_name = "Exhibitions_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
 
     if not cached:
