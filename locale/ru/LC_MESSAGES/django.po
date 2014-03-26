@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: 2014-03-26 08:33+0200\n"
+"PO-Revision-Date: 2014-03-26 12:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -278,7 +278,7 @@ msgstr "Войти"
 #: centerpokupok/templates/index.html:4
 #: centerpokupok/templates/Company/header.html:7
 msgid "Shopcenter"
-msgstr "ТПП центер"
+msgstr "ТПП центр"
 
 #: centerpokupok/templates/header_big.html:90
 msgid "Your workplace"
@@ -2147,7 +2147,7 @@ msgstr "Применить"
 
 #: tppcenter/templates/index.html:7
 msgid "Tppcenter"
-msgstr "ТПП центер"
+msgstr "ТПП центр"
 
 #: tppcenter/templates/index.html:60
 msgid "All countries"
