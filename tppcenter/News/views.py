@@ -31,6 +31,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     current_company = request.session.get('current_company', False)
     description = ""
+    title = ""
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -49,6 +50,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             result = _getdetailcontent(request, item_id)
             newsPage = result[0]
             description = result[1]
+            title = result[2]
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -73,7 +75,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             'search': request.GET.get('q', ''),
             'addNew': reverse('news:add'),
             'cabinetValues': cabinetValues,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -258,7 +261,7 @@ def updateNew(request, item_id):
         'categories': categories,
         'countries': countries,
         'choosen_country': choosen_country,
-        'create_date':create_date,
+        'create_date': create_date,
         'redactor': redactor
     }
 
@@ -276,6 +279,7 @@ def _getdetailcontent(request, item_id):
 
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
+
     query = request.GET.urlencode()
     cached = cache.get(cache_name)
     if not cached:
@@ -283,6 +287,7 @@ def _getdetailcontent(request, item_id):
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
         description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
+        title = newValues.get('NAME', False)[0] if newValues.get('NAME', False) else ""
         photos = Gallery.objects.filter(c2p__parent=new)
 
         try:
@@ -310,13 +315,15 @@ def _getdetailcontent(request, item_id):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 

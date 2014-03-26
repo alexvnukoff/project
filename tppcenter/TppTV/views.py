@@ -28,6 +28,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
          return HttpResponseNotFound
 
     description = ''
+    title = ''
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
@@ -48,6 +49,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
         result = _getdetailcontent(request, item_id)
         newsPage = result[0]
         description = result[1]
+        title = result[2]
 
 
     if not request.is_ajax():
@@ -63,7 +65,8 @@ def get_news_list(request, page=1, item_id=None, slug=None):
             'current_company': current_company,
             'addNew': reverse('tv:add'),
             'cabinetValues': cabinetValues,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
@@ -228,6 +231,7 @@ def _getdetailcontent(request, item_id):
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
         description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
+        title = newValues.get('NAME', False)[0] if newValues.get('NAME', False) else ""
 
         organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
 
@@ -267,13 +271,15 @@ def _getdetailcontent(request, item_id):
         context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 

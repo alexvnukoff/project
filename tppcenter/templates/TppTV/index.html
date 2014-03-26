@@ -3,7 +3,13 @@
 {% load i18n %}
 
 
-   {% block title %}{% trans 'TPP TV' %}{% endblock %}
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'TPP TV' %}
+       {% endif %}
+   {% endblock %}
 
    {% block description %}
         {% if description %}
