@@ -24,11 +24,11 @@
                  </label>
 
                 <div class="notify">
-                    <div class="event-holder">
+                    <div class="event-holder" title="{% trans 'System notifications' %}">
                         <i class="imgnews i-note showevent" id="showevent"></i>
-                        <a href="#" class="showevent num">{% notif %}</a>
+                        <a href="#" class="showevent num" >{% notif %}</a>
                         <div class="formevent">
-                        	<i class="close-event imgnews"></i>
+                        	<i class="close-event imgnews" ></i>
                             <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
                             <div class="list-holder">
                                 <ul>
@@ -39,14 +39,14 @@
                         </div>
                     </div>
 
-                    <div class="event-holder">
+                    <div class="event-holder" title="{% trans 'Messages' %}">
                         <i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">0</a>
                     </div>
 
-                    <div class="event-holder">
+                    <div class="event-holder" title="{% trans 'Friend request' %}">
                         <i class="imgnews i-user" id="showevent"></i> <a href="#" class="num">0</a>
                     </div>
-                    <div class="event-holder">
+                    <div class="event-holder" title="{% trans 'Notification in your communities' %}">
                         <i class="imgnews i-book" ></i> <a href="#" class="num">0</a>
                     </div>
                 </div>

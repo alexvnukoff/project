@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
+from loginas.views import user_login
 
 import tppcenter.views
 import tppcenter.News.urls
@@ -33,6 +34,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', tppcenter.views.home),
+    url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
     url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
@@ -68,6 +70,7 @@ urlpatterns = patterns('',
     url(r'^admin/tpp/', include(admin.site.urls)),
 
 
+
     url(r'^items/$', tppcenter.views.set_items_list),
     url(r'^items/([a-zA-Z]+)/$', tppcenter.views.set_item_list),
     url(r'^items/([a-zA-Z]+)/create/$', tppcenter.views.get_item_form),
@@ -96,4 +99,6 @@ urlpatterns = patterns('',
 
     url(r'^(upload/.+)$', tppcenter.views.redirectTo),
     url(r'^(globus/.+)$', tppcenter.views.redirectTo),
+
 )
+

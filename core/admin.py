@@ -9,6 +9,7 @@ from core.forms import *
 class TPPUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
+    change_form_template = 'loginas/change_form.html'
 
 
     list_display = ('email', 'username', 'is_admin',)

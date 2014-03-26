@@ -25,6 +25,7 @@ import datetime
 import hashlib
 
 def createHash(string):
+
     return hashlib.sha1(str(string).encode()).hexdigest()
 
 
