@@ -1000,6 +1000,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         rendered = cache.get(cache_name)
     return rendered
 
+
+
+
+
 def cleanFromHtml(value):
 
     if len(value) > 0:

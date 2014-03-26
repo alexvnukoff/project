@@ -488,4 +488,3 @@ background: -webkit-gradient(linear, left top, left bottom, from(#41a6d8), to(#2
 .list-cpn{position: absolute; width: 184px; padding: 8px; background-color: #4a4a4a; border-radius: 0px 0px 3px 3px; left: 0; top: 49px; display: none; z-index: 9;}
 .list-cpn li{ position: relative; float: left; width: 100%; padding: 5px 0; font-size: 12px;}
 .list-cpn li a{ color: #FFF;}
-
