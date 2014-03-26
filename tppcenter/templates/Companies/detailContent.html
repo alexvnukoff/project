@@ -70,7 +70,7 @@
 		});
 	});
 </script>
-<!-- script for Staff deletion -->
+<!-- script for Staff add and delete -->
 <script type="text/javascript">
     $(function(){
 	    $(document).on('click','.btnremove-small', function(){
@@ -93,29 +93,10 @@
             }
             return false;
 		});
-	});
-</script>
-<!-- script for Staff deletion -->
-<script type="text/javascript">
-    $(function(){
-	    $(document).on('click','.btnremove-small', function(){
-            var tr = $(this).parents('tr');
-            var cabinetID = tr.data('cabinet');
-            var color  = $(this).css("background-color");
-            tr.css("background-color","#FF3700");
-
-            if (confirm('Do you want to delete this record?'))
-            {
-                tr.fadeOut(400, function(){
-                    <!-- send to server Cabinet ID of detached User -->
-                    $.post("{% url "companies:tab_staff" item_id %}", {cabinetID: cabinetID});
-                    tr.remove();
-                });
-            }
-            else
-            {
-                 tr.css("background", color);
-            }
+        <!-- add Staff (popup window) -->
+        $(document).on('click','#user-add-button', function(){
+            $('#fade-profile').show();
+            $('.staffadd').show();
             return false;
 		});
 	});
@@ -226,7 +207,14 @@
             $('#dep-edit-button').css('visibility', 'visible');
 		});
 
-        <!-- edit Department -->
+        <!-- add Department (popup window) -->
+        $(document).on('click','#dep-add-button', function(){
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+
+        <!-- edit Department (popup window)-->
         $(document).on('click','#dep-edit-button', function(){
             var selectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
             prevDepName = selectedRow.context.innerText;

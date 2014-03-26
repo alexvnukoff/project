@@ -1331,7 +1331,7 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
 
 
     def prepare_company(self, obj):
-        return Company.objects.get(p2c__child=obj, p2c__type="hierarchy").pk
+        return Company.objects.get(p2c__child=obj.pk, p2c__type="hierarchy").pk
 
     def get_model(self):
         return Department
