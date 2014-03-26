@@ -6,10 +6,10 @@
 	<div class="news">
     	<div class="tophead-l">
         	<a href="/"><i class="imgnews news-logo"></i></a>
-        	<a href="#" title="">{% trans 'About project' %}</a> | <a href="#" title="">{% trans 'Service' %}</a> | <a href="#" title="">{% trans 'Help' %}</a>
+        	<a href="{% url "project:about" %}" title="">{% trans 'About' %}</a> | <a href="{% url "project:faq" %}" title="">{% trans 'FAQ' %}</a> | <a href="{% url "project:contact" %}" title="">{% trans 'Contact' %}</a>
         </div>
         <div class="tophead-r">
-        	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}{% endif %}</a>
+        	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>{% endif %}
         </div>
     </div>
 </div>
@@ -19,31 +19,36 @@
         <div class="community">
             <div class="newstitle">
                 <label>
-                    Профиль: {% userName %} + </label><label class="cur-page">{{ current_section }}
+                    {% trans "Profile" %}: {% userName %} + </label><label class="cur-page">{{ current_section }}
 
                  </label>
 
                 <div class="notify">
-                    <span><i class="imgnews i-note" id="showevent"></i> <a href="#" class="num">{% notif %}</a>
-                      <div class="formevent">
+                    <div class="event-holder">
+                        <i class="imgnews i-note showevent" id="showevent"></i>
+                        <a href="#" class="showevent num">{% notif %}</a>
+                        <div class="formevent">
                         	<i class="close-event imgnews"></i>
-                          <div id='load'><img style="width: 250px;" id="load" src="{% static "tppcenter/img/loading.gif" %}"></div>
-                          <div id="not-content">
-                          </div>
+                            <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
+                            <div class="list-holder">
+                                <ul>
+
+                                </ul>
+                            </div>
+                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
                         </div>
-                    </span>
+                    </div>
 
-                    <span><i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">0</a>
+                    <div class="event-holder">
+                        <i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">0</a>
+                    </div>
 
-                    </span>
-
-                    <span><i class="imgnews i-user" id="showevent"></i> <a href="#" class="num">0</a>
-
-                    </span>
-                    <span><i class="imgnews i-book" ></i> <a href="#" class="num">0</a>
-
-                    </span>
-
+                    <div class="event-holder">
+                        <i class="imgnews i-user" id="showevent"></i> <a href="#" class="num">0</a>
+                    </div>
+                    <div class="event-holder">
+                        <i class="imgnews i-book" ></i> <a href="#" class="num">0</a>
+                    </div>
                 </div>
             </div>
             <div class="newslink">
@@ -52,7 +57,7 @@
                         <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% endif %}
                     {% if current_company %}
-                            <label style="padding: 150px;font-weight: bolder;" > {% trans 'Your current organization: ' %}{{ current_company|first }}</label>
+                            <label style="padding-left: 150px;font-weight: bolder;" > {% trans 'Your current organization: ' %}{{ current_company|first }}</label>
                     {% endif %}
                 </div>
                 <a href="#" class="btnprofile"><i class="imgnews bullet"></i> {% trans 'Profile' %}</a>

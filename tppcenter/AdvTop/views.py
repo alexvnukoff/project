@@ -40,7 +40,7 @@ def advJsonFilter(request):
             if not q:
                 sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
             else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title')
 
             paginator = Paginator(sqs, 10)
 
@@ -89,7 +89,7 @@ def addTop(request, item):
 
     perm_list = org.getItemInstPermList(request.user)
 
-    if 'add_tops' not in perm_list:
+    if 'add_advtop' not in perm_list:
          return render_to_response("permissionDenied.html")
 
 

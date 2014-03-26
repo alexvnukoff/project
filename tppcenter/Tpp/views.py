@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,6 +15,7 @@ from core.tasks import addNewTpp
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
+from django.core.cache import cache
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -23,9 +24,12 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
    # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
     #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
      #    return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
-
+    description = ''
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -37,7 +41,9 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             tppPage = func.emptyCompany()
     else:
-        tppPage = _tppDetailContent(request, item_id)
+        result = _tppDetailContent(request, item_id)
+        tppPage = result[0]
+        description = result[1]
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -60,7 +66,8 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'search': request.GET.get('q', ''),
             'addNew': reverse('tpp:add'),
             'cabinetValues': cabinetValues,
-            'item_id': item_id
+            'item_id': item_id,
+            'description': description
         }
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
@@ -78,131 +85,164 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
 def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
+    cached = False
+    cache_name = "tpp_list_result_page_%s" % page
+    query = request.GET.urlencode()
+    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
+        cached = cache.get(cache_name)
+    if not cached:
 
-    if not my:
-        filters, searchFilter = func.filterLive(request)
+        if not my:
+            filters, searchFilter = func.filterLive(request)
 
-        sqs = func.getActiveSQS().models(Tpp)
+            sqs = func.getActiveSQS().models(Tpp)
 
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
+            if len(searchFilter) > 0:
+                sqs = sqs.filter(searchFilter)
 
-        q = request.GET.get('q', '')
+            q = request.GET.get('q', '')
 
-        if q != '':
-            sqs = sqs.filter(title=q)
+            if q != '':
+                sqs = sqs.filter(title=q)
 
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
+            sortFields = {
+                'date': 'id',
+                'name': 'title'
+            }
 
-        order = []
+            order = []
 
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
+            sortField1 = request.GET.get('sortField1', 'date')
+            sortField2 = request.GET.get('sortField2', None)
+            order1 = request.GET.get('order1', 'desc')
+            order2 = request.GET.get('order2', None)
 
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
+            if sortField1 and sortField1 in sortFields:
+                if order1 == 'desc':
+                    order.append('-' + sortFields[sortField1])
+                else:
+                    order.append(sortFields[sortField1])
             else:
-                order.append(sortFields[sortField1])
+                order.append('-id')
+
+            if sortField2 and sortField2 in sortFields:
+                if order2 == 'desc':
+                    order.append('-' + sortFields[sortField2])
+                else:
+                    order.append(sortFields[sortField2])
+
+
+            tpp = sqs.order_by(*order)
+            url_paginator = "tpp:paginator"
+
+            params = {
+                'filters': filters,
+                'sortField1': sortField1,
+                'sortField2': sortField2,
+                'order1': order1,
+                'order2': order2
+            }
         else:
-            order.append('-id')
+             current_organization = request.session.get('current_company', False)
 
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
-            else:
-                order.append(sortFields[sortField2])
+             if current_organization:
+                 tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
+
+                 url_paginator = "tpp:my_main_paginator"
+                 params = {}
+             else:
+                 raise ObjectDoesNotExist('you need check company')
+
+        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(tpp, *attr, page_num=5, page=page)
+
+        tppList = result[0]
+        tpp_ids = [id for id in tppList.keys()]
+        countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        country_dict = {}
+
+        for country in countries:
+            country_dict[country['p2c__child']] = country['pk']
+
+        for id, tpp in tppList.items():
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            tpp.update(toUpdate)
 
 
-        tpp = sqs.order_by(*order)
-        url_paginator = "tpp:paginator"
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
+
+        template = loader.get_template('Tpp/contentPage.html')
+
+        templateParams = {
+            'tppList': tppList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
         }
+
+        templateParams.update(params)
+
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
+           cache.set(cache_name, rendered)
+
     else:
-         current_organization = request.session.get('current_company', False)
+        rendered = cache.get(cache_name)
 
-         if current_organization:
-             tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
-
-             url_paginator = "tpp:my_main_paginator"
-             params = {}
-         else:
-             raise ObjectDoesNotExist('you need check company')
-
-    attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
-
-    result = func.setPaginationForSearchWithValues(tpp, *attr, page_num=5, page=page)
-
-    tppList = result[0]
-    tpp_ids = [id for id in tppList.keys()]
-    countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
-    countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-    country_dict = {}
-
-    for country in countries:
-        country_dict[country['p2c__child']] = country['pk']
-
-    for id, tpp in tppList.items():
-        toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                    'COUNTRY_ID':  country_dict.get(id, 0)}
-        tpp.update(toUpdate)
+    return rendered
 
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-
-    template = loader.get_template('Tpp/contentPage.html')
-
-    templateParams = {
-        'tppList': tppList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-    }
-
-    templateParams.update(params)
-
-
-    context = RequestContext(request, templateParams)
-
-    return template.render(context)
 
 
 def _tppDetailContent(request, item_id):
 
-    tpp = get_object_or_404(Tpp, pk=item_id)
-    tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+    cache_name = "detail_%s" % item_id
+    description_cache_name = "description_%s" % item_id
+    cached = cache.get(cache_name)
+    if not cached:
+
+        tpp = get_object_or_404(Tpp, pk=item_id)
+        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+        description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
+        description = func.cleanFromHtml(description)
 
 
-    if not tppValues.get('FLAG', False):
-       try:
-           country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
-       except:
+        if not tppValues.get('FLAG', False):
+           try:
+               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+           except:
+               country = ""
+        else:
            country = ""
+
+        template = loader.get_template('Tpp/detailContent.html')
+        context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+        rendered = template.render(context)
+        cache.set(cache_name, rendered, 60*60*24*7)
+        cache.set(description_cache_name, description, 60*60*24*7)
+
     else:
-       country = ""
+        rendered = cache.get(cache_name)
+        description = cache.get(description_cache_name)
 
-    template = loader.get_template('Tpp/detailContent.html')
-    context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
+    return rendered, description
 
-    return template.render(context)
+
 
 @login_required(login_url='/login/')
 def tppForm(request, action, item_id=None):
+    if item_id:
+       if not Tpp.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -222,13 +262,13 @@ def tppForm(request, action, item_id=None):
         return tppPage
 
     templateParams = {
-        'tppPage': tppPage,
+        'formContent': tppPage,
         'current_company':current_company,
         'current_section': current_section,
         'cabinetValues': cabinetValues
     }
 
-    return render_to_response('Tpp/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 def addTpp(request):
 
@@ -244,15 +284,14 @@ def addTpp(request):
     if request.POST:
         user = request.user
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-
-        values = _getValues(request)
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tpp', values=values)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
@@ -266,6 +305,7 @@ def addTpp(request):
 
 
 def updateTpp(request, item_id):
+
     item = Organization.objects.get(pk=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
@@ -282,25 +322,23 @@ def updateTpp(request, item_id):
     countries = func.getItemsList("Country", 'NAME')
     tpp = Tpp.objects.get(pk=item_id)
 
+    form = ItemForm('Tpp', id=item_id)
 
-    if request.method != 'POST':
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-        pages = pages.queryset
 
-        form = ItemForm('Tpp', id=item_id)
+
 
     if request.POST:
         user = request.user
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
 
-        values = _getValues(request)
+
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
 
         form = ItemForm('Tpp', values=values, id=item_id)
         form.clean()
 
-        if form.is_valid() and pages.is_valid():
+        if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                             lang_code=settings.LANGUAGE_CODE)
@@ -311,7 +349,6 @@ def updateTpp(request, item_id):
 
     templateParams = {
         'form': form,
-        'pages': pages,
         'choosen_country': choosen_country,
         'countries': countries,
         'tpp': tpp
@@ -323,131 +360,131 @@ def updateTpp(request, item_id):
     return tppPage
 
 
-def _getValues(request):
-    values = {}
-    values['NAME'] = request.POST.get('NAME', "")
-    values['IMAGE'] = request.FILES.get('IMAGE', "")
-    values['FLAG'] = request.FILES.get('FLAG', "")
-    values['ADDRESS'] = request.POST.get('ADDRESS', "")
-    values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
-    values['TELEPHONE_NUMBER'] = request.POST.get('TELEPHONE_NUMBER', "")
-    values['FAX'] = request.POST.get('FAX', "")
-    values['INN'] = request.POST.get('INN', "")
-    values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-    values['SLOGAN'] = request.POST.get('SLOGAN', "")
-    values['EMAIL'] = request.POST.get('EMAIL', "")
-    values['KEYWORD'] = request.POST.get('KEYWORD', "")
-    values['DIRECTOR'] = request.POST.get('DIRECTOR', "")
-    values['KPP'] = request.POST.get('KPP', "")
-    values['OKPO'] = request.POST.get('OKPO', "")
-    values['OKATO'] = request.POST.get('OKATO', "")
-    values['OKVED'] = request.POST.get('OKVED', "")
-    values['ACCOUNTANT'] = request.POST.get('ACCOUNTANT', "")
-    values['ACCOUNT_NUMBER'] = request.POST.get('ACCOUNT_NUMBER', "")
-    values['BANK_DETAILS'] = request.POST.get('BANK_DETAILS', "")
 
-    return values
 
 
 def _tabsCompanies(request, tpp, page=1):
+    cache_name = "Companies_tab_tpp_%s_page_%s" % tpp, page
+    cached = cache.get(cache_name)
 
-    companies = func.getActiveSQS().models(Company).filter(tpp=tpp)
-    attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
+    if not cached:
+        companies = func.getActiveSQS().models(Company).filter(tpp=tpp)
+        attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
 
-    result = func.setPaginationForSearchWithValues(companies, *attr, page_num=10, page=page)
+        result = func.setPaginationForSearchWithValues(companies, *attr, page_num=10, page=page)
 
 
-    companyList = result[0]
+        companyList = result[0]
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "tpp:tab_companies_paged"
+        url_paginator = "tpp:tab_companies_paged"
 
-    templateParams = {
-        'companyList': companyList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': tpp
-    }
+        templateParams = {
+            'companyList': companyList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsNews(request, tpp, page=1):
+    cache_name = "News_tab_tpp_%s_page_%s" % tpp, page
+    cached = cache.get(cache_name)
 
-    news = func.getActiveSQS().models(News).filter(tpp=tpp)
-    attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+    if not cached:
+        news = func.getActiveSQS().models(News).filter(tpp=tpp)
+        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
-    result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
+        result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
 
 
-    newsList = result[0]
+        newsList = result[0]
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "tpp:tab_news_paged"
+        url_paginator = "tpp:tab_news_paged"
 
-    templateParams = {
-        'newsList': newsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': tpp
-    }
+        templateParams = {
+            'newsList': newsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Tpp/tabNews.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsTenders(request, tpp, page=1):
+    cache_name = "Tenders_tab_tpp_%s_page_%s" % tpp, page
+    cached = cache.get(cache_name)
+
+    if not cached:
+        tenders = func.getActiveSQS().models(Tender).filter(tpp=tpp)
+        attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
 
 
-    tenders = func.getActiveSQS().models(Tender).filter(tpp=tpp)
-    attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+        tendersList = result[0]
 
-    result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
+        url_paginator = "tpp:tab_tenders_paged"
 
-    tendersList = result[0]
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    url_paginator = "tpp:tab_tenders_paged"
-
-    templateParams = {
-        'tendersList': tendersList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': tpp
-    }
+        templateParams = {
+            'tendersList': tendersList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, tpp, page=1):
+    cache_name = "Exhibitions_tab_tpp_%s_page_%s" % tpp, page
+    cached = cache.get(cache_name)
 
-    exhibition = func.getActiveSQS().models(Exhibition).filter(tpp=tpp)
-    attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
+    if not cached:
+        exhibition = func.getActiveSQS().models(Exhibition).filter(tpp=tpp)
+        attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
-    result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
+        result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
 
 
-    exhibitionList = result[0]
+        exhibitionList = result[0]
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "tpp:tab_exhibitions_paged"
+        url_paginator = "tpp:tab_exhibitions_paged"
 
-    templateParams = {
-        'exhibitionList': exhibitionList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': tpp
-    }
+        templateParams = {
+            'exhibitionList': exhibitionList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached   
 
 
     return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))

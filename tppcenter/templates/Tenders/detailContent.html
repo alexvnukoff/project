@@ -10,6 +10,18 @@ $(function() {
 <script>
     $('.keyword').html('');
 </script>
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'tender');
+</script>
 
   <div class="tender">
             {% with tenderValues.NAME.0 as name %}

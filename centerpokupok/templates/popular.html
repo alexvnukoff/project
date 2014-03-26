@@ -14,7 +14,7 @@
                         {% with attr.CURRENCY|first as currency  %}
                         <li>
                             <a href="{% url "products:detail" id %}">
-                                <img class="thumb" width="80" height="80" alt="{{ name }}" src="{% static picture %}">
+                                <img class="thumb" width="80" height="80" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }} ">
                             </a>
                             <a href="{% url "products:detail" id %}">{{ name }}</a>
                             <p>

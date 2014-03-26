@@ -1,22 +1,13 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load set_var %}
 
-{% block keywords %}{% endblock %}
+
 
 {% with form.fields.POSITION.initial as position %}
 
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-<script>
-        tinymce.init({mode:"textareas", selector: 'textarea[class="tiny"]', plugins : " paste", paste_as_text: true});
-</script>
-
-
-
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
@@ -25,6 +16,7 @@
         $(function() {
 
             $( ".date" ).datepicker();
+            setTiny('textarea[class="tiny"]');
 
         });
 
@@ -45,7 +37,7 @@
 
 <div class="newsform">
 
-<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+<form onkeypress="return event.keyCode != 13;" enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
 
 
 {% csrf_token %}
@@ -61,103 +53,146 @@
     {% with form.fields.DOCUMENT_2.initial as doc_2 %}
     {% with form.fields.DOCUMENT_3.initial as doc_3 %}
 
+        <div class="uploadimgage">
+            <div>
+                <label class="sapce">{% trans 'City' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.CITY %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.CITY }}</div></div>
+                {% endif %}
+                <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
+                <select id="id_BRANCH" name="BRANCH">
+                    {% for id, branch in branches.items %}
+                        <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >
+                            {{ branch.NAME|first }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-				<ul class="tenderline">
+            <div>
+                <label  class="sapce">{% trans 'Start event date' %}<font color="#FF0000">*</font></label>
+                {% if form.errors.START_EVENT_DATE %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>
+                    </div>
+                {% endif %}
+                <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'End event date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.END_EVENT_DATE %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.END_EVENT_DATE }}</div></div>
+                {% endif %}
+                <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" />
+
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.KEYWORD %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                {% endif %}
+                <textarea name="KEYWORD" rows="7">{{ keyword }}</textarea>
+            </div>
+            <div>
+                <div class="line">
+                    <label class="sapce">{% trans 'Route description' %}</label>
+                    {% if form.errors.ROUTE_DESCRIPTION %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.ROUTE_DESCRIPTION }}</div></div>
+                    {% endif %}
+                    <textarea name="ROUTE_DESCRIPTION"  rows="7">{{ route }}</textarea>
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Documents' %}</label>
+                {% if form.errors.DOCUMENT_1  %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_1 }}</div></div>
+                {% endif %}
+                {% if form.errors.DOCUMENT_2  %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_2 }}</div></div>
+                {% endif %}
+                {% if form.errors.DOCUMENT_3  %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_3 }}</div></div>
+                {% endif %}
+
+                <div class="line">
+
+                    {% if doc_1 %}
+                        <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a>
+                        <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}" />Delete
+                    {% endif %}
+
+                    <input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/>
+                </div>
+
+                <div class="line">
+                    {% if doc_2 %}
+                        <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 1</a>
+                        <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}" />Delete
+                    {% endif %}
+                        <input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/>
+                </div>
+
+                <div class="line">
+
+                    {% if doc_3 %}
+
+                        <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 1</a>
+                        <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}" />Delete
+
+                    {% endif %}
+                        <input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{doc_3 }}"/>
+                </div>
+
+                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="5" />
+                <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+                <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="5" />
+
+                <label class="sapce">{% trans 'Image' %}</label>
+
+                {% for i in '01234'|make_list %}
+                    {% resolve photos i as img %}
+                    <div class="line">
+                        {% if img %}
+                            <a href='{{ MEDIA_URL }}th/{{ img.photo.name }}'>Image {{ i }}</a>
+                            <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete
+                            <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
+                        {% endif %}
+                        <input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" />
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+				<ul class="uploadconfig">
                     <li>
                         <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                          {% if form.errors.NAME %}<div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>{% endif %}
+                          {% if form.errors.NAME %}
+                              <div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>
+                          {% endif %}
                         <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
                     </li>
+
                     <li>
-                    	<div class="clumn1">
-                        	<label>{% trans 'Start event date' %}<font color="#FF0000">*</font></label>
-                             {% if form.errors.START_EVENT_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.START_EVENT_DATE }}</div></div>{% endif %}
-                            <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
+                    	<div style="margin-bottom: 20px;">
+                            <label>{% trans "Description" %} <font color="#FF0000">*</font></label>
+                            {% if form.errors.DETAIL_TEXT %}
+                                <div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                            {% endif %}
                         </div>
-                        <div class="clumn2">
-                        	<label>{% trans 'End event date' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.END_EVENT_DATE %}<div class="error-handler"> <div class="formserror">{{ form.errors.END_EVENT_DATE }}</div></div>{% endif %}
-                            <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" style="width:94%;" />
-                        </div>
+
+                        <div class="detail"><textarea rows="10"  class="tiny"  name="DETAIL_TEXT" >{{ text }}</textarea></div>
                     </li>
                     <li>
-                    	<div class="clumn1">
-                        	<label>{% trans 'City' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.CITY %}<div class="error-handler"> <div class="formserror">{{ form.errors.CITY }}</div></div>{% endif %}
-                            <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
-                        </div>
-                        <div class="clumn2">
-                        	<label>{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
-                            <select id="id_BRANCH" name="BRANCH">
-                              {% for id, branch in branches.items %}
-                                 <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >{{ branch.NAME|first }}</option>
-                              {% endfor %}
-                            </select>
-                        </div>
-                    </li>
-                    <li>
-                    	<label>{% trans "Description" %} <font color="#FF0000">*</font></label>
-                        {% if form.errors.DETAIL_TEXT %}<div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>{% endif %}
-                        <div class="tiny"><textarea rows="10"  class="tiny"  name="DETAIL_TEXT" >{{ text }}</textarea></div>
-                    </li>
-                    <li>
-                    	<div class="clumn1">
-                        	<label>{% trans 'Keywords' %}</label>
-                            <textarea name="KEYWORD"  rows="7">{{ keyword }}</textarea>
-                            <div class="line">
-                                <label>{% trans 'Route description' %}</label>
-                                <textarea name="ROUTE_DESCRIPTION"  rows="16">{{ route }}</textarea>
-                            </div>
+
                             <div  class="line">
                                 <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
                                   <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                                 <div id="map-canvas"></div>
 
-                            </div>
-
-                        </div>
-
-                      	<div class="clumn2">
-                       	<label>{% trans 'Documents' %}</label>
-                         <div class="line">
-                           {% if doc_1 %}
-                                <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a>
-                                <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}" />Delete
-                            {% endif %}
-                                <input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/>
-                            </div>
-                            <div class="line">
-                               {% if doc_2 %}
-                            <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 1</a>
-                                <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}" />Delete
-                            {% endif %}
-                                <input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/>
-                            </div>
-                            <div class="line">
-                               {% if doc_3 %}
-
-                                <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 1</a>
-                                <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}" />Delete
-                            {% endif %}
-                                <input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{doc_3 }}"/>
-                            </div>
 
 
-                           <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="5" />
-                            <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
-                            <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="5" />
-                        	<label>{% trans 'Image' %}</label>
-                            {% for i in '01234'|make_list %}
-                              {% resolve photos i as img %}
-                                <div class="line">
-                                    {% if img %}
-                                        <a href='{{ MEDIA_URL }}th/{{ img.photo.name }}'>Image {{ i }}</a>
-                                       <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete
-                                       <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
-                                    {% endif %}
-                                    <input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" />
-                                </div>
-                        {% endfor %}
                         </div>
                     </li>
                   </ul>
@@ -165,51 +200,17 @@
                 <div class="addpage-title">{% trans 'Additional pages' %}</div>
                 <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
                 <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
-                <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
                 <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
 
                 {% if  pages|length >  0 %}
                     {% for page in  pages %}
-                <div class="addpage-form">
-                    <div class="clumn1">
-                        <label>{% trans 'Title' %}</label>
-                        <input class="text" style="width:89%;" id="id_form-{{  forloop.counter0 }}-title"  name="pages-{{  forloop.counter0 }}-title" type="text" value="{{ page.getTitle }}" />
-                        {% if forloop.counter0 > 0 %}
-                          <a href="#" class="buttonclear  buttonremove">Remove</a>
-                        {% else %}
-                          <a href="#" class="buttonclear  add-advandce">Добавить</a>
-                        {% endif %}
-                    </div>
-                    <div class="clumn2">
-                        <label>{% trans 'Content' %}</label>
-
-                        <div class="">
-                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-{{  forloop.counter0 }}-content" name="pages-{{  forloop.counter0 }}-content">{{ page.getContent }}</textarea>
-
-                        </div>
-                    </div>
-                   </div>
-                          {% endfor %}
-                         {% else %}
-
-                   <div class="addpage-form">
-                    <div class="clumn1">
-                        <label>{% trans 'Title' %}</label>
-                        <input class="text" style="width:89%;" id="id_form-0-title"  name="pages-0-title" type="text" value="" />
-
-                        <a href="#" class="buttonclear add-advandce">Добавить</a>
-                    </div>
-                    <div class="clumn2">
-                        <label>{% trans 'Content' %}</label>
-
-                        <div class="">
-                            <textarea class="tiny" style="height: 158px;width: 456px;" id="id_form-0-content" name="pages-0-content"></textarea>
-
-                        </div>
-
-                    </div>
-                </div>
-            {% endif %}
+                        {% set i = forloop.counter0 %}
+                        {% include "additionalPage.html" %}
+                    {% endfor %}
+                {% else %}
+                    {% set i = 0 %}
+                    {% include "additionalPage.html" %}
+                {% endif %}
            </div>
            <div class="newform-button">
                 <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
@@ -234,3 +235,5 @@
 </form>
  </div>
 {% endwith %}
+
+{% block right %}{% endblock %}

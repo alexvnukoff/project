@@ -1,30 +1,26 @@
-from django.shortcuts import render
-from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, Http404
-from appl.models import *
-
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship, Slot
-
-from appl import func
-from django.core.exceptions import ValidationError
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery
-from django.template import RequestContext, loader
-from django.views.decorators.csrf import ensure_csrf_cookie
-from datetime import datetime
-from django.views.decorators.cache import cache_page
-from django.utils.timezone import now
-from registration.forms import RegistrationFormUniqueEmail
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
-from registration.backends.default.views import RegistrationView
-from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
+from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
-from django.contrib.contenttypes.models import ContentType
-
 from django.conf import settings
+from django.utils.translation import ugettext as _
+from registration.backends.default.views import RegistrationView
+from registration.forms import RegistrationFormUniqueEmail
+from tppcenter.forms import ItemForm, BasePhotoGallery
+from appl import func
+from appl.models import *
+from core.models import Item
+from collections import OrderedDict
+import json
 
+@csrf_protect
 def home(request):
 
 
@@ -33,73 +29,115 @@ def home(request):
 
     if request.POST.get('Register', None):
         return registration(request)
+    cache_name = 'home_page'
+    cached = cache.get(cache_name)
 
-    countries = Country.active.get_active()
-    countries_id = [country.pk for country in countries]
+    if not cached:
 
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countries = Country.active.get_active()
+        countries_id = [country.pk for country in countries]
 
-    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
-    organizations_id = [organization.pk for organization in organizations]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
 
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG'), organizations_id)
+        organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+        organizations_id = [organization.pk for organization in organizations]
 
-    products = Product.active.get_active_related().order_by('-pk')[:3]
+        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_id)
 
-    products_id = [product.pk for product in products]
-    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-    func.addDictinoryWithCountryAndOrganization(products_id,productsList)
+        products = Product.active.get_active_related().order_by('-pk')[:3]
 
-    services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
+        products_id = [product.pk for product in products]
+        productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
+        func.addDictinoryWithCountryAndOrganization(products_id,productsList)
 
-    services_id = [service.id for service in services]
-    serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
-    func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
+        services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
+
+        services_id = [service.id for service in services]
+        serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
+        func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
 
 
-    greetings = Greeting.active.get_active().all()
-    greetings_id = [greeting.id for greeting in greetings]
-    greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
+        greetings = Greeting.active.get_active().all()
+        greetings_id = [greeting.id for greeting in greetings]
+        greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
 
-    exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
-    exhibitions_id = [exhibition.pk for exhibition in exhibitions]
-    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
-    func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
+        exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
+        exhibitions_id = [exhibition.pk for exhibition in exhibitions]
+        exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
+        func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
-    templateParams = {
-        "countriesList": countriesList,
-        'organizationsList': organizationsList,
-        'productsList': productsList,
-        'serviceList': serviceList,
-        'greetingsList': greetingsList,
-        'exhibitionsList': exhibitionsList
-    }
+        templateParams = {
+            "countriesList": countriesList,
+            'organizationsList': organizationsList,
+            'productsList': productsList,
+            'serviceList': serviceList,
+            'greetingsList': greetingsList,
+            'exhibitionsList': exhibitionsList,
 
-    return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
+        }
+
+
+
+        cache.set(cache_name, templateParams)
+    else:
+        templateParams = cache.get(cache_name)
+
+    template = loader.get_template('index.html')
+    context = RequestContext(request, templateParams)
+    rendered = template.render(context)
+
+
+    return HttpResponse(rendered)
 
 
 @ensure_csrf_cookie
 def getNotifList(request):
 
+
     if request.is_ajax():
-        notifications = Notification.objects.filter(user=request.user, read=False).order_by("-pk")[:3]
+
+        #Older notifications
+        last = int(request.GET.get('last', 0))
+
+        #New notifications
+        first = int(request.GET.get('first', 0))
+
+        #Disable loading of empty list
+        lastLine = False
+
+        notifications = Notification.objects.filter(user=request.user).select_related('message__pk')
+
+        if last != 0:
+            notifications = notifications.filter(pk__lt=last).order_by("-pk")[:3]
+
+            if len(notifications) < 3:
+                lastLine = True
+        elif first != 0:
+            notifications = notifications.filter(pk__gt=first).order_by("-pk")[:20]
+        else:
+            notifications = notifications.order_by("-pk")[:3]
+
+
         messages_id = [notification.message.pk for notification in notifications]
         notifications_id = [notification.pk for notification in notifications]
 
         notificationsValues = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
-        notifDict = {}
+        notifDict = OrderedDict()
 
         for notification in notifications:
             notifDict[notification.pk] = notificationsValues[notification.message.pk]
 
-        Notification.objects.filter(pk__in=notifications_id)  .update(read=True)
+        unread = Notification.objects.filter(pk__in=notifications_id, read=False)
 
+        unreadCount = unread.count()
+        unread.update(read=True)
 
         template = loader.get_template('main/notoficationlist.html')
-        context = RequestContext(request, {'notifDict': notifDict})
+        context = RequestContext(request, {'notifDict': notifDict, 'lastLine': lastLine})
+        data = template.render(context)
 
-        return HttpResponse(template.render(context))
+        return HttpResponse(json.dumps({'data': data, 'count': unreadCount}))
 
 
 def user_login(request):
@@ -331,7 +369,7 @@ def jsonFilter(request):
             if not q:
                 sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
             else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=q)
+                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title')
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
@@ -347,29 +385,37 @@ def jsonFilter(request):
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-
 def test(request):
-    from PIL import Image
-    from core.amazonMethods import add
-
-    a = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\078279f0100c6ea1d7692338d59719d2.jpg'
-    z = 'C:\\Users\\user\\PycharmProjects\\tpp\\appl\\Static\\test.png'
-
-    sizes = {
-            'big': {'box': (150, 140), 'fit': False},
-            'small': {'box': (70, 70), 'fit': False},
-            'th': {'box':(30, 30), 'fit': True}
-    }
-
-    a = add(a, sizes=sizes)
-
-    #func.resize(im, sizes['big']['box'], False, z)
+    a = func.getAnalytic({'dimensions': 'ga:dimension2'})
 
 
 
     from django.http import StreamingHttpResponse
     return StreamingHttpResponse(a)
 
+def getLiveTop(request):
+
+    filterAdv = func.getListAdv(request)
+
+    templateParams = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'modelTop': func.getTops(request, filterAdv)
+    }
+
+    return render_to_response("AdvTop/tops.html", templateParams)
+
+def getLiveBanner(request):
+
+    filterAdv = func.getListAdv(request)
+
+    places = request.POST.getlist('places[]', [])
+
+    templateParams = {
+        'MEDIA_URL': settings.MEDIA_URL,
+        'banners': func.getBanners(places, settings.SITE_ID, filterAdv)
+    }
+
+    return render_to_response("AdvBanner/banners.html", templateParams)
 
 def ping(request):
     from django.http import StreamingHttpResponse

@@ -7,7 +7,9 @@ from PIL import Image
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet, SQ
-
+import lxml
+from lxml.html.clean import clean_html
+from django.core.cache import cache
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -472,6 +474,8 @@ def getAnalytic(params = None):
     if 'start_date' not in params:
         params['start_date'] = '2014-01-01'
 
+    params['metrics'] = 'ga:visitors'
+
     return get_results(**params)
 
 
@@ -518,10 +522,66 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
 
 
+def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
+
+        cabinets = Cabinet.objects.filter(p2c__child__in=ids,).values('p2c__child', 'pk')
+
+        cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
+        countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
+
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
+        country_dict = {}
+
+        for country in countries:
+            if country['pk']:
+               country_dict[country['p2c__child']] = country['pk']
+
+        cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
+
+        cabinets_dict = {}
+
+        for cabinet in cabinets:
+            cabinets_dict[cabinet['p2c__child']] = {
+                'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
+                'CABINET_ID': cabinet['pk'],
+                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
+            }
+
+        addDictinoryWithCountryAndOrganization(ids, itemList)
+
+
+        for id, innov in itemList.items():
+            if cabinets_dict.get(id, 0):
+                innov.update(cabinets_dict.get(id, 0))
 
 
 
-def addToItemDictinoryWithCountryAndOrganization(id, itemList):
+def addDictinoryWithCountryToCompany(ids, itemList):
+
+        countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
+        countries_id = [country['pk'] for country in countries]
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        country_dict = {}
+
+        for country in countries:
+            country_dict[country['p2c__child']] = country['pk']
+
+        for id, company in itemList.items():
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            company.update(toUpdate)
+
+
+
+
+
+def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=False):
 
     countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__type='dependence',
                                        p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
@@ -531,7 +591,10 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'IMAGE', 'SLUG'), organizations_ids)
+    attr = ("NAME", 'FLAG', 'IMAGE', 'SLUG')
+    if withContacts:
+        attr = attr + ('EMAIL', 'SITE_NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'FAX')
+    organizationsList = Item.getItemsAttributesValues(attr, organizations_ids)
     organizations_dict = {}
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
@@ -556,6 +619,11 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList):
                         'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_ID': organizations_dict.get(id, 0),
                         'ORGANIZATION_URL': url}
             itemList.update(toUpdate)
@@ -568,7 +636,7 @@ def organizationIsCompany(item_id):
 
 def filterLive(request):
 
-    searchFilter = {}
+    searchFilter = []
     filtersIDs = {}
     filters = {}
     ids = []
@@ -597,12 +665,23 @@ def filterLive(request):
                 continue
 
             for name, id in filtersIDs.items():
+
                 if pk in id:
                     filters[name].append({'id': pk, 'text': attr['NAME'][0]})
 
-                if len(id):
-                    searchFilter[name + '__in'] = id
+                newIDs = []
+                #Security
+                for i in id:
+                    try:
+                        newIDs.append(str(int(i)))
+                    except ValueError:
+                        continue
 
+                if len(newIDs) > 0:
+                    searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
+
+    if len(searchFilter) > 0:
+        searchFilter = eval(' | '.join(searchFilter))
 
     return filters, searchFilter
 
@@ -722,11 +801,22 @@ def getTops(request, filterAdv=None):
                 tops[sModel] = {}
                 tops[sModel]['MODEL'] = models[model]
                 tops[sModel]['elements'] = {}
+                tops[sModel]['ids'] = []
 
             if id in modelTop[sModel]:
                 tops[sModel]['elements'][id] = attrs
+                tops[sModel]['ids'].append(id)
 
                 break
+
+    for name, attr in tops.items():
+       if name == BusinessProposal.__name__ or Product.__name__ == name:
+           addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
+       if name == InnovationProject.__name__:
+           addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
+       if name == Company.__name__:
+           addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
+
 
 
     return tops
@@ -765,7 +855,11 @@ def getListAdv(request):
         if name != 'tpp':
             filtersAdv += ids
         else:
-            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+            sqs = getActiveSQS().models(Tpp)
+
+            if len(ids) > 0:
+                sqs = sqs.filter(django_id__in=ids)
+
 
             for tpp in sqs:
                 if len(tpp.country) > 0:
@@ -775,8 +869,7 @@ def getListAdv(request):
 
 
 def getActiveSQS():
-
-    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1, 1, 1)),
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
 def emptyCompany():
      template = loader.get_template('permissionDen.html')
@@ -794,99 +887,124 @@ def permissionDenied():
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
 
-    if not my:
-        filters, searchFilter = filterLive(request)
+    cached = False
+    cache_name = "%s_list_result_page_%s" % (model.__name__, page)
+    query = request.GET.urlencode()
 
-        sqs = getActiveSQS().models(model)
+    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
+        cached = cache.get(cache_name)
 
-        if len(searchFilter) > 0:
-            sqs = sqs.filter(**searchFilter)
+    if not cached:
+        if not my:
+            filters, searchFilter = filterLive(request)
 
-        q = request.GET.get('q', '')
+            sqs = getActiveSQS().models(model)
 
-        if q != '':
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+            if len(searchFilter) > 0:
+                sqs = sqs.filter(searchFilter)
 
-        sortFields = {
-            'date': 'id',
-            'name': 'title'
-        }
+            q = request.GET.get('q', '')
 
-        order = []
+            if q != '':
+                sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-        sortField1 = request.GET.get('sortField1', 'date')
-        sortField2 = request.GET.get('sortField2', None)
-        order1 = request.GET.get('order1', 'desc')
-        order2 = request.GET.get('order2', None)
+            sortFields = {
+                'date': 'id',
+                'name': 'title'
+            }
 
-        if sortField1 and sortField1 in sortFields:
-            if order1 == 'desc':
-                order.append('-' + sortFields[sortField1])
+            order = []
+
+            sortField1 = request.GET.get('sortField1', 'date')
+            sortField2 = request.GET.get('sortField2', None)
+            order1 = request.GET.get('order1', 'desc')
+            order2 = request.GET.get('order2', None)
+
+            if sortField1 and sortField1 in sortFields:
+                if order1 == 'desc':
+                    order.append('-' + sortFields[sortField1])
+                else:
+                    order.append(sortFields[sortField1])
             else:
-                order.append(sortFields[sortField1])
+                order.append('-id')
+
+            if sortField2 and sortField2 in sortFields:
+                if order2 == 'desc':
+                    order.append('-' + sortFields[sortField2])
+                else:
+                    order.append(sortFields[sortField2])
+
+            proposal = sqs.order_by(*order)
+            url_paginator = "%s:paginator" % (url)
+
+            params = {
+                'filters': filters,
+                'sortField1': sortField1,
+                'sortField2': sortField2,
+                'order1': order1,
+                'order2': order2
+            }
+
         else:
-            order.append('-id')
+            current_organization = request.session.get('current_company', False)
 
-        if sortField2 and sortField2 in sortFields:
-            if order2 == 'desc':
-                order.append('-' + sortFields[sortField2])
+            if current_organization:
+               if model != Tpp:
+                    proposal = SearchQuerySet().models(model).\
+                        filter(SQ(tpp=current_organization) | SQ(company=current_organization))
+               else:
+                    proposal = SearchQuerySet().models(model).\
+                        filter(SQ(id=current_organization) | SQ(company=current_organization))
+
+               url_paginator = "%s:my_main_paginator" % url
+               params = {}
             else:
-                order.append(sortFields[sortField2])
+                 raise ObjectDoesNotExist('you need check company')
 
-        proposal = sqs.order_by(*order)
-        url_paginator = "%s:paginator" % (url)
 
-        params = {
-            'filters': filters,
-            'sortField1': sortField1,
-            'sortField2': sortField2,
-            'order1': order1,
-            'order2': order2
+        result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
+
+
+
+
+
+
+        proposalList = result[0]
+        proposal_ids = [id for id in proposalList.keys()]
+
+        addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
+
+        page = result[1]
+        paginator_range = getPaginatorRange(page)
+
+
+
+
+        template = loader.get_template(template_page)
+
+        templateParams = {
+            'proposalList': proposalList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+
         }
+        templateParams.update(params)
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
+           cache.set(cache_name, rendered)
 
     else:
-        current_organization = request.session.get('current_company', False)
+        rendered = cache.get(cache_name)
+    return rendered
 
-        if current_organization:
-           if model != Tpp:
-                proposal = SearchQuerySet().models(model).\
-                    filter(SQ(tpp=current_organization) | SQ(company=current_organization))
-           else:
-                proposal = SearchQuerySet().models(model).\
-                    filter(SQ(id=current_organization) | SQ(company=current_organization))
+def cleanFromHtml(value):
 
-           url_paginator = "%s:my_main_paginator" % url
-           params = {}
-        else:
-             raise ObjectDoesNotExist('you need check company')
-
-
-    result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
-
-
-
-    proposalList = result[0]
-    proposal_ids = [id for id in proposalList.keys()]
-
-    addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
-
-    page = result[1]
-    paginator_range = getPaginatorRange(page)
-
-
-
-
-    template = loader.get_template(template_page)
-
-    templateParams = {
-        'proposalList': proposalList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-
-    }
-    templateParams.update(params)
-
-    context = RequestContext(request, templateParams)
-    return template.render(context)
-
+    if len(value) > 0:
+        document = lxml.html.document_fromstring(value)
+        raw_text = document.text_content()
+        return raw_text
+    else:
+        return  ""

@@ -32,7 +32,7 @@
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
                                       <a href="{% url "products:detail" id %}">
-                                          <img src="{% static picture %}" alt="{{ name }}" />
+                                          <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" />
                                       </a>
                                     </div>
 					          </div>
@@ -49,8 +49,10 @@
                                     </font>
                                 </p>
                                 <p>
-                                    <a href="{% url "products:category" category_id %}" class="viewall">
+                                    {% if category_id %}
+                                         <a href="{% url "products:category" category_id %}" class="viewall">
                                         {{ category_name }}
+                                    {% endif %}
                                     </a>
                                 </p>
                             </li>
@@ -95,7 +97,7 @@
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
                                       <a href="{% url "products:detail" id %}">
-                                          <img src="{% static picture %}" alt="{{ name }}" />
+                                          <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" />
                                       </a>
                                     </div>
 					          </div>
@@ -113,8 +115,10 @@
                                     </font>
                                 </p>
                                 <p>
-                                    <a href="{% url "products:category" category_id %}" class="viewall">
+                                    {% if category_id %}
+                                      <a href="{% url "products:category" category_id %}" class="viewall">
                                         {{ category_name }}
+                                        {% endif %}
                                     </a>
                                 </p>
                             </li>

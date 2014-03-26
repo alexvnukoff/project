@@ -27,7 +27,7 @@
                     <div class="thumb-cp">
                         <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
                         <a title="{{ name }}" href="{% url "products:detail" id %}">
-                            <img width="225" height="225" alt="{{ name }}" src="{% static picture %}">
+                            <img width="225" height="225" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }} ">
                         </a>
                     </div>
                     <div class="couponinfo">
@@ -57,7 +57,7 @@
                     <li>
                         <div class="thumb">
                             <a title="{{ name }}" href="{% url "products:detail" id %}">
-                                <img width="140" height="100" alt="{{ name }}" src="{% static picture %}">
+                                <img width="140" height="100" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }} ">
                             </a>
                             <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
                         </div>

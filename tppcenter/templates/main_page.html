@@ -2,8 +2,9 @@
 {% load static from staticfiles %}
 {% load i18n %}
 {% load inclusionTags %}
+{% load CustomFilters %}
 
-   {% block title %}News{% endblock %}
+   {% block title %}{% endblock %}
 
 
 
@@ -157,26 +158,60 @@
             $(document).ready(function() {
                 ui.init();
                 uiDetail.init();
+                uiEvents.init();
 
             });
         </script>
             <script type="text/javascript">
                 $(function() {
-                    $( "#tabs" ).tabs();
+                    var cname = 'tab';
+                    var ca = document.cookie.split(';');
+                    var name = cname + "=";
+                    var tab = 0;
+
+                    for(var i=0; i < ca.length; i++)
+                     {
+                         var c = ca[i].trim();
+
+                         if (c.indexOf(name)==0)
+                         {
+                            tab = c.substring(name.length, c.length);
+                            break;
+                         }
+                     }
+
+                    $( "#tabs" ).tabs({
+                        active: tab,
+                        activate: function(event, ui) {
+                            var i = ui.newTab.index();
+
+                            document.cookie = cname + "=" + i + "; path=/";
+                        }
+                    });
                     $( ".tabfilter" ).tabs();
 
+
                 });
+
+
+
+
+
             </script>
     {% endblock %}
 
 {% block body %}
 <div class="news-main">
          <div class="news-left">
+
+            {% if user.email %}
+                {% getMyCompaniesList %}
+            {% endif %}
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
                     <ul>
-                        <li><a href="#tabs-1">{% trans "TPP-Center" %}</a></li>
-                        {% if user.email %}<li><a href="#tabs-2">{% trans "My" %}</a></li>{% endif %}
+                        <li><a href="#tabs-1" class="tab1">{% trans "TPP-Center" %}</a></li>
+                        {% if user.email %}<li><a href="#tabs-2" class="tab2">{% trans "My" %}</a></li>{% endif %}
                     </ul>
                 </div>
                 <div id="tabs-1">
@@ -220,36 +255,42 @@
                     </ul>
                 </div>
             {% endif %}
+
             </div>
+            <script>
+
+            </script>
              <div class="banner-wrapper-left">
             {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
              </div>
         </div>
+
         {% block center %}
-<div class="news-center">
-        	<div  class="keyword">
-                {% block keywords %}
-                    <i class="icon-key imgnews" id="filter-link"></i>
-                    <ul class="list-key">
-                    </ul>
-                    <div class="search-key">
-                    <form action="" method="get" name="search">
-                        <input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
-                        <input type="submit" name="" value="" class="i-search imgnews" />
-                    </form>
-                    </div>
-                {% endblock %}
+            <div class="news-center">
+                <div  class="keyword">
+                    {% block keywords %}
+                        <i class="icon-key imgnews" id="filter-link"></i>
+                        <ul class="list-key">
+                        </ul>
+                        <div class="search-key">
+                        <form action="" method="get" name="search">
+                            <input type="text" name="q" value="{{ search }}" placeholder="{% trans "Find.." %}" class="text" />
+                            <input type="submit" name="" value="" class="i-search imgnews" />
+                        </form>
+                        </div>
+                    {% endblock %}
+                </div>
+
+                {% block content %}{% endblock %}
+
             </div>
 
-            {% block content %}{% endblock %}
-        </div>
         {% endblock %}
+
         {% block right %}
             <div class="newsright">
                 <div class="bannerleft nomargin">
-                    <a href="#">
-                        <img src="{% static 'tppcenter/img/banner/r1.jpg' %}" alt="" />
-                    </a>
+                   {% right_tv %}
                 </div>
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
@@ -257,6 +298,8 @@
                  </div>
             </div>
         {% endblock %}
+
     </div>
+
 {% endblock %}
 

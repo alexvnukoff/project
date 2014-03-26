@@ -5,6 +5,18 @@
 <script>
     $('.keyword').html('');
 </script>
+<script>
+    {% getOwner item_id as owner %}
+
+
+    ga('set', 'dimension1', {{ item_id }});
+
+    {% if owner %}
+        ga('set', 'dimension3', {{ owner.id }});
+    {% endif %}
+
+    ga('set', 'dimension2', 'company');
+</script>
 
 {% with companyValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
@@ -14,8 +26,9 @@
 <script type="text/javascript">
     var marker;
         $(document).ready(function($) {
-            $( '#tpp-details-tab' ).tabs();
-            var href = $('#tpp-details-tab').find('a[href="#cpn-tabs-contacts"]');
+            var tabs = $( '#tpp-details-tab' )
+            tabs.tabs();
+            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
             (href).on('click',function(){
 
                 {% if position %}

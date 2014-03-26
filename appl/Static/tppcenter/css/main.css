@@ -5,7 +5,7 @@ body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:1
 .wrapper{ width:1000px; margin:0 auto;}
 .tophead{ display:inline-block; width:100%; height:34px; background-color:#f5f5f5;
 background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#fbfbfb)); background: -moz-linear-gradient(top, #efefef, #fbfbfb);}
-.tophead-l{ float:left; width:45%; line-height:34px; color:#9b9b9b;}
+.tophead-l{ float:left; width:55%; line-height:34px; color:#9b9b9b;}
 .tophead-l a{ color:#9b9b9b; padding:0 5px;}
 .tophead-l a:hover{ color:#0089bc; text-decoration:none;}
 .tophead-r{ float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}

@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-{% block title %}News Detail{% endblock %}
+{% block title %}{% trans 'Product detail' %}{% endblock %}
 
 
 {{% block styles %}
@@ -90,8 +90,8 @@
 							<div class="discount"><i class="icons i-after"></i> спеццена</div>
 							<a href="#"><img src="images/products/pr8.jpg" alt=""></a>
 							<div class="coupon-info">
-								<p><a href="#">Распродажа</a></p>
-								<p>осенней коллекции</p>
+								<p><a href="#">{% trans 'Sale' %}</a></p>
+								<p>{% trans 'winter collection' %}</p>
 							</div>
 						</li>
 					</ul>
@@ -136,15 +136,15 @@
 						<div class="imgout">
 							<div id="imagebig">
                                 <a href="#" data-index="0" class="bzoom"><i class="icons i-zoom"></i></a>
-								<img src="{% static picture %}" border="0" />
+								<img src="{{ MEDIA_URL }}big/{{ picture }}" border="0" />
 							</div>
 						</div>
 						<ul class="allthumb">
 							<li>
-                                <a href="#"  data-big="{% static picture %}" class="image">
-                                    <img src="{% static picture %}" class="imagesmall" border="0"/>
+                                <a href="#"  data-big="{{ MEDIA_URL }}big/{{ picture }}" class="image">
+                                    <img src="{{ MEDIA_URL }}small/{{ picture }}" class="imagesmall" border="0"/>
                                 </a>
-                                <a href="{% static picture %}" class="fancybox" rel="gallery" style="display: none;"></a>
+                                <a href="{{ MEDIA_URL }}big/{{ picture }}" class="fancybox" rel="gallery" style="display: none;"></a>
                             </li>
 						</ul>
 					</div>
@@ -253,7 +253,7 @@
 					</div>
 
 					<div class="feedback">
-						<h3>Transaction History & Feedback</h3>
+						<h3>{% trans 'Transaction History & Feedback' %}</h3>
                     {% for id , attr  in commentsList.items %}
 
                         {% with attr.DETAIL_TEXT|first as content  %}
@@ -335,7 +335,7 @@
                                 <div class="img_prod_slider">
                                     <div class="shadow"></div>
                                     <div class="img_block">
-                                        <img src="{% static picture %}" alt="{{ name }}">
+                                        <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}">
 
                                     </div>
                                 </div>

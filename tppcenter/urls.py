@@ -24,6 +24,7 @@ import tppcenter.Project
 import tppcenter.Project.urls
 import tppcenter.Analytic
 import tppcenter.Analytic.urls
+from tppcenter.News.views import NewsFeed
 
 
 admin.autodiscover()
@@ -44,8 +45,9 @@ urlpatterns = patterns('',
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
+    url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
-     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
+    url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
     url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
@@ -63,7 +65,7 @@ urlpatterns = patterns('',
     url(r'^test/', tppcenter.views.test),
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/tpp/', include(admin.site.urls)),
 
 
     url(r'^items/$', tppcenter.views.set_items_list),
@@ -88,7 +90,8 @@ urlpatterns = patterns('',
 
 
 
-
+    url(r'^adv/tops/', tppcenter.views.getLiveTop),
+    url(r'^adv/bann/', tppcenter.views.getLiveBanner),
     url(r'^filter/', tppcenter.views.jsonFilter),
 
     url(r'^(upload/.+)$', tppcenter.views.redirectTo),

@@ -19,7 +19,7 @@
             <div class="container">
                 <div id="header">
                     <div class="head-l">
-                        <a href="/" class="imgshop" id="logo">Центр покупок</a>
+                        <a href="/" class="imgshop" id="logo">{% trans 'Shopcenter' %}</a>
                         <div id="sl-lang">
                             <div id="linklang">
                                 Израиль, Иерусалим
@@ -102,75 +102,9 @@
                     <div class="bginput">
                         <i class="icon-search imgshop"></i>
                         <input type="text" name="" placeholder={% trans "Search Products" %} class="text" />
-                        <div class="styled-select">
-                            <select name="select">
-                              <option value="">{% trans "Choose category"%}</option>
-                              {% for parent_name , dict  in categotySelect|sort  %}
-
-
-
-
-                             {%  for name , item in  dict|sort%}
-                                   {% with  item.ID as id%}
-                                   {% with  item.LEVEL as  level %}
-
-
-                                {% if name == "@Parent" %}
-                                         <option value="{{ id }}">{{ parent_name }}</option>
-
-                                 {% endif %}
-                                  {% if level == 2 %}
-                                         <option value="{{ id }}">-{{name}}</option>
-
-                                 {% endif %}
-                                 {% if level == 3 %}
-                                         <option value="{{ id }}">--{{name}}</option>
-
-                                 {% endif %}
-                                 {% endwith %}
-                                 {% endwith %}
-                      {% endfor %}
-
-               {% endfor %}
-
-                            </select>
-                        </div>
-                        <div class="styled-select">
-
-
-
-                            <select name="select">
-                              <option value="1">{% trans "Choose region" %}</option>
-                                     {% for id ,  country  in countryList.items %}
-                                       {% with  country.NAME|first as name %}
-                                          <option value="{{ id }}">{{ name }}</option> countryList
-                                       {% endwith %}
-                                     {% endfor %}
-
-                            </select>
-                        </div>
+                         {% categories %}
+                         {% countries %}
                     </div>
-                    <a href="#" class="btns">Поиск</a>
+                    <a href="#" class="btns">{% trans 'Search' %}</a>
                 </div>
-               {% if country %}<div id="flag">{% else %}<div id="flag-var">{% endif %}
-                    <ul>
-
-                             {% for id, flag  in flagList.items %}
-                             {% with flag.NAME|first as name  %}
-                              {% with flag.FLAG|first  as flag  %}
-
-
-
-                     <li {% if country == id|slugify %} class="active"{% endif %}>
-
-                              <i class="iflag">
-                             <a href="{% dynurl url_country id url_country_parametr  %}"> <img src="{% static flag %}" alt="{{ name }}"></a>
-                                </i>
-                         {% if not country %} <a href="{% dynurl url_country id url_country_parametr  %}">{{ name }}</a>{% endif %}
-                        </li>
-
-                        {% endwith %}
-                    {% endwith %}
-                    {% endfor %}
-                    </ul>
-                </div>
+                 {% flags country url_country url_country_parametr %}
