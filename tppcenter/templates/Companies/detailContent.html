@@ -53,6 +53,11 @@
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
             {% with companyValues.IMAGE.0 as image %}
+            {% with companyValues.ADDRESS.0 as address %}
+            {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
+            {% with companyValues.EMAIL.0 as email %}
+            {% with companyValues.FAX.0 as fax %}
+            {% with companyValues.SITE_NAME.0 as site_name %}
 
             {% with country.FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
@@ -161,12 +166,40 @@
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
+                             <div class="org-contacts">
+                               <ul>
+                                	<li>
+                                    	<span class="left">{% trans 'Address' %}: </span>
+                                        <span class="right">{{ address }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Telephone number' %}: </span>
+                                        <span class="right">{{ telephone_number }} </span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Fax' %}: </span>
+                                        <span class="right">{{ fax }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ email }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'WWW' %}: </span>
+                                        <span class="right">{{ site_name }}</span>
+                                    </li>
+                                </ul>
+                             </div>
 
-
-                              <div id="map-canvas"></div>
+                              <div class="org-map"> <div   id="map-canvas"></div></div>
                         </div>
                     </div>
                 </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

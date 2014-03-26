@@ -196,7 +196,8 @@ def _companiesDetailContent(request, item_id):
 
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
-        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
+        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
+                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME'))
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
 
