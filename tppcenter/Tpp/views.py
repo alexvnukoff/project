@@ -85,9 +85,14 @@ def _tppContent(request, page=1, my=None):
     cached = False
     cache_name = "tpp_list_result_page_%s" % page
     query = request.GET.urlencode()
-    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
-        cached = cache.get(cache_name)
+
+    if not my and not request.user.is_authenticated():
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+            cached = cache.get(cache_name)
+
     if not cached:
+
+        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = func.filterLive(request)
@@ -96,8 +101,6 @@ def _tppContent(request, page=1, my=None):
 
             if len(searchFilter) > 0:
                 sqs = sqs.filter(searchFilter)
-
-            q = request.GET.get('q', '')
 
             if q != '':
                 sqs = sqs.filter(title=q)
@@ -140,15 +143,20 @@ def _tppContent(request, page=1, my=None):
                 'order2': order2
             }
         else:
-             current_organization = request.session.get('current_company', False)
+            current_organization = request.session.get('current_company', False)
 
-             if current_organization:
-                 tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
+            if current_organization:
+                tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
 
-                 url_paginator = "tpp:my_main_paginator"
-                 params = {}
-             else:
-                 raise ObjectDoesNotExist('you need check company')
+                if q != '':
+                   tpp = tpp.filter(title=q)
+
+                tpp.order_by('-obj_create_date')
+
+                url_paginator = "tpp:my_main_paginator"
+                params = {}
+            else:
+                raise ObjectDoesNotExist('you need check company')
 
         attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
 
@@ -189,8 +197,10 @@ def _tppContent(request, page=1, my=None):
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
-           cache.set(cache_name, rendered)
+
+        if not my and not request.user.is_authenticated():
+            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+                cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)

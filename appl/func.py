@@ -816,21 +816,23 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     cache_name = "%s_list_result_page_%s" % (model.__name__, page)
     query = request.GET.urlencode()
 
-    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
-        cached = cache.get(cache_name)
+    if not my and not request.user.is_authenticated():
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+            cached = cache.get(cache_name)
 
     if not cached:
+
+        q = request.GET.get('q', '')
+
         if not my:
             filters, searchFilter = filterLive(request)
 
             sqs = getActiveSQS().models(model)
 
-            if len(searchFilter) > 0:
+            if len(searchFilter) > 0: #Got filter values
                 sqs = sqs.filter(searchFilter)
 
-            q = request.GET.get('q', '')
-
-            if q != '':
+            if q != '': #Search for content
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
             sortFields = {
@@ -874,25 +876,26 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-               if model != Tpp:
+                if model != Tpp:
                     proposal = SearchQuerySet().models(model).\
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
-               else:
+                else:
                     proposal = SearchQuerySet().models(model).\
                         filter(SQ(id=current_organization) | SQ(company=current_organization))
 
-               url_paginator = "%s:my_main_paginator" % url
-               params = {}
+
+                if q != '': #Search for content
+                    proposal = proposal.filter(SQ(title=q) | SQ(text=q))
+
+                proposal.order_by('-obj_create_date')
+
+                url_paginator = "%s:my_main_paginator" % url
+                params = {}
             else:
                  raise ObjectDoesNotExist('you need check company')
 
 
         result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
-
-
-
-
-
 
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
@@ -918,8 +921,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
-           cache.set(cache_name, rendered)
+
+        if not my and not request.user.is_authenticated():
+            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+                cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)

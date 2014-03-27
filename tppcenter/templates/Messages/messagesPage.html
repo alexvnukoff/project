@@ -4,12 +4,12 @@
 {% if messagesList|length < 10 %}
     <div class="last"></div>
 {% endif %}
+
 {% for id, attr in messagesList.items %}
-    {% with attr.CREATE_DATE as date %}
+
+    {% with attr.CREATE_DATE|first as date %}
     {% with attr.DETAIL_TEXT|first as message %}
-    {% with attr.USER_FIRST_NAME|first as fname %}
-    {% with attr.USER_LAST_NAME|first as lname %}
-    {% with attr.IMAGE|first as image %}
+    {% with attr.OWNER as owner %}
 
     {% if lastDate and forloop.first %}
 
@@ -18,34 +18,68 @@
         {% endif %}
 
     {% else %}
+
         {% ifchanged date.day date.month date.year %}
             <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
         {% endifchanged %}
+
     {% endif %}
 
-    <div class="customline" data-message="{{ id }}" data-date="{{ date|date:"Y-n-d H:m:s.u" }}">
-        <label class="time">{{ fname }} {{ lname }}    {{ date|date:"H:i" }}</label>
-        <div class="clumnleft">
-            <span class="thumb">
-                <img src="{{ MEDIA_URL }}th/{{ image }}"/>
-            </span>
+    {% with owner.USER_FIRST_NAME|first as fname %}
+    {% with owner.USER_LAST_NAME|first as lname %}
+    {% with owner.NAME|first as name %}
+    {% with owner.IMAGE|first as image %}
+
+        <div class="customline" data-message="{{ id }}" data-date="{{ date|date:"Y-n-d H:m:s.u" }}">
+
+            <label class="time">
+
+                {% if name %}
+
+                    {{ name}}
+
+                {% elif fname or lname %}
+
+                    {{ fname }} {{ lname }}
+
+                {% endif %}
+
+                {{ date|date:"H:i" }}
+            </label>
+
+            <div class="clumnleft">
+                <span class="thumb">
+                    <img src="{{ MEDIA_URL }}th/{{ image }}"/>
+                </span>
+            </div>
+
+            <div class="clumnright">
+                <p>{{ message }}</p>
+            </div>
+
         </div>
-        <div class="clumnright">
-            <p>{{ message }}</p>
-        </div>
-    </div>
+
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
 
     {% if forloop.last and startDate %}
+
         {% if startDate.day != date.day or startDate.month != date.month or startDate.year != date.year %}
              <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
-        {% endif %}    {% endif %}
+        {% endif %}
+
+    {% endif %}
+
     {% endwith %}
     {% endwith %}
     {% endwith %}
-    {% endwith %}
-    {% endwith %}
+
 {% empty %}
+
         {% if startDate %}
              <div class="dateline"><span>{{ startDate|date:"d M Y" }}</span></div>
         {% endif %}
+
 {% endfor %}

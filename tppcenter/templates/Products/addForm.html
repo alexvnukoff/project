@@ -10,7 +10,95 @@
     });
 </script>
 
-{% block keywords %}{% endblock %}
+
+<script>
+$.fn.onChangeSet = function(e) {
+
+
+                if ( e.added ) {
+
+                     var input = $('<input />');
+                     var name = $(this).attr('name')
+
+                    input.attr({
+                        name: "filter[" + name + "][]",
+                        value: e.added.id,
+                        type: 'hidden'
+                    });
+
+                    input.data('cost', e.added.cost);
+
+                    e.added.cost = parseFloat(e.added.cost);
+                    cost = e.added.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                    html = $('<li></li>').addClass('basket-' + e.added.id);
+                    html.append('<span class="left">' + e.added.title + '</span>');
+                    html.append('<span class="right">' + cost + ' $/{% trans "day" %}</span>');
+
+                    priceList.append(html);
+                    totalCost += e.added.cost;
+
+                    setTotal();
+
+                    input.appendTo(advForm);
+                } else if ( e.removed ) {
+                    toRemove = advForm.find('input[value="' + e.removed.id + '"]');
+
+                    cost = toRemove.data('cost');
+                    toRemove.remove();
+                    priceList.find('li.basket-' + e.removed.id).remove();
+
+                    totalCost -= parseFloat(cost);
+                    setTotal();
+                }
+
+            };
+
+
+
+
+            $('.ads-details-center .filter input').select2({
+                    width: "100%",
+                    multiple:true,
+                    formatNoMatches: noMatches,
+                    ajax: {
+                        url: "/advbanner/filter/",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        return {
+                            page: page, // page number
+                            type: $(this).attr('name')
+                            };
+                        },
+                        results: function (data, page) {
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            // notice we return the value of more so Select2 knows if more results can be loaded
+                            return {results: data.content, more: more};
+                        }
+
+                    },
+                    initSelection : function (element, callback) {
+                        var name = element.attr('name');
+
+                        if ( name in initial )
+                        {
+                            e = {'added': {}, removed: {}};
+
+                            for ( data in initial[name] )
+                            {
+                                e.added = initial[name][data];
+                                 element.onChangeSet(e);
+                            }
+
+                            callback(initial[name]);
+                        }
+                    },
+                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+            }).on("change", function(e) { $(this).onChangeSet(e) });
+</script>
 
 <div class="newsform">
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
