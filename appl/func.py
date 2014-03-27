@@ -974,6 +974,12 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
+        if request.user.is_authenticated():
+            items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
+        else:
+            items_perms = ""
+
+
 
         addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
@@ -990,6 +996,8 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
+            'items_perms': items_perms,
+            'current_path': request.get_full_path()
 
         }
         templateParams.update(params)
