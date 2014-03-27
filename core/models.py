@@ -537,7 +537,7 @@ class Item(models.Model):
                             group_list.append('Staff')
                 else:
                     #if obj_type == 'company':
-                    #try to receive TPP for this company using Item class and Relationship and check is the user in Community
+                    #try to receive TPP for this company using Item class and Relationship and check is there user in Community
                     if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
                                         values('c2p__parent__organization__community__name')) and user.is_manager:
                         group_list.append('Owner')
@@ -553,7 +553,7 @@ class Item(models.Model):
                         else:
                             #try to check Company's TPP for this Item and check is there User in TPP's community and manager
                             prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False,\
-                                pk=self.pk).values('c2p__parent__id');
+                                                                            pk=self.pk).values('c2p__parent__id');
                             for tpp in prnt_lst:
                                 if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False,\
                                     pk=tpp.get('c2p__parent__id')).values('c2p__parent__organization__community__name'))\

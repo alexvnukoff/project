@@ -464,9 +464,9 @@ def _tabsStaff(request, company, page=1):
         dep_lst = [dep.pk for dep in departments]
 
         if len(dep_lst) == 0:
-            dep_lst = comp.community.pk # if Company w/o Departments
-
-        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+            departmentsList = []
+        else:
+            departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
 
         templateParams = {
             'workersList': workersList,
