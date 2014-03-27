@@ -146,11 +146,7 @@ $.fn.onChangeSet = function(e) {
                 {% endif %}
 
                 <div class="fileinputs">
-                    <input name="IMAGE" type="file" class="fileimg" />
-                    <div class="fakefile">
-                        <input class="inputhide" />
-                        <img src="{% static "tppcenter/img/file.png" %}" />
-                    </div>
+                    <input name="IMAGE" type="file" style="width: 100%"  />
                 </div>
             </div>
 
@@ -175,11 +171,7 @@ $.fn.onChangeSet = function(e) {
                 {% endif %}
 
                 <div class="fileinputs">
-                    <input name="SMALL_IMAGE" type="file" class="fileimg" />
-                    <div class="fakefile">
-                        <input class="inputhide" />
-                        <img src="{% static "tppcenter/img/file.png" %}" />
-                    </div>
+                    <input name="SMALL_IMAGE" type="file" style="width: 100%"  />
                 </div>
             </div>
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
@@ -211,11 +203,7 @@ $.fn.onChangeSet = function(e) {
                     {% endif %}
 
                     <div class="fileinputs">
-                        <input name="form-{{ i }}-photo" type="file" class="fileimg" />
-                        <div class="fakefile">
-                            <input class="inputhide" />
-                            <img src="{% static "tppcenter/img/file.png" %}" />
-                        </div>
+                        <input name="form-{{ i }}-photo" type="file" style="width: 100%"  />
                     </div>
                 </div>
             {% endfor %}
