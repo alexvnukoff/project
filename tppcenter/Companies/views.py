@@ -150,7 +150,7 @@ def _companiesContent(request, page=1, my=None):
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
+                companies = func.getActiveSQS().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
 
                 if q != '':
                     companies = companies.filter(title=q)
@@ -169,7 +169,11 @@ def _companiesContent(request, page=1, my=None):
 
         companyList = result[0]
         company_ids = [id for id in companyList.keys()]
-        func.addDictinoryWithCountryToCompany(company_ids,companyList)
+        if request.user.is_authenticated():
+            items_perms = func.getUserPermsForObjectsList(request.user, company_ids, Company.__name__)
+        else:
+            items_perms = ""
+        func.addDictinoryWithCountryToCompany(company_ids, companyList)
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -182,6 +186,8 @@ def _companiesContent(request, page=1, my=None):
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
+            'items_perms': items_perms,
+            'current_path': request.get_full_path()
 
         }
 
@@ -501,10 +507,16 @@ def companyForm(request, action, item_id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Companies")
+    if action == 'set':
+        newsPage = setCurrent(request, item_id)
+
+    if action == 'delete':
+        newsPage = deleteCompany(request, item_id)
 
     if action == 'add':
         newsPage = addCompany(request)
-    else:
+
+    if action == 'update':
         newsPage = updateCompany(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -569,6 +581,7 @@ def addCompany(request):
 
 def updateCompany(request, item_id):
 
+
     item = Organization.objects.get(pk=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
@@ -619,7 +632,8 @@ def updateCompany(request, item_id):
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
-            return HttpResponseRedirect(reverse('companies:main'))
+
+            return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 
 
     template = loader.get_template('Companies/addForm.html')
@@ -641,3 +655,37 @@ def updateCompany(request, item_id):
     return newsPage
 
 
+
+def deleteCompany(request, item_id):
+    item = Organization.objects.get(pk=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_company' not in perm_list:
+        return func.permissionDenied()
+
+    instance = Company.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
+
+
+def setCurrent(request, item_id):
+    item = Organization.objects.get(pk=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'change_company' not in perm_list:
+        return func.permissionDenied()
+
+    request.session['current_company'] = int(item_id)
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))

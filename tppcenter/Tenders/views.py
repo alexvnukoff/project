@@ -152,10 +152,13 @@ def tenderForm(request, action, item_id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Tenders")
+    if action == 'delete':
+        tendersPage = deleteTender(request, item_id)
 
     if action == 'add':
         tendersPage = addTender(request)
-    else:
+
+    if action == 'update':
         tendersPage = updateTender(request, item_id)
 
     if isinstance(tendersPage, HttpResponseRedirect) or isinstance(tendersPage, HttpResponse):
@@ -267,7 +270,7 @@ def updateTender(request, item_id):
             addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                lang_code=settings.LANGUAGE_CODE)
 
-            return HttpResponseRedirect(reverse('tenders:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('tenders:main'))
 
     template = loader.get_template('Tenders/addForm.html')
 
@@ -285,6 +288,24 @@ def updateTender(request, item_id):
     return tendersPage
 
 
+
+def deleteTender(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_tender' not in perm_list:
+        return func.permissionDenied()
+
+    instance = Tender.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('tenders:main'))
 
 
 
