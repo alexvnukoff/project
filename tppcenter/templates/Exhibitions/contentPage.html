@@ -25,12 +25,18 @@
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                   {% if has_perms %}
+                   {% resolve items_perms id|slugify as permlist %}
+
+                     {% if 'delete_exhibition' in  permlist or 'change_exhibition' in permlist%}
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                <div class="tender-action"><i class="imgnews remove icon-action"></i><span class="deletext">{% trans 'remove' %}</span></div>
-                                <div class="tender-action"><i class="imgnews edit icon-action"></i><span class="deletext">{% trans 'edit' %}</span></div>
+                                {% if 'delete_exhibition' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                {% endif %}
+                                {% if 'change_exhibition' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
                             </div>
                         </div>
                    {% endif %}

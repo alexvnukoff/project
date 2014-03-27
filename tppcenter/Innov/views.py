@@ -149,7 +149,7 @@ def _innovContent(request, page=1, my=None):
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                innov_projects = SearchQuerySet().models(InnovationProject)
+                innov_projects = func.getActiveSQS().models(InnovationProject)
                 innov_projects = innov_projects.filter(SQ(tpp=current_organization) | SQ(company=current_organization))
 
                 if q != '':
@@ -160,13 +160,17 @@ def _innovContent(request, page=1, my=None):
                 url_paginator = "innov:my_main_paginator"
                 params = {}
 
-            else: #TODO Jenya do block try
+            else:
                 raise ObjectDoesNotExist('you need check company')
 
         result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
 
         innovList = result[0]
         innov_ids = [id for id in innovList.keys()]
+        if request.user.is_authenticated():
+            items_perms = func.getUserPermsForObjectsList(request.user, innov_ids, InnovationProject.__name__)
+        else:
+            items_perms = ""
 
 
         branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
@@ -201,6 +205,8 @@ def _innovContent(request, page=1, my=None):
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
+            'items_perms': items_perms,
+            'current_path': request.get_full_path()
 
         }
 
@@ -319,9 +325,13 @@ def innovForm(request, action, item_id=None):
 
     current_section = _("Innovation Project")
 
+    if action == 'delete':
+        newsPage = deleteInnov(request, item_id)
+
+
     if action == 'add':
         newsPage = addProject(request)
-    else:
+    if action == 'update':
         newsPage = updateProject(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -453,7 +463,7 @@ def updateProject(request, item_id):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
-            return HttpResponseRedirect(reverse('innov:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
 
     template = loader.get_template('Innov/addForm.html')
     context = RequestContext(request, {'gallery': gallery, 'photos': photos, 'form': form, 'pages': pages,
@@ -467,5 +477,24 @@ def updateProject(request, item_id):
 
 
 
+def deleteInnov(request, item_id):
+    try:
+        item = Organization.objects.get(p2c__child_id=item_id)
+    except ObjectDoesNotExist:
+        item = Cabinet.objects.get(p2c__child_id=item_id)
 
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_innovationproject' not in perm_list:
+        return func.permissionDenied()
+
+    instance = InnovationProject.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
 

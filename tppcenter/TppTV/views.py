@@ -98,10 +98,12 @@ def tvForm(request, action, item_id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("TppTv")
+    if action == 'delete':
+        newsPage = deleteTppTv(request, item_id)
 
     if action == 'add':
         newsPage = addNews(request)
-    else:
+    if action == 'update':
         newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -198,7 +200,7 @@ def updateNew(request, item_id):
             addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                   lang_code=settings.LANGUAGE_CODE)
 
-            return HttpResponseRedirect(reverse('tv:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
 
 
     template = loader.get_template('TppTV/addForm.html')
@@ -283,3 +285,17 @@ def _getdetailcontent(request, item_id):
 
 
 
+
+def deleteTppTv(request, item_id):
+    if not 'Redactor' in request.user.groups.values_list('name', flat=True):
+        return func.permissionDenied()
+
+    instance = TppTV.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))

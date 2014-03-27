@@ -952,10 +952,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
             if current_organization:
                 if model != Tpp:
-                    proposal = SearchQuerySet().models(model).\
+                    proposal = getActiveSQS().models(model).\
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
-                    proposal = SearchQuerySet().models(model).\
+                    proposal = getActiveSQS().models(model).\
                         filter(SQ(id=current_organization) | SQ(company=current_organization))
 
 
@@ -974,10 +974,15 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
+        redactor = False
         if request.user.is_authenticated():
             items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
         else:
             items_perms = ""
+        if model is News or model is TppTV:
+            if 'Redactor' in request.user.groups.values_list('name', flat=True):
+                 redactor = True
+
 
 
 
@@ -997,7 +1002,8 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
             'items_perms': items_perms,
-            'current_path': request.get_full_path()
+            'current_path': request.get_full_path(),
+            'redactor': redactor
 
         }
         templateParams.update(params)

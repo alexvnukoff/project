@@ -108,10 +108,13 @@ def newsForm(request, action, item_id=None):
 
 
     current_section = _("News")
+    if action == 'delete':
+       newsPage = deleteNews(request, item_id)
 
     if action == 'add':
         newsPage = addNews(request)
-    else:
+
+    if action == 'update':
         newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -326,6 +329,28 @@ def _getdetailcontent(request, item_id):
     return rendered, description, title
 
 
+
+
+
+def deleteNews(request, item_id):
+    if not 'Redactor' in request.user.groups.values_list('name', flat=True):
+
+        item = Organization.objects.get(p2c__child_id=item_id)
+
+        perm_list = item.getItemInstPermList(request.user)
+
+        if 'delete_news' not in perm_list:
+            return func.permissionDenied()
+
+    instance = News.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
 
 

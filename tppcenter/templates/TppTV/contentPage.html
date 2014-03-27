@@ -16,15 +16,19 @@
                     {% with attr.COUNTRY_ID as country_id %}
                     {% with attr.IMAGE|first as image %}
                 <li>
-                  {% if has_perms %}
-                    <div class="blockbox">
+                  {% resolve items_perms id|slugify as permlist %}
+
+                     {% if  redactor %}
+                       <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                <div class="tender-action"><i class="imgnews remove icon-action"></i><span class="deletext">{% trans 'remove' %}</span></div>
-                                <div class="tender-action"><i class="imgnews edit icon-action"></i><span class="deletext">{% trans 'edit' %}</span></div>
+                                {% if 'redactor'  %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tv:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
                             </div>
                         </div>
-                  {% endif %}
+                   {% endif %}
                 	<div class="title-tv">
                         {% if flag %}
                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
