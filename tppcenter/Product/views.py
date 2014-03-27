@@ -165,9 +165,13 @@ def productForm(request, action, item_id=None):
 
     current_section = _("Products")
 
+    if action == 'delete':
+        productsPage = deleteProduct(request, item_id)
+
     if action == 'add':
         productsPage = addProducts(request)
-    else:
+
+    if action == 'update':
         productsPage = updateProduct(request, item_id)
 
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
@@ -274,7 +278,7 @@ def updateProduct(request, item_id):
 
     perm_list = item.getItemInstPermList(request.user)
 
-    if 'change_exhibition' not in perm_list:
+    if 'change_product' not in perm_list:
         return func.permissionDenied()
 
     try:
@@ -339,7 +343,7 @@ def updateProduct(request, item_id):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
-            return HttpResponseRedirect(reverse('products:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
 
     template = loader.get_template('Products/addForm.html')
@@ -365,3 +369,20 @@ def updateProduct(request, item_id):
 
 
 
+def deleteProduct(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_product' not in perm_list:
+        return func.permissionDenied()
+
+    instance = Product.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))

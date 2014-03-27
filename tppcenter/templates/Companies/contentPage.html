@@ -21,15 +21,25 @@
                         {% with attr.COUNTRY_FLAG|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
                          <li>
-                           {% if has_perms %}
-                            <div class="blockbox">
+                           {% resolve items_perms id|slugify as permlist %}
+
+                             {% if 'delete_company' in  permlist or 'change_company' in permlist%}
+                               <div class="blockbox">
                                     <a href="#"><i class="btn-afisha imgnews"></i></a>
                                     <div class="localmenu">
-                                        <div class="tender-action"><i class="imgnews remove icon-action"></i><span class="deletext">{% trans 'remove' %}</span></div>
-                                        <div class="tender-action"><i class="imgnews edit icon-action"></i><span class="deletext">{% trans 'edit' %}</span></div>
+                                        {% if 'delete_company' in  permlist %}
+                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                        {% endif %}
+                                        {% if 'change_company' in permlist %}
+                                             <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                              <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:set' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
+                                       {% endif %}
+                                       {% if 'add_advtop' in permlist %}
+                                           <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                       {% endif %}
                                     </div>
                                 </div>
-                          {% endif %}
+                           {% endif %}
                             <div class="title">
                                 <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
                                 <a href="{% url 'companies:detail' slug %}">

@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="container">
 
 
@@ -20,12 +21,21 @@
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
-                     {% if has_perms %}
+                    {% resolve items_perms id|slugify as permlist %}
+
+                     {% if 'delete_businessproposal' in  permlist or 'change_businessproposal' in permlist%}
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                <div class="tender-action"><i class="imgnews remove icon-action"></i><span class="deletext">{% trans 'remove' %}</span></div>
-                                <div class="tender-action"><i class="imgnews edit icon-action"></i><span class="deletext">{% trans 'edit' %}</span></div>
+                                {% if 'delete_businessproposal' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'proposal:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                {% endif %}
+                                {% if 'change_businessproposal' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'proposal:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
+                                {% if 'add_advtop' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                {% endif %}
                             </div>
                         </div>
                    {% endif %}
