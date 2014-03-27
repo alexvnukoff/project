@@ -442,57 +442,68 @@ def _tabsStaff(request, company, page=1):
                 communityGroup = Group.objects.get(pk=comp.community_id)
                 communityGroup.user_set.remove(userToDetach)
 
-        return HttpResponse('Ok')
+    # add a new user to department
+    userEmail = request.POST.get('userEmail', '')
+    if len(userEmail):
+        departmentName = request.POST.get('departmentName','')
+        if len(departmentName):
+            dep = Department.objects.get(c2p__parent=company, item2value__attr__title='NAME', item2value__title=departmentName)
+            communityGroup = Group.objects.get(pk=dep.community_id)
+            try:
+                usr = User.objects.get(email=userEmail)
+                communityGroup.user_set.add(usr)
+            except:
+                pass
+
+    comp = Company.objects.get(pk=company)
+    cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+    cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+    attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
+
+    cabinets = Cabinet.objects.filter(pk__in=cab_lst)
+    workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+
+    # add Department, Joined_date and Status fields
+    dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+    org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
+    #create correlation list between Organization IDs and Cabinet IDs
+    correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+    for cab_id, cab_att in workersList.items(): #get Cabinet ID
+        for t in correlation: #lookup into corelation list
+            if t[1] == cab_id: #if Cabinet ID then...
+                dep_id = t[0] #...get Organization ID
+                for org_id, org_attr in org_lst.items(): #from OrderedDict...
+                    if org_id == dep_id:    #if found the same Organization ID then...
+                        #... set additional attributes for Users (Cabinets) befor sending to web form
+                        cab_att['DEPARTMENT'] = org_attr['NAME']
+                        cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
+                        cab_att['STATUS'] = ['Active']
+                        break
+
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "companies:tab_staff_paged"
+
+    #create full list of Company's departments
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+
+    dep_lst = [dep.pk for dep in departments]
+
+    if len(dep_lst) == 0:
+        departmentsList = []
     else:
-        comp = Company.objects.get(pk=company)
-        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
-        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
-        attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
+        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
 
-        cabinets = Cabinet.objects.filter(pk__in=cab_lst)
-        workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+    templateParams = {
+        'workersList': workersList,
+        'departmentsList': departmentsList, #list for add user form
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company,
+    }
 
-        # add Department, Joined_date and Status fields
-        dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
-        org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
-        #create correlation list between Organization IDs and Cabinet IDs
-        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
-
-        for cab_id, cab_att in workersList.items(): #get Cabinet ID
-            for t in correlation: #lookup into corelation list
-                if t[1] == cab_id: #if Cabinet ID then...
-                    dep_id = t[0] #...get Organization ID
-                    for org_id, org_attr in org_lst.items(): #from OrderedDict...
-                        if org_id == dep_id:    #if found the same Organization ID then...
-                            #... set additional attributes for Users (Cabinets) befor sending to web form
-                            cab_att['DEPARTMENT'] = org_attr['NAME']
-                            cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
-                            cab_att['STATUS'] = ['Active']
-                            break
-
-        paginator_range = func.getPaginatorRange(page)
-        url_paginator = "companies:tab_staff_paged"
-
-        #create full list of Company's departments
-        departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
-
-        dep_lst = [dep.pk for dep in departments]
-
-        if len(dep_lst) == 0:
-            departmentsList = []
-        else:
-            departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
-
-        templateParams = {
-            'workersList': workersList,
-            'departmentsList': departmentsList, #list for add user form
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': company,
-        }
-
-        return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
