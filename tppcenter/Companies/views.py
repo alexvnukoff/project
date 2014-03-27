@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.forms.models import modelformset_factory
@@ -13,15 +13,21 @@ from haystack.query import SQ, SearchQuerySet
 import json
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from itertools import chain
 from django.core.cache import cache
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       #   return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     description = ""
+    title = ""
     current_company = request.session.get('current_company', False)
 
     if current_company:
@@ -46,6 +52,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         result = _companiesDetailContent(request, item_id)
         newsPage = result[0]
         description = result[1]
+        title = result[2]
     if not request.is_ajax():
 
         current_section = _("Companies")
@@ -60,7 +67,8 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('companies:add'),
             'cabinetValues': cabinetValues,
             'item_id': item_id,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
@@ -161,19 +169,7 @@ def _companiesContent(request, page=1, my=None):
 
         companyList = result[0]
         company_ids = [id for id in companyList.keys()]
-        countries = Country.objects.filter(p2c__child__in=company_ids, p2c__type='dependence').values('p2c__child', 'pk')
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-        country_dict = {}
-
-        for country in countries:
-            country_dict[country['p2c__child']] = country['pk']
-
-        for id, company in companyList.items():
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
-            company.update(toUpdate)
+        func.addDictinoryWithCountryToCompany(company_ids,companyList)
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -213,9 +209,11 @@ def _companiesDetailContent(request, item_id):
 
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
-        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION'))
+        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
+                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME'))
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
+        title = companyValues.get('NAME', False)[0] if companyValues.get('NAME', False) else ""
 
         country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
 
@@ -224,122 +222,277 @@ def _companiesDetailContent(request, item_id):
         context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 def _tabsNews(request, company, page=1):
+    cache_name = "News_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
 
-    news = func.getActiveSQS().models(News).filter(company=company)
-    attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+    if not cached:
+        news = func.getActiveSQS().models(News).filter(company=company)
+        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
-    result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
+        result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
 
-    newsList = result[0]
+        newsList = result[0]
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-    url_paginator = "companies:tab_news_paged"
+        url_paginator = "companies:tab_news_paged"
 
-    templateParams = {
-        'newsList': newsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company
-    }
+        templateParams = {
+            'newsList': newsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Companies/tabNews.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsTenders(request, company, page=1):
+    cache_name = "Tenders_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
 
-    tenders = func.getActiveSQS().models(Tender).filter(company=company)
+    if not cached:
+        tenders = func.getActiveSQS().models(Tender).filter(company=company)
 
-    attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+        attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
 
-    result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
-
-
-    tendersList = result[0]
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    url_paginator = "companies:tab_tenders_paged"
-
-    templateParams = {
-        'tendersList': tendersList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company,
+        result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
 
 
-    }
+        tendersList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        url_paginator = "companies:tab_tenders_paged"
+
+        templateParams = {
+            'tendersList': tendersList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company,
+
+
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
     
     return render_to_response('Companies/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, company, page=1):
+    cache_name = "Exhibitions_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
 
+    if not cached:
+        exhibition = func.getActiveSQS().models(Exhibition).filter(company=company)
+        attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
-    exhibition = func.getActiveSQS().models(Exhibition).filter(company=company)
-    attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
+        result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
 
-    result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
+        exhibitionList = result[0]
 
-    exhibitionList = result[0]
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+        url_paginator = "companies:tab_exhibitions_paged"
 
-    url_paginator = "companies:tab_exhibitions_paged"
-
-    templateParams = {
-        'exhibitionList': exhibitionList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company
-    }
+        templateParams = {
+            'exhibitionList': exhibitionList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Companies/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsProducts(request, company, page=1):
+    cache_name = "Products_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        products = func.getActiveSQS().models(Product).filter(company=company)
+        attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG', 'DETAIL_TEXT')
+
+        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
 
 
-    products = func.getActiveSQS().models(Product).filter(company=company)
-    attr = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG', 'DETAIL_TEXT')
+        productsList = result[0]
 
-    result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
 
+        url_paginator = "companies:tab_products_paged"
 
-    productsList = result[0]
-
-    page = result[1]
-    paginator_range = func.getPaginatorRange(page)
-
-    url_paginator = "companies:tab_products_paged"
-
-    templateParams = {
-        'productsList': productsList,
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'url_parameter': company
-    }
+        templateParams = {
+            'productsList': productsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
+def _tabsStructure(request, company, page=1):
+    '''
+        Show content of the Company-details-structure panel
+    '''
+    #check if there Department for deletion
+    departmentForDeletion = request.POST.get('departmentID', 0)
+
+    try:
+        departmentForDeletion = int(departmentForDeletion)
+    except ValueError:
+        departmentForDeletion = 0
+
+    if departmentForDeletion > 0:
+        Department.objects.filter(pk=departmentForDeletion).delete()
+
+    #check if there Department for adding
+    departmentToChange = request.POST.get('departmentName', '')
+
+    if len(departmentToChange):
+        #if update department we receive previous name
+        prevDepName = request.POST.get('prevDepName', '')
+        try:
+            #check is there department with 'old' name
+            obj_dep = Department.objects.get(item2value__attr__title="NAME", item2value__title=prevDepName)
+        except:
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
+            Relationship.setRelRelationship(Company.objects.get(pk=company), obj_dep, request.user, type='hierarchy')
+
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
+        obj_dep.reindexItem()
+
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+    attr = ('NAME', 'SLUG')
+
+    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
+
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "companies:tab_structure_paged"
+
+    templateParams = {
+        'departmentsList': departmentsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': company,
+    }
+
+    return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsStaff(request, company, page=1):
+    '''
+        Show content of the Company-details-staff panel
+    '''
+    # get Cabinet ID if user should be detach from Organization
+    cabinetToDetach = request.POST.get('cabinetID', 0)
+
+    try:
+        cabinetToDetach = int(cabinetToDetach)
+    except ValueError:
+        cabinetToDetach = 0
+
+    if cabinetToDetach > 0:
+        userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
+        comp = Company.objects.get(pk=company)
+        #create list of pk for Company's Organizations
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        # create cross list for Cabinet IDs and Organization IDs - list of tuples
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+        for t in correlation:
+            if t[1] == cabinetToDetach:
+                comp = Organization.objects.get(pk=t[0])
+                communityGroup = Group.objects.get(pk=comp.community_id)
+                communityGroup.user_set.remove(userToDetach)
+
+        return HttpResponse('Ok')
+    else:
+        comp = Company.objects.get(pk=company)
+        cab_lst = list(Department.objects.filter(c2p__parent=company, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=comp.community.name).values_list('user__cabinet__pk', flat=True))
+        attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
+
+        cabinets = Cabinet.objects.filter(pk__in=cab_lst)
+        workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+
+        # add Department, Joined_date and Status fields
+        dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+        org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
+        #create correlation list between Organization IDs and Cabinet IDs
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+        for cab_id, cab_att in workersList.items(): #get Cabinet ID
+            for t in correlation: #lookup into corelation list
+                if t[1] == cab_id: #if Cabinet ID then...
+                    dep_id = t[0] #...get Organization ID
+                    for org_id, org_attr in org_lst.items(): #from OrderedDict...
+                        if org_id == dep_id:    #if found the same Organization ID then...
+                            #... set additional attributes for Users (Cabinets) befor sending to web form
+                            cab_att['DEPARTMENT'] = org_attr['NAME']
+                            cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
+                            cab_att['STATUS'] = ['Active']
+                            break
+
+        paginator_range = func.getPaginatorRange(page)
+        url_paginator = "companies:tab_staff_paged"
+
+        #create full list of Company's departments
+        departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+
+        dep_lst = [dep.pk for dep in departments]
+
+        if len(dep_lst) == 0:
+            departmentsList = []
+        else:
+            departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+
+        templateParams = {
+            'workersList': workersList,
+            'departmentsList': departmentsList, #list for add user form
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company,
+        }
+
+        return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
+
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
+    if item_id:
+       if not Company.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     cabinetValues = func.getB2BcabinetValues(request)
 

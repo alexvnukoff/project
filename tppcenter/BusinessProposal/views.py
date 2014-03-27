@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from core.models import Item
 from appl import func
 from django.utils.translation import ugettext as _
@@ -18,6 +18,9 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 
@@ -25,6 +28,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     description = ""
+    title = ""
     cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [
@@ -48,6 +52,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         proposalsPage = result[0]
 
         description = result[1]
+        title = result[2]
 
 
     if not request.is_ajax():
@@ -65,6 +70,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'addNew': reverse('proposal:add'),
             'item_id': item_id,
             'description': description,
+            'title': title
         }
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
@@ -95,12 +101,13 @@ def _proposalDetailContent(request, item_id):
         proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
         description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
+        title = proposalValues.get('NAME', False)[0] if proposalValues.get('NAME', False) else ""
 
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
-        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues)
+        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues, withContacts=True)
 
         template = loader.get_template('BusinessProposal/detailContent.html')
 
@@ -114,17 +121,22 @@ def _proposalDetailContent(request, item_id):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 @login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
+    if item_id:
+       if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
 
     current_company = request.session.get('current_company', False)
 

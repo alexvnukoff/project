@@ -47,8 +47,9 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
-    'BC-CIS.COM', # Also allow FQDN and subdomains
-    'B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.BC-CIS.COM', # Also allow FQDN and subdomains
+    '.B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.centerpokupok.com'
 ]
 
 # Application definition
@@ -69,10 +70,11 @@ INSTALLED_APPS = (
     'appl',
     'legacy_data',
     'djcelery',
+    'loginas',
 
 )
 
-
+CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period

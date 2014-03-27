@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
 from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from core.models import Item, Dictionary
 from appl import func
 from django.core.exceptions import ObjectDoesNotExist
@@ -21,8 +21,14 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
     #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
      #    return HttpResponseRedirect(reverse('innov:detail',  args=[slug]))
 
+
+    if item_id:
+       if not Item.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
+
     current_company = request.session.get('current_company', False)
     description = ''
+    title = ''
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
@@ -44,7 +50,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
        result  = _innovDetailContent(request, item_id)
        newsPage = result[0]
        description = result[1]
-
+       title = result[2]
     if not request.is_ajax():
 
         current_section = _("Innovation Project")
@@ -59,7 +65,8 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
             'addNew': reverse('innov:add'),
             'cabinetValues': cabinetValues,
             'item_id': item_id,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
@@ -161,33 +168,6 @@ def _innovContent(request, page=1, my=None):
         innovList = result[0]
         innov_ids = [id for id in innovList.keys()]
 
-        cabinets = Cabinet.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
-
-        cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
-        countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
-
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
-
-        country_dict = {}
-
-        for country in countries:
-            if country['pk']:
-               country_dict[country['p2c__child']] = country['pk']
-
-        cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
-
-        cabinets_dict = {}
-
-        for cabinet in cabinets:
-            cabinets_dict[cabinet['p2c__child']] = {
-                'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_ID': cabinet['pk'],
-                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
-            }
 
         branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
         branches_ids = [branch['pk'] for branch in branches]
@@ -198,7 +178,7 @@ def _innovContent(request, page=1, my=None):
         for branch in branches:
             branches_dict[branch['p2c__child']] = branch['pk']
 
-        func.addDictinoryWithCountryAndOrganization(innov_ids, innovList)
+
 
         for id, innov in innovList.items():
 
@@ -209,8 +189,7 @@ def _innovContent(request, page=1, my=None):
 
             innov.update(toUpdate)
 
-            if cabinets_dict.get(id, 0):
-               innov.update(cabinets_dict.get(id, 0))
+        func.addDictinoryWithCountryAndOrganizationToInnov(innov_ids, innovList)
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -242,6 +221,7 @@ def _innovContent(request, page=1, my=None):
 
 def _innovDetailContent(request, item_id):
 
+
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
@@ -255,7 +235,7 @@ def _innovDetailContent(request, item_id):
         innovValues = innov.getAttributeValues(*attr)
         description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
-
+        title = innovValues.get('NAME', False)[0] if innovValues.get('NAME', False) else ""
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
@@ -268,7 +248,8 @@ def _innovDetailContent(request, item_id):
             innovValues.update({'BRANCH_NAME': [0], 'BRANCH_ID': 0})
 
 
-        func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues)
+        func.addToItemDictinoryWithCountryAndOrganization(innov.id, innovValues, withContacts=True)
+
 
         cabinet = Cabinet.objects.filter(p2c__child=item_id)
 
@@ -311,18 +292,24 @@ def _innovDetailContent(request, item_id):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, description, 60*60*24*7)
+        cache.set(description_cache_name, (description, title), 60*60*24*7)
 
     else:
         rendered = cache.get(cache_name)
-        description = cache.get(description_cache_name)
+        result = cache.get(description_cache_name)
+        description = result[0]
+        title = result[1]
 
-    return rendered, description
+    return rendered, description, title
 
 
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
+    if item_id:
+       if not InnovationProject.active.get_active().filter(pk=item_id).exists():
+         return HttpResponseNotFound
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)

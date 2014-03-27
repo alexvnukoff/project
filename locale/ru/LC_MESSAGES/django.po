@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-23 14:11+0000\n"
-"PO-Revision-Date: 2014-03-23 17:20+0200\n"
+"PO-Revision-Date: 2014-03-26 15:50+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -278,7 +278,7 @@ msgstr "Войти"
 #: centerpokupok/templates/index.html:4
 #: centerpokupok/templates/Company/header.html:7
 msgid "Shopcenter"
-msgstr "ТПП центер"
+msgstr "ТПП центр"
 
 #: centerpokupok/templates/header_big.html:90
 msgid "Your workplace"
@@ -314,7 +314,7 @@ msgstr "Похожие товары"
 #: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
 #: tppcenter/templates/index.html:94
 msgid "Search"
-msgstr "Исакть"
+msgstr "Искать"
 
 #: centerpokupok/templates/header_small.html:6
 #: tppcenter/templates/base.html:22
@@ -563,7 +563,7 @@ msgstr "Домашняя страница"
 #: tppcenter/templates/Project/about.html:16
 #: tppcenter/templates/Tpp/detailContent.html:44
 msgid "About"
-msgstr "Описанние"
+msgstr "Описание"
 
 #: centerpokupok/templates/Company/header.html:50
 #: tppcenter/templates/base.html:118
@@ -787,7 +787,7 @@ msgstr "Правила возврата"
 
 #: centerpokupok/templates/Product/detail.html:234
 msgid "Short description"
-msgstr "Краткое описанние"
+msgstr "Краткое описание"
 
 #: centerpokupok/templates/Product/detail.html:238
 msgid "Complete description"
@@ -2090,7 +2090,7 @@ msgstr "Описание"
 
 #: tppcenter/templates/base.html:111
 msgid "Advices"
-msgstr "Советы"
+msgstr "Помощь"
 
 #: tppcenter/templates/base.html:132 tppcenter/templates/index.html:131
 msgid "Partners"
@@ -2147,7 +2147,7 @@ msgstr "Применить"
 
 #: tppcenter/templates/index.html:7
 msgid "Tppcenter"
-msgstr "ТПП центер"
+msgstr "ТПП центр"
 
 #: tppcenter/templates/index.html:60
 msgid "All countries"
@@ -2868,11 +2868,11 @@ msgstr "Инновационный проект"
 
 #: tppcenter/templates/Messages/contentBox.html:8
 msgid "Send private message"
-msgstr "Послать личное сообщение"
+msgstr "Отправить личное сообщение"
 
 #: tppcenter/templates/Messages/contentBox.html:13
 msgid "Send"
-msgstr "Послать"
+msgstr "Отправить"
 
 #: tppcenter/templates/Messages/index.html:41
 msgid "Users"
@@ -3018,7 +3018,7 @@ msgstr "Описание"
 
 #: tppcenter/templates/Tpp/addForm.html:197
 msgid "Detail"
-msgstr "Детальное описанние"
+msgstr "Детальное описание"
 
 #: tppcenter/templates/Tpp/tabCompanies.html:7
 msgid "Logo"

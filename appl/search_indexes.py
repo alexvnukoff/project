@@ -1,7 +1,7 @@
 __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
-    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV
+    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV, Department
 from core.models import Relationship
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -1263,6 +1263,78 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return TppTV
+
+
+
+
+class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    obj_start_date = indexes.DateTimeField()
+    obj_end_date = indexes.DateTimeField(null=True)
+    company = indexes.IntegerField()
+
+    id = indexes.IntegerField()
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+
+        self.prepared_data = super(DepartmentIndex, self).prepare(obj)
+
+        attributes = obj.getAttributeValues('NAME')
+
+        if len(attributes) == 0:
+            return self.prepared_data
+
+        textIndex = self.fields['text'].index_fieldname
+        self.prepared_data[textIndex] = attributes[0]
+
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
+
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
+        return self.prepared_data
+
+
+    def prepare_company(self, obj):
+        return Company.objects.get(p2c__child=obj.pk, p2c__type="hierarchy").pk
+
+    def get_model(self):
+        return Department
 
 class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)

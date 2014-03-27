@@ -123,23 +123,22 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if self == obj.create_user: # is user object's owner?
                     group_list.append('Owner')
                     group_list.append('Admin')
-
+                    
                     if obj.status.perm: # is there permissions group for current object's state?
                         group_list.append(obj.status.perm.name)
                     else: # no permissions group for current state, attach Staff group
                         group_list.append('Staff')
                 else:
                     if self == obj.update_user or self.groups.filter(name=obj.community.name).exists(): # is user community member?
-
                         if self.is_manager: # has user content manager flag?
                             group_list.append('Admin')
-
+                          
                             if obj.status.perm: # is there permissions group for current object's state?
                                 group_list.append(obj.status.perm.name)
                             else: # no permissions group for current state, attach Staff group
                                 group_list.append('Staff')
                         else:
-
+                            
                             if obj.status.perm: # is there permissions group for current object's state?
                                 group_list.append(obj.status.perm.name)
                             else: # no permissions group for current state, attach Staff group
@@ -147,7 +146,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                     else:
                         if obj_type == 'company':
                             #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-
                             communityName = self.parentTppCommunityName()
 
                             if self.groups.filter(name=communityName).exists() and self.is_manager:
@@ -174,7 +172,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             for i in perm_list:
                 if i not in p_list:
                     return False
-
+                
             return True
 
     def has_module_perms(self, app_label):
@@ -574,6 +572,7 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
+
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
@@ -669,7 +668,7 @@ class Item(models.Model):
     def getAttributeValues(self, *attr, fullAttrVal=False):
         '''
            Return values of attribute list for specific Item
-           Example item = News.getAttributeValues("NAME", "DETAIL_TEXT")
+                      Example item = self.getAttributeValues("NAME", "DETAIL_TEXT")
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 

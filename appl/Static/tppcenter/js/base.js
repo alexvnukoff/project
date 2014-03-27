@@ -236,13 +236,16 @@ $(document).ready(function()
 
        return false;
     });
-
+    
 	$(".cpn-current").click(function(){
-        var list = $(".list-cpn")
-		if(list.is(":hidden")){
+        var list = $(".list-cpn");
+
+		if(list.is(":hidden"))
+        {
 			list.slideDown();
 		}
-		else{
+		else
+        {
 			list.slideUp();
 		}
 	});

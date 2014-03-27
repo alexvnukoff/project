@@ -46,6 +46,10 @@ def databaseInitialization(sender, **kwargs):
     if created:
         gr4.permissions.add(add_company, read_company)
 
+    gr4, created = Group.objects.get_or_create(name='TPP Creator')
+    if created:
+        gr4.permissions.add(add_tpp, read_tpp)
+
     gr5, created = Group.objects.get_or_create(name='Owner')
     if created:
         gr5.permissions.add(read_company, change_company, delete_company,
