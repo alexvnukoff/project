@@ -4,6 +4,7 @@
 <div class="container">
             {% include "News/popupFilter.html" %}
            {% include "main/paginator.html" %}
+             {% include "main/local_menu_script.html" %}
             <ul class="listnews">
                 {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
@@ -19,6 +20,21 @@
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
+                    {% resolve items_perms id|slugify as permlist %}
+
+                         {% if 'delete_news' in  permlist or 'change_news' in permlist or redactor%}
+                            <div class="blockbox">
+                                <a href="#"><i class="btn-afisha imgnews"></i></a>
+                                <div class="localmenu">
+                                    {% if 'delete_news' in  permlist or redactor %}
+                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'news:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                    {% endif %}
+                                    {% if 'change_news' in permlist or redactor %}
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'news:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                       {% endif %}
 
                         <div class="thumb shadow">
                         <a href="{% url "news:detail" slug %}">

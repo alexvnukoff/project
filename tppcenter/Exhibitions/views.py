@@ -149,9 +149,13 @@ def exhibitionForm(request, action, item_id=None):
 
     current_section = _("Exhibitions")
 
+    if action == 'delete':
+        exhibitionPage = deleteExhibition(request, item_id)
+
     if action == 'add':
         exhibitionPage = addExhibition(request)
-    else:
+
+    if action == 'update':
         exhibitionPage = updateExhibition(request, item_id)
 
     if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):
@@ -274,7 +278,7 @@ def updateExhibition(request, item_id):
             addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                    branch=branch, lang_code=settings.LANGUAGE_CODE)
 
-            return HttpResponseRedirect(reverse('exhibitions:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 
 
     template = loader.get_template('Exhibitions/addForm.html')
@@ -294,6 +298,23 @@ def updateExhibition(request, item_id):
     return exhibitionPage
 
 
+def deleteExhibition(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_exhibition' not in perm_list:
+        return func.permissionDenied()
+
+    instance = Exhibition.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 
 
 

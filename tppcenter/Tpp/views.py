@@ -170,6 +170,10 @@ def _tppContent(request, page=1, my=None):
 
         tppList = result[0]
         tpp_ids = [id for id in tppList.keys()]
+        if request.user.is_authenticated():
+            items_perms = func.getUserPermsForObjectsList(request.user, tpp_ids, Tpp.__name__)
+        else:
+            items_perms = ""
         countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
         countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
@@ -196,6 +200,8 @@ def _tppContent(request, page=1, my=None):
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
+            'items_perms': items_perms,
+            'current_path': request.get_full_path()
         }
 
         templateParams.update(params)

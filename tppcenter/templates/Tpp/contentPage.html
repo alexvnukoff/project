@@ -5,6 +5,7 @@
     <div class="companies">
      {% include "Tpp/popupFilter.html" %}
            {% include "main/paginator.html" %}
+           {% include "main/local_menu_script.html" %}
              <ul class="company-list">
                 {% for id , attr in tppList.items %}
                     {% with attr.NAME.0 as name %}
@@ -21,6 +22,18 @@
                     {% with attr.COUNTRY_FLAG|first as country_flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                          <li>
+                         {% resolve items_perms id|slugify as permlist %}
+
+                         {% if  'change_tpp' in permlist%}
+                            <div class="blockbox">
+                                <a href="#"><i class="btn-afisha imgnews"></i></a>
+                                <div class="localmenu">
+                                    {% if 'change_tpp' in permlist %}
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tpp:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                         {% endif %}
                         <div class="title">
                             <img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" />
                             <a href="{% url 'tpp:detail' slug %}">{{ name }}</a>

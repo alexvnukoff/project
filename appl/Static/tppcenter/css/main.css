@@ -88,7 +88,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f7', endC
 .mainright{ position:relative; float:right; width:770px;}
 .mainright .slide-comm{width:740px;}
 .mainright .community{ width:750px;}
-.homeslider{ position:relative; float:left; width:100%; height:260px; margin:40px 0 0 0;}
+.homeslider{ position:relative; float:left; width:100%; height:260px;}
 .register{ position:absolute; width:220px; height:290px; right:20px; top:-20px; z-index:99; background-color:#2387b9; border-radius:0px 0px 3px 3px; font-family: 'Roboto', sans-serif;
 background: -webkit-gradient(linear, left top, left bottom, from(#1b7fb1), to(#40a5d7)); background: -moz-linear-gradient(top, #1b7fb1, #40a5d7);}
 .register:before{ position:absolute; content:""; width:0; height:0; top:0; left:-16px;

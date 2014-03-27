@@ -1,9 +1,11 @@
 {% load static %}
 {% load i18n %}
+{% load CustomFilters %}
 <div class="container">
     <div class="companies">
             {% include "Innov/popupFilter.html" %}
            {% include "main/paginator.html" %}
+          {% include "main/local_menu_script.html" %}
            <ul class="tender-list" id="afisha-list">
                 {% for id , attr in innovList.items %}
                     {% with attr.NAME.0 as name %}
@@ -28,6 +30,21 @@
                      {% with attr.CABINET_COUNTRY_ID as cabinet_country_id %}
 
                     <li>
+                    {% resolve items_perms id|slugify as permlist %}
+
+                     {% if 'delete_innovationproject' in  permlist or 'change_innovationproject' in permlist%}
+                    <div class="blockbox">
+                            <a href="#"><i class="btn-afisha imgnews"></i></a>
+                            <div class="localmenu">
+                                {% if 'delete_innovationproject' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'innov:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                {% endif %}
+                                {% if 'change_innovationproject' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'innov:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                   {% endif %}
                         <div class="title">
                         {% if cabinet_country_flag %}
                            <img src="{{ MEDIA_URL }}small/{{ cabinet_country_flag }}" class="flag" />

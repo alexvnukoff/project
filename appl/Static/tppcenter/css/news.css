@@ -6,6 +6,7 @@
 .community .newstitle{ position:relative; float:left; width:100%; height:30px; background-color:#e6e6e6; color:#4a4a4a;}
 .community .newstitle label{ float:left; font-weight:400; font-family: 'Roboto', sans-serif; font-size:16px; line-height:28px;
  padding-left:8px; text-shadow: -1px 1px 0 #FFFFFF;}
+.community .newstitle label.cur-page { font-weight: bold; }
 .community .newstitle .notify{ float:right; margin-right:20px; display:inline;}
 .community .newstitle .notify .event-holder{ position:relative; display:inline-block; height:30px; line-height:28px; vertical-align:middle; margin-left:12px;}
 .community .newstitle .notify .event-holder i{ cursor: pointer; display:inline-block; margin-right:5px; vertical-align:middle;}
@@ -489,4 +490,4 @@ background: -webkit-gradient(linear, left top, left bottom, from(#41a6d8), to(#2
 .list-cpn{position: absolute; width: 184px; padding: 8px; background-color: #4a4a4a; border-radius: 0px 0px 3px 3px; left: 0; top: 49px; display: none; z-index: 9;}
 .list-cpn li{ position: relative; float: left; width: 100%; padding: 5px 0; font-size: 12px;}
 .list-cpn li a{ color: #FFF;}
-
+.btn-afisha{ position: absolute; width: 34px; height: 35px; background-position: -266px -60px; top: 0; right: 0;}

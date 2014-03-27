@@ -106,7 +106,7 @@
                                  {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
-                                 <a href="{% url 'tpp:detail' slug %}" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="" /></a>
+                                 <a href="{% url 'tpp:detail' slug %}" class="items"><img src="{{ MEDIA_URL }}small/{{flag }}" alt="{% trans 'Work with' %}{{ name }}" /></a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
                                  {% endif %}
@@ -149,30 +149,7 @@
             </ul>
         </div>
         <div class="mainright">
-        	<div class="community">
-            	<span class="title">{% trans 'Participating countries (more than 25 countries)' %} </span>
-                <div class="slide-comm">
-                	<ul class="bxslider">
-                      {% for id,attr in countriesList.items %}
-                        {% with attr.NAME|first as name %}
-                        {% with attr.FLAG|first as flag %}
-                           {% if forloop.counter|add:-1|divisibleby:"17" or forloop.counter0 == 0 %}
-                                <li>
-                            {% endif %}
-                            	<a href="#" class="items"><img src="{{ MEDIA_URL }}small/{{ flag }}" alt="{{ name }}" /></a>
-                             {% if forloop.counter|divisibleby:"17" or forloop.counter == countriesList|length%}
-                                </li>
-                            {% endif %}
 
-
-                        {% endwith %}
-                       {% endwith %}
-                      {% endfor %}
-
-
-                    </ul>
-                </div>
-            </div>
             <div class="homeslider">
             	<ul class="homeslide">
                     <li>

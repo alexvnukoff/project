@@ -147,9 +147,13 @@ def proposalForm(request, action, item_id=None):
 
     current_section = _("Business Proposal")
 
+    if action == 'delete':
+        proposalsPage = deleteProposal(request,item_id)
+
     if action == 'add':
         proposalsPage = addBusinessProposal(request)
-    else:
+
+    if action =='update':
         proposalsPage = updateBusinessProposal(request, item_id)
 
     if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
@@ -283,7 +287,7 @@ def updateBusinessProposal(request, item_id):
             addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
                                 lang_code=settings.LANGUAGE_CODE)
 
-            return HttpResponseRedirect(reverse('proposal:main'))
+            return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
 
 
@@ -304,5 +308,24 @@ def updateBusinessProposal(request, item_id):
 
     return proposalsPage
 
+
+
+def deleteProposal(request, item_id):
+    item = Organization.objects.get(p2c__child_id=item_id)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_businessproposal' not in perm_list:
+        return func.permissionDenied()
+
+    instance = BusinessProposal.objects.get(pk=item_id)
+    instance.activation(eDate=now())
+    instance.end_date = now()
+    instance.reindexItem()
+
+
+
+
+    return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
 

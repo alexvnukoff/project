@@ -5,6 +5,7 @@
      <div class="companies">
                {% include "Companies/popupFilter.html" %}
                {% include "main/paginator.html" %}
+              {% include "main/local_menu_script.html" %}
                  <ul class="company-list">
                     {% for id , attr in companyList.items %}
                         {% with attr.NAME.0 as name %}
@@ -19,7 +20,23 @@
                         {% with attr.COUNTRY_NAME|first as country_name %}
                         {% with attr.COUNTRY_FLAG|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
-                             <li>
+                         <li>
+                           {% resolve items_perms id|slugify as permlist %}
+
+                             {% if 'delete_company' in  permlist or 'change_company' in permlist%}
+                               <div class="blockbox">
+                                    <a href="#"><i class="btn-afisha imgnews"></i></a>
+                                    <div class="localmenu">
+                                        {% if 'delete_company' in  permlist %}
+                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                        {% endif %}
+                                        {% if 'change_company' in permlist %}
+                                             <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                              <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:set' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
+                                       {% endif %}
+                                    </div>
+                                </div>
+                           {% endif %}
                             <div class="title">
                                 <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
                                 <a href="{% url 'companies:detail' slug %}">

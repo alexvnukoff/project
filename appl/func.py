@@ -952,10 +952,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
             if current_organization:
                 if model != Tpp:
-                    proposal = SearchQuerySet().models(model).\
+                    proposal = getActiveSQS().models(model).\
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
-                    proposal = SearchQuerySet().models(model).\
+                    proposal = getActiveSQS().models(model).\
                         filter(SQ(id=current_organization) | SQ(company=current_organization))
 
 
@@ -974,6 +974,17 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
+        redactor = False
+        if request.user.is_authenticated():
+            items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
+        else:
+            items_perms = ""
+        if model is News or model is TppTV:
+            if 'Redactor' in request.user.groups.values_list('name', flat=True):
+                 redactor = True
+
+
+
 
         addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
@@ -990,6 +1001,9 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
+            'items_perms': items_perms,
+            'current_path': request.get_full_path(),
+            'redactor': redactor
 
         }
         templateParams.update(params)
@@ -1005,6 +1019,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         rendered = cache.get(cache_name)
     return rendered
 
+
+
+
+
 def cleanFromHtml(value):
 
     if len(value) > 0:
@@ -1013,3 +1031,27 @@ def cleanFromHtml(value):
         return raw_text
     else:
         return  ""
+
+def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
+    '''
+        Receive User, list of Items PK obj_lst and model name of these Items obj_model_name, for example, "Product".
+        Returns dictionary with list of permissions for current user for each object instance.
+        Example:    user = User.objects.get(pk=1)
+                    getUserPermsForObjectsList(user, [1, 2, 34, 67], 'Product')
+        Return:
+        {
+            '1': ['add_product', 'change_product', 'read_product', 'delete_product'],
+            '2': ['add_product', 'read_product'],
+            '34': ['read_product'],
+            '67': ['add_product', 'change_product', 'read_product', 'delete_product']
+        }
+    '''
+    if len(obj_lst) == 0:
+        return {}
+
+    perms_dict = {}
+    items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+    for itm in items:
+        perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
+
+    return perms_dict

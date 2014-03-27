@@ -451,6 +451,7 @@ class Item(models.Model):
         self._activationRelated(self.pk, eDate, sDate)
 
 
+
     def reindexItem(self):
         if self.__class__.__name__ is 'Item':
             raise ValueError('Should be subclass of Item')
@@ -526,7 +527,9 @@ class Item(models.Model):
             group_list.append('Staff')
         else:
             # is user community member?
-            if user.groups.filter(name=self.community.name).exists():
+            selfCommunity = getattr(self.community, 'name', False)
+
+            if selfCommunity is not False and user.groups.filter(name=selfCommunity).exists():
                 if user.is_manager: # has user content manager flag?
                     group_list.append('Admin')
 
@@ -572,7 +575,6 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
-
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
