@@ -47,12 +47,7 @@
                 {% endif %}
 
                 <div class="fileinputs">
-                    <input name="IMAGE" type="file" class="fileimg"/>
-
-                    <div class="fakefile">
-                        <input class="inputhide"/>
-                        <img src="{% static "tppcenter/img/file.png" %}"/>
-                    </div>
+                    <input name="IMAGE" type="file" style="width: 100%">
                 </div>
             </div>
 
@@ -81,12 +76,7 @@
                         </div>
                     {% endif %}
                     <div class="fileinputs">
-                        <input name="form-{{ i }}-photo" type="file" class="fileimg"/>
-
-                        <div class="fakefile">
-                            <input class="inputhide"/>
-                            <img src="{% static "tppcenter/img/file.png" %}"/>
-                        </div>
+                        <input style="width: 100%" name="form-{{ i }}-photo" type="file"/>
                     </div>
                 {% endfor %}
             </div>
@@ -165,9 +155,7 @@
                     <div class="error-handler"><div class="formserror">{{ form.errors.ANONS }}</div></div>
                 {% endif %}
                 <div>
-                    <textarea rows="5" id="id_anons" name="ANONS">
-                        {{ anons }}
-                    </textarea>
+                    <textarea rows="5" id="id_anons" name="ANONS">{{ anons }}</textarea>
                 </div>
             </li>
             <li>

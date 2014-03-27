@@ -5,6 +5,7 @@
 
           {% include "BusinessProposal/popupFilter.html" %}
            {% include "main/paginator.html" %}
+           {% include "main/local_menu_script.html" %}
              <ul class="tender-list" id="afisha-list">
                 {% for id , attr in proposalList.items %}
                     {% with attr.NAME.0 as name %}
@@ -19,6 +20,15 @@
                     {% with attr.COUNTRY_FLAG|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     <li>
+                     {% if has_perms %}
+                    <div class="blockbox">
+                            <a href="#"><i class="btn-afisha imgnews"></i></a>
+                            <div class="localmenu">
+                                <div class="tender-action"><i class="imgnews remove icon-action"></i><span class="deletext">{% trans 'remove' %}</span></div>
+                                <div class="tender-action"><i class="imgnews edit icon-action"></i><span class="deletext">{% trans 'edit' %}</span></div>
+                            </div>
+                        </div>
+                   {% endif %}
                         <div class="title">
                             <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>

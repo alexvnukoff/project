@@ -101,11 +101,7 @@ $(function() {
                     </div>
                 {% endif %}
                 <div class="fileinputs">
-                    <input name="form-{{ i }}-photo" type="file" class="fileimg">
-                    <div class="fakefile">
-                        <input class="inputhide">
-                        <img src="{% static "tppcenter/img/file.png" %}">
-                    </div>
+                    <input name="form-{{ i }}-photo" type="file" style="width: 100%" >
                 </div>
             </div>
         {% endfor %}
