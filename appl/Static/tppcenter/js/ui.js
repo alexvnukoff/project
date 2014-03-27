@@ -465,6 +465,7 @@ var messagesUI = {
     messageList: '.message-list',
     textarea: '#message-box-',
     chatWindow: 'custom-content-',
+    messagesLoader: null,
 
 
     onScrollTop: function( el )
@@ -617,28 +618,58 @@ var messagesUI = {
             });
     },
 
+    onSelectRecipient: function() {
+
+        var container = $(this).parent();
+
+        if ( container.hasClass(messagesUI.curChat) )
+            return false;
+
+        var loadUrl = $(this).data('url');
+        var recipientID = $(this).data('user-id');
+        var messages = $('#custom-content-' + recipientID);
+        var old = $(messagesUI.chatList + ' .' + messagesUI.curChat)
+
+        if ( old.length > 0 )
+        {
+            old.removeClass(messagesUI.curChat);
+            oldID = old.find('a').data('user-id');
+            $('#custom-content-' + oldID).hide();
+        }
+
+        container.addClass(messagesUI.curChat);
+
+
+        if ( messages.length > 0)
+        {
+            messages.show();
+        } else {
+            messagesUI.messagesLoader.show();
+            History.pushState( null, null, loadUrl);
+
+            var jqxhr = $.get( loadUrl, 'box=1', function(data) {
+                messagesUI.messagesLoader.hide();
+                $('.custom-content:last').after(data);
+            });
+        }
+
+        return false;
+    },
+
 
     init: function() {
-            $( ".messages-l" ).tabs({
-                beforeActivate: function( event, ui ) {
+        $( ".messages-l" ).tabs();
 
-                    var subTab = ui.newPanel.find( messagesUI.chatList );
-                    var curr = subTab.tabs( 'option','active' );
+        messagesUI.messagesLoader = $('.message-loader');
 
-                    if ( curr != 0 )
-                    {
-                        subTab.tabs( 'option','active', 0 );
-                        subTab.tabs( 'option','active', curr );
-                    }
-
-                }
-            });
+        $(messagesUI.chatList).on('click', 'li a', messagesUI.onSelectRecipient);
 
 
+            /*
             $( messagesUI.chatList ).tabs({
 
                 beforeLoad: function( event, ui ) {
-                    ui.panel.html('<div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>');
+                    ui.panel.html();
                 },
 
                 load: function( event, ui ) {
@@ -665,21 +696,22 @@ var messagesUI = {
                     ui.newTab.addClass( messagesUI.curChat );
                 }
             });
+            */
 
 
 
-            $(document).on( 'click', 'a.send-message', messagesUI.sendMessage );
+        $(document).on( 'click', 'a.send-message', messagesUI.sendMessage );
 
-            $(document).bind( 'new_message', function( ev, fromUser ) {
+        $(document).bind( 'new_message', function( ev, fromUser ) {
 
-                var active_id = $( '.' + messagesUI.curChat  + ' a').data('user-id');
+            var active_id = $( '.' + messagesUI.curChat  + ' a').data('user-id');
 
-                if ( fromUser == active_id )
-                    messagesUI.getMessages( active_id );
-            });
+            if ( fromUser == active_id )
+                messagesUI.getMessages( active_id );
+        });
 
-            messagesUI.scroollMessageDown();
-            messagesUI.bindScroll();
+        messagesUI.scroollMessageDown();
+        messagesUI.bindScroll();
 
     }
 };

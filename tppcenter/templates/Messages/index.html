@@ -9,6 +9,13 @@
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
+        <style>
+            .custom-content {
+                float: left;
+                position: relative;
+                width: 70%;
+            }
+        </style>
     {% endblock %}
 
 
@@ -20,7 +27,6 @@
      <script type="text/javascript">
         $(function() {
             messagesUI.init();
-
         });
     </script>
 
@@ -28,8 +34,10 @@
 
 {% block keywords %}{% endblock %}
 
-     {% block content %}
-<div class="analytics">
+{% block left %}{% endblock %}
+
+{% block center %}
+    <div class="analytics">
 				<div class="community">
                 	<div class="messages-l">
                     	<div class="tab-cate">
@@ -53,7 +61,7 @@
 
                                         {% if active == id %}
 
-                                            <li class="mess-cur ui-tabs-active">
+                                            <li class="mess-cur">
                                                 <span class="thumb">
                                                     <img src="{{ MEDIA_URL }}th/{{ image }}" />
                                                 </span>
@@ -67,7 +75,7 @@
                                                 <span class="thumb">
                                                     <img src="{{ MEDIA_URL }}th/{{ image }}" />
                                                 </span>
-                                                <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="{% url "messages:message_item" id  %}?box=1">
+                                                <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="{% url "messages:message_item" id  %}">
                                                     {{ name|truncatewords:3 }}
                                                 </a>
                                             </li>
@@ -76,13 +84,7 @@
                                         {% endwith %}
                                         {% endwith %}
                                     {% endfor %}
-
                                 </ul>
-                                {% if active in organizations %}
-                                    <div id="custom-content-{{ active }}">
-                                        {% include "Messages/contentBox.html" %}
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                         <div id="message-tabs-2">
@@ -98,11 +100,11 @@
 
                                         {% if active == id %}
 
-                                        <li class="mess-cur ui-tabs-active">
+                                        <li class="mess-cur">
                                                 <span class="thumb">
                                                     <img src="{{ MEDIA_URL }}th/{{ image }}"/>
                                                 </span>
-                                                <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="#custom-content-{{ id }}">
+                                                <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="#">
                                                     {{ first_name }} {{ last_name }}
                                                 </a>
                                         </li>
@@ -113,7 +115,7 @@
                                             <span class="thumb">
                                                 <img src="{{ MEDIA_URL }}th/{{ image }}"/>
                                             </span>
-                                            <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="{% url "messages:message_item" id  %}?box=1">
+                                            <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="#">
                                                 {{ first_name }} {{ last_name }}
                                             </a>
                                         </li>
@@ -127,17 +129,19 @@
                                     {% endfor %}
 
                                 </ul>
-
-                                {% if active in cabinets %}
-                                    <div id="custom-content-{{ active }}">
-
-                                    {% include "Messages/contentBox.html" %}
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
+
+                    {% if active %}
+
+                            {% include "Messages/contentBox.html" %}
+
+                    {% endif %}
+                    <div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>
                 </div>
             </div>
-     {% endblock %}
+{% endblock %}
+
+{% block right %}{% endblock %}
 
