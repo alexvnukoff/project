@@ -575,7 +575,6 @@ class Item(models.Model):
         return perm_list
 
     @staticmethod
-
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
 
         '''
