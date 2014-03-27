@@ -24,7 +24,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     current_company = request.session.get('current_company', False)
     description = ''

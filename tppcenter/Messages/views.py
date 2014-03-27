@@ -18,7 +18,9 @@ def viewMessages(request, recipient=None):
 
     # who is the sender ?
     current_company = request.session.get('current_company', False)
-    senderIsCabinet = True
+
+    #TODO: Delete for full usability
+    current_company = False
 
     if current_company is False:
         senderObj = Cabinet.objects.get(user=request.user)
@@ -69,7 +71,8 @@ def viewMessages(request, recipient=None):
             'messages': messages,
             'cabinets': cabinets,
             'organizations': organizations,
-            'active': recipient
+            'active': recipient,
+            'current_section': _('Private messages')
         }
 
         return render_to_response("Messages/index.html", templateParams, context_instance=RequestContext(request))
@@ -233,7 +236,9 @@ def addMessages(request):
 
     # who is the sender ?
     current_company = request.session.get('current_company', False)
-    senderIsCabinet = True
+
+    #TODO: Delete for full usability
+    current_company = False
 
     if current_company is False:
         sender = Cabinet.objects.get(user=request.user)
@@ -270,7 +275,7 @@ def addMessages(request):
 
 
     if notify:
-        func.sendTask('private_massage', recipient=recipient.pk, fromUser=request.user.pk)
+        func.sendTask('private_massage', recipient=recipient.pk, fromUser=sender.pk)
 
     return HttpResponse('')
 

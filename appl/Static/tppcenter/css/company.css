@@ -210,17 +210,17 @@ box-shadow:inset 0 0 3px #CCC;}
 .avatar{ display:inline-block; width:24px; height:24px; background-color:#afafaf;}
 .table-analytics tr td.date .number{ position:absolute; width:20px; height:20px; border-radius:10px; background-color:#ff0000; text-align:center; line-height:20px; color:#FFF; left:-20px;}
 
-.messages-l{ position:relative; float:left; width:205px; border-right:1px #d8d8d8 solid; min-height:850px; background-color:#f5f5f5;}
+.messages-l{ position:relative; float:left; width:30%; border-right:1px #d8d8d8 solid; min-height:850px; background-color:#f5f5f5; box-sizing: border-box;}
 .messages-l .tab-cate{ position:relative; float:left; width:100%; height:auto; background:#e6e6e6 url(../img/dot.png) repeat-x bottom center; font-size:11px;}
 .message-tabcontent{ position:relative; float:left; width:100%;}
 .custom-ms{ position:relative; float:left; width:100%;}
-.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px;}
+.custom-ms li{ position:relative; float:left; width:100%; margin:3px 0 0 0; font-size:12px; line-height:30px; white-space: nowrap;}
 .custom-ms li .thumb{ float:left; width:24px; height:24px; background-color:#afafaf; margin:3px 8px; display:inline;}
-.message-tabcontent .custom-ms li.ui-tabs-active{ background:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px;}
-.message-tabcontent .custom-ms li.ui-tabs-active a{ color:#FFF;}
-.message-tabcontent .custom-ms li.ui-tabs-active:after{ content:""; position:absolute; width:0; height:0; right:0px; top:10px;
+.message-tabcontent .custom-ms li.mess-cur { background:#4a4a4a; font-weight:normal; border:0; line-height:30px; height:30px; max-width: 100%; overflow: hidden;}
+.message-tabcontent .custom-ms li.mess-cur a{ color:#FFF;}
+.message-tabcontent .custom-ms li.mess-cur:after{ content:""; position:absolute; width:0; height:0; right:0px; top:10px;
 border-style: solid; border-width: 4px 7px 4px 0; border-color: transparent #fafafa transparent transparent;}
-.custom-contentin{ position:absolute; width:458px; right:-458px; top:-30px;}
+.custom-contentin{ position:absolute; left: 0; top: 0;}
 .customtable{ position:relative; float:left; margin:0 10px;}
 .dateline{ float:left; width:100%; padding:10px 0; text-align:center; background:url(../img/dota.png) repeat-x center center;}
 .dateline span{ background:#f5f5f5; padding:0 8px; color:#9b9b9b; font-style:italic;}
@@ -231,8 +231,8 @@ border-style: solid; border-width: 4px 7px 4px 0; border-color: transparent #faf
 .customline .clumnleft .i-attack{ float:left; width:16px; height:17px; background-position:-199px -60px; margin:4px 0 0 5px; display:inline;}
 .customline .clumnright{ float:left; width:400px;}
 .custom-contentin .title{ float:left; width:100%; padding:8px 0; background-color:#e6e6e6; font-size:16px; font-weight:bold; text-indent:18px; margin-top:0; text-align:left; color:#000;}
-.customform{ position:relative; float:left; text-align:center; margin:12px 12px 0 12px; display:inline;}
-.customform .editor{ float:left; border:1px #bdbdbd solid; margin-bottom:10px;}
+.customform{ position:relative; float:left; text-align:center; margin:12px 12px 0 12px; display:inline; width: 97%;}
+.customform .editor{ float:left; border:1px #bdbdbd solid; margin-bottom:10px; width: 100%; box-sizing: border-box;}
 .customform .btntype2, .btnprice{ font-size:17px; padding:8px 40px; border:0;
 background-color:#2186b8;
 background-image: -webkit-gradient(
