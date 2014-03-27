@@ -2058,7 +2058,7 @@ msgstr "Адрес электронной почты уже использует
 #: tppcenter/Project/urls.py:11 tppcenter/templates/base.html:107
 #: tppcenter/templates/Project/adv.html:16
 msgid "Advertise with us"
-msgstr ""
+msgstr "Реклама на портале"
 
 #: tppcenter/Project/urls.py:12 tppcenter/templates/base.html:108
 #: tppcenter/templates/main_header.html:6
@@ -2265,7 +2265,7 @@ msgstr "Сообщество"
 
 #: tppcenter/templates/index.html:109
 msgid "Work with"
-msgstr ""
+msgstr "Сотрудничай с"
 
 #: tppcenter/templates/index.html:123
 msgid "Producst and services"
@@ -2421,7 +2421,7 @@ msgstr "Это поле обязательно"
 
 #: tppcenter/templates/login_header.html:49
 msgid "Notification in your communities"
-msgstr ""
+msgstr "Уведомления от ваших сообществ"
 
 #: tppcenter/templates/login_header.html:57
 #: tppcenter/templates/Companies/tabStaff.html:98
@@ -2688,7 +2688,7 @@ msgstr "Удалить"
 #: tppcenter/templates/Tpp/contentPage.html:32
 #: tppcenter/templates/TppTV/contentPage.html:27
 msgid "edit"
-msgstr ""
+msgstr "редактировать"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:44
 #: tppcenter/templates/BusinessProposal/popupFilter.html:20
@@ -2864,7 +2864,7 @@ msgstr "Реквизиты банка"
 
 #: tppcenter/templates/Companies/contentPage.html:35
 msgid "set current"
-msgstr ""
+msgstr "управлять"
 
 #: tppcenter/templates/Companies/detailContent.html:285
 #: tppcenter/templates/Tpp/detailContent.html:49
@@ -2891,7 +2891,7 @@ msgstr "Начало события"
 #: tppcenter/templates/Companies/tabStaff.html:12
 #: tppcenter/templates/Companies/tabStaff.html:73
 msgid "Department"
-msgstr ""
+msgstr "Отдел"
 
 #: tppcenter/templates/Companies/tabStaff.html:14
 #, fuzzy
@@ -2900,7 +2900,7 @@ msgstr "Дата окончания"
 
 #: tppcenter/templates/Companies/tabStaff.html:15
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: tppcenter/templates/Companies/tabStaff.html:56
 #, fuzzy
@@ -2909,7 +2909,7 @@ msgstr "Ничего не найдено"
 
 #: tppcenter/templates/Companies/tabStaff.html:82
 msgid "Empty"
-msgstr ""
+msgstr "Пусто"
 
 #: tppcenter/templates/Companies/tabStructure.html:18
 #, fuzzy
