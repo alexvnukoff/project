@@ -37,7 +37,7 @@ def home(request):
         countries = Country.active.get_active()
         countries_id = [country.pk for country in countries]
 
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+
 
         organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
         organizations_id = [organization.pk for organization in organizations]
@@ -68,7 +68,6 @@ def home(request):
         func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
         templateParams = {
-            "countriesList": countriesList,
             'organizationsList': organizationsList,
             'productsList': productsList,
             'serviceList': serviceList,
