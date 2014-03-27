@@ -25,7 +25,6 @@ import datetime
 import hashlib
 
 def createHash(string):
-
     return hashlib.sha1(str(string).encode()).hexdigest()
 
 
@@ -143,19 +142,22 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if self == obj.create_user: # is user object's owner?
                     group_list.append('Owner')
                     group_list.append('Admin')
+                    
                     if obj.status.perm: # is there permissions group for current object's state?
                         group_list.append(obj.status.perm.name)
                     else: # no permissions group for current state, attach Staff group
                         group_list.append('Staff')
                 else:
-                    if self == obj.update_user or self.groups.filter(name=obj.community.name): # is user community member?
+                    if self == obj.update_user or self.groups.filter(name=obj.community.name).exists(): # is user community member?
                         if self.is_manager: # has user content manager flag?
                             group_list.append('Admin')
+                          
                             if obj.status.perm: # is there permissions group for current object's state?
                                 group_list.append(obj.status.perm.name)
                             else: # no permissions group for current state, attach Staff group
                                 group_list.append('Staff')
                         else:
+                            
                             if obj.status.perm: # is there permissions group for current object's state?
                                 group_list.append(obj.status.perm.name)
                             else: # no permissions group for current state, attach Staff group
@@ -163,8 +165,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                     else:
                         if obj_type == 'company':
                             #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-                            if self.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=obj.pk).\
-                                        values('c2p__parent__organization__community__name')) and self.is_manager:
+                            communityName = self.parentTppCommunityName()
+
+                            if self.groups.filter(name=communityName).exists() and self.is_manager:
                                 group_list.append('Owner')
                                 group_list.append('Admin')
                                 group_list.append('Staff')
@@ -175,15 +178,20 @@ class User(AbstractBaseUser, PermissionsMixin):
                 group_list.append('Staff')
 
             # get all permissions from all related groups for current type of item
-            p_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list,\
-                            permissions__codename__contains=obj_type).values('permissions__codename')]
+            p_list = Group.objects.filter(name__in=group_list, permissions__codename__contains=obj_type)\
+                .values_list('permissions__codename', flat=True)
+
+            p_list = list(p_list)
             # attach user's private permissions
-            p_list += [p['codename'] for p in self.user_permissions.filter(codename__contains=obj_type).values('codename')]
+            p_list += list(self.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+
             p_list = list(set(p_list)) #remove duplicated keys in permissions list
             #print(p_list)
+
             for i in perm_list:
                 if i not in p_list:
                     return False
+                
             return True
 
     def has_module_perms(self, app_label):
@@ -528,64 +536,58 @@ class Item(models.Model):
         obj_type = self.__class__.__name__ # get current object's type
         obj_type = obj_type.lower()
 
+        if obj_type == 'item':
+            raise ValueError('Should be instance of Item')
+
         if user.is_superuser:
             group_list.append('Owner')
             group_list.append('Admin')
             group_list.append('Staff')
-
         else:
-            if user == self.create_user: # is user object's owner?
-                group_list.append('Owner')
-                group_list.append('Admin')
+            # is user community member?
+            if user.groups.filter(name=self.community.name).exists():
+                if user.is_manager: # has user content manager flag?
+                    group_list.append('Admin')
+
                 if self.status.perm: # is there permissions group for current object's state?
                     group_list.append(self.status.perm.name)
                 else: # no permissions group for current state, attach Staff group
                     group_list.append('Staff')
-            else:
-                if user == self.update_user or user.groups.filter(name=self.community.name): # is user community member?
-                    if user.is_manager: # has user content manager flag?
-                        group_list.append('Admin')
-                        if self.status.perm: # is there permissions group for current object's state?
-                            group_list.append(self.status.perm.name)
-                        else: # no permissions group for current state, attach Staff group
-                            group_list.append('Staff')
-                    else:
-                        if self.status.perm: # is there permissions group for current object's state?
-                            group_list.append(self.status.perm.name)
-                        else: # no permissions group for current state, attach Staff group
-                            group_list.append('Staff')
+            else: #user is not a member of community of current object
+
+
+                #try to receive community of parent organization of the object
+                communityName = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
+                                    values('c2p__parent__organization__community__name')
+
+                if user.is_manager and user.groups.filter(name=communityName).exists():
+                    group_list.append('Owner')
+                    group_list.append('Admin')
+                    group_list.append('Staff')
                 else:
-                    #if obj_type == 'company':
-                    #try to receive TPP for this company using Item class and Relationship and check is there user in Community
-                    if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
-                                        values('c2p__parent__organization__community__name')) and user.is_manager:
+                    #try to get all parent organizations of current object
+                    prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk)\
+                        .values_list('c2p__parent', flat=True)
+
+                    tppCommunity = Item.objects.filter(c2p__parent__organization__isnull=False,\
+                            pk__in=prnt_lst).values_list('c2p__parent__organization__community__name', flat=True)
+
+                    #chech if user is a member of tpp
+                    if user.groups.filter(name__in=tppCommunity).exists() and user.is_manager:
                         group_list.append('Owner')
                         group_list.append('Admin')
                         group_list.append('Staff')
-                    else:
-                        #try to get parent Company for this Item and check is there User in Company's community
-                        if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
-                                        values('c2p__parent__organization__community__name')) and user.is_manager:
-                            group_list.append('Owner')
-                            group_list.append('Admin')
-                            group_list.append('Staff')
-                        else:
-                            #try to check Company's TPP for this Item and check is there User in TPP's community and manager
-                            prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False,\
-                                                                            pk=self.pk).values('c2p__parent__id');
-                            for tpp in prnt_lst:
-                                if user.groups.filter(name=Item.objects.filter(c2p__parent__organization__isnull=False,\
-                                    pk=tpp.get('c2p__parent__id')).values('c2p__parent__organization__community__name'))\
-                                        and user.is_manager:
-                                    group_list.append('Owner')
-                                    group_list.append('Admin')
-                                    group_list.append('Staff')
+
 
         # get all permissions from all related groups for current type of item
-        perm_list = [p['permissions__codename'] for p in Group.objects.filter(name__in=group_list).values('permissions__codename')]
+        perm_list = Group.objects.filter(name__in=group_list).values_list('permissions__codename', flat=True)
+
+        perm_list = list(perm_list)
+
         # attach user's private permissions
-        perm_list += [p['codename'] for p in user.user_permissions.filter(codename__contains=obj_type).values('codename')]
+        perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
         perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
+
         return perm_list
 
     @staticmethod
@@ -685,7 +687,7 @@ class Item(models.Model):
     def getAttributeValues(self, *attr, fullAttrVal=False):
         '''
            Return values of attribute list for specific Item
-           Example item = self.getAttributeValues("NAME", "DETAIL_TEXT")
+                      Example item = self.getAttributeValues("NAME", "DETAIL_TEXT")
            will return :   item = {NAME:['name'] , DETAIL_TEXT:['content']}
         '''
 

@@ -87,10 +87,14 @@ def _innovContent(request, page=1, my=None):
     cached = False
     cache_name = "inov_list_result_page_%s" % page
     query = request.GET.urlencode()
-    if query.find('filter') == -1 and not my and not request.user.is_authenticated():
-        cached = cache.get(cache_name)
+
+    if not my and not request.user.is_authenticated():
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+            cached = cache.get(cache_name)
+
     if not cached:
 
+        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = func.filterLive(request)
@@ -99,8 +103,6 @@ def _innovContent(request, page=1, my=None):
 
             if len(searchFilter) > 0:
                 sqs = sqs.filter(searchFilter)
-
-            q = request.GET.get('q', '')
 
             if q != '':
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
@@ -149,6 +151,11 @@ def _innovContent(request, page=1, my=None):
             if current_organization:
                 innov_projects = SearchQuerySet().models(InnovationProject)
                 innov_projects = innov_projects.filter(SQ(tpp=current_organization) | SQ(company=current_organization))
+
+                if q != '':
+                    innov_projects = innov_projects.filter(SQ(title=q) | SQ(text=q))
+
+                innov_projects.order_by('-obj_create_date')
 
                 url_paginator = "innov:my_main_paginator"
                 params = {}
@@ -201,8 +208,10 @@ def _innovContent(request, page=1, my=None):
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        if not my and query.find('filter') == -1 and not request.user.is_authenticated():
-           cache.set(cache_name, rendered)
+
+        if not my and not request.user.is_authenticated():
+            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+                cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)

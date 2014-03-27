@@ -109,15 +109,15 @@
                       </tr>
                       <tr>
                         <td>{% trans "Business Proposals" %}</td>
-                        <td>{% modelCount "BusinessProposal" tpp %}</td>
+                        <td>{% modelCount "BusinessProposal" tpp|first %}</td>
                       </tr>
                       <tr>
                         <td>{% trans "Exhibitions" %}</td>
-                        <td>{% modelCount "Exhibition" tpp %}</td>
+                        <td>{% modelCount "Exhibition" tpp|first %}</td>
                       </tr>
                       <tr>
                         <td>{% trans "Tenders" %}</td>
-                        <td>{% modelCount "Tender" tpp %}</td>
+                        <td>{% modelCount "Tender" tpp|first %}</td>
                       </tr>
                      </table>
                 {% endif %}

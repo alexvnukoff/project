@@ -38,6 +38,7 @@ def getSpecificParent(cls, child):
     '''
     return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="relation")
 
+
 class Organization (Item):
     active = ItemManager()
     objects = models.Manager()
@@ -55,6 +56,9 @@ class Organization (Item):
 
     def __str__(self):
         return self.getName()
+
+    def parentTppCommunityName(self):
+        return Organization.objects.filter(p2c__child=self.pk).values_list('community__name', flat=True)
 
 
 class Tpp(Organization):
@@ -91,14 +95,13 @@ class Company(Organization):
     def __str__(self):
         return self.getName()
 
-
     def getDescription(self):
         desc = self.getAttributeValues('TEXT_DETAIL')
         return desc[0] if desc else ''
 
     def getTpp(self):
         try:
-            return Tpp.objects.get(p2c__child=self.pk, p2c__type="relation")
+            return Tpp.objects.filter(p2c__child=self.pk, p2c__type="relation")
         except ObjectDoesNotExist:
             return None
 
