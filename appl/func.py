@@ -1017,3 +1017,26 @@ def cleanFromHtml(value):
         return raw_text
     else:
         return  ""
+
+def getUserPermsForObjectsList(user, obj_lst, objs_type):
+    '''
+        Receive User, list of Item's PK obj_lst and type name of these Items objs_type, for example, "product".
+        Returns dictionary with list of permissions for current user for each object instance.
+        Example: user.getPermsForObjectsList([1, 2, 34, 67], 'Product')
+        Return:
+        {
+            '1': ['add_product', 'change_product', 'read_product', 'delete_product'],
+            '2': ['add_product', 'read_product'],
+            '34': ['read_product'],
+            '67': ['add_product', 'change_product', 'read_product', 'delete_product']
+        }
+    '''
+    if len(obj_lst) == 0:
+        return {}
+
+    perms_dict = {}
+    items = (globals()[objs_type]).objects.filter(pk__in=obj_lst)
+    for itm in items:
+        perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
+
+    return perms_dict
