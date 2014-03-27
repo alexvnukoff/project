@@ -100,25 +100,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         return True
 
-    def getPermsForObjectsList(self, obj_lst, objs_type):
-        '''
-            Reveive list of PK Returns dictionary
-             {
-                    '1':
-                        {
-                            'NAME': ['news title']
-                            'DETAIL_TEXT': ['Text of the news']
-                            'TAGS': ['TAG1', 'TAG2']
-                        }
-                    '2':
-                        {
-                            'NAME': ['news title2']
-                            'DETAIL_TEXT': ['Text of the news2']
-                            'TAGS': ['TAG3']
-                        }
-                }
-        '''
-
     def has_perms(self, perm_list, obj=None):
         """
         Returns True if the user has each of the specified permissions. If
