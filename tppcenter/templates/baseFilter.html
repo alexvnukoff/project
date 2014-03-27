@@ -1,4 +1,62 @@
 {% load i18n %}
+<script>
+    LANG['live-filter'] = {
+        noResults: '{% trans "No result found" %}',
+        minLen: '{% trans "Minimum length of search term is 3 characters" %}',
+        selectOrg: '{% trans "Select organizations"  %}',
+        selectBranch: '{% trans "Select branch"  %}',
+        selectCountry: '{% trans "Select country"  %}'
+    };
+
+    baseOptions = {
+        maximumSelectionSize: 5,
+        width: "100%",
+        multiple:true,
+        formatNoMatches: function noMatches(term) {
+            if (term.length > 0 && term.length < 3)
+                return LANG['live-filter']['minLen'];
+
+            return LANG['live-filter']['noResults'];
+        },
+        ajax: {
+            url: "/filter/",
+            dataType: 'json',
+            quietMillis: 100,
+            data: function (term, page) { // page is the one-based page number tracked by Select2
+                return {
+                    q: term, //search term
+                    page: page, // page number
+                    type: $(this).attr('id').replace('filter-', '')
+                };
+            },
+            results: function (data, page) {
+                var more = (page * 10) < data.total; // whether or not there are more results available
+                // notice we return the value of more so Select2 knows if more results can be loaded
+                return {results: data.content, more: more};
+            }
+
+        },
+        formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+        formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
+        escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+    };
+
+    options = {
+        tpp: baseOptions,
+        branch: baseOptions,
+        country: baseOptions
+    };
+
+    options['tpp']['placeholder'] = LANG['live-filter']['selectOrg'];
+    options['branch']['placeholder'] = LANG['live-filter']['selectBranch'];
+    options['country']['placeholder'] = LANG['live-filter']['selectCountry'];
+</script>
+
+<script>
+    $(document).ready(function() {
+        ui.init();
+    });
+</script>
 <div class="popuplifter">
     <div class="filter-form">
         <i class="close-event imgnews"></i>

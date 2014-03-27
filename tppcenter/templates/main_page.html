@@ -15,15 +15,23 @@
 
     {% block styles %}
          {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.css" />
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
     {% endblock %}
 
     {% block js %}
-
-
         {{  block.super }}
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/jquery.history.min.js"></script>
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.js"></script>
+
+        <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
+        <script  type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
+        <script  type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=ru" charset="utf-8"></script>
         <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
         <script type="text/javascript">
+
+        var LANG = {}
 
             $(document).ready(function(e) {
                 $('#thumbs').delegate('img','click', function(){
@@ -33,133 +41,9 @@
             });
         </script>
         <script>
-
-
-            function noMatches(term) {
-                if (term.length > 0 && term.length < 3)
-                   return '{% trans "Minimum length of search term is 3 characters" %}';
-
-                return '{% trans "No result found" %}';
-
-            }
-
-            function filterChange(name, e) {
-
-                var form = $('form[name="filter-form"]');
-
-                if (e.added)
-                {
-                    if(!$('input[value="' + e.added.id + '"].filter-item').length)
-                    {
-                        $('<input type="hidden" />').attr({
-                            value: e.added.id,
-                            name: name,
-                            class: 'filter-item'
-                        }).attr("name", 'filter[' + name + '][]').appendTo(form);
-                    }
-                }
-                else
-                {
-                    input = form.find('input[value="' + e.removed.id + '"].filter-item')
-
-                    if (input.length == 1)
-                        input.remove()
-                }
-            }
-
-
-            options = {
-                tpp: {
-                    maximumSelectionSize: 5,
-                    width: "100%",
-                    multiple:true,
-                    placeholder: '{% trans "Select organizations"  %}',
-                    formatNoMatches: noMatches,
-                    ajax: {
-                        url: "/filter/",
-                        dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
-                        return {
-                            q: term, //search term
-                            page: page, // page number
-                            type: 'tpp'
-                            };
-                        },
-                        results: function (data, page) {
-                            var more = (page * 10) < data.total; // whether or not there are more results available
-                            // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.content, more: more};
-                        }
-
-                    },
-                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-                },
-                branch: {
-                    maximumSelectionSize: 5,
-                    width: "100%",
-                    multiple:true,
-                    placeholder: '{% trans "Select branch"  %}',
-                    formatNoMatches: noMatches,
-                    ajax: {
-                        url: "/filter/",
-                        dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
-                        return {
-                            q: term, //search term
-                            page: page, // page number
-                            type: 'branch'
-                            };
-                        },
-                        results: function (data, page) {
-                            var more = (page * 10) < data.total; // whether or not there are more results available
-                            // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.content, more: more};
-                        }
-
-                    },
-                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-                },
-
-                country: {
-                    maximumSelectionSize: 5,
-                    width: "100%",
-                    multiple:true,
-                    placeholder: '{% trans "Select country"  %}',
-                    formatNoMatches: noMatches,
-                    ajax: {
-                        url: "/filter/",
-                        dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
-                        return {
-                            q: term, //search term
-                            page: page, // page number
-                            type: 'country'
-                            };
-                        },
-                        results: function (data, page) {
-                            var more = (page * 10) < data.total; // whether or not there are more results available
-                            // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.content, more: more};
-                        }
-
-                    },
-                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-                }
-            }
             $(document).ready(function() {
-                ui.init();
                 uiDetail.init();
                 uiEvents.init();
-
             });
         </script>
             <script type="text/javascript">

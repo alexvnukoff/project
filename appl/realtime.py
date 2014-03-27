@@ -13,6 +13,8 @@ _engine = import_module(settings.SESSION_ENGINE)
 def get_session(session_key):
     return _engine.SessionStore(session_key)
 
+def get_current_company(session):
+    return session._session.get('current_company', False)
 
 def get_user(session):
     class Dummy(object):
@@ -72,6 +74,7 @@ class Connection(SockJSConnection):
         """
         self.django_session = get_session(request.get_cookie('sessionid').value)
         self.user = get_user(self.django_session)
+        self.current_company = get_current_company(self.django_session)
 
 
     def on_message(self, msg):
@@ -90,18 +93,18 @@ class Connection(SockJSConnection):
                                    #  поняли я передаю данные в JSON
 
             # в зависимости от канала получения распределяем сообщения
-            if message.channel == 'notification' or message.channel == 'private_massage':
+            if message.channel == 'notification' and message_body.get('user', False) == self.user.pk:
                 self.sendNoification(message, message_body)
 
+            if message.channel == 'private_massage':
 
+                recipient = message_body.get('recipient', False)
 
+                if recipient == self.user.pk or recipient == self.current_company:
+                    self.sendNoification(message, message_body)
 
     def sendNoification(self, message, message_body):
-
-        if message_body['user'] == self.user.pk:
-            self.send(message.channel, message_body)
-
-
+        self.send(message.channel, message_body)
 
     def on_close(self):
         """

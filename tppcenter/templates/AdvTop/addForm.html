@@ -188,7 +188,7 @@
 
                     html = $('<li></li>').addClass('basket-' + e.added.id);
                     html.append('<span class="left">' + e.added.title + '</span>');
-                    html.append('<span class="right">' + cost + ' $/сут</span>');
+                    html.append('<span class="right">' + cost + ' $/{% trans "day" %}</span>');
 
                     priceList.append(html);
                     totalCost += e.added.cost;
