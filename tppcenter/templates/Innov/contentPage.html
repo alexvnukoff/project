@@ -9,10 +9,12 @@
            <ul class="tender-list" id="afisha-list">
                 {% for id , attr in innovList.items %}
                     {% with attr.NAME.0 as name %}
-                     {% with attr.SLUG.0 as slug %}
+                    {% with attr.SLUG.0 as slug %}
+                    {% with attr.COST.0 as cost %}
+                    {% with attr.CURRENCY.0 as currency %}
                     {% with attr.DETAIL_TEXT.0 as content %}
                     {% with attr.CREATE_DATE.0 as date%}
-                     {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
+                    {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
                     {% with attr.ORGANIZATION_NAME.0 as org_name %}
                     {% with attr.ORGANIZATION_ID.0 as org_id %}
                     {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
@@ -57,6 +59,7 @@
                             <font class="name">{{ org_name }}  {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name|truncatewords:14 }}</a></h2>
+                        <div class="desc">{% trans 'Cost' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>
                         <div class="line">
                             {% if branch_name != 0  %}
                         	    <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
@@ -74,6 +77,8 @@
                         </div>
                         <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

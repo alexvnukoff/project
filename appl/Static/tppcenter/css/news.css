@@ -491,3 +491,5 @@ background: -webkit-gradient(linear, left top, left bottom, from(#41a6d8), to(#2
 .list-cpn li{ position: relative; float: left; width: 100%; padding: 5px 0; font-size: 12px;}
 .list-cpn li a{ color: #FFF;}
 .btn-afisha{ position: absolute; width: 34px; height: 35px; background-position: -266px -60px; top: 0; right: 0;}
+#afisha-list .desc{ display:inline-block; width:100%; color:#9b9b9b; padding-top:5px;}
+#afisha-list .desc b.num{ font-size:15px; font-weight:bold; color:#101010}

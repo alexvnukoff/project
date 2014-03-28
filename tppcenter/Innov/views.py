@@ -163,7 +163,7 @@ def _innovContent(request, page=1, my=None):
             else:
                 raise ObjectDoesNotExist('you need check company')
 
-        result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG'), page_num=7, page=page)
+        result = func.setPaginationForSearchWithValues(innov_projects, *('NAME', 'SLUG', 'COST', 'CURRENCY'), page_num=7, page=page)
 
         innovList = result[0]
         innov_ids = [id for id in innovList.keys()]
