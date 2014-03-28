@@ -3074,7 +3074,7 @@ msgstr "Миниатюра"
 
 #: tppcenter/templates/Products/addForm.html:295
 msgid "Part number"
-msgstr "Партнер"
+msgstr "СКУ"
 
 #: tppcenter/templates/Products/addForm.html:324
 msgid "Temporary discount"

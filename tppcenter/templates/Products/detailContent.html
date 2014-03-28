@@ -71,7 +71,13 @@ $(function() {
                 	<ul>
                     	<li>
                         	<label>{% trans "Price" %}:</label>
-                            <p>{{ currency|getSymbol }} {{ cost }}</p>
+                            <p>
+                                {% if price %}
+                                     {{ currency|getSymbol }} {{ cost }}
+                                {% else %}
+                                     {% trans 'Contact to price' %}
+                                {% endif %}
+                            </p>
                         </li>
                         <li>
                         	<label>{% trans 'Unit' %}:</label>

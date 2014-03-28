@@ -118,7 +118,7 @@ $.fn.onChangeSet = function(e) {
         {% with form.fields.DOCUMENT_1.initial as doc_1 %}
         {% with form.fields.DOCUMENT_2.initial as doc_2 %}
         {% with form.fields.DOCUMENT_3.initial as doc_3 %}
-        {% with form.fields.SMALL_IMAGE.initial as small_image %}
+
         {% with form.fields.SKU.initial as sku %}
 
 
@@ -150,30 +150,7 @@ $.fn.onChangeSet = function(e) {
                 </div>
             </div>
 
-            <div class="imgbig">
 
-                <label class="sapce">{% trans 'Small image' %} <font color="#FF0000">*</font></label>
-                {% if form.errors.SMALL_IMAGE %}
-                    <div class="error-handler">
-                        <div class="formserror">{{ form.errors.SMALL_IMAGE }}</div>
-                    </div>
-                {% endif %}
-
-                {% if small_image %}
-                    <div class="b-img">
-                        <img src="{{ MEDIA_URL }}th/{{ small_image.name }}"><br>
-                        <div class="deleteimge">
-                            <i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>
-                        </div>
-                        <input id="delete" type="checkbox" name="SMALL_IMAGE-CLEAR" value="{{ small_image }}" hidden="hidden" />
-                        <div class="gray-img"></div>
-                    </div>
-                {% endif %}
-
-                <div class="fileinputs">
-                    <input name="SMALL_IMAGE" type="file" style="width: 100%"  />
-                </div>
-            </div>
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
             <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
             <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
@@ -354,7 +331,7 @@ $.fn.onChangeSet = function(e) {
             <li>
                 <div class="clumn1">
                     <div class="clumn3">
-                        <label class="sapce">{% trans 'Cost' %} <font color="#FF0000">*</font></label>
+                        <label class="sapce">{% trans 'Cost' %}</label>
 
                         {% if form.errors.COST %}
                             <div class="error-handler">
@@ -470,7 +447,7 @@ $.fn.onChangeSet = function(e) {
         {% endwith %}
         {% endwith %}
         {% endwith %}
-        {% endwith %}
+
 
     </form>
 </div>
