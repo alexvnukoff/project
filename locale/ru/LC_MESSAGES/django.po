@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-28 07:34+0000\n"
-"PO-Revision-Date: 2014-03-26 15:50+0200\n"
+"PO-Revision-Date: 2014-03-28 10:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -522,14 +522,12 @@ msgid "Subscripe"
 msgstr "Подписаться"
 
 #: centerpokupok/templates/Company/contact.html:60
-#, fuzzy
 msgid "Your name"
-msgstr "Название продукта"
+msgstr "Ваше имя"
 
 #: centerpokupok/templates/Company/contact.html:67
-#, fuzzy
 msgid "Your email"
-msgstr "Ваш заказ"
+msgstr "Ваша почта"
 
 #: centerpokupok/templates/Company/contact.html:74
 msgid "Message"
@@ -615,7 +613,6 @@ msgid "Contacts"
 msgstr "Контакты"
 
 #: centerpokupok/templates/Company/index.html:5
-#, fuzzy
 msgid "Company main"
 msgstr "Название компании"
 
@@ -797,7 +794,6 @@ msgid " all countries"
 msgstr "все страны"
 
 #: centerpokupok/templates/Product/detail.html:6
-#, fuzzy
 msgid "Product detail"
 msgstr "Название продукта"
 
@@ -2004,7 +2000,6 @@ msgid "Innovation Project"
 msgstr "Инновационные проекты "
 
 #: tppcenter/Messages/views.py:75
-#, fuzzy
 msgid "Private messages"
 msgstr "Отправить личное сообщение"
 
@@ -2397,7 +2392,6 @@ msgid "Greetings"
 msgstr "Приветствия"
 
 #: tppcenter/templates/login_header.html:27
-#, fuzzy
 msgid "System notifications"
 msgstr "Уведомления"
 
@@ -2410,14 +2404,12 @@ msgid "See all"
 msgstr "Посмотреть все"
 
 #: tppcenter/templates/login_header.html:42
-#, fuzzy
 msgid "Messages"
-msgstr "Изображения"
+msgstr "Сообщения"
 
 #: tppcenter/templates/login_header.html:46
-#, fuzzy
 msgid "Friend request"
-msgstr "Это поле обязательно"
+msgstr "Запрос на добавление в друзья"
 
 #: tppcenter/templates/login_header.html:49
 msgid "Notification in your communities"
@@ -2470,9 +2462,8 @@ msgstr "Организации"
 
 #: tppcenter/templates/main_page.html:114
 #: tppcenter/templates/main_page.html:133
-#, fuzzy
 msgid "Exhibitions / Forums"
-msgstr "Все выставки и форумы"
+msgstr "Выставки / Форумы"
 
 #: tppcenter/templates/main_page.html:116
 #: tppcenter/templates/TppTV/index.html:10
@@ -2674,7 +2665,6 @@ msgstr "Отменить"
 #: tppcenter/templates/Products/contentPage.html:28
 #: tppcenter/templates/Tenders/contentPage.html:32
 #: tppcenter/templates/TppTV/contentPage.html:26
-#, fuzzy
 msgid "remove"
 msgstr "Удалить"
 
@@ -2695,7 +2685,7 @@ msgstr "редактировать"
 #: tppcenter/templates/Innov/contentPage.html:46
 #: tppcenter/templates/Products/contentPage.html:34
 msgid "add top"
-msgstr ""
+msgstr "добавить в топ"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:47
 #: tppcenter/templates/BusinessProposal/popupFilter.html:20
@@ -2901,16 +2891,14 @@ msgid "Department"
 msgstr "Отдел"
 
 #: tppcenter/templates/Companies/tabStaff.html:14
-#, fuzzy
 msgid "Join Date"
-msgstr "Дата окончания"
+msgstr "Дата включения"
 
 #: tppcenter/templates/Companies/tabStaff.html:15
 msgid "Status"
 msgstr "Статус"
 
 #: tppcenter/templates/Companies/tabStaff.html:56
-#, fuzzy
 msgid "No Staff found."
 msgstr "Ничего не найдено"
 
@@ -2919,12 +2907,10 @@ msgid "Empty"
 msgstr "Пусто"
 
 #: tppcenter/templates/Companies/tabStructure.html:18
-#, fuzzy
 msgid "No Departments found."
 msgstr "Ничего не найдено"
 
 #: tppcenter/templates/Companies/tabStructure.html:32
-#, fuzzy
 msgid "Department name"
 msgstr "Имя получателя"
 
@@ -3119,7 +3105,6 @@ msgid "Deleviry method"
 msgstr "Способ доставки"
 
 #: tppcenter/templates/Products/detailContent.html:92
-#, fuzzy
 msgid "Countact us"
 msgstr "Связаться с нами"
 
@@ -3201,7 +3186,6 @@ msgid "Bussiness Proposals"
 msgstr "Бизнес предложения"
 
 #: tppcenter/templates/main/currentCompany.html:5
-#, fuzzy
 msgid "Current organization:"
 msgstr "Текущая орагнизация"
 
