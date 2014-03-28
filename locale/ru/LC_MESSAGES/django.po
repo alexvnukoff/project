@@ -3089,9 +3089,8 @@ msgstr "Единица измерения "
 
 #: tppcenter/templates/Products/contentPage.html:56
 #: tppcenter/templates/Products/detailContent.html:78
-#, fuzzy
 msgid "Contact to price"
-msgstr "Связаться с нами"
+msgstr "Цена по договоренности"
 
 #: tppcenter/templates/Products/detailContent.html:83
 msgid "Unit"
@@ -3155,7 +3154,7 @@ msgstr "Дата публикации"
 
 #: tppcenter/templates/Tpp/addForm.html:136
 msgid "VATIN"
-msgstr ""
+msgstr "ИНН"
 
 #: tppcenter/templates/Tpp/addForm.html:153
 msgid "Organization name"
