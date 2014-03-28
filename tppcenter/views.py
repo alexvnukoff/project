@@ -53,7 +53,7 @@ def home(request):
         services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
 
         services_id = [service.id for service in services]
-        serviceList = Item.getItemsAttributesValues(("NAME",'SLUG'), services_id)
+        serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
         func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
 
