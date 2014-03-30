@@ -20,7 +20,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     current_company = request.session.get('current_company', False)
 
@@ -136,7 +136,7 @@ def _proposalDetailContent(request, item_id):
 def proposalForm(request, action, item_id=None):
     if item_id:
        if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     current_company = request.session.get('current_company', False)
 

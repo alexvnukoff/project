@@ -25,7 +25,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
     description = ""
@@ -142,7 +142,7 @@ def _tenderDetailContent(request, item_id):
 def tenderForm(request, action, item_id=None):
     if item_id:
        if not Tender.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 

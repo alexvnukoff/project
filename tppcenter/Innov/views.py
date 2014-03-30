@@ -314,7 +314,7 @@ def _innovDetailContent(request, item_id):
 def innovForm(request, action, item_id=None):
     if item_id:
        if not InnovationProject.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 

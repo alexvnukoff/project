@@ -12,9 +12,4 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Wall.views.get_wall_list, name='main'),
-
-
-
-
-
 )

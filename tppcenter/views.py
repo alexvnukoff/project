@@ -433,9 +433,11 @@ def getAdditionalPage(request):
 
 
 def perm_denied(request):
+    template = loader.get_template('permissionDen.html')
+    context = RequestContext(request)
 
-
-    return render_to_response("permissionDen.html")
+    return render_to_response("main/denied.html", {'DeniedContent': template.render(context)},
+                              context_instance=RequestContext(request))
 
 def redirectTo(request, to):
     from django.shortcuts import redirect
@@ -443,3 +445,24 @@ def redirectTo(request, to):
     return redirect('http://archive.tppcenter.com/' + to, permanent=True)
 
 
+def setCurrent(request, item_id):
+
+    if item_id != '0':
+        try:
+            item = Organization.objects.get(pk=item_id)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
+
+        perm_list = item.getItemInstPermList(request.user)
+
+        if 'change_company' not in perm_list and 'change_tpp' not in perm_list:
+            return HttpResponseRedirect(reverse('denied'))
+
+        current_company = int(item_id)
+    else:
+        current_company = False
+
+    request.session['current_company'] = current_company
+
+
+    return HttpResponseRedirect(request.GET.get('next'), '/')

@@ -25,7 +25,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
    #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     description = ''
     title = ''
@@ -88,7 +88,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
 def tvForm(request, action, item_id=None):
     if item_id:
        if not TppTV.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 
