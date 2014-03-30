@@ -246,7 +246,7 @@ def _getdetailcontent(request, item_id):
             similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
         except ObjectDoesNotExist:
             similarValues = None
-            pass
+
 
 
         if organizations.get('c2p__parent__country', False):

@@ -8,9 +8,11 @@ from django.conf import settings
 
 def get_wall_list(request):
 
+
     cabinetValues = func.getB2BcabinetValues(request)
 
     current_company = request.session.get('current_company', False)
+
 
     if current_company:
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
