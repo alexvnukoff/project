@@ -2,7 +2,7 @@
 {% load i18n %}
 
     <div class="current-company">
-        {% trans "Current organization:" %}
+        {% trans "Current organization" %}:
         {% if current %}
             {% with current.NAME|first as name %}
                 <a href="#" class="cpn-current">{{ name }}</a>
