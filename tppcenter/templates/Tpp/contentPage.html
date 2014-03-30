@@ -30,6 +30,7 @@
                                 <div class="localmenu">
                                     {% if 'change_tpp' in permlist %}
                                          <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tpp:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                     {% endif %}
                                 </div>
                             </div>
