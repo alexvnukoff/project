@@ -21,7 +21,7 @@
                 {% if id != currentId %}
 
                     {% with org.NAME|first as name %}
-                        <li data-org="{{ id }}"><a href="#">{{ name }}</a></li>
+                        <li><a href="{% url 'companies:set' id %}?next={{ current_path }}">{{ name }}</a></li>
                     {% endwith %}
 
                 {% endif %}

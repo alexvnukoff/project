@@ -73,7 +73,13 @@ def getMyCompaniesList(context):
     if user_name == '':
         user_name = _('Profile')
 
-    return {'companies': companies, 'current': current, 'currentId': current_company, 'user': user_name}
+    return {
+        'companies': companies,
+        'current': current,
+        'currentId': current_company,
+        'user': user_name,
+        'current_path': request.get_full_path()
+    }
 
 
 
