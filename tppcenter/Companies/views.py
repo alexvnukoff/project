@@ -188,7 +188,6 @@ def _companiesContent(request, page=1, my=None):
             'url_paginator': url_paginator,
             'items_perms': items_perms,
             'current_path': request.get_full_path()
-
         }
 
         templateParams.update(params)

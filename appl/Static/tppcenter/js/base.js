@@ -252,18 +252,9 @@ $(document).ready(function()
 
 	$(document).on("click", ".list-cpn li a", function(){
 
-        var selected = $(this);
+		$(".cpn-current").html( $(this).html() );
 
-		$(".cpn-current").html( selected.html() );
-
-		$(".list-cpn").slideUp(function() {
-
-            var id = selected.parent().data('org');
-
-            var newURL = updateURLParameter('current-org', id);
-
-            location.replace(newURL);
-        });
+		$(".list-cpn").slideUp();
 	});
 
 });
