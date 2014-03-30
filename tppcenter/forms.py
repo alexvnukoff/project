@@ -240,7 +240,7 @@ class ItemForm(forms.Form):
             return True
 
     @transaction.atomic
-    def save(self, user, site_id, dates=None, disableNotify=False):
+    def save(self, user, site_id, dates=None, disableNotify=False, sizes=None):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -271,7 +271,7 @@ class ItemForm(forms.Form):
             for title in self.fields:
                 if (isinstance(self.fields[title], forms.FileField) or isinstance(self.fields[title], forms.ImageField))\
                         and self.fields[title].initial and isinstance(self.fields[title].initial, InMemoryUploadedFile):
-                    self._save_file(self.fields[title].initial, title, user, path_to_images)
+                    self._save_file(self.fields[title].initial, title, user, path_to_images, sizes=sizes)
                     # If Field is Image that call save_file method
 
                 if dates and title in dates:
@@ -314,7 +314,7 @@ class ItemForm(forms.Form):
             return self.obj
 
 
-    def _save_file(self, file, title, user, path=''):
+    def _save_file(self, file, title, user, path='', sizes=None):
         """
         Method that save new file , and delete old file if exist
         parameters:
@@ -337,7 +337,7 @@ class ItemForm(forms.Form):
         file = '%s/%s' % (settings.MEDIA_ROOT, str(path) + str(filename))
 
         if isinstance(self.fields[title], forms.ImageField):
-            filename = add(imageFile=file)
+            filename = add(imageFile=file, sizes=sizes)
             self.to_delete_if_exception.append(filename)
             self.fields[title].initial = ImageFieldFile(instance=None, field=FileField(),  name=filename)
 
