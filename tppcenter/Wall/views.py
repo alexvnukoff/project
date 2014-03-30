@@ -61,7 +61,7 @@ def _wallContent(request):
     func.addDictinoryWithCountryAndOrganization(products, productsValues)
 
     #---------------News---------------------------------#
-    news = list(News.active.get_active().order_by('-pk').values_list('pk', flat=True)[:3])
+    news = list(News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).order_by('-pk').values_list('pk', flat=True)[:3])
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
     func.addDictinoryWithCountryAndOrganization(news, newsValues)
 

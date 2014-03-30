@@ -903,6 +903,8 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             filters, searchFilter = filterLive(request)
 
             sqs = getActiveSQS().models(model)
+            if model is News:
+               sqs = sqs.filter(categories__gt=0)
 
             if len(searchFilter) > 0: #Got filter values
                 sqs = sqs.filter(searchFilter)
