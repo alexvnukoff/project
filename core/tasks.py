@@ -30,8 +30,12 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
 
     form = ItemForm('News', values=values, id=item_id, addAttr=addAttr)
     form.clean()
-
-    new = form.save(user, site_id)
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (70, 70), 'fit': False},
+            'th': {'box':(30, 30), 'fit': True}
+            }
+    new = form.save(user, site_id, sizes=sizes)
     if new:
         if date:
             try:
@@ -92,9 +96,13 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     form = ItemForm('Product', values=values, id=item_id, addAttr=addAttr)
     form.clean()
 
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (60, 50), 'fit': False},
+            'th': {'box':(50, 40), 'fit': True}
+            }
 
-
-    product = form.save(user, site_id, dates=dates)
+    product = form.save(user, site_id, dates=dates, sizes=sizes)
     if product:
         if end_date:
             product.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
@@ -187,8 +195,13 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
     form = ItemForm('Company', values=values, id=item_id, addAttr=addAttr)
     form.clean()
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (70, 70), 'fit': False},
+            'th': {'box':(30, 30), 'fit': True}
+            }
 
-    company = form.save(user, site_id)
+    company = form.save(user, site_id, sizes=sizes)
     if company:
 
 
@@ -245,8 +258,13 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 
     form = ItemForm('TppTV', values=values, id=item_id, addAttr=addAttr)
     form.clean()
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (120, 90), 'fit': False},
+            'th': {'box':(60, 40), 'fit': True}
+            }
 
-    new = form.save(user, site_id)
+    new = form.save(user, site_id, sizes=sizes)
     if new:
         if date:
             try:
@@ -294,8 +312,13 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
 
     form = ItemForm('Tpp', values=values, id=item_id, addAttr=addAttr)
     form.clean()
+    sizes = {
+            'big': {'box': (150, 140), 'fit': False},
+            'small': {'box': (70, 70), 'fit': False},
+            'th': {'box':(30, 30), 'fit': True}
+            }
 
-    tpp = form.save(user, site_id)
+    tpp = form.save(user, site_id, sizes=sizes)
     if tpp:
         if end_date:
             tpp.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
@@ -530,8 +553,12 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
 
     form = ItemForm('AdvOrder', values=attr)
     form.clean()
+    sizes = {
+            'big': {'box': (200, 100), 'fit': False},
 
-    ord = form.save(user, site_id, disableNotify=True)
+            }
+
+    ord = form.save(user, site_id, disableNotify=True, sizes=sizes)
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
     Relationship.setRelRelationship(dep, item, user=user, type="dependence")
