@@ -1051,6 +1051,7 @@ def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
 
     perms_dict = {}
     items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+
     for itm in items:
         perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
 

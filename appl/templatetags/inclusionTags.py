@@ -42,14 +42,11 @@ def getMyCompaniesList(context):
 
     request = context.get('request')
 
-    if request.user.is_authenticated():
 
-        if not request.user.first_name and not request.user.last_name:
-            user_name = request.user.email
-        else:
-            user_name = request.user.first_name + ' ' + request.user.last_name
+    if not request.user.first_name and not request.user.last_name:
+        user_name = request.user.email
     else:
-        user_name = None
+        user_name = request.user.first_name + ' ' + request.user.last_name
 
     current_company = request.session.get('current_company', False)
 
@@ -57,7 +54,10 @@ def getMyCompaniesList(context):
 
     companies = Organization.objects.filter(community__in=user_groups)
 
-    companies_ids = companies.values_list('pk', flat=True)
+    companies_ids = list(companies.values_list('pk', flat=True))
+
+    if current_company is not False and current_company not in companies_ids:
+        companies_ids.append(current_company)
 
     sqs = SearchQuerySet().filter(django_id__in=companies_ids).order_by('title')
 
