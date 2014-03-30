@@ -371,9 +371,9 @@ rgb(33,136,187) 100%);}
 .staffaddin{ position:relative; float:left; width:334px; margin:8px 15px 0px 15px; display:inline;}
 .staffaddin label, .staffaddin select{ float:left; line-height:24px;}
 .staffaddin select{ border:1px #bdbdbd solid; float:right;}
-.inputadd{ position:relative; float:left; width:100%; height:28px; border:1px #bdbdbd solid; box-sizing:border-box; margin-top:10px;}
+.inputadd{ position:relative; float:left; width:100%; border:1px #bdbdbd solid; box-sizing:border-box; margin-top:10px;}
 .inputadd .button-add{ float:right; font-size:32px; color:#aeaeae; margin:0px 7px 0 0; display:inline; line-height:28px; cursor:pointer;}
-.inputadd input.text{ float:left; width:80%; line-height:28px; background:none; border:0; padding:6px 5px;}
+.inputadd input.text{ float:left; width:80%; line-height:16px; background:none; border:0; padding:6px 5px; font-size: 16px;}
 .staffaddin input.textstructure{ float:left; width:100%; padding:7px 0; border:1px #bdbdbd solid; box-sizing:border-box;}
 
 .keyword-formadd{ position:relative; float:left; width:100%;}
