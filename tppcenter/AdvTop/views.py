@@ -82,7 +82,7 @@ def addTop(request, item):
     current_organization = request.session.get('current_company', False)
 
     if current_organization is False:
-        return render_to_response("permissionDen.html")
+        return HttpResponseRedirect(reverse('denied'))
 
     org = Organization.objects.get(pk=current_organization)
     #org = Organization.objects.get(pk=114)
@@ -90,7 +90,7 @@ def addTop(request, item):
     perm_list = org.getItemInstPermList(request.user)
 
     if 'add_advtop' not in perm_list:
-         return render_to_response("permissionDenied.html")
+         return HttpResponseRedirect(reverse('denied'))
 
 
     itemName = object.getAttributeValues('NAME')[0]

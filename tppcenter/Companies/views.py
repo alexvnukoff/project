@@ -22,7 +22,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
       #   return HttpResponseRedirect(reverse('companies:detail',  args=[slug]))
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -506,9 +506,10 @@ def _tabsStaff(request, company, page=1):
 
 @login_required(login_url='/login/')
 def companyForm(request, action, item_id=None):
+
     if item_id:
        if not Company.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 
@@ -517,8 +518,8 @@ def companyForm(request, action, item_id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Companies")
-    if action == 'set':
-        newsPage = setCurrent(request, item_id)
+
+    newsPage = ''
 
     if action == 'delete':
         newsPage = deleteCompany(request, item_id)
@@ -678,24 +679,5 @@ def deleteCompany(request, item_id):
     instance.activation(eDate=now())
     instance.end_date = now()
     instance.reindexItem()
-
-
-
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
-
-
-def setCurrent(request, item_id):
-    item = Organization.objects.get(pk=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_company' not in perm_list:
-        return func.permissionDenied()
-
-    request.session['current_company'] = int(item_id)
-
-
-
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))

@@ -21,7 +21,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
       # return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
@@ -138,7 +138,7 @@ def _exhibitionsDetailContent(request, item_id):
 def exhibitionForm(request, action, item_id=None):
     if item_id:
        if not Exhibition.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 

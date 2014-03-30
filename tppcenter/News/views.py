@@ -27,7 +27,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     current_company = request.session.get('current_company', False)
     description = ""
@@ -96,7 +96,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 def newsForm(request, action, item_id=None):
     if item_id:
        if not News.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 

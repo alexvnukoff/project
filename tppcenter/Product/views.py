@@ -24,7 +24,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
      #    return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
     current_company = request.session.get('current_company', False)
@@ -154,7 +154,7 @@ def _getDetailContent(request, item_id):
 def productForm(request, action, item_id=None):
     if item_id:
        if not Product.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound
+         return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
 
