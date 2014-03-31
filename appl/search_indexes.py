@@ -1271,7 +1271,8 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
-    company = indexes.IntegerField()
+    company = indexes.IntegerField(null=True)
+    tpp = indexes.IntegerField(null=True)
 
     id = indexes.IntegerField()
 
@@ -1327,11 +1328,24 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
             else:
                 self.prepared_data[startDateIndex] = obj.start_date
 
+        #company , tpp
+        companyIndex = self.fields['company'].index_fieldname
+        tppIndexfield = self.fields['tpp'].index_fieldname
+
+        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="hierarchy")
+        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="hierarchy")
+
+        if comp.exists():
+            comp = comp[0]
+
+            self.prepared_data[companyIndex] = comp.pk
+
+        elif tpp.exists():
+            tpp = tpp[0]
+
+            self.prepared_data[tppIndexfield] = tpp.pk
+
         return self.prepared_data
-
-
-    def prepare_company(self, obj):
-        return Company.objects.get(p2c__child=obj.pk, p2c__type="hierarchy").pk
 
     def get_model(self):
         return Department

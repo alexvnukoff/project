@@ -1,0 +1,44 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+<div class="tpp-dt-content">
+    <div class="content-staff">
+        <div class="content-staffin">
+            <ul class="sitemap">
+                {% for id, attr in departmentsList.items %}
+                    {% with attr.NAME|first as name %}
+
+                    <li data-department="{{ id }}">
+                        <a href="#" title="{{ name }}">{{ name }}</a>
+                    </li>
+                    {% endwith %}
+
+                {% empty %}
+                    <div class="no-results">{% trans "No Departments found." %}</div>
+                {% endfor %}
+
+            </ul>
+            <!-- right buttons menu -->
+            <div class="btn-clumn">
+                <i class="btnadd btnaction imgnews addform" id="dep-add-button"></i>
+                <i class="btnedit btnaction imgnews" id="dep-edit-button"></i>
+                <i class="btnremove btnaction imgnews" id="dep-remove-button"></i>
+            </div>
+
+            <!-- add Department popup window -->
+            <div class="staffadd">
+                <i class="close-formadd imgnews"></i>
+                <div class="title">{% trans "Department name" %}</div>
+                <div class="staffaddin">
+                    <input type="text" name="" id="dep-name" class="textstructure" />
+                    <div class="formadd-button">
+                        <a class="btntype2" id="btn-add-depart" href="#">{% trans "Add" %}</a>
+                        <a class="btntype1" href="#">{% trans "Cancel" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "main/paginator.html" %}
+</div>
