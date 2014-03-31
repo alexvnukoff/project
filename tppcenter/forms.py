@@ -512,16 +512,19 @@ class BasePages(BaseModelFormSet):
             instances = super(BasePages, self).save(commit)
             for instance in instances:
                 instance.create_user = user
-                instance.save()
-                instance.setAttributeValue({'NAME': instance.title, 'DETAIL_TEXT': instance.content}, user=user)
+                instTitle = instance.title
+                instContent = instance.content
+                instance.title = None
+                instance.content = None
 
-            instances_pk = [instance.pk for instance in instances]
-            bulkInsert = []
+                instance.save()
+
+                instance.setAttributeValue({'NAME': instTitle, 'DETAIL_TEXT': instContent}, user=user)
+
             item = Item.objects.get(pk=parent)
+
             for instance in instances:
-                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
-            if bulkInsert:
-                Relationship.objects.bulk_create(bulkInsert)
+                Relationship.setRelRelationship(parent=item, child=instance, user=user, type='dependence')
 
         except Exception as e:
             logger.exception("Error in additional page ",  exc_info=True)
