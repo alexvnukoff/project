@@ -9,7 +9,30 @@
     ga('set', 'dimension3', {{ item_id }});
     ga('set', 'dimension2', 'tpp');
 </script>
+{% with companyValues.POSITION.0 as position %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<script type="text/javascript">
+    var marker;
+        $(document).ready(function($) {
+            var tabs = $( '#tpp-details-tab' )
+            tabs.tabs();
+            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
+            (href).on('click',function(){
+
+                {% if position %}
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ position }})
+                });
+                {% endif %}
+
+             initialize(false);
+
+            })});
+</script>
+{% endwith %}
   <div class="companies">
 
             {% with tppValues.NAME.0 as name %}
@@ -18,6 +41,12 @@
             {% with tppValues.FLAG.0 as flag %}
             {% with country.FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
+            {% with companyValues.ADDRESS.0 as address %}
+            {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
+            {% with companyValues.EMAIL.0 as email %}
+            {% with companyValues.FAX.0 as fax %}
+            {% with companyValues.SITE_NAME.0 as site_name %}
+            {% with companyValues.ANONS.0 as anons %}
 
 
                 <div class="deal-details">
@@ -27,7 +56,11 @@
                     {% else %}
                         <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="thumb-deal" alt="" />
                     {% endif %}
-                    <p>{{ content|cleanHtml|safe }}</p>
+                    <p>
+                        {% autoescape off %}
+                            {{ anons|force_escape|linebreaks }}
+                        {% endautoescape %}
+                    </p>
                 </div>
                 <div class="social">
                     <a href="#"><i class="imgnews share-1"></i></a>
@@ -121,7 +154,34 @@
                         <div class="tpp-dt-content"> </div>
                     </div>
                     <div id="cpn-tabs-contacts">
-                        <div class="tpp-dt-content"></div>
+                        <div class="tpp-dt-content">
+
+                             <div class="org-contacts">
+                               <ul>
+                                	<li>
+                                    	<span class="left">{% trans 'Address' %}: </span>
+                                        <span class="right">{{ address }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Telephone number' %}: </span>
+                                        <span class="right">{{ telephone_number }} </span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Fax' %}: </span>
+                                        <span class="right">{{ fax }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ email }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'WWW' %}: </span>
+                                        <span class="right">{{ site_name }}</span>
+                                    </li>
+                                </ul>
+                             </div>
+                              <div class="org-map"> <div   id="map-canvas"></div></div>
+                        </div>
                     </div>
                 </div>
             {% endwith %}
@@ -130,7 +190,12 @@
             {% endwith %}
             {% endwith %}
             {% endwith %}
-
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
 
   </div>
 

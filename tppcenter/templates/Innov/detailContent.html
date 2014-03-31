@@ -128,18 +128,22 @@ $(function() {
                         <div id="goods-tabs-3">
                             <div class="content-goods-tab">
                                 <ul class="tpp-gallery">
-                              {% for photo in photos %}
-                                <li>
-                                    <div class="b-img">
-                                        <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
-
-                                        <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
-                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span></div>
-                                        <div class="gray-img"></div>
-                                    </div>
-                                </li>
-                              {% endfor %}
-                              </ul>
+                                    {% for photo in photos %}
+                                        <li>
+                                            <div class="b-img">
+                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
+                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
+                                                </a>
+                                                <div class="viewimge">
+                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
+                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="gray-img"></div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
                         <div id="goods-tabs-4">
@@ -166,7 +170,6 @@ $(function() {
                                         <span class="right">{{ org_site }}</span>
                                     </li>
                                 </ul>
-
                             </div>
                         </div>
                         {% for page in additionalPages %}

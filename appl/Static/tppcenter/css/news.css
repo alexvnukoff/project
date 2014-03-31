@@ -23,7 +23,7 @@
 .content-news .gallery{ float:left; width:150px; margin:0px 8px 8px 0; display:inline;}
 .content-news p{ padding-top:10px;}
 
-.org-contacts{float: left;}
+.org-contacts{float: left; max-width: 285px;}
 .org-map{float: right; width: 350px;height: 300px;overflow: hidden;}
 div.org-contacts  ul{ width: 507px; margin: 0 0 0 20px; display:inline; min-height:515px;}
 div.org-contacts  ul li { margin:12px 0 0 0;}

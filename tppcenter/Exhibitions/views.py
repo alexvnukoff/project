@@ -109,7 +109,7 @@ def _exhibitionsDetailContent(request, item_id):
          additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
 
-         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
+         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues, withContacts=True)
 
          template = loader.get_template('Exhibitions/detailContent.html')
 

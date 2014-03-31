@@ -592,6 +592,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
     attr = ("NAME", 'FLAG', 'IMAGE', 'SLUG')
+
     if withContacts:
         attr = attr + ('EMAIL', 'SITE_NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'FAX')
     organizationsList = Item.getItemsAttributesValues(attr, organizations_ids)
