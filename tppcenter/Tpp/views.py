@@ -228,7 +228,8 @@ def _tppDetailContent(request, item_id):
     if not cached:
 
         tpp = get_object_or_404(Tpp, pk=item_id)
-        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE'))
+        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE', 'POSITION', 'ADDRESS',
+                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
         description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
         title = tppValues.get('NAME', False)[0] if tppValues.get('NAME', False) else ""

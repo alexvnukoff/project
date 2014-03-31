@@ -109,7 +109,7 @@ def _exhibitionsDetailContent(request, item_id):
          additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
 
-         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues)
+         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues, withContacts=True)
 
          template = loader.get_template('Exhibitions/detailContent.html')
 
@@ -148,6 +148,8 @@ def exhibitionForm(request, action, item_id=None):
         current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Exhibitions")
+
+    exhibitionPage = None
 
     if action == 'delete':
         exhibitionPage = deleteExhibition(request, item_id)
@@ -243,6 +245,7 @@ def updateExhibition(request, item_id):
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+
     if getattr(pages, 'new_objects', False):
         pages = pages.new_objects
     else:

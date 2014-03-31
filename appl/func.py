@@ -592,6 +592,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
     attr = ("NAME", 'FLAG', 'IMAGE', 'SLUG')
+
     if withContacts:
         attr = attr + ('EMAIL', 'SITE_NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'FAX')
     organizationsList = Item.getItemsAttributesValues(attr, organizations_ids)
@@ -755,6 +756,11 @@ def getTops(request, filterAdv=None):
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
+        Exhibition: {
+            'count': 5,
+            'text': _('Exhibitions'),
+            'detailUrl': 'exhibitions:detail'
+        },
     }
 
     topList = []
@@ -810,7 +816,7 @@ def getTops(request, filterAdv=None):
                 break
 
     for name, attr in tops.items():
-       if name == BusinessProposal.__name__ or Product.__name__ == name:
+       if name == BusinessProposal.__name__ or Product.__name__ == name or name == Exhibition.__name__:
            addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
        if name == InnovationProject.__name__:
            addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])

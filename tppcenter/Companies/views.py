@@ -15,6 +15,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from itertools import chain
 from django.core.cache import cache
+import logging
+logger = logging.getLogger('django.request')
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -452,6 +454,7 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 communityGroup.user_set.add(usr)
             except:
+                logger.exception("Error in tab staff",  exc_info=True)
                 pass
 
     comp = Company.objects.get(pk=company)

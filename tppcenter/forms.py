@@ -18,7 +18,8 @@ from core.amazonMethods import add, delete, addFile, deleteFile
 from appl import func
 from django.db.models import Q
 from PIL import Image
-
+import logging
+logger = logging.getLogger('django.request')
 
 
 class ItemForm(forms.Form):
@@ -296,6 +297,7 @@ class ItemForm(forms.Form):
                  deleteFile(self.document_to_delete)
 
         except Exception as e:
+            logger.exception("Error in tpp forms",  exc_info=True)
 
             transaction.savepoint_rollback(sid)
 
@@ -446,6 +448,7 @@ class BasePhotoGallery(BaseModelFormSet):
             if bulkInsert:
                 Relationship.objects.bulk_create(bulkInsert)
         except Exception:
+            logger.exception("Error in gallery ",  exc_info=True)
             transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)
             if len(self.files_to_delete) > 0:
@@ -519,7 +522,9 @@ class BasePages(BaseModelFormSet):
                 bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
             if bulkInsert:
                 Relationship.objects.bulk_create(bulkInsert)
+
         except Exception as e:
+            logger.exception("Error in additional page ",  exc_info=True)
 
             transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)

@@ -10,6 +10,8 @@ import uuid
 import time
 import os
 from celery import shared_task
+import logging
+logger = logging.getLogger('django.request')
 
 def add(imageFile=None, sizes=None):
 
@@ -70,6 +72,8 @@ def add(imageFile=None, sizes=None):
 
 
         except Exception as e:
+            logger.exception("Error in uploading image",  exc_info=True)
+
             return False
 
         try:
@@ -85,6 +89,7 @@ def add(imageFile=None, sizes=None):
                    os.remove(filename)
 
         except Exception:
+            logger.exception("Error in removing images after uploading",  exc_info=True)
             pass
 
 
@@ -115,6 +120,7 @@ def addFile(file=None):
             if os.path.isfile(filename):
                     os.remove(filename)
         except Exception as e:
+            logger.exception("Error in uploading file",  exc_info=True)
             return False
 
     return folder + '/' + name
@@ -139,6 +145,7 @@ def delete(toDelete=None):
 
          pool.all_completed(requests)
      except Exception as e:
+         logger.exception("Error in delete image method",  exc_info=True)
          return False
 
 
@@ -160,6 +167,7 @@ def deleteFile(toDelete=None):
 
          pool.all_completed(requests)
      except Exception as e:
+         logger.exception("Error in deleteFile method",  exc_info=True)
          return False
 
 

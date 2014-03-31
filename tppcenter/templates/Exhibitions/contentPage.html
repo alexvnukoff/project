@@ -37,6 +37,9 @@
                                 {% if 'change_exhibition' in permlist %}
                                      <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
+                                {% if 'add_advtop' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                {% endif %}
                             </div>
                         </div>
                    {% endif %}
