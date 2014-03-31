@@ -25,7 +25,7 @@
 
 .org-contacts{float: left; max-width: 285px;}
 .org-map{float: right; width: 350px;height: 300px;overflow: hidden;}
-div.org-contacts ul{ margin: 0 0 0 20px; display:inline; min-height:515px;}
+div.org-contacts ul{ margin: 0 0 0 20px; display:inline;}
 div.org-contacts ul li { margin:12px 0 0 0;}
 
 div.org-contacts ul li span.right{ margin-left: 5px;}
