@@ -9,7 +9,7 @@
     ga('set', 'dimension3', {{ item_id }});
     ga('set', 'dimension2', 'tpp');
 </script>
-{% with companyValues.POSITION.0 as position %}
+{% with tppValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -41,12 +41,12 @@
             {% with tppValues.FLAG.0 as flag %}
             {% with country.FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
-            {% with companyValues.ADDRESS.0 as address %}
-            {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
-            {% with companyValues.EMAIL.0 as email %}
-            {% with companyValues.FAX.0 as fax %}
-            {% with companyValues.SITE_NAME.0 as site_name %}
-            {% with companyValues.ANONS.0 as anons %}
+            {% with tppValues.ADDRESS.0 as address %}
+            {% with tppValues.TELEPHONE_NUMBER.0 as telephone_number %}
+            {% with tppValues.EMAIL.0 as email %}
+            {% with tppValues.FAX.0 as fax %}
+            {% with tppValues.SITE_NAME.0 as site_name %}
+            {% with tppValues.ANONS.0 as anons %}
 
 
                 <div class="deal-details">
