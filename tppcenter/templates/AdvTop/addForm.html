@@ -215,7 +215,12 @@
             $('.ads-details-center .filter input').select2({
                     width: "100%",
                     multiple:true,
-                    formatNoMatches: noMatches,
+                    formatNoMatches: function noMatches(term) {
+                            if (term.length > 0 && term.length < 3)
+                                return '{% trans "Minimum length of search term is 3 characters" %}';
+
+                            return '{% trans "No result found" %}';
+                        },
                     ajax: {
                         url: "/advbanner/filter/",
                         dataType: 'json',

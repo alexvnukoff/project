@@ -26,10 +26,6 @@ def advJsonFilter(request):
 
         if filter == 'tpp':
             model = Tpp
-        elif filter == "companies":
-            model = Company
-        elif filter == "category":
-            model = Category
         elif filter == "branch":
             model = Branch
         elif filter == 'country':
