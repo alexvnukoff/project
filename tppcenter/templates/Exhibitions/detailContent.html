@@ -70,7 +70,11 @@
             {% with exhibitionlValues.COUNTRY_NAME|first as country_name %}
             {% with exhibitionlValues.COUNTRY_FLAG|first as flag %}
             {% with exhibitionlValues.COUNTRY_ID as country_id %}
-
+            {% with proposalValues.ORGANIZATION_EMAIL|first as org_email %}
+            {% with proposalValues.ORGANIZATION_SITE_NAME|first as org_site %}
+            {% with proposalValues.ORGANIZATION_ADDRESS|first as org_address %}
+            {% with proposalValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}
+            {% with proposalValues.ORGANIZATION_FAX|first as org_fax %}
 
                <div class="tender-details-title">
                		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
@@ -140,7 +144,32 @@
                         </div>
                         <div id="goods-tabs-4">
                             <div class="content-goods-tab">
-                                  <div id="map-canvas"></div>
+                                <div class="org-contacts">
+                                    <ul class="innov-tab-content">
+                                        <li>
+                                            <span class="left">{% trans 'Address' %}: </span>
+                                            <span class="right">{{ org_address }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="left">{% trans 'Telephone number' %}: </span>
+                                            <span class="right">{{ org_telephone }} </span>
+                                        </li>
+                                        <li>
+                                            <span class="left">{% trans 'Fax' %}: </span>
+                                            <span class="right">{{ org_fax }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="left">{% trans 'Email' %}: </span>
+                                            <span class="right">{{ org_email }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="left">{% trans 'WWW' %}: </span>
+                                            <span class="right">{{ org_site }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="map-canvas"></div>
                             </div>
                         </div>
                         {% for page in additionalPages %}
@@ -152,6 +181,11 @@
                </div>
 
 
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
