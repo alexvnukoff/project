@@ -5,7 +5,7 @@
     {% include "main/paginator.html" %}
 
     <ul class="listnews">
-        {% for id , attr in proposalList.items %}
+        {% for id , attr in greetingList.items %}
             {% with attr.NAME.0 as name %}
             {% with attr.IMAGE.0 as image %}
             {% with attr.SLUG.0 as slug %}

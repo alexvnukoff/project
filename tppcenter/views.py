@@ -60,7 +60,7 @@ def home(request):
 
         greetings = Greeting.active.get_active().all()
         greetings_id = [greeting.id for greeting in greetings]
-        greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION"), greetings_id)
+        greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
 
         exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
         exhibitions_id = [exhibition.pk for exhibition in exhibitions]

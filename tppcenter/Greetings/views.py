@@ -1,10 +1,8 @@
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from core.models import Item
+from appl.models import Greeting
 from appl import func
 from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.conf import settings
@@ -23,8 +21,7 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
 
     try:
         if not item_id:
-            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
-            greetingPage = func.setContent(request, Greeting, attr, 'greetings', 'Greetings/contentPage.html', 5, page=page)
+            greetingPage = _getContent(request, page)
 
         else:
             result = _getdetailcontent(request, item_id)
@@ -59,8 +56,8 @@ def _getdetailcontent(request, item_id):
     cached = cache.get(cache_name)
 
     if not cached:
-        new = get_object_or_404(News, pk=item_id)
-        greetingValues = new.getAttributeValues('NAME', 'DETAIL_TEXT', 'IMAGE')
+        greeting = get_object_or_404(Greeting, pk=item_id)
+        greetingValues = greeting.getAttributeValues('NAME', 'DETAIL_TEXT', 'IMAGE')
         description = greetingValues.get('DETAIL_TEXT', False)[0] if greetingValues.get('DETAIL_TEXT', False) else ""
 
         description = func.cleanFromHtml(description)
@@ -86,3 +83,42 @@ def _getdetailcontent(request, item_id):
         title = result[1]
 
     return rendered, description, title
+
+def _getContent(request, page):
+
+    cached = False
+    cache_name = "greeting_list_result_page_%s" % page
+
+    if not request.user.is_authenticated():
+        cached = cache.get(cache_name)
+
+    if not cached:
+        greetings = Greeting.objects.all()
+        url_paginator = "greetings:paginator"
+        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+
+        result = func.setPaginationForItemsWithValues(greetings, *attr, page_num=7, page=page)
+        greetingList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        template = loader.get_template('Greetings/contentPage.html')
+
+        templateParams = {
+            'greetingList': greetingList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator
+        }
+
+        context = RequestContext(request, templateParams)
+        rendered = template.render(context)
+
+        if not request.user.is_authenticated():
+                cache.set(cache_name, rendered)
+
+    else:
+        rendered = cache.get(cache_name)
+
+    return rendered
