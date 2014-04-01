@@ -22,10 +22,8 @@
                 </div>
                 <div class="infoprd">
                     <a href="{% url "greetings:detail" slug %}" class="name">{{ name }}</a>
-                    {{ content|cleanHtml|safe|truncatewords_html:"30" }}
-                <span class="clumn">
-                    {% trans "Organization" %}: {{ tpp }}
-                </span>
+                    {{ content|safe|cleanHtml|linebreaks|truncatewords_html:"30" }}
+                <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
                     <!--noindex-->
                         <a href="{% url "greetings:detail" slug %}" class="more">{% trans 'Read more' %}...</a>
                     <!--/noindex-->
