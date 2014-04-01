@@ -19,14 +19,12 @@ from django.core.cache import cache
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
-
-
-   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
+    #   if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
+    #   slug = Value.objects.get(item=item_id, attr__title='SLUG').title
+    #   return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
     if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+        if not Item.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     cabinetValues = func.getB2BcabinetValues(request)
     description = ''
@@ -512,6 +510,7 @@ def _tabsExhibitions(request, tpp, page=1):
 
     return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
 
+
 def _tabsProposals(request, tpp, page=1):
     cache_name = "Proposal_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
@@ -574,3 +573,142 @@ def _tabsInnovs(request, tpp, page=1):
         templateParams = cached
 
     return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsStructure(request, tpp, page=1):
+    '''
+        Show content of the Tpp-details-structure panel
+    '''
+    #check if there Department for deletion
+    departmentForDeletion = request.POST.get('departmentID', 0)
+
+    try:
+        departmentForDeletion = int(departmentForDeletion)
+    except ValueError:
+        departmentForDeletion = 0
+
+    if departmentForDeletion > 0:
+        Department.objects.filter(pk=departmentForDeletion).delete()
+
+    #check if there Department for adding
+    departmentToChange = request.POST.get('departmentName', '')
+
+    if len(departmentToChange):
+        #if update department than receive previous name
+        prevDepName = request.POST.get('prevDepName', '')
+        try:
+            #check is there department with 'old' name
+            obj_dep = Department.objects.get(item2value__attr__title="NAME", item2value__title=prevDepName)
+        except:
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
+            Relationship.setRelRelationship(Tpp.objects.get(pk=tpp), obj_dep, request.user, type='hierarchy')
+
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
+        obj_dep.reindexItem()
+
+    departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
+    attr = ('NAME', 'SLUG')
+
+    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
+
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "tpp:tab_structure_paged"
+
+    templateParams = {
+        'departmentsList': departmentsList,
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp,
+    }
+
+    return render_to_response('Tpp/tabStructure.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsStaff(request, tpp, page=1):
+    '''
+        Show content of the Tpp-details-staff panel
+    '''
+    # get Cabinet ID if user should be detach from Organization
+    org = Tpp.objects.get(pk=tpp)
+    cabinetToDetach = request.POST.get('cabinetID', 0)
+
+    try:
+        cabinetToDetach = int(cabinetToDetach)
+    except ValueError:
+        cabinetToDetach = 0
+
+    if cabinetToDetach > 0:
+        userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
+        #create list of pk for Company's Organizations
+        cab_lst = list(Department.objects.filter(c2p__parent=tpp, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+        cab_lst += list(Group.objects.filter(name=org.community.name).values_list('user__cabinet__pk', flat=True))
+        # create cross list for Cabinet IDs and Organization IDs - list of tuples
+        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+        for t in correlation:
+            if t[1] == cabinetToDetach:
+                comp = Organization.objects.get(pk=t[0])
+                communityGroup = Group.objects.get(pk=comp.community_id)
+                communityGroup.user_set.remove(userToDetach)
+
+    # add a new user to department
+    userEmail = request.POST.get('userEmail', '')
+    if len(userEmail):
+        departmentName = request.POST.get('departmentName', '')
+        if len(departmentName):
+            dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title='NAME', item2value__title=departmentName)
+            communityGroup = Group.objects.get(pk=dep.community_id)
+            try:
+                usr = User.objects.get(email=userEmail)
+                communityGroup.user_set.add(usr)
+            except:
+                pass
+
+    cab_lst = list(Department.objects.filter(c2p__parent=tpp, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
+    cab_lst += list(Group.objects.filter(name=org.community.name).values_list('user__cabinet__pk', flat=True))
+    attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
+
+    cabinets = Cabinet.objects.filter(pk__in=cab_lst)
+    workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+
+    # add Department, Joined_date and Status fields
+    dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+    org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
+    #create correlation list between Organization IDs and Cabinet IDs
+    correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+
+    for cab_id, cab_att in workersList.items(): #get Cabinet ID
+        for t in correlation: #lookup into corelation list
+            if t[1] == cab_id: #if Cabinet ID then...
+                dep_id = t[0] #...get Organization ID
+                for org_id, org_attr in org_lst.items(): #from OrderedDict...
+                    if org_id == dep_id:    #if found the same Organization ID then...
+                        #... set additional attributes for Users (Cabinets) befor sending to web form
+                        cab_att['DEPARTMENT'] = org_attr['NAME']
+                        cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
+                        cab_att['STATUS'] = ['Active']
+                        break
+
+    paginator_range = func.getPaginatorRange(page)
+    url_paginator = "tpp:tab_staff_paged"
+
+    #create full list of Company's departments
+    departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
+
+    dep_lst = [dep.pk for dep in departments]
+
+    if len(dep_lst) == 0:
+        departmentsList = []
+    else:
+        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+
+    templateParams = {
+        'workersList': workersList,
+        'departmentsList': departmentsList, #list for add user form
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp,
+    }
+
+    return render_to_response('Tpp/tabStaff.html', templateParams, context_instance=RequestContext(request))
+

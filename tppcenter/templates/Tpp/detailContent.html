@@ -9,30 +9,206 @@
     ga('set', 'dimension3', {{ item_id }});
     ga('set', 'dimension2', 'tpp');
 </script>
-{% with tppValues.POSITION.0 as position %}
-<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<!-- script for Tpp-details-staff delete content button -->
 <script type="text/javascript">
-    var marker;
-        $(document).ready(function($) {
-            var tabs = $( '#tpp-details-tab' )
-            tabs.tabs();
-            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
-            (href).on('click',function(){
+    $(function(){
+	    $(document).on('mouseenter','.table-staff tr', function(){
 
-                {% if position %}
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ position }})
-                });
-                {% endif %}
+		    $(this).children().find(".btnremove-small").show();
+		});
 
-             initialize(false);
-
-            })});
+        $(document).on('mouseleave', '.table-staff tr', function(){
+		    $(this).children().find(".btnremove-small").hide();
+		});
+	});
 </script>
-{% endwith %}
+<!-- script for Staff add popup and delete -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','.btnremove-small', function(){
+            var tr = $(this).parents('tr');
+            var cabinetID = tr.data('cabinet');
+            var color  = $(this).css("background-color");
+            tr.css("background-color","#FF3700");
+
+            if (confirm('Do you want to delete this record?'))
+            {
+                var contentHolder = $('#staff-tab .tpp-dt-content');
+                contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+
+                $.post("{% url "tpp:tab_staff" item_id %}", {cabinetID: cabinetID}, function(data){
+                        contentHolder.replaceWith(data);
+                        }, 'html');
+
+            }
+            else
+            {
+                 tr.css("background", color);
+            }
+            return false;
+		});
+        <!-- add Staff (popup window) -->
+        $(document).on('click','#user-add-button', function(){
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+    });
+</script>
+
+<!-- script for Staff adding -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click','#btn-add-user', function(){
+
+            var userEmail = $('#user-name').val();
+            var departmentName = $('#dep-list').find(":selected").text();
+
+            var contentHolder = $('#staff-tab .tpp-dt-content');
+
+            contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+
+            $.post("{% url "tpp:tab_staff" item_id %}", {departmentName: departmentName, userEmail: userEmail}, function(data){
+                        contentHolder.replaceWith(data);
+                    }, 'html');
+
+            $('#dep-list:eq(0)').attr('selected','selected');
+            $('#fade-profile').hide();
+
+            return false;
+		});
+	});
+</script>
+<!-- script for Department adding (popup window)-->
+<script type="text/javascript">
+    var prevDepName = '';
+    $(function(){
+        <!-- press Add button -->
+	    $(document).on('click','#btn-add-depart', function()
+        {
+            var inputField = $('#dep-name');
+            var departmentName = inputField.val();
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+
+            contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+
+            $.post("{% url "tpp:tab_structure" item_id %}", {departmentName: departmentName, prevDepName: prevDepName}, function(data){
+                        contentHolder.replaceWith(data);
+                    }, 'html');
+
+            inputField.empty();
+            prevDepName = '';
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+        <!-- press Cancel button -->
+	    $(document).on('click','.btntype1', function()
+        {
+            $('.staffadd').hide();      <!-- hide pop-up window -->
+            $('#fade-profile').hide();  <!-- switch off gray background -->
+            return false;
+		});
+
+	});
+</script>
+<!-- script for Department selection -->
+<script type="text/javascript">
+    $(function(){
+        var bkgr_color  = 0;
+        var font_color = 0;
+        var departmentID = 0;
+        var currentRow = -1;
+
+        <!-- select row -->
+        $(document).on('mouseenter','.sitemap li', function(){
+            currentRow = $(this);
+            if(departmentID == 0)
+            {
+                bkgr_color = currentRow.css("background-color");
+                font_color = currentRow.children('a').css("color");
+                currentRow.css("background-color","#E6E6E6");
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    bkgr_color = currentRow.css("background-color");
+                    font_color = currentRow.children('a').css("color");
+                    currentRow.css("background-color","#E6E6E6");
+                }
+            }
+        });
+        <!-- deselect row -->
+        $(document).on('mouseleave', '.sitemap li', function(){
+            currentRow = $(this);
+            if(departmentID == 0)
+            {
+                currentRow.css("background-color", bkgr_color);
+                currentRow.children('a').css("color", font_color);
+            }
+            else
+            {
+                if(currentRow.data('department') != departmentID)
+                {
+                    currentRow.css("background-color", bkgr_color);
+                    currentRow.children('a').css("color", font_color);
+                }
+            }
+		});
+        <!-- mark row in Tpp-structure -->
+        $(document).on('click', '.sitemap li', function(){
+		    currentRow = $(this);
+            currentRow.css("background-color", "#3397C9");
+            currentRow.children('a').css("color", "white");
+            <!-- deselect previous selection if it is -->
+            var newSelectedRow = currentRow.data('department');
+            if(departmentID != 0 && departmentID != newSelectedRow)
+            {
+                var lastSelectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+                lastSelectedRow.css("background-color", bkgr_color);
+                lastSelectedRow.children('a').css("color", font_color);
+            }
+
+            departmentID = newSelectedRow;
+            $('#dep-remove-button').css('visibility', 'visible');
+            $('#dep-edit-button').css('visibility', 'visible');
+		});
+
+        <!-- add Department (popup window) -->
+        $(document).on('click','#dep-add-button', function(){
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+
+        <!-- edit Department (popup window)-->
+        $(document).on('click','#dep-edit-button', function(){
+            var selectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+            prevDepName = selectedRow.context.innerText;
+            $('#dep-name').val(prevDepName);
+            $('#fade-profile').show();
+            $('.staffadd').show();
+            return false;
+		});
+
+        <!-- remove Department -->
+        $(document).on('click','#dep-remove-button', function()
+        {
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+
+            if (confirm('Do you want to delete this Department?'))
+            {
+                contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
+                $.post("{% url "tpp:tab_structure" item_id %}", {departmentID: departmentID}, function(data){
+                            contentHolder.replaceWith(data);
+                        }, 'html');
+            }
+            return false;
+		});
+	});
+</script>
+
   <div class="companies">
 
             {% with tppValues.NAME.0 as name %}
@@ -118,14 +294,14 @@
                                 <a data-id="proposal-tab" href="{% url "tpp:tab_proposal" item_id %}">
                                     {% trans 'Business Proposals'  %}
                                 </a>
-                            </li>
+                            </li>                            
                             <li>
-                                <a href="#cpn-tabs-structure">
+                                <a data-id="structure-tab" href="{% url "tpp:tab_structure" item_id %}">
                                     {% trans "Structure" %}
                                 </a>
                             </li>
                             <li>
-                                <a href="#cpn-tabs-staff">
+                                <a data-id="staff-tab" href="{% url "tpp:tab_staff" item_id %}">
                                     {% trans "Staff" %}
                                 </a>
                             </li>
@@ -156,12 +332,6 @@
                     -->
                     <div id="cpn-tabs-gallery">
                         <div class="tpp-dt-content"></div>
-                    </div>
-                    <div id="cpn-tabs-structure">
-                        <div class="tpp-dt-content"></div>
-                    </div>
-                    <div id="cpn-tabs-staff">
-                        <div class="tpp-dt-content"> </div>
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">

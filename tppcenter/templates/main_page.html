@@ -30,7 +30,12 @@
         <script  type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=ru" charset="utf-8"></script>
         <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
         <script type="text/javascript">
-
+		$(document).ready(function() {
+			$(".fancybox").fancybox({
+				openEffect	: 'none',
+				closeEffect	: 'none'
+			});
+		});
         var LANG = {}
 
             $(document).ready(function(e) {

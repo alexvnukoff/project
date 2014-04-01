@@ -37,8 +37,8 @@ urlpatterns = patterns('',
      url(r'^tabs/proposal/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsProposals, name="tab_proposal"),
      url(r'^tabs/proposal/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsProposals, name="tab_proposal_paged"),
 
-
-
-
-
+     url(r'^tabs/structure/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsStructure, name="tab_structure"),
+     url(r'^tabs/structure/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsStructure, name="tab_structure_paged"),
+     url(r'^tabs/staff/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsStaff, name="tab_staff"),
+     url(r'^tabs/staff/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsStaff, name="tab_staff_paged"),
 )
