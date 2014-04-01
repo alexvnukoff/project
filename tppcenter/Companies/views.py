@@ -378,7 +378,7 @@ def _tabsProposals(request, company, page=1):
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
 
 
-        productsList = result[0]
+        proposalList = result[0]
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -386,7 +386,7 @@ def _tabsProposals(request, company, page=1):
         url_paginator = "companies:tab_proposal_paged"
 
         templateParams = {
-            'productsList': productsList,
+            'proposalList': proposalList,
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
@@ -410,7 +410,7 @@ def _tabsInnovs(request, company, page=1):
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
 
 
-        productsList = result[0]
+        innovList = result[0]
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -418,7 +418,7 @@ def _tabsInnovs(request, company, page=1):
         url_paginator = "companies:tab_innov_paged"
 
         templateParams = {
-            'productsList': productsList,
+            'innovList': innovList,
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,

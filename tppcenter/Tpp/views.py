@@ -522,7 +522,7 @@ def _tabsProposals(request, tpp, page=1):
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
 
 
-        productsList = result[0]
+        proposalList = result[0]
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -530,7 +530,7 @@ def _tabsProposals(request, tpp, page=1):
         url_paginator = "tpp:tab_proposal_paged"
 
         templateParams = {
-            'productsList': productsList,
+            'productsList': proposalList,
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
@@ -554,7 +554,7 @@ def _tabsInnovs(request, tpp, page=1):
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
 
 
-        productsList = result[0]
+        innovList = result[0]
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -562,7 +562,7 @@ def _tabsInnovs(request, tpp, page=1):
         url_paginator = "tpp:tab_innov_paged"
 
         templateParams = {
-            'productsList': productsList,
+            'productsList': innovList,
             'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
@@ -578,6 +578,9 @@ def _tabsStructure(request, tpp, page=1):
     '''
         Show content of the Tpp-details-structure panel
     '''
+
+    #TODO: Ilya check for permission
+
     #check if there Department for deletion
     departmentForDeletion = request.POST.get('departmentID', 0)
 
@@ -627,6 +630,9 @@ def _tabsStaff(request, tpp, page=1):
     '''
         Show content of the Tpp-details-staff panel
     '''
+
+    #TODO: Ilya check for permission
+
     # get Cabinet ID if user should be detach from Organization
     org = Tpp.objects.get(pk=tpp)
     cabinetToDetach = request.POST.get('cabinetID', 0)
