@@ -810,6 +810,7 @@ def getTops(request, filterAdv=None):
                 tops[sModel]['ids'] = []
 
             if id in modelTop[sModel]:
+                attrs['DETAIL_TEXT'] = cleanFromHtml(attrs.get('DETAIL_TEXT', [''])[0])
                 tops[sModel]['elements'][id] = attrs
                 tops[sModel]['ids'].append(id)
 
