@@ -11,12 +11,11 @@
 
             	<h1>{{ name }}</h1>
                 <div class="content-news">
-                <p class="date">{{ position }}</p>
                     <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
-                    {{ content|cleanHtml|safe }}
+                    {{ content|linebreaks|cleanHtml|safe }}
                 <p></p>
-                <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
-                <p><strong>{% trans "Position" %}:</strong> {{ position }}</p>
+                <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ tpp }}</p>
+                <p><strong>{% trans "Position" %}:</strong>  &nbsp;&nbsp;{{ position }}</p>
                 </div>
 
             {% endwith %}
