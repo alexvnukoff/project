@@ -9,11 +9,11 @@
             {% with greetingValues.POSITION.0 as position %}
             {% with greetingValues.TPP.0 as tpp %}
 
-            <p class="date">{{ position }}</p>
             	<h1>{{ name }}</h1>
                 <div class="content-news">
+                <p class="date">{{ position }}</p>
                     <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
-                    {{ content|safe|cleanHtml }}
+                    {{ content|cleanHtml|safe }}
                 <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
                 </div>
 
