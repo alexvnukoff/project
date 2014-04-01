@@ -516,7 +516,7 @@ def _tabsProposals(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(Product).filter(company=tpp)
+        products = func.getActiveSQS().models(BusinessProposal).filter(company=tpp)
         attr = ('NAME', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
@@ -548,7 +548,7 @@ def _tabsInnovs(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(Product).filter(company=None, tpp=tpp)
+        products = func.getActiveSQS().models(InnovationProject).filter(company=None, tpp=tpp)
         attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
