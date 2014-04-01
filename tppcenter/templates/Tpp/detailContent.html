@@ -286,6 +286,16 @@
                                 </a>
                             </li>
                             <li>
+                                <a data-id="innov-tab" href="{% url "tpp:tab_innov" item_id %}">
+                                    {% trans 'Innovation Projects' %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="proposal-tab" href="{% url "tpp:tab_proposal" item_id %}">
+                                    {% trans 'Business Proposals'  %}
+                                </a>
+                            </li>                            
+                            <li>
                                 <a data-id="structure-tab" href="{% url "tpp:tab_structure" item_id %}">
                                     {% trans "Structure" %}
                                 </a>

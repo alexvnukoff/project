@@ -17,4 +17,5 @@ urlpatterns = patterns('',
      url(r'^proposal/$', tppcenter.Project.views.project, {'template': "proposal.html", 'section': _('Add a business proposal')}, name='proposal'),
      url(r'^contact/$', tppcenter.Project.views.project, {'template': "contact.html", 'section': _('Contact us')}, name='contact'),
      url(r'^faq/$', tppcenter.Project.views.project, {'template': "faq.html", 'section': _('FAQ')}, name='faq'),
+     url(r'^site/$', tppcenter.Project.views.project, {'template': "site.html", 'section': _('Your own site')}, name='site'),
 )

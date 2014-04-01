@@ -367,6 +367,69 @@ def _tabsProducts(request, company, page=1):
 
     return render_to_response('Companies/tabProducts.html', templateParams, context_instance=RequestContext(request))
 
+def _tabsProposals(request, company, page=1):
+    cache_name = "Proposal_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        products = func.getActiveSQS().models(Product).filter(company=company)
+        attr = ('NAME', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+        productsList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        url_paginator = "companies:tab_proposal_paged"
+
+        templateParams = {
+            'productsList': productsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
+
+    return render_to_response('Companies/tabProposal.html', templateParams, context_instance=RequestContext(request))
+
+
+def _tabsInnovs(request, company, page=1):
+    cache_name = "Innov_tab_company_%s_page_%s" % (company, page)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        products = func.getActiveSQS().models(Product).filter(company=company)
+        attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+        productsList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        url_paginator = "companies:tab_innov_paged"
+
+        templateParams = {
+            'productsList': productsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': company
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
+
+    return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
+
 def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
