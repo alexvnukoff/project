@@ -32,8 +32,6 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
     except ObjectDoesNotExist:
         greetingPage = func.emptyCompany()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
     current_section = _("Greetings")
 
     templateParams = {
@@ -42,7 +40,6 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
         'greetingPage': greetingPage,
         'scripts': scripts,
         'styles': styles,
-        'cabinetValues': cabinetValues,
         'description': description,
     }
 

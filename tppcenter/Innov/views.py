@@ -26,13 +26,9 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    current_company = request.session.get('current_company', False)
     description = ''
     title = ''
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
-    cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -60,10 +56,7 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
             'current_section': current_section,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', ''),
-            'current_company': current_company,
             'addNew': reverse('innov:add'),
-            'cabinetValues': cabinetValues,
             'item_id': item_id,
             'description': description,
             'title': title
@@ -87,14 +80,13 @@ def _innovContent(request, page=1, my=None):
     cached = False
     cache_name = "inov_list_result_page_%s" % page
     query = request.GET.urlencode()
+    q = request.GET.get('q', '')
 
     if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
             cached = cache.get(cache_name)
 
     if not cached:
-
-        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = func.filterLive(request)
@@ -316,21 +308,16 @@ def innovForm(request, action, item_id=None):
        if not InnovationProject.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Innovation Project")
+    newsPage = ''
 
     if action == 'delete':
         newsPage = deleteInnov(request, item_id)
 
-
     if action == 'add':
         newsPage = addProject(request)
+
     if action == 'update':
         newsPage = updateProject(request, item_id)
 
@@ -339,9 +326,7 @@ def innovForm(request, action, item_id=None):
 
     templateParams = {
         'formContent': newsPage,
-        'current_company':current_company,
-        'current_section': current_section,
-        'cabinetValues': cabinetValues
+        'current_section': current_section
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))

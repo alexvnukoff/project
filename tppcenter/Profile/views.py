@@ -18,9 +18,6 @@ def getProfileForm(request):
 
     user = request.user
 
-    if user.is_authenticated():
-        cabinetValues = func.getB2BcabinetValues(request)
-
     current_section = _("Profile")
 
     profilePage = _profileContent(request)
@@ -28,16 +25,9 @@ def getProfileForm(request):
     if isinstance(profilePage, HttpResponseRedirect):
         return profilePage
 
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
     templateParams = {
         'current_section': current_section,
-        'profilePage': profilePage,
-        'current_company': current_company,
-        'cabinetValues': cabinetValues
+        'profilePage': profilePage
     }
 
 

@@ -81,5 +81,15 @@ def getMyCompaniesList(context):
         'current_path': request.get_full_path()
     }
 
+@register.inclusion_tag('main/user_profile.html', takes_context=True)
+def userProfile(context):
 
+    request = context.get('request')
+    cabinetValues = func.getB2BcabinetValues(request)
+    MEDIA_URL = context.get('MEDIA_URL', '')
+
+    return {
+        'MEDIA_URL': MEDIA_URL,
+        'cabinetValues': cabinetValues
+    }
 

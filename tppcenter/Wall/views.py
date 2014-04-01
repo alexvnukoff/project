@@ -8,24 +8,13 @@ from django.conf import settings
 
 def get_wall_list(request):
 
-
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
     current_section = _("Wall")
 
     wallPage = _wallContent(request)
 
     templateParams = {
         'current_section': current_section,
-        'wallPage': wallPage,
-        'current_company': current_company,
-        'cabinetValues': cabinetValues,
+        'wallPage': wallPage
     }
 
     return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
