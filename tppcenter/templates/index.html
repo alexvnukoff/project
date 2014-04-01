@@ -385,6 +385,7 @@
                   {% with attr.TPP|first as tpp %}
                   {% with attr.AUTHOR_NAME|first as name %}
                   {% with attr.POSITION|first as position %}
+                  {% with attr.SLUG|first as slug %}
                   {% if forloop.counter|add:-1|divisibleby:"6" or forloop.counter0 == 0 %}
                           <li>
                    {% endif %}
@@ -404,6 +405,7 @@
                   {% if forloop.counter|divisibleby:"6" or forloop.counter == greetingsList|length%}
                        </li>
                   {% endif %}
+                  {% endwith %}
                   {% endwith %}
                   {% endwith %}
                   {% endwith %}
