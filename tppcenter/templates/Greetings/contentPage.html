@@ -15,7 +15,6 @@
 
             <li>
                 <div class="thumb shadow">
-                    <font class="name">{{ position }}</font>
                     <a href="{% url "greetings:detail" slug %}">
                         <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
                     </a>
@@ -24,6 +23,8 @@
                     <a href="{% url "greetings:detail" slug %}" class="name">{{ name }}</a>
                     {{ content|truncatewords_html:"30"|linebreaks|cleanHtml|safe }}
                 <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
+                <p><strong>{% trans "Position" %}:</strong> {{ position }}</p>
+
                     <!--noindex-->
                         <a href="{% url "greetings:detail" slug %}" class="more">{% trans 'Read more' %}...</a>
                     <!--/noindex-->
