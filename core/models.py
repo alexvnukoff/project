@@ -80,6 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False) #for enterprise content management
+    is_commando = models.BooleanField(default=False) #for special purposes
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     ip = models.GenericIPAddressField()
 
@@ -109,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         #if obj is None:
             #return PermissionsMixin.has_perms(self, perm_list)
 
-        if self.is_superuser:
+        if self.is_superuser or self.is_commando:
             return True
         else:
             group_list = []
@@ -521,7 +522,7 @@ class Item(models.Model):
         if obj_type == 'item':
             raise ValueError('Should be instance of Item')
 
-        if user.is_superuser:
+        if user.is_superuser or user.is_commando:
             group_list.append('Owner')
             group_list.append('Admin')
             group_list.append('Staff')
