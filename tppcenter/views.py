@@ -1,13 +1,12 @@
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
-from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -90,6 +89,7 @@ def home(request):
 
 
 @ensure_csrf_cookie
+@login_required(login_url='/login/')
 def getNotifList(request):
 
 
@@ -111,6 +111,7 @@ def getNotifList(request):
 
             if len(notifications) < 3:
                 lastLine = True
+
         elif first != 0:
             notifications = notifications.filter(pk__gt=first).order_by("-pk")[:20]
         else:
@@ -136,6 +137,8 @@ def getNotifList(request):
         data = template.render(context)
 
         return HttpResponse(json.dumps({'data': data, 'count': unreadCount}))
+    else:
+        return HttpResponseBadRequest()
 
 
 def user_login(request):

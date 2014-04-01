@@ -17,7 +17,7 @@
             {% with attr.SLUG|first as slug %}
             {% with attr.COST|first as cost %}
             {% with attr.CURRENCY|first as currency %}
-            {% with attr.CREATE_DATE as date %}
+            {% with attr.CREATE_DATE|first as date %}
             <tr>
                 <td>{{ id }}</td>
                 <td>
