@@ -14,7 +14,7 @@
        {% for id, attr in proposalList.items %}
             {% with attr.NAME|first as name %}
             {% with attr.SLUG|first as slug %}
-            {% with attr.CREATE_DATE as date %}
+            {% with attr.CREATE_DATE|first as date %}
             <tr>
                 <td>{{ id }}</td>
                 <td>
