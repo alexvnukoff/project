@@ -14,12 +14,12 @@
        {% for id, attr in proposalList.items %}
             {% with attr.NAME|first as name %}
             {% with attr.SLUG|first as slug %}
-            {% with attr.CREATE_DATE as date %}
+            {% with attr.CREATE_DATE|first as date %}
             <tr>
                 <td>{{ id }}</td>
                 <td>
                     <a href="{% url 'proposal:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:4 }}
+                        {{ name|truncatewords:6 }}
                     </a>
                 </td>
                 <td>
