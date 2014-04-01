@@ -29,7 +29,6 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    current_company = request.session.get('current_company', False)
     description = ""
     title = ""
     styles = [
@@ -39,8 +38,6 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
     scripts = []
 
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
     try:
         if not item_id:
             attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
@@ -55,8 +52,6 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
     styles = []
     scripts = []
 
@@ -70,11 +65,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
             'newsPage': newsPage,
             'scripts': scripts,
-            'current_company': current_company,
             'styles': styles,
-            'search': request.GET.get('q', ''),
             'addNew': reverse('news:add'),
-            'cabinetValues': cabinetValues,
             'description': description,
             'title': title
         }
@@ -98,16 +90,9 @@ def newsForm(request, action, item_id=None):
        if not News.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-
-
+    newsPage = ''
     current_section = _("News")
+
     if action == 'delete':
        newsPage = deleteNews(request, item_id)
 
@@ -122,9 +107,7 @@ def newsForm(request, action, item_id=None):
 
     templateParams = {
         'formContent': newsPage,
-        'current_company':current_company,
         'current_section': current_section,
-        'cabinetValues': cabinetValues,
 
     }
 

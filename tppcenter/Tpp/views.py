@@ -26,13 +26,8 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         if not Item.active.get_active().filter(pk=item_id).exists():
             return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
     description = ''
     title = ''
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     if item_id is None:
         try:
@@ -61,11 +56,8 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'current_section': current_section,
             'tppPage': tppPage,
             'scripts': scripts,
-            'current_company': current_company,
             'styles': styles,
-            'search': request.GET.get('q', ''),
             'addNew': reverse('tpp:add'),
-            'cabinetValues': cabinetValues,
             'item_id': item_id,
             'description': description,
             'title': title
@@ -89,14 +81,14 @@ def _tppContent(request, page=1, my=None):
     cached = False
     cache_name = "tpp_list_result_page_%s" % page
     query = request.GET.urlencode()
+    q = request.GET.get('q', '')
+
 
     if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
             cached = cache.get(cache_name)
 
     if not cached:
-
-        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = func.filterLive(request)
@@ -265,12 +257,6 @@ def tppForm(request, action, item_id=None):
        if not Tpp.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("Tpp")
 
@@ -284,9 +270,7 @@ def tppForm(request, action, item_id=None):
 
     templateParams = {
         'formContent': tppPage,
-        'current_company':current_company,
-        'current_section': current_section,
-        'cabinetValues': cabinetValues
+        'current_section': current_section
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))

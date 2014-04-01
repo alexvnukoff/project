@@ -22,14 +22,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
     description = ""
     title = ""
-    cabinetValues = func.getB2BcabinetValues(request)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -62,11 +56,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         templateParams = {
             'current_section': current_section,
             'proposalsPage': proposalsPage,
-            'current_company': current_company,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', ''),
-            'cabinetValues': cabinetValues,
             'addNew': reverse('proposal:add'),
             'item_id': item_id,
             'description': description,
@@ -138,12 +129,6 @@ def proposalForm(request, action, item_id=None):
        if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
-    cabinetValues = func.getB2BcabinetValues(request)
 
     current_section = _("Business Proposal")
 
@@ -162,9 +147,7 @@ def proposalForm(request, action, item_id=None):
 
     templateParams = {
         'formContent': proposalsPage,
-        'current_company':current_company,
         'current_section': current_section,
-        'cabinetValues': cabinetValues
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))

@@ -693,9 +693,6 @@ def filterLive(request):
 def getB2BcabinetValues(request):
     if request.user.is_authenticated():
         user = request.user
-        current_company = request.session.get('current_company', False)
-        if current_company:
-           current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
         cabinet = Cabinet.objects.get(user=user.pk)
 
         try:
@@ -710,7 +707,6 @@ def getB2BcabinetValues(request):
                                                 'SKYPE', 'SITE_NAME', 'ICQ', 'USER_MIDDLE_NAME', 'USER_FIRST_NAME',
                                                 'USER_LAST_NAME', 'IMAGE', 'TELEPHONE_NUMBER'))
         cabinetValues['COUNTRY'] = country
-        cabinetValues['CURRENT_COMPANY'] = current_company if current_company else ['']
 
 
         return cabinetValues
@@ -900,14 +896,13 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     cached = False
     cache_name = "%s_list_result_page_%s" % (model.__name__, page)
     query = request.GET.urlencode()
+    q = request.GET.get('q', '')
 
     if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
             cached = cache.get(cache_name)
 
     if not cached:
-
-        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = filterLive(request)

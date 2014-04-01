@@ -30,7 +30,7 @@
                     <li>
                         <div class="title">
                            <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
-                            <font class="name">{{ org_name }}, {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
+                            <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name }}</a></h2>
                         <div class="desc">{% trans 'Cost of project' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>

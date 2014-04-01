@@ -26,14 +26,8 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
     description = ""
     title = ""
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
 
     styles = [
@@ -64,10 +58,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'newsPage': newsPage,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', ''),
-            'current_company': current_company,
             'addNew': reverse('companies:add'),
-            'cabinetValues': cabinetValues,
             'item_id': item_id,
             'description': description,
             'title': title
@@ -91,8 +82,10 @@ def _companiesContent(request, page=1, my=None):
     cache_name = "company_list_result_page_%s" % (page)
     query = request.GET.urlencode()
 
+    q = request.GET.get('q', '')
+
     if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
+        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
             cached = cache.get(cache_name)
 
     if not cached:
@@ -577,12 +570,6 @@ def companyForm(request, action, item_id=None):
        if not Company.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
-
     current_section = _("Companies")
 
     newsPage = ''
@@ -601,9 +588,7 @@ def companyForm(request, action, item_id=None):
 
     templatePrarams = {
         'formContent': newsPage,
-        'current_company': current_company,
         'current_section': current_section,
-        'cabinetValues': cabinetValues
     }
 
     return render_to_response('forms.html', templatePrarams, context_instance=RequestContext(request))

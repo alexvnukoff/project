@@ -10,12 +10,9 @@ from tppcenter.forms import ItemForm
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from haystack.query import SQ, SearchQuerySet
 import json
 from core.tasks import addTppAttrubute
 from django.conf import settings
-from django.utils import timezone
-from datetime import datetime
 from django.core.cache import cache
 
 def get_news_list(request, page=1, item_id=None, slug=None):
@@ -29,12 +26,6 @@ def get_news_list(request, page=1, item_id=None, slug=None):
 
     description = ''
     title = ''
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
     scripts = []
@@ -61,10 +52,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
             'newsPage': newsPage,
             'scripts': scripts,
             'styles': styles,
-            'search': request.GET.get('q', ''),
-            'current_company': current_company,
             'addNew': reverse('tv:add'),
-            'cabinetValues': cabinetValues,
             'description': description,
             'title': title
         }
@@ -90,19 +78,16 @@ def tvForm(request, action, item_id=None):
        if not TppTV.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    cabinetValues = func.getB2BcabinetValues(request)
-
-    current_company = request.session.get('current_company', False)
-
-    if current_company:
-        current_company = Organization.objects.get(pk=current_company).getAttributeValues("NAME")
 
     current_section = _("TppTv")
+    newsPage = ''
+
     if action == 'delete':
         newsPage = deleteTppTv(request, item_id)
 
     if action == 'add':
         newsPage = addNews(request)
+
     if action == 'update':
         newsPage = updateNew(request, item_id)
 
@@ -111,9 +96,7 @@ def tvForm(request, action, item_id=None):
 
     templateParams = {
         'formContent': newsPage,
-        'current_company':current_company,
         'current_section': current_section,
-        'cabinetValues': cabinetValues
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))

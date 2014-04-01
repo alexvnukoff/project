@@ -1,11 +1,7 @@
-from django import template
 from collections import OrderedDict
-from django.core.urlresolvers import reverse
 from copy import copy
 from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
-import datetime
-from django.template import Node, TemplateSyntaxError
 from lxml.html.clean import clean_html
 from appl import func
 from appl.models import *
@@ -13,6 +9,10 @@ from urllib.parse import urlencode
 from haystack.query import SQ
 from django.template import RequestContext, loader
 from django.conf import settings
+from django.template import Node, TemplateSyntaxError
+from django.utils.html import escape
+from django.core.urlresolvers import reverse
+from django import template
 
 register = template.Library()
 
@@ -153,9 +153,6 @@ def resolve(lookup, target):
 
     except Exception as e:
         return None
-
-
-
 
 
 class RangeNode(Node):
@@ -355,3 +352,8 @@ def rightTv(context):
 
   else:
       return ''
+
+@register.simple_tag(takes_context=True)
+def searchQuery(context):
+    request = context.get('request')
+    return escape(request.GET.get('q', ''))
