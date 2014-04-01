@@ -69,7 +69,7 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrV
         page = items = paginator.page(1)
 
     if not isinstance(items, list):
-        items = tuple(items.values_list('pk', flat=True))
+        items = tuple([item.pk for item in page.object_list])
 
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
