@@ -511,3 +511,66 @@ def _tabsExhibitions(request, tpp, page=1):
 
 
     return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
+
+def _tabsProposals(request, tpp, page=1):
+    cache_name = "Proposal_tab_tpp_%s_page_%s" % (tpp, page)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        products = func.getActiveSQS().models(Product).filter(company=tpp)
+        attr = ('NAME', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+        productsList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        url_paginator = "tpp:tab_proposal_paged"
+
+        templateParams = {
+            'productsList': productsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
+
+    return render_to_response('Companies/tabProposal.html', templateParams, context_instance=RequestContext(request))
+
+
+def _tabsInnovs(request, tpp, page=1):
+    cache_name = "Innov_tab_tpp_%s_page_%s" % (tpp, page)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        products = func.getActiveSQS().models(Product).filter(company=None, tpp=tpp)
+        attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
+
+        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
+
+
+        productsList = result[0]
+
+        page = result[1]
+        paginator_range = func.getPaginatorRange(page)
+
+        url_paginator = "tpp:tab_innov_paged"
+
+        templateParams = {
+            'productsList': productsList,
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'url_parameter': tpp
+        }
+        cache.set(cache_name, templateParams, 60*60)
+    else:
+        templateParams = cached
+
+    return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))

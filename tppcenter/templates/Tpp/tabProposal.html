@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Date" %}</td>
+
+
+        </tr>
+
+       {% for id, attr in productsList.items %}
+            {% with attr.NAME|first as name %}
+            {% with attr.SLUG|first as slug %}
+            {% with attr.CREATE_DATE as date %}
+            <tr>
+                <td>{{ id }}</td>
+                <td>
+                    <a href="{% url 'i:detail' slug %}" title="{{ name }}">
+                        {{ name|truncatewords:4 }}
+                    </a>
+                </td>
+                <td>
+                    {{ date|date:'d M Y' }}
+                </td>
+            </tr>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "main/paginator.html" %}
+</div>
