@@ -6,7 +6,9 @@
             {% with greetingValues.DETAIL_TEXT.0 as content %}
             {% with greetingValues.IMAGE.0 as image %}
             {% with greetingValues.NAME.0 as name %}
-
+            {% with greetingValues.POSITION.0 as position %}
+            {% with greetingValues.TPP.0 as tpp %}
+            <p class="date">{{ position }}</p>
             	<h1>{{ name }}</h1>
                 <div class="content-news">
                     <p>
@@ -14,6 +16,8 @@
                         {{ content|cleanHtml|safe }}
                     </p>
                 </div>
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

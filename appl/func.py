@@ -62,12 +62,15 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrV
     page_num = num element per page
     '''
     paginator = Paginator(items, page_num)
+
     try:
         page = items = paginator.page(page)
     except Exception:
         page = items = paginator.page(1)
+
     if not isinstance(items, list):
-        items = tuple([item.pk for item in page.object_list])
+        items = tuple(items.values_list('pk', flat=True))
+
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
     return attributeValues, page #Return List Item and Page object of current page
