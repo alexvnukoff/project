@@ -1,0 +1,37 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<div class="container">
+    {% include "main/paginator.html" %}
+
+    <ul class="listnews">
+        {% for id , attr in proposalList.items %}
+            {% with attr.NAME.0 as name %}
+            {% with attr.IMAGE.0 as image %}
+            {% with attr.SLUG.0 as slug %}
+            {% with attr.DETAIL_TEXT.0 as content %}
+
+            <li>
+                <div class="thumb shadow">
+                    <a href="{% url "greetings:detail" slug %}">
+                        <img src="{{ MEDIA_URL }}big/{{ image }} " alt="{{ name }}" />}
+                    </a>
+                </div>
+                <div class="infoprd">
+                    <a href="{% url "greetings:detail" slug %}" class="name">{{ name }}</a>
+                    {{ content|cleanHtml|safe|truncatewords_html:"30" }}
+                    <!--noindex-->
+                        <a href="{% url "greetings:detail" slug %}" class="more">{% trans 'Read more' %}...</a>
+                    <!--/noindex-->
+                </div>
+            </li>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </ul>
+    {% include "main/paginator.html" %}
+</div>

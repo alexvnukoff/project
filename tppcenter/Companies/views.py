@@ -616,6 +616,10 @@ def updateCompany(request, item_id):
 
     company = Company.objects.get(pk=item_id)
 
+    branches = {}
+    currentBranch = ''
+    form = None
+
     if request.method != 'POST':
         branches = Branch.objects.all()
         branches_ids = [branch.id for branch in branches]
@@ -623,17 +627,13 @@ def updateCompany(request, item_id):
 
         try:
             currentBranch = Branch.objects.get(p2c__child=item_id)
-        except Exception:
-            currentBranch = ""
-
-
+        except ObjectDoesNotExist:
+            pass
 
         form = ItemForm('Company', id=item_id)
 
     if request.POST:
         user = request.user
-
-
 
         values = {}
         values.update(request.POST)

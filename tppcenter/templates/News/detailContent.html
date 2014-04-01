@@ -37,8 +37,10 @@
                 {% if country_flag or org_flag %}
                     <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else  %}{{ country_flag }}{% endif %}" class="flag" alt="" />
                 {% endif %}
-                    Россия, {{ date|date:"d M Y" }},
-                    <a href="#">{{ category_name  }}</a></p>
+                    {% if country_name %}
+                        {{ country_name }},
+                    {% endif %} {{ date|date:"d M Y" }},
+                    {{ category_name  }}</p>
                 <div class="content-news">
                 	<div class="gallery">
                         <div id="panel">
