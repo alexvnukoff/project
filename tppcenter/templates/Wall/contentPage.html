@@ -25,18 +25,23 @@
                     {% with attr.COUNTRY_ID as country_id %}
                     {% with attr.BRANCH_NAME|first as branch_name %}
                     {% with attr.BRANCH_ID as branch_id %}
+                    {% with attr.COST.0 as cost %}
+                    {% with attr.CURRENCY.0 as currency %}
                     <li>
                         <div class="title">
                            <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                             <font class="name">{{ org_name }}, {% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name }}</a></h2>
+                        <div class="desc">{% trans 'Cost of project' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>
                         <div class="line">
                         	<span class="clumn">{%  trans "Branch" %}: <font class="gray">{% if branch_name != 0 %}{{ branch_name }}{% endif %}</font></span>
                         	<span class="clumn">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></span>
                         </div>
                         <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
+                    {% endwith %}
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

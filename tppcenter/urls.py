@@ -25,6 +25,8 @@ import tppcenter.Project
 import tppcenter.Project.urls
 import tppcenter.Analytic
 import tppcenter.Analytic.urls
+import tppcenter.Greetings
+import tppcenter.Greetings.urls
 from tppcenter.News.views import NewsFeed
 
 
@@ -46,6 +48,7 @@ urlpatterns = patterns('',
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),
+    url(r'^greetings/', include(tppcenter.Greetings.urls, namespace='greetings')),
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 

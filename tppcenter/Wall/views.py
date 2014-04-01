@@ -38,7 +38,7 @@ def _wallContent(request):
 
     branches = Branch.objects.filter(p2c__child__in=innov_projects).values('p2c__child', 'pk')
     branches_ids = [branch['pk'] for branch in branches]
-    branchesList = Item.getItemsAttributesValues(("NAME"), branches_ids)
+    branchesList = Item.getItemsAttributesValues(("NAME", 'COST', 'CURRENCY'), branches_ids)
 
     branches_dict = {}
 

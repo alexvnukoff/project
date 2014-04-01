@@ -1,0 +1,20 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="new-details">
+            {% with greetingValues.DETAIL_TEXT.0 as content %}
+            {% with greetingValues.IMAGE.0 as image %}
+            {% with greetingValues.NAME.0 as name %}
+
+            	<h1>{{ name }}</h1>
+                <div class="content-news">
+                    <p>
+                        <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" />
+                        {{ content|cleanHtml|safe }}
+                    </p>
+                </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+</div>
