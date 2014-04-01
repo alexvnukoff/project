@@ -155,3 +155,8 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
 .uploadconfig .detail textarea {
     height: 200px;
 }
+
+.content-news img.tmb {
+    float: left;
+    padding: 0 10px 10px 0;
+}
