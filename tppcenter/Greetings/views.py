@@ -57,7 +57,7 @@ def _getdetailcontent(request, item_id):
 
     if not cached:
         greeting = get_object_or_404(Greeting, pk=item_id)
-        greetingValues = greeting.getAttributeValues('NAME', 'DETAIL_TEXT', 'IMAGE')
+        greetingValues = greeting.getAttributeValues('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'TPP')
         description = greetingValues.get('DETAIL_TEXT', False)[0] if greetingValues.get('DETAIL_TEXT', False) else ""
 
         description = func.cleanFromHtml(description)
@@ -95,7 +95,7 @@ def _getContent(request, page):
     if not cached:
         greetings = Greeting.objects.all()
         url_paginator = "greetings:paginator"
-        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
+        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'POSITION', 'TPP')
 
         result = func.setPaginationForItemsWithValues(greetings, *attr, page_num=7, page=page)
         greetingList = result[0]
