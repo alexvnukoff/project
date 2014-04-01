@@ -1,0 +1,24 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/news.css"%}" />
+    <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/company.css"%}" />
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+<div class="companies">
+                <div class="deal-details">
+                    <h1>{% trans 'Your own site' %}</h1>
+                    Предоставление возможности генерации собственного многофункционального Интернет-сайта на платформе Центра Торгово-Промышленных палат, синхронизирующимся с порталом, без дополнительной оплаты.
+                    Выбор сайта можно сделать из большого количества готовых шаблонов, что позволяет быстро и без дополнительных финансовых ресурсов реализовать индевидуальный виртуальный ресурс.
+                    На деле вы управляете своим кобинетом и всё Ваши действия автоматически отображаются как на портале так и на внешнем сайте компании.
+                </div>
+
+            </div>
+
+{% endblock %}

@@ -31,6 +31,12 @@ urlpatterns = patterns('',
      url(r'^tabs/tenders/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsCompanies, name="tab_tenders_paged"),
      url(r'^tabs/exhibitions/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsExhibitions, name="tab_exhibitions"),
      url(r'^tabs/exhibitions/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsExhibitions, name="tab_exhibitions_paged"),
+
+     url(r'^tabs/innov/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsInnovs, name="tab_innov"),
+     url(r'^tabs/innov/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsInnovs, name="tab_innov_paged"),
+     url(r'^tabs/proposal/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsProposals, name="tab_proposal"),
+     url(r'^tabs/proposal/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsProposals, name="tab_proposal_paged"),
+
      url(r'^tabs/structure/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsStructure, name="tab_structure"),
      url(r'^tabs/structure/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsStructure, name="tab_structure_paged"),
      url(r'^tabs/staff/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tabsStaff, name="tab_staff"),

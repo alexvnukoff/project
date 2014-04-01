@@ -35,4 +35,8 @@ urlpatterns = patterns('',
      url(r'^tabs/structure/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsStructure, name="tab_structure_paged"),
      url(r'^tabs/staff/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsStaff, name="tab_staff"),
      url(r'^tabs/staff/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsStaff, name="tab_staff_paged"),
+     url(r'^tabs/proposal/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsProposals, name="tab_proposal"),
+     url(r'^tabs/proposal/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsProposals, name="tab_proposal_paged"),
+     url(r'^tabs/innov/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov"),
+     url(r'^tabs/innov/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov_paged"),
 )
