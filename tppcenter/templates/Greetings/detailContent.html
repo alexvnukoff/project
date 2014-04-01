@@ -14,7 +14,9 @@
                 <p class="date">{{ position }}</p>
                     <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
                     {{ content|cleanHtml|safe }}
+                <p></p>
                 <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
+                <p><strong>{% trans "Position" %}:</strong> {{ position }}</p>
                 </div>
 
             {% endwith %}
