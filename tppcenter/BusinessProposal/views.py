@@ -230,6 +230,7 @@ def updateBusinessProposal(request, item_id):
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+
         if getattr(pages, 'new_objects', False):
              pages = pages.new_objects
         else:

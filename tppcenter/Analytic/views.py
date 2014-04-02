@@ -10,6 +10,9 @@ from django.core.urlresolvers import reverse
 
 @login_required(login_url='/login/')
 def main(request):
+    '''
+        Main analytic page
+    '''
 
     current_organization = request.session.get('current_company', False)
 
@@ -28,6 +31,10 @@ def main(request):
 
 @login_required(login_url='/login/')
 def getAnalytic(request):
+    '''
+        Get analytic of current organization
+    '''
+
     current_company = request.session.get('current_company', False)
 
     if current_company is False:
