@@ -21,14 +21,19 @@
 
     {% block js %}
         {{  block.super }}
-        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
         <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/jquery.history.min.js"></script>
         <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.min.js"></script>
-
-        <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
-        <script  type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
         <script  type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=ru" charset="utf-8"></script>
+        <script  type="text/javascript" src="{% static "tppcenter/js/ui.js"%}"></script>
         <script type="text/javascript" src="{% static "tppcenter/js/plugin.js" %}"></script>
+
+        {% if user.is_authenticated %}
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+            <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
+        {% endif %}
+
+
+
         <script type="text/javascript">
 		$(document).ready(function() {
 			$(".fancybox").fancybox({
