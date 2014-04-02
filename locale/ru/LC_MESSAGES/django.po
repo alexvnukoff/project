@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-01 13:53+0000\n"
+"POT-Creation-Date: 2014-04-02 14:32+0000\n"
 "PO-Revision-Date: 2014-04-01 17:02+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.6.4\n"
 
-#: appl/func.py:740 centerpokupok/templates/Company/header.html:48
+#: appl/func.py:776 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Company/products.html:6
 #: centerpokupok/templates/Product/detail.html:114
 #: centerpokupok/templates/Product/index.html:6
@@ -27,8 +27,8 @@ msgstr ""
 #: centerpokupok/templates/Product/index.html:76
 #: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:50
 #: tppcenter/Product/views.py:152 tppcenter/templates/base.html:133
-#: tppcenter/templates/main_page.html:112
-#: tppcenter/templates/main_page.html:131
+#: tppcenter/templates/main_page.html:117
+#: tppcenter/templates/main_page.html:136
 #: tppcenter/templates/Analytic/main.html:64
 #: tppcenter/templates/Companies/detailContent.html:333
 #: tppcenter/templates/Products/index.html:10
@@ -36,26 +36,27 @@ msgstr ""
 msgid "Products"
 msgstr "Товары"
 
-#: appl/func.py:745 tppcenter/templates/main_page.html:116
-#: tppcenter/templates/main_page.html:135
+#: appl/func.py:781 tppcenter/templates/main_page.html:121
+#: tppcenter/templates/main_page.html:140
 #: tppcenter/templates/Analytic/main.html:72
 #: tppcenter/templates/Companies/detailContent.html:338
 #: tppcenter/templates/Tpp/detailContent.html:290
 msgid "Innovation Projects"
 msgstr "Инновационные проекты"
 
-#: appl/func.py:750 tppcenter/Companies/views.py:54
+#: appl/func.py:786 tppcenter/Companies/views.py:54
 #: tppcenter/Companies/views.py:573 tppcenter/templates/base.html:134
-#: tppcenter/templates/forms.html:6 tppcenter/templates/main_page.html:115
-#: tppcenter/templates/main_page.html:134
+#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:131
+#: tppcenter/templates/main_page.html:120
+#: tppcenter/templates/main_page.html:139
 #: tppcenter/templates/Analytic/main.html:95
 #: tppcenter/templates/Companies/index.html:10
 #: tppcenter/templates/Tpp/detailContent.html:315
 msgid "Companies"
 msgstr "Компании"
 
-#: appl/func.py:755 tppcenter/templates/main_page.html:117
-#: tppcenter/templates/main_page.html:136
+#: appl/func.py:791 tppcenter/templates/main_page.html:122
+#: tppcenter/templates/main_page.html:141
 #: tppcenter/templates/Analytic/main.html:68
 #: tppcenter/templates/Analytic/main.html:111
 #: tppcenter/templates/BusinessProposal/index.html:10
@@ -64,7 +65,7 @@ msgstr "Компании"
 msgid "Business Proposals"
 msgstr "Бизнес предложения"
 
-#: appl/func.py:760 tppcenter/Exhibitions/views.py:52
+#: appl/func.py:796 tppcenter/Exhibitions/views.py:52
 #: tppcenter/Exhibitions/views.py:137
 #: tppcenter/templates/Analytic/main.html:80
 #: tppcenter/templates/Analytic/main.html:115
@@ -78,7 +79,7 @@ msgstr "Выставки"
 #: appl/templatetags/inclusionTags.py:74 tppcenter/Profile/views.py:21
 #: tppcenter/templates/login_header.html:23
 #: tppcenter/templates/login_header.html:60
-#: tppcenter/templates/main_page.html:144
+#: tppcenter/templates/main_page.html:149
 #: tppcenter/templates/Profile/index.html:6
 msgid "Profile"
 msgstr "Профиль"
@@ -1971,48 +1972,48 @@ msgstr ""
 msgid "Image size must be less than 2 mb "
 msgstr "Размер картинки должен быть меньше 2 MB"
 
-#: tppcenter/AdvBanner/views.py:29 tppcenter/AdvBanner/views.py:227
-#: tppcenter/AdvTop/views.py:188 tppcenter/templates/main_page.html:139
+#: tppcenter/AdvBanner/views.py:32 tppcenter/AdvBanner/views.py:242
+#: tppcenter/AdvTop/views.py:201 tppcenter/templates/main_page.html:144
 #: tppcenter/templates/AdvBanner/index.html:7
 msgid "Banners"
 msgstr "Реклама"
 
-#: tppcenter/AdvBanner/views.py:173 tppcenter/AdvTop/views.py:152
+#: tppcenter/AdvBanner/views.py:186 tppcenter/AdvTop/views.py:163
 msgid "You must choose one filter al least"
 msgstr "Вы должны выбрать как минимум один фильтр"
 
-#: tppcenter/AdvBanner/views.py:179
+#: tppcenter/AdvBanner/views.py:192
 msgid "The image size cannot exceed 50 KB"
 msgstr "Размер картинки не должен превышать 50 KB"
 
-#: tppcenter/AdvBanner/views.py:185
+#: tppcenter/AdvBanner/views.py:198
 msgid "Image dimension should not exceed"
 msgstr "Размеры картинки не должны превышать"
 
-#: tppcenter/AdvBanner/views.py:192 tppcenter/AdvBanner/views.py:202
-#: tppcenter/AdvTop/views.py:160 tppcenter/AdvTop/views.py:169
+#: tppcenter/AdvBanner/views.py:205 tppcenter/AdvBanner/views.py:217
+#: tppcenter/AdvTop/views.py:171 tppcenter/AdvTop/views.py:182
 msgid "You should choose a valid date range"
 msgstr "Не верно указан период"
 
-#: tppcenter/AdvBanner/views.py:197 tppcenter/AdvTop/views.py:164
+#: tppcenter/AdvBanner/views.py:212 tppcenter/AdvTop/views.py:177
 msgid "You should choose a date range"
 msgstr "Вы должны выбрать период"
 
-#: tppcenter/AdvBanner/views.py:209 tppcenter/AdvTop/views.py:175
+#: tppcenter/AdvBanner/views.py:224 tppcenter/AdvTop/views.py:188
 msgid "Error occurred while trying to proceed your request"
 msgstr "Во время выполнения вашего запроса произошла ошибка"
 
-#: tppcenter/AdvBanner/views.py:219 tppcenter/AdvTop/views.py:183
+#: tppcenter/AdvBanner/views.py:234 tppcenter/AdvTop/views.py:196
 #: tppcenter/templates/baseFilter.html:7
 msgid "Select branch"
 msgstr "Выберить отрасль "
 
-#: tppcenter/AdvBanner/views.py:222 tppcenter/AdvTop/views.py:184
+#: tppcenter/AdvBanner/views.py:237 tppcenter/AdvTop/views.py:197
 #: tppcenter/templates/baseFilter.html:8
 msgid "Select country"
 msgstr "Выбереть страну"
 
-#: tppcenter/AdvBanner/views.py:225 tppcenter/AdvTop/views.py:185
+#: tppcenter/AdvBanner/views.py:240 tppcenter/AdvTop/views.py:198
 msgid "Select organization"
 msgstr "Выбрать организацию"
 
@@ -2037,8 +2038,8 @@ msgid "Private messages"
 msgstr "Отправить личное сообщение"
 
 #: tppcenter/News/views.py:60 tppcenter/News/views.py:94
-#: tppcenter/templates/index.html:151 tppcenter/templates/main_page.html:111
-#: tppcenter/templates/main_page.html:130
+#: tppcenter/templates/index.html:151 tppcenter/templates/main_page.html:116
+#: tppcenter/templates/main_page.html:135
 #: tppcenter/templates/Companies/detailContent.html:306
 #: tppcenter/templates/News/index.html:10
 #: tppcenter/templates/Tpp/detailContent.html:263
@@ -2120,8 +2121,8 @@ msgid "Your own site"
 msgstr "Собственный интернет-сайт"
 
 #: tppcenter/Tenders/views.py:54 tppcenter/Tenders/views.py:140
-#: tppcenter/templates/index.html:139 tppcenter/templates/main_page.html:118
-#: tppcenter/templates/main_page.html:137
+#: tppcenter/templates/index.html:139 tppcenter/templates/main_page.html:123
+#: tppcenter/templates/main_page.html:142
 #: tppcenter/templates/Analytic/main.html:76
 #: tppcenter/templates/Analytic/main.html:119
 #: tppcenter/templates/Companies/detailContent.html:323
@@ -2139,8 +2140,8 @@ msgstr "ТПП"
 msgid "TppTv"
 msgstr "ТПП ТВ"
 
-#: tppcenter/Wall/views.py:11 tppcenter/templates/main_page.html:123
-#: tppcenter/templates/main_page.html:145
+#: tppcenter/Wall/views.py:11 tppcenter/templates/main_page.html:128
+#: tppcenter/templates/main_page.html:150
 #: tppcenter/templates/Wall/index.html:6
 msgid "Wall"
 msgstr "Стена"
@@ -2176,11 +2177,11 @@ msgstr "Описание"
 msgid "Advices"
 msgstr "Помощь"
 
-#: tppcenter/templates/base.html:135 tppcenter/templates/index.html:135
+#: tppcenter/templates/base.html:135
 msgid "Partners"
 msgstr "Партнеры"
 
-#: tppcenter/templates/base.html:143 tppcenter/templates/main_page.html:104
+#: tppcenter/templates/base.html:143 tppcenter/templates/main_page.html:109
 msgid "TPP-Center"
 msgstr "ТПП-Центр"
 
@@ -2213,7 +2214,7 @@ msgid "Filter"
 msgstr "Фильтр"
 
 #: tppcenter/templates/baseFilter.html:70
-#: tppcenter/templates/main_page.html:105
+#: tppcenter/templates/main_page.html:110
 msgid "My"
 msgstr "Мои"
 
@@ -2308,9 +2309,10 @@ msgstr "Сотрудничай с"
 msgid "Producst and services"
 msgstr "Товары и услуги"
 
-#: tppcenter/templates/index.html:131
-msgid "Members"
-msgstr "Участники"
+#: tppcenter/templates/index.html:135
+#, fuzzy
+msgid "Business community"
+msgstr "Спросить сообщество"
 
 #: tppcenter/templates/index.html:143
 msgid "Innovative projects"
@@ -2461,27 +2463,27 @@ msgstr "Уведомления от ваших сообществ"
 msgid "Add"
 msgstr "Добавить"
 
-#: tppcenter/templates/main_page.html:114
-#: tppcenter/templates/main_page.html:133
+#: tppcenter/templates/main_page.html:119
+#: tppcenter/templates/main_page.html:138
 #: tppcenter/templates/Messages/index.html:46
 msgid "Organizations"
 msgstr "Организации"
 
-#: tppcenter/templates/main_page.html:119
-#: tppcenter/templates/main_page.html:138
+#: tppcenter/templates/main_page.html:124
+#: tppcenter/templates/main_page.html:143
 msgid "Exhibitions / Forums"
 msgstr "Выставки / Форумы"
 
-#: tppcenter/templates/main_page.html:121
+#: tppcenter/templates/main_page.html:126
 #: tppcenter/templates/TppTV/index.html:10
 msgid "TPP TV"
 msgstr "Тпп ТВ"
 
-#: tppcenter/templates/main_page.html:140
+#: tppcenter/templates/main_page.html:145
 msgid "Analytic"
 msgstr "Аналитика"
 
-#: tppcenter/templates/main_page.html:168
+#: tppcenter/templates/main_page.html:173
 msgid "Find.."
 msgstr "Найти.."
 
@@ -3306,6 +3308,9 @@ msgstr "Я прочитал и согласен с "
 msgid "the terms of use"
 msgstr "правилами использования "
 
+#~ msgid "Members"
+#~ msgstr "Участники"
+
 #~ msgid "Current organization:"
 #~ msgstr "Текущая орагнизация"
 
@@ -3320,9 +3325,6 @@ msgstr "правилами использования "
 
 #~ msgid "Your current organization: "
 #~ msgstr "Текущая орагнизация:"
-
-#~ msgid "Ask the community"
-#~ msgstr "Спросить сообщество"
 
 #~ msgid "registration"
 #~ msgstr "регистрация"
