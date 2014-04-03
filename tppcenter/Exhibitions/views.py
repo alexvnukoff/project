@@ -1,19 +1,20 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item
+from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch
 from appl import func
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
+from core.models import Item
 from core.tasks import addNewExhibition
-from haystack.query import SQ, SearchQuerySet
-import json
 from django.conf import settings
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+import json
 
 def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
     #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -75,14 +76,12 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
         return HttpResponse(json.dumps(serialize))
 
 
-
-
 def _exhibitionsDetailContent(request, item_id):
 
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
-    query = request.GET.urlencode()
     cached = cache.get(cache_name)
+
     if not cached:
 
          exhibition = get_object_or_404(Exhibition, pk=item_id)
@@ -157,6 +156,7 @@ def exhibitionForm(request, action, item_id=None):
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
+
 def addExhibition(request):
 
     form = None
@@ -176,6 +176,7 @@ def addExhibition(request):
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
     pages = None
+
     if request.POST:
 
         user = request.user
@@ -298,9 +299,6 @@ def deleteExhibition(request, item_id):
     instance.activation(eDate=now())
     instance.end_date = now()
     instance.reindexItem()
-
-
-
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 

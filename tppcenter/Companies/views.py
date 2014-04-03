@@ -1,21 +1,23 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item
 from appl import func
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
+from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
+                        Branch, Tpp, InnovationProject, Cabinet
+from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
 from haystack.query import SQ, SearchQuerySet
-import json
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from itertools import chain
 from django.core.cache import cache
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm
 import logging
+import json
+
 logger = logging.getLogger('django.request')
 
 def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
@@ -28,7 +30,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     description = ""
     title = ""
-
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -80,17 +81,13 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 def _companiesContent(request, page=1, my=None):
     cached = False
     cache_name = "company_list_result_page_%s" % (page)
-    query = request.GET.urlencode()
 
     q = request.GET.get('q', '')
 
-    if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
-            cached = cache.get(cache_name)
+    if not my and func.cachePisibility(request):
+        cached = cache.get(cache_name)
 
     if not cached:
-
-        q = request.GET.get('q', '')
 
         if not my:
             filters, searchFilter = func.filterLive(request)
@@ -145,7 +142,7 @@ def _companiesContent(request, page=1, my=None):
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                companies = func.getActiveSQS().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
+                companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
 
                 if q != '':
                     companies = companies.filter(title=q)
@@ -164,10 +161,13 @@ def _companiesContent(request, page=1, my=None):
 
         companyList = result[0]
         company_ids = [id for id in companyList.keys()]
+
+
         if request.user.is_authenticated():
             items_perms = func.getUserPermsForObjectsList(request.user, company_ids, Company.__name__)
         else:
             items_perms = ""
+
         func.addDictinoryWithCountryToCompany(company_ids, companyList)
 
         page = result[1]
@@ -190,9 +190,8 @@ def _companiesContent(request, page=1, my=None):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
 
-        if not my and not request.user.is_authenticated():
-            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
-                cache.set(cache_name, rendered)
+        if not my and func.cachePisibility(request):
+            cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)
@@ -204,13 +203,14 @@ def _companiesContent(request, page=1, my=None):
 def _companiesDetailContent(request, item_id):
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
-    query = request.GET.urlencode()
     cached = cache.get(cache_name)
 
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
+
         companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME'))
+
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
         title = companyValues.get('NAME', False)[0] if companyValues.get('NAME', False) else ""

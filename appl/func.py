@@ -945,11 +945,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     cached = False
     cache_name = "%s_list_result_page_%s" % (model.__name__, page)
     query = request.GET.urlencode()
+
     q = request.GET.get('q', '')
 
-    if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
-            cached = cache.get(cache_name)
+    if not my and cachePisibility(request):
+        cached = cache.get(cache_name)
 
     if not cached:
 
@@ -1067,9 +1067,8 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
 
-        if not my and not request.user.is_authenticated():
-            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
-                cache.set(cache_name, rendered)
+        if not my and cachePisibility(request):
+            cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)
@@ -1112,3 +1111,19 @@ def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
         perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
 
     return perms_dict
+
+
+def cachePisibility(request):
+    '''
+        Check if need to cache the page
+    '''
+
+    q = request.GET.get('q', '')
+    query = request.GET.urlencode()
+
+    if not request.user.is_authenticated() and query.find('sortField') == -1 and query.find('order') == -1 and \
+                    query.find('filter') == -1 and q == '':
+
+            return True
+
+    return False

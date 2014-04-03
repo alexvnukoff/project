@@ -1,22 +1,20 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item
 from appl import func
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, Test, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
-from haystack.query import SQ, SearchQuerySet
-import json
+from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
+                        Cabinet, InnovationProject
+from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp
 from django.conf import settings
-from django.utils import timezone
-from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.core.cache import cache
-
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from haystack.query import SQ, SearchQuerySet
+from tppcenter.forms import ItemForm
+import json
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
     #   if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
@@ -80,13 +78,11 @@ def _tppContent(request, page=1, my=None):
     #tpp = Tpp.active.get_active().order_by('-pk')
     cached = False
     cache_name = "tpp_list_result_page_%s" % page
-    query = request.GET.urlencode()
+
     q = request.GET.get('q', '')
 
-
-    if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
-            cached = cache.get(cache_name)
+    if not my and func.cachePisibility(request):
+        cached = cache.get(cache_name)
 
     if not cached:
 
@@ -160,10 +156,12 @@ def _tppContent(request, page=1, my=None):
 
         tppList = result[0]
         tpp_ids = [id for id in tppList.keys()]
+
         if request.user.is_authenticated():
             items_perms = func.getUserPermsForObjectsList(request.user, tpp_ids, Tpp.__name__)
         else:
             items_perms = ""
+
         countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
         countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
@@ -200,16 +198,13 @@ def _tppContent(request, page=1, my=None):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
 
-        if not my and not request.user.is_authenticated():
-            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
-                cache.set(cache_name, rendered)
+        if not my and func.cachePisibility(request):
+            cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)
 
     return rendered
-
-
 
 
 def _tppDetailContent(request, item_id):
@@ -364,10 +359,6 @@ def updateTpp(request, item_id):
 
     return tppPage
 
-
-
-
-
 def _tabsCompanies(request, tpp, page=1):
     cache_name = "Companies_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
@@ -404,7 +395,7 @@ def _tabsNews(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        news = func.getActiveSQS().models(News).filter(tpp=tpp)
+        news = func.getActiveSQS().models(News).filter(company=0, tpp=tpp)
         attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
@@ -436,7 +427,7 @@ def _tabsTenders(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        tenders = func.getActiveSQS().models(Tender).filter(tpp=tpp)
+        tenders = func.getActiveSQS().models(Tender).filter(company=0, tpp=tpp)
         attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
@@ -467,7 +458,7 @@ def _tabsExhibitions(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        exhibition = func.getActiveSQS().models(Exhibition).filter(tpp=tpp)
+        exhibition = func.getActiveSQS().models(Exhibition).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
         result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
@@ -500,7 +491,7 @@ def _tabsProposals(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(BusinessProposal).filter(company=tpp)
+        products = func.getActiveSQS().models(BusinessProposal).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
@@ -532,7 +523,7 @@ def _tabsInnovs(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(InnovationProject).filter(company=None, tpp=tpp)
+        products = func.getActiveSQS().models(InnovationProject).filter(company=0, tpp=tpp)
         attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)

@@ -1,22 +1,19 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect
+from appl.models import Cabinet, Country, Organization
+from core.amazonMethods import add, delete
 from core.models import Item, Dictionary, Relationship
-from appl import func
-from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
 from tppcenter.Profile.profileForms import ProfileForm
-from core.amazonMethods import add, delete
 from tppcenter.views import user_logout
 import uuid
-from django.utils.translation import ugettext as _
-from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
-
-    user = request.user
 
     current_section = _("Profile")
 
