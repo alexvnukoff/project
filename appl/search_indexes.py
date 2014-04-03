@@ -11,13 +11,7 @@ class SearchIndexActive(indexes.SearchIndex):
     def index_queryset(self, using=None):
         return self.get_model().active.get_active()
 
-
-class SearchIndexActive(indexes.SearchIndex):
-    def index_queryset(self, using=None):
-        return self.get_model().active.get_active()
-
 ################## Exhibition Index #############################
-
 class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
@@ -88,10 +82,10 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
             self.prepared_data[endDateIndex] = obj.end_date
         elif parentRelEnd and obj.end_date:
             
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
+            if parentRelEnd > obj.end_date:
+                self.prepared_data[endDateIndex] = obj.end_date
+            else:
+                self.prepared_data[endDateIndex] = parentRelEnd
         else:
             self.prepared_data[endDateIndex] = datetime(1, 1, 1)
 
@@ -126,12 +120,12 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
             try:
                 self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
             except ObjectDoesNotExist:
-                self.prepared_data[tppIndexfield] = None
+                self.prepared_data[tppIndexfield] = 0
 
         elif tpp.exists():
             tpp = tpp[0]
 
-            self.prepared_data[companyIndex] = None
+            self.prepared_data[companyIndex] = 0
             self.prepared_data[tppIndexfield] = tpp.pk
 
             if not self.prepared_data[countryIndex]:
@@ -254,12 +248,12 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
             try:
                 self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
             except ObjectDoesNotExist:
-                self.prepared_data[tppIndexfield] = None
+                self.prepared_data[tppIndexfield] = 0
 
         elif tpp.exists():
             tpp = tpp[0]
 
-            self.prepared_data[companyIndex] = None
+            self.prepared_data[companyIndex] = 0
             self.prepared_data[tppIndexfield] = tpp.pk
 
             if not self.prepared_data[countryIndex]:
@@ -680,8 +674,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             self.prepared_data[couponIndex] = float(attributes['COUPON_DISCOUNT'][0]['title'])
             self.prepared_data[couponEndIndex] = attributes['COUPON_DISCOUNT'][0]['end_date']
         else:
-            self.prepared_data[couponIndex] = None
-            self.prepared_data[couponEndIndex] = None
+            self.prepared_data[couponIndex] = 0
+            self.prepared_data[couponEndIndex] = datetime(1, 1, 1)
 
         #Company
         companyIndex = self.fields['company'].index_fieldname
@@ -709,7 +703,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         try:
             self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child_id=comp.pk, p2c__type="relation").pk
         except ObjectDoesNotExist:
-            self.prepared_data[tppIndexfield] = None
+            self.prepared_data[tppIndexfield] = 0
 
         return self.prepared_data
 
@@ -848,12 +842,12 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
             if not self.prepared_data[countryIndex]:
                 self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp[0].pk, p2c__type='dependence').pk
 
-            self.prepared_data[tppIndexfield] = None
+            self.prepared_data[tppIndexfield] = 0
         elif tpp.exists():
 
             tpp = tpp.all()
 
-            self.prepared_data[companyIndex] = None
+            self.prepared_data[companyIndex] = 0
             self.prepared_data[tppIndexfield] = tpp[0].pk
 
             if not self.prepared_data[countryIndex]:
@@ -885,7 +879,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return News
 
-########################## News Index #############################
+########################## Tenders Index #############################
 
 class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
@@ -997,11 +991,11 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
             if not self.prepared_data[countryIndex]:
                 self.prepared_data[countryIndex] = Country.objects.get(p2c__child_id=comp[0].pk, p2c__type='dependence').pk
 
-            self.prepared_data[tppIndexfield] = None
+            self.prepared_data[tppIndexfield] = 0
         elif tpp.exists():
             tpp = tpp.all()
 
-            self.prepared_data[companyIndex] = None
+            self.prepared_data[companyIndex] = 0
             self.prepared_data[tppIndexfield] = tpp[0].pk
 
             if not self.prepared_data[countryIndex]:
@@ -1016,6 +1010,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Tender
 
+########################## Innovation Projects Index #############################
 
 class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
@@ -1118,11 +1113,11 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
             try:
                 self.prepared_data[tppIndexfield] = Tpp.objects.get(p2c__child=obj.pk, p2c__type="relation").pk
             except ObjectDoesNotExist:
-                self.prepared_data[tppIndexfield] = None
+                self.prepared_data[tppIndexfield] = 0
         elif tpp.exists():
             tpp = tpp[0]
 
-            self.prepared_data[companyIndex] = None
+            self.prepared_data[companyIndex] = 0
             self.prepared_data[tppIndexfield] = tpp.pk
 
             try:
@@ -1159,7 +1154,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return InnovationProject
 
-
+########################## Tpp Index #############################
 class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     title = indexes.CharField(null=True)
@@ -1266,7 +1261,7 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 
-
+########################## Department Index #############################
 class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     obj_start_date = indexes.DateTimeField()
@@ -1350,6 +1345,8 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Department
 
+
+########################## Cabinet Index #############################
 class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     country = indexes.IntegerField(null=True)

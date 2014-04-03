@@ -364,10 +364,6 @@ def updateTpp(request, item_id):
 
     return tppPage
 
-
-
-
-
 def _tabsCompanies(request, tpp, page=1):
     cache_name = "Companies_tab_tpp_%s_page_%s" % (tpp, page)
     cached = cache.get(cache_name)
@@ -404,7 +400,7 @@ def _tabsNews(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        news = func.getActiveSQS().models(News).filter(tpp=tpp)
+        news = func.getActiveSQS().models(News).filter(company=0, tpp=tpp)
         attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
@@ -436,7 +432,7 @@ def _tabsTenders(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        tenders = func.getActiveSQS().models(Tender).filter(tpp=tpp)
+        tenders = func.getActiveSQS().models(Tender).filter(company=0, tpp=tpp)
         attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
@@ -467,7 +463,7 @@ def _tabsExhibitions(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        exhibition = func.getActiveSQS().models(Exhibition).filter(tpp=tpp)
+        exhibition = func.getActiveSQS().models(Exhibition).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
         result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
@@ -500,7 +496,7 @@ def _tabsProposals(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(BusinessProposal).filter(company=tpp)
+        products = func.getActiveSQS().models(BusinessProposal).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
@@ -532,7 +528,7 @@ def _tabsInnovs(request, tpp, page=1):
     cached = cache.get(cache_name)
 
     if not cached:
-        products = func.getActiveSQS().models(InnovationProject).filter(company=None, tpp=tpp)
+        products = func.getActiveSQS().models(InnovationProject).filter(company=0, tpp=tpp)
         attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
 
         result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)

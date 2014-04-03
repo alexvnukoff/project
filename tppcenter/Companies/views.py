@@ -29,7 +29,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
     description = ""
     title = ""
 
-
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
@@ -90,8 +89,6 @@ def _companiesContent(request, page=1, my=None):
 
     if not cached:
 
-        q = request.GET.get('q', '')
-
         if not my:
             filters, searchFilter = func.filterLive(request)
 
@@ -145,7 +142,7 @@ def _companiesContent(request, page=1, my=None):
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                companies = func.getActiveSQS().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
+                companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
 
                 if q != '':
                     companies = companies.filter(title=q)
