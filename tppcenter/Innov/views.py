@@ -1,19 +1,22 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item, Dictionary
 from appl import func
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
+from appl.models import InnovationProject, Branch, AdditionalPages, Country, Cabinet, Gallery, Organization
 from core.tasks import addNewProject
+from core.models import Item, Dictionary
 from django.conf import settings
-from haystack.query import SQ, SearchQuerySet
-import json
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext, loader
+from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from haystack.query import SQ, SearchQuerySet
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+
+import json
 
 
 def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
@@ -77,14 +80,13 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 def _innovContent(request, page=1, my=None):
+
     cached = False
     cache_name = "inov_list_result_page_%s" % page
-    query = request.GET.urlencode()
     q = request.GET.get('q', '')
 
-    if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
-            cached = cache.get(cache_name)
+    if not my and func.cachePisibility(request):
+        cached = cache.get(cache_name)
 
     if not cached:
 
@@ -141,7 +143,7 @@ def _innovContent(request, page=1, my=None):
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                innov_projects = func.getActiveSQS().models(InnovationProject)
+                innov_projects = SearchQuerySet().models(InnovationProject)
                 innov_projects = innov_projects.filter(SQ(tpp=current_organization) | SQ(company=current_organization))
 
                 if q != '':
@@ -159,6 +161,7 @@ def _innovContent(request, page=1, my=None):
 
         innovList = result[0]
         innov_ids = [id for id in innovList.keys()]
+
         if request.user.is_authenticated():
             items_perms = func.getUserPermsForObjectsList(request.user, innov_ids, InnovationProject.__name__)
         else:
@@ -173,8 +176,6 @@ def _innovContent(request, page=1, my=None):
 
         for branch in branches:
             branches_dict[branch['p2c__child']] = branch['pk']
-
-
 
         for id, innov in innovList.items():
 
@@ -207,9 +208,8 @@ def _innovContent(request, page=1, my=None):
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
 
-        if not my and not request.user.is_authenticated():
-            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
-                cache.set(cache_name, rendered)
+        if not my and func.cachePisibility(request):
+            cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)
@@ -304,6 +304,7 @@ def _innovDetailContent(request, item_id):
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
+
     if item_id:
        if not InnovationProject.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()

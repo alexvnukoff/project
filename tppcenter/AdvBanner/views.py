@@ -1,13 +1,15 @@
-__author__ = 'user'
+from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country
+from core.models import Item
+from core.tasks import addBannerAttr
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.core.files.images import ImageFile
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
-from appl.models import *
-from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
-from django.core.urlresolvers import reverse
-from django.conf import settings
-from core.tasks import addBannerAttr
-from django.core.files.images import ImageFile
+import datetime
 
 @login_required(login_url='/login/')
 def gatPositions(request):

@@ -1,19 +1,20 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-
-from django.utils.translation import ugettext as _
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Value, Item, Attribute, Dictionary, AttrTemplate, Relationship
-
 from appl import func
-from tppcenter.forms import ItemForm
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
-import json
+from appl.models import TppTV, NewsCategories, Country, Organization
+from core.models import Item
 from core.tasks import addTppAttrubute
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm
+
+import json
 
 def get_news_list(request, page=1, item_id=None, slug=None):
 
@@ -210,6 +211,7 @@ def _getdetailcontent(request, item_id):
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
+
     if not cached:
 
         new = get_object_or_404(TppTV, pk=item_id)
@@ -270,6 +272,7 @@ def _getdetailcontent(request, item_id):
 
 
 def deleteTppTv(request, item_id):
+
     if not 'Redactor' in request.user.groups.values_list('name', flat=True):
         return func.permissionDenied()
 
@@ -277,8 +280,5 @@ def deleteTppTv(request, item_id):
     instance.activation(eDate=now())
     instance.end_date = now()
     instance.reindexItem()
-
-
-
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))

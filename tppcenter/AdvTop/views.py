@@ -1,12 +1,14 @@
-__author__ = 'user'
-from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
-from appl.models import *
-from django.template import RequestContext, loader
-from django.utils.translation import ugettext as _
-from tppcenter.forms import ItemForm
+from appl.models import Organization, Branch, Tpp, Country
+from core.models import Item
+from core.tasks import addTopAttr
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from core.tasks import addTopAttr
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
+from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
+from django.utils.translation import ugettext as _
+from tppcenter.forms import ItemForm
+import datetime
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
@@ -147,12 +149,12 @@ def addTop(request, item):
         #Get name and cost of each filter for form initial values (if error occur on previous submit)
         filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
 
-        for id in ids:
-            if not isinstance(filterAttr[id], dict):
-                filterAttr[id] = {}
+        for itemID in ids:
+            if not isinstance(filterAttr[itemID], dict):
+                filterAttr[itemID] = {}
 
-            filterAttr[id]['NAME'] = filterAttr[id].get('NAME', [''])[0]
-            filterAttr[id]['COST'] = filterAttr[id].get('COST', [0])[0]
+            filterAttr[itemID]['NAME'] = filterAttr[itemID].get('NAME', [''])[0]
+            filterAttr[itemID]['COST'] = filterAttr[itemID].get('COST', [0])[0]
 
         form = ItemForm('AdvTop', values={})
         form.clean()
