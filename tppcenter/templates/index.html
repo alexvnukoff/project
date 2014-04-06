@@ -50,49 +50,32 @@
     {% endblock %}
 
 {% block body %}
+<div class="header">
 <div class="wrapper">
 	<a href="#"><i class="imgmain" id="logo"></i></a>
-    <div id="search">
-        <div class="styled-select">
-            <span class="textfilter" id="country">- {% trans 'Country' %}</span>
-            <div class="country-list">
-            	<ul>
-                	<li>{% trans 'All countries' %}</li>
-
-                    <li><a href="#">{% trans 'Arminia' %}</a></li>
-                    <li><a href="#">{% trans 'Belarus' %}</a></li>
-                    <li><a href="#">{% trans 'Gruzia' %}</a></li>
-                    <li><a href="#">{% trans 'Israel' %}</a></li>
-
-                </ul>
-            </div>
-        </div>
-        <div class="styled-select">
-        	<span class="texttype" id="type">–  {% trans 'Industry/branch' %}</span>
-            <div class="type-list">
-            	<ul>
-                	<li><input type="checkbox" name="" class="check" /><label>{% trans 'All categories' %}</label></li>
-
-                </ul>
-                <ul>
-                	<li><input type="checkbox" name="" class="check" /><label>{% trans 'All branches' %}</label></li>
-
-                </ul>
-                <div class="bottom-type">
-                	<a href="#" class="btntype2">{% trans 'Reset' %}</a>
-                	<a href="#" class="btntype1">{% trans 'Reset' %}</a>
-                </div>
-            </div>
-        </div>
-        <div class="styled-select2">
-            <select name="select">
-              <option value="1">–  {% trans 'Branch' %}</option>
-              <option value="2">–  {% trans 'Country' %}</option>
-            </select>
-        </div>
-        <input type="text" class="inputsearch" placeholder="{% trans 'Searching ' %}" />
-        <a href="#" class="btns"><i class="i-search icons"></i>{% trans 'Search' %}</a>
+    <ul class="header-r">
+        	<li>
+            	<a href="http://centerpokupok.ru">
+                	<div class="icon-l"><i class="iconsv1 imgmain"></i></div>
+                    <div class="text-r">{% trans 'B2C center' %}</div>
+                </a>
+            </li>
+            <li>
+            	<a href="http://bankip.com">
+                	<div class="icon-l"><i class="iconsv2 imgmain"></i></div>
+                    <div class="text-r">{% trans 'Innovation projects' %}</div>
+                </a>
+            </li>
+            <li>
+            	<a href="http://payonline.ru">
+                	<div class="icon-l"><i class="iconsv3 imgmain"></i></div>
+                    <div class="text-r">{% trans 'Payment System' %}</div>
+                </a>
+            </li>
+        </ul>
     </div>
+</div>
+<div class="wrapper">
     <div class="main">
     	<div class="sideleft">
         	<div class="community">
@@ -162,6 +145,7 @@
                             	<h2>{% trans 'Sign up' %}</h2>
                                 <span class="text">{% trans 'and get tools for business' %}</span>
                             </div>
+                            <span class="note">* {% trans 'In 2014, Portal TPP-Center was marked by the reward sign "Business Leader of the CIS" for his contribution to the development of economic integration' %}.</span>
                        </div>
                     </li>
                     <li>
@@ -375,6 +359,7 @@
         </div>
     </div>
 </div>
+
 <div class="peoples">
 	<div class="wrapper">
     	<span class="title">{% trans 'Greetings' %}</span>
