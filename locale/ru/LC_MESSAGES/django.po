@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-06 08:11+0000\n"
-"PO-Revision-Date: 2014-04-02 17:36+0200\n"
+"PO-Revision-Date: 2014-04-06 11:26+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2248,19 +2248,16 @@ msgid "Tppcenter"
 msgstr "ТПП центр"
 
 #: tppcenter/templates/index.html:60
-#, fuzzy
 msgid "B2C center"
-msgstr "ТПП центр"
+msgstr "Центр розничных продаж"
 
 #: tppcenter/templates/index.html:66
-#, fuzzy
 msgid "Innovation projects"
-msgstr "Инновационный проект"
+msgstr "Банк инновационных проектов"
 
 #: tppcenter/templates/index.html:72
-#, fuzzy
 msgid "Payment System"
-msgstr "Оплата"
+msgstr "Платежная система"
 
 #: tppcenter/templates/index.html:82
 msgid "Community"
@@ -2295,6 +2292,8 @@ msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
 msgstr ""
+"В 2014 году портал ТПП-Центр был отмечен наградным знаком \"Лидер Бизнеса СНГ"
+"\" за вклад в развитие экономической интеграции"
 
 #: tppcenter/templates/index.html:155
 msgid "on the portal will allow you to"
