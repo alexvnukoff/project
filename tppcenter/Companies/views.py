@@ -155,7 +155,7 @@ def _companiesContent(request, page=1, my=None):
                 raise ObjectDoesNotExist('you need check company')
 
 
-        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG')
+        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG', 'ANONS')
 
         result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
 
@@ -209,7 +209,7 @@ def _companiesDetailContent(request, item_id):
         company = get_object_or_404(Company, pk=item_id)
 
         companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
-                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME'))
+                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
 
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)

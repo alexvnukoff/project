@@ -9,6 +9,7 @@
                  <ul class="company-list">
                     {% for id , attr in companyList.items %}
                         {% with attr.NAME.0 as name %}
+                        {% with attr.ANONS.0 as anons %}
                         {% with attr.SLUG.0 as slug %}
                         {% with attr.IMAGE.0 as image %}
                         {% with attr.DETAIL_TEXT.0 as about_company %}
@@ -55,8 +56,13 @@
                                  <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
                                 {% endif %}
                                 <div class="desc">
+                                    {% if anons %}
+                                         {{ anons|cleanHtml|safe }}
+                                    {% else %}
+                                         {{ about_company|cleanHtml|safe|truncatewords_html:30 }}
+                                    {% endif %}
 
-                                   {{ about_company|cleanHtml|safe|truncatewords_html:30 }}
+
                                     <a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>
 
                                 </div>
@@ -84,6 +90,7 @@
                                 </div>
                             </div>
                         </li>
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}
