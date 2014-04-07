@@ -16,7 +16,7 @@
                         {% with attrs.SLUG|first as slug %}
                         {% with attrs.IMAGE|first as image %}
                         {% with attrs.DETAIL_TEXT as text %}
-                        {% with attrs.COUNTRY_FLAG|first as country_flag %}
+                        {% with attrs.FLAG_CLASS|first as country_flag %}
                         {% with attrs.ORGANIZATION_FLAG|first as org_flag %}
                         {% with attrs.CABINET_COUNTRY_FLAG|first as cabinet_flag %}
                        
@@ -28,7 +28,7 @@
                                     {% if cabinet_flag %}
                                         <img class="flag" src="{{ MEDIA_URL}}th/{{cabinet_flag }} ">
                                     {% elif country_flag %}
-                                          <img class="flag" src="{{ MEDIA_URL}}th/{{country_flag }} ">
+                                        <i class="sprite {{ country_flag }}"></i>
                                     {% elif org_flag %}
                                            <img class="flag" src="{{ MEDIA_URL}}th/{{org_flag }} ">
                                     {% endif %}

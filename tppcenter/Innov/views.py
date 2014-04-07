@@ -256,11 +256,12 @@ def _innovDetailContent(request, item_id):
             country = Country.objects.filter(p2c__child=cabinet)
 
             if country.exists():
-                countriesList = country[0].getAttributeValues("NAME", 'FLAG')
+                countriesList = country[0].getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
                 countryUpdate = {
                     'CABINET_COUNTRY_ID': country[0].pk,
                     'CABINET_COUNTRY_FLAG': countriesList.get('FLAG', [0]),
-                    'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0])
+                    'CABINET_COUNTRY_NAME':  countriesList.get('NAME', [0]),
+                    'CABINET_FLAG_CLASS':  countriesList.get('COUNTRY_FLAG', [0])
                 }
             else:
                 countryUpdate = {}

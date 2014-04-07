@@ -19,7 +19,7 @@
                     {% with attr.INN.0 as inn%}
                     {% with attr.FLAG.0 as flag%}
                     {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.COUNTRY_FLAG|first as country_flag %}
+                    {% with attr.FLAG_CLASS|first as country_flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                          <li>
                          {% resolve items_perms id|slugify as permlist %}
@@ -36,7 +36,11 @@
                             </div>
                          {% endif %}
                         <div class="title">
-                            <img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" />
+                            {% if flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                            {% else %}
+                               <i class="sprite {{ country_flag }}" ></i>
+                            {% endif %}
                             <a href="{% url 'tpp:detail' slug %}">{{ name }}</a>
                         </div>
                         <div class="company-infor">

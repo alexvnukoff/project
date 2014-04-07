@@ -28,6 +28,7 @@ $(function() {
             {% with proposalValues.DOCUMENT_1.0 as doc_1 %}
             {% with proposalValues.DOCUMENT_2.0 as doc_2 %}
             {% with proposalValues.DOCUMENT_3.0 as doc_3 %}
+            {% with proposalValues.FLAG_CLASS.0 as flag_class %}
 
             {% with proposalValues.ORGANIZATION_FLAG.0 as org_flag %}
             {% with proposalValues.ORGANIZATION_NAME.0 as org_name %}
@@ -46,7 +47,13 @@ $(function() {
 
 
                <div class="tender-details-title">
-               		<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+               		{% if flag_class %}
+                         <i class="sprite {{ flag_class }}"></i>
+                            {% elif org_flag %}
+                         <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                            {% else %}
+                         <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                            {% endif %}
                     <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
                </div>
                <div class="tender-info">
@@ -150,7 +157,7 @@ $(function() {
 
 
 
-
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

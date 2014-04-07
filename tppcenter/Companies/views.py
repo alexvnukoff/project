@@ -215,7 +215,7 @@ def _companiesDetailContent(request, item_id):
         description = func.cleanFromHtml(description)
         title = companyValues.get('NAME', False)[0] if companyValues.get('NAME', False) else ""
 
-        country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+        country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME', 'COUNTRY_FLAG'))
 
         template = loader.get_template('Companies/detailContent.html')
 
