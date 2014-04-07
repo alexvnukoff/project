@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-06 08:11+0000\n"
-"PO-Revision-Date: 2014-04-06 11:26+0200\n"
+"PO-Revision-Date: 2014-04-07 15:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -336,7 +336,7 @@ msgstr "Зарегестрируйтесь"
 
 #: centerpokupok/templates/header_big.html:95
 msgid "Seller"
-msgstr "Галерея"
+msgstr "Продавец"
 
 #: centerpokupok/templates/header_big.html:96
 msgid "Customer"
@@ -1244,7 +1244,7 @@ msgstr "Регистрация на "
 #: centerpokupok/templates/registration/login.html:3
 #: centerpokupok/templates/registration/registration_form.html:9
 msgid "Create new account"
-msgstr "Создать онлайн магазин"
+msgstr "Создать новый аккаунт"
 
 #: centerpokupok/templates/registration/login.html:17
 #: tppcenter/templates/BusinessProposal/detailContent.html:131
