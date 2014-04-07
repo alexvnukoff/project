@@ -12,6 +12,7 @@ def databaseInitialization(sender, **kwargs):
        Only run when model got created using signal post_syncdb
     '''
 
+
     #Default Groups with Permissions
     read_item = Permission.objects.get(codename='read_item')
 
@@ -69,6 +70,7 @@ def databaseInitialization(sender, **kwargs):
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
 
+
     attributes = {  'ADDRESS': 'Chr',
                     'ADDRESS_YURID': 'Chr',
                     'ADDRESS_FACT': 'Chr',
@@ -88,6 +90,7 @@ def databaseInitialization(sender, **kwargs):
                     'COST': 'Flo',
                     'CITY': 'Chr',
                     'COUPON_DISCOUNT': 'Flo',
+                    'COUNTRY_FLAG': "Chr",
                     'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
                     'DETAIL_TEXT': 'Str',
                     'DIRECTOR': 'Chr',
@@ -155,6 +158,7 @@ def databaseInitialization(sender, **kwargs):
             Attribute.objects.get_or_create(title=attribute, type=type)
 
     #Create dictionary of countries
+
     crt_usr = User.objects.get(pk=1)
     countries = {'Azerbaydjan': {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}, 'COUNTRY_FLAG': "sprite-flag_azerbaijan"},
                  'Armenia': {'NAME': {'title': 'Armenia', 'title_ru': 'Армения'}, 'COUNTRY_FLAG': "sprite-flag_armenia"},
@@ -357,10 +361,10 @@ def databaseInitialization(sender, **kwargs):
     }
 
     for title, attr in countries.items():
-        cntr, res = Country.objects.get_or_create(title=title, create_user=crt_usr)
-        if res:
-            cntr.setAttributeValue(attr['NAME'], crt_usr)
-        cntr.setAttributeValue(attr['COUNTRY_FLAG'], crt_usr)
+         cntr, res = Country.objects.get_or_create(title=title, create_user=crt_usr)
+         if res:
+             cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
+         cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
 
 
 
@@ -389,7 +393,7 @@ def databaseInitialization(sender, **kwargs):
                             'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
                             'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
 
-                    'Country': {'NAME': True, 'FLAG': False},
+                    'Country': {'NAME': True, 'FLAG': False, 'COUNTRY_FLAG': False},
 
                     'Exhibition': {'NAME': True, 'CITY': True, 'START_EVENT_DATE': True, 'END_EVENT_DATE': True,
                                    'KEYWORD': False, 'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False,
