@@ -106,11 +106,12 @@ def _getDetailContent(request, item_id):
         companyValues.update({'COMPANY_ID': company.id})
 
 
-        countriesList = country.getAttributeValues("NAME", 'FLAG')
+        countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
 
         toUpdate = {
             'COUNTRY_NAME': countriesList.get('NAME', 0),
             'COUNTRY_FLAG': countriesList.get('FLAG', 0),
+            'FLAG_CLASS': countriesList.get('COUNTRY_FLAG', 0),
             'COUNTRY_ID':  country.id
         }
 

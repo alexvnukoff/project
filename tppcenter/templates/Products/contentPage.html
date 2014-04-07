@@ -13,7 +13,7 @@
                     {% with attr.CREATE_DATE.0 as date%}
                     {% with attr.COUNTRY_NAME|first as country_name %}
                     {% with attr.SLUG|first as slug %}
-                    {% with attr.COUNTRY_FLAG|first as flag %}
+                    {% with attr.FLAG_CLASS|first as flag_class %}
                     {% with attr.COST|first as price %}
                     {% with attr.CURRENCY|first as currency %}
                     {% with attr.COUNTRY_ID as country_id %}
@@ -39,14 +39,17 @@
                       <div class="thumb">
                           <a href="{% url "products:detail" slug %}">
                               {% if image %}
-                                  <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" />
+                                  <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
                               {% else %}
                                   <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatewords:7 }}" />
                               {% endif %}
                           </a>
                       </div>
                         <div class="link">
-                    	<img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
+
+                            {% if flag_class %}
+                                 <i class="sprite {{ flag_class }}"></i>
+                            {% endif %}
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
                        </div>
                         <div class="price">

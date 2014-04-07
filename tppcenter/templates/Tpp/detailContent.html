@@ -215,7 +215,7 @@
             {% with tppValues.DETAIL_TEXT.0 as content %}
             {% with tppValues.IMAGE.0 as image %}
             {% with tppValues.FLAG.0 as flag %}
-            {% with country.FLAG.0 as country_flag %}
+            {% with country.COUNTRY_FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
             {% with tppValues.ADDRESS.0 as address %}
             {% with tppValues.TELEPHONE_NUMBER.0 as telephone_number %}
@@ -226,7 +226,14 @@
 
 
                 <div class="deal-details">
-                    <h3><img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" /> {{ name }}</h3>
+                <h3>
+                {% if flag %}
+                    <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                {% else %}
+                   <i class="sprite  {{ country_flag }}"></i>
+                {% endif %}
+                 {{ name }}
+                </h3>
                     {% if image %}
                         <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="" />
                     {% else %}

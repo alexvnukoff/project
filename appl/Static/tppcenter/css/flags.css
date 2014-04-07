@@ -2,6 +2,8 @@
     background-image: url(../img/spritesheet.png);
     background-repeat: no-repeat;
     display: block;
+    float: left;
+    margin-right: 10px;
 }
 
 .sprite-flag_afghanistan {

@@ -164,7 +164,7 @@ def _tppContent(request, page=1, my=None):
 
         countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
 
         for country in countries:
@@ -173,6 +173,7 @@ def _tppContent(request, page=1, my=None):
         for id, tpp in tppList.items():
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             tpp.update(toUpdate)
 
@@ -224,7 +225,7 @@ def _tppDetailContent(request, item_id):
 
         if not tppValues.get('FLAG', False):
            try:
-               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME'))
+               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME','COUNTRY_FLAG'))
            except:
                country = ""
         else:

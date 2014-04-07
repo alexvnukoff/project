@@ -495,7 +495,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
                                        p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
     organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
@@ -513,6 +513,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
         if country_dict.get(id, False):
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             item.update(toUpdate)
         if organizations_dict.get(id, False):
@@ -539,7 +540,7 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
         countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
 
         countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
         country_dict = {}
 
@@ -558,6 +559,7 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
                 'CABINET_ID': cabinet['pk'],
                 'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                 'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_FLAG_CLASS': countriesList[country_dict[cabinet['pk']]].get('COUNTRY_FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                 'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
             }
 
@@ -574,7 +576,7 @@ def addDictinoryWithCountryToCompany(ids, itemList):
 
         countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
 
         for country in countries:
@@ -583,6 +585,7 @@ def addDictinoryWithCountryToCompany(ids, itemList):
         for id, company in itemList.items():
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             company.update(toUpdate)
 
@@ -596,7 +599,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
                                        p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
@@ -616,8 +619,9 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
 
 
     if country_dict.get(id, False):
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             itemList.update(toUpdate)
     if organizations_dict.get(id, False):
@@ -625,9 +629,9 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
                 url = 'companies:detail'
             else:
                 url = 'tpp:detail'
-            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
+            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, 0) else [0],
+                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, 0) else [0],
+                        'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],

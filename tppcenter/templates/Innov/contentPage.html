@@ -20,7 +20,7 @@
                     {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
                     {% with attr.ORGANIZATION_URL as org_url %}
                     {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.COUNTRY_FLAG|first as flag %}
+                    {% with attr.FLAG_CLASS|first as flag %}
                     {% with attr.COUNTRY_ID as country_id %}
                     {% with attr.BRANCH_NAME|first as branch_name %}
                     {% with attr.BRANCH_ID as branch_id %}
@@ -28,7 +28,7 @@
                     {% with attr.CABINET_LAST_NAME|first as cabinet_last_name %}
                     {% with attr.CABINET_ID as cabinet_id %}
                     {% with attr.CABINET_COUNTRY_NAME|first as cabinet_country_name %}
-                    {% with attr.CABINET_COUNTRY_FLAG|first as cabinet_country_flag %}
+                    {% with attr.CABINET_COUNTRY_FLAG_CLASS|first as cabinet_country_flag %}
                      {% with attr.CABINET_COUNTRY_ID as cabinet_country_id %}
 
                     <li>
@@ -52,9 +52,11 @@
                    {% endif %}
                         <div class="title">
                         {% if cabinet_country_flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ cabinet_country_flag }}" class="flag" />
-                        {% else %}
-                           <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+                             <i class="sprite {{ cabinet_country_flag }}"></i>
+                        {% elif org_flag %}
+                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                        {% elif flag %}
+                           <i class="sprite {{ flag }}"></i>
                         {% endif %}
                             <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
