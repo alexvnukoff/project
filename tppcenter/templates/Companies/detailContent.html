@@ -266,6 +266,7 @@
             {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
             {% with companyValues.EMAIL.0 as email %}
             {% with companyValues.FAX.0 as fax %}
+            {% with companyValues.ANONS.0 as anons %}
             {% with companyValues.SITE_NAME.0 as site_name %}
 
             {% with country.FLAG.0 as country_flag %}
@@ -279,7 +280,11 @@
                     {% else %}
                     <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
-                    <p>{{ content|cleanHtml|safe }}</p>
+                    {% if anons %}
+                      <p>{{ anons|cleanHtml|safe }}</p>
+                    {% else %}
+                      <p>{{ content|cleanHtml|safe }}</p>
+                    {% endif %}
                 </div>
                 <div class="social">
                     <a href="#"><i class="imgnews share-1"></i></a>
@@ -411,6 +416,7 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
