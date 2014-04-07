@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="regform">
-    <span class="title">{% trans "Create new account" %}</span>
+    <span class="title">{% trans "Sign in" %}</span>
     <ul class="errorlist">
     {% for key, value in auth_form.errors.items %}
     <li>{% ifnotequal key '__all__' %} <span style="color: red;"> {{ key }} </span>{% endifnotequal %}  <span style="color: red;"> {{ value.as_text }}</span></li>
