@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DEFAULT_FROM_EMAIL = 'noreply@tppcenter.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'noreply@tppcenter.com'
-EMAIL_HOST_PASSWORD = 'qwe123321'
+EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -28,6 +28,7 @@ EMAIL_USE_TLS = True
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
+    ('Jenya', 'jenyapri@tppcenter.com'),
 )
 
 MANAGERS = ADMINS
