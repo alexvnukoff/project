@@ -1,6 +1,6 @@
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
 from haystack.query import SQ, SearchQuerySet

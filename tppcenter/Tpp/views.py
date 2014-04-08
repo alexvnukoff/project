@@ -1,6 +1,6 @@
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject
+                        Cabinet, InnovationProject, Vacancy
 from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp
 from django.conf import settings
