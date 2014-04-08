@@ -11,7 +11,7 @@
                     <td>{% trans "Name" %}</td>
                     <td>{% trans "Department" %}</td>
                     <td>{% trans "E-mail" %}</td>
-                    <td>{% trans "Join Date" %}</td>
+                    <td>{% trans "Joined Date" %}</td>
                     <td class="status">{% trans "Status" %}</td>
                 </tr>
 
@@ -22,7 +22,7 @@
                     {% with attr.USER_LAST_NAME|first as l_name %}
                     {% with attr.EMAIL|first as email %}
                     {% with attr.DEPARTMENT|first as department %}
-                    {% with attr.JOINED_DATE|first|date:"d-M-y" as joined_date %}
+                    {% with attr.CREATE_DATE|first|date:"d-M-y" as joined_date %}
                     {% with attr.STATUS|first as status %}
 
 
@@ -36,11 +36,23 @@
                                 {% endif %}
                             </div>
                         </td>
-                        <td><a href="#" title="{{ f_name }} {{ m_name }} {{ l_name }}">{{ f_name }} {{ m_name }} {{ l_name }}</a></td>
+                        {% if attr %}
+                            <td><a href="#" title="{{ f_name }} {{ m_name }} {{ l_name }}">{{ f_name }} {{ m_name }} {{ l_name }}</a></td>
+                        {% else %}
+                            <td><a href="#" title="">{% trans "User with empty profile. Cabinet ID:" %} {{ id }}</a></td>
+                        {% endif %}
                         <td>{{ department }}</td>
-                        <td><a href="#">{{ email }}</a></td>
+                        {% if email %}
+                            <td><a href="#">{{ email }}</a></td>
+                        {% else %}
+                            <td><a href="#">{% trans "Undefined" %}</a></td>
+                        {% endif %}
                         <td>{{ joined_date }}</td>
-                        <td>{{ status }} <i class="btnremove-small imgnews"></i></td>
+                        <td>{{ status }}
+                            {% if 'delete_cabinet' in permissionsList %}
+                                <i class="btnremove-small imgnews"></i>
+                            {% endif %}
+                        </td>
                     </tr>
 
                     {% endwith %}
@@ -57,10 +69,12 @@
                 {% endfor %}
 
             </table>
-            <div class="btn-clumn">
-                <i class="btnadd btnaction imgnews addform" id="user-add-button"></i>
-                <!-- <i class="btnremove btnaction imgnews"></i> -->
-            </div>
+            {% if 'add_cabinet' in permissionsList %}
+                <div class="btn-clumn">
+                    <i class="btnadd btnaction imgnews addform" id="user-add-button"></i>
+                    <!-- <i class="btnremove btnaction imgnews"></i> -->
+                </div>
+            {% endif %}
         </div>
     </div>
     {% include "main/paginator.html" %}
@@ -74,27 +88,28 @@
             <select id="dep-list" style="width:62%;">
                 {% for id, attr in departmentsList.items %}
                 {% with attr.NAME|first as department %}
-
                     <option value="{{ id }}">{{ department }}</option>
-
                 {% endwith %}
                 {% empty %}
                     <div class="no-results">{% trans "Empty" %}</div>
                 {% endfor %}
-
             </select>
+            <label>{% trans "/Vacancy" %}</label>
+            <select id="vacancy-list" style="width:62%;">
+                {% for id, attr in vacanciesList.items %}
+                {% with attr.NAME|first as vacancy %}
+                    <option value="{{ id }}">{{ vacancy }}</option>
+                {% endwith %}
+                {% empty %}
+                    <div class="no-results">{% trans "Empty" %}</div>
+                {% endfor %}
+            </select>
+            <input type="checkbox" name="AdminFlag" value="isAdmin" id="is-admin">{% trans "Administrator" %}
             <div class="inputadd">
                 <input type="text" name="" id="user-name" value="" class="text" />
     <!--       	<span class="button-add" id="btn-sel-user">+</span>
     -->     </div>
-    <!--    <div class="keyword-formadd">
-                <ul class="list-key">
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                </ul>
-            </div>
-    -->        <div class="formadd-button">
+            <div class="formadd-button">
                 <a class="btntype2" id="btn-add-user" href="#">{% trans "Add" %}</a>
                 <a class="btntype1" href="#">{% trans "Cancel" %}</a>
             </div>

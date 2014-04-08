@@ -16,6 +16,8 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
 from django.core.cache import cache
+import logging
+logger = logging.getLogger('django.request')
 
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -560,12 +562,10 @@ def _tabsInnovs(request, tpp, page=1):
 
 def _tabsStructure(request, tpp, page=1):
     '''
-        Show content of the Tpp-details-structure panel
+        Show content of the Company-details-structure panel
     '''
-
-    #TODO: Ilya check for permission
-
     #check if there Department for deletion
+    comp = Tpp.objects.get(pk=tpp)
     departmentForDeletion = request.POST.get('departmentID', 0)
 
     try:
@@ -580,14 +580,14 @@ def _tabsStructure(request, tpp, page=1):
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
-        #if update department than receive previous name
+        #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
             #check is there department with 'old' name
-            obj_dep = Department.objects.get(item2value__attr__title="NAME", item2value__title=prevDepName)
+            obj_dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title="NAME", item2value__title=prevDepName)
         except:
             obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
-            Relationship.setRelRelationship(Tpp.objects.get(pk=tpp), obj_dep, request.user, type='hierarchy')
+            Relationship.setRelRelationship(comp, obj_dep, request.user, type='hierarchy')
 
         obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
         obj_dep.reindexItem()
@@ -598,10 +598,13 @@ def _tabsStructure(request, tpp, page=1):
     departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
 
     paginator_range = func.getPaginatorRange(page)
-    url_paginator = "tpp:tab_structure_paged"
+    url_paginator = "companies:tab_structure_paged"
+
+    permissionsList = comp.getItemInstPermList(request.user)
 
     templateParams = {
         'departmentsList': departmentsList,
+        'permissionsList': permissionsList,
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
@@ -612,13 +615,9 @@ def _tabsStructure(request, tpp, page=1):
 
 def _tabsStaff(request, tpp, page=1):
     '''
-        Show content of the Tpp-details-staff panel
+        Show content of the Company-details-staff panel
     '''
-
-    #TODO: Ilya check for permission
-
     # get Cabinet ID if user should be detach from Organization
-    org = Tpp.objects.get(pk=tpp)
     cabinetToDetach = request.POST.get('cabinetID', 0)
 
     try:
@@ -627,61 +626,75 @@ def _tabsStaff(request, tpp, page=1):
         cabinetToDetach = 0
 
     if cabinetToDetach > 0:
-        userToDetach = User.objects.get(cabinet__pk=cabinetToDetach)
-        #create list of pk for Company's Organizations
-        cab_lst = list(Department.objects.filter(c2p__parent=tpp, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
-        cab_lst += list(Group.objects.filter(name=org.community.name).values_list('user__cabinet__pk', flat=True))
-        # create cross list for Cabinet IDs and Organization IDs - list of tuples
-        correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
-
-        for t in correlation:
-            if t[1] == cabinetToDetach:
-                comp = Organization.objects.get(pk=t[0])
-                communityGroup = Group.objects.get(pk=comp.community_id)
-                communityGroup.user_set.remove(userToDetach)
+        Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinetToDetach, type='hierarchy').delete()
 
     # add a new user to department
     userEmail = request.POST.get('userEmail', '')
     if len(userEmail):
         departmentName = request.POST.get('departmentName', '')
+        vacancyName = request.POST.get('vacancyName', '')
+        isAdmin = int(request.POST.get('isAdmin', 0))
         if len(departmentName):
-            dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title='NAME', item2value__title=departmentName)
-            communityGroup = Group.objects.get(pk=dep.community_id)
             try:
+                dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title='NAME', item2value__title=departmentName)
+                try:
+                    vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME', item2value__title=vacancyName)
+                except: #if this Department hasn't this Vacancy then add Vacancy to Department
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_DEPARTMENT_ID:'+str(dep.pk), create_user=request.user)
+                    vac.setAttributeValue({'NAME': vacancyName}, request.user)
+                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=request.user)
+
                 usr = User.objects.get(email=userEmail)
-                communityGroup.user_set.add(usr)
+                #if User already works in the Organization, don't allow to connect him to the Company
+                if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=tpp).exists():
+                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                    if res:
+                        try:
+                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',\
+                                                'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
+                            group = Group.objects.get(name='Company Creator')
+                            usr.is_manager = True
+                            usr.save()
+                            group.user_set.add(usr)
+                        except Exception as e:
+                            print('Can not set attributes for Cabinet ID:'+cab.pk+'. The reason is:'+e)
+
+                    if isAdmin:
+                        flag = True
+                    else:
+                        flag = False
+                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='hierarchy', create_user=request.user)
+                else:
+                    pass
             except:
+                logger.exception("Error in tab staff",  exc_info=True)
                 pass
 
-    cab_lst = list(Department.objects.filter(c2p__parent=tpp, c2p__type='hierarchy').values_list('community__user__cabinet__pk', flat=True))
-    cab_lst += list(Group.objects.filter(name=org.community.name).values_list('user__cabinet__pk', flat=True))
+    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=tpp)
     attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
-
-    cabinets = Cabinet.objects.filter(pk__in=cab_lst)
     workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
 
-    # add Department, Joined_date and Status fields
-    dep_lst = tuple(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', flat=True))
+    dep_lst = tuple(Department.objects.filter(c2p__parent=tpp).values_list('pk', flat=True))
     org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
-    #create correlation list between Organization IDs and Cabinet IDs
-    correlation = list(Organization.objects.filter(community__user__cabinet__pk__in=cab_lst).values_list('pk', 'community__user__cabinet__pk'))
+    correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('pk', 'p2c__child__p2c__child'))
 
-    for cab_id, cab_att in workersList.items(): #get Cabinet ID
+    for cab_id, cab_att in workersList.items(): #get Cabinet instance
+        if not cab_att:
+            continue
         for t in correlation: #lookup into corelation list
             if t[1] == cab_id: #if Cabinet ID then...
                 dep_id = t[0] #...get Organization ID
                 for org_id, org_attr in org_lst.items(): #from OrderedDict...
                     if org_id == dep_id:    #if found the same Organization ID then...
-                        #... set additional attributes for Users (Cabinets) befor sending to web form
+                        #... set additional attributes for Users (Cabinets) before sending to web form
                         cab_att['DEPARTMENT'] = org_attr['NAME']
-                        cab_att['JOINED_DATE'] = org_attr['CREATE_DATE']
                         cab_att['STATUS'] = ['Active']
                         break
 
     paginator_range = func.getPaginatorRange(page)
-    url_paginator = "tpp:tab_staff_paged"
+    url_paginator = "companies:tab_staff_paged"
 
-    #create full list of Company's departments
+    #create full list of Company's Departments
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
 
     dep_lst = [dep.pk for dep in departments]
@@ -691,9 +704,24 @@ def _tabsStaff(request, tpp, page=1):
     else:
         departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
 
+    #create list of Company's Vacancies
+    vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text')
+
+    vac_lst = [vac.pk for vac in vacancies]
+
+    if len(vac_lst) == 0:
+        vacanciesList = []
+    else:
+        vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+
+    comp = Tpp.objects.get(pk=tpp)
+    permissionsList = comp.getItemInstPermList(request.user)
+
     templateParams = {
         'workersList': workersList,
-        'departmentsList': departmentsList, #list for add user form
+        'departmentsList': departmentsList, #list for adding user form
+        'vacanciesList': vacanciesList,     #list for adding user form
+        'permissionsList': permissionsList,
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,

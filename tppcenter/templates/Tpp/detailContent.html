@@ -63,12 +63,25 @@
 
             var userEmail = $('#user-name').val();
             var departmentName = $('#dep-list').find(":selected").text();
+            var vacancyName = $('#vacancy-list').find(":selected").text();
+            var vacancyName = $('#vacancy-list').find(":selected").text();
+            var isAdmin = 0;
+            if ($('#is-admin').is(':checked'))
+            {
+                isAdmin = 1;
+            }
+            else
+            {
+                isAdmin = 0;
+            }
 
             var contentHolder = $('#staff-tab .tpp-dt-content');
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "tpp:tab_staff" item_id %}", {departmentName: departmentName, userEmail: userEmail}, function(data){
+            $.post("{% url "tpp:tab_staff" item_id %}",
+                    {departmentName: departmentName, userEmail: userEmail, vacancyName: vacancyName, isAdmin: isAdmin},
+                    function(data){
                         contentHolder.replaceWith(data);
                     }, 'html');
 

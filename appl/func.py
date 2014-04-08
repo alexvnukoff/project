@@ -578,7 +578,11 @@ def addDictinoryWithCountryToCompany(ids, itemList):
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
-            company.update(toUpdate)
+            try:
+                company.update(toUpdate)
+            except Exception as e:
+                print('Passed Company ID:'+id+'has not attribute list. The reason is:'+e+'Please, rebuild index.')
+                pass
 
 
 
@@ -875,7 +879,7 @@ def getListAdv(request):
 
 
 def getActiveSQS():
-    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1, 1, 1)),
                                                                obj_start_date__lt=timezone.now())
 def emptyCompany():
      template = loader.get_template('permissionDen.html')
