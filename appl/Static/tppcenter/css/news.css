@@ -493,3 +493,33 @@ background: -webkit-gradient(linear, left top, left bottom, from(#41a6d8), to(#2
 .btn-afisha{ position: absolute; width: 34px; height: 35px; background-position: -266px -60px; top: 0; right: 0;}
 #afisha-list .desc{ display:inline-block; width:100%; color:#9b9b9b; padding-top:5px;}
 #afisha-list .desc b.num{ font-size:15px; font-weight:bold; color:#101010}
+
+.afisha-reg{ position:absolute; width:414px; background-color:#FFF;border-radius:5px; padding:20px 30px; left:50%; margin-left:-237px; top:-35px; z-index:1002; display:none; color:#4a4a4a;}
+.afisha-reg ul li{ position:relative; float:left; width:100%; margin:10px 0 0 0;}
+.afisha-reg ul li label{ float:left; width:100%; padding-bottom:4px;}
+.afisha-reg ul li input.text, .afisha-reg ul li select{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
+.afisha-reg ul li span{ float:left; margin-right:8px; display:inline;}
+.afisha-reg ul li span:nth-child(1){ width:40%;}
+.afisha-reg ul li span:nth-child(2){ width:22%;}
+.afisha-reg ul li span:nth-child(3){ width:32%;}
+.afisha-reg ul li.end{ margin-top:20px; text-align:center;}
+
+.afisha-reg ul li .btntype1 { background: #FFF url(../img/bgbutton.gif) repeat-x bottom center; border:0; padding:8px 40px; font-size:17px;}
+.afisha-reg ul li .btntype2{ border:0; padding:8px 40px; font-size:17px;
+background-color:#2186b8;
+background-image: -webkit-gradient(
+linear,
+left top,
+left bottom,
+color-stop(0, rgb(60,155,203)),
+color-stop(0.49, rgb(60,159,195)),
+color-stop(0.5, rgb(33,134,184)),
+color-stop(1, rgb(33,136,187))
+);
+background-image: -moz-linear-gradient(
+center top,
+rgb(60,155,203) 0%,
+rgb(60,159,195) 49%,
+rgb(33,134,184) 50%,
+rgb(33,136,187) 100%);}
+.close-regform{ position:absolute; width:22px; height:22px; background-position:-220px 0; top:-9px; right:-12px; cursor:pointer; z-index:99;}

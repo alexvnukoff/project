@@ -21,7 +21,7 @@
                 <td>
                     <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
                         {% if logo %}
-                            <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" />
+                            <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" title="{{ name }}" />
                         {% else %}
                             <img src="{% static "tppcenter/img/company.jpg"  %}" alt="{{ name }}" />
                         {%endif %}

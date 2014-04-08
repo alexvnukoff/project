@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
+from tppcenter.sitemaps import all_sitemaps as sitemaps
+
 
 import tppcenter.views
 import tppcenter.News.urls
@@ -103,7 +105,12 @@ urlpatterns = patterns('',
     url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.setCurrent, name="setCurrent"),
 
     url(r'^(upload/.+)$', tppcenter.views.redirectTo),
-    url(r'^(globus/.+)$', tppcenter.views.redirectTo),
+    url(r'^(globus/.+)$', tppcenter.views.redirectTo)
 
+)
+
+urlpatterns += patterns('',
+        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
+        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 )
 

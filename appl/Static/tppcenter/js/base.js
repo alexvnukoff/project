@@ -175,6 +175,38 @@ $(document).ready(function()
         $(".btntype2").click(function(){
             $(".type-list").slideUp(100);
         });
+         $(".reg_to_exhebition").click(function(){
+         var form =   $("#registration_to_ex").serializeArray();
+         var o = {};
+
+         $.each(form, function() {
+             if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+              });
+        form = o;
+        var email;
+        email = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!form.name_register.trim() || !form.email_register.trim() || !email.test(form.email_register))
+        {
+            $("#registration_error_ex").show();
+            $("#registration_succsefuly_ex").hide();
+
+        }
+        else
+        {
+             $("#registration_error_ex").hide();
+             $("#registration_succsefuly_ex").show();
+
+        }
+
+        });
+
 	/*
 	$(".showevent").click(function() {
         var num = $(".imgnews.i-note").siblings(".num");
@@ -201,6 +233,7 @@ $(document).ready(function()
 		}
 	});
     */
+
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();

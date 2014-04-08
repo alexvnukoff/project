@@ -4,7 +4,7 @@
     {% with banner.NAME|first as name %}
     <div class="bannerleft">
         <a href="{{ url }}" title="{{ name }}">
-            <img src="{{ MEDIA_URL }}original/{{ image }}" alt="{{ name }}" />
+            <img src="{{ MEDIA_URL }}original/{{ image }}" alt="{{ name }}" title="{{ name }}" />
         </a>
     </div>
     {% endwith %}

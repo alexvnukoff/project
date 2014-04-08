@@ -49,14 +49,14 @@ $(function() {
                 	<div class="gallery">
                         <div id="panel">
                             {% if image %}
-                              <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                              <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                             {% else %}
                               <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                             {% endif %}
                         </div>
                         <div id="thumbs">
                             {% for photo in photos %}
-                               <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+                               <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
                             {% endfor %}
                         </div>
                     </div>
@@ -100,7 +100,7 @@ $(function() {
                 </div>
                 <ul class="goods-info">
                    <li class="top">
-                        <div class="iconinfo"><i class="sprite {{ country_flag }}"></i> </div>
+                        <div class="iconinfo"><i class="sprite {{ country_flag }}" title="{{ country_name }}"></i> </div>
                         <div class="nameinfo"><b><a href="{% url 'companies:detail' country_slug %}">{{ company_name }}</a></b></div>
                    </li>
                    <li>

@@ -30,9 +30,9 @@
                     <li>
                         <div class="title">
                          {% if org_flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                          {% else %}
-                           <i class="sprite {{ flag }}"></i>
+                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                          {% endif %}
                             <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
@@ -81,9 +81,9 @@
                     <li>
                         <div class="title">
                         {% if org_flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
                          {% else %}
-                           <i class="sprite {{ flag }}"></i>
+                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                          {% endif %}
                             <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
                         </div>
@@ -126,9 +126,9 @@
                     <li>
                         <div class="title">
                          {% if org_flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                          {% else %}
-                           <i class="sprite {{ flag }}"></i>
+                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                          {% endif %}
                             <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>
                         </div>
@@ -172,9 +172,9 @@
                         <div class="thumb shadow">
                             <a href="{% url "news:detail" slug %}">
                                 {% if image %}
-                                    <img src="{{ MEDIA_URL }}small/{{ image }} " alt="{{ name }}" />
+                                    <img src="{{ MEDIA_URL }}small/{{ image }} " alt="{{ name }}" title="{{ name }}"/>
                                 {% else %}
-                                    <img src="{% static "tppcenter/img/news.jpg" %} " alt="{{ name }}" />
+                                    <img src="{% static "tppcenter/img/news.jpg" %} " alt="" />
                                 {% endif %}
                             </a>
                         </div>
@@ -183,9 +183,9 @@
                             <p class="date">
                             {% if org_flag or flag %}
                                {% if org_flag %}
-                                     <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                                     <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  alt="{{ org_name }}" title="{{ org_name }}"/>
                                {% else %}
-                                      <i class="sprite {{ flag }}"></i>
+                                      <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                                {% endif %}
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
@@ -226,15 +226,15 @@
                       <div class="thumb">
                       <a href="{% url "products:detail" slug %}">
                           {% if image %}
-                             <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" />
+                             <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                           {% else %}
-                               <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                               <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                           {% endif %}
                       </a>
                       </div>
                         <div class="link">
 
-                           <i class="sprite {{ flag }}"></i>
+                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
 
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
                        </div>

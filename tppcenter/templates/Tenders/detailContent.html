@@ -45,9 +45,9 @@ $(function() {
 
                <div class="tender-details-title">
                		 {% if org_flag %}
-                               <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                               <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                         {% else %}
-                               <i class="sprite {{ flag }}"></i>
+                               <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                     <font class="name">{% if org_name %}{{ org_name }}{% else %}{{ country_name }}{% endif %}</font>
                </div>
@@ -70,7 +70,7 @@ $(function() {
                     </ul>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" title="{{ org_name }}" alt="{{ org_name }}" />
                             <a href="{% url org_url org_slug %}">{{ org_name }}</a>
                         </div>
                         <div class="tender-bottom-right">

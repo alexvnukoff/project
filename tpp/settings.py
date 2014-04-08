@@ -85,6 +85,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'registration',
     'modeltranslation',
     'south',
@@ -244,6 +245,9 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     #'uk': ('ru',),
     #'uz': ('ru',),
 }
+
+
+
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
