@@ -344,7 +344,7 @@ def updateTpp(request, item_id):
             addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                             lang_code=settings.LANGUAGE_CODE)
 
-            return HttpResponseRedirect(reverse('tpp:main'))
+            return HttpResponseRedirect(request.GET.get('next', reverse('tpp:main')))
 
     template = loader.get_template('Tpp/addForm.html')
 
