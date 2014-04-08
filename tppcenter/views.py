@@ -470,6 +470,13 @@ def setCurrent(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), '/')
 
 
+
+
+
+
+
+
+
 def buildCountries(request):
     if not request.user.is_superuser:
         raise PermissionError('you dont have permissions')

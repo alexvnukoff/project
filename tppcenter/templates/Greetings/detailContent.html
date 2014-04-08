@@ -11,7 +11,7 @@
 
             	<h1>{{ name }}</h1>
                 <div class="content-news">
-                    <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" />
+                    <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                     {{ content|linebreaksbr|cleanHtml|safe }}
                 <p></p>
                 <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ tpp }}</p>

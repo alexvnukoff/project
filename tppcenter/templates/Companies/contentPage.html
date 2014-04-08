@@ -46,7 +46,7 @@
                                {% if flag_class %}
                                     <i class="sprite {{ flag_class }}"></i>
                                     {% else %}
-                                     <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                                     <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}"/>
                                     {% endif %}
                                 <a href="{% url 'companies:detail' slug %}">
                                     {{ name }}
@@ -56,7 +56,7 @@
                             </div>
                             <div class="company-infor">
                                 {% if image %}
-                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
+                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="{{ name }}" title="{{ name }}"/>
                                 {% else %}
                                  <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
                                 {% endif %}

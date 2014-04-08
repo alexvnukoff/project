@@ -56,9 +56,9 @@ $(function() {
                {% if countryUpdate %}
                		<i class="sprite {{ countryUpdate.CABINET_FLAG_CLASS.0 }}"></i>
                {% elif flag_class %}
-                   <i class="sprite {{ flag_class }}"></i>
+                   <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                {% elif cabinet_flag_class %}
-                   <i class="sprite {{ cabinet_flag_class }}"></i>
+                   <i class="sprite {{ cabinet_flag_class }}" ></i>
                {% else %}
                    <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
                {% endif %}
@@ -78,7 +78,7 @@ $(function() {
                     	<div class="tender-bottom-left">
 
                         {% if org_flag or org_image %}
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" title="{{ org_name }}" alt="{{ org_name }}" class="thumb" />
                         {% else %}
                             <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
                         {% endif %}

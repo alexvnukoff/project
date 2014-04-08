@@ -36,7 +36,7 @@
                         {{ date|date:'d M Y' }}</div>
                 	<div class="video">
                         {% if image %}
-                            <img width="165" height="125" src="{{ MEDIA_URL }}small/{{ image }}" />
+                            <img width="165" height="125" src="{{ MEDIA_URL }}small/{{ image }}" title="{{ name }}" alt="{{ name }}"/>
                         {% else %}
                             <img width="165" height="125" src="http://img.youtube.com/vi/{{ youtube_code }}/0.jpg" />
                         {% endif %}

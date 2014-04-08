@@ -52,11 +52,11 @@
                    {% endif %}
                         <div class="title">
                         {% if cabinet_country_flag %}
-                             <i class="sprite {{ cabinet_country_flag }}"></i>
+                             <i class="sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
                         {% elif org_flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                           <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
                         {% elif flag %}
-                           <i class="sprite {{ flag }}"></i>
+                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                             <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>

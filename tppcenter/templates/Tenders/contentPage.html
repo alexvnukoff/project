@@ -39,9 +39,9 @@
                    {% endif %}
                         <div class="title">
                         {% if org_flag %}
-                               <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                               <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                         {% else %}
-                               <i class="sprite {{ flag }}"></i>
+                               <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                             <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}, {% trans 'Date of publication' %}: {{ date|date:"d M Y" }}</font>
                         </div>
