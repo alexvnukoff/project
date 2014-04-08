@@ -3,7 +3,7 @@ __author__ = 'user'
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Organization
+from appl.models import Cabinet
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -50,10 +50,8 @@ def getMyCompaniesList(context):
 
     current_company = request.session.get('current_company', False)
 
-    user_groups = request.user.groups.values_list('pk', flat=True)
-
-    companies = Organization.objects.filter(community__in=user_groups)
-
+    cab = Cabinet.objects.get(user=request.user)
+    companies = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab)
     companies_ids = list(companies.values_list('pk', flat=True))
 
     if current_company is not False and current_company not in companies_ids:
