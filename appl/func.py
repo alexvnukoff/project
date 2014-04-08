@@ -395,6 +395,12 @@ def resize(img, box, fit, out):
 
 
 def findKeywords(tosearch):
+    '''
+        Automatically find seo keyword on each text using python libraries
+
+        str tosearch - Text to find keywords
+    '''
+
     import string
     import difflib
 
@@ -489,7 +495,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
                                        p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
     organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
@@ -507,6 +513,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
         if country_dict.get(id, False):
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             item.update(toUpdate)
         if organizations_dict.get(id, False):
@@ -533,7 +540,7 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
         countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
 
         countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
         country_dict = {}
 
@@ -552,6 +559,7 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
                 'CABINET_ID': cabinet['pk'],
                 'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                 'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
+                'CABINET_COUNTRY_FLAG_CLASS': countriesList[country_dict[cabinet['pk']]].get('COUNTRY_FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
                 'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
             }
 
@@ -568,7 +576,7 @@ def addDictinoryWithCountryToCompany(ids, itemList):
 
         countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
 
         for country in countries:
@@ -577,6 +585,7 @@ def addDictinoryWithCountryToCompany(ids, itemList):
         for id, company in itemList.items():
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             try:
                 company.update(toUpdate)
@@ -594,7 +603,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
                                        p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
-    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG'), countries_id)
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
@@ -614,8 +623,9 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
 
 
     if country_dict.get(id, False):
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', 0) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', 0) if country_dict.get(id, 0) else [0],
+            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
             itemList.update(toUpdate)
     if organizations_dict.get(id, False):
@@ -623,9 +633,9 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
                 url = 'companies:detail'
             else:
                 url = 'tpp:detail'
-            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', 0) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', 0) if organizations_dict.get(id, 0) else [0],
+            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, 0) else [0],
+                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, 0) else [0],
+                        'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(id, 0) else [0],
                         'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
                         'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
@@ -643,14 +653,23 @@ def organizationIsCompany(item_id):
     return False
 
 def filterLive(request):
+    '''
+        Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
+
+        obj request - request context
+
+
+    '''
 
     searchFilter = []
     filtersIDs = {}
     filters = {}
     ids = []
 
+    #allowed filter list
     filterList = ['tpp', 'country', 'branch']
 
+    #get all filter parameters from request GET
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
@@ -663,11 +682,12 @@ def filterLive(request):
 
         ids += filtersIDs[name]
 
-
+    #Do we have any valid filter ?
     if len(ids) > 0:
         attributes = Item.getItemsAttributesValues('NAME', ids)
 
         for pk, attr in attributes.items():
+            #Creating a list of filter parameters
 
             if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
                 continue
@@ -688,8 +708,9 @@ def filterLive(request):
                 if len(newIDs) > 0:
                     searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
 
-    if len(searchFilter) > 0:
+    if len(searchFilter) > 0: #Converting a list of filter parameters to big "OR" filter
         searchFilter = eval(' | '.join(searchFilter))
+
 
     return filters, searchFilter
 
@@ -718,7 +739,19 @@ def getB2BcabinetValues(request):
     return None
 
 def getBanners(places, site, filterAdv=None):
+    '''
+        Get banners to show
 
+        list places - Names of position blocks (The names are the titles of the items)
+        int site - show banners of some specified site
+        dict filterAdv - advertisement filter , can include countries organizations or branches
+                (get it from getDeatailAdv() or getListAdv() )
+
+        Example:
+            adv_filters = getDetailAdv()
+
+            banners = getBanners(['RIGHT 1', 'RIGHT 2'], settings.SITE_ID, adv_filters)
+    '''
     bList = []
 
     for place in places:
@@ -737,12 +770,19 @@ def getBanners(places, site, filterAdv=None):
     return bAttr
 
 def getTops(request, filterAdv=None):
+    '''
+        Get context advertisement items depended on received filter
+
+        obj request - request context
+        dict filterAdv - advertisement filter , can include countries organizations or branches
+                (get it from getDeatailAdv() or getListAdv() )
+    '''
 
     models = {
         Product: {
-            'count': 5,
-            'text': _('Products'),
-            'detailUrl': 'products:detail'
+            'count': 5, #Limit of this type to fetch
+            'text': _('Products'), #Title
+            'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
         },
         InnovationProject: {
             'count': 5,
@@ -772,9 +812,11 @@ def getTops(request, filterAdv=None):
     for model, modelDict in models.items():
 
         sub = model.objects.all()
+        #Get all active context advertisement of some specific type
         top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence").values_list('c2p__parent', flat=True)
 
-        if filterAdv is not None and len(filterAdv) > 0:
+
+        if filterAdv is not None and len(filterAdv) > 0: #Do we have some filters depended on current page ?
             top = top.filter(c2p__parent__in=filterAdv, c2p__type='relation')
 
         top = top.order_by('?')[:int(modelDict['count'])]
@@ -808,9 +850,9 @@ def getTops(request, filterAdv=None):
 
             if sModel not in tops:
                 tops[sModel] = {}
-                tops[sModel]['MODEL'] = models[model]
-                tops[sModel]['elements'] = {}
-                tops[sModel]['ids'] = []
+                tops[sModel]['MODEL'] = models[model] #Some template helper
+                tops[sModel]['elements'] = {} #Items with attributes are stored here
+                tops[sModel]['ids'] = [] #List of items to get their flags
 
             if id in modelTop[sModel]:
                 attrs['DETAIL_TEXT'] = cleanFromHtml(attrs.get('DETAIL_TEXT', [''])[0])
@@ -820,23 +862,27 @@ def getTops(request, filterAdv=None):
                 break
 
     for name, attr in tops.items():
+       #Special method to fetch a flag for each item type
        if name == BusinessProposal.__name__ or Product.__name__ == name or name == Exhibition.__name__:
            addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
+
        if name == InnovationProject.__name__:
            addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
+
        if name == Company.__name__:
            addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
-
-
 
     return tops
 
 def getDeatailAdv(item_id):
+    '''
+        Get advertisement filter for detail page depended on current item and section
 
-
+        item_id - ID of current item that we are viewing
+    '''
     filterAdv = []
-    sqs = getActiveSQS().filter(id=item_id)
 
+    sqs = getActiveSQS().filter(id=item_id)
 
     filterAdv += getattr(sqs, 'branch', [])
     filterAdv += getattr(sqs, 'tpp', [])
@@ -847,6 +893,10 @@ def getDeatailAdv(item_id):
     return filterAdv
 
 def getListAdv(request):
+    '''
+        Get advertisement filter for content pages depended on current page , section and filter
+    '''
+
     filtersAdv = []
 
     filterList = ['tpp', 'country', 'branch']
@@ -862,7 +912,7 @@ def getListAdv(request):
             except ValueError:
                 continue
 
-        if name != 'tpp':
+        if name != 'tpp': #Add filter items to advertisement filter
             filtersAdv += ids
         else:
             sqs = getActiveSQS().models(Tpp)
@@ -871,7 +921,7 @@ def getListAdv(request):
                 sqs = sqs.filter(django_id__in=ids)
 
 
-            for tpp in sqs:
+            for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
                     filtersAdv += tpp.country
 
@@ -879,7 +929,10 @@ def getListAdv(request):
 
 
 def getActiveSQS():
-    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1, 1, 1)),
+    '''
+        Get active items from search indexes
+    '''
+    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
                                                                obj_start_date__lt=timezone.now())
 def emptyCompany():
      template = loader.get_template('permissionDen.html')
@@ -900,11 +953,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     cached = False
     cache_name = "%s_list_result_page_%s" % (model.__name__, page)
     query = request.GET.urlencode()
+
     q = request.GET.get('q', '')
 
-    if not my and not request.user.is_authenticated():
-        if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1 and q == '':
-            cached = cache.get(cache_name)
+    if not my and cachePisibility(request):
+        cached = cache.get(cache_name)
 
     if not cached:
 
@@ -1022,9 +1075,8 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
 
-        if not my and not request.user.is_authenticated():
-            if query.find('sortField') == -1 and query.find('order') == -1 and query.find('filter') == -1:
-                cache.set(cache_name, rendered)
+        if not my and cachePisibility(request):
+            cache.set(cache_name, rendered)
 
     else:
         rendered = cache.get(cache_name)
@@ -1067,3 +1119,19 @@ def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
         perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
 
     return perms_dict
+
+
+def cachePisibility(request):
+    '''
+        Check if need to cache the page
+    '''
+
+    q = request.GET.get('q', '')
+    query = request.GET.urlencode()
+
+    if not request.user.is_authenticated() and query.find('sortField') == -1 and query.find('order') == -1 and \
+                    query.find('filter') == -1 and q == '':
+
+            return True
+
+    return False

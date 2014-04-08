@@ -1,10 +1,9 @@
-from django.shortcuts import render_to_response
-from appl.models import *
-from core.models import Item
 from appl import func
+from appl.models import InnovationProject, Product, BusinessProposal, Exhibition, News, Branch, NewsCategories
+from core.models import Item
 from django.template import RequestContext, loader
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from django.conf import settings
 
 def get_wall_list(request):
 

@@ -1,15 +1,21 @@
-__author__ = 'user'
-from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
-from appl.models import *
-from django.template import RequestContext, loader
-from django.utils.translation import ugettext as _
-from tppcenter.forms import ItemForm
+from appl.models import Organization, Branch, Tpp, Country
+from core.models import Item
+from core.tasks import addTopAttr
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from core.tasks import addTopAttr
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
+from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
+from django.utils.translation import ugettext as _
+from tppcenter.forms import ItemForm
+import datetime
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
+    '''
+        Getting filters for advertisement
+    '''
+
     import json
 
     filter = request.GET.get('type', None)
@@ -72,6 +78,9 @@ def advJsonFilter(request):
 
 @login_required(login_url='/login/')
 def addTop(request, item):
+    '''
+        View for a form of adding new context adv
+    '''
 
     object = get_object_or_404(Item, pk=item)
 
@@ -104,10 +113,11 @@ def addTop(request, item):
         stDate = request.POST.get('st_date', '')
         edDate = request.POST.get('ed_date', '')
 
+        #Allowed filters
         filterList = ['tpp', 'country', 'branch']
         ids = []
 
-        for name in filterList:
+        for name in filterList: #Get filters from the request context
 
             for pk in request.POST.getlist('filter[' + name + '][]', []):
                 try:
@@ -115,6 +125,8 @@ def addTop(request, item):
                 except ValueError:
                     continue
 
+
+        #Get filter objects
         tpps = Tpp.objects.filter(pk__in=ids)
         countries = Country.objects.filter(pk__in=ids)
         branches = Branch.objects.filter(pk__in=ids)
@@ -134,14 +146,15 @@ def addTop(request, item):
             filter['branch'] = branches.values_list('pk', flat=True)
             ids += filter['branch']
 
+        #Get name and cost of each filter for form initial values (if error occur on previous submit)
         filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
 
-        for id in ids:
-            if not isinstance(filterAttr[id], dict):
-                filterAttr[id] = {}
+        for itemID in ids:
+            if not isinstance(filterAttr[itemID], dict):
+                filterAttr[itemID] = {}
 
-            filterAttr[id]['NAME'] = filterAttr[id].get('NAME', [''])[0]
-            filterAttr[id]['COST'] = filterAttr[id].get('COST', [0])[0]
+            filterAttr[itemID]['NAME'] = filterAttr[itemID].get('NAME', [''])[0]
+            filterAttr[itemID]['COST'] = filterAttr[itemID].get('COST', [0])[0]
 
         form = ItemForm('AdvTop', values={})
         form.clean()
@@ -158,6 +171,8 @@ def addTop(request, item):
                     endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
                 except ValueError:
                     form.errors.update({"DATE": _("You should choose a valid date range")})
+                    startDate = None
+                    endDate = None
 
                 if form.is_valid():
                     if not startDate or not endDate:

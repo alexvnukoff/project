@@ -1,15 +1,18 @@
-__author__ = 'user'
-
-from django.shortcuts import render_to_response, HttpResponse
-from django.template import RequestContext
-import json
 from appl import func
-from appl.models import Organization, login_required
-from django.http import HttpResponseRedirect
+from appl.models import Organization
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.template import RequestContext
+from django.shortcuts import render_to_response, HttpResponse
+
+import json
 
 @login_required(login_url='/login/')
 def main(request):
+    '''
+        Main analytic page
+    '''
 
     current_organization = request.session.get('current_company', False)
 
@@ -28,6 +31,10 @@ def main(request):
 
 @login_required(login_url='/login/')
 def getAnalytic(request):
+    '''
+        Get analytic of current organization
+    '''
+
     current_company = request.session.get('current_company', False)
 
     if current_company is False:

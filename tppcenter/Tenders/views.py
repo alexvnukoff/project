@@ -1,18 +1,19 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Value, Dictionary
+from appl.models import Tender, Gallery, AdditionalPages, Organization
 from appl import func
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
 from core.tasks import addNewTender
+from core.models import Dictionary, Item
 from django.conf import settings
-from haystack.query import SQ, SearchQuerySet
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.forms.models import modelformset_factory
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
 
 def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):

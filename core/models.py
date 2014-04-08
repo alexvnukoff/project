@@ -360,6 +360,15 @@ class Item(models.Model):
 
     @staticmethod
     def _activationRelated(itemList, eDate, sDate=None):
+        '''
+            Change start_date and end_date for depended items recursively
+
+             list itemsList - Depended items
+             datetime eDate - End date
+             datetime sDate - Start Date (optional)
+
+             should be called only from "activation" method
+        '''
 
         if isinstance(itemList, int):
             itemList = [itemList]
@@ -386,6 +395,9 @@ class Item(models.Model):
 
 
     def activation(self, eDate, sDate=None):
+        '''
+            Change start_date and end_date of the item and depended items
+        '''
 
         fields = {'end_date': eDate}
 
@@ -398,6 +410,12 @@ class Item(models.Model):
 
 
     def reindexItem(self):
+        '''
+            Send reindex signal from item instance
+
+            should be called just from item subclass instance
+        '''
+
         if self.__class__.__name__ is 'Item':
             raise ValueError('Should be subclass of Item')
 
@@ -663,11 +681,18 @@ class Item(models.Model):
 
     @staticmethod
     def createItemSlug(string, pk):
+        '''
+            Creating url slug from some string using unicode to acii decoder( unidecode library)
+
+            str string - unicode string to convert to slug
+            int pk - item pk to append to the slug
+        '''
         #nonDig = ''.join([i for i in string if not i.isdigit()])
 
         #slug = slugify(nonDig)
         slug = ''
         if slug == '':
+            #TODO: Artur remove that hack
             if get_language() == 'ru' or True:
                 string = unidecode(string)
             else:
@@ -677,7 +702,15 @@ class Item(models.Model):
 
     def _setAttrDictValues(self, attrWithValues, existsAttributes, queries, uniqDict, user):
         '''
-            sett attr values form dictionary, call only from setAttributeValue method
+            set attribute values from dictionary,
+
+            dict attrWithValues - Dictionary of dict attributes and slot ids {'SEX': 1, 'CURRENCY': [1, 2, 3]}
+            QuerySet existsAttributes - QuerySet of the attributes form attrWithValues
+            list queries - QuerySet filter parameters to check if attribute slots are exists
+            dict uniqDict - Dictionary of dict and sub dict of slots
+            User user - User object to sear as create user
+
+            should be called only from setAttributeValue method
         '''
 
         bulkInsert = []
@@ -902,12 +935,14 @@ class Relationship(models.Model):
     title = models.CharField(max_length=128, unique=True)
     parent = models.ForeignKey(Item, related_name='p2c')
     child = models.ForeignKey(Item, related_name='c2p')
+
     TYPE_OF_RELATIONSHIP = (
         ('relation', 'Relation'),
         ('hierarchy', 'Hierarchy'),
         ('dependence', 'Depended relation'),
         ('friend', 'Friend relation'),
     )
+
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
     is_admin = models.BooleanField(default=False)
@@ -926,6 +961,15 @@ class Relationship(models.Model):
 
     @staticmethod
     def setRelRelationship(parent, child, user, type="relation", **additionParams):
+        '''
+            Setting relationship and setting end_date and start_date to the relation depended on parent
+
+            Item parent - Item instance to set as a parent
+            Item child - Item instance to set as a child
+            Str type - Relationship type
+
+            kwargs additionParams - addition pareters ( end_date , start_date etc..)
+        '''
 
         if not isinstance(parent, Item):
             raise ValueError('Parent should be an Item instance')
@@ -947,7 +991,8 @@ class Relationship(models.Model):
 
         if type == 'dependence' and ('end_date' not in params or 'start_date' not in params):
             #set activation date for dependence relation
-            try:
+
+            try:#Getting parent start date and end date
                 parentRel = Relationship.objects.get(child=parent.pk, type='dependence')
                 parentRelEnd = parentRel.end_date
                 parendStart = parentRel.start_date
@@ -955,7 +1000,7 @@ class Relationship(models.Model):
                 parentRelEnd = None
                 parendStart = None
 
-            if 'end_date' not in params:
+            if 'end_date' not in params: #Getting proper end date
                 if not parent.end_date and parentRelEnd:
                     params['end_date'] = parentRelEnd
                 elif not parentRelEnd and parent.end_date:
@@ -967,9 +1012,11 @@ class Relationship(models.Model):
                     else:
                         params['end_date'] = parentRelEnd
 
-            if 'start_date' not in params:
+            if 'start_date' not in params: #Getting proper start date
+
                 if not parendStart and parent.start_date:
                     params['start_date'] = parent.start_date
+
                 elif parendStart and parent.start_date:
 
                     if parendStart > parent.start_date:

@@ -178,6 +178,7 @@
 .slide3{ width:770px; height:260px; background-image:url(../img/slide3.jpg);}
 .slide4{ width:770px; height:260px; background-image:url(../img/slide4.jpg);}
 .homeslider .bx-wrapper .bx-viewport{ width:100%!important; left:0!important;}
+.homeslide .note{ position:absolute; width:340px; left:26px; bottom:30px; font-weight:300; font-size:10px; line-height:16px;}
 .desc{ position:relative; float:left; width:290px; padding-left:35px; font-family: 'Roboto', sans-serif; color:#4a4a4a;}
 .desc h2{ text-align:center; font-size:26px; font-weight:bold; line-height:28px; padding:42px 0 25px 0; text-transform:uppercase;}
 .desc .text{ display:inline-block; padding-left:30px; font-weight:300; font-size:20px; line-height:24px;}

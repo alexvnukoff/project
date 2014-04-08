@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^about/$', tppcenter.Project.views.project, {'template': "about.html", 'section': _('About')}, name='about'),
      url(r'^adv/$', tppcenter.Project.views.project, {'template': "adv.html", 'section': _('Advertise with us')}, name='adv'),
+     url(r'^payment/$', tppcenter.Project.views.project, {'template': "payment.html", 'section': _('Payment System')}, name='pay'),
      url(r'^terms/$', tppcenter.Project.views.project, {'template': "terms.html", 'section': _('Terms of use')}, name='terms'),
      url(r'^partner/$', tppcenter.Project.views.project, {'template': "partner.html", 'section': _('Find a Business Partner')}, name='partner'),
      url(r'^offer/$', tppcenter.Project.views.project, {'template': "offer.html", 'section': _('Public offer')}, name='offer'),

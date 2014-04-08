@@ -12,6 +12,7 @@ def databaseInitialization(sender, **kwargs):
        Only run when model got created using signal post_syncdb
     '''
 
+
     #Default Groups with Permissions
     read_item = Permission.objects.get(codename='read_item')
 
@@ -69,6 +70,7 @@ def databaseInitialization(sender, **kwargs):
     st2, created=State.objects.get_or_create(title='Default Company State', perm=gr2)
     st3, created=State.objects.get_or_create(title='Default Department State')
 
+
     attributes = {  'ADDRESS': 'Chr',
                     'ADDRESS_YURID': 'Chr',
                     'ADDRESS_FACT': 'Chr',
@@ -88,6 +90,7 @@ def databaseInitialization(sender, **kwargs):
                     'COST': 'Flo',
                     'CITY': 'Chr',
                     'COUPON_DISCOUNT': 'Flo',
+                    'COUNTRY_FLAG': "Chr",
                     'CURRENCY': {'type': 'Chr', 'slots': ['USD', 'EUR', 'RUB']},
                     'DETAIL_TEXT': 'Str',
                     'DIRECTOR': 'Chr',
@@ -155,86 +158,16 @@ def databaseInitialization(sender, **kwargs):
             Attribute.objects.get_or_create(title=attribute, type=type)
 
     #Create dictionary of countries
-    crt_usr = User.objects.get(pk=1)
-    cntr, res = Country.objects.get_or_create(title='Azerbaydjan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Armenia', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Armenia', 'title_ru': 'Армения'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Belarus', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Belarus', 'title_ru': 'Беларусь'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Georgia', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Georgia', 'title_ru': 'Грузия'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Israel', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Israel', 'title_ru': 'Израиль'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Kazakhstan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Kazakhstan', 'title_ru': 'Казахстан'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Kyrgyzstan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Kyrgyzstan', 'title_ru': 'Киргизия'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Latvia', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Latvia', 'title_ru': 'Латвия'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Lithuania', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Lithuania', 'title_ru': 'Литва'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Moldova', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Moldova', 'title_ru': 'Молдова'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
-    cntr, res = Country.objects.get_or_create(title='Russia', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Russia', 'title_ru': 'Россия'}}
-        cntr.setAttributeValue(attr, crt_usr)
-
-    cntr, res = Country.objects.get_or_create(title='Tajikistan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Tajikistan', 'title_ru': 'Таджикистан'}}
-        cntr.setAttributeValue(attr, crt_usr)
-
-    cntr, res = Country.objects.get_or_create(title='Turkmenistan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Turkmenistan', 'title_ru': 'Туркмения'}}
-        cntr.setAttributeValue(attr, crt_usr)
-
-    cntr, res = Country.objects.get_or_create(title='Uzbekistan', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Uzbekistan', 'title_ru': 'Узбекистан'}}
-        cntr.setAttributeValue(attr, crt_usr)
-
-    cntr, res = Country.objects.get_or_create(title='Ukraine', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Ukraine', 'title_ru': 'Украина'}}
-        cntr.setAttributeValue(attr, crt_usr)
-
-    cntr, res = Country.objects.get_or_create(title='Estonia', create_user = crt_usr)
-    if res:
-        attr = {'NAME': {'title': 'Estonia', 'title_ru': 'Эстония'}}
-        cntr.setAttributeValue(attr, crt_usr)
 
     content_type = {'News': {'NAME': True, 'IMAGE': True, 'DETAIL_TEXT': True, 'YOUTUBE_CODE': False, 'ANONS': False},
 
@@ -255,7 +188,7 @@ def databaseInitialization(sender, **kwargs):
                             'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
                             'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
 
-                    'Country': {'NAME': True, 'FLAG': False},
+                    'Country': {'NAME': True, 'FLAG': False, 'COUNTRY_FLAG': False},
 
                     'Exhibition': {'NAME': True, 'CITY': True, 'START_EVENT_DATE': True, 'END_EVENT_DATE': True,
                                    'KEYWORD': False, 'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False,

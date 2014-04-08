@@ -1,11 +1,11 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import Greeting
 from appl import func
-from django.template import RequestContext, loader
+from appl.models import Greeting
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.conf import settings
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.template import RequestContext, loader
 
 def get_greetings_list(request, page=1, item_id=None, slug=None):
 

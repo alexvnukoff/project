@@ -27,7 +27,7 @@
      {% block keywords %}{% endblock %}
 
     <div class="newsform">
-    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+    <form enctype="multipart/form-data"  method="post" action="" onkeypress="return event.keyCode != 13;" xmlns="http://www.w3.org/1999/html">
 
 
     {% csrf_token %}

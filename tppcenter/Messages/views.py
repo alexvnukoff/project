@@ -1,14 +1,16 @@
-__author__ = 'user'
-from django.shortcuts import render_to_response, HttpResponse
-from appl.models import *
-from django.db.models import Max, ObjectDoesNotExist
 from appl import func
-from django.template import RequestContext, loader
-from django.utils.translation import trans_real
+from appl.models import Cabinet, Messages, Organization
+from core.models import Item, Relationship
 from collections import OrderedDict
+from django.contrib.auth.decorators import login_required
+from django.db.models import Max, ObjectDoesNotExist
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
+from django.utils.translation import trans_real
 from copy import copy
+
 
 @login_required(login_url='/login/')
 def viewMessages(request, recipient=None):

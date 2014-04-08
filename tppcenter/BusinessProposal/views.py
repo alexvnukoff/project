@@ -1,17 +1,19 @@
-from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponseNotFound
-from core.models import Item
 from appl import func
-from django.utils.translation import ugettext as _
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
+from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch
+from core.models import Item
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
@@ -76,16 +78,12 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
         return HttpResponse(json.dumps(serialize))
 
 
-
-
-
-
 def _proposalDetailContent(request, item_id):
-
 
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
+
     if not cached:
 
         proposal = get_object_or_404(BusinessProposal, pk=item_id)
@@ -230,6 +228,7 @@ def updateBusinessProposal(request, item_id):
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+
         if getattr(pages, 'new_objects', False):
              pages = pages.new_objects
         else:

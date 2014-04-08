@@ -1,19 +1,20 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item, Dictionary
 from appl import func
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
-from haystack.query import SQ, SearchQuerySet
-import json
+from appl.models import Product, Gallery, AdditionalPages, Company, Country, Category, Organization
+from core.models import Item, Dictionary
 from core.tasks import addProductAttrubute
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
+from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+import json
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
@@ -105,11 +106,12 @@ def _getDetailContent(request, item_id):
         companyValues.update({'COMPANY_ID': company.id})
 
 
-        countriesList = country.getAttributeValues("NAME", 'FLAG')
+        countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
 
         toUpdate = {
             'COUNTRY_NAME': countriesList.get('NAME', 0),
             'COUNTRY_FLAG': countriesList.get('FLAG', 0),
+            'FLAG_CLASS': countriesList.get('COUNTRY_FLAG', 0),
             'COUNTRY_ID':  country.id
         }
 

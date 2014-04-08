@@ -1,23 +1,23 @@
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response, get_object_or_404
-from appl.models import *
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from core.models import Item
 from appl import func
-from django.forms.models import modelformset_factory
-from tppcenter.forms import ItemForm,BasePhotoGallery
-from django.template import RequestContext, loader
+from appl.models import News, Organization, NewsCategories, Gallery, Country
+from core.models import Item, Group
+from datetime import datetime
 from django.core.urlresolvers import reverse
-import json
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.syndication.views import Feed
-from django.utils import feedgenerator
-from django.utils.feedgenerator import Rss201rev2Feed
 from django.core.cache import cache
-
-from datetime import datetime, timedelta
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.contrib.syndication.views import Feed
+from django.forms.models import modelformset_factory
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.feedgenerator import Rss201rev2Feed
+from django.utils.translation import ugettext as _
+from django.utils.timezone import now
+from tppcenter.forms import ItemForm,BasePhotoGallery
 from pytz import timezone
 import pytz
+import json
 
 from core.tasks import addNewsAttrubute
 from django.conf import settings
@@ -108,7 +108,6 @@ def newsForm(request, action, item_id=None):
     templateParams = {
         'formContent': newsPage,
         'current_section': current_section,
-
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
@@ -266,8 +265,8 @@ def _getdetailcontent(request, item_id):
     cache_name = "detail_%s" % item_id
     description_cache_name = "description_%s" % item_id
 
-    query = request.GET.urlencode()
     cached = cache.get(cache_name)
+
     if not cached:
         new = get_object_or_404(News, pk=item_id)
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))

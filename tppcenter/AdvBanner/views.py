@@ -1,16 +1,21 @@
-__author__ = 'user'
+from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country
+from core.models import Item
+from core.tasks import addBannerAttr
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.core.files.images import ImageFile
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
-from appl.models import *
-from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
-from django.core.urlresolvers import reverse
-from django.conf import settings
-from core.tasks import addBannerAttr
-from django.core.files.images import ImageFile
+import datetime
 
 @login_required(login_url='/login/')
 def gatPositions(request):
+    '''
+        Show possible advertisement position as a first page and show them by site
+    '''
 
     bannerType = AdvBannerType.objects.all().values('pk', 'sites__name')
 
@@ -38,6 +43,9 @@ def gatPositions(request):
 
 @login_required(login_url='/login/')
 def advJsonFilter(request):
+    '''
+        Getting filters for advertisement
+    '''
     import json
 
     filter = request.GET.get('type', None)
@@ -104,6 +112,9 @@ def advJsonFilter(request):
 
 @login_required(login_url='/login/')
 def addBanner(request, bannerType):
+    '''
+        View for a form of adding new banners
+    '''
 
     btype = get_object_or_404(AdvBannerType, pk=bannerType)
 
@@ -125,10 +136,11 @@ def addBanner(request, bannerType):
         stDate = request.POST.get('st_date', '')
         edDate = request.POST.get('ed_date', '')
 
+        #allowed filters
         filterList = ['tpp', 'country', 'branch']
         ids = []
 
-        for name in filterList:
+        for name in filterList: # Get filters form request context
 
             for pk in request.POST.getlist('filter[' + name + '][]', []):
                 try:
@@ -136,6 +148,8 @@ def addBanner(request, bannerType):
                 except ValueError:
                     continue
 
+
+        # Get filter objects
         tpps = Tpp.objects.filter(pk__in=ids)
         countries = Country.objects.filter(pk__in=ids)
         branches = Branch.objects.filter(pk__in=ids)
@@ -155,6 +169,7 @@ def addBanner(request, bannerType):
             filter['branch'] = branches.values_list('pk', flat=True)
             ids += filter['branch']
 
+        #Get name and cost of each filter for form initial values (if error occur on previous submit)
         filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
 
         for id in ids:
@@ -190,6 +205,8 @@ def addBanner(request, bannerType):
                         endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
                     except ValueError:
                         form.errors.update({"DATE": _("You should choose a valid date range")})
+                        startDate = None
+                        endDate = None
 
                     if form.is_valid():
 

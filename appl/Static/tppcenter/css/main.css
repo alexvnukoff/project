@@ -3,6 +3,16 @@ body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:1
 .imgmain{ background:url(../img/imgmain.png);}
 .icons{ background:url(../img/icons.png);}
 .wrapper{ width:1000px; margin:0 auto;}
+.header{ position:relative; float:left; width:100%; background:url(../img/dotb.png) repeat-x bottom center; padding-bottom:18px;}
+.header-r{ position:relative; float:right; width:606px; margin:22px 0 0 0;}
+.header-r li{ position:relative; float:left; width:190px; height:70px; border:1px #e5e5e5 solid; background:#FFF url(../img/dotc.png) repeat-x top center; margin-left:10px; display:inline; border-radius:3px;
+box-shadow:0 6px 6px -4px #e5e5e5; font-family: 'robotothin',Arial,sans-serif;}
+.header-r li .icon-l{ display:table-cell; width:55px; height:70px; border-right:1px #efeff0 solid; text-align:center; vertical-align:middle;}
+.header-r li a{ color:#888;}
+.header-r li .text-r{  display:table-cell; width:120px; padding-left:10px; font-size:16px; font-weight:normal; text-shadow:0px 2px 3px #eaeaea; vertical-align:middle;}
+.header-r li .iconsv1{ display:inline-block; width:30px; height:45px; background-position:0px -226px; vertical-align:middle;}
+.header-r li .iconsv2{ display:inline-block; width:45px; height:32px; background-position:-32px -226px;}
+.header-r li .iconsv3{ display:inline-block; width:36px; height:50px; background-position:-80px -226px;}
 .tophead{ display:inline-block; width:100%; height:34px; background-color:#f5f5f5;
 background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#fbfbfb)); background: -moz-linear-gradient(top, #efefef, #fbfbfb);}
 .tophead-l{ float:left; width:55%; line-height:34px; color:#9b9b9b;}

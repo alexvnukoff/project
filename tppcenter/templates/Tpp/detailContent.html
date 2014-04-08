@@ -22,6 +22,9 @@
 		});
 	});
 </script>
+
+
+
 <!-- script for Staff add popup and delete -->
 <script type="text/javascript">
     $(function(){
@@ -222,13 +225,38 @@
 	});
 </script>
 
+{% with companyValues.POSITION.0 as position %}
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<script type="text/javascript">
+    var marker;
+        $(document).ready(function($) {
+            var tabs = $( '#tpp-details-tab' )
+            tabs.tabs();
+            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
+            (href).on('click',function(){
+
+                {% if position %}
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ position }})
+                });
+                {% endif %}
+
+             initialize(false);
+
+            })});
+</script>
+{% endwith %}
+
   <div class="companies">
 
             {% with tppValues.NAME.0 as name %}
             {% with tppValues.DETAIL_TEXT.0 as content %}
             {% with tppValues.IMAGE.0 as image %}
             {% with tppValues.FLAG.0 as flag %}
-            {% with country.FLAG.0 as country_flag %}
+            {% with country.COUNTRY_FLAG.0 as country_flag %}
             {% with country.NAME.0 as country_name %}
             {% with tppValues.ADDRESS.0 as address %}
             {% with tppValues.TELEPHONE_NUMBER.0 as telephone_number %}
@@ -239,7 +267,14 @@
 
 
                 <div class="deal-details">
-                    <h3><img src="{{ MEDIA_URL }}small/{% if flag %}{{ flag }}{% else %}{{ country_flag }}{% endif %}" class="flag" /> {{ name }}</h3>
+                <h3>
+                {% if flag %}
+                    <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                {% else %}
+                   <i class="sprite  {{ country_flag }}"></i>
+                {% endif %}
+                 {{ name }}
+                </h3>
                     {% if image %}
                         <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="" />
                     {% else %}

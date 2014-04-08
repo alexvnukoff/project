@@ -17,10 +17,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 
-DEFAULT_FROM_EMAIL = 'admin@tppcenter.com'
+DEFAULT_FROM_EMAIL = 'noreply@tppcenter.com'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'admin@tppcenter.com'
-EMAIL_HOST_PASSWORD = 'Apocalypse?!'
+EMAIL_HOST_USER = 'noreply@tppcenter.com'
+EMAIL_HOST_PASSWORD = 'qazZAQ123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -28,6 +28,7 @@ EMAIL_USE_TLS = True
 
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
+    ('Jenya', 'jenyapri@tppcenter.com'),
 )
 
 MANAGERS = ADMINS
@@ -261,7 +262,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'ec2-54-229-215-78.eu-west-1.compute.amazonaws.com:9200',
+        'URL': 'ec2-54-72-168-236.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
