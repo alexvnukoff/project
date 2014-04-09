@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-09 11:53+0000\n"
-"PO-Revision-Date: 2014-04-09 15:13+0200\n"
+"PO-Revision-Date: 2014-04-09 15:44+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2941,7 +2941,7 @@ msgstr "Начало события"
 #: tppcenter/templates/Tpp/tabInnov.html:9
 #: tppcenter/templates/Wall/contentPage.html:40
 msgid "Cost of project"
-msgstr "Стоимость проекта"
+msgstr "Требуемый бюджет"
 
 #: tppcenter/templates/Companies/tabStaff.html:12
 #: tppcenter/templates/Companies/tabStaff.html:73

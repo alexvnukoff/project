@@ -152,10 +152,10 @@ def registerToExebition(request):
         adminEmail = 'admin@tppcenter.com'
         companyEmail = request.POST.get('SEND_EMAIL', None)
 
-        message_name = _('%s , was registered to your event %s ,') % (request.POST.get('NAME'), request.POST.get('EXEBITION', ""))
-        message_company = (_('working in the %s ') % (request.POST.get('COMPANY'),)) if request.POST.get('COMPANY', False) else ""
-        message_position = (_('on the position of %s . ') % (request.POST.get('POSITION'),)) if request.POST.get('POSITION', False) else ""
-        message_email = _('You can contact him at this email address %s  ') % (request.POST.get('EMAIL'),)
+        message_name = _('%(name)s , was registered to your event %(event)s ,') % {"name": request.POST.get('NAME'), "event" : request.POST.get('EXEBITION', "")}
+        message_company = (_('working in the %(company)s ') % {'company': request.POST.get('COMPANY')}) if request.POST.get('COMPANY', False) else ""
+        message_position = (_('on the position of %(position)s . ') % {'position': request.POST.get('POSITION')}) if request.POST.get('POSITION', False) else ""
+        message_email = _('You can contact him at this email address %(email)s  ') % {"email": request.POST.get('EMAIL')}
         message = (message_name + message_company + message_position + message_email)
         send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
                             [adminEmail], fail_silently=False)
