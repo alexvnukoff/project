@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import connection
-from django.db.models import Q
+from django.db.models import Q, ObjectDoesNotExist
+
 
 class hierarchyManager(models.Manager):
     '''
@@ -251,18 +252,19 @@ class hierarchyManager(models.Manager):
             IMPORTANT: should be called from Item
         '''
 
-        if not issubclass(parent, int):
+        if not isinstance(parent, int):
             raise ValueError('Parent should be item PK')
 
         if self.model.__name__ != 'Item':
             raise ValueError('Accepting only Item instances except child subclasses')
 
-        descendants = [descendant['ID'] for descendant in self.getChild(parent)]
+        try:
+            instList = self.model.objects.filter(pk__in=self.getChild(parent))
 
-        instList = self.model.objects.filter(pk__in=descendants)
-
-        for inst in instList:
-            inst.delete()
+            for inst in instList:
+                inst.delete()
+        except ObjectDoesNotExist:
+            pass
 
     def getRootParents(self, limit=0, siteID=False):
         '''

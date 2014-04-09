@@ -1059,8 +1059,7 @@ class Value(models.Model):
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
 
-    if getattr(instance, 'hierarchy', None) is not None:
-        instance.hierarchy.deleteHierarch(instance.pk)
+    Item.hierarchy.deleteTree(instance.pk)
 
     dependedChilds = Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence")
 
