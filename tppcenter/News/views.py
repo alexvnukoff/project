@@ -391,7 +391,7 @@ class NewsFeed(Feed):
     def items(self):
         group = Group.objects.get(name='Redactor')
         users = group.user_set.all()
-        return News.active.get_active().filter(create_user__in=users)[:20]
+        return News.active.get_active().filter(create_user__in=users).order_by("-create_date")[:20]
 
 
     def item_title(self, item):
