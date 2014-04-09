@@ -623,7 +623,13 @@ def _tabsStaff(request, tpp, page=1):
         cabinetToDetach = 0
 
     if cabinetToDetach > 0:
-        Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinetToDetach, type='hierarchy').delete()
+        try:
+            curr_user_cab = Cabinet.objects.get(user=request.user)
+            if curr_user_cab.pk != cabinetToDetach:
+                Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinetToDetach,
+                                            type='hierarchy').delete()
+        except Exception as e:
+            pass
 
     # add a new user to department
     userEmail = request.POST.get('userEmail', '')
