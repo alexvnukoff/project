@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-09 13:27+0000\n"
-"PO-Revision-Date: 2014-04-09 15:44+0200\n"
+"PO-Revision-Date: 2014-04-09 16:37+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -1973,22 +1973,22 @@ msgstr "Размер картинки должен быть меньше 2 MB"
 #: tppcenter/views.py:155
 #, python-format
 msgid "%(name)s , was registered to your event %(event)s ,"
-msgstr ""
+msgstr "%(name)s , зарегистрировался на мероприятие %(event)s , "
 
 #: tppcenter/views.py:156
 #, python-format
 msgid "working in the %(company)s "
-msgstr ""
+msgstr "работающий в %(company)s "
 
 #: tppcenter/views.py:157
 #, python-format
 msgid "on the position of %(position)s . "
-msgstr ""
+msgstr "на должности %(position)s "
 
 #: tppcenter/views.py:158
 #, python-format
 msgid "You can contact him at this email address %(email)s  "
-msgstr ""
+msgstr "Вы можете связаться с ним по электронной почте %(email)s  "
 
 #: tppcenter/views.py:160 tppcenter/views.py:163
 msgid "Registartion to event"
@@ -3010,7 +3010,7 @@ msgstr "Описание маршрута"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:202
 msgid "Name and Email are required"
-msgstr ""
+msgstr "Имя и Адрес электронной почты обязательны."
 
 #: tppcenter/templates/Exhibitions/detailContent.html:203
 msgid "You have successfully registered."
