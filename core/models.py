@@ -502,7 +502,7 @@ class Item(models.Model):
                           Item.objects.filter(c2p__parent__c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists():
 
                             rs = Relationship.objects.filter(parent__c2p__parent__c2p__parent=org_pk['pk'], \
-                                                                child=cab_pk, type='hierarchy')
+                                                                child=cab_pk, type='relation')
                             for r in rs:
                                 if r.is_admin:
                                     group_list.append('Admin')

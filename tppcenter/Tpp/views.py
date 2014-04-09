@@ -627,7 +627,7 @@ def _tabsStaff(request, tpp, page=1):
             curr_user_cab = Cabinet.objects.get(user=request.user)
             if curr_user_cab.pk != cabinetToDetach:
                 Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinetToDetach,
-                                            type='hierarchy').delete()
+                                            type='relation').delete()
         except Exception as e:
             pass
 
@@ -666,11 +666,11 @@ def _tabsStaff(request, tpp, page=1):
                         flag = True
                     else:
                         flag = False
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='hierarchy', create_user=request.user)
+                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation', create_user=request.user)
                 else:
                     pass
             except:
-                logger.exception("Error in tab staff",  exc_info=True)
+                logger.exception("Error in tab staff.",  exc_info=True)
                 pass
 
     cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=tpp)
