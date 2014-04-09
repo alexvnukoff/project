@@ -1059,9 +1059,18 @@ class Value(models.Model):
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
 
-    Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence").delete()
+    if getattr(instance, 'hierarchy', None) is not None:
+        instance.hierarchy.deleteHierarch(instance.pk)
+
+    dependedChilds = Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence")
+
+    for inst in dependedChilds:
+        inst.delete()
+
+
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
 
 
 @receiver(post_delete, sender=Item)

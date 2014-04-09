@@ -9,7 +9,6 @@ from django.conf import settings
 
 def set_news_list(request):
     #dict = Dictionary.objects.get(title="Sex")
-    #dict.deleteSlot("Jopa")
     id = settings.SITE_ID
 
 @login_required
