@@ -479,8 +479,8 @@ def setCurrent(request, item_id):
 
 def buildCountries(request):
     if not request.user.is_superuser:
-        raise PermissionError('you dont have permissions')
-    '''
+        raise PermissionError('you have not enough permissions')
+
     crt_usr = User.objects.get(pk=1)
     countries = {'Azerbaydjan': {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}, 'COUNTRY_FLAG': "sprite-flag_azerbaijan"},
                  'Armenia': {'NAME': {'title': 'Armenia', 'title_ru': 'Армения'}, 'COUNTRY_FLAG': "sprite-flag_armenia"},
@@ -688,5 +688,5 @@ def buildCountries(request):
              cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
          cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
 
-    '''
-    return HttpResponse('sucessfuly')
+
+    return HttpResponse('Successfully')
