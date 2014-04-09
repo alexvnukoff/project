@@ -48,11 +48,11 @@ $(function() {
 
                <div class="tender-details-title">
                		{% if flag_class %}
-                         <i class="sprite {{ flag_class }}"></i>
+                         <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% elif org_flag %}
-                         <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                         <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  title="{{ org_name }}"/>
                             {% else %}
-                         <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                         <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" />
                             {% endif %}
                     <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
                </div>

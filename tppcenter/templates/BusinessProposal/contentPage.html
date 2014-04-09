@@ -43,11 +43,11 @@
 
                         <div class="title">
                            {% if flag_class %}
-                                <i class="sprite {{ flag_class }}"></i>
+                                <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% elif org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ country_name }}" />
                             {% else %}
-                                 <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                                 <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" />
                             {% endif %}
                             <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>
                         </div>

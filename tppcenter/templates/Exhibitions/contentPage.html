@@ -46,15 +46,15 @@
                    {% endif %}
                         <div class="title">
                            {% if org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                             {% elif flag_class %}
-                            <i class="sprite {{ flag_class }}"></i>
+                            <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% else %}
-                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" alt="{{ country_name }}" />
                             {% endif %}
                             <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
                         </div>
-                        <div class="button-r"><a href="#" class="bigbuy">{% trans 'Registration' %}</a></div>
+
                         <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
                         <div class="line">{% trans 'Organizer' %}: <a href="{% url org_url org_slug %}">{{ org_name }}</a></div>
                         <a href="{% url 'exhibitions:detail' slug %}" class="linkmore">{% trans 'More' %}...</a>

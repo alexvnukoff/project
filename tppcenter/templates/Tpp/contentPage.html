@@ -36,16 +36,16 @@
                             </div>
                          {% endif %}
                         <div class="title">
-                            {% if flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                            {% if country_flag %}
+                                <i class="sprite {{ country_flag }}" title="{{ country_name }}" ></i>
                             {% else %}
-                               <i class="sprite {{ country_flag }}" ></i>
+                               <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" title="{{ country_name }}"/>
                             {% endif %}
                             <a href="{% url 'tpp:detail' slug %}">{{ name }}</a>
                         </div>
                         <div class="company-infor">
                             {% if image %}
-                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="" />
+                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="{{ name }}" title="{{ name }}" />
                             {% else %}
                                  <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="logocompany" alt="" />
                             {% endif %}

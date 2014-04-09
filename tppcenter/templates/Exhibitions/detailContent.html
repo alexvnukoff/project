@@ -28,23 +28,25 @@
         $(function() {
              $(".goods-details-tab").tabs();});
 
-  var marker;
-        $(document).ready(function($) {
-            var tabs =  $( '.goods-details-tab' )
-            tabs.tabs();
+      var marker;
+            $(document).ready(function($) {
+                var tabs =  $( '.goods-details-tab' )
+                tabs.tabs();
 
-            var href = tabs.find('a[href="#goods-tabs-4"]');
-            href.on('click',function(){
+                var href = tabs.find('a[href="#goods-tabs-4"]');
+                href.on('click',function(){
 
-                {% if position|length > 3 %}
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ position }})
-                });
-                {% endif %}
-              initialize(false);
+                    {% if position|length > 3 %}
+                      marker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ position }})
+                    });
+                    {% endif %}
+                  initialize(false);
 
 
-            })});
+
+
+                })});
 
 
 
@@ -81,11 +83,11 @@
 
                <div class="tender-details-title">
                		   {% if org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" />
+                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                             {% elif flag_class %}
-                            <i class="sprite {{ flag_class }}"></i>
+                            <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% else %}
-                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" title="{{ country_name }}"/>
                             {% endif %}
                     <font class="name">
                         {% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %} {{ city }}
@@ -93,10 +95,11 @@
                     </font>
                </div>
                <div class="tender-info">
+               <div class="tender-button"><a class="bigbuy" href="#" id="afisha">{% trans 'Registration' %}</a></div>
 					<span class="title">{{ name }}</span>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" title="{{ org_name }}" alt="{{ org_name }}" class="thumb" />
                             <a href="{% url org_url org_slug %}">{{ org_name }}</a>
                             </div>
                     </div>
@@ -141,7 +144,7 @@
                                         <li>
                                             <div class="b-img">
                                                 <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
-                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
+                                                    <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
                                                 </a>
                                                 <div class="viewimge">
                                                     <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
@@ -156,9 +159,9 @@
                             </div>
                         </div>
                         <div id="goods-tabs-4">
-                            <div class="content-goods-tab">
+                            <div class="tpp-dt-content">
                                 <div class="org-contacts">
-                                    <ul class="innov-tab-content">
+                                    <ul >
                                         <li>
                                             <span class="left">{% trans 'Address' %}: </span>
                                             <span class="right">{{ org_address }}</span>
@@ -182,7 +185,7 @@
                                     </ul>
                                 </div>
 
-                                <div id="map-canvas"></div>
+                                 <div class="org-map"><div id="map-canvas"></div></div>
                             </div>
                         </div>
                         {% for page in additionalPages %}
@@ -191,7 +194,46 @@
                          </div>
                         {% endfor %}
                     </div>
+                 <div class="afisha-reg">
+                    <form id="registration_to_ex">
+                     <i class="close-regform imgnews"></i>
+                        <ul>
+                            <li>
+                            	<label id="registration_error_ex" style="margin-left:110px;color: red;" hidden="hidden">{% trans 'Name and Email are required' %}</label>
+                                <label id="registration_succsefuly_ex" style="margin-left:110px;color: #008000;" hidden="hidden">{% trans 'You have successfully registered.' %}</label>
+
+                            </li>
+                        	<li>
+                            	<label><b>{% trans 'Name' %}</b><font color="#FF0000">*</font></label>
+                                <input type="text" name="name_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>Email</b><font color="#FF0000">*</font></label>
+                                <input type="email" name="email_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Telephone number' %}</b></label>
+                                <input type="text" name="telephone_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Company' %}</b></label>
+                                 <input type="text" name="company_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Position' %}</b></label>
+                                <input type="text" name="position_register" placeholder="" class="text" />
+                            </li>
+
+                            <li class="end">
+                            	<a class="btntype2 reg_to_exhebition" href="#">{% trans 'Register' %}</a>
+                                <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                            </li>
+                        </ul>
+                        </form>
+                    </div>
+
                </div>
+
 
             {% endwith %}
             {% endwith %}

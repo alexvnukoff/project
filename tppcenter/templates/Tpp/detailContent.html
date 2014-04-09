@@ -225,7 +225,7 @@
 	});
 </script>
 
-{% with companyValues.POSITION.0 as position %}
+{% with tppValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -268,15 +268,16 @@
 
                 <div class="deal-details">
                 <h3>
-                {% if flag %}
-                    <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" />
+                {% if country_flag %}
+                     <i class="sprite  {{ country_flag }}" title="{{ country_name }}"></i>
                 {% else %}
-                   <i class="sprite  {{ country_flag }}"></i>
+                     <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" alt="{{ country_name }}" />
+
                 {% endif %}
                  {{ name }}
                 </h3>
                     {% if image %}
-                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="" />
+                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}"  />
                     {% else %}
                         <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="thumb-deal" alt="" />
                     {% endif %}

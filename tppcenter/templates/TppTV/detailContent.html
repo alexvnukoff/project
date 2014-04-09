@@ -22,7 +22,7 @@
             <h1>{{ name }}</h1>
                 <p class="date">
                 {% if country_flag or org_flag %}
-                    <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else  %}{{ country_flag }}{% endif %}" class="flag" alt="" />
+                    <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else  %}{{ country_flag }}{% endif %}" class="flag" alt="{{ country_name }}" />
                 {% endif %}
                    {{ country_name }}
                    {{ date|date:"d M Y" }}, <a href="#">{{ category_name }}</a></p>
@@ -53,9 +53,9 @@
                     	<li>
                         	<span class="date">{{ date|date:"d M y" }}</span>
                             {% if sim_image %}
-                        	    <img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="{{ sim_name }}" class="thumb" />
+                        	    <img src="{{ MEDIA_URL }}big/{{ sim_image }}" alt="{{ sim_name }}" title="{{ sim_name }}" class="thumb" />
                             {% else %}
-                                <img src="{% static 'tppcenter/img/news.jpg' %}" alt="{{ sim_name }}" class="thumb" />
+                                <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
                             {% endif %}
 
                             <a href="{% url  "tv:detail" sim_slug %}" class="more">{{ sim_name }} </a>

@@ -33,6 +33,7 @@ def add(imageFile=None, sizes=None):
     if imageFile:
         try:
 
+            expires = 60 * 60 * 24 * 7
 
             im = Image.open(imageFile)
             requests = []
@@ -58,14 +59,15 @@ def add(imageFile=None, sizes=None):
 
                 # Uploading a single file
                 #f = open('some_file.zip','rb')
-                requests.append(pool.upload(path, f[sizeType], close=True))
+                requests.append(pool.upload(path, f[sizeType], close=True, expires=expires))
 
 
 
 
             f['original'] = open(imageFile, 'rb')
 
-            requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f['original'], close=True))
+            requests.append(pool.upload('/original/' + folder + '/' + name + '.png', f['original'], close=True, expires=expires))
+
             pool.all_completed(requests)
 
             filename = imageFile
