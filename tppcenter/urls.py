@@ -55,6 +55,8 @@ urlpatterns = patterns('',
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
+    url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
+
     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),

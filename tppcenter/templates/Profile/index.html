@@ -16,8 +16,12 @@
         {{ block.super }}
             <script type="text/javascript">
                 $(function() {
-                    $(".date").datepicker();
-                    });
+                $( ".date" ).datepicker({
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "1900:"
+                });
+              });
             </script>
     {% endblock %}
 

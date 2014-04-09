@@ -17,6 +17,7 @@ from appl import func
 from appl.models import *
 from core.models import Item
 from collections import OrderedDict
+from django.core.mail import send_mail
 import json
 
 @csrf_protect
@@ -139,6 +140,32 @@ def getNotifList(request):
         return HttpResponse(json.dumps({'data': data, 'count': unreadCount}))
     else:
         return HttpResponseBadRequest()
+
+
+
+@ensure_csrf_cookie
+def registerToExebition(request):
+
+
+    if request.is_ajax() and request.POST.get('NAME', False) and request.POST.get('EMAIL', False):
+
+        adminEmail = 'admin@tppcenter.com'
+        companyEmail = request.POST.get('SEND_EMAIL', None)
+
+        message_name = _('%s , was registered to your event %s ,') % (request.POST.get('NAME'), request.POST.get('EXEBITION', ""))
+        message_company = (_('working in the %s ') % (request.POST.get('COMPANY'))) if request.POST.get('COMPANY', False) else ""
+        message_position = (_('on the position of %s . ') % (request.POST.get('POSITION'))) if request.POST.get('POSITION', False) else ""
+        message_email = _('You can contact him at this email address %s  ') % (request.POST.get('EMAIL'))
+        message = (message_name + message_company + message_position + message_email)
+        send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
+                            [adminEmail], fail_silently=False)
+        if companyEmail:
+            send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
+                            [companyEmail], fail_silently=False)
+
+
+    return HttpResponse("")
+
 
 
 def user_login(request):
