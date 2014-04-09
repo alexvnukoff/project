@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-09 11:53+0000\n"
-"PO-Revision-Date: 2014-04-07 15:56+0200\n"
+"PO-Revision-Date: 2014-04-09 15:13+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -1991,9 +1991,8 @@ msgid "You can contact him at this email address %s  "
 msgstr ""
 
 #: tppcenter/views.py:160 tppcenter/views.py:163
-#, fuzzy
 msgid "Registartion to event"
-msgstr "Регистрация на "
+msgstr "Регистрация на мероприятие"
 
 #: tppcenter/AdvBanner/views.py:34 tppcenter/AdvBanner/views.py:244
 #: tppcenter/AdvTop/views.py:203 tppcenter/templates/main_page.html:144
@@ -3014,9 +3013,8 @@ msgid "Name and Email are required"
 msgstr ""
 
 #: tppcenter/templates/Exhibitions/detailContent.html:203
-#, fuzzy
 msgid "You have successfully registered."
-msgstr "были удачно сохранены"
+msgstr "Вы удачно зарегистрировались на мероприятие"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:223
 #: tppcenter/templates/Greetings/contentPage.html:27
@@ -3025,9 +3023,8 @@ msgid "Position"
 msgstr "Должность"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:230
-#, fuzzy
 msgid "Register"
-msgstr "Зарегистрированныe"
+msgstr "Зарегистрироваться"
 
 #: tppcenter/templates/Greetings/contentPage.html:30
 #: tppcenter/templates/News/contentPage.html:67
