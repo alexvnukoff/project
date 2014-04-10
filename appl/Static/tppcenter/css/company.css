@@ -408,7 +408,10 @@ rgb(33,136,187) 100%);}
 .tender-action .edit{background-position:-216px -60px;}
 .tender-action .ads{background-position:-237px -60px;}
 .tender-action .deletext{ float:left; font-size:11px; color:#FFF; line-height:20px; width:84px; padding-left:8px;}
+.tender-action .noty{background-position:0px -158px;}
+.tender-action .sett{background-position:-22px -158px;}
 .cpn-staff .social{ text-align:right;}
+
 
 /*--------------Menucategories------------------*/
 .menucategories{ position:absolute; width:180px; background:#e6e6e6; border:1px #cacaca solid; box-shadow:0px 3px 3px #dedede; display:none; top:21px; left:12px; z-index:99; border-radius:0px 0px 2px 2px;}
