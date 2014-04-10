@@ -22,11 +22,11 @@ def get_wall_list(request):
 def _wallContent(request):
     #------------------Innov--------------------------#
     innov_projects = list(InnovationProject.active.get_active().order_by('-pk').values_list('pk', flat=True)[:3])
-    innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), innov_projects)
+    innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_projects)
 
     branches = Branch.objects.filter(p2c__child__in=innov_projects).values('p2c__child', 'pk')
     branches_ids = [branch['pk'] for branch in branches]
-    branchesList = Item.getItemsAttributesValues(("NAME", 'COST', 'CURRENCY'), branches_ids)
+    branchesList = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     branches_dict = {}
 
