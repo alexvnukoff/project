@@ -48,7 +48,7 @@ def home(request):
 
         products_id = [product.pk for product in products]
         productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-        func.addDictinoryWithCountryAndOrganization(products_id,productsList)
+        func.addDictinoryWithCountryAndOrganization(products_id, productsList)
 
         services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
 
