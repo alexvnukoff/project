@@ -94,7 +94,7 @@
                                     <li>
                                  {% endif %}
                                  <a title="{{ title }}" href="{% url 'tpp:detail' slug %}" class="items">
-                                     <img src="{{ MEDIA_URL }}small/{{flag }}" alt="{% trans 'Work with' %}{{ name }}" />
+                                     <img src="{{ MEDIA_URL }}small/{{flag }}" alt="{% trans 'Work with' %}{{ name }}" title="{{ name }}" />
                                  </a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
@@ -231,17 +231,17 @@
                     	<a href="{% url 'products:detail' slug %}">
                             <div class="thumb">
                                 {% if picture %}
-                                     <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" />
+                                     <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" title="{{ name }}" />
                                 {% else %}
-                                     <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                                     <img src="{% static 'tppcenter/img/item.jpg' %}"  />
                                 {% endif %}
                             </div>
                         </a>
                         <div class="location">
                          {% if org_flag %}
-                        	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" />
+                        	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                          {% else %}
-                             <i class="sprite {{ flag }}"></i>
+                             <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
 
                          {% endif %}
                             <a style="width: 75%;" href="{% url 'products:detail' slug %}">{{ name }}</a>
@@ -278,9 +278,9 @@
                         	<li>
                             	<div class="topcm">
                                   {% if org_flag %}
-                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" />
+                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                                   {% else %}
-                                      <i class="sprite {{ flag }}"></i>
+                                      <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                                   {% endif %}
                                     <div class="date">
                                         <p><b>{{ date_event|makeDate|date:"d M Y"}}</b></p>
@@ -321,9 +321,9 @@
                         	<li>
                             	<div class="topcm">
                                   {% if org_flag %}
-                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" />
+                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}"/>
                                   {% else %}
-                                     <i class="sprite {{ flag }}"></i>
+                                     <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
                                   {% endif %}
                                         <p><b>{{ country_name }}</b></p>
                                     <div class="date">
@@ -396,7 +396,7 @@
                         	<div class="textin">{{ tpp }}</div>
                         </div>
                     	<a href="{% url "greetings:detail" slug %}">
-                            <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" class="avatar" />
+                            <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" class="avatar" title="{{ name }}" />
                         </a>
                         <div class="name">
                         	<a href="{% url "greetings:detail" slug %}">{{ name }}</a>
