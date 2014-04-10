@@ -32,14 +32,14 @@
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                {% if 'delete_exhibition' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
                                 {% if 'change_exhibition' in permlist %}
                                      <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                                 {% if 'add_advtop' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                {% endif %}
+                                {% if 'delete_exhibition' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                 {% endif %}
                             </div>
                         </div>

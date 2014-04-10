@@ -23,8 +23,8 @@
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
                                 {% if 'redactor'  %}
+                                    <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                      <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tv:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                             </div>
                         </div>
