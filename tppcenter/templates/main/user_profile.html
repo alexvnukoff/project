@@ -25,9 +25,9 @@
             <div class="profile-main">
             	<div class="avatar">
                     {% if image %}
-                	    <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" />
+                	    <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" title="{{ user_last_name }}" />
                     {% else %}
-                        <img src="{% static "tppcenter/img/profile.jpg" %}" alt="{{ user_last_name }}" />
+                        <img src="{% static "tppcenter/img/profile.jpg" %}"  />
                     {% endif %}
                     <p class="name">{{ personal_status }}</p>
                 </div>
