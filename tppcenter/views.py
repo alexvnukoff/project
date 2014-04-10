@@ -368,9 +368,9 @@ def jsonFilter(request):
         if model:
 
             if not q:
-                sqs = SearchQuerySet().models(model).order_by('title').order_by('title')
+                sqs = SearchQuerySet().models(model).order_by('title_sort')
             else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title')
+                sqs = SearchQuerySet().models(model).autocomplete(title_auto=q).order_by('title_sort')
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
@@ -469,18 +469,10 @@ def setCurrent(request, item_id):
 
     return HttpResponseRedirect(request.GET.get('next'), '/')
 
-
-
-
-
-
-
-
-
 def buildCountries(request):
     if not request.user.is_superuser:
         raise PermissionError('you dont have permissions')
-    '''
+
     crt_usr = User.objects.get(pk=1)
     countries = {'Azerbaydjan': {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}, 'COUNTRY_FLAG': "sprite-flag_azerbaijan"},
                  'Armenia': {'NAME': {'title': 'Armenia', 'title_ru': 'Армения'}, 'COUNTRY_FLAG': "sprite-flag_armenia"},
@@ -688,5 +680,4 @@ def buildCountries(request):
              cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
          cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
 
-    '''
     return HttpResponse('sucessfuly')
