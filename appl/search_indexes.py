@@ -26,7 +26,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     end_event_date = indexes.DateField(null=True)
     obj_create_date = indexes.DateTimeField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepare_obj_create_date(self, obj):
         return obj.create_date
@@ -166,7 +166,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepate_obj_create_date(self, obj):
         return obj.create_date
@@ -290,7 +290,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
 class CountryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -301,9 +301,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.pk
 
     def prepare(self, obj):
-        from django.utils.translation import trans_real
 
-        trans_real.activate('ru')
         self.prepared_data = super(CountryIndex, self).prepare(obj)
 
         attr = obj.getAttributeValues('NAME')
@@ -319,7 +317,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         self.prepared_data[sortIndex] = attr[0].lower().strip()
         self.prepared_data[textIndex] = attr[0].strip()
         self.prepared_data[titleAutoIndex] = attr[0].strip()
-        trans_real.deactivate()
+
         return self.prepared_data
 
 
@@ -327,7 +325,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
 class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -359,7 +357,7 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
 
 class BranchIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -400,7 +398,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField()
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepare_obj_create_date(self, obj):
         return obj.create_date
@@ -510,7 +508,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField()
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepare_obj_create_date(self, obj):
         return  obj.create_date
@@ -618,7 +616,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     id = indexes.IntegerField()
 
@@ -794,7 +792,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     obj_create_date = indexes.DateTimeField()
     video = indexes.BooleanField(default=False)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepare_id(self, obj):
         return obj.pk
@@ -945,7 +943,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     obj_create_date = indexes.DateTimeField()
     cost = indexes.FloatField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     id = indexes.IntegerField()
 
@@ -1081,7 +1079,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     branch = indexes.MultiValueField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     id = indexes.IntegerField()
 
@@ -1229,7 +1227,7 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     categories = indexes.MultiValueField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     id = indexes.IntegerField()
 
@@ -1341,7 +1339,7 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     id = indexes.IntegerField()
 
@@ -1431,7 +1429,7 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
 
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
