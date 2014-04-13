@@ -389,7 +389,27 @@
                     </div>
                     -->
                     <div id="cpn-tabs-gallery">
-                        <div class="tpp-dt-content"></div>
+                        <div class="tpp-dt-content">
+                            <form>
+                                <div id="queue"></div>
+                                <input id="file_upload" name="file_upload" type="file" multiple="true">
+                            </form>
+
+                            <script type="text/javascript">
+                                $(function() {
+                                    $('#file_upload').uploadify({
+                                        'formData'     : {
+                                            'csrfmiddlewaretoken': $.cookie('csrftoken')
+                                        },
+                                        'swf'      : '{% static "tppcenter/uploadify.swf" %}',
+                                        'uploader' : '{% url "companies:tabs_gallery" %}',
+                                        'uploadLimit': 20
+                                        'buttonImage': {% static "tppcenter/img/addimage.jpg" %},
+                                        'auto'     : true
+                                    });
+                                });
+                            </script>
+                        </div>
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
