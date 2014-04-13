@@ -10,11 +10,12 @@ class Command(NoArgsCommand):
             Remove all community groups ('ORG-') and sets Item.community = null
         '''
         print('Start Communities removing...')
+
+        itm = Item.objects.all()
+        itm.update(community=None)
+
         g_list = Group.objects.filter(name__icontains='ORG-')
         for g in g_list:
             g.delete()
-            
-        itm = Item.objects.all()
-        itm.update(community=None)
 
         print('All Communities were removed!')
