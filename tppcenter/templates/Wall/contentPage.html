@@ -87,7 +87,7 @@
                          {% endif %}
                             <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
                         </div>
-                        <div class="button-r"><a href="#" class="bigbuy">{% trans 'Registration' %}</a></div>
+                      
                         <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
                         <div class="line">{% trans 'Organizer' %}: <a href="#">{{ org_name }}</a></div>
                         <a href="{% url 'exhibitions:detail' slug %}" class="linkmore">{% trans 'More' %}...</a>
