@@ -673,7 +673,7 @@ def _tabsStaff(request, tpp, page=1):
                 logger.exception("Error in tab staff.",  exc_info=True)
                 pass
 
-    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=tpp)
+    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=tpp).distinct()
     attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
     workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
 

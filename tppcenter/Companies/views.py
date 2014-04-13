@@ -540,9 +540,9 @@ def _tabsStaff(request, company, page=1):
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
 
-    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=company)
+    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=company).distinct()
     attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
-    workersList, page = func.setPaginationForSearchWithValues(cabinets, *attr, page_num=10, page=page)
+    workersList, page = func.setPaginationForItemsWithValues(cabinets, *attr, page_num=10, page=page)
 
     dep_lst = tuple(Department.objects.filter(c2p__parent=company).values_list('pk', flat=True))
     org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
@@ -567,7 +567,7 @@ def _tabsStaff(request, company, page=1):
     #create full list of Company's Departments
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
 
-    dep_lst = [dep.pk for dep in departments]
+    dep_lst = [dep.id for dep in departments]
 
     if len(dep_lst) == 0:
         departmentsList = []

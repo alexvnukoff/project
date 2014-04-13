@@ -14,7 +14,7 @@ class Command(NoArgsCommand):
         for dep in dep_lst:
             dep.delete()
 
-        cab_lst = Cabinet.objects.exclude(pk__in=(1, 256, 257, 258, 259, 288))
+        cab_lst = Cabinet.objects.exclude(pk__in=(1, 256, 257, 426, 427, 428))
         for cab in cab_lst:
             cab.delete()
 

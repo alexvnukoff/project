@@ -51,7 +51,7 @@ def getMyCompaniesList(context):
     current_company = request.session.get('current_company', False)
 
     cab = Cabinet.objects.get(user=request.user)
-    companies = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab)
+    companies = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab.pk)
     companies_ids = list(companies.values_list('pk', flat=True))
 
     if current_company is not False and current_company not in companies_ids:

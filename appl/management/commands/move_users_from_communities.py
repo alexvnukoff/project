@@ -115,9 +115,14 @@ class Command(NoArgsCommand):
                     dep_g = Group.objects.get(pk=dep.community.pk)
                     dep_usr_list = dep_g.user_set.all()
                     for usr in dep_usr_list:
-                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                        if res:
+                        if Cabinet.objects.filter(user=usr).exists():
                             try:
+                                cab = Cabinet.objects.get(user=usr)
+                            except:
+                                continue
+                        else:
+                            try:
+                                cab = Cabinet.objects.create(user=usr, create_user=usr)
                                 cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME': '',
                                                         'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
                                 group = Group.objects.get(name='Company Creator')
@@ -125,7 +130,7 @@ class Command(NoArgsCommand):
                                 usr.save()
                                 group.user_set.add(usr)
                             except:
-                                pass
+                                continue
 
                         try:
                             vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:' + str(dep.pk),
@@ -189,9 +194,11 @@ class Command(NoArgsCommand):
             #cycle through Users in current TPP's ORG group
             if len(usr_list):
                 for usr in usr_list:
-                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                    if res:
+                    if Cabinet.objects.filter(user=usr).exists():
+                        cab = Cabinet.objects.get(name=usr)
+                    else:
                         try:
+                            cab = Cabinet.objects.create(user=usr, create_user=usr)
                             cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME': '',
                                                     'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
                             group = Group.objects.get(name='Company Creator')
@@ -199,7 +206,7 @@ class Command(NoArgsCommand):
                             usr.save()
                             group.user_set.add(usr)
                         except:
-                            pass
+                            continue
 
                     # create department and add through signal vacancy 'Работник(ца)'
                     if not Department.objects.filter(item2value__attr__title="NAME",
