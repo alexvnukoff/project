@@ -101,80 +101,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         return True
 
-    def has_perms(self, perm_list, obj=None):
+    def has_perms(self, perm_list, obj):
         """
-        Returns True if the user has each of the specified permissions. If
-        object is passed, it checks if the user has all required perms for this
-        object.
+        Returns True if the User has all specified permissions perm_list for this object obj.
         """
-        #if obj is None:
-            #return PermissionsMixin.has_perms(self, perm_list)
 
         if self.is_superuser or self.is_commando:
             return True
         else:
-            group_list = []
-            #obj_type = obj.__class__.__name__ # get current object's type
-            #obj_type = obj_type.lower()
-
             if obj:
-                obj_type = obj.__class__.__name__ # get current object's type
-                obj_type = obj_type.lower()
+                p_list = obj.getItemInstPermList(self)
+                for i in perm_list:
+                    if i not in p_list:
+                        return False
 
-                if self == obj.create_user: # is user object's owner?
-                    group_list.append('Owner')
-                    group_list.append('Admin')
-                    
-                    if obj.status.perm: # is there permissions group for current object's state?
-                        group_list.append(obj.status.perm.name)
-                    else: # no permissions group for current state, attach Staff group
-                        group_list.append('Staff')
-                else:
-                    if self == obj.update_user or self.groups.filter(name=obj.community.name).exists(): # is user community member?
-                        if self.is_manager: # has user content manager flag?
-                            group_list.append('Admin')
-                          
-                            if obj.status.perm: # is there permissions group for current object's state?
-                                group_list.append(obj.status.perm.name)
-                            else: # no permissions group for current state, attach Staff group
-                                group_list.append('Staff')
-                        else:
-                            
-                            if obj.status.perm: # is there permissions group for current object's state?
-                                group_list.append(obj.status.perm.name)
-                            else: # no permissions group for current state, attach Staff group
-                                group_list.append('Staff')
-                    else:
-                        if obj_type == 'company':
-                            #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-                            communityName = self.parentTppCommunityName()
+                return True
 
-                            if self.groups.filter(name=communityName).exists() and self.is_manager:
-                                group_list.append('Owner')
-                                group_list.append('Admin')
-                                group_list.append('Staff')
             else:
-                obj_type = '_'
-                group_list.append('Owner')
-                group_list.append('Admin')
-                group_list.append('Staff')
-
-            # get all permissions from all related groups for current type of item
-            p_list = Group.objects.filter(name__in=group_list, permissions__codename__contains=obj_type)\
-                .values_list('permissions__codename', flat=True)
-
-            p_list = list(p_list)
-            # attach user's private permissions
-            p_list += list(self.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
-
-            p_list = list(set(p_list)) #remove duplicated keys in permissions list
-            #print(p_list)
-
-            for i in perm_list:
-                if i not in p_list:
-                    return False
-                
-            return True
+                return False
 
     def has_module_perms(self, app_label):
         return True
@@ -534,64 +478,63 @@ class Item(models.Model):
                 list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
         group_list = []
-        obj_type = self.__class__.__name__ # get current object's type
-        obj_type = obj_type.lower()
-
-        if obj_type == 'item':
-            raise ValueError('Should be instance of Item')
-
-        if user.is_superuser or user.is_commando:
+        is_commando = getattr(user, 'is_commando', False) #Anonymous User has not attribute 'is_commando'
+        if user.is_superuser or is_commando or self.create_user == user:
             group_list.append('Owner')
             group_list.append('Admin')
             group_list.append('Staff')
         else:
-            # is user community member?
-            selfCommunity = getattr(self.community, 'name', False)
+            #whether there is a User Cabinet
+            cabinet = getattr(user, 'cabinet', False) #Anonymous User has not attribute 'cabinet'
+            if cabinet:
+                #get Cabinet ID
+                cab_pk = user.cabinet.filter(user=user).values('pk')
+                #check is Cabinet belongs to any Organization
+                if Item.objects.filter(c2p__parent__c2p__parent__organization__isnull=False, pk=cab_pk).exists():
+                    #get Organization ID
+                    org_lst = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab_pk).values('pk')
+                    #rs = None
+                    for org_pk in org_lst:
+                        # if object SELF belongs to the same Company or it is Company itself or belongs to User's TPP or to TPP's parent TPP...
+                        if org_pk['pk'] == self.pk or \
+                          Item.objects.filter(c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                          Item.objects.filter(c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                          Item.objects.filter(c2p__parent__c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists():
 
-            if selfCommunity is not False and user.groups.filter(name=selfCommunity).exists():
-                if user.is_manager: # has user content manager flag?
-                    group_list.append('Admin')
+                            rs = Relationship.objects.filter(parent__c2p__parent__c2p__parent=org_pk['pk'], \
+                                                                child=cab_pk, type='relation')
+                            for r in rs:
+                                if r.is_admin:
+                                    group_list.append('Admin')
+                                    group_list.append('Staff')
+                                else:
+                                    if self.status:
+                                        if self.status.perm: # is there permissions group for current object's state?
+                                            group_list.append(self.status.perm.name)
+                                        else: # no permissions group for current state, attach Staff group
+                                            group_list.append('Staff')
 
-                if self.status.perm: # is there permissions group for current object's state?
-                    group_list.append(self.status.perm.name)
-                else: # no permissions group for current state, attach Staff group
-                    group_list.append('Staff')
-            else: #user is not a member of community of current object
+                        else: #User and SELF belongs to different Organization without any correlation
+                            group_list = []
 
-
-                #try to receive community of parent organization of the object
-                communityName = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
-                                    values('c2p__parent__organization__community__name')
-
-                if user.is_manager and user.groups.filter(name=communityName).exists():
-                    group_list.append('Owner')
-                    group_list.append('Admin')
-                    group_list.append('Staff')
-                else:
-                    #try to get all parent organizations of current object
-                    prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk)\
-                        .values_list('c2p__parent', flat=True)
-
-                    tppCommunity = Item.objects.filter(c2p__parent__organization__isnull=False,\
-                            pk__in=prnt_lst).values_list('c2p__parent__organization__community__name', flat=True)
-
-                    #chech if user is a member of tpp
-                    if user.groups.filter(name__in=tppCommunity).exists() and user.is_manager:
-                        group_list.append('Owner')
-                        group_list.append('Admin')
-                        group_list.append('Staff')
-
+                else: # Cabinet still do not attach to any Organization
+                    group_list = []
+            else: # if User without Cabinet (before first login or unregistered)
+                group_list = []
 
         # get all permissions from all related groups for current type of item
+        group_list = list(set(group_list)) # remove duplicated keys in groups list
         perm_list = Group.objects.filter(name__in=group_list).values_list('permissions__codename', flat=True)
 
         perm_list = list(perm_list)
 
         # attach user's private permissions
-        perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+        #perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+        perm_list += list(user.user_permissions.all().values_list('codename', flat=True))
         perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
 
         return perm_list
+
 
     @staticmethod
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
@@ -996,11 +939,13 @@ class Relationship(models.Model):
     TYPE_OF_RELATIONSHIP = (
         ('relation', 'Relation'),
         ('hierarchy', 'Hierarchy'),
-        ('dependence', 'Depended relation' )
+        ('dependence', 'Depended relation'),
+        ('friend', 'Friend relation'),
     )
 
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
+    is_admin = models.BooleanField(default=False)
     qty = models.FloatField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
@@ -1114,9 +1059,17 @@ class Value(models.Model):
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
 
-    Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence").delete()
+    Item.hierarchy.deleteTree(instance.pk)
+
+    dependedChilds = Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence")
+
+    for inst in dependedChilds:
+        inst.delete()
+
+
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
 
 
 @receiver(post_delete, sender=Item)

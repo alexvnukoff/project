@@ -225,8 +225,9 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
             company.end_date = time
             company.save()
 
-        g = Group.objects.get(name=company.community)
-        g.user_set.add(user)
+        #this logic was moved into appl.models signal post_save from Department creation
+        #g = Group.objects.get(name=company.community)
+        #g.user_set.add(user)
         company.reindexItem()
 
 

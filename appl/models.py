@@ -11,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
 from django.db.models import Count, F, ObjectDoesNotExist
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
+from django.utils.translation import trans_real
+from tpp.SiteUrlMiddleWare import get_request
 from django.dispatch import receiver
 from itertools import chain
 
@@ -490,16 +492,16 @@ class Rate(Item):
     def __str__(self):
         return ''
 
+
 class AdvOrder(Item):
 
     def __str__(self):
         return ''
 
-class Order(Item):
 
+class Order(Item):
     active = ItemManager()
     objects = models.Manager()
-
 
     def __str__(self):
         return ''
@@ -508,6 +510,7 @@ class Order(Item):
 class Basket(Item):
     active = ItemManager()
     objects = models.Manager()
+
     class Meta:
         permissions = (
             ("read_basket", "Can read basket"),
@@ -533,14 +536,13 @@ class Document(Item):
     def __str__(self):
         return ''
 
+
 class BusinessProposal(Item):
     active = ItemManager()
     objects = models.Manager()
 
     def __str__(self):
         return self.getName()
-
-
 
 
 class Gallery(Item):
@@ -550,7 +552,6 @@ class Gallery(Item):
 
       def __str__(self):
           return str(self.photo)
-
 
 
 class AdditionalPages(Item):
@@ -588,30 +589,107 @@ class Messages(Item):
     def __str__(self):
         return self.title
 
+class Vacancy(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    class Meta:
+        permissions = (
+            ("read_vacancy", "Can read vacancy"),
+        )
+
+    def __str__(self):
+        return self.getName()
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_save, sender=Company)
+@receiver(post_save, sender=Company)
 def companyCommunity(instance, **kwargs):
     '''
-       Create community Group for given Company instance
+       Create default Department if Company hasn't it.
     '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+    if not Department.objects.filter(c2p__parent=instance.pk).exists():
+        request = get_request()
+        if request:
+            usr = request.user
+        else:
+            usr = User.objects.get(pk=1)
 
-@receiver(pre_save, sender=Tpp)
+        try:
+            dep = Department.objects.create(title='DEPARTMENT_FOR_COMPANY_ID:'+str(instance.pk), create_user=usr)
+            trans_real.activate('ru') #activate russian locale
+            res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
+            trans_real.deactivate() #deactivate russian locale
+            if not res:
+                dep.delete()
+                return False
+            try:
+                Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+            except:
+                print('Can not create Relationship between Department ID'+dep.pk+' and Company ID'+instance.pk)
+                dep.delete()
+        except Exception as e:
+            print('Can not create Department for Company ID', instance.pk)
+            pass
+
+
+@receiver(post_save, sender=Tpp)
 def tppCommunity(instance, **kwargs):
     '''
-       Create community Group for given TPP instance
+       Create default Department if Tpp hasn't it.
     '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+    if not Department.objects.filter(c2p__parent=instance.pk).exists():
+        request = get_request()
+        if request:
+            usr = request.user
+        else:
+            usr = User.objects.get(pk=1)
 
-@receiver(pre_save, sender=Department)
+        try:
+            dep = Department.objects.create(title='DEPARTMENT_FOR_TPP_ID:'+str(instance.pk), create_user=usr)
+            trans_real.activate('ru') #activate russian locale
+            res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
+            trans_real.deactivate() #deactivate russian locale
+            if not res:
+                dep.delete()
+                return False
+            try:
+                Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+            except:
+                print('Can not create Relationship between Department ID'+dep.pk+' and TPP ID'+instance.pk)
+                dep.delete()
+        except Exception as e:
+            print('Can not create Department for TPP ID', instance.pk)
+            pass
+
+
+@receiver(post_save, sender=Department)
 def departmentCommunity(instance, **kwargs):
     '''
-       Create community Group for given Department instance
+       Create default Vacancy and attach current user if Department hasn't it
     '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+    if not Vacancy.objects.filter(c2p__parent=instance.pk).exists():
+        request = get_request()
+        if request:
+            usr = request.user
+        else:
+            usr = User.objects.get(pk=1)
+
+        try:
+            vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(instance.pk), create_user=usr)
+            trans_real.activate('ru') #activate russian locale
+            res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+            trans_real.deactivate() #deactivate russian locale
+            if not res:
+                vac.delete()
+                return False
+            try:
+                Relationship.objects.create(parent=instance, child=vac, type='hierarchy', create_user=usr)
+                #add current user to default Vacancy
+            except Exception as e:
+                print('Can not create Relationship between Vacancy ID:'+vac.pk+'and Department ID:'+instance.pk+'. The reason is:'+e)
+                vac.delete()
+        except Exception as e:
+            print('Can not create Vacancy for Department ID:'+instance.pk+'. The reason is:'+e)
+            pass

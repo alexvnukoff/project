@@ -587,7 +587,11 @@ def addDictinoryWithCountryToCompany(ids, itemList):
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
-            company.update(toUpdate)
+            try:
+                company.update(toUpdate)
+            except Exception as e:
+                print('Passed Company ID:'+id+'has not attribute list. The reason is:'+e+'Please, rebuild index.')
+                pass
 
 
 
