@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
-from tppcenter.sitemaps import all_sitemaps as sitemaps
+#from tppcenter.sitemaps import all_sitemaps as sitemaps
 
 
 import tppcenter.views
@@ -111,8 +111,8 @@ urlpatterns = patterns('',
 
 )
 
-urlpatterns += patterns('',
-        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
-        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-)
+#urlpatterns += patterns('',
+#        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
+#        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+#)
 
