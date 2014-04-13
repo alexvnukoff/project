@@ -3,10 +3,11 @@ __author__ = 'user'
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet
+from appl.models import Cabinet, Organization
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
+from django.db.models import Q
 
 register = template.Library()
 
@@ -51,7 +52,9 @@ def getMyCompaniesList(context):
     current_company = request.session.get('current_company', False)
 
     cab = Cabinet.objects.get(user=request.user)
-    companies = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab.pk)
+    companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
+                                            Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+
     companies_ids = list(companies.values_list('pk', flat=True))
 
     if current_company is not False and current_company not in companies_ids:
