@@ -17,6 +17,7 @@ from appl import func
 from appl.models import *
 from core.models import Item
 from collections import OrderedDict
+from django.core.mail import send_mail
 import json
 
 @csrf_protect
@@ -47,7 +48,7 @@ def home(request):
 
         products_id = [product.pk for product in products]
         productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-        func.addDictinoryWithCountryAndOrganization(products_id,productsList)
+        func.addDictinoryWithCountryAndOrganization(products_id, productsList)
 
         services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
 
@@ -139,6 +140,32 @@ def getNotifList(request):
         return HttpResponse(json.dumps({'data': data, 'count': unreadCount}))
     else:
         return HttpResponseBadRequest()
+
+
+
+@ensure_csrf_cookie
+def registerToExebition(request):
+
+
+    if request.is_ajax() and request.POST.get('NAME', False) and request.POST.get('EMAIL', False):
+
+        adminEmail = 'admin@tppcenter.com'
+        companyEmail = request.POST.get('SEND_EMAIL', None)
+
+        message_name = _('%(name)s , was registered to your event %(event)s ,') % {"name": request.POST.get('NAME'), "event" : request.POST.get('EXEBITION', "")}
+        message_company = (_('working in the %(company)s ') % {'company': request.POST.get('COMPANY')}) if request.POST.get('COMPANY', False) else ""
+        message_position = (_('on the position of %(position)s . ') % {'position': request.POST.get('POSITION')}) if request.POST.get('POSITION', False) else ""
+        message_email = _('You can contact him at this email address %(email)s  ') % {"email": request.POST.get('EMAIL')}
+        message = (message_name + message_company + message_position + message_email)
+        send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
+                            [adminEmail], fail_silently=False)
+        if companyEmail:
+            send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
+                            [companyEmail], fail_silently=False)
+
+
+    return HttpResponse("")
+
 
 
 def user_login(request):
@@ -471,7 +498,7 @@ def setCurrent(request, item_id):
 
 def buildCountries(request):
     if not request.user.is_superuser:
-        raise PermissionError('you dont have permissions')
+        raise PermissionError('you have not enough permissions')
 
     crt_usr = User.objects.get(pk=1)
     countries = {'Azerbaydjan': {'NAME': {'title': 'Azerbaydjan', 'title_ru': 'Азербайджан'}, 'COUNTRY_FLAG': "sprite-flag_azerbaijan"},
@@ -680,4 +707,5 @@ def buildCountries(request):
              cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
          cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
 
-    return HttpResponse('sucessfuly')
+
+    return HttpResponse('Successfully')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import connection
-from django.db.models import Q
+from django.db.models import Q, ObjectDoesNotExist
+
 
 class hierarchyManager(models.Manager):
     '''
@@ -243,25 +244,27 @@ class hierarchyManager(models.Manager):
         '''
         return self.model.objects.get(p2c__child_id=child, p2c__type="hierarchy")
 
-    def deleteTree(self, parents):
+    def deleteTree(self, parent):
         '''
             Used to call delete method to all hierarchical child of parents passed to argument "parent"
                 Example: Item.hierarchy.deleteTree(6)
-                Example: Item.hierarchy.deleteTree([1,2,3])
 
-            IMPORTANT: shoul be called from Item
+            IMPORTANT: should be called from Item
         '''
-        if not isinstance(parents, list) and isinstance(parents, int):
-            parents = [parents]
+
+        if not isinstance(parent, int):
+            raise ValueError('Parent should be item PK')
 
         if self.model.__name__ != 'Item':
-            raise ValueError
+            raise ValueError('Accepting only Item instances except child subclasses')
 
-        descendants = [descendant['ID'] for descendant in self.getDescedantsForList(parents)]
+        try:
+            instList = self.model.objects.filter(pk__in=self.getChild(parent))
 
-        self.model.objects.filter(pk__in=descendants).delete()
-
-
+            for inst in instList:
+                inst.delete()
+        except ObjectDoesNotExist:
+            pass
 
     def getRootParents(self, limit=0, siteID=False):
         '''

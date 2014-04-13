@@ -117,7 +117,7 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 
-#TODO Artur change LOCATION to elastic cash ip and port
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',

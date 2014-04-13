@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
-from tppcenter.sitemaps import all_sitemaps as sitemaps
+#from tppcenter.sitemaps import all_sitemaps as sitemaps
 
 
 import tppcenter.views
@@ -55,6 +55,8 @@ urlpatterns = patterns('',
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
+    url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
+
     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
@@ -65,7 +67,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', tppcenter.views.user_login, name='login' ),
     url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
-    url(r'^registartion/', tppcenter.views.registration, name='register' ),
+    url(r'^registration/', tppcenter.views.registration, name='register' ),
 
     url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
 
@@ -109,8 +111,8 @@ urlpatterns = patterns('',
 
 )
 
-urlpatterns += patterns('',
-        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
-        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-)
+#urlpatterns += patterns('',
+#        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
+#        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+#)
 

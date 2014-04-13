@@ -202,6 +202,12 @@ $(document).ready(function()
         {
              $("#registration_error_ex").hide();
              $("#registration_succsefuly_ex").show();
+             var dataPost = {'NAME':form.name_register , 'EMAIL':form.email_register,
+                             'TELEPHONE': form.telephone_register, 'COMPANY': form.company_register,
+                             'POSITION': form.position_register, 'SEND_EMAIL': form.email_company_register,
+                             'EXEBITION': form.ex_name_register};
+
+             $.post('/register/exhibition/', dataPost );
 
         }
 
