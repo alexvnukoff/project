@@ -333,7 +333,7 @@ class Command(NoArgsCommand):
                 else:
                     continue
 
-        print('Done. Quantity of processed users:', count)
+        print('Done. Quantity of processed relationships:', count)
         time2 = datetime.datetime.now()
         time = time2-time1
         print('Elapsed time:', time)
