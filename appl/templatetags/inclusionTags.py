@@ -52,7 +52,6 @@ def getMyCompaniesList(context):
     current_company = request.session.get('current_company', False)
 
     cab = Cabinet.objects.get(user=request.user)
-    #companies = Item.objects.filter(Q(create_user=request.user, organization__isnull=False) | Q(p2c__child__p2c__child__p2c__child=cab.pk))
     companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
                                             Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
