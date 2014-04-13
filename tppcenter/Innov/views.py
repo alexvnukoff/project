@@ -103,7 +103,7 @@ def _innovContent(request, page=1, my=None):
 
             sortFields = {
                 'date': 'id',
-                'name': 'title'
+                'name': 'title_sort'
             }
 
             order = []

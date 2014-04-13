@@ -282,10 +282,10 @@ class hierarchyManager(models.Manager):
             filter['sites'] = siteID
 
         if limit < 1:
-            return self.model.objects.filter(Q(Q(c2p__type="hierarchy"),c2p__parent_id__isnull=True), **filter)
+            return self.model.objects.filter(Q(Q(c2p__type="hierarchy"),c2p__parent__isnull=True), **filter)
         else:
             return \
-                self.model.objects.filter(Q(Q(c2p__type="hierarchy"), c2p__parent_id__isnull=True), **filter)[:limit]
+                self.model.objects.filter(Q(Q(c2p__type="hierarchy"), c2p__parent__isnull=True), **filter)[:limit]
 
 
 

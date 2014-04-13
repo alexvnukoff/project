@@ -976,7 +976,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
             sortFields = {
                 'date': 'id',
-                'name': 'title'
+                'name': 'title_sort'
             }
 
             order = []

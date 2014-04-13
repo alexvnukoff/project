@@ -26,6 +26,8 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     end_event_date = indexes.DateField(null=True)
     obj_create_date = indexes.DateTimeField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     def prepare_obj_create_date(self, obj):
         return obj.create_date
 
@@ -50,12 +52,17 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 if field_name == 'start_event_date' or field_name == 'end_event_date':
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
@@ -159,6 +166,8 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     def prepate_obj_create_date(self, obj):
         return obj.create_date
 
@@ -182,12 +191,17 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
@@ -276,6 +290,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
 class CountryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -286,6 +301,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.pk
 
     def prepare(self, obj):
+
         self.prepared_data = super(CountryIndex, self).prepare(obj)
 
         attr = obj.getAttributeValues('NAME')
@@ -293,10 +309,12 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
+
+        sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
-
+        self.prepared_data[sortIndex] = attr[0].lower().strip()
         self.prepared_data[textIndex] = attr[0].strip()
         self.prepared_data[titleAutoIndex] = attr[0].strip()
 
@@ -307,6 +325,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
 class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -324,10 +343,11 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
         if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
-
+        self.prepared_data[sortIndex] = attr[0].lower().strip()
         self.prepared_data[textIndex] = attr[0].strip()
         self.prepared_data[titleAutoIndex] = attr[0].strip()
 
@@ -337,6 +357,7 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
 
 class BranchIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -354,10 +375,11 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
         if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
-
+        self.prepared_data[sortIndex] = attr[0].lower().strip()
         self.prepared_data[textIndex] = attr[0].strip()
         self.prepared_data[titleAutoIndex] = attr[0].strip()
 
@@ -376,6 +398,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField()
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
     def prepare_obj_create_date(self, obj):
         return obj.create_date
@@ -398,12 +421,17 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
@@ -480,6 +508,8 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField()
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     def prepare_obj_create_date(self, obj):
         return  obj.create_date
 
@@ -501,12 +531,17 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
@@ -581,6 +616,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     id = indexes.IntegerField()
 
     def get_model(self):
@@ -604,12 +641,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 if attr is "COST":
                     self.prepared_data[field.index_fieldname] = float(attributes[attr][0])
@@ -750,6 +792,8 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     obj_create_date = indexes.DateTimeField()
     video = indexes.BooleanField(default=False)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     def prepare_id(self, obj):
         return obj.pk
 
@@ -767,12 +811,17 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 if field_name == 'video':
                     if attributes[attr][0] == '':
@@ -894,6 +943,8 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     obj_create_date = indexes.DateTimeField()
     cost = indexes.FloatField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
@@ -920,12 +971,17 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 if field_name == 'start_event_date' or field_name == 'end_event_date':
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
@@ -1023,6 +1079,8 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     branch = indexes.MultiValueField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
@@ -1045,12 +1103,17 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
@@ -1164,6 +1227,8 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     categories = indexes.MultiValueField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
@@ -1186,12 +1251,17 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
         if 'NAME' not in attributes or len(attributes['NAME']) == 0 or len(attributes['NAME'][0].strip()) == 0:
             return self.prepared_data
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+
         for field_name, field in self.fields.items():
             if field_name in field_to_attr:
                 attr = field_to_attr[field_name]
 
                 if attr not in attributes:
                     continue
+
+                if attr == 'NAME':
+                    self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
@@ -1269,6 +1339,8 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
@@ -1280,11 +1352,15 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
 
         attributes = obj.getAttributeValues('NAME')
 
-        if len(attributes) == 0:
+        if len(attributes) == 0 or attributes[0].strip() == '':
             return self.prepared_data
 
+
+        sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
-        self.prepared_data[textIndex] = attributes[0]
+
+        self.prepared_data[textIndex] = attributes[0].strip()
+        self.prepared_data[sortIndex] = attributes[0].lower().strip()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
@@ -1353,6 +1429,7 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
 
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     id = indexes.IntegerField()
 
     def prepare_id(self, obj):
@@ -1370,17 +1447,17 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
         name = []
 
         try:
-            name.append(attributes['USER_FIRST_NAME'][0])
+            name.append(attributes['USER_FIRST_NAME'][0].strip())
         except KeyError:
             pass
 
         try:
-            name.append(attributes['USER_MIDDLE_NAME'][0])
+            name.append(attributes['USER_MIDDLE_NAME'][0].strip())
         except KeyError:
             pass
 
         try:
-            name.append(attributes['USER_LAST_NAME'][0])
+            name.append(attributes['USER_LAST_NAME'][0].strip())
         except KeyError:
             pass
 
@@ -1389,8 +1466,14 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
 
         name = ' '.join(name)
 
+        if name == '':
+            return self.prepared_data
+
+        sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
+
         self.prepared_data[textIndex] = name
+        self.prepared_data[sortIndex] = name.lower()
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname

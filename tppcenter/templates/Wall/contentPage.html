@@ -226,7 +226,7 @@
                       <div class="thumb">
                       <a href="{% url "products:detail" slug %}">
                           {% if image %}
-                             <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                             <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                           {% else %}
                                <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                           {% endif %}
@@ -238,8 +238,14 @@
 
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
                        </div>
-                        <div class="price">{{ currency|getSymbol }} {{ price }}</div>
-                        <a href="{% url "products:detail" slug %}" class="btnbuy">Купить</a>
+                        <div class="price">
+                             {% if price %}
+                                {{ currency|getSymbol }} {{ price }}
+                            {% else %}
+                                {% trans 'Contact to price' %}
+                            {% endif %}
+                        </div>
+                        <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
                     </li>
                     {% endwith %}
                     {% endwith %}
