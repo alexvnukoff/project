@@ -651,6 +651,7 @@ def tppCommunity(instance, **kwargs):
             trans_real.activate('ru') #activate russian locale
             res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
             trans_real.deactivate() #deactivate russian locale
+            dep.reindexItem()
             if not res:
                 dep.delete()
                 return False
@@ -681,6 +682,7 @@ def departmentCommunity(instance, **kwargs):
             trans_real.activate('ru') #activate russian locale
             res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
             trans_real.deactivate() #deactivate russian locale
+            vac.reindexItem()
             if not res:
                 vac.delete()
                 return False
