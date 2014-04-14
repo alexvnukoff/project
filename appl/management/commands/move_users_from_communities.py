@@ -100,7 +100,7 @@ class Command(NoArgsCommand):
                         is_admin = False
 
                     try:
-                        Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                        Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                     is_admin=is_admin, create_user=usr)
                         g.user_set.remove(usr)
                         count += 1
@@ -166,7 +166,7 @@ class Command(NoArgsCommand):
                             is_admin = False
 
                         try:
-                            Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                            Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                         is_admin=is_admin, create_user=usr)
                             g.user_set.remove(usr)
                             count += 1
@@ -268,7 +268,7 @@ class Command(NoArgsCommand):
                         is_admin = False
 
                     try:
-                        Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                        Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                     is_admin=is_admin, create_user=usr)
                         g.user_set.remove(usr)
                         count += 1
@@ -329,7 +329,7 @@ class Command(NoArgsCommand):
                             is_admin = False
 
                         try:
-                            Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                            Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                         is_admin=is_admin, create_user=usr)
                             g.user_set.remove(usr)
                             count += 1
