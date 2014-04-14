@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-14 10:16+0000\n"
-"PO-Revision-Date: 2014-04-09 16:37+0200\n"
+"PO-Revision-Date: 2014-04-14 13:29+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2158,7 +2158,7 @@ msgstr "Собственный интернет-сайт"
 #: tppcenter/Resume/views.py:125 tppcenter/templates/main_page.html:146
 #: tppcenter/templates/Resume/index.html:10
 msgid "Resume"
-msgstr ""
+msgstr "Резюме"
 
 #: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:141
 #: tppcenter/templates/index.html:125 tppcenter/templates/main_page.html:123
@@ -3287,117 +3287,117 @@ msgid ""
 "Filling resume does not obligate company that publishes job on the site TPP-"
 "Center, enter into a contract of employment."
 msgstr ""
+"Заполнение данного резюме не обязывает соискателя, либо компанию, "
+"публикующую вакансию на сайте ТПП Центра, заключать договор о "
+"трудоустройстве."
 
 #: tppcenter/templates/Resume/addForm.html:70
-#, fuzzy
 msgid "Marital Status"
-msgstr "Статус"
+msgstr "Семейное положение"
 
 #: tppcenter/templates/Resume/addForm.html:85
 msgid "Citizenship"
-msgstr ""
+msgstr "Гражданство"
 
 #: tppcenter/templates/Resume/addForm.html:107
 #: tppcenter/templates/Resume/detailContent.html:81
 msgid "Education"
-msgstr ""
+msgstr "Образование"
 
 #: tppcenter/templates/Resume/addForm.html:110
 #: tppcenter/templates/Resume/detailContent.html:91
-#, fuzzy
 msgid "Institution"
-msgstr "Должность"
+msgstr "Учебное заведение"
 
 #: tppcenter/templates/Resume/addForm.html:118
 #: tppcenter/templates/Resume/detailContent.html:95
 msgid "Faculty"
-msgstr ""
+msgstr "Факультет"
 
 #: tppcenter/templates/Resume/addForm.html:125
 #: tppcenter/templates/Resume/detailContent.html:99
 msgid "Study period"
-msgstr ""
+msgstr "Период обучения"
 
 #: tppcenter/templates/Resume/addForm.html:133
 #: tppcenter/templates/Resume/addForm.html:199
 #: tppcenter/templates/Resume/addForm.html:232
 #: tppcenter/templates/Resume/addForm.html:265
 msgid "from"
-msgstr ""
+msgstr "с"
 
 #: tppcenter/templates/Resume/addForm.html:137
 #: tppcenter/templates/Resume/addForm.html:203
 #: tppcenter/templates/Resume/addForm.html:236
 #: tppcenter/templates/Resume/addForm.html:269
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #: tppcenter/templates/Resume/addForm.html:144
-#, fuzzy
 msgid "Specialty"
-msgstr "Специальная цена"
+msgstr "Специальность"
 
 #: tppcenter/templates/Resume/addForm.html:151
 msgid "Form of study"
-msgstr ""
+msgstr "Форма обучения"
 
 #: tppcenter/templates/Resume/addForm.html:165
 #: tppcenter/templates/Resume/addForm.html:292
 #: tppcenter/templates/Resume/addForm.html:299
-#, fuzzy
 msgid "Additionally"
-msgstr "Дополнительные страницы"
+msgstr "Дополнительно"
 
 #: tppcenter/templates/Resume/addForm.html:172
 #: tppcenter/templates/Resume/detailContent.html:82
 msgid "Experience"
-msgstr ""
+msgstr "Опыт работы"
 
 #: tppcenter/templates/Resume/addForm.html:174
 msgid "Specify the last 3 jobs"
-msgstr ""
+msgstr "Укажите 3 последних места работы"
 
 #: tppcenter/templates/Resume/addForm.html:191
 msgid "Worrk period"
-msgstr ""
+msgstr "Период работы"
 
 #: tppcenter/templates/Resume/addForm.html:224
 #: tppcenter/templates/Resume/addForm.html:257
-#, fuzzy
 msgid "Work period"
-msgstr "Сотрудничай с"
+msgstr "Период работы"
 
 #: tppcenter/templates/Resume/addForm.html:275
 #: tppcenter/templates/Resume/detailContent.html:83
 msgid "Skills"
-msgstr ""
+msgstr "Навыки"
 
 #: tppcenter/templates/Resume/addForm.html:278
 msgid "Languages skills"
-msgstr ""
+msgstr "Владение иностранными языками"
 
 #: tppcenter/templates/Resume/addForm.html:285
 #: tppcenter/templates/Resume/detailContent.html:157
 msgid "Computer skills"
-msgstr ""
+msgstr "Владение компьютером"
 
 #: tppcenter/templates/Resume/addForm.html:302
 msgid "Your salary expectations"
-msgstr ""
+msgstr "Ваши ожидания по зарплате"
 
 #: tppcenter/templates/Resume/addForm.html:309
 msgid "Information about which you wish to inform"
-msgstr ""
+msgstr "Сведения, о которых Вы хотели бы сообщить"
 
 #: tppcenter/templates/Resume/addForm.html:316
 msgid ""
 "I confirm that all information provided by me in this form on the site TPP-"
 "Center, are true and complete"
 msgstr ""
+"Я подтверждаю, что все сведения, приведённые мной в данной форме на сайте "
+"ТПП Центра, являются правдивыми и полными"
 
 #: tppcenter/templates/Resume/addForm.html:317
 msgid "I don't mind for checking the information reported by me"
-msgstr ""
+msgstr "Я не возражаю против проверки сообщённых мною сведений"
 
 #: tppcenter/templates/Resume/contentPage.html:32
 #: tppcenter/templates/Tenders/contentPage.html:46
@@ -3406,36 +3406,34 @@ msgstr "Дата публикации"
 
 #: tppcenter/templates/Resume/detailContent.html:58
 msgid "Marital status"
-msgstr ""
+msgstr "Семейное положение"
 
 #: tppcenter/templates/Resume/detailContent.html:62
 msgid "Citezenship"
-msgstr ""
+msgstr "Гражданство"
 
 #: tppcenter/templates/Resume/detailContent.html:74
 msgid "Salary"
-msgstr ""
+msgstr "Зарплата"
 
 #: tppcenter/templates/Resume/detailContent.html:84
 #: tppcenter/templates/Resume/detailContent.html:107
-#, fuzzy
 msgid "Additional"
-msgstr "Дополнительные страницы"
+msgstr "Дополнительно"
 
 #: tppcenter/templates/Resume/detailContent.html:124
 #: tppcenter/templates/Resume/detailContent.html:132
 #: tppcenter/templates/Resume/detailContent.html:140
 msgid "Work  period"
-msgstr ""
+msgstr "Период работы"
 
 #: tppcenter/templates/Resume/detailContent.html:153
 msgid "Language skills"
-msgstr ""
+msgstr "Владение иностранными языками"
 
 #: tppcenter/templates/Resume/detailContent.html:161
-#, fuzzy
 msgid "Additional skills"
-msgstr "Дополнительные страницы"
+msgstr "Дополнительные навыки"
 
 #: tppcenter/templates/Tenders/addForm.html:41
 #: tppcenter/templates/Tenders/detailContent.html:63
