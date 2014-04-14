@@ -1570,7 +1570,7 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
         #department
         departmentIndex = self.fields['department'].index_fieldname
 
-        dep = Department.objects.filter(p2c__child_id=obj.pk, p2c__type="hierarchy")
+        dep = Department.objects.filter(p2c__child=obj.pk, p2c__type="hierarchy")
 
         if dep.exists():
             dep = dep[0]
@@ -1580,7 +1580,7 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
         #company
         companyIndex = self.fields['company'].index_fieldname
 
-        comp = Company.objects.filter(p2c__child__p2c__child_id=obj.pk, p2c__type="hierarchy")
+        comp = Company.objects.filter(p2c__child__p2c__child=obj.pk, p2c__type="hierarchy")
 
         if comp.exists():
             comp = comp[0]
@@ -1590,7 +1590,7 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
         #tpp
         tppIndex = self.fields['tpp'].index_fieldname
 
-        tpp = Tpp.objects.filter(p2c__child__p2c__child_id=obj.pk, p2c__type="hierarchy")
+        tpp = Tpp.objects.filter(p2c__child__p2c__child=obj.pk, p2c__type="hierarchy")
 
         if tpp.exists():
             tpp = tpp[0]
