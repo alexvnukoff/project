@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm
+from django.utils.translation import trans_real
 import logging
 import json
 
@@ -444,17 +445,42 @@ def _tabsStructure(request, company, page=1):
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
+        usr = request.user
         #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
             #check is there department with 'old' name
-            obj_dep = Department.objects.get(c2p__parent=company, item2value__attr__title="NAME", item2value__title=prevDepName)
+            obj_dep = Department.objects.get(c2p__parent=company, item2value__attr__title="NAME",
+                                             item2value__title=prevDepName)
         except:
-            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
-            Relationship.setRelRelationship(comp, obj_dep, request.user, type='hierarchy')
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
+            Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
 
-        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
+
+        if not Vacancy.objects.filter(c2p__parent=obj_dep.pk).exists():
+            try:
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                            str(obj_dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
+            except Exception as e:
+                print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
+                pass
+
         obj_dep.reindexItem()
+        vac.reindexItem()
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
     attr = ('NAME', 'SLUG')
@@ -466,8 +492,19 @@ def _tabsStructure(request, company, page=1):
 
     permissionsList = comp.getItemInstPermList(request.user)
 
+    #create list of Company's Vacancies
+    vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
+
+    vac_lst = [vac.id for vac in vacancies]
+
+    if len(vac_lst) == 0:
+        vacanciesList = []
+    else:
+        vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+
     templateParams = {
         'departmentsList': departmentsList,
+        'vacanciesList': vacanciesList,
         'permissionsList': permissionsList,
         'page': page,
         'paginator_range': paginator_range,
@@ -506,11 +543,15 @@ def _tabsStaff(request, company, page=1):
         isAdmin = int(request.POST.get('isAdmin', 0))
         if len(departmentName):
             try:
-                dep = Department.objects.get(c2p__parent=company, item2value__attr__title='NAME', item2value__title=departmentName)
+                dep = Department.objects.get(c2p__parent=company, item2value__attr__title='NAME',
+                                             item2value__title=departmentName)
                 try:
-                    vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME', item2value__title=vacancyName)
-                except: #if this Department hasn't this Vacancy then add Vacancy to Department
-                    vac = Vacancy.objects.create(title='VACANCY_FOR_DEPARTMENT_ID:'+str(dep.pk), create_user=request.user)
+                    vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME',
+                                              item2value__title=vacancyName)
+                except:
+                    #if this Department hasn't this Vacancy then add Vacancy to Department
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_DEPARTMENT_ID:'+str(dep.pk),
+                                                 create_user=request.user)
                     vac.setAttributeValue({'NAME': vacancyName}, request.user)
                     Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=request.user)
 
@@ -520,20 +561,21 @@ def _tabsStaff(request, company, page=1):
                     cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
                     if res:
                         try:
-                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',\
+                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
                                                 'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
                             group = Group.objects.get(name='Company Creator')
                             usr.is_manager = True
                             usr.save()
                             group.user_set.add(usr)
                         except Exception as e:
-                            print('Can not set attributes for Cabinet ID:'+cab.pk+'. The reason is:'+e)
+                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
 
                     if isAdmin:
                         flag = True
                     else:
                         flag = False
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation', create_user=request.user)
+                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                       create_user=request.user)
                 else:
                     pass
             except:
@@ -577,7 +619,7 @@ def _tabsStaff(request, company, page=1):
     #create list of Company's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
 
-    vac_lst = [vac.pk for vac in vacancies]
+    vac_lst = [vac.id for vac in vacancies]
 
     if len(vac_lst) == 0:
         vacanciesList = []

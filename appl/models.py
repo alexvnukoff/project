@@ -621,17 +621,41 @@ def companyCommunity(instance, **kwargs):
             trans_real.activate('ru') #activate russian locale
             res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
             trans_real.deactivate() #deactivate russian locale
+
             if not res:
                 dep.delete()
                 return False
             try:
                 Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+                dep.reindexItem()
             except:
-                print('Can not create Relationship between Department ID'+dep.pk+' and Company ID'+instance.pk)
+                print('Can not create Relationship between Department ID' + dep.pk + ' and Company ID' + instance.pk)
                 dep.delete()
         except Exception as e:
             print('Can not create Department for Company ID', instance.pk)
             pass
+
+        if not Vacancy.objects.filter(c2p__parent=dep.pk).exists():
+            try:
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=usr)
+                    vac.reindexItem()
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                          str(dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
+            except Exception as e:
+                print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
+                pass
 
 
 @receiver(post_save, sender=Tpp)
@@ -651,47 +675,41 @@ def tppCommunity(instance, **kwargs):
             trans_real.activate('ru') #activate russian locale
             res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
             trans_real.deactivate() #deactivate russian locale
-            dep.reindexItem()
+
             if not res:
                 dep.delete()
                 return False
             try:
                 Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+                dep.reindexItem()
             except:
-                print('Can not create Relationship between Department ID'+dep.pk+' and TPP ID'+instance.pk)
                 dep.delete()
+                print('Can not create Relationship between Department ID'+dep.pk+' and TPP ID'+instance.pk)
+                raise Exception('Can not create Relationship between Department ID' +str(dep.pk)+ ' and TPP ID'+ instance.pk)
+
         except Exception as e:
             print('Can not create Department for TPP ID', instance.pk)
+            raise Exception('Can not create Department for TPP ID: %s' % instance.pk)
             pass
 
-
-@receiver(post_save, sender=Department)
-def departmentCommunity(instance, **kwargs):
-    '''
-       Create default Vacancy and attach current user if Department hasn't it
-    '''
-    if not Vacancy.objects.filter(c2p__parent=instance.pk).exists():
-        request = get_request()
-        if request:
-            usr = request.user
-        else:
-            usr = User.objects.get(pk=1)
-
-        try:
-            vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(instance.pk), create_user=usr)
-            trans_real.activate('ru') #activate russian locale
-            res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
-            trans_real.deactivate() #deactivate russian locale
-            vac.reindexItem()
-            if not res:
-                vac.delete()
-                return False
+        if not Vacancy.objects.filter(c2p__parent=dep.pk).exists():
             try:
-                Relationship.objects.create(parent=instance, child=vac, type='hierarchy', create_user=usr)
-                #add current user to default Vacancy
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=usr)
+                    vac.reindexItem()
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                          str(dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
             except Exception as e:
-                print('Can not create Relationship between Vacancy ID:'+vac.pk+'and Department ID:'+instance.pk+'. The reason is:'+e)
-                vac.delete()
-        except Exception as e:
-            print('Can not create Vacancy for Department ID:'+instance.pk+'. The reason is:'+e)
-            pass
+                print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
+                pass
