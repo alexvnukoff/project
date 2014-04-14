@@ -382,6 +382,31 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     return True
 
 
+#@shared_task
+def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+    form = ItemForm('Resume', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+    resume = form.save(user, site_id)
+    if resume:
+        Relationship.objects.filter(parent=Cabinet.objects.get(user=user), child=resume).delete()
+        Relationship.setRelRelationship(parent=Cabinet.objects.get(user=user), child=resume, type='dependence', user=user)
+
+
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True
+
+
 
 @shared_task
 def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
