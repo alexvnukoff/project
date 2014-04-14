@@ -6,7 +6,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         '''
-            Move Users from community groups ('ORG-') and attach User's Cabinets to Vacancy
+            Update Relationship type from 'hierarchy' to 'relation' between Cabinets and Vacancies
         '''
         print('Update Relationship type between Vacancies and Cabinets...')
         cab_list = Cabinet.objects.all()
