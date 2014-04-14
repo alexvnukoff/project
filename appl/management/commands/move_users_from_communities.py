@@ -195,7 +195,7 @@ class Command(NoArgsCommand):
             if len(usr_list):
                 for usr in usr_list:
                     if Cabinet.objects.filter(user=usr).exists():
-                        cab = Cabinet.objects.get(name=usr)
+                        cab = Cabinet.objects.get(user=usr)
                     else:
                         try:
                             cab = Cabinet.objects.create(user=usr, create_user=usr)
