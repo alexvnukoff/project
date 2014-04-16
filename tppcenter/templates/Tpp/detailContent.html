@@ -53,7 +53,8 @@
         <!-- add Staff (popup window) -->
         $(document).on('click','#user-add-button', function(){
             $('#fade-profile').show();
-            $('.staffadd').show();
+            $('#popup-context').load("{% url "tpp:tab_staff" item_id %} .staffaddin");
+            $('#add-dep-popup').show();
             return false;
 		});
     });
