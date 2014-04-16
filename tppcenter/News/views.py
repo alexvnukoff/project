@@ -30,6 +30,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
          return HttpResponseNotFound()
 
     description = ""
+    add_news = False
     title = ""
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -48,6 +49,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             newsPage = result[0]
             description = result[1]
             title = result[2]
+            add_news = True
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -68,7 +70,9 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'addNew': reverse('news:add'),
             'description': description,
-            'title': title
+            'title': title,
+            'add_news': add_news
+
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -77,7 +81,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         serialize = {
             'styles': styles,
             'scripts': scripts,
-            'content': newsPage
+            'content': newsPage,
+
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -294,7 +299,8 @@ def _getdetailcontent(request, item_id):
             'newValues': newValues,
             'photos': photos,
             'similarValues': similarValues,
-            'item_id': item_id
+            'item_id': item_id,
+
         }
 
         context = RequestContext(request, templateParams)
