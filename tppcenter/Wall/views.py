@@ -51,7 +51,7 @@ def _wallContent(request):
     func.addDictinoryWithCountryAndOrganization(products, productsValues)
 
     #---------------News---------------------------------#
-    #PAYATTENTION HARDCODED CATEGORY
+    #PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
     news = list(News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).exclude(c2p__parent=exlude_category).order_by('-pk').values_list('pk', flat=True)[:3])
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
