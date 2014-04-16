@@ -572,7 +572,13 @@ def _tabsStructure(request, tpp, page=1):
         departmentForDeletion = 0
 
     if departmentForDeletion > 0:
-        Department.objects.filter(pk=departmentForDeletion).delete()
+        dep_lst = Department.objects.filter(pk=departmentForDeletion)
+        for d in dep_lst:
+            try:
+                d.delete()
+            except Exception as e:
+                print('Can not delete Department. The reason is: ' + str(e))
+                pass
 
     #check if there Department for adding
     departmentToChange = request.POST.get('departmentName', '')
