@@ -1,0 +1,48 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+ {% include "main/local_menu_script.html" %}
+<div class="container">
+    <div class="companies">
+
+
+
+            <ul class="tender-list">
+                {% for id , attr in resumeValues.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.SLUG.0 as slug %}
+                    {% with attr.CREATE_DATE.0 as date %}
+                    <li>
+
+
+                    <div class="blockbox">
+                            <a href="#"><i class="btn-afisha imgnews"></i></a>
+                            <div class="localmenu">
+
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'resume:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+
+
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'resume:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+
+                            </div>
+                        </div>
+
+                        <div class="title">
+
+                            <font class="name">{% trans 'Date of publication' %}: {{ date|date:"d M Y" }}</font>
+                        </div>
+                        <h2><a href="{% url "resume:detail" slug %}" >{{ name }}</a></h2>
+
+                        <a href="{% url "resume:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% empty %}
+                    <div class="no-results">{% trans "No results found" %}</div>
+                {% endfor %}
+
+            </ul>
+
+    </div>
+</div>

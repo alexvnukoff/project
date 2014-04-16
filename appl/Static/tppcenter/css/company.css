@@ -125,6 +125,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .tender-info ul.inforesume li{ float:left; width:100%; margin:8px 0 0 0;}
 .tender-info ul.inforesume li label{ float:left; width:115px; color:#9b9b9b;}
 .tender-info ul.inforesume li .right{ float:left; color:#000; font-weight:bold;}
+.tender-info ul.inforesume li .resume{ float:left; color:#000; font-weight:bold;margin-left: -40px;width: 90px;}
 
 .vacancy-list{ position: relative; float: left; width: 100%;}
 .vacancy-list li{ position: relative; float: left; width: 516px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
