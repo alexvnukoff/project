@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-16 13:43+0000\n"
-"PO-Revision-Date: 2014-04-16 11:05+0200\n"
+"PO-Revision-Date: 2014-04-16 16:46+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3192,9 +3192,8 @@ msgid "Similar news"
 msgstr "Похожие новости"
 
 #: tppcenter/templates/News/last.html:9
-#, fuzzy
 msgid "Last News"
-msgstr "Фамилия"
+msgstr "Последние новости"
 
 #: tppcenter/templates/Products/addForm.html:141
 #: tppcenter/templates/Products/addForm.html:206
