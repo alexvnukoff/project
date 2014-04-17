@@ -242,6 +242,7 @@ $(document).ready(function()
 
     $(document).on('click', ".contact-us", function()
     {
+        $('#send_succsefuly').hide()
 	    document.getElementById('light-contact').style.display='block';
         document.getElementById('fade-contact').style.display='block';
         var company_name = $(this).data('name');
@@ -253,9 +254,16 @@ $(document).ready(function()
 
     $(document).on('click', "#send-message", function()
     {
-
-        $("#messageToCompany").ajaxSubmit({url: '/companies/send/', type: 'post'});
+        $('#send_succsefuly').text("Please wait to response.....").show();
+        $("#messageToCompany").ajaxSubmit({
+            url: '/companies/send/',
+            type: 'post',
+            success:function(data) {
+                    $('#send_succsefuly').text(data).show()
+            }
+        });
         $("#messageToCompany")[0].reset();
+
 
 
 
