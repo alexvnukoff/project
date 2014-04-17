@@ -44,10 +44,7 @@ function updateURLParameter(param, paramVal, url)
     return baseURL + "?" + newAdditionalURL + rows_txt;
 }
 
-
-$(document).ready(function()
-{
-       function getCookie(name) {
+function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie != '') {
                 var cookies = document.cookie.split(';');
@@ -83,6 +80,8 @@ $(document).ready(function()
                 !(/^(\/\/|http:|https:).*/.test(url));
         }
 
+$(document).ready(function()
+{
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {

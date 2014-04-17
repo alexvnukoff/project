@@ -1,15 +1,16 @@
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet, Vacancy
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
+from core.amazonMethods import add
 from haystack.query import SQ, SearchQuerySet
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
@@ -769,3 +770,23 @@ def deleteCompany(request, item_id):
     instance.reindexItem()
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
+
+@login_required(login_url='/login/')
+def _tabsGallery(request, company):
+
+    company = get_object_or_404(Company, pk=company)
+
+    try:
+        file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
+        instance = Gallery(photo=file, create_user=request.user)
+        instance.save()
+        Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
+
+        template = loader.get_template('Companies/tabGalleryPhoto.html')
+        context = RequestContext(request, {'photo': file})
+        photo = template.render(context)
+
+        return HttpResponse(photo)
+    except Exhibition:
+        return HttpResponseBadRequest()
+
