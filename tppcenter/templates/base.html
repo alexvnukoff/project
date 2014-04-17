@@ -42,6 +42,7 @@
             <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
             <script  type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+            <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
 
 
             <!-- Yandex.Metrika counter -->
@@ -156,5 +157,36 @@
      }
      ga('send', 'pageview');
     </script>
+<div class="white_content" id="light-contact">
+    <div class="contact-table">
+        <div class="contact-tablein">
+        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+          <form id="messageToCompany"  enctype="multipart/form-data">
+            <ul class="contactform">
+            	<li>
+                	<label>{% trans 'To' %}:</label>
+                    <label id="send_to" ></label>
+                </li>
+                <li>
+                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                </li>
+                <li>
+                	<label>{% trans 'File' %}</label>
+                    <input name="file" type="file" />
+                    <input name="company" id="toCompany" type="hidden" />
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+            </ul>
+          </form>
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-contact"></div>
 </body>
 </html>

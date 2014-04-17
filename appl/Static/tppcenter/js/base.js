@@ -240,6 +240,27 @@ $(document).ready(function()
 	});
     */
 
+    $(document).on('click', ".contact-us", function()
+    {
+	    document.getElementById('light-contact').style.display='block';
+        document.getElementById('fade-contact').style.display='block';
+        var company_name = $(this).data('name');
+        var company_id = $(this).data('id');
+        $("#toCompany").val(company_id);
+        $('#send_to').text(company_name);
+
+	});
+
+    $(document).on('click', "#send-message", function()
+    {
+
+        $("#messageToCompany").ajaxSubmit({url: '/companies/send/', type: 'post'});
+        $("#messageToCompany")[0].reset();
+
+
+
+	});
+
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
