@@ -1,3 +1,5 @@
+from django.core.mail import EmailMessage
+from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
                         Branch, Tpp, InnovationProject, Cabinet, Vacancy
@@ -831,3 +833,40 @@ def deleteCompany(request, item_id):
     instance.reindexItem()
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
+
+
+def sendMessage(request):
+    response = ""
+    if request.is_ajax():
+        if request.user.is_authenticated() and request.POST.get('company', False):
+            if request.POST.get('message', False) or request.FILES.get('file', False):
+                company_pk = request.POST.get('company')
+
+                email = Company.objects.get(pk=int(company_pk)).getAttributeValues('EMAIL')
+                if len(email) == 0:
+                    email = 'admin@tppcenter.com'
+                    subject = _('This message was sent to company with id:') + company_pk
+                else:
+                    email = email[0]
+                    subject = _('New message')
+                mail = EmailMessage(subject, request.POST.get('message', ""), ['noreply@tppcenter.com'], [email])
+                attachment = request.FILES.get('file', False)
+                if attachment:
+                   mail.attach(attachment.name, attachment.read(), attachment.content_type)
+                mail.send()
+                response = _('You have successfully sent the message.')
+
+            else:
+                response = _('Message or file are required')
+        else:
+             response = _('Only registred users can send the messages')
+
+        return HttpResponse(response)
+
+
+
+
+
+
+
+

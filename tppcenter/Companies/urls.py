@@ -20,6 +20,7 @@ urlpatterns = patterns('',
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "update"}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "delete"}, name="delete"),
      url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Companies.views.get_companies_list, name="detail"),
+     url(r'^send/$', tppcenter.Companies.views.sendMessage),
 
 
 
