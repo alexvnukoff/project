@@ -493,7 +493,7 @@ class Item(models.Model):
                 if Item.objects.filter(c2p__parent__c2p__parent__organization__isnull=False, pk=cab_pk).exists():
                     #get Organization ID
                     org_lst = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab_pk).values('pk')
-                    #rs = None
+
                     for org_pk in org_lst:
                         # if object SELF belongs to the same Company or it is Company itself or belongs to User's TPP or to TPP's parent TPP...
                         if org_pk['pk'] == self.pk or \

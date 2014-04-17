@@ -89,7 +89,7 @@
                 <select id="dep-list" style="width:62%;">
                     {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as department %}
-                        <option value="{{ id }}">{{ department }}</option>
+                        <option value="{{ id }}" id="{{ id }}">{{ department }}</option>
                     {% endwith %}
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
@@ -99,7 +99,9 @@
                 <select id="vacancy-list" style="width:62%;">
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
-                        <option value="{{ id }}">{{ vacancy }}</option>
+                    {% with attr.DEPARTMENT_ID|first as dep_id %}
+                        <option value="{{ dep_id }}_{{ id }}" id="{{ dep_id }}_{{ id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                    {% endwith %}
                     {% endwith %}
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
@@ -107,6 +109,9 @@
                 </select>
                 <input type="checkbox" name="AdminFlag" value="isAdmin" id="is-admin">{% trans "Administrator" %}
                 <div class="inputadd">
+                    {% if errorMessage %}
+                        <div class="error-handler"> <div class="formserror">{{ errorMessage }}</div></div>
+                    {% endif %}
                     <input type="text" name="" id="user-name" value="" class="text" />
                 </div>
                 <div class="formadd-button">
