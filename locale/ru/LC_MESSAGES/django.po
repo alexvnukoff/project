@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-17 10:17+0000\n"
-"PO-Revision-Date: 2014-04-16 16:46+0200\n"
+"PO-Revision-Date: 2014-04-17 13:27+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2055,26 +2055,23 @@ msgstr "Бизнес предложения"
 
 #: tppcenter/Companies/views.py:834
 msgid "This message was sent to company with id:"
-msgstr ""
+msgstr "Сообщение отправлено компании с  id"
 
 #: tppcenter/Companies/views.py:837
-#, fuzzy
 msgid "New message"
-msgstr "Отправить личное сообщение"
+msgstr "Новое сообщение от Tppcenter"
 
 #: tppcenter/Companies/views.py:843 tppcenter/templates/base.html:169
-#, fuzzy
 msgid "You have successfully sent the message."
-msgstr "Вы удачно зарегистрировались на мероприятие"
+msgstr "Ваше сообщение было успешно отправлено"
 
 #: tppcenter/Companies/views.py:846
-#, fuzzy
 msgid "Message or file are required"
-msgstr "Имя и Адрес электронной почты обязательны."
+msgstr "Напишите текст сообщения или присоедините файл"
 
 #: tppcenter/Companies/views.py:848
 msgid "Only registred users can send the messages"
-msgstr ""
+msgstr "Только зарегистрированные пользователи могут отправлять сообщения."
 
 #: tppcenter/Greetings/views.py:35 tppcenter/templates/base.html:115
 #: tppcenter/templates/index.html:380
@@ -2256,9 +2253,8 @@ msgstr ""
 "предпринимателей и промышленников."
 
 #: tppcenter/templates/base.html:174
-#, fuzzy
 msgid "Send message to"
-msgstr "Отправить личное сообщение"
+msgstr "Отправить сообщение"
 
 #: tppcenter/templates/base.html:182
 msgid "File"
