@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
                         Branch, Tpp, InnovationProject, Cabinet, Vacancy
@@ -817,3 +818,11 @@ def deleteCompany(request, item_id):
     instance.reindexItem()
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
+
+
+def sendMessage(request):
+     if request.is_ajax():
+         if request.user.is_authenticated():
+             pass
+
+     return HttpResponse()
