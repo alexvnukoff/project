@@ -106,9 +106,36 @@
     });
 </script>
 
-<!-- script for Staff adding -->
 <script type="text/javascript">
     $(function(){
+        // pull Vacancies related to selected Department
+/*        $('#dep-list').combobox({
+            selected: function(event, ui) {
+                var vacApto=$('#vacancy-list .'+ui.item.option.id).eq(0).val();
+                $('#vacancy-list').val(vacApto);
+                $('#input_city').val($('#vacancy-list option:selected').text());
+
+                var Widget=$('#input_city').combobox("widget").find('li');
+                Widget.each(function() {
+                    if($(this).hasClass(ui.item.option.id)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+
+        $('#vacancy-list').combobox({
+            selected: function(event, ui) {
+                console.log(ui.item.option.value);
+                $('#dep-list').val(ui.item.option.className);
+                $('#input_country').val($('#dep-list option:selected').text());
+                $('#vacancy-list').attr({'class':ui.item.option.className});
+            }
+        });
+*/
+        // Staff adding from popup
 	    $(document).on('click','#btn-add-user', function(){
 
             var userEmail = $('#user-name').val();
@@ -125,14 +152,13 @@
             }
 
             var contentHolder = $('#staff-tab .tpp-dt-content');
-
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
             $.post("{% url "companies:tab_staff" item_id %}",
                     {departmentName: departmentName, userEmail: userEmail, vacancyName: vacancyName, isAdmin: isAdmin},
                     function(data){
                         contentHolder.replaceWith(data);
-                    }, 'html');
+                        }, 'html');
 
             $('#dep-list:eq(0)').attr('selected','selected');
             $('#fade-profile').hide();
@@ -145,7 +171,7 @@
 <script type="text/javascript">
     var prevDepName = '';
     $(function(){
-        <!-- press Add button -->
+        // press Add button
 	    $(document).on('click','#btn-add-depart', function()
         {
             var inputField = $('#dep-name');

@@ -527,6 +527,7 @@ def _tabsStaff(request, company, page=1):
         Show content of the Company-details-staff panel
     '''
     # get Cabinet ID if user should be detach from Organization
+    errorMessage = ''
     cabinetToDetach = request.POST.get('cabinetID', 0)
 
     try:
@@ -566,26 +567,28 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
-                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                    if res:
-                        try:
-                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
-                                                'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                            group = Group.objects.get(name='Company Creator')
-                            usr.is_manager = True
-                            usr.save()
-                            group.user_set.add(usr)
-                        except Exception as e:
-                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                        # if no attached Cabinets to this Vacancy then ...
+                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                        if res:
+                            try:
+                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
+                                                    'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
+                                group = Group.objects.get(name='Company Creator')
+                                usr.is_manager = True
+                                usr.save()
+                                group.user_set.add(usr)
+                            except Exception as e:
+                                print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
 
-                    if isAdmin:
-                        flag = True
+                        if isAdmin:
+                            flag = True
+                        else:
+                            flag = False
+                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                               create_user=usr)
                     else:
-                        flag = False
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                       create_user=request.user)
-                else:
-                    pass
+                        errorMessage = 'You can not add user at vacancy which already busy.'
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
@@ -633,6 +636,16 @@ def _tabsStaff(request, company, page=1):
         vacanciesList = []
     else:
         vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+        # correlation between Departments and Vacancies
+        correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child'))
+
+        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
+        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
+            for t in correlation: #lookup into correlation list
+                if t[1] == vac_id: #if Vacancy ID is equal then...
+                    #... add a new key into Vacancy attribute dictionary
+                    vac_att['DEPARTMENT_ID'] = [t[0]]
+                    break
 
     comp = Company.objects.get(pk=company)
     permissionsList = comp.getItemInstPermList(request.user)
@@ -646,6 +659,7 @@ def _tabsStaff(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
+        'errorMessage': errorMessage,
     }
 
     return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))
