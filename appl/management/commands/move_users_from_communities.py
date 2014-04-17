@@ -100,7 +100,7 @@ class Command(NoArgsCommand):
                         is_admin = False
 
                     try:
-                        Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                        Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                     is_admin=is_admin, create_user=usr)
                         g.user_set.remove(usr)
                         count += 1
@@ -166,7 +166,7 @@ class Command(NoArgsCommand):
                             is_admin = False
 
                         try:
-                            Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                            Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                         is_admin=is_admin, create_user=usr)
                             g.user_set.remove(usr)
                             count += 1
@@ -195,7 +195,7 @@ class Command(NoArgsCommand):
             if len(usr_list):
                 for usr in usr_list:
                     if Cabinet.objects.filter(user=usr).exists():
-                        cab = Cabinet.objects.get(name=usr)
+                        cab = Cabinet.objects.get(user=usr)
                     else:
                         try:
                             cab = Cabinet.objects.create(user=usr, create_user=usr)
@@ -268,7 +268,7 @@ class Command(NoArgsCommand):
                         is_admin = False
 
                     try:
-                        Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                        Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                     is_admin=is_admin, create_user=usr)
                         g.user_set.remove(usr)
                         count += 1
@@ -329,7 +329,7 @@ class Command(NoArgsCommand):
                             is_admin = False
 
                         try:
-                            Relationship.objects.create(parent=vac, child=cab, type='hierarchy',
+                            Relationship.objects.create(parent=vac, child=cab, type='relation',
                                                         is_admin=is_admin, create_user=usr)
                             g.user_set.remove(usr)
                             count += 1

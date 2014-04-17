@@ -3,7 +3,7 @@ __author__ = 'user'
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization
+from appl.models import Cabinet, Organization, News, NewsCategories
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -52,6 +52,7 @@ def getMyCompaniesList(context):
     current_company = request.session.get('current_company', False)
 
     cab = Cabinet.objects.get(user=request.user)
+    #read all Organizations which hasn't foreign key from Department and current User is create user or worker
     companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
                                             Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
@@ -94,3 +95,15 @@ def userProfile(context):
         'cabinetValues': cabinetValues
     }
 
+@register.inclusion_tag('News/last.html', takes_context=True)
+def getLastNews(context):
+
+    request = context.get('request')
+    MEDIA_URL = context.get('MEDIA_URL', '')
+
+    news = list(News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).order_by('-pk').values_list('pk', flat=True)[:3])
+    newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
+
+
+
+    return {'MEDIA_URL': MEDIA_URL,  'newsValues': newsValues }

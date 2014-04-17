@@ -20,6 +20,7 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
 from django.core.cache import cache
+from django.utils.translation import trans_real
 import logging
 logger = logging.getLogger('django.request')
 
@@ -571,23 +572,53 @@ def _tabsStructure(request, tpp, page=1):
         departmentForDeletion = 0
 
     if departmentForDeletion > 0:
-        Department.objects.filter(pk=departmentForDeletion).delete()
+        dep_lst = Department.objects.filter(pk=departmentForDeletion)
+        for d in dep_lst:
+            try:
+                d.delete()
+            except Exception as e:
+                print('Can not delete Department. The reason is: ' + str(e))
+                pass
 
     #check if there Department for adding
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
+        usr = request.user
         #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
             #check is there department with 'old' name
             obj_dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title="NAME", item2value__title=prevDepName)
         except:
-            obj_dep = Department.objects.create(title=departmentToChange, create_user=request.user)
-            Relationship.setRelRelationship(comp, obj_dep, request.user, type='hierarchy')
+            obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
+            Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
 
-        obj_dep.setAttributeValue({'NAME': departmentToChange}, request.user)
+        obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
+
+        if not Vacancy.objects.filter(c2p__parent=obj_dep.pk).exists():
+            try:
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                            str(obj_dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
+            except Exception as e:
+                print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
+                pass
+
         obj_dep.reindexItem()
+        vac.reindexItem()
 
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
     attr = ('NAME', 'SLUG')

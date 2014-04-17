@@ -157,6 +157,7 @@ def registerToExebition(request):
         message_position = (_('on the position of %(position)s . ') % {'position': request.POST.get('POSITION')}) if request.POST.get('POSITION', False) else ""
         message_email = _('You can contact him at this email address %(email)s  ') % {"email": request.POST.get('EMAIL')}
         message = (message_name + message_company + message_position + message_email)
+
         send_mail(_('Registartion to event'), message, 'noreply@tppcenter.com',
                             [adminEmail], fail_silently=False)
         if companyEmail:
