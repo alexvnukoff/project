@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-18 06:03+0000\n"
-"PO-Revision-Date: 2014-04-18 09:06+0200\n"
+"PO-Revision-Date: 2014-04-18 09:09+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3008,7 +3008,6 @@ msgstr "Отдел"
 
 #: tppcenter/templates/Companies/tabStaff.html:14
 #: tppcenter/templates/Tpp/tabStaff.html:14
-#, fuzzy
 msgid "Joined Date"
 msgstr "Дата включения"
 
