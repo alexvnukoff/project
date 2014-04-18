@@ -338,20 +338,23 @@ def setCountries(context):
 def rightTv(context):
 
   request = context.get('request')
-
-  sqs = func.getActiveSQS().models(TppTV)
-
-  if sqs.count() > 0:
-    sqs = sqs.order_by('-id')[0]
-    tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
-    template = loader.get_template('main/tv.html')
-    context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
-    tv = template.render(context)
-
-    return tv
-
+  if request.resolver_match.namespace == 'innov':
+      is_innov = True
+      tvValues  = ""
   else:
-      return ''
+      sqs = func.getActiveSQS().models(TppTV)
+      if sqs.count() == 0:
+          return ''
+      else:
+          sqs = sqs.order_by('-id')[0]
+          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
+          tvValues = tvValues[sqs.id]
+          is_innov = False
+  template = loader.get_template('main/tv.html')
+  context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov })
+  tv = template.render(context)
+  return tv
+
 
 @register.simple_tag(takes_context=True)
 def searchQuery(context):
