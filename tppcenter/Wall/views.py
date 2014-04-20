@@ -21,7 +21,7 @@ def get_wall_list(request):
 
 def _wallContent(request):
     #------------------Innov--------------------------#
-    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")
+    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:3]
     innov_ids = [project.id for project in innov_projects]
     innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
