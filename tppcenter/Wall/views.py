@@ -21,10 +21,11 @@ def get_wall_list(request):
 
 def _wallContent(request):
     #------------------Innov--------------------------#
-    innov_projects = list(InnovationProject.active.get_active().order_by('-pk').values_list('pk', flat=True)[:3])
-    innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_projects)
+    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")
+    innov_ids = [project.id for project in innov_projects]
+    innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
-    branches = Branch.objects.filter(p2c__child__in=innov_projects).values('p2c__child', 'pk')
+    branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
     branches_ids = [branch['pk'] for branch in branches]
     branchesList = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
@@ -33,7 +34,7 @@ def _wallContent(request):
     for branch in branches:
         branches_dict[branch['p2c__child']] = branch['pk']
 
-    func.addDictinoryWithCountryAndOrganization(innov_projects, innovValues)
+    func.addDictinoryWithCountryAndOrganizationToInnov(innov_ids, innovValues)
 
     for id, innov in innovValues.items():
 
@@ -46,29 +47,33 @@ def _wallContent(request):
 
 
     #----------------Product----------------------------#
-    products = list(Product.active.get_active().order_by('-pk').values_list('pk', flat=True)[:4])
-    productsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), products)
-    func.addDictinoryWithCountryAndOrganization(products, productsValues)
+    products = func.getActiveSQS().models(Product).order_by("-obj_create_date")[:4]
+    products_ids = [product.id for product in products]
+    productsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), products_ids)
+    func.addDictinoryWithCountryAndOrganization(products_ids, productsValues)
 
     #---------------News---------------------------------#
     #PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
-    news = list(News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).exclude(c2p__parent=exlude_category).order_by('-pk').values_list('pk', flat=True)[:3])
-    newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
-    func.addDictinoryWithCountryAndOrganization(news, newsValues)
+    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:3]
+    news_ids = [new.id for new in news]
+    newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news_ids)
+    func.addDictinoryWithCountryAndOrganization(news_ids, newsValues)
 
 
     #---------------BusinessProposal--------------------#
-    proposals = list(BusinessProposal.active.get_active().order_by('-pk').values_list('pk', flat=True)[:3])
-    proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals)
-    func.addDictinoryWithCountryAndOrganization(proposals, proposalsValues)
+    proposals = func.getActiveSQS().models(BusinessProposal).order_by("-obj_create_date")[:3]
+    proposals_ids = [proposal.id for proposal in proposals]
+    proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals_ids)
+    func.addDictinoryWithCountryAndOrganization(proposals_ids, proposalsValues)
 
 
     #--------------Exhibitions--------------------------#
-    exhibitions = list(Exhibition.active.get_active().order_by('-pk').values_list('pk', flat=True)[:3])
+    exhibitions = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:3]
+    exhibitions_ids = [exhibition.id for exhibition in exhibitions]
     exhibitionsValues = Item.getItemsAttributesValues(('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
-                                                       'END_EVENT_DATE', 'SLUG'), exhibitions)
-    func.addDictinoryWithCountryAndOrganization(exhibitions, exhibitionsValues)
+                                                       'END_EVENT_DATE', 'SLUG'), exhibitions_ids)
+    func.addDictinoryWithCountryAndOrganization(exhibitions_ids, exhibitionsValues)
 
 
     template = loader.get_template('Wall/contentPage.html')
