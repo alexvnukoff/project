@@ -718,6 +718,7 @@ def addCompany(request):
 
         values = {}
         values.update(request.POST)
+        values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
@@ -786,6 +787,7 @@ def updateCompany(request, item_id):
 
         values = {}
         values.update(request.POST)
+        values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
