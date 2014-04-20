@@ -826,6 +826,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         queueID  : 'queue'
     },
 
+    loadURL: '/',
+
     fail_upload : '',
 
     lang : {
@@ -835,7 +837,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         wasUploaded: ''
     },
 
-    init : function(lang, swf, image, upload_url)
+    init : function(lang, swf, image, upload_url, loadURL)
     {
         galleryUpload.lang = lang;
 
@@ -849,6 +851,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
         galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
         galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
+
+        galleryUpload.loadURL = loadURL;
 
 
         $('#file_upload').uploadify(galleryUpload.options);
@@ -867,7 +871,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         queue.find('span').append( ' - ' + galleryUpload.lang.success );
         queue.css('color', 'green');
 
-        $('.tpp-gallery').prepend(data);
+        //$('.tpp-gallery').prepend(data);
     },
 
     onUploadError : function(file) {
@@ -884,6 +888,12 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         if ( queueData.uploadsErrored > 0 )
         {
             alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
+        }
+
+        if ( queueData.uploadsSuccessful > 0 ) {
+            $.GET(galleryUpload.loadURL, function(data) {
+                $('.tpp-gallery').replaceWith(data);
+            });
         }
 
         galleryUpload.fail_upload = '';

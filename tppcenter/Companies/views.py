@@ -824,17 +824,27 @@ def _tabsGallery(request, company):
 
     company = get_object_or_404(Company, pk=company)
 
-    try:
-        file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
-        instance = Gallery(photo=file, create_user=request.user)
-        instance.save()
-        Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
 
-        template = loader.get_template('Companies/tabGalleryPhoto.html')
-        context = RequestContext(request, {'photo': file})
-        photo = template.render(context)
+    file = request.FILES.get('Filedata', None)
 
-        return HttpResponse(photo)
-    except Exhibition:
-        return HttpResponseBadRequest()
+    if file is not None:
+
+        permissionsList = company.getItemInstPermList(request.user)
+
+        if 'change_company' in permissionsList:
+
+            try:
+                file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
+                instance = Gallery(photo=file, create_user=request.user)
+                instance.save()
+
+                Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
+
+                return HttpResponse('')
+            except Exhibition:
+                return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+    else:
+        return render_to_response()
 
