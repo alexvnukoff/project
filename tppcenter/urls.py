@@ -4,7 +4,8 @@ from django.contrib import admin
 from loginas.views import user_login
 #from tppcenter.sitemaps import all_sitemaps as sitemaps
 from django.conf import settings
-
+from tpp.SiteUrlMiddleWare import get_request
+from appl.func import show_toolbar
 
 import tppcenter.views
 import tppcenter.News.urls
@@ -119,8 +120,9 @@ urlpatterns = patterns('',
 
 )
 
+request = get_request()
 
-if settings.DEBUG:
+if show_toolbar(request):
     import debug_toolbar
     urlpatterns += patterns('',
         url(r'^__debug__/', include(debug_toolbar.urls)),
