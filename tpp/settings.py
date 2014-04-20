@@ -53,7 +53,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
+            'include_html': False,
         }
     },
     'loggers': {
@@ -78,7 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'django.contrib.sitemaps',
+    #'django.contrib.sitemaps',
     'registration',
     'modeltranslation',
     'south',

@@ -10,6 +10,7 @@
         {% block  meta%}
 
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta name='yandex-verification' content='7036efbb8c82d0da' />
 
             {% block description %}
              <meta name="description" content="Программа развития и продвижения предпринимательства,
@@ -31,7 +32,7 @@
             <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
             <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
                <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/flags.css"%}" />
-            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" >
+            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
         {% endblock %}
 
         {% block js %}
@@ -41,8 +42,10 @@
             </script>
 		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
             <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
             <script  type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
 
 
             <!-- Yandex.Metrika counter -->
@@ -157,12 +160,42 @@
      }
      ga('send', 'pageview');
     </script>
-        <div id="stats">
-            <!-- STATS: Total: %(totTime).2fs <br/>
-                Python: %(pyTime).2fs <br/>
-                DB: %(dbTime).2fs <br/>
-                Queries: %(queries)d -->
-        </div>
+<div style="display: none;" class="white_content" id="light-contact">
+    <div class="contact-table">
+        <div class="contact-tablein">
+        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+          <form id="messageToCompany"  enctype="multipart/form-data">
 
+            <ul class="contactform">
+                <li style="text-align: center;">
+                    <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+                </li>
+
+
+            	<li>
+                	<label>{% trans 'Send message to' %}:</label>
+                    <label id="send_to" ></label>
+                </li>
+                <li>
+                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                </li>
+                <li>
+                	<label>{% trans 'File' %}</label>
+                    <input name="file" type="file" />
+                    <input name="company" id="toCompany" type="hidden" />
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+            </ul>
+          </form>
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-contact"></div>
 </body>
 </html>

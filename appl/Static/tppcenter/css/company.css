@@ -425,3 +425,15 @@ rgb(33,136,187) 100%);}
 .menucategoriesin .slimScrollBar{ background:#E6E6E6!important; z-index:1!important;}
 .submenu{ position:absolute; clearfix:after;}
 .btn-afisha{ position: absolute; width: 34px; height: 35px; background-position: -266px -60px; top: 0; right: 0;}
+
+
+.contact-table{ width:584px; margin:0 auto;}
+.contact-tablein{ position:relative; float:left; width:100%; background-color:#FFF; border-radius:3px; padding:25px 0;}
+.contactform{ position:relative; float:left; width:100%;}
+.contactform li{ position:relative; float:left; width:80%; margin:15px 0 0 40px; color:#595959; display:inline;}
+.contactform li label{ position:relative; float:left; width:100%; font-weight:bold; padding-bottom:6px;}
+.contactform li .editor{ float:left; border:1px #bdbdbd solid;}
+.contactform li.end{ text-align:center;}
+.contactform li.end .btntype1, .contactform li.end .btntype2{ font-size:17px; padding:8px 40px;}
+.closecontact{ position:absolute;}
+

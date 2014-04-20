@@ -494,7 +494,7 @@ class Item(models.Model):
                 if Item.objects.filter(c2p__parent__c2p__parent__organization__isnull=False, pk=cab_pk).exists():
                     #get Organization ID
                     org_lst = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab_pk).values('pk')
-                    #rs = None
+
                     for org_pk in org_lst:
                         # if object SELF belongs to the same Company or it is Company itself or belongs to User's TPP or to TPP's parent TPP...
                         if org_pk['pk'] == self.pk or \
@@ -516,12 +516,12 @@ class Item(models.Model):
                                             group_list.append('Staff')
 
                         else: #User and SELF belongs to different Organization without any correlation
-                            group_list = []
+                            pass
 
                 else: # Cabinet still do not attach to any Organization
-                    group_list = []
+                    pass
             else: # if User without Cabinet (before first login or unregistered)
-                group_list = []
+                pass
 
         # get all permissions from all related groups for current type of item
         group_list = list(set(group_list)) # remove duplicated keys in groups list
