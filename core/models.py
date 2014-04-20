@@ -515,12 +515,12 @@ class Item(models.Model):
                                             group_list.append('Staff')
 
                         else: #User and SELF belongs to different Organization without any correlation
-                            group_list = []
+                            pass
 
                 else: # Cabinet still do not attach to any Organization
-                    group_list = []
+                    pass
             else: # if User without Cabinet (before first login or unregistered)
-                group_list = []
+                pass
 
         # get all permissions from all related groups for current type of item
         group_list = list(set(group_list)) # remove duplicated keys in groups list
