@@ -54,13 +54,11 @@ def getMyCompaniesList(context):
     cab = Cabinet.objects.get(user=request.user)
     #read all Organizations which hasn't foreign key from Department and current User is create user or worker
 
-    if request.user.pk > 1:
-        companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
+    companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
                                                 Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
-        companies_ids = list(companies.values_list('pk', flat=True))
-    else:
-        companies_ids = []
+    companies_ids = list(companies.values_list('pk', flat=True))
+
 
     if current_company is not False and current_company not in companies_ids:
         companies_ids.append(current_company)
