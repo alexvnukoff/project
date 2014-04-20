@@ -57,7 +57,7 @@
 
     $(document).ready(function($) {
 
-       galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader);
+       //galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader);
     });
 </script>
 <!-- /Gallery uploader -->
@@ -108,7 +108,7 @@
 
 		    $(this).children().find(".btnremove-small").show();
 		});
-        
+
         $(document).on('mouseleave', '.table-staff tr', function(){
 		    $(this).children().find(".btnremove-small").hide();
 		});
@@ -451,6 +451,7 @@
                     -->
                     <div id="cpn-tabs-gallery">
                         <div class="tpp-dt-content">
+                        <!--
                             <div class="uploader">
                                 <form>
                                     <input id="file_upload" name="file_upload" type="file" multiple="true">
@@ -459,11 +460,15 @@
                                 </form>
                             </div>
                             <ul class="tpp-gallery">
-                                {% for photo in photos %}
-                                    {% include "Companies/tabGalleryPhoto.html" %}
-                                {% endfor %}
+                                {% comment %}
+                                    {% for photo in photos %}
+                                        {% include "Companies/tabGalleryPhoto.html" %}
+                                    {% endfor %}
+                                {% endcomment %}
                             </ul>
+                        -->
                         </div>
+
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">

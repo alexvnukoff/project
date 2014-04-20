@@ -1139,8 +1139,6 @@ def cachePisibility(request):
 
 def show_toolbar(request):
 
-    return True
-
     if request.user.is_authenticated():
         if request.user.is_superuser:
             return True
