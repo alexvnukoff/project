@@ -479,6 +479,7 @@ class Item(models.Model):
         '''
         group_list = []
         is_commando = getattr(user, 'is_commando', False) #Anonymous User has not attribute 'is_commando'
+
         if user.is_superuser or is_commando or self.create_user == user:
             group_list.append('Owner')
             group_list.append('Admin')

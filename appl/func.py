@@ -10,6 +10,7 @@ from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
 from django.core.cache import cache
+
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -1133,5 +1134,14 @@ def cachePisibility(request):
                     query.find('filter') == -1 and q == '':
 
             return True
+
+    return False
+
+def show_toolbar(request):
+
+    if request.user.is_authenticated():
+        if request.user.is_superuser:
+            return True
+
 
     return False

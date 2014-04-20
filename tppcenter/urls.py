@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
 #from tppcenter.sitemaps import all_sitemaps as sitemaps
+from django.conf import settings
 
 
 import tppcenter.views
@@ -30,6 +31,8 @@ import tppcenter.Analytic.urls
 import tppcenter.Greetings
 import tppcenter.Greetings.urls
 import tppcenter.Resume.urls
+import tppcenter.adminTpp
+import tppcenter.adminTpp.urls
 from tppcenter.News.views import NewsFeed
 
 
@@ -57,6 +60,8 @@ urlpatterns = patterns('',
     url(r'^resume/', include(tppcenter.Resume.urls, namespace='resume')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
+    url(r'^(admin-tpp/.+)$', include(tppcenter.Resume.urls, namespace='adminTpp')),
+
     url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
 
     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
@@ -64,6 +69,8 @@ urlpatterns = patterns('',
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
     url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
     url(r'^advtop/', include(tppcenter.AdvTop.urls, namespace='adv_top')),
+
+
 
 
     # url(r'^blog/', include('blog.urls')),
@@ -108,11 +115,16 @@ urlpatterns = patterns('',
     url(r'^filter/', tppcenter.views.jsonFilter),
     url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.setCurrent, name="setCurrent"),
 
-    url(r'^(upload/.+)$', tppcenter.views.redirectTo),
-    url(r'^(globus/.+)$', tppcenter.views.redirectTo)
+
 
 )
 
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
 #urlpatterns += patterns('',
 #        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
 #        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
