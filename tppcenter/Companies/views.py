@@ -2,16 +2,17 @@ from django.core.mail import EmailMessage
 from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet, Vacancy
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
+from core.amazonMethods import add
 from haystack.query import SQ, SearchQuerySet
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
@@ -567,28 +568,29 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
-                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                    #if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
                         # if no attached Cabinets to this Vacancy then ...
-                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                        if res:
-                            try:
-                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
+                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                    if res:
+                        try:
+                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
                                                     'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                                group = Group.objects.get(name='Company Creator')
-                                usr.is_manager = True
-                                usr.save()
-                                group.user_set.add(usr)
-                            except Exception as e:
-                                print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                            group = Group.objects.get(name='Company Creator')
+                            usr.is_manager = True
+                            usr.save()
+                            group.user_set.add(usr)
+                        except Exception as e:
+                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
 
-                        if isAdmin:
-                            flag = True
-                        else:
-                            flag = False
-                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                               create_user=usr)
+                    if isAdmin:
+                        flag = True
                     else:
-                        errorMessage = 'You can not add user at vacancy which already busy.'
+                        flag = False
+
+                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                               create_user=usr)
+                    #else:
+                    #    errorMessage = 'You can not add user at vacancy which already busy.'
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
@@ -836,6 +838,34 @@ def deleteCompany(request, item_id):
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 
+@login_required(login_url='/login/')
+def _tabsGallery(request, company):
+
+    company = get_object_or_404(Company, pk=company)
+
+
+    file = request.FILES.get('Filedata', None)
+
+    if file is not None:
+
+        permissionsList = company.getItemInstPermList(request.user)
+
+        if 'change_company' in permissionsList:
+
+            try:
+                file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
+                instance = Gallery(photo=file, create_user=request.user)
+                instance.save()
+
+                Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
+
+                return HttpResponse('')
+            except Exhibition:
+                return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+    else:
+        return render_to_response()
 
 def sendMessage(request):
     response = ""

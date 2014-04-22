@@ -815,3 +815,88 @@ uiEvents = {
         });
     }
 };
+
+var galleryUpload = { //Async gallery uploader (uploadify)
+
+    options : {
+        uploadLimit: 20,
+        height   : 130,
+        width    : 150,
+        auto     : true,
+        queueID  : 'queue'
+    },
+
+    loadURL: '/',
+
+    fail_upload : '',
+
+    lang : {
+        uploading: '',
+        success: '',
+        fail: '',
+        wasUploaded: ''
+    },
+
+    init : function(lang, swf, image, upload_url, loadURL)
+    {
+        galleryUpload.lang = lang;
+
+        galleryUpload.options['formData'] = {
+            csrfmiddlewaretoken : getCookie('csrftoken')
+        };
+        galleryUpload.options['swf'] = swf;
+        galleryUpload.options['uploader'] = upload_url;
+        galleryUpload.options['buttonImage'] = image;
+        galleryUpload.options['itemTemplate'] = galleryUpload.getQueueTemplate();
+        galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
+        galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
+        galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
+
+        galleryUpload.loadURL = loadURL;
+
+
+        $('#file_upload').uploadify(galleryUpload.options);
+
+    },
+
+    getQueueTemplate : function() {
+        return '<div id="${fileID}" class="uploadify-queue-item">' +
+                '<span class="fileName"><strong>' + galleryUpload.lang.uploading + '</strong>: ${fileName} (${fileSize})...' +
+                '</span></div>';
+    },
+
+    onUploadSuccess : function(file, data) {
+        var queue = $('#' + file.id);
+
+        queue.find('span').append( ' - ' + galleryUpload.lang.success );
+        queue.css('color', 'green');
+
+        //$('.tpp-gallery').prepend(data);
+    },
+
+    onUploadError : function(file) {
+        var queue = $('#' + file.id);
+
+        galleryUpload.fail_upload += file.name + "\r\n";
+
+        queue.find('span').append(' - ' + galleryUpload.lang.fail );
+        queue.css({color: 'red', fontWeight: 'bold'});
+    },
+
+    onQueueComplete : function(queueData) { //Show all failed uploads
+
+        if ( queueData.uploadsErrored > 0 )
+        {
+            alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
+        }
+
+        if ( queueData.uploadsSuccessful > 0 ) {
+            $.GET(galleryUpload.loadURL, function(data) {
+                $('.tpp-gallery').replaceWith(data);
+            });
+        }
+
+        galleryUpload.fail_upload = '';
+
+    }
+};

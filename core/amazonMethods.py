@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-from core.models import Item
 
 from appl import func
 from PIL import Image
@@ -7,11 +6,15 @@ from django.conf import settings
 from django.utils.timezone import now
 import tinys3
 import uuid
-import time
 import os
-from celery import shared_task
 import logging
+
 logger = logging.getLogger('django.request')
+
+def handle_uploaded_file(f, filePath):
+    with open(filePath, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 def add(imageFile=None, sizes=None):
 
@@ -36,13 +39,31 @@ def add(imageFile=None, sizes=None):
             expires = 60 * 60 * 24 * 7
 
             im = Image.open(imageFile)
+
+            try:
+                im.verify()
+            except:
+                raise Exception('File is not an image')
+
+            if not isinstance(imageFile, str):
+
+
+                filename = imageFile._get_name()
+                ext = filename.split('.')[-1]
+                filename = "%s.%s" % (name, ext)
+                filename = '%s/%s/%s' % (settings.MEDIA_ROOT, 'upload', str(filename))
+
+                handle_uploaded_file(imageFile, filename)
+
+                imageFile = filename
+
             requests = []
 
             x, y = im.size
             del im
 
-            if x > 800 or y > 800:
-                func.resize(imageFile, (800, 800), False, imageFile)
+            if x > 1000 or y > 1000:
+                func.resize(imageFile, (1000, 1000), False, imageFile)
 
             # Creating a pool connection
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,

@@ -411,6 +411,7 @@ class BasePhotoGallery(BaseModelFormSet):
         self.user = parent_id
 
         self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
+
     @transaction.atomic
     def save(self, parent=None, user=None,  commit=False):
         """
@@ -422,11 +423,13 @@ class BasePhotoGallery(BaseModelFormSet):
             items = Gallery.objects.filter(pk__in=self.toDelete).distinct()
             self.toDelete = [item.photo.name for item in items]
             items.delete()
+
         self.user = user
         sid = transaction.savepoint()
 
         try:
             instances = super(BasePhotoGallery, self).save(commit)
+
             for instance in instances:
                 instance.create_user = self.user
                 instance.save()
@@ -435,27 +438,29 @@ class BasePhotoGallery(BaseModelFormSet):
                 name = instance.photo.file.name
                 instance.photo.close()
                 file = add(imageFile=name)
+
                 self.files_to_delete.append(file)
                 instance.photo = file
                 instance.save()
 
-
-            instances_pk = [instance.pk for instance in instances]
-            bulkInsert = []
             item = Item.objects.get(pk=parent)
+
             for instance in instances:
-                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
-            if bulkInsert:
-                Relationship.objects.bulk_create(bulkInsert)
+                Relationship.setRelRelationship(parent=item, child=instance, user=user, type='dependence')
+
         except Exception:
             logger.exception("Error in gallery ",  exc_info=True)
+
             transaction.savepoint_rollback(sid)
+
             func.notify("error_creating", 'notification', user=user)
+
             if len(self.files_to_delete) > 0:
                delete(self.files_to_delete)
 
         else:
             transaction.savepoint_commit(sid)
+
             if self.toDelete:
                 delete(self.toDelete)
 

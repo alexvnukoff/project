@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
@@ -12,10 +15,11 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
+from appl.models import Country, Organization, Branch, Category, Company, Tpp, Gallery, Cabinet, Notification, \
+    Exhibition, Greeting, BusinessProposal, Product
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
-from appl.models import *
-from core.models import Item
+from core.models import Item, User
 from collections import OrderedDict
 from django.core.mail import send_mail
 import json
@@ -23,34 +27,29 @@ import json
 @csrf_protect
 def home(request):
 
-
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('wall:main'))
 
     if request.POST.get('Register', None):
         return registration(request)
+
     cache_name = 'home_page'
     cached = cache.get(cache_name)
 
     if not cached:
-
-        countries = Country.active.get_active()
-        countries_id = [country.pk for country in countries]
-
-
 
         organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
         organizations_id = [organization.pk for organization in organizations]
 
         organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG', 'TITLE_DESCRIPTION'), organizations_id)
 
-        products = Product.active.get_active_related().order_by('-pk')[:3]
+        products = Product.active.get_active().order_by('-pk')[:3]
 
         products_id = [product.pk for product in products]
         productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
         func.addDictinoryWithCountryAndOrganization(products_id, productsList)
 
-        services = BusinessProposal.active.get_active_related().order_by('-pk')[:3]
+        services = BusinessProposal.active.get_active().order_by('-pk')[:3]
 
         services_id = [service.id for service in services]
         serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
@@ -62,7 +61,7 @@ def home(request):
         greetings_id = [greeting.id for greeting in greetings]
         greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
 
-        exhibitions = Exhibition.active.get_active_related().order_by("-pk")[:3]
+        exhibitions = Exhibition.active.get_active().order_by("-pk")[:3]
         exhibitions_id = [exhibition.pk for exhibition in exhibitions]
         exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
         func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
@@ -417,10 +416,7 @@ def jsonFilter(request):
 def test(request):
     a = func.getAnalytic({'dimensions': 'ga:dimension2'})
 
-
-
-    from django.http import StreamingHttpResponse
-    return StreamingHttpResponse(a)
+    return HttpResponse(a)
 
 def getLiveTop(request):
 
@@ -703,10 +699,10 @@ def buildCountries(request):
     }
 
     for title, attr in countries.items():
-         cntr, res = Country.objects.get_or_create(title=title, create_user=crt_usr)
-         if res:
-             cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
-         cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
+        cntr, res = Country.objects.get_or_create(title=title, create_user=crt_usr)
+        if res:
+            cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
+        cntr.setAttributeValue({'COUNTRY_FLAG': attr['COUNTRY_FLAG']}, crt_usr)
 
 
     return HttpResponse('Successfully')

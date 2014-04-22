@@ -1,4 +1,4 @@
-
+from django.db import transaction
 from appl.models import *
 from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
