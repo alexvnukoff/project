@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
@@ -144,23 +145,31 @@ def _companiesContent(request, page=1, my=None):
         else:
             current_organization = request.session.get('current_company', False)
 
-            if current_organization:
-                companies = SearchQuerySet().models(Company).filter(SQ(tpp=current_organization) | SQ(id=current_organization))
+            cab = Cabinet.objects.get(user=request.user)
+            #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+            companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
+                                                    Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
-                if q != '':
-                    companies = companies.filter(title=q)
 
-                url_paginator = "companies:my_main_paginator"
 
-                params = {}
 
-            else:
-                raise ObjectDoesNotExist('you need check company')
+
+
+
+
+            url_paginator = "companies:my_main_paginator"
+
+            params = {}
+
+
 
 
         attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG', 'ANONS')
 
-        result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
+        if not my:
+             result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
+        else:
+            result = func.setPaginationForItemsWithValues(companies, *attr,  page_num=5, page=page)
 
         companyList = result[0]
         company_ids = [id for id in companyList.keys()]
