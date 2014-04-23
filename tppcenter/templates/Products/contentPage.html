@@ -41,7 +41,7 @@
                               {% if image %}
                                   <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                               {% else %}
-                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatewords:7 }}" />
+                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatechars:40 }}" />
                               {% endif %}
                           </a>
                       </div>
