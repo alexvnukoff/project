@@ -1,4 +1,5 @@
 from itertools import count
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from appl.models import *
 from core.models import Value, Item, Attribute, Dictionary

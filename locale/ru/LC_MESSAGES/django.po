@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-18 06:03+0000\n"
-"PO-Revision-Date: 2014-04-18 09:09+0200\n"
+"PO-Revision-Date: 2014-04-23 09:34+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3058,7 +3058,7 @@ msgstr "Ничего не найдено"
 #: tppcenter/templates/Companies/tabStructure.html:38
 #: tppcenter/templates/Tpp/tabStructure.html:38
 msgid "Department name"
-msgstr "Имя получателя"
+msgstr "Наименование подразделения"
 
 #: tppcenter/templates/Exhibitions/addForm.html:76
 msgid "Start event date"

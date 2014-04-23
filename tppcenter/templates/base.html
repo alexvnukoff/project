@@ -37,7 +37,8 @@
 
         {% block js %}
             <script type="application/javascript">
-                statciPath = '{% static "tppcenter/" %}'
+                var statciPath = '{% static "tppcenter/" %}';
+                var LANG = {};
             </script>
 		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
             <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -187,7 +188,7 @@
                 <li class="end">
                 	<div class="newform-button">
                         <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
-                        <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
                     </div>
                 </li>
             </ul>

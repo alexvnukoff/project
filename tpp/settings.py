@@ -79,7 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'django.contrib.sitemaps',
+    #'django.contrib.sitemaps',
     'registration',
     'modeltranslation',
     'south',
@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'legacy_data',
     'djcelery',
     'loginas',
+    'debug_toolbar'
 
 )
 
@@ -106,7 +107,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
+}
 
 
 ROOT_URLCONF = 'tpp.urls'

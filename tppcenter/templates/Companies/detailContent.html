@@ -21,11 +21,52 @@
 {% with companyValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
+
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+<script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
+
+
+<!-- Gallery uploader -->
+<style>
+    .uploader {
+        max-height: 130px;
+        overflow-y: hidden;
+    }
+    #queue, #file_upload {
+        float: left;
+        margin-left: 20px;
+    }
+    .uploader:after {
+       content: "";
+       display: block;
+       clear: both;
+    }
+</style>
+<script>
+    LANG['UPLOAD'] = {
+        'uploading': '{% trans "Uploading" %}',
+        'success': '{% trans "Uploaded" %}',
+        'fail': '{% trans "Fail" %}',
+        'wasUploaded': '{% trans "The following files was not uploaded" %}'
+    };
+
+    var swf = '{% static "tppcenter/uploadify.swf" %}';
+    var uploader = '{% url "companies:tabs_gallery" item_id %}';
+    var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
+
+    $(document).ready(function($) {
+
+       //galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader);
+    });
+</script>
+<!-- /Gallery uploader -->
+
+<!-- Google maps -->
 <script type="text/javascript">
     var marker;
-        $(document).ready(function($) {
+
+    $(document).ready(function($) {
             var tabs = $( '#tpp-details-tab' )
             tabs.tabs();
             var href = tabs.find('a[href="#cpn-tabs-contacts"]');
@@ -39,8 +80,10 @@
 
              initialize(false);
 
-            })});
+    })});
 </script>
+<!-- /Google maps -->
+
 <!-- script for Company-details-structure right buttons menu -->
 <script type="text/javascript">
     $(function(){
@@ -57,6 +100,7 @@
         });
 	});
 </script>
+
 <!-- script for Company-details-staff delete content button -->
 <script type="text/javascript">
     $(function(){
@@ -64,12 +108,13 @@
 
 		    $(this).children().find(".btnremove-small").show();
 		});
-        
+
         $(document).on('mouseleave', '.table-staff tr', function(){
 		    $(this).children().find(".btnremove-small").hide();
 		});
 	});
 </script>
+
 <!-- script for Staff add popup and delete -->
 <script type="text/javascript">
     $(function(){
@@ -167,6 +212,7 @@
 		});
 	});
 </script>
+
 <!-- script for Department adding (popup window)-->
 <script type="text/javascript">
     var prevDepName = '';
@@ -200,6 +246,7 @@
 
 	});
 </script>
+
 <!-- script for Department selection -->
 <script type="text/javascript">
     $(function(){
@@ -297,7 +344,7 @@
 	});
 </script>
 
-  <div class="companies">
+<div class="companies">
 
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
@@ -429,7 +476,25 @@
                     </div>
                     -->
                     <div id="cpn-tabs-gallery">
-                        <div class="tpp-dt-content"></div>
+                        <div class="tpp-dt-content">
+                        <!--
+                            <div class="uploader">
+                                <form>
+                                    <input id="file_upload" name="file_upload" type="file" multiple="true">
+                                    <div id="queue"></div>
+
+                                </form>
+                            </div>
+                            <ul class="tpp-gallery">
+                                {% comment %}
+                                    {% for photo in photos %}
+                                        {% include "Companies/tabGalleryPhoto.html" %}
+                                    {% endfor %}
+                                {% endcomment %}
+                            </ul>
+                        -->
+                        </div>
+
                     </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
@@ -476,9 +541,6 @@
             {% endwith %}
             {% endwith %}
             {% endwith %}
-
-
-
   </div>
 
 {% endwith %}

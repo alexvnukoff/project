@@ -1,21 +1,16 @@
 from django.db import models
 from django.db.models.query import QuerySet
-from core.models import Item, State, Relationship, User
-from django.contrib.auth.models import Group, Permission
-from random import randint
+from core.models import Item, State, Relationship
 from core.hierarchy import hierarchyManager
 from core.models import User, ItemManager
-from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
-from django.db.models import Count, F, ObjectDoesNotExist
-from django.db.models.signals import pre_save, post_save
+from django.db.models import Count, ObjectDoesNotExist
+from django.db.models.signals import post_save
 from django.utils.translation import trans_real
 from tpp.SiteUrlMiddleWare import get_request
 from django.dispatch import receiver
-from itertools import chain
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
