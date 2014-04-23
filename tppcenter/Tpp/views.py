@@ -1,3 +1,4 @@
+from django.db.models import Q
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
                         Cabinet, InnovationProject, Vacancy
@@ -145,22 +146,21 @@ def _tppContent(request, page=1, my=None):
         else:
             current_organization = request.session.get('current_company', False)
 
-            if current_organization:
-                tpp = SearchQuerySet().models(Tpp).filter(id=current_organization)
+            cab = Cabinet.objects.get(user=request.user)
+            #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+            tpp = Tpp.objects.filter(Q(create_user=request.user) |
+                                                    Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
-                if q != '':
-                   tpp = tpp.filter(title=q)
+            url_paginator = "tpp:my_main_paginator"
+            params = {}
 
-                tpp.order_by('-obj_create_date')
-
-                url_paginator = "tpp:my_main_paginator"
-                params = {}
-            else:
-                raise ObjectDoesNotExist('you need check company')
 
         attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
 
-        result = func.setPaginationForSearchWithValues(tpp, *attr, page_num=5, page=page)
+        if not my:
+             result = func.setPaginationForSearchWithValues(tpp, *attr,  page_num=5, page=page)
+        else:
+            result = func.setPaginationForItemsWithValues(tpp, *attr,  page_num=5, page=page)
 
         tppList = result[0]
         tpp_ids = [id for id in tppList.keys()]
