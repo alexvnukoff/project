@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
@@ -710,3 +710,4 @@ def buildCountries(request):
 
 
     return HttpResponse('Successfully')
+

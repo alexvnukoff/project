@@ -23,6 +23,7 @@ EMAIL_USE_TLS = True
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
     ('Jenya', 'jenyapri@tppcenter.com'),
+    ('Iliya', 'afend@tppcenter.com'),
 )
 
 MANAGERS = ADMINS

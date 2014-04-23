@@ -209,6 +209,14 @@ class NewsCategories(Item):
     def __str__(self):
         return self.getName()
 
+class UserSites(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    organization = models.ForeignKey(Organization, null=True, blank=True)
+
+
 class TppTV(Item):
 
     active = ItemManager()

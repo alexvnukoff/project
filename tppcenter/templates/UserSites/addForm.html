@@ -1,0 +1,154 @@
+{% load staticfiles %}
+<script>
+    $(function() {
+
+	$('.themesb2b').bxSlider();
+});
+</script>
+<div class="external-r">
+            <div class="external-step1">
+            	<h1>Мой сайт</h1>
+                <p>Уважаемые коллеги, рады сообщить вам, что для удобства предоставления ваших интересов мы разработали
+                    удобный конструктор сайтов, который поможет вам собственный внешний сайт всего за пару минут.
+                    Техподдержка сайта:
+                    <a href="#">admin@tppcenter.com</a>.</p>
+                <h3>Ваш сайт</h3>
+
+
+            </div>
+<form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        {% with form.fields.NAME.initial as name %}
+        {% with form.fields.SITE_SLOGAN.initial as slogan %}
+        {% with form.fields.SITE_LOGO.initial as logo %}
+        {% with form.fields.DETAIL_TEXT.initial as content %}
+
+            <div class="external-step3">
+            	<ul class="step3form">
+                    <li>
+                   <div class="left">Название сайта</div>
+                   {% if form.errors.NAME %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.NAME }}</div></div>
+                   {% endif %}
+                    <input type="text" name="NAME" placeholder="" class="text" style="width:30%;" value="{{ name }}"/>.tppcenter.com
+
+                    </li>
+                	<li>
+                    	<div class="left">Слоган компании:</div>
+                        {% if form.errors.SITE_SLOGAN %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.SITE_SLOGAN }}</div></div>
+                        {% endif %}
+                        <div class="right">
+                        	<input type="text" name="SITE_SLOGAN" placeholder="" class="text" style="width:60%;" value="{{ slogan }}">
+                        	 (максимум 50 символов)
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="left">Логотип компании:</div>
+                        {% if form.errors.SITE_LOGO %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.SITE_LOGO }}</div></div>
+                         {% endif %}
+                        <div class="right">
+                        	<div class="fileinputs">
+                                <div class="file-wrapper">
+                                    <input type="file" name="SITE_LOGO">
+                                    <span class="button">Choose a file</span>
+                                </div>
+                            </div>
+                            <div class="viewimg">
+                               {% if logo %}
+                                <div class="b-img">
+                                    <img src="{{ MEDIA_URL }}big/{{ logo.name }}">
+                                    <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">удалить</span></div>
+                                    <div class="gray-img"></div>
+                                    <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ logo }}" hidden="hidden" />
+                                </div>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                      <div class="line-step">
+                	        <label>Шаблон сайта</label>
+                      </div>
+                         <div class="external-slide">
+            	<ul class="themesb2b">
+                    <li>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+
+                    </li>
+                    <li>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+
+                    </li>
+                    <li>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+                        <div class="items">
+                            <a href="#nogo"><img src="{% static "tppcenter/img/external.jpg" %}" title="" alt="" /></a>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+                    </li>
+                    <li>
+                    	<div class="left">Описание для подвала: (максимум 200 символов)</div>
+                        {% if form.errors.DETAIL_TEXT %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                         {% endif %}
+                        <div class="right">
+                        	<textarea cols="30" rows="10" style="width:95%;" name="DETAIL_TEXT">{{ content }}</textarea>
+                        </div>
+                    </li>
+                </ul>
+                <div class="btn-nextstep">
+
+                    <input type="submit" class="bigbuy right" value="Создать сайт" >
+                </div>
+            </div>
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+
+    </form>
+        </div>
