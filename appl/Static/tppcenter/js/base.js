@@ -250,6 +250,11 @@ $(document).ready(function()
         $('#send_to').text(company_name);
 
 	});
+     $(document).on('click', "#cancel", function()
+     {
+          document.getElementById('light-contact').style.display='none';
+          document.getElementById('fade-contact').style.display='none';
+     });
 
     $(document).on('click', "#send-message", function()
     {
