@@ -1,6 +1,6 @@
 {% load CustomFilters %}
 {% if page.paginator.num_pages > 1 %}
-        <div class="panging">
+        <div class="panaging">
              {%  if page.has_previous %}
                     &larr; <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >Назад</a>
             {% endif %}

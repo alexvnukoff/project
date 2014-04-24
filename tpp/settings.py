@@ -88,7 +88,7 @@ INSTALLED_APPS = (
     'legacy_data',
     'djcelery',
     'loginas',
-    'debug_toolbar'
+    'debug_toolbar',
 
 )
 

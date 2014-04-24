@@ -3,7 +3,7 @@ from django.http.response import HttpResponsePermanentRedirect
 from haystack.backends import SQ
 from appl import func
 from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginatorRange
-from appl.models import News, Organization, NewsCategories, Gallery, Country, UserSites
+from appl.models import Product, Organization, NewsCategories, Gallery, Country, UserSites
 from core.models import Item, Group
 from datetime import datetime
 from django.core.urlresolvers import reverse
@@ -30,7 +30,7 @@ from django.contrib.sites.models import Site
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None):
+def get_products_list(request, page=1, item_id=None, my=None, slug=None):
 
 
     if item_id:
@@ -50,7 +50,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             if isinstance(contentPage, HttpResponse):
                 return contentPage
 
-            add_news = True
+
 
     except ObjectDoesNotExist:
         contentPage = func.emptyCompany()
@@ -59,8 +59,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 
-    current_section = _("News")
-    title = _("News")
+    current_section = _("Products")
+    title = _("Products")
 
     templateParams = {
     'current_section': current_section,
@@ -81,14 +81,14 @@ def _get_content(request, page):
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
 
-     sqs = getActiveSQS().models(News).filter(SQ(tpp=organization) |
+     sqs = getActiveSQS().models(Product).filter(SQ(tpp=organization) |
                                               SQ(company=organization)).order_by('-obj_create_date')
 
-     url_paginator = 'news:paginator'
+     url_paginator = 'products:paginator'
 
-     attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
+     attr = ('NAME', 'COST', 'CURRENCY', 'SLUG', 'IMAGE')
 
-     result = setPaginationForSearchWithValues(sqs, *attr, page_num=10, page=page)
+     result = setPaginationForSearchWithValues(sqs, *attr, page_num=12, page=page)
 
      content = result[0]
 
@@ -104,7 +104,7 @@ def _get_content(request, page):
 
      }
 
-     template = loader.get_template('News/contentPage.html')
+     template = loader.get_template('Products/contentPage.html')
      context = RequestContext(request, templateParams)
      rendered = template.render(context)
 

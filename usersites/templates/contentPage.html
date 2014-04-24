@@ -1,129 +1,118 @@
+{% load i18n %}
+{% load CustomFilters %}
 
-           {% include 'Paginator.html' %}
-            {% for id ,attr in content.items %}
 
-                <a href="{% url "news:detail" attr.SLUG.0 %}">alo{{ attr.NAME.0 }}</a>
-                       {% endfor %}
+
             <ul class="walllist">
+             <h2 class="titlepage">{% trans "Business proposals" %}</h2>
+                 {% for id ,attr in proposalValues.items %}
+                     {% with attr.NAME.0 as name %}
+                     {% with attr.ANONS.0 as anons %}
+                     {% with attr.DETAIL_TEXT.0 as detail_text %}
+                     {% with attr.SLUG.0 as slug %}
+                     {% with attr.CREATE_DATE.0 as create_date %}
+
             	<li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
+                	<h3><a href="#">{{ name }}</a></h3>
                     <div class="desc">
                     	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
+
+                             {% trans 'Date' %}:  {{ create_date|date:'d M Y' }}
                         </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
+                        <p>
+                            {% if anons %}
+                                 {{ anons|force_escape|linebreaks }}
+                            {% else %}
+                                 {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
+                            {% endif %}
+                        </p>
+                        <p class="linkmore"><a href="#">{% trans "more" %}...</a></p>
                     </div>
                 </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
-                <li>
-                	<h3><a href="#">Название блока</a></h3>
-                    <div class="thumb"><img src="img/prd.jpg" alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-                            <img src="img/flag.jpg" alt="" class="flag" />
-                            Страна, Дата: 14 июня 2014 года
-                        </p>
-                        <p>Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись обнаружила на Youtube видеозапись Подробнее...</p>
-                        <p class="linkmore"><a href="#">Подробнее...</a></p>
-                    </div>
-                </li>
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+
+                {% endfor %}
             </ul>
-          {% include 'Paginator.html' %}
+
+
+            <ul class="walllist">
+             <h2 class="titlepage">{% trans "News" %}</h2>
+
+                 {% for id ,attr in newsValues.items %}
+                     {% with attr.NAME.0 as name %}
+                     {% with attr.ANONS.0 as anons %}
+                     {% with attr.DETAIL_TEXT.0 as detail_text %}
+                     {% with attr.IMAGE.0 as image %}
+                     {% with attr.SLUG.0 as slug %}
+                     {% with attr.CREATE_DATE.0 as create_date %}
+
+            	<li>
+                	<h3><a href="#">{{ name }}</a></h3>
+                    <div class="thumb"><img src="{{ MEDIA_URL }}small/{{ image }} " alt="" /></div>
+                    <div class="desc">
+                    	<p class="date">
+
+                             {% trans 'Date' %}:  {{ create_date|date:'d M Y' }}
+                        </p>
+                        <p>
+                            {% if anons %}
+                                 {{ anons|force_escape|linebreaks }}
+                            {% else %}
+                                 {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
+                            {% endif %}
+                        </p>
+                        <p class="linkmore"><a href="#">{% trans "more" %}...</a></p>
+                    </div>
+                </li>
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+
+                {% endfor %}
+            </ul>
+
+
+
+
+
+            <ul class="listprd">
+             <h2 class="titlepage">{% trans "Products" %}</h2>
+                 {% for id ,attr in productValues.items %}
+                     {% with attr.NAME.0 as name %}
+                     {% with attr.COST.0 as cost %}
+                     {% with attr.CURRENCY.0 as currency %}
+                     {% with attr.IMAGE.0 as image %}
+                     {% with attr.SLUG.0 as slug %}
+
+
+
+            	<li>
+                	<div class="thumb"><a href="#"><img src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a></div>
+                    <div class="link">
+
+                        <a href="#" class="name">{{ name|truncatewords:8 }}</a>
+                    </div>
+                    <div class="price">{{ cost }} {{ currency|getSymbol }}</div>
+                    <a href="#" class="btnbuy">{% trans "Buy" %}</a>
+                </li>
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+                     {% endwith %}
+
+
+                {% endfor %}
+            </ul>
+
+
+
+
+
