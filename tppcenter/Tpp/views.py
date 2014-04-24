@@ -683,6 +683,9 @@ def _tabsStaff(request, tpp, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=tpp).exists():
+                    #if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                        # if no attached Cabinets to this Vacancy then ...
+
                     cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
                     if res:
                         try:
@@ -702,6 +705,9 @@ def _tabsStaff(request, tpp, page=1):
                     Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation', create_user=request.user)
                 else:
                     pass
+                    #else:
+                    #    errorMessage = 'You can not add user at vacancy which already busy.'
+
             except:
                 logger.exception("Error in tab staff.",  exc_info=True)
                 pass
@@ -733,7 +739,7 @@ def _tabsStaff(request, tpp, page=1):
     #create full list of Company's Departments
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
 
-    dep_lst = [dep.pk for dep in departments]
+    dep_lst = [dep.id for dep in departments]
 
     if len(dep_lst) == 0:
         departmentsList = []
@@ -743,12 +749,22 @@ def _tabsStaff(request, tpp, page=1):
     #create list of Company's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text')
 
-    vac_lst = [vac.pk for vac in vacancies]
+    vac_lst = [vac.id for vac in vacancies]
 
     if len(vac_lst) == 0:
         vacanciesList = []
     else:
         vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+        # correlation between Departments and Vacancies
+        correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('pk', 'p2c__child'))
+
+        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
+        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
+            for t in correlation: #lookup into correlation list
+                if t[1] == vac_id: #if Vacancy ID is equal then...
+                    #... add a new key into Vacancy attribute dictionary
+                    vac_att['DEPARTMENT_ID'] = [t[0]]
+                    break
 
     comp = Tpp.objects.get(pk=tpp)
     permissionsList = comp.getItemInstPermList(request.user)

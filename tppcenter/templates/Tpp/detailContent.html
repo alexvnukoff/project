@@ -9,7 +9,25 @@
     ga('set', 'dimension3', {{ item_id }});
     ga('set', 'dimension2', 'tpp');
 </script>
-<!-- script for Tpp-details-staff delete content button -->
+
+<!-- script for Company-details-structure right buttons menu -->
+<script type="text/javascript">
+    $(function(){
+	    $(document).on('click', ".sitemap li a", function(){
+		    if ($(this).parent().find(".sub").is(":hidden")){
+			    $(this).parent().find(".sub").show();
+				$(this).addClass('lesssitemap')
+			}
+			else{
+			    $(this).parent().find(".sub").hide();
+				$(this).removeClass('lesssitemap')
+			}
+            return false;
+        });
+	});
+</script>
+
+<!-- script for Company-details-staff delete content button -->
 <script type="text/javascript">
     $(function(){
 	    $(document).on('mouseenter','.table-staff tr', function(){
@@ -22,8 +40,6 @@
 		});
 	});
 </script>
-
-
 
 <!-- script for Staff add popup and delete -->
 <script type="text/javascript">
@@ -42,7 +58,6 @@
                 $.post("{% url "tpp:tab_staff" item_id %}", {cabinetID: cabinetID}, function(data){
                         contentHolder.replaceWith(data);
                         }, 'html');
-
             }
             else
             {
@@ -54,20 +69,20 @@
         $(document).on('click','#user-add-button', function(){
             $('#fade-profile').show();
             $('#popup-context').load("{% url "tpp:tab_staff" item_id %} .staffaddin");
-            $('#add-dep-popup').show();
+            $('#add-user-popup').show();
+
             return false;
 		});
     });
 </script>
 
-<!-- script for Staff adding -->
 <script type="text/javascript">
     $(function(){
+        // Staff adding from popup
 	    $(document).on('click','#btn-add-user', function(){
 
             var userEmail = $('#user-name').val();
             var departmentName = $('#dep-list').find(":selected").text();
-            var vacancyName = $('#vacancy-list').find(":selected").text();
             var vacancyName = $('#vacancy-list').find(":selected").text();
             var isAdmin = 0;
             if ($('#is-admin').is(':checked'))
@@ -80,14 +95,13 @@
             }
 
             var contentHolder = $('#staff-tab .tpp-dt-content');
-
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
             $.post("{% url "tpp:tab_staff" item_id %}",
                     {departmentName: departmentName, userEmail: userEmail, vacancyName: vacancyName, isAdmin: isAdmin},
                     function(data){
                         contentHolder.replaceWith(data);
-                    }, 'html');
+                        }, 'html');
 
             $('#dep-list:eq(0)').attr('selected','selected');
             $('#fade-profile').hide();
@@ -96,11 +110,12 @@
 		});
 	});
 </script>
+
 <!-- script for Department adding (popup window)-->
 <script type="text/javascript">
     var prevDepName = '';
     $(function(){
-        <!-- press Add button -->
+        // press Add button
 	    $(document).on('click','#btn-add-depart', function()
         {
             var inputField = $('#dep-name');
@@ -109,7 +124,9 @@
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "tpp:tab_structure" item_id %}", {departmentName: departmentName, prevDepName: prevDepName}, function(data){
+            $.post("{% url "tpp:tab_structure" item_id %}",
+                    {departmentName: departmentName, prevDepName: prevDepName},
+                    function(data){
                         contentHolder.replaceWith(data);
                     }, 'html');
 
@@ -129,6 +146,7 @@
 
 	});
 </script>
+
 <!-- script for Department selection -->
 <script type="text/javascript">
     $(function(){
@@ -173,7 +191,7 @@
                 }
             }
 		});
-        <!-- mark row in Tpp-structure -->
+        <!-- mark row in Company-structure -->
         $(document).on('click', '.sitemap li', function(){
 		    currentRow = $(this);
             currentRow.css("background-color", "#3397C9");
