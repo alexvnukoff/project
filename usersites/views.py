@@ -8,6 +8,6 @@ from django.conf import settings
 
 def home(request):
     current_site = get_current_site(request)
-    sitename =  current_site.domain
-    return render_to_response("home.html",locals())
+    sitename = current_site.domain
+    return render_to_response("index.html")
 

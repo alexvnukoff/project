@@ -1,0 +1,25 @@
+{% load CustomFilters %}
+{% if page.paginator.num_pages > 1 %}
+        <div class="panging">
+             {%  if page.has_previous %}
+                    &larr; <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >Назад</a>
+            {% endif %}
+
+
+                {% for i in paginator_range %}
+
+
+                   {% ifequal i page.number %}
+                       <span style="font-weight: bolder" class="current">{{ page.number }}</span>
+                          {% else %}
+                       <a href="{% dynurl url_paginator url_parameter i%}">{{ i }}</a>
+                 {% endifequal %}
+               {% endfor %}
+               {%  if page.has_next %}
+                          <a href="{% dynurl url_paginator url_parameter page.next_page_number%}" >Вперед</a>&rarr;
+               {% endif %}
+        </div>
+ {% endif %}
+
+
+
