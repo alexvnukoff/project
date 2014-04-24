@@ -378,7 +378,7 @@ $.fn.onChangeSet = function(e) {
             </li>
             <li>
                 <label>{% trans 'Category' %} <font color="#FF0000">*</font></label>
-                <select name="CATEGORY">
+                <select style="width: 50%;" name="CATEGORY">
                     {% for parent_name , dict  in categotySelect|sort  %}
                         {%  for name , item in  dict|sort%}
                             {% with  item.ID as id%}
@@ -409,6 +409,9 @@ $.fn.onChangeSet = function(e) {
                         {% endfor %}
                     {% endfor %}
                 </select>
+                <input type="checkbox" name="B2C_PRODUCT" style="vertical-align: middle;margin-left: 20px; width: 20px;height: 20px;"  {% if b2c_product %}checked{% endif %}  />
+
+                <span style="font-size: large;vertical-align: middle;">{% trans 'Post on b2c portal' %}</span>
             </li>
         </ul>
         <div class="append-formin">
