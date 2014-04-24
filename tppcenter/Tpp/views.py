@@ -148,7 +148,7 @@ def _tppContent(request, page=1, my=None):
 
             cab = Cabinet.objects.get(user=request.user)
             #read all Organizations which hasn't foreign key from Department and current User is create user or worker
-            tpp = Tpp.objects.filter(Q(create_user=request.user) |
+            tpp = Tpp.active.get_active().filter(Q(create_user=request.user) |
                                                     Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
 
             url_paginator = "tpp:my_main_paginator"
