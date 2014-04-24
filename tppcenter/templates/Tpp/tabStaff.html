@@ -2,6 +2,21 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
+<script type="text/javascript">
+    $(function(){
+        // save Vacancy list content for swapping
+        savedItems = $('#vacancy-list').html();
+
+        // pull Vacancies related to selected Department in popup comboboxes
+        $(document).on('change','#dep-list', function() {
+			depID = $('#dep-list').find(':selected').data('department');
+			$('#vacancy-list').html(savedItems);
+			$('#vacancy-list option:not([class = ' + depID + '])').remove();
+		});
+    });
+</script>
+
+
 <div id="staff-tabs" class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
@@ -32,7 +47,7 @@
                                 {% if avatar %}
                                      <img src="{{ MEDIA_URL }}th/{{ avatar }}" alt="{{ l_name }}" />
                                 {% else %}
-                                     <img src="{% static "tppcenter/img/profile_24x24.jpg"  %}" alt="{{ l_name }}" />
+                                     <img style="width: 24px;height: 24px;" src="{% static "tppcenter/img/profile.jpg"  %}" alt="{{ l_name }}" />
                                 {% endif %}
                             </div>
                         </td>
@@ -80,7 +95,7 @@
     {% include "main/paginator.html" %}
 
     <!-- Person add popup window -->
-    <div class="staffadd" id="add-dep-popup">
+    <div class="staffadd" id="add-user-popup">
         <i class="close-formadd imgnews"></i>
         <div class="title">Add user</div>
         <div id="popup-context">
@@ -89,7 +104,7 @@
                 <select id="dep-list" style="width:62%;">
                     {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as department %}
-                        <option value="{{ id }}">{{ department }}</option>
+                        <option data-department="{{ id }}">{{ department }}</option>
                     {% endwith %}
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
@@ -99,7 +114,9 @@
                 <select id="vacancy-list" style="width:62%;">
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
-                        <option value="{{ id }}">{{ vacancy }}</option>
+                    {% with attr.DEPARTMENT_ID|first as dep_id %}
+                        <option data-vacancy="{{ id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                    {% endwith %}
                     {% endwith %}
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
@@ -107,9 +124,11 @@
                 </select>
                 <input type="checkbox" name="AdminFlag" value="isAdmin" id="is-admin">{% trans "Administrator" %}
                 <div class="inputadd">
+                    {% if errorMessage %}
+                        <div class="error-handler"> <div class="formserror">{{ errorMessage }}</div></div>
+                    {% endif %}
                     <input type="text" name="" id="user-name" value="" class="text" />
-        <!--       	<span class="button-add" id="btn-sel-user">+</span>
-        -->     </div>
+                </div>
                 <div class="formadd-button">
                     <a class="btntype2" id="btn-add-user" href="#">{% trans "Add" %}</a>
                     <a class="btntype1" href="#">{% trans "Cancel" %}</a>

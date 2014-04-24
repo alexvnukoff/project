@@ -15,7 +15,10 @@ class Command(NoArgsCommand):
         itm.update(community=None)
 
         g_list = Group.objects.filter(name__icontains='ORG-')
+        count = 0
         for g in g_list:
             g.delete()
+            count += 1
+            print(count)
 
         print('All Communities were removed!')

@@ -2,6 +2,21 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
+<script type="text/javascript">
+    $(function(){
+        // save Vacancy list content for swapping
+        savedItems = $('#vacancy-list').html();
+
+        // pull Vacancies related to selected Department in popup comboboxes
+        $(document).on('change','#dep-list', function() {
+			depID = $('#dep-list').find(':selected').data('department');
+			$('#vacancy-list').html(savedItems);
+			$('#vacancy-list option:not([class = ' + depID + '])').remove();
+		});
+    });
+</script>
+
+
 <div id="staff-tabs" class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
@@ -89,7 +104,7 @@
                 <select id="dep-list" style="width:62%;">
                     {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as department %}
-                        <option value="{{ id }}" id="{{ id }}">{{ department }}</option>
+                        <option data-department="{{ id }}">{{ department }}</option>
                     {% endwith %}
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
@@ -100,7 +115,7 @@
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
                     {% with attr.DEPARTMENT_ID|first as dep_id %}
-                        <option value="{{ dep_id }}_{{ id }}" id="{{ dep_id }}_{{ id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                        <option data-vacancy="{{ id }}" class="{{ dep_id }}">{{ vacancy }}</option>
                     {% endwith %}
                     {% endwith %}
                     {% empty %}
