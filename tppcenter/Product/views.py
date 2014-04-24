@@ -345,7 +345,8 @@ def updateProduct(request, item_id):
         'pages': pages,
         'product': product,
         'choosen_category': choosen_category,
-        'categotySelect': categotySelect
+        'categotySelect': categotySelect,
+        'b2c_product':  Item.objects.get(pk=item_id).sites.filter(name='centerpokupok').exists()
     }
 
     context = RequestContext(request, templateParams)
