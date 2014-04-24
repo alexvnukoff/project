@@ -102,6 +102,7 @@
             <div class="staffaddin">
                 <label>{% trans "Department" %}</label>
                 <select id="dep-list" style="width:62%;">
+                    <option disabled selected>{% trans "Select Department..." %}</option>
                     {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as department %}
                         <option data-department="{{ id }}">{{ department }}</option>
@@ -112,6 +113,7 @@
                 </select>
                 <label>{% trans "/Vacancy" %}</label>
                 <select id="vacancy-list" style="width:62%;">
+                    <option disabled selected></option>
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
                     {% with attr.DEPARTMENT_ID|first as dep_id %}
