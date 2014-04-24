@@ -4,7 +4,7 @@ from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
 
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
-
+from django.contrib.sites.models import Site
 from celery import shared_task, task
 import json
 from appl import func
@@ -84,6 +84,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
     category = post.get('CATEGORY', None)
+    is_b2c_product = post.get('B2C_PRODUCT', None)
 
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
@@ -117,6 +118,14 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
         if current_company:
             parent = Organization.objects.get(pk=int(current_company))
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
+
+        site = Site.objects.get(name='centerpokupok')
+        if is_b2c_product:
+            product.sites.add(site.pk)
+        else:
+            product.sites.remove(site.pk)
+
+
 
 
 
