@@ -95,7 +95,7 @@ $(function() {
                             <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
                             <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
                        </li>
-                       <li><a href="#" class="bigbuy">{% trans 'Countact us' %}</a></li>
+                       <li><a class="bigbuy contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="#" >{% trans 'Countact us' %}</a></li>
                     </ul>
                 </div>
                 <ul class="goods-info">
@@ -121,7 +121,7 @@ $(function() {
                    </li>
                    <li>
                         <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
-                        <div class="nameinfo"><a href="#">{% trans 'Contact us' %}</a></div>
+                        <div class="nameinfo"> <a class="contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="#" >{% trans 'Contact us' %}</a></div>
                    </li>
                 </ul>
                 <div class="goods-details-tab">
