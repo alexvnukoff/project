@@ -305,6 +305,25 @@ def setFlags(context, country, url_country, url_country_parametr):
   return flags
 
 
+@register.simple_tag(name='logo', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  user_logo = user_site.getAttributeValues('SITE_LOGO')
+  if len(user_logo) > 0:
+      return user_logo[0]
+
+
+  return ""
+
+@register.simple_tag(name='footer_text', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  site_footer = user_site.getAttributeValues('DETAIL_TEXT')
+  if len(site_footer) > 0:
+      return site_footer[0]
+
+
+  return ""
 
 
 

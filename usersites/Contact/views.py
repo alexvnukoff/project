@@ -30,45 +30,22 @@ from django.contrib.sites.models import Site
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None):
+def get_news_list(request):
 
+   contentPage = _get_content(request)
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+   current_section = _("Contacts")
+   title = _("Contacts")
 
-
-
-
-    try:
-        if not item_id:
-
-            contentPage = _get_content(request, page)
-
-        else:
-            contentPage = _getdetailcontent(request, item_id, slug)
-            if isinstance(contentPage, HttpResponse):
-                return contentPage
-
-            add_news = True
-
-    except ObjectDoesNotExist:
-        contentPage = func.emptyCompany()
+   templateParams = {
+       'current_section': current_section,
+       'contentPage': contentPage,
+       'title': title
+   }
 
 
 
-
-
-    current_section = _("News")
-    title = _("News")
-
-    templateParams = {
-    'current_section': current_section,
-    'contentPage': contentPage,
-    'title': title
-    }
-
-    return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
+   return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
 
 
 
@@ -77,34 +54,27 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 
-def _get_content(request, page):
+def _get_content(request):
+
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-     organization = user_site.organization.pk
+     organization = user_site.organization
 
-     sqs = getActiveSQS().models(News).filter(SQ(tpp=organization) |
-                                              SQ(company=organization)).order_by('-obj_create_date')
+     attr = ('NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'SLUG', 'POSITION')
 
-     url_paginator = 'news:paginator'
 
-     attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
+     organizationValues = organization.getAttributeValues(*attr)
 
-     result = setPaginationForSearchWithValues(sqs, *attr, page_num=10, page=page)
 
-     content = result[0]
 
-     page = result[1]
 
-     paginator_range = getPaginatorRange(page)
 
      templateParams = {
-         'url_paginator': url_paginator,
-         'content': content,
-         'page': page,
-         'paginator_range': paginator_range
+         'organizationValues': organizationValues,
 
      }
 
-     template = loader.get_template('News/contentPage.html')
+
+     template = loader.get_template('Contact/contentPage.html')
      context = RequestContext(request, templateParams)
      rendered = template.render(context)
 
@@ -117,19 +87,6 @@ def _get_content(request, page):
 
 
 
-
-
-
-
-
-def _getdetailcontent(request, item_id, slug):
-    prefix =  Site.objects.get(name='tppcenter').domain + '/'# Note, you need the trailing slash
-
-    url = (reverse(viewname='news:detail' ,urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
-    url = requests.get("http://"+ url)
-
-
-    return HttpResponse(url)
 
 
 

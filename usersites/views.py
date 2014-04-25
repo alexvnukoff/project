@@ -12,7 +12,7 @@ from django.conf import settings
 
 
 def get_wall(request):
-    contentPage = _get_content(request, page)
+    contentPage = _get_content(request)
 
 
     current_section = _("Wall")
@@ -33,7 +33,7 @@ def get_wall(request):
 
 
 
-def _get_content(request, page):
+def _get_content(request):
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
 

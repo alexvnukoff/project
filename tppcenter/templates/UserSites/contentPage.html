@@ -14,18 +14,22 @@
                     {% with siteValues.CREATE_DATE.0 as date %}
                     <li>
 
+                    {% resolve items_perms id|slugify as permlist %}
 
+                    {% if 'delete_usersites' in  permlist or 'change_usersites' in permlist%}
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
+                                {% if 'change_usersites' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'site:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
 
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-
-
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-
+                                 {% if 'delete_usersites' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'site:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                 {% endif %}
                             </div>
                         </div>
+                   {% endif %}
 
                         <div class="title">
 

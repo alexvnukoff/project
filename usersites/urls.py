@@ -4,6 +4,7 @@ import usersites.views
 import usersites.News.urls
 import usersites.Proposals.urls
 import usersites.Products.urls
+import usersites.Contact.urls
 
 
 
@@ -20,4 +21,5 @@ urlpatterns = patterns('',
     url(r'^news/', include(usersites.News.urls, namespace='news')),
     url(r'^proposal/', include(usersites.Proposals.urls, namespace='proposal')),
     url(r'^products/', include(usersites.Products.urls, namespace='products')),
+    url(r'^contact/', include(usersites.Contact.urls, namespace='contact')),
 )

@@ -98,7 +98,7 @@ h2.titlemodule{ position:relative; float:left; width:100%; font-size:21px; font-
 .map-l li{ float:left; width:100%; margin-bottom:10px; color:#595959;}
 .map-l li .left{ float:left; width:70px; color:#9b9b9b;}
 .map-l li .right{ float:left; width:200px;}
-.ggmap{ float:right; width:420px;}
+.ggmap{float: right; width: 350px;height: 300px;overflow: hidden;}
 .contact-form{ position:relative; float:left; width:664px; padding:18px; background:#fafafa; margin:20px 0 0 0;}
 .contact-form li{ float:left; width:100%; margin-bottom:15px;}
 .contact-form li label{ float:left; width:100%; padding-bottom:4px; font-weight:bold;}
@@ -130,7 +130,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#3095c1), to(#1
 .listprd li .link .name{ display:inline-block; margin-left:6px; max-width:125px; height:48px; vertical-align:top;}
 .listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:15px; font-weight:bold; color:#000;}
 .listprd li .call{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
-.listprd li .btnbuy{ float:left; width:100%; margin:10px 0 0 0; font-size:12px; background:#369bcd; line-height:21px; text-align:center; color:#FFF; text-shadow:-1px -1px 1px #317ca1; border-radius:3px;\
+.listprd li .btnbuy{ float:left; width:100%; margin:10px 0 0 0; font-size:12px; background:#369bcd; line-height:21px; text-align:center; color:#FFF; text-shadow:-1px -1px 1px #317ca1; border-radius:3px;
  box-shadow:0px 1px 2px #DDD;}
 .listprd li .btnbuy:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
 .listprd li:nth-child(4n){ margin-right:0;}

@@ -1,5 +1,5 @@
 from docutils.nodes import transition
-from appl.models import UserSites, Resume, Cabinet
+from appl.models import UserSites, Resume, Cabinet, Organization
 from appl import func
 from core.tasks import addNewSite
 from core.models import Dictionary, Item
@@ -64,15 +64,20 @@ def _siteList(request):
     try:
         site = UserSites.active.get_active().get(organization=current_organization)
         siteValues = site.getAttributeValues('NAME', 'SLUG')
+        items_perms = func.getUserPermsForObjectsList(request.user, [site.pk], UserSites.__name__)
     except ObjectDoesNotExist:
         siteValues = ""
+        items_perms = ''
+        site = None
 
 
 
     template = loader.get_template("UserSites/contentPage.html")
     templateParams = {
         'siteValues': siteValues,
-        'current_path': request.get_full_path()
+        'current_path': request.get_full_path(),
+        'items_perms': items_perms,
+        'id': site.pk if site else ""
     }
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
@@ -149,8 +154,22 @@ def resumeForm(request, action, item_id=None):
 
 
 def addSite(request):
-
     current_organization = request.session.get('current_company', False)
+
+    if not request.session.get('current_company', False):
+         return func.emptyCompany()
+
+    item = Organization.objects.get(pk=current_organization)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+
+    if 'add_usersites' not in perm_list:
+         return func.permissionDenied()
+
+
+
+
 
     sites = UserSites.active.get_active().filter(organization=current_organization)
 
@@ -192,10 +211,24 @@ def addSite(request):
 
 
 def updateSite(request, item_id):
+    current_organization = request.session.get('current_company', False)
+
+    if not request.session.get('current_company', False):
+         return func.emptyCompany()
+
+    item = Organization.objects.get(pk=current_organization)
+
+    perm_list = item.getItemInstPermList(request.user)
+
+
+    if 'change_usersites' not in perm_list:
+         return func.permissionDenied()
+
+
 
     form = ItemForm('UserSites', id=item_id)
 
-    current_organization = request.session.get('current_company', False)
+
 
 
 
