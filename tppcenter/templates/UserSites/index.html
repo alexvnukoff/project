@@ -1,0 +1,43 @@
+{% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'Resume' %}
+       {% endif %}
+   {% endblock %}
+
+
+
+
+
+    {% block header %}
+        {% include "login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}"/>
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/external.css" %}"/>
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}"/>
+    {% endblock %}
+
+    {% block js %}
+        {{  block.super }}
+          <script  type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
+
+    {% endblock %}
+
+
+
+
+
+
+
+
+     {% block content %} {{ sitePage }}{% endblock %}

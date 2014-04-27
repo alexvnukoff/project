@@ -1,0 +1,25 @@
+ {% load i18n %}
+ {% load CustomFilters %}
+  <div class="sidebar">
+        	<a href="#"><i class="" id="logo"><img src="{{ MEDIA_URL }}big/{% logo %}"/></i></a>
+            <div class="bgcart">
+            	<i class="iconcart imgmain"></i>
+                <b>В вашей корзине 0 товаров</b>
+				на сумму 0.00 руб.
+            </div>
+            <div class="search">
+            	<input type="text" name="" placeholder="Поиск…" class="text" />
+                <input type="button" name="" class="btns imgmain" />
+            </div>
+            <ul class="categories">
+            	<li><a href="/">{% trans 'Main' %}</a></li>
+               <!-- <li><a href="#">Наши проекты в СНГ</a></li>-->
+                <li><a href="{% url "news:main" %}">{% trans 'Company news' %}</a></li>
+                <!--<li><a href="#">Статьи</a></li>-->
+                <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
+                <li><a href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
+               <!-- <li><a href="#">Фотогалерея</a></li>-->
+                <li><a href="{% url 'structure:main' %}">{% trans 'Company structure' %}</a></li>
+                <li><a href="{% url 'contact:main' %}">{% trans 'Contact us' %}</a></li>
+            </ul>
+        </div>
