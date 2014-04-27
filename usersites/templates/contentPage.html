@@ -13,7 +13,7 @@
                      {% with attr.CREATE_DATE.0 as create_date %}
 
             	<li>
-                	<h3><a href="#">{{ name }}</a></h3>
+                	<h3><a href="{% detail_page_to_tppcenter "proposal:detail" slug %}">{{ name }}</a></h3>
                     <div class="desc">
                     	<p class="date">
 
@@ -26,7 +26,7 @@
                                  {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
                         </p>
-                        <p class="linkmore"><a href="#">{% trans "more" %}...</a></p>
+                        <p class="linkmore"><a href="{% detail_page_to_tppcenter "proposal:detail" slug %}">{% trans "more" %}...</a></p>
                     </div>
                 </li>
                      {% endwith %}
@@ -51,7 +51,7 @@
                      {% with attr.CREATE_DATE.0 as create_date %}
 
             	<li>
-                	<h3><a href="#">{{ name }}</a></h3>
+                	<h3><a href="{% detail_page_to_tppcenter "news:detail" slug %}">{{ name }}</a></h3>
                     <div class="thumb"><img src="{{ MEDIA_URL }}small/{{ image }} " alt="" /></div>
                     <div class="desc">
                     	<p class="date">
@@ -65,7 +65,7 @@
                                  {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
                         </p>
-                        <p class="linkmore"><a href="#">{% trans "more" %}...</a></p>
+                        <p class="linkmore"><a href="{% detail_page_to_tppcenter "news:detail" slug %}">{% trans "more" %}...</a></p>
                     </div>
                 </li>
                      {% endwith %}
@@ -97,10 +97,10 @@
                 	<div class="thumb"><a href="#"><img src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a></div>
                     <div class="link">
 
-                        <a href="#" class="name">{{ name|truncatewords:8 }}</a>
+                        <a href="{% detail_page_to_tppcenter "products:detail" slug %}" class="name">{{ name|truncatewords:8 }}</a>
                     </div>
                     <div class="price">{{ cost }} {{ currency|getSymbol }}</div>
-                    <a href="#" class="btnbuy">{% trans "Buy" %}</a>
+                    <a href="{% detail_page_to_tppcenter "products:detail" slug %}" class="btnbuy">{% trans "Buy" %}</a>
                 </li>
                      {% endwith %}
                      {% endwith %}

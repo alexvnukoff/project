@@ -88,7 +88,8 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
 
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
-       dates = {'COUPON_DISCOUNT': [post.get('COUPON_DISCOUNT-START', now()), date]}
+       edate = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-START', None), "%m/%d/%Y") if post.get('COUPON_DISCOUNT-START', False) else now()
+       dates = {'COUPON_DISCOUNT': [edate, date]}
     else:
         dates = None
 
@@ -690,6 +691,7 @@ def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang
         if user_site:
             user_site.organization = Organization.objects.get(pk=company_id)
             user_site.save()
+            user_site.sites.add(site.pk)
             user_site.sites.all().exclude(pk=site.pk).delete()
         else:
             if created:

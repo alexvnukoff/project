@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load CustomFilters %}
   {% block header %}
         {% include 'header.html' %}
     {% endblock %}
@@ -9,7 +10,7 @@
 	<div class="wrapper">
     	<div class="menutop">
         	<div class="linkleft">
-            	<a href="#nogo">О проекте</a>|<a href="#nogo">Услуги</a>|<a href="#nogo">Помощь</a>
+            	<a href="{% detail_page_to_tppcenter "project:about" %}">О проекте</a>|<a href="{% detail_page_to_tppcenter "project:offer" %}">Услуги</a>|<a href="{% detail_page_to_tppcenter "project:faq" %}">Помощь</a>
             </div>
             <div class="signup">
             	<i class="i-lock imgmain"></i>

@@ -10,7 +10,7 @@
                      {% with attr.CREATE_DATE.0 as create_date %}
 
             	<li>
-                	<h3><a href="#">{{ name }}</a></h3>
+                	<h3><a href="{% detail_page_to_tppcenter "proposal:detail" slug %}">{{ name }}</a></h3>
                     <div class="desc">
                     	<p class="date">
 
@@ -23,7 +23,7 @@
                                  {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
                         </p>
-                        <p class="linkmore"><a href="#">{% trans "more" %}...</a></p>
+                        <p class="linkmore"><a href="{% detail_page_to_tppcenter "proposal:detail" slug %}">{% trans "more" %}...</a></p>
                     </div>
                 </li>
                      {% endwith %}

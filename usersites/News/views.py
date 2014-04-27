@@ -1,3 +1,4 @@
+import urllib
 from urllib.parse import urlencode
 from django.http.response import HttpResponsePermanentRedirect
 from haystack.backends import SQ
@@ -125,8 +126,8 @@ def _get_content(request, page):
 def _getdetailcontent(request, item_id, slug):
     prefix =  Site.objects.get(name='tppcenter').domain + '/'# Note, you need the trailing slash
 
-    url = (reverse(viewname='news:detail' ,urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
-    url = requests.get("http://"+ url)
+    url = (reverse(viewname='news:detail',urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
+    url = requests.get("http\\:\\/\\/"+ url)
 
 
     return HttpResponse(url)

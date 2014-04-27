@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-18 06:03+0000\n"
-"PO-Revision-Date: 2014-04-23 09:34+0200\n"
+"PO-Revision-Date: 2014-04-27 15:08+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -337,7 +337,7 @@ msgstr "Выйти"
 
 #: centerpokupok/templates/header_big.html:94
 msgid "Sign up now"
-msgstr "Зарегестрируйтесь"
+msgstr "Зарегистрируйтесь"
 
 #: centerpokupok/templates/header_big.html:95
 msgid "Seller"
@@ -1447,7 +1447,7 @@ msgstr "условиями"
 #: tppcenter/templates/main_header.html:9
 #: tppcenter/templates/registration/registration.html:61
 msgid "Sign up"
-msgstr "Зарегестрируйтесь"
+msgstr "Зарегистрируйтесь"
 
 #: core/models.py:84
 msgid "date joined"
@@ -2376,7 +2376,7 @@ msgstr "Вакансии"
 
 #: tppcenter/templates/index.html:149
 msgid "and get tools for business"
-msgstr "и получите портфель управления бизнесменом"
+msgstr "и получите портфель управления бизнесом"
 
 #: tppcenter/templates/index.html:151
 msgid ""

@@ -34,6 +34,7 @@ def get_wall(request):
 
 
 def _get_content(request):
+     a = settings.SITE_ID
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
 
