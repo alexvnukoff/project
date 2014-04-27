@@ -8,16 +8,24 @@
             <ul class="sitemap">
                 {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as name %}
-
                     <li data-department="{{ id }}">
                         <a href="#" title="{{ name }}">{{ name }}</a>
+                        <ul class="sub">
+                            {% for vac_id, vac_attr in vacanciesList.items %}
+                                {% with vac_attr.NAME|first as vac_name %}
+                                {% with vac_attr.DEPARTMENT_ID|first as dep_id %}
+                                {% if id == dep_id %}
+                                    <li data-vacancy="{{ vac_id }}" data-department="{{ id }}"><span>{{ vac_name }}</span></li>
+                                {% endif %}
+                                {% endwith %}
+                                {% endwith %}
+                            {% endfor %}
+                        </ul>
                     </li>
                     {% endwith %}
-
                 {% empty %}
                     <div class="no-results">{% trans "No Departments found." %}</div>
                 {% endfor %}
-
             </ul>
             <!-- right buttons menu -->
             <div class="btn-clumn">

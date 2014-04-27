@@ -221,62 +221,139 @@
 	});
 </script>
 
-<!-- script for Department selection -->
+<!-- script for Departments and Vacancies selection -->
 <script type="text/javascript">
     $(function(){
-        var bkgr_color  = 0;
-        var font_color = 0;
-        var departmentID = 0;
-        var currentRow = -1;
+        bkgr_color  = 0;
+        font_color = 0;
+        bg_vac_color = 0;
+        vac_font_color = 0;
 
-        <!-- select row -->
-        $(document).on('mouseenter','.sitemap li', function(){
-            currentRow = $(this);
+        departmentID = 0;
+        vacancyID = 0;
+        currentDepRow = -1;
+        currentVacRow = -1;
+        bg_color_lookup = '#E6E6E6';
+        bg_color_dep_selected = '#B9C9FA';
+        text_color_dep_selected = '#FFFFFF';
+        bg_color_vac_lookup = '#BBBEBE';
+        text_color_vac_lookup = '#FFFFFF';
+        bg_color_vac_selected = '#454ED6';
+        text_color_vac_selected = '#FFFFFF';
+
+        <!-- lookup Department row -->
+        $(document).on('mouseenter','.sitemap > li', function(){
+            currentDepRow = $(this);
+            currentDepRow.css('cursor', 'pointer');
             if(departmentID == 0)
             {
-                bkgr_color = currentRow.css("background-color");
-                font_color = currentRow.children('a').css("color");
-                currentRow.css("background-color","#E6E6E6");
+                bkgr_color = currentDepRow.css("background-color");
+                font_color = currentDepRow.children('a').css("color");
+                currentDepRow.css("background-color", bg_color_lookup);
             }
             else
             {
-                if(currentRow.data('department') != departmentID)
+                if(currentDepRow.data('department') != departmentID)
                 {
-                    bkgr_color = currentRow.css("background-color");
-                    font_color = currentRow.children('a').css("color");
-                    currentRow.css("background-color","#E6E6E6");
+                    bkgr_color = currentDepRow.css("background-color");
+                    font_color = currentDepRow.children('a').css("color");
+                    currentDepRow.css("background-color", bg_color_lookup);
                 }
             }
         });
-        <!-- deselect row -->
-        $(document).on('mouseleave', '.sitemap li', function(){
-            currentRow = $(this);
+        <!-- lookup Vacancy row -->
+        $(document).on('mouseenter','.sub > li', function(){
+            currentVacRow = $(this);
+            currentVacRow.css('cursor', 'pointer');
+            if(vacancyID == 0)
+            {
+                bg_vac_color = currentVacRow.css("background-color");
+                vac_font_color = currentVacRow.css("color");
+                currentVacRow.css("background-color", bg_color_vac_lookup);
+                currentVacRow.css("color", text_color_vac_lookup);
+            }
+            else //if Vacancy already selected...
+            {
+                //... then lookup only for unselected items
+                if(currentVacRow.data('vacancy') != vacancyID)
+                {
+                    bg_vac_color = currentVacRow.css("background-color");
+                    vac_font_color = currentVacRow.css("color");
+                    currentVacRow.css("background-color", bg_color_vac_lookup);
+                    currentVacRow.css("color", text_color_vac_lookup);
+                }
+            }
+        });
+
+        // leave Department row
+        $(document).on('mouseleave', '.sitemap > li', function(){
+            currentDepRow = $(this);
             if(departmentID == 0)
             {
-                currentRow.css("background-color", bkgr_color);
-                currentRow.children('a').css("color", font_color);
+                currentDepRow.css("background-color", bkgr_color);
+                currentDepRow.children('a').css("color", font_color);
             }
             else
             {
-                if(currentRow.data('department') != departmentID)
+                if(currentDepRow.data('department') != departmentID)
                 {
-                    currentRow.css("background-color", bkgr_color);
-                    currentRow.children('a').css("color", font_color);
+                    currentDepRow.css("background-color", bkgr_color);
+                    currentDepRow.children('a').css("color", font_color);
                 }
             }
 		});
-        <!-- mark row in Company-structure -->
-        $(document).on('click', '.sitemap li', function(){
-		    currentRow = $(this);
-            currentRow.css("background-color", "#3397C9");
-            currentRow.children('a').css("color", "white");
-            <!-- deselect previous selection if it is -->
-            var newSelectedRow = currentRow.data('department');
+
+        // leave Vacancy row
+        $(document).on('mouseleave', '.sub > li', function(){
+            currentVacRow = $(this);
+            if(vacancyID == 0)
+            {
+                currentVacRow.css("background-color", bg_vac_color);
+                currentVacRow.css("color", vac_font_color);
+            }
+            else // if Vacancy already selected then...
+            {
+                // do not lookup selected Vacancy row
+                if(currentVacRow.data('vacancy') != vacancyID)
+                {
+                    currentVacRow.css("background-color", bg_vac_color);
+                    currentVacRow.css("color", vac_font_color);
+                }
+            }
+		});
+
+        // mark Department row in Company-structure
+        $(document).on('click', '.sitemap > li', function(){
+		    currentDepRow = $(this);
+            currentDepRow.css("background-color", bg_color_dep_selected);
+            currentDepRow.children('a').css("color", text_color_dep_selected);
+            // deselect previous Department selection if it was
+            // get selected Department's ID
+            var newSelectedRow = currentDepRow.data('department');
+            // if prev selected Department exists and it's an another Department...
             if(departmentID != 0 && departmentID != newSelectedRow)
             {
-                var lastSelectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+                var lastSelectedRow = currentDepRow.parent('ul').find("[data-department='" + departmentID + "']");
                 lastSelectedRow.css("background-color", bkgr_color);
                 lastSelectedRow.children('a').css("color", font_color);
+                // clear selected Vacancy
+                vacancyID = 0;
+                lastSelectedRow.css("color", vac_font_color);
+            }
+            else
+            {
+                if(departmentID != 0)
+                {
+                    // deselect Department on the second click
+                    var lastSelectedDepRow = currentDepRow.parent('ul').find("[data-department='" + departmentID + "']");
+                    lastSelectedDepRow.css("background-color", bkgr_color);
+                    lastSelectedDepRow.children('a').css("color", font_color);
+                    $('#dep-remove-button').css('visibility', 'hidden');
+                    $('#dep-edit-button').css('visibility', 'hidden');
+                    departmentID = 0;
+                    vacancyID = 0;
+                    return false;
+                }
             }
 
             departmentID = newSelectedRow;
@@ -284,7 +361,40 @@
             $('#dep-edit-button').css('visibility', 'visible');
 		});
 
-        <!-- add Department (popup window) -->
+        // mark Vacancy row in Company-structure
+        $(document).on('click', '.sub > li', function(){
+		    currentVacRow = $(this);
+            currentVacRow.css("background-color", bg_color_vac_selected);
+            currentVacRow.css("color", text_color_vac_selected);
+            // deselect previous vacancy selection if it was
+            var newSelectedRow = currentVacRow.data('vacancy');
+            if(vacancyID != 0 && vacancyID != newSelectedRow)
+            {
+                var lastSelectedVacRow = currentVacRow.parent('ul').find("[data-vacancy='" + vacancyID + "']");
+                lastSelectedVacRow.css("background-color", bkgr_color);
+                lastSelectedVacRow.css("color", vac_font_color);
+                //deselect prev Department
+                var lastSelectedDepRow = currentVacRow.parent('ul').find("[data-department='" + departmentID + "']");
+                lastSelectedDepRow.css("background-color", bkgr_color);
+                lastSelectedDepRow.css("color", font_color);
+            }
+            else
+            {
+                if(vacancyID != 0)
+                {
+                    // deselect Vacancy on the second click
+                    var lastSelectedVacRow = currentVacRow.parent('ul').find("[data-vacancy='" + vacancyID + "']");
+                    lastSelectedVacRow.css("background-color", bg_color_vac_lookup);
+                    lastSelectedVacRow.css("color", text_color_vac_lookup);
+                    vacancyID = 0;
+                    return false;
+                }
+            }
+            vacancyID = newSelectedRow;
+		});
+
+        //============== Operation menu ====================================
+        // add Department (popup window)
         $(document).on('click','#dep-add-button', function(){
             $('#fade-profile').show();
             $('.staffadd').show();
@@ -293,7 +403,7 @@
 
         <!-- edit Department (popup window)-->
         $(document).on('click','#dep-edit-button', function(){
-            var selectedRow = currentRow.parent('ul').find("[data-department='" + departmentID + "']");
+            var selectedRow = currentDepRow.parent('ul').find("[data-department='" + departmentID + "']");
             prevDepName = selectedRow.context.innerText;
             $('#dep-name').val(prevDepName);
             $('#fade-profile').show();
