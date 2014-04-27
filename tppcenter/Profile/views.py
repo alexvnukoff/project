@@ -77,6 +77,7 @@ def _profileContent(request):
                 'USER_LAST_NAME': form.cleaned_data['last_name'],
                 'USER_FIRST_NAME': form.cleaned_data['first_name'],
                 'TELEPHONE_NUMBER': form.cleaned_data['telephone_number'],
+                'EMAIL': form.cleaned_data['email'],
                 'IMAGE': file
             }, request.user)
 

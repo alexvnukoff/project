@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* Reset ================================================================================= */
+h1, h2, h3, h4, h5, h6, p, blockquote, a, abbr, acronym, address, big, cite, code,
+del, dfn, img, ins, kbd, q, s, samp,
+strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form
+table, caption, tbody, tfoot, thead, tr, th, td, hr {margin: 0; border: 0; padding:0; outline: 0;}
+ol, ul {list-style: none;}
+a {color:#0089bc; text-decoration: none;}
+a:hover{color:#0089bc; text-decoration:underline;}
+img{ border:0;}
+/* Until ================================================================================= */
+.clearfix:after{content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.clearfix{display: inline-block;}
+.clearfix{display: block;}

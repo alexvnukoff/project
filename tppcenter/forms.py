@@ -266,6 +266,7 @@ class ItemForm(forms.Form):
                # self.obj.name = self.fields['NAME'].initial
                 #self.obj.title = self.fields['NAME'].initial
                 self.obj.save()
+
             attrValues = {}
             attrValues_to_delte = []
 
