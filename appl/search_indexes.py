@@ -290,7 +290,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
 class CountryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
-    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True)
     id = indexes.IntegerField()
     title_auto = indexes.NgramField(null=True)
 
@@ -314,7 +314,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
 
-        self.prepared_data[sortIndex] = attr[0].lower().strip()
+        self.prepared_data[sortIndex] = attr[0].lower().strip().replace(' ','_')
         self.prepared_data[textIndex] = attr[0].strip()
         self.prepared_data[titleAutoIndex] = attr[0].strip()
 
