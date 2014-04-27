@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-27 13:23+0000\n"
-"PO-Revision-Date: 2014-04-27 15:08+0200\n"
+"PO-Revision-Date: 2014-04-27 16:31+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3649,24 +3649,20 @@ msgstr "правилами использования "
 #: usersites/Proposals/views.py:62 usersites/Proposals/views.py:63
 #: usersites/templates/contentPage.html:7
 #: usersites/templates/site_sidebar.html:19
-#, fuzzy
 msgid "Business proposals"
 msgstr "Бизнес предложения"
 
 #: usersites/templates/site_sidebar.html:17
-#, fuzzy
 msgid "Company news"
-msgstr "Название компании"
+msgstr "Новости компании"
 
 #: usersites/templates/site_sidebar.html:22
-#, fuzzy
 msgid "Company structure"
-msgstr "Похожие товары"
+msgstr "Структура компании"
 
 #: usersites/templates/CompanyStructure/contentPage.html:16
-#, fuzzy
 msgid "Department staff"
-msgstr "Наименование подразделения"
+msgstr "Работники отдела"
 
 #: usersites/templates/CompanyStructure/contentPage.html:19
 msgid "Employee"
