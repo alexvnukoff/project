@@ -12,7 +12,7 @@
 
 
             	<li>
-                	<div class="thumb"><a href="#"><img src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a></div>
+                	<div class="thumb"><a href="#"><img style="max-width: 120px;" src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a></div>
                     <div class="link">
 
                         <a href="{% detail_page_to_tppcenter "products:detail" slug %}" class="name">{{ name|truncatewords:8 }}</a>
