@@ -2,7 +2,7 @@ from django.db import transaction
 from appl.models import *
 from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
-
+from django.contrib.sites.models import Site
 from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
 from django.contrib.sites.models import Site
 from celery import shared_task, task
@@ -88,7 +88,8 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
 
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
-       dates = {'COUPON_DISCOUNT': [post.get('COUPON_DISCOUNT-START', now()), date]}
+       edate = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-START', None), "%m/%d/%Y") if post.get('COUPON_DISCOUNT-START', False) else now()
+       dates = {'COUPON_DISCOUNT': [edate, date]}
     else:
         dates = None
 
@@ -670,3 +671,34 @@ def addTopAttr(post, object, user, site_id, ids, org):
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
     Relationship.setRelRelationship(org, ord, user=user, type="relation")
+
+
+
+def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+
+    form = ItemForm('UserSites', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+    if form.is_valid():
+        site, created = Site.objects.get_or_create(domain=values['NAME'][0] +'.tppcenter.com', name='usersites')
+        user_site = form.save(user, site.pk)
+        if user_site:
+            user_site.organization = Organization.objects.get(pk=company_id)
+            user_site.save()
+            user_site.sites.add(site.pk)
+            user_site.sites.all().exclude(pk=site.pk).delete()
+        else:
+            if created:
+                site.delete()
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True

@@ -10,6 +10,8 @@ class SiteUrlMiddleWare:
 
     def process_request(self, request):
 
+        domains = {'centerpokupok.com': 'centerpokupok.ru'}
+
         current_domain = request.META.get('HTTP_HOST', False)
 
         if current_domain is False:
@@ -18,7 +20,10 @@ class SiteUrlMiddleWare:
         if current_domain[:4] == "www":
             current_domain = current_domain[4:]
         try:
-            site = Site.objects.get(domain=current_domain)
+            if domains.get(current_domain, False):
+                site = Site.objects.get(domain=domains.get(current_domain))
+            else:
+                site = Site.objects.get(domain=current_domain)
 
             settings.SITE_ID = site.pk
             settings.ROOT_URLCONF = str(site.name)+".urls"

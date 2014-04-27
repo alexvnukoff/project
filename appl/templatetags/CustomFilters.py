@@ -1,5 +1,8 @@
 from collections import OrderedDict
 from copy import copy
+import urllib
+from urllib.request import FancyURLopener
+from django.contrib.sites.models import Site
 from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
@@ -13,6 +16,7 @@ from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+import tppcenter.urls
 
 register = template.Library()
 
@@ -305,6 +309,25 @@ def setFlags(context, country, url_country, url_country_parametr):
   return flags
 
 
+@register.simple_tag(name='logo', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  user_logo = user_site.getAttributeValues('SITE_LOGO')
+  if len(user_logo) > 0:
+      return user_logo[0]
+
+
+  return ""
+
+@register.simple_tag(name='footer_text', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  site_footer = user_site.getAttributeValues('DETAIL_TEXT')
+  if len(site_footer) > 0:
+      return site_footer[0]
+
+
+  return ""
 
 
 
@@ -366,3 +389,21 @@ def rightTv(context):
 def searchQuery(context):
     request = context.get('request')
     return escape(request.GET.get('q', ''))
+
+
+@register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
+def detail_page_to_tppcenter(context, url, slug=None):
+
+    prefix =  Site.objects.get(name='tppcenter').domain + '/'
+    if slug:
+        url = (reverse(viewname=url, urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
+    else:
+        url = (reverse(viewname=url, urlconf=tppcenter.urls,   prefix=prefix))
+
+
+
+
+
+
+    return 'http://' + url
+
