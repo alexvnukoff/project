@@ -1,4 +1,4 @@
-from docutils.nodes import transition
+
 from appl.models import UserSites, Resume, Cabinet, Organization
 from appl import func
 from core.tasks import addNewSite
