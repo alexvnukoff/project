@@ -942,10 +942,10 @@ def emptyCompany():
      page = template.render(context)
      return page
 
-def permissionDenied():
+def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      template = loader.get_template('permissionDenied.html')
      request = get_request()
-     context = RequestContext(request, {})
+     context = RequestContext(request, {'message': message})
      page = template.render(context)
      return page
 

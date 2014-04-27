@@ -335,7 +335,7 @@ class Item(models.Model):
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField(Site, related_name='item')
     community = models.ForeignKey(Group, null=True, blank=True)
 
     objects = models.Manager()

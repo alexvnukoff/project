@@ -1,0 +1,71 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+
+{% with organizationValues.POSITION.0 as position %}
+{% with organizationValues.ADDRESS.0 as address %}
+{% with organizationValues.TELEPHONE_NUMBER.0 as telephone_number %}
+
+ <script type="text/javascript">
+   var marker;
+   $(function()  {
+
+
+
+              {% if position %}
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ position }})
+                });
+                {% endif %}
+
+            initialize(false);
+  });
+    </script>
+
+
+            <div class="map">
+            	<ul class="map-l">
+                	<li>{{address }}</li>
+                    <li>
+                    	<span class="left">{% trans 'Telephone number' %}: </span>
+                        <span class="right">
+                        	<p>{{ telephone_number }}</p>
+
+                        </span>
+                    </li>
+
+                </ul>
+                <div class="ggmap"> <div   id="map-canvas"></div></div>
+            </div>
+            <ul class="contact-form">
+            	<li class="top">{% trans 'Ask a question' %}</li>
+                <li>
+                	<div class="clumn1">
+                    	<label>{% trans 'Your name' %}</label>
+                        <input type="text" name="" placeholder="" class="text" style="width:95%;" />
+                    </div>
+                    <div class="clumn2">
+                    	<label>{% trans 'You email' %}</label>
+                        <input type="text" name="" placeholder="" class="text" style="width:95%;" />
+                    </div>
+                </li>
+                <li>
+                	<label>{% trans 'Message' %}</label>
+                	<textarea cols="40" rows="5" style="width:98%;"></textarea>
+                </li>
+                <li class="center">
+                	<span>Введите код с картинки</span>
+                    <div class="capcha"></div>
+                    <input type="text" name="" placeholder="" class="text" style="width:20%;" />
+                </li>
+                <li class="end center">
+                	<a href="#" class="btnsend">{% trans 'Send' %}</a>
+                </li>
+            </ul>
+{% endwith %}
+{% endwith %}
+{% endwith %}
