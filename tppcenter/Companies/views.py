@@ -442,9 +442,11 @@ def _tabsStructure(request, company, page=1):
         Show content of the Company-details-structure panel
     '''
     #check if there Department for deletion
+    usr = request.user
     comp = Company.objects.get(pk=company)
-    departmentForDeletion = request.POST.get('departmentID', 0)
 
+    # check Department for deletion
+    departmentForDeletion = request.POST.get('departmentDelID', 0)
     try:
         departmentForDeletion = int(departmentForDeletion)
     except ValueError:
@@ -463,7 +465,6 @@ def _tabsStructure(request, company, page=1):
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
-        usr = request.user
         #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
@@ -475,30 +476,56 @@ def _tabsStructure(request, company, page=1):
             Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
 
         obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
-
-        if not Vacancy.objects.filter(c2p__parent=obj_dep.pk).exists():
-            try:
-                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
-                trans_real.activate('ru') #activate russian locale
-                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
-                trans_real.deactivate() #deactivate russian locale
-
-                if not res:
-                    vac.delete()
-                    return False
-                try:
-                    Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
-                    #add current user to default Vacancy
-                except Exception as e:
-                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
-                            str(obj_dep.pk) + '. The reason is:' + str(e))
-                    vac.delete()
-            except Exception as e:
-                print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
-                pass
-
         obj_dep.reindexItem()
-        vac.reindexItem()
+
+    # add (edit) Vacancy to Department
+    vacancyName = request.POST.get('vacancyName', '')
+    if len(vacancyName):
+        #update vacancy if we received previous name
+        prevVacName = request.POST.get('prevVacName', '')
+        if len(prevVacName):
+            # edit Vacancy
+            try:
+                #check is there vacancy with 'old' name
+                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, item2value__attr__title="NAME",
+                                                 item2value__title=prevVacName)
+                vac.setAttributeValue({'NAME': vacancyName}, usr)
+                vac.reindexItem()
+            except:
+                pass
+        else:
+            # add a new vacancy to Department
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
+            if dep_id > 0:
+                try:
+                    obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+                    if not res:
+                        vac.delete()
+                        return False
+                    try:
+                        Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                        obj_dep.reindexItem()
+                        vac.reindexItem()
+                    except Exception as e:
+                        print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                                str(obj_dep.pk) + '. The reason is:' + str(e))
+                        vac.delete()
+                except Exception as e:
+                    print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
+                    pass
+
+    # delete Vacancy from Department
+    vacancyID = request.POST.get('vacancyID', 0)
+    vacancyID = int(vacancyID)
+    if vacancyID > 0:
+        try:
+            vac = Vacancy.objects.get(pk=vacancyID)
+            vac.delete()
+        except:
+            pass
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
     attr = ('NAME', 'SLUG')
