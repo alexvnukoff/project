@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.AdvBanner.views.gatPositions, name='main'),
      url(r'^add/([0-9]+)/$', tppcenter.AdvBanner.views.addBanner, name='banner_form'),
+     url(r'^order/([0-9]+)/$', tppcenter.AdvBanner.views.resultOrder, name='banner_form'),
      url(r'^filter/$', tppcenter.AdvBanner.views.advJsonFilter),
 
 )

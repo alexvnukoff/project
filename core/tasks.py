@@ -600,6 +600,8 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     Relationship.setRelRelationship(dep, item, user=user, type="dependence")
     Relationship.setRelRelationship(dep, ord, user=user, type="relation")
 
+    return ord.pk
+
 
 @transaction.atomic
 def addTopAttr(post, object, user, site_id, ids, org):
