@@ -441,7 +441,6 @@ def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
-    #check if there Department for deletion
     errorMessage = ''
     usr = request.user
     comp = Company.objects.get(pk=company)
@@ -488,10 +487,12 @@ def _tabsStructure(request, company, page=1):
         prevVacName = request.POST.get('prevVacName', '')
         if len(prevVacName):
             # edit Vacancy
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
             try:
                 #check is there vacancy with 'old' name
-                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, item2value__attr__title="NAME",
-                                                 item2value__title=prevVacName)
+                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, c2p__parent=dep_id,
+                                          item2value__attr__title="NAME", item2value__title=prevVacName)
                 vac.setAttributeValue({'NAME': vacancyName}, usr)
                 vac.reindexItem()
             except:
