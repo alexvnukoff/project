@@ -699,7 +699,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .var-main{ position:relative; float:left; width:100%; border-bottom:#d7d7d7 1px solid; padding-bottom:40px;}
 .prd-new{ position:relative; float:left; width:360px; margin:0 20px 0 0; display:inline;}
 .listnew li{ position:relative; float:left; width:150px; margin:30px 15px 0 0; display:inline;}
-.listnew li p{ padding-top:8px; color:#999;}
+.listnew li p{ padding-top:8px; color:#999;height: 5px;}
 .listnew li font.number{ font-size:16px; font-weight:bold; color:#ca4228;}
 .listnew li .viewall{ color:#9a9a9a;}
 .items-coupon h2{ font-size: 30px; font-weight: 300; padding-top:5px;}
