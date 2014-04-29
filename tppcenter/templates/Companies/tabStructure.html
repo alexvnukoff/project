@@ -2,33 +2,55 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
+<script>
+    // show or hide small arrows near the Department name
+    $(function() {
+        var dep_lst = $('.sitemap li');
+        dep_lst.each(function() {
+            var vac_lst = $(this).find('li');
+            if(vac_lst.size() == 0) {
+                $(this).children('a').css('background', 'none');
+            }
+        });
+    });
+</script>
+
+
 <div class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
             <ul class="sitemap">
                 {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as name %}
-
                     <li data-department="{{ id }}">
                         <a href="#" title="{{ name }}">{{ name }}</a>
+                        <ul class="sub">
+                            {% for vac_id, vac_attr in vacanciesList.items %}
+                                {% with vac_attr.NAME|first as vac_name %}
+                                {% with vac_attr.DEPARTMENT_ID|first as dep_id %}
+                                {% if id == dep_id %}
+                                    <li data-vacancy="{{ vac_id }}" data-department="{{ id }}"><span>{{ vac_name }}</span></li>
+                                {% endif %}
+                                {% endwith %}
+                                {% endwith %}
+                            {% endfor %}
+                        </ul>
                     </li>
                     {% endwith %}
-
                 {% empty %}
                     <div class="no-results">{% trans "No Departments found." %}</div>
                 {% endfor %}
-
             </ul>
             <!-- right buttons menu -->
             <div class="btn-clumn">
                 {% if 'add_department' in permissionsList %}
-                    <i class="btnadd btnaction imgnews addform" id="dep-add-button"></i>
+                    <i class="btnadd btnaction imgnews addform" id="add-button"></i>
                 {% endif %}
                 {% if 'change_department' in permissionsList %}
-                    <i class="btnedit btnaction imgnews" id="dep-edit-button"></i>
+                    <i class="btnedit btnaction imgnews" id="edit-button"></i>
                 {% endif %}
                 {% if 'delete_department' in permissionsList %}
-                    <i class="btnremove btnaction imgnews" id="dep-remove-button"></i>
+                    <i class="btnremove btnaction imgnews" id="remove-button"></i>
                 {% endif %}
             </div>
 
@@ -40,6 +62,18 @@
                     <input type="text" name="" id="dep-name" class="textstructure" />
                     <div class="formadd-button">
                         <a class="btntype2" id="btn-add-depart" href="#">{% trans "Add" %}</a>
+                        <a class="btntype1" href="#">{% trans "Cancel" %}</a>
+                    </div>
+                </div>
+            </div>
+            <!-- add Vacancy popup window -->
+            <div class="vacadd" id="add-vac-popup">
+                <i class="close-formadd imgnews"></i>
+                <div class="title">{% trans "Vacancy title" %}</div>
+                <div class="staffaddin">
+                    <input type="text" name="" id="vac-name" class="textstructure" />
+                    <div class="formadd-button">
+                        <a class="btntype2" id="btn-add-vacancy" href="#">{% trans "Add" %}</a>
                         <a class="btntype1" href="#">{% trans "Cancel" %}</a>
                     </div>
                 </div>
