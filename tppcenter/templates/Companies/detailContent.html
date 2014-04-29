@@ -126,8 +126,7 @@
             var color  = $(this).css("background-color");
             tr.css("background-color","#FF3700");
 
-            if (confirm('{%  trans "Do you want to delete this record?" %}'))
-            {
+            if (confirm('{%  trans "Do you want to delete this record?" %}')) {
                 var contentHolder = $('#staff-tab .tpp-dt-content');
                 contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
@@ -135,8 +134,7 @@
                         contentHolder.replaceWith(data);
                         }, 'html');
             }
-            else
-            {
+            else {
                  tr.css("background", color);
             }
             return false;
@@ -160,12 +158,10 @@
             var departmentName = $('#dep-list').find(":selected").text();
             var vacancyName = $('#vacancy-list').find(":selected").text();
             var isAdmin = 0;
-            if ($('#is-admin').is(':checked'))
-            {
+            if ($('#is-admin').is(':checked')) {
                 isAdmin = 1;
             }
-            else
-            {
+            else {
                 isAdmin = 0;
             }
 
@@ -209,16 +205,13 @@
         $(document).on('mouseenter','.sitemap > li', function() {
             currentDepRow = $(this);
             currentDepRow.css('cursor', 'pointer');
-            if(departmentID == 0)
-            {
+            if(departmentID == 0) {
                 bkgr_color = currentDepRow.css("background-color");
                 font_color = currentDepRow.children('a').css("color");
                 currentDepRow.css("background-color", bg_color_lookup);
             }
-            else
-            {
-                if(currentDepRow.data('department') != departmentID)
-                {
+            else {
+                if(currentDepRow.data('department') != departmentID) {
                     bkgr_color = currentDepRow.css("background-color");
                     font_color = currentDepRow.children('a').css("color");
                     currentDepRow.css("background-color", bg_color_lookup);
@@ -230,18 +223,15 @@
         $(document).on('mouseenter','.sub > li', function() {
             currentVacRow = $(this);
             currentVacRow.css('cursor', 'pointer');
-            if(vacancyID == 0)
-            {
+            if(vacancyID == 0) {
                 bg_vac_color = currentVacRow.css("background-color");
                 vac_font_color = currentVacRow.css("color");
                 currentVacRow.css("background-color", bg_color_vac_lookup);
                 currentVacRow.css("color", text_color_vac_lookup);
             }
-            else //if Vacancy already selected...
-            {
+            else { //if Vacancy already selected...
                 //... then lookup only for unselected items
-                if(currentVacRow.data('vacancy') != vacancyID)
-                {
+                if(currentVacRow.data('vacancy') != vacancyID) {
                     bg_vac_color = currentVacRow.css("background-color");
                     vac_font_color = currentVacRow.css("color");
                     currentVacRow.css("background-color", bg_color_vac_lookup);
@@ -253,15 +243,12 @@
         // leave Department row
         $(document).on('mouseleave', '.sitemap > li', function() {
             currentDepRow = $(this);
-            if(departmentID == 0)
-            {
+            if(departmentID == 0) {
                 currentDepRow.css("background-color", bkgr_color);
                 currentDepRow.children('a').css("color", font_color);
             }
-            else
-            {
-                if(currentDepRow.data('department') != departmentID)
-                {
+            else {
+                if(currentDepRow.data('department') != departmentID) {
                     currentDepRow.css("background-color", bkgr_color);
                     currentDepRow.children('a').css("color", font_color);
                 }
@@ -271,16 +258,13 @@
         // leave Vacancy row
         $(document).on('mouseleave', '.sub > li', function() {
             currentVacRow = $(this);
-            if(vacancyID == 0)
-            {
+            if(vacancyID == 0) {
                 currentVacRow.css("background-color", bg_vac_color);
                 currentVacRow.css("color", vac_font_color);
             }
-            else // if Vacancy already selected then...
-            {
+            else {// if Vacancy already selected then...
                 // do not lookup selected Vacancy row
-                if(currentVacRow.data('vacancy') != vacancyID)
-                {
+                if(currentVacRow.data('vacancy') != vacancyID) {
                     currentVacRow.css("background-color", bg_vac_color);
                     currentVacRow.css("color", vac_font_color);
                 }
@@ -291,6 +275,7 @@
         $(document).on('click', '.sitemap > li', function() {
 		    currentDepRow = $(this);
             currentDepID = currentDepRow.data('department');
+
             if(departmentID == 0) {
                 currentDepRow.css("background-color", bg_color_dep_selected);
                 currentDepRow.children('a').css("color", text_color_dep_selected);
@@ -325,7 +310,6 @@
                     lastSelectedVac = $('.sub li[data-vacancy=' + memVac + ']');
                     lastSelectedVac.css("background-color", bkgr_color);
                     lastSelectedVac.css("color", vac_font_color);
-
                 }
             }
             $('#edit-button').css('visibility', 'visible');
@@ -375,14 +359,12 @@
         //============== Operation menu ====================================
         // add Department (popup window)
         $(document).on('click','#add-button', function() {
-            if(departmentID == 0)
-            {
+            if(departmentID == 0) {
                 $('#fade-profile').show();
                 $('.staffadd').show();
                 return false;
             }
-            else
-            {
+            else {
                 $('#fade-profile').show();
                 $('.vacadd').show();
                 return false;
@@ -391,18 +373,15 @@
 
         // edit Department or Vacancy (popup window)
         $(document).on('click','#edit-button', function() {
-            if(departmentID != 0 && vacancyID == 0)
-            {
+            if(departmentID != 0 && vacancyID == 0) {
                 prevDepName = currentDepRow.context.innerText;
                 $('#dep-name').val(prevDepName);
                 $('#fade-profile').show();
                 $('.staffadd').show();
                 return false;
             }
-            else
-            {
-                if(vacancyID != 0)
-                {
+            else {
+                if(vacancyID != 0) {
                     prevVacName = currentVacRow.context.innerText;
                     $('#vac-name').val(prevVacName);
                     $('#fade-profile').show();
@@ -415,10 +394,8 @@
         // remove Department or Vacancy
         $(document).on('click','#remove-button', function() {
             var contentHolder = $('#structure-tab .tpp-dt-content');
-            if(vacancyID != 0)
-            {
-                if(confirm('{% trans "Do you want to delete this Vacancy?" %}'))
-                {
+            if(vacancyID != 0) {
+                if(confirm('{% trans "Do you want to delete this Vacancy?" %}')) {
                     contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
                     $.post('{% url "companies:tab_structure" item_id %}', {vacancyID: vacancyID}, function(data){
                                 contentHolder.replaceWith(data);
@@ -426,12 +403,9 @@
                 }
                 return false;
             }
-            else
-            {
-                if(departmentID !=0)
-                {
-                    if(confirm('{% trans "Do you want to delete this Department?" %}'))
-                    {
+            else {
+                if(departmentID !=0) {
+                    if(confirm('{% trans "Do you want to delete this Department?" %}')) {
                         contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
                         $.post('{% url "companies:tab_structure" item_id %}', {departmentDelID: departmentID}, function(data){
                                     contentHolder.replaceWith(data);
@@ -444,17 +418,13 @@
 	});
 </script>
 
-
-
-
 <!-- ===================== Company Structure popups ======================================= -->
 <script type="text/javascript">
     // script for Department popup window
     prevDepName = '';
     $(function(){
         // press Add button
-	    $(document).on('click','#btn-add-depart', function()
-        {
+	    $(document).on('click','#btn-add-depart', function() {
             var inputField = $('#dep-name');
             var departmentName = inputField.val();
             var contentHolder = $('#structure-tab .tpp-dt-content');
@@ -509,8 +479,7 @@
 		});
 
         // press Cancel button
-	    $(document).on('click','.btntype1', function()
-        {
+	    $(document).on('click','.btntype1', function() {
             $('.vacadd').hide();      <!-- hide pop-up window -->
             $('#fade-profile').hide();  <!-- switch off gray background -->
             return false;
