@@ -1,10 +1,7 @@
 from haystack.backends import SQ
-from appl import func
 from appl.func import getActiveSQS
 from appl.models import Product,  UserSites, News, BusinessProposal
 from core.models import Item
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import  HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _

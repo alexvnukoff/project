@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-04-27 13:23+0000\n"
-"PO-Revision-Date: 2014-04-27 16:49+0200\n"
+"PO-Revision-Date: 2014-04-29 12:53+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3595,7 +3595,7 @@ msgstr "Бизнес предложения"
 
 #: tppcenter/templates/main/currentCompany.html:5
 msgid "Current organization"
-msgstr "Текущая орагнизация"
+msgstr "Текущая организация"
 
 #: tppcenter/templates/main/denied.html:10
 msgid "Permission denied"

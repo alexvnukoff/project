@@ -1,8 +1,8 @@
 
-from appl.models import UserSites, Resume, Cabinet, Organization
+from appl.models import UserSites, Resume,  Organization
 from appl import func
 from core.tasks import addNewSite
-from core.models import Dictionary, Item
+from core.models import  Item
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -89,37 +89,7 @@ def _siteList(request):
 
 
 
-def _resumeDetailContent(request, item_id):
 
-    resume = get_object_or_404(Resume, pk=item_id)
-
-
-    attr = (
-        'NAME', 'BIRTHDAY', 'MARITAL_STATUS', 'NATIONALITY', 'TELEPHONE_NUMBER','ADDRESS', 'FACULTY', 'PROFESSION',
-        'STUDY_START_DATE', 'STUDY_END_DATE', 'STUDY_FORM', 'COMPANY_EXP_1', 'COMPANY_EXP_2','COMPANY_EXP_3',
-        'POSITION_EXP_1', 'POSITION_EXP_2', 'POSITION_EXP_3', 'START_DATE_EXP_1', 'START_DATE_EXP_2','START_DATE_EXP_3',
-        'END_DATE_EXP_1', 'END_DATE_EXP_2', 'END_DATE_EXP_3', 'ADDITIONAL_STUDY', 'LANGUAGE_SKILL','COMPUTER_SKILL',
-        'ADDITIONAL_SKILL', 'SALARY', 'ADDITIONAL_INFORMATION', 'INSTITUTION'
-    )
-
-    resumeValues = resume.getAttributeValues(*attr)
-
-    title = resumeValues.get('NAME', False)[0] if resumeValues.get('NAME', False) else ""
-
-
-    template = loader.get_template('Resume/detailContent.html')
-
-    templateParams = {
-       'resumeValues': resumeValues,
-       'item_id': item_id
-        }
-
-    context = RequestContext(request, templateParams)
-    rendered = template.render(context)
-
-
-
-    return rendered, title
 
 
 

@@ -441,10 +441,12 @@ def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
-    #check if there Department for deletion
+    errorMessage = ''
+    usr = request.user
     comp = Company.objects.get(pk=company)
-    departmentForDeletion = request.POST.get('departmentID', 0)
 
+    # check Department for deletion
+    departmentForDeletion = request.POST.get('departmentDelID', 0)
     try:
         departmentForDeletion = int(departmentForDeletion)
     except ValueError:
@@ -455,6 +457,7 @@ def _tabsStructure(request, company, page=1):
         for d in dep_lst:
             try:
                 d.delete()
+                comp.reindexItem()
             except Exception as e:
                 print('Can not delete Department. The reason is: ' + str(e))
                 pass
@@ -463,7 +466,6 @@ def _tabsStructure(request, company, page=1):
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
-        usr = request.user
         #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
@@ -473,32 +475,61 @@ def _tabsStructure(request, company, page=1):
         except:
             obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
             Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
+            comp.reindexItem()
 
         obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
-
-        if not Vacancy.objects.filter(c2p__parent=obj_dep.pk).exists():
-            try:
-                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
-                trans_real.activate('ru') #activate russian locale
-                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
-                trans_real.deactivate() #deactivate russian locale
-
-                if not res:
-                    vac.delete()
-                    return False
-                try:
-                    Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
-                    #add current user to default Vacancy
-                except Exception as e:
-                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
-                            str(obj_dep.pk) + '. The reason is:' + str(e))
-                    vac.delete()
-            except Exception as e:
-                print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
-                pass
-
         obj_dep.reindexItem()
-        vac.reindexItem()
+
+    # add (edit) Vacancy to Department
+    vacancyName = request.POST.get('vacancyName', '')
+    if len(vacancyName):
+        #update vacancy if we received previous name
+        prevVacName = request.POST.get('prevVacName', '')
+        if len(prevVacName):
+            # edit Vacancy
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
+            try:
+                #check is there vacancy with 'old' name
+                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, c2p__parent=dep_id,
+                                          item2value__attr__title="NAME", item2value__title=prevVacName)
+                vac.setAttributeValue({'NAME': vacancyName}, usr)
+                vac.reindexItem()
+            except:
+                pass
+        else:
+            # add a new vacancy to Department
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
+            if dep_id > 0:
+                try:
+                    obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+                    if not res:
+                        vac.delete()
+                        return False
+                    try:
+                        Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                        obj_dep.reindexItem()
+                        vac.reindexItem()
+                    except Exception as e:
+                        print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                                str(obj_dep.pk) + '. The reason is:' + str(e))
+                        vac.delete()
+                except Exception as e:
+                    print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
+                    pass
+
+    # delete Vacancy from Department
+    vacancyID = request.POST.get('vacancyID', 0)
+    vacancyID = int(vacancyID)
+    if vacancyID > 0:
+        try:
+            vac = Vacancy.objects.get(pk=vacancyID)
+            vac.delete()
+        except:
+            pass
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
     attr = ('NAME', 'SLUG')
@@ -519,6 +550,16 @@ def _tabsStructure(request, company, page=1):
         vacanciesList = []
     else:
         vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+        # correlation between Departments and Vacancies
+        correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child'))
+
+        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
+        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
+            for t in correlation: #lookup into correlation list
+                if t[1] == vac_id: #if Vacancy ID is equal then...
+                    #... add a new key into Vacancy attribute dictionary
+                    vac_att['DEPARTMENT_ID'] = [t[0]]
+                    break
 
     templateParams = {
         'departmentsList': departmentsList,
@@ -528,6 +569,7 @@ def _tabsStructure(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
+        'errorMessage': errorMessage,
     }
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
@@ -577,29 +619,29 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
-                    #if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
                         # if no attached Cabinets to this Vacancy then ...
-                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                    if res:
-                        try:
-                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
-                                                    'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                            group = Group.objects.get(name='Company Creator')
-                            usr.is_manager = True
-                            usr.save()
-                            group.user_set.add(usr)
-                        except Exception as e:
-                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                        if res:
+                            try:
+                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
+                                                        'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
+                                group = Group.objects.get(name='Company Creator')
+                                usr.is_manager = True
+                                usr.save()
+                                group.user_set.add(usr)
+                            except Exception as e:
+                                print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
 
-                    if isAdmin:
-                        flag = True
+                        if isAdmin:
+                            flag = True
+                        else:
+                            flag = False
+
+                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                                   create_user=usr)
                     else:
-                        flag = False
-
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                               create_user=usr)
-                    #else:
-                    #    errorMessage = 'You can not add user at vacancy which already busy.'
+                        errorMessage = 'You can not add user at vacancy which already busy.'
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
