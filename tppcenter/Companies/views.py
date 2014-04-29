@@ -442,6 +442,7 @@ def _tabsStructure(request, company, page=1):
         Show content of the Company-details-structure panel
     '''
     #check if there Department for deletion
+    errorMessage = ''
     usr = request.user
     comp = Company.objects.get(pk=company)
 
@@ -457,6 +458,7 @@ def _tabsStructure(request, company, page=1):
         for d in dep_lst:
             try:
                 d.delete()
+                comp.reindexItem()
             except Exception as e:
                 print('Can not delete Department. The reason is: ' + str(e))
                 pass
@@ -474,6 +476,7 @@ def _tabsStructure(request, company, page=1):
         except:
             obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
             Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
+            comp.reindexItem()
 
         obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
         obj_dep.reindexItem()
@@ -565,6 +568,7 @@ def _tabsStructure(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
+        'errorMessage': errorMessage,
     }
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
@@ -614,29 +618,29 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
-                    #if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
                         # if no attached Cabinets to this Vacancy then ...
-                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                    if res:
-                        try:
-                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
-                                                    'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                            group = Group.objects.get(name='Company Creator')
-                            usr.is_manager = True
-                            usr.save()
-                            group.user_set.add(usr)
-                        except Exception as e:
-                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                        if res:
+                            try:
+                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
+                                                        'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
+                                group = Group.objects.get(name='Company Creator')
+                                usr.is_manager = True
+                                usr.save()
+                                group.user_set.add(usr)
+                            except Exception as e:
+                                print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
 
-                    if isAdmin:
-                        flag = True
+                        if isAdmin:
+                            flag = True
+                        else:
+                            flag = False
+
+                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                                   create_user=usr)
                     else:
-                        flag = False
-
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                               create_user=usr)
-                    #else:
-                    #    errorMessage = 'You can not add user at vacancy which already busy.'
+                        errorMessage = 'You can not add user at vacancy which already busy.'
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
