@@ -1,33 +1,9 @@
-from urllib.parse import urlencode
-from django.http.response import HttpResponsePermanentRedirect
-from haystack.backends import SQ
-from appl import func
-from appl.func import getActiveSQS, setPaginationForItemsWithValues, getPaginatorRange
-from appl.models import Department, Organization, NewsCategories, Gallery, Country, UserSites, Cabinet, Vacancy
-from core.models import Item, Group
-from datetime import datetime
-from django.core.urlresolvers import reverse
-from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
-from django.contrib.syndication.views import Feed
-from django.forms.models import modelformset_factory
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseGone
+from appl.func import setPaginationForItemsWithValues, getPaginatorRange
+from appl.models import Department, UserSites, Cabinet, Vacancy
+from core.models import Item
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.utils.feedgenerator import Rss201rev2Feed
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
-import tppcenter
-from tppcenter.forms import ItemForm,BasePhotoGallery
-from pytz import timezone
-import pytz
-import json
-import requests
-from django.contrib.sites.models import Site
-
-
-from core.tasks import addNewsAttrubute
 from django.conf import settings
 
 def get_structure_list(request, page=1):
