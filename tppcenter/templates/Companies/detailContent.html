@@ -307,9 +307,11 @@
                     lastSelectedDep.children('a').css("color", font_color);
                     departmentID = currentDepID;
 
-                    lastSelectedVac = $('.sub li[data-vacancy=' + memVac + ']');
+                    VacID = memVac == 0 ? vacancyID : memVac;
+                    lastSelectedVac = $('.sub li[data-vacancy=' + VacID + ']');
                     lastSelectedVac.css("background-color", bkgr_color);
                     lastSelectedVac.css("color", vac_font_color);
+                    vacancyID = 0;
                 }
             }
             $('#edit-button').css('visibility', 'visible');
@@ -325,6 +327,7 @@
             if(vacancyID == 0) {
                 currentVacRow.css("background-color", bg_color_vac_selected);
                 currentVacRow.css("color", text_color_vac_selected);
+                memVac = vacancyID;
                 vacancyID = currentVacID;
                 if(departmentID != 0) {
                     return false;
