@@ -4,10 +4,9 @@
 
 <script type="text/javascript">
     $(function(){
-        // save Vacancy list content for swapping and inti vacancies for first department
+        // save Vacancy list content for swapping and init vacancies for first department
         savedItems = $('#vacancy-list').html();
-        //savedItems = $('#vacancy-list option').html();
-        // pull Vacancies related to selected Department in popup comboboxes
+        // pull Vacancies related to selected Department in popup combobox
         $(document).on('change','#dep-list', function() {
 			depID = $('#dep-list').find(':selected').data('department');
 			$('#vacancy-list').html(savedItems);
