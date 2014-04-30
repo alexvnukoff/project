@@ -168,6 +168,16 @@ class Branch(Item):
         return self.getName()
 
 
+class Requirement(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+
+    def __str__(self):
+        return self.getName()
+
+
 class AdvBannerType(Item):
 
     enableBranch = models.BooleanField(default=False)

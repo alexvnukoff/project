@@ -115,7 +115,7 @@
 
                     	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
-                      <!---  <li><a class="single-page" href="#">Услуги</a></li>-->
+
                         <li><a class="single-page" href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
                         <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
                         <li><a class="single-page" href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
@@ -124,7 +124,8 @@
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
                         <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
-                        <!--<li><a class="single-page" href="#">Вакансии</a></li>-->
+                        <li><a  href="{% url 'vacancy:main' %}">{% trans 'Vacancy' %} </a></li>
+
                         <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
 
                     </ul>
@@ -134,7 +135,7 @@
                     <ul class="tab1-cate">
                     	<li><a href="{%url 'news:my_main' %}">{% trans 'News' %}</a></li>
                         <li><a href="{% url 'products:my_main' %}">{% trans 'Products' %}</a></li>
-                       <!-- <li><a href="#">Услуги</a></li>-->
+
                         <li><a href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
                         <li><a href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
                         <li><a href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
@@ -145,9 +146,9 @@
                         <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
                         <li><a href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
                         <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
+                        <li><a href="{% url 'vacancy:my_main' %}">{% trans 'Vacancy' %}</a></li>
 
-                        <!--<li><a href="#">ТПП ТВ </a></li>-->
-                       <!-- <li><a href="#">Вакансии</a></li>-->
+
                         <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                         <!-- <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>-->
                     </ul>
