@@ -14,11 +14,23 @@
         });
     });
 </script>
-
+<script>
+    // hide error message on click
+    $(function() {
+        $(document).on('click', '.error-msg p', function() {
+            $(this).fadeOut(800);
+        });
+    });
+</script>
 
 <div class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
+            <div class="error-msg">
+                {% if errorMessage %}
+                    <p>{{ errorMessage }}</p>
+                {% endif %}
+            </div>
             <ul class="sitemap">
                 {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as name %}

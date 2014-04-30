@@ -582,7 +582,7 @@ def _tabsStructure(request, tpp, page=1):
                 d.delete()
                 comp.reindexItem()
             except Exception as e:
-                print('Can not delete Department. The reason is: ' + str(e))
+                errorMessage = _('Can not delete Department. The reason is: %(reason)s') % {"reason": str(e)}
                 pass
 
     #check if there Department for adding
@@ -619,6 +619,7 @@ def _tabsStructure(request, tpp, page=1):
                 vac.setAttributeValue({'NAME': vacancyName}, usr)
                 vac.reindexItem()
             except:
+                errorMessage = _('Could not find in DB Vacancy %(name)s') % {"name": vacancyName}
                 pass
         else:
             # add a new vacancy to Department
@@ -631,17 +632,20 @@ def _tabsStructure(request, tpp, page=1):
                     res = vac.setAttributeValue({'NAME': vacancyName}, usr)
                     if not res:
                         vac.delete()
-                        return False
+                        errorMessage = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}
                     try:
                         Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
                         obj_dep.reindexItem()
                         vac.reindexItem()
                     except Exception as e:
-                        print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
-                                str(obj_dep.pk) + '. The reason is:' + str(e))
+                        errorMessage = _('Can not create Relationship between Vacancy %(vac_name)s and Department ID '
+                                             '%(dep_name)s. The reason is: %(reason)s') % {"vac_name": vacancyName,
+                                                                                           "dep_name": str(obj_dep.pk),
+                                                                                           "reason": str(e)}
                         vac.delete()
                 except Exception as e:
-                    print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
+                    errorMessage = _('Can not create Vacancy for Department ID: %(dep_id)s. The reason is: %(reason)s')\
+                                    % {"dep_id": str(obj_dep.pk), "reason": str(e)}
                     pass
 
     # delete Vacancy from Department
@@ -652,6 +656,8 @@ def _tabsStructure(request, tpp, page=1):
             vac = Vacancy.objects.get(pk=vacancyID)
             vac.delete()
         except:
+            errorMessage = _('Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s') %\
+                                        {"dep_id": str(vacancyID), "reason": str(e)}
             pass
 
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
@@ -660,7 +666,7 @@ def _tabsStructure(request, tpp, page=1):
     departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
 
     paginator_range = func.getPaginatorRange(page)
-    url_paginator = "companies:tab_structure_paged"
+    url_paginator = "tpp:tab_structure_paged"
 
     permissionsList = comp.getItemInstPermList(request.user)
 
@@ -717,6 +723,7 @@ def _tabsStaff(request, tpp, page=1):
                 Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinetToDetach,
                                             type='relation').delete()
         except Exception as e:
+            errorMessage = _('User %(user)s has not Cabinet.') % {"user": str(request.user)}
             pass
 
     # add a new user to department
@@ -754,7 +761,8 @@ def _tabsStaff(request, tpp, page=1):
                                 usr.save()
                                 group.user_set.add(usr)
                             except Exception as e:
-                                print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                                errorMessage = _('Can not set attributes for Cabinet ID: %(cab_id)s.\
+                                                The reason is: %(reason)s') % {"cab_id": str(cab.pk), "reason": str(e)}
 
                         if isAdmin:
                             flag = True
@@ -764,7 +772,9 @@ def _tabsStaff(request, tpp, page=1):
                         Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
                                                                    create_user=usr)
                     else:
-                        errorMessage = 'You can not add user at vacancy which already busy.'
+                        errorMessage = _('You can not add user at Vacancy which already busy.')
+                else:
+                    errorMessage = _('You can not add user [%(user)s] at the company twice.') % {"user": str(usr)}
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
@@ -791,7 +801,7 @@ def _tabsStaff(request, tpp, page=1):
                         break
 
     paginator_range = func.getPaginatorRange(page)
-    url_paginator = "companies:tab_staff_paged"
+    url_paginator = "tpp:tab_staff_paged"
 
     #create full list of TPP's Departments
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
