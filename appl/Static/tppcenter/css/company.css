@@ -439,3 +439,9 @@ rgb(33,136,187) 100%);}
 .contactform li.end .btntype1, .contactform li.end .btntype2{ font-size:17px; padding:8px 40px;}
 .closecontact{ position:absolute;}
 
+.error-msg p {
+    background: #FC2D46;
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 5px;
+}
