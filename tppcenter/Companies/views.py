@@ -453,17 +453,24 @@ def _tabsStructure(request, company, page=1):
         departmentForDeletion = 0
 
     if departmentForDeletion > 0:
+        # delete all Department's Vacancies
+        itm_lst = Item.objects.filter(pk=departmentForDeletion)
+        for itm in itm_lst:
+            try:
+                Item.hierarchy.deleteTree(itm.pk)
+            except Exception as e:
+                errorMessage = _('Can not delete Department hierarchy. The reason is: %(reason)s') % {"reason": str(e)}
+
+        # delete Department itself
         dep_lst = Department.objects.filter(pk=departmentForDeletion)
         for d in dep_lst:
             try:
-                #d.delete()
-                d.activation(eDate=now())
-                d.end_date = now()
-                d.reindexItem()
-                comp.reindexItem()
+                d.delete()
             except Exception as e:
                 errorMessage = _('Can not delete Department. The reason is: %(reason)s') % {"reason": str(e)}
                 pass
+
+        comp.reindexItem()
 
     #check if there Department for adding
     departmentToChange = request.POST.get('departmentName', '')
