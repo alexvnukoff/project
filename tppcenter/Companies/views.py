@@ -456,7 +456,10 @@ def _tabsStructure(request, company, page=1):
         dep_lst = Department.objects.filter(pk=departmentForDeletion)
         for d in dep_lst:
             try:
-                d.delete()
+                #d.delete()
+                d.activation(eDate=now())
+                d.end_date = now()
+                d.reindexItem()
                 comp.reindexItem()
             except Exception as e:
                 errorMessage = _('Can not delete Department. The reason is: %(reason)s') % {"reason": str(e)}
