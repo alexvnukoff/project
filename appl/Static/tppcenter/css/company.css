@@ -323,9 +323,11 @@ rgb(33,136,187) 100%);}
 .cpn-details-tab .content-tab-ads .clumn ul li{ position:relative; float:left; width:100%; padding:6px 0; font-size:11px;}
 .cpn-details-tab .content-tab-ads .clumn ul li input{ margin:0 5px 0 0; padding:0;}
 .cpn-details-tab .content-tab-ads .clumn ul li:nth-child(2n){ background:#FFF;}
-.ads-details-right{ position:relative; float:right; width:280px;}
+.ads-details-right{ position:relative; float:right; width:300px;}
+.ads-order-details{ position:relative; float: left; width:280px;}
 
 .screen{ position:relative; float:left; width:278px; border:1px #d7d7d7 solid; margin:12px 0 0 0; box-shadow: 0 0 7px #d7d7d7;}
+.ads-order-details .title,
 .ads-details-right .title{ position:relative; float:left; width:100%; margin:25px 0 10px 0; display:inline; font-size:18px; font-weight:bold; color:#000;}
 .ads-price{ position:relative; float:left; width:100%;}
 .ads-pricein{position:relative; float:left; width:100%; height:270px;}
@@ -335,7 +337,9 @@ rgb(33,136,187) 100%);}
 .ads-pricein ul li .right, .total-price .right{ float:right; padding-right:5px;}
 .total-price{ position:relative; float:left; width:100%; background:#e8e8e8; padding:8px 0;}
 .total-price.white{ background:#FFF;}
+.ads-order-details .btnprice,
 .ads-details-right .btnprice{ color:#FFF; font-size:17px; border-radius:3px; margin-top:10px; display:inline-block;}
+.ads-order-details .btnprice:hover,
 .ads-details-right .btnprice:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
 .btncatedt{ position:absolute; height:21px; color:#FFF; line-height:21px; border-radius:3px; background: url("../img/btnbuy.gif") repeat-x; padding:0 30px; text-shadow:1px -1px 1px #327fa4; top:5px; right:5px;}
 .btncatedt:hover{ opacity:0.9; filter:alpha(opacity=90); color:#FFF; text-decoration:none;}

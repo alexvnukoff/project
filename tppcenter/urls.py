@@ -46,7 +46,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', tppcenter.views.home),
+    url(r'^$', tppcenter.views.home, name="main"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^addcon/', tppcenter.views.buildCountries),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),

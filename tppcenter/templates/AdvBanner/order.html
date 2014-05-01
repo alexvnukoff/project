@@ -270,17 +270,16 @@
 
 
 {% block content %}
-<div class="ads-details">
+<div class="new-details">
 
+        <div><h1 class="title">{% trans "Order details" %}</h1></div>
+        <div class="ads-order-details">
 
-        <div class="ads-details-right">
-
-            <div class="title">{% trans "Basket" %}</div>
                 <div class="ads-price">
                 	<div class="arrow-scroll-up"></div>
                 	<div class="ads-pricein">
                     	<ul>
-                            {% for name, cost in nameCost %}
+                            {% for name, cost in nameCost.items %}
                                 <li><span class="left">{{ name }}</span><span class="right">{{ cost }} $</span></li>
                             {% endfor %}
                         </ul>
@@ -292,8 +291,8 @@
                     <span class="right">{{ startDate }}</span>
                 </div>
                 <div class="total-price white">
-                	<span class="left"><b>{% trans "End date" %}:</b></span>
-                    <span class="right"><b>{{ endDate }}</b><b> $</b></span>
+                	<span class="left">{% trans "End date" %}:</span>
+                    <span class="right">{{ endDate }}</span>
                 </div>
                 <div class="total-price brown">
                 	<span class="left">{% trans "Days Q-ty" %}:</span>
@@ -303,9 +302,18 @@
                 	<span class="left"><b>{% trans "Summary" %}:</b></span>
                     <span class="right"><b>{{ totalCost }}</b><b> $</b></span>
                 </div>
+                <div class="total-price brown">
+                	<span class="left"><b>{% trans "Order number" %}:</b></span>
+                    <span class="right"><b>{{ order }}</b></span>
+                </div>
 
 
-                <input type="submit" class="btnprice" value="{% trans "Pay" %}">
-            </div>
+
+        </div>
+        <div class="ads-order-details" style="margin-left: 10px;">
+            <div>{% trans "Thank you for order, you will be notified when the adveretisement be applied" %}</div>
+            <div style="margin-top: 10px;"><img src="{{ MEDIA_URL }}original/{{ IMAGE }}" /></div>
+            <a href="{% url "main" %}" class="btnprice">{% trans "Continue" %}</a>
+        </div>
 </div>
 {% endblock %}

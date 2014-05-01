@@ -1,6 +1,5 @@
 import json
-from appl import func
-from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country, Order, Organization
+from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country, Order, Organization, AdvOrder
 from core.models import Item
 from core.tasks import addBannerAttr
 from django.conf import settings
@@ -11,6 +10,7 @@ from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
+from dateutil.parser import parse
 import datetime
 
 @login_required(login_url='/login/')
@@ -18,7 +18,7 @@ def gatPositions(request):
     '''
         Show possible advertisement position as a first page and show them by site
     '''
-
+    '''
     current_company = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
@@ -29,8 +29,8 @@ def gatPositions(request):
     perm_list = item.getItemInstPermList(request.user)
 
     if 'add_adv_banner' not in perm_list:
-        return func.permissionDenied()
-
+        return HttpResponseRedirect(reverse('denied'))
+    '''
     bannerType = AdvBannerType.objects.all().values('pk', 'sites__name')
 
     bannerType_ids = [btype['pk'] for btype in bannerType]
@@ -129,7 +129,7 @@ def addBanner(request, bannerType):
     '''
         View for a form of adding new banners
     '''
-
+    '''
     current_company = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
@@ -140,7 +140,8 @@ def addBanner(request, bannerType):
     perm_list = item.getItemInstPermList(request.user)
 
     if 'add_adv_banner' not in perm_list:
-        return func.permissionDenied()
+        return HttpResponseRedirect(reverse('denied'))
+    '''
 
     btype = get_object_or_404(AdvBannerType, pk=bannerType)
 
@@ -244,6 +245,8 @@ def addBanner(request, bannerType):
                         if delta.days <= 0:
                             form.errors.update({"DATE": _("You should choose a valid date range")})
 
+        order = None
+
         if form.is_valid():
             try:
                 current_company = request.session.get('current_company', False)
@@ -252,7 +255,7 @@ def addBanner(request, bannerType):
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 
             if form.is_valid():
-                return HttpResponseRedirect(reverse('advbanner:resultOrder', args=(order, )))
+                return HttpResponseRedirect(reverse('adv_banners:resultOrder', args=(order, )))
 
 
 
@@ -284,8 +287,9 @@ def addBanner(request, bannerType):
 @login_required(login_url='/login/')
 def resultOrder(request, orderID):
 
-    current_company = request.session.get('current_company', False)
 
+    current_company = request.session.get('current_company', False)
+    '''
     if not request.session.get('current_company', False):
          return func.emptyCompany()
 
@@ -294,12 +298,12 @@ def resultOrder(request, orderID):
     perm_list = item.getItemInstPermList(request.user)
 
     if 'add_adv_banner' not in perm_list:
-        return func.permissionDenied()
+        return HttpResponseRedirect(reverse('denied'))
+    '''
 
-    get_object_or_404(Order, pk=orderID, c2p__parent=current_company)
+    order = get_object_or_404(AdvOrder, pk=orderID, c2p__parent=current_company)
 
-    order = Order.objects.get(pk=orderID)
-    ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE', 'END_EVENT_DATE')
+    ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE', 'END_EVENT_DATE', 'IMAGE')
 
     ordJson = ordWithValues.get('ORDER_HISTORY', [""])[0]
 
@@ -313,24 +317,34 @@ def resultOrder(request, orderID):
 
     for pid, cost in orderHistory.get('costs', {}).items():
 
-        name = placeNames.get(pid, [""])[0]
 
-        if isinstance(name, int):
-            name = ""
+
+        if int(pid) in placeNames:
+            attrValues = placeNames[int(pid)]
+        else:
+            attrValues = {}
+
+        if isinstance(attrValues, int):
+            attrValues = {}
 
         nameCostDict.update({
-            name: cost
+            attrValues.get('NAME', [""])[0] : cost
         })
+
+    startDate = parse(ordWithValues.get('START_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
+    endDate = parse(ordWithValues.get('END_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
 
     current_section = _('Banners')
 
     templateParams = {
         'current_section': current_section,
         'nameCost': nameCostDict,
-        'totalCost': orderHistory.get('COST', [0])[0],
-        'startDate': orderHistory.get('START_EVENT_DATE', [""])[0],
-        'endDate': orderHistory.get('END_EVENT_DATE', [""])[0],
-        'totalDays': orderHistory.get('ORDER_DAYS', [0])[0]
+        'totalCost': ordWithValues.get('COST', [0])[0],
+        'startDate': startDate,
+        'endDate': endDate,
+        'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
+        'IMAGE': ordWithValues.get('IMAGE', [''])[0],
+        'order': orderID
     }
 
     return render_to_response('AdvBanner/order.html', templateParams, context_instance=RequestContext(request))

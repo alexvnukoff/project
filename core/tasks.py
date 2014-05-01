@@ -522,6 +522,15 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     values['SITE_NAME'] = post.get('SITE_NAME', "")
     values['IMAGE'] = files.get('IMAGE', "")
 
+    stDate = post.get('st_date')
+    edDate = post.get('ed_date')
+
+    stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
+    edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
+
+    values['START_EVENT_DATE'] = stDate
+    values['END_EVENT_DATE'] = edDate
+
     form = ItemForm('AdvBanner', values=values)
     form.clean()
 
@@ -530,13 +539,7 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     if not item:
         raise Exception('Error occurred while saving form')
 
-    stDate = post.get('st_date')
-    edDate = post.get('ed_date')
-
-    stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
-    edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
-
-    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
+    Item.objects.filter(pk=item.pk).update(end_date=now())
     Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
 
     delta = edDate - stDate
