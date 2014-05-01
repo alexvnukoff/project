@@ -32,6 +32,7 @@ import tppcenter.Analytic.urls
 import tppcenter.Greetings
 import tppcenter.Greetings.urls
 import tppcenter.Resume.urls
+import tppcenter.Vacancy.urls
 
 import tppcenter.UserSites.urls
 
@@ -57,6 +58,7 @@ urlpatterns = patterns('',
     url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
     url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
+    url(r'^vacancy/', include(tppcenter.Vacancy.urls, namespace='vacancy')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),

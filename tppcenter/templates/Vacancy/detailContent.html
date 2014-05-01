@@ -1,0 +1,106 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="vacancy-dt">
+
+            {% with requirementValues.NAME.0 as name %}
+            {% with requirementValues.DETAIL_TEXT.0 as detail_text %}
+            {% with requirementValues.CITY.0 as city %}
+            {% with requirementValues.TYPE_OF_EMPLOYMENT.0 as type_of_employements %}
+            {% with requirementValues.REQUIREMENTS.0 as requirements %}
+            {% with requirementValues.TERMS.0 as terms %}
+            {% with requirementValues.IS_ANONYMOUS_VACANCY.0 as is_anonymous %}
+            {% with requirementValues.CREATE_DATE.0 as create_date %}
+
+            {% with organizationValues.NAME.0 as org_name %}
+             {% with organizationValues.SLUG.0 as org_slug %}
+
+
+
+
+
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="vacancy-button"><a href="#" id="send-resume" class="bigbuy">{% trans 'Send Resume' %}</a></div>
+                    <ul class="inforesume">
+                    	<li>
+                        	<label>{% trans 'Date' %}:</label>
+                            <span class="right">{{ create_date|date:'d M Y' }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Company' %}:</label>
+                            <span class="right">
+                                {% if is_anonymous %}
+                                    {% trans 'Anonymous company' %}
+                                {% else %}
+                                <a href="{% url 'companies:detail' org_slug %}">{{ org_name }}</a>
+                                {% endif %}
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="social">
+                        <a href="#"><i class="imgnews share-1"></i></a>
+                        <a href="#"><i class="imgnews share-2"></i></a>
+                        <a href="#"><i class="imgnews share-3"></i></a>
+                        <a href="#"><i class="imgnews share-4"></i></a>
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">Описание</a></li>
+
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	<ul class="innov-tab-content">
+
+                                    <li>
+                                    	<label>{% trans 'Type of employments' %}</label>
+                                        <p>{{ type_of_employements }}</p>
+                                    </li>
+
+                                    <li>
+                                    	<label>{% trans 'Description' %}</label>
+                                       <p>{{ detail_text }}</p>
+                                    </li>
+                                    <li>
+                                    	<label>{% trans 'Requirements' %}</label>
+                                        <p>{{ requirements }}</p>
+                                    </li>
+                                    <li>
+                                    	<label>{% trans 'Terms' %}</label>
+                                        <p>{{ terms }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                   </div>
+               </div>
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+
+     </div>
+
+
