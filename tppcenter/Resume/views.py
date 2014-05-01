@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
 
-login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
 
 

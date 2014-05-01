@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.utils.timezone import now
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy, Requirement
+                        Cabinet, InnovationProject, Vacancy, Requirement, Resume
 from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp, addNewRequirement
 from django.conf import settings
@@ -36,6 +36,7 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
 
     description = ''
     title = ''
+    resumesValues = ''
 
     if item_id is None:
         try:
@@ -44,6 +45,10 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
             vacancyPage = func.emptyCompany()
     else:
         result = _vacancyDetailContent(request, item_id)
+        if request.user.is_authenticated():
+            resumes =  Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
+            resumes_ids = [resume.pk for resume in resumes]
+            resumesValues = Item.getItemsAttributesValues(('NAME',),resumes_ids)
         vacancyPage = result[0]
         description = result[1]
         title = result[2]
@@ -62,7 +67,8 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
         'addNew': reverse('vacancy:add'),
         'item_id': item_id,
         'description': description,
-        'title': title
+        'title': title,
+        'resumesValues': resumesValues
     }
 
     return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
@@ -434,3 +440,24 @@ def deleteVacancy(request, item_id):
 
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('vacancy:main'))
+
+
+def sendResume(request):
+    response = ""
+    if request.is_ajax():
+        if request.user.is_authenticated() and request.POST.get('VACANCY', False):
+            if request.POST.get('RESUME', False):
+                requirement = request.POST.get('VACANCY', "")
+                resume = request.POST.get('RESUME', '')
+                if Relationship.objects.filter(parent=Requirement.objects.get(pk=int(requirement)), child=Resume.objects.get(pk=int(resume))).exists():
+                      response = _('You cannot send more than one resume at the same job position.')
+                else:
+                    Relationship.setRelRelationship(parent=Requirement.objects.get(pk=int(requirement)), child=Resume.objects.get(pk=int(resume)), user=request.user)
+                    response = _('You have successfully sent the resume.')
+
+            else:
+                response = _('Resume  are required')
+        else:
+             response = _('Only registred users can send resume')
+
+        return HttpResponse(response)
