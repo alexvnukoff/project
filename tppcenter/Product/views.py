@@ -33,7 +33,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
     if item_id is None:
         try:
             attr  = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
-            productsPage = func.setContent(request, Product, attr, 'products', 'Products/contentPage.html', 1,
+            productsPage = func.setContent(request, Product, attr, 'products', 'Products/contentPage.html', 12,
                                            page=page, my=my)
 
         except ObjectDoesNotExist:
