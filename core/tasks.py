@@ -392,7 +392,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     return True
 
 
-#@shared_task
+@shared_task
 def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -473,7 +473,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     return True
 
 
-#@shared_task
+@shared_task
 def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
 

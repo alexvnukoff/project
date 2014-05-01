@@ -173,7 +173,7 @@ def addResume(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewResume(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(reverse('resume:main'))
 
@@ -206,7 +206,7 @@ def updateResume(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewResume(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(reverse('resume:main'))
