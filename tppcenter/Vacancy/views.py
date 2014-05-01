@@ -297,9 +297,6 @@ def addVacancy(request):
 
 
 
-
-
-
     if request.POST:
         user = request.user
 
@@ -313,7 +310,7 @@ def addVacancy(request):
 
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
-            addNewRequirement(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(reverse('vacancy:main'))
         if not request.POST.get('VACANCY', False):
@@ -366,7 +363,7 @@ def updateVacancy(request, item_id):
 
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
-            addNewRequirement(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                             lang_code=settings.LANGUAGE_CODE)
             return HttpResponseRedirect(request.GET.get('next', reverse('vacancy:main')))
         if not request.POST.get('VACANCY', False):
