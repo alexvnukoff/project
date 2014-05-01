@@ -619,7 +619,7 @@ class Vacancy(Item):
 def companyCommunity(instance, **kwargs):
     '''
        Create default Department if Company hasn't it.
-    '''
+
     if not Department.objects.filter(c2p__parent=instance.pk).exists():
         request = get_request()
         if request:
@@ -667,13 +667,13 @@ def companyCommunity(instance, **kwargs):
             except Exception as e:
                 print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
                 pass
-
+    '''
 
 @receiver(post_save, sender=Tpp)
 def tppCommunity(instance, **kwargs):
     '''
        Create default Department if Tpp hasn't it.
-    '''
+
     if not Department.objects.filter(c2p__parent=instance.pk).exists():
         request = get_request()
         if request:
@@ -723,4 +723,4 @@ def tppCommunity(instance, **kwargs):
                     vac.delete()
             except Exception as e:
                 print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
-                pass
+    '''
