@@ -943,6 +943,7 @@ def _tabsGallery(request, company):
     else:
         return render_to_response()
 
+
 def sendMessage(request):
     response = ""
     if request.is_ajax():

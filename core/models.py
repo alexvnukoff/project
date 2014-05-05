@@ -577,6 +577,8 @@ class Item(models.Model):
 
 
 
+
+
         valuesAttribute = {}
 
 
@@ -590,9 +592,10 @@ class Item(models.Model):
             except ValueError:
                 continue
 
-        valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
+        if len(valuesObj) > 0:
+            valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
-        #TODO: Artur fix bug, when just one attribute and it's not exists, will return integer not dict
+
         for valuesObj in valuesObj:
 
             itemPk = valuesObj.item.pk
@@ -627,6 +630,10 @@ class Item(models.Model):
                 valuesAttribute[itemPk][valuesObj.attr.title].append(attrValDict)
             else:
                 valuesAttribute[itemPk][valuesObj.attr.title].append(valuesObj.title)
+
+        for id, item in valuesAttribute.items():
+            if isinstance(item, int):
+                valuesAttribute[id] = {}
 
         return valuesAttribute
 

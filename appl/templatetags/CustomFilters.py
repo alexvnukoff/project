@@ -135,7 +135,7 @@ class DynUrlNode(template.Node):
         request = get_request()
         query_set = None
         if len(request.GET) > 0:
-            query_set = urlencode(request.GET)
+            query_set = request.GET.urlencode()
 
 
         url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)

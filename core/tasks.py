@@ -392,7 +392,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     return True
 
 
-#@shared_task
+@shared_task
 def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -471,6 +471,49 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
     trans_real.deactivate()
     return True
+
+
+@shared_task
+def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+    vacancy = post.get('VACANCY', False)
+
+
+
+
+
+    form = ItemForm('Requirement', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+
+
+    requirement = form.save(user, site_id)
+    if requirement:
+
+        if vacancy:
+            Relationship.objects.filter(child=requirement, type='dependence').delete()
+            Relationship.setRelRelationship(parent=Vacancy.objects.get(pk=int(vacancy)), child=requirement, type='dependence', user=user)
+
+
+
+
+
+
+
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True
+
 
 
 

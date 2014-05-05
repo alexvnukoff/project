@@ -128,12 +128,13 @@ box-shadow:inset 0 0 3px #CCC;}
 .tender-info ul.inforesume li .resume{ float:left; color:#000; font-weight:bold;margin-left: -40px;width: 90px;}
 
 .vacancy-list{ position: relative; float: left; width: 100%;}
-.vacancy-list li{ position: relative; float: left; width: 516px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
-.vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold;}
+.vacancy-list li{ position: relative; float: left; width: 636px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
+.vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold; padding-top: 12px;}
 .vacancy-list li .logovacancy{ float: left; width: 70px; height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; margin: 8px 10px 0 0; display: inline;}
-.vacancy-list li .vacancy-desc{ position:relative; float:left; width:435px; margin:8px 0 0 0;}
+.vacancy-list li .vacancy-desc{ position:relative; float:left; width:555px; margin:8px 0 0 0;}
 .vacancy-list li .vacancy-desc .flag{ float:left; width:18px; height:12px; padding-right:5px;}
 .vacancy-list li .vacancy-desc .date{ color:#9b9b9b;}
+.vacancy-list li .vacancy-desc p{ line-height:18px;padding-top: 10px;font-family: sans-serif;font-size: 14px;}
 .vacancy-list li .vacancy-desc a.more{ display:block; text-align:right; padding-top:5px;}
 
 .tender-list li .line .clumn{ float:left; padding-right:25px;}
