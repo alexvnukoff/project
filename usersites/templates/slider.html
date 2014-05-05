@@ -1,10 +1,22 @@
 {% load i18n %}
 {% load staticfiles %}
+{% load CustomFilters %}
+
+
             <div class="slidehome">
             	<ul class="slide">
-                	<li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
-                    <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
-                    <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
+                    {% if file_count == 0 %}
+                          <li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
+                          <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
+                          <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
+                       {% else %}
+                         {% mkrange file_count as some_range %}
+                        {{ mkrange }}
+                         {% for file in some_range %}
+                            <li><img src="{% static "" %}tppcenter/img/templates/{{ user_site_slider }}/{{ file|add:'1' }}.jpg" alt="" /></li>
+                        {% endfor %}
+
+                    {% endif %}
                 </ul>
                 <div class="register">
                     <div class="title">

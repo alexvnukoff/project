@@ -310,6 +310,7 @@ $(document).ready(function()
 
 	});
 
+
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();
