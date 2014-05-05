@@ -15,7 +15,7 @@
 
             	<div class="profile-l">
                 {% if avatar %}
-                	<div class="avatar"><img src="{{ MEDIA_URL }}big/{{ avatar }}" alt="" /></div>
+                	<div class="avatar"><img style="max-width: 150px;max-height: 156px;" src="{{ MEDIA_URL }}big/{{ avatar }}" alt="" /></div>
                 {% endif %}
                 {% if form.personal_status.errors   %}<div style="color: #ff0000">{{ form.personal_status.errors.as_text }}</div>{% endif %}
                     {% for choice in form.personal_status %}
