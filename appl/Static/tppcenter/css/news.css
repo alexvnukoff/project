@@ -175,7 +175,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .profile-title{ position:relative; float:left; width:100%; border-bottom:1px #cfcfcf solid; font-size:18px; font-weight:normal; padding:12px 0; text-indent:22px;}
 .profile-main{ position:relative; float:left; width:100%; border-bottom:1px #cfcfcf solid; padding:12px 0; color:#4a4a4a;}
 .profile-main .avatar{ float:left; width:150px; margin:0 0 0 22px; display:inline;}
-.profile-main .avatar img{ display:block; width:100%; box-shadow:0px 1px 1px #333;}
+.profile-main .avatar img{ display:block; max-width:150px;max-height: 156px; box-shadow:0px 1px 1px #333;}
 .profile-main .avatar .name{ display:block; padding-top:5px; color:#9b9b9b; font-style:italic;}
 .profile-info{ position:relative; float:left; width:365px; margin:0 0 0 20px; display:inline;}
 .profile-info li{ float:left; width:100%; margin:8px 0 0 0;}
