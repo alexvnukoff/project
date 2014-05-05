@@ -1,8 +1,8 @@
 
-from appl.models import UserSites, Resume,  Organization
+from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate
 from appl import func
 from core.tasks import addNewSite
-from core.models import  Item
+from core.models import Item
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -40,7 +40,7 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
     if item_id is None:
         sitePage = _siteList(request)
     else:
-        result = _resumeDetailContent(request, item_id)
+        result = {}
         sitePage = result[0]
         title = result[1]
 
@@ -102,12 +102,17 @@ def resumeForm(request, action, item_id=None):
 
     current_section = _("Site")
     sitePage = ''
+    templates = ExternalSiteTemplate.active.get_active().all()
+    templates_ids = [template.pk for template in templates]
+    template_values = Item.getItemsAttributesValues(('NAME', 'TEMPLATE_IMAGE_FOLDER'), templates_ids)
 
     if action == 'delete':
         sitePage = deleteResume(request, item_id)
 
     if action == 'add':
         sitePage = addSite(request)
+
+
 
     if action == 'update':
         sitePage = updateSite(request, item_id)
@@ -117,7 +122,8 @@ def resumeForm(request, action, item_id=None):
 
     templateParams = {
         'sitePage': sitePage,
-        'current_section': current_section
+        'current_section': current_section,
+        'template_values': template_values
     }
 
     return render_to_response('UserSites/index.html', templateParams, context_instance=RequestContext(request))
