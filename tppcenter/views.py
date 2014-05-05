@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 from appl.models import Country, Organization, Branch, Category, Company, Tpp, Gallery, Cabinet, Notification, \
-    Exhibition, Greeting, BusinessProposal, Product
+    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from core.models import Item, User
@@ -707,3 +707,39 @@ def buildCountries(request):
 
     return HttpResponse('Successfully')
 
+def builTemplate(request):
+    if request.user.is_superuser:
+        crt_usr = User.objects.get(pk=request.user.pk)
+        templates = {'tourism': {'NAME': {'title': 'Tourism', 'title_ru': 'Туризм'}, 'TEMPLATE_IMAGE_FOLDER': "tourism"} ,
+                     'advocacy': {'NAME': {'title': 'Advocacy', 'title_ru': 'Адвокатура'}, 'TEMPLATE_IMAGE_FOLDER': "advocacy"},
+                     'agriculture': {'NAME': {'title': 'Agriculture', 'title_ru': 'Сельское хозяйство'}, 'TEMPLATE_IMAGE_FOLDER': "agriculture"},
+                     'architecture': {'NAME': {'title': 'Architecture and Engineering jobs', 'title_ru': 'Архитектура и Инженерные работы'}, 'TEMPLATE_IMAGE_FOLDER': "architecture"},
+                     'art': {'NAME': {'title': 'Art and Photography', 'title_ru': 'Искусство и Фото'}, 'TEMPLATE_IMAGE_FOLDER': "art"},
+                     'auditors': {'NAME': {'title': 'Auditors', 'title_ru': 'Аудиторы'}, 'TEMPLATE_IMAGE_FOLDER': "auditors"},
+                     'brokerage': {'NAME': {'title': 'Brokerage', 'title_ru': 'Брокерские компании'}, 'TEMPLATE_IMAGE_FOLDER': "brokerage"},
+                     'communications': {'NAME': {'title': 'Communications and Electronics', 'title_ru': 'Связь и электроника'}, 'TEMPLATE_IMAGE_FOLDER': "communications"},
+                     'comuters': {'NAME': {'title': 'Computers and IT', 'title_ru': 'Компьютеры и IT'}, 'TEMPLATE_IMAGE_FOLDER': "comuters"},
+                     'consumer_services': {'NAME': {'title': 'Domestic services', 'title_ru': 'Бытовые услуги'}, 'TEMPLATE_IMAGE_FOLDER': "consumer_services"},
+                     'culture': {'NAME': {'title': 'Culture and Society', 'title_ru': 'Культура и Общество'}, 'TEMPLATE_IMAGE_FOLDER': "culture"},
+                     'entertainment': {'NAME': {'title': 'Entertainment, Food and Drink', 'title_ru': 'Развлечения, Еда и Напитки'}, 'TEMPLATE_IMAGE_FOLDER': "entertainment"},
+                     'fasion': {'NAME': {'title': 'Fasion', 'title_ru': 'Мода'}, 'TEMPLATE_IMAGE_FOLDER': "fasion"},
+                     'fiance': {'NAME': {'title': 'Business and Finance', 'title_ru': 'Бизнес и финансы'}, 'TEMPLATE_IMAGE_FOLDER': "fiance"},
+                     'furniture': {'NAME': {'title': 'Furniture and Interior', 'title_ru': 'Мебель и Интерьер'}, 'TEMPLATE_IMAGE_FOLDER': "furniture"},
+                     'import_export': {'NAME': {'title': 'Import and Export', 'title_ru': 'Импорт и экспорт'}, 'TEMPLATE_IMAGE_FOLDER': "import_export"},
+                     'industrial': {'NAME': {'title': 'Industrial and Equipment', 'title_ru': 'Промышленность и оборудование'}, 'TEMPLATE_IMAGE_FOLDER': "industrial"},
+                     'insurance': {'NAME': {'title': 'Insurance', 'title_ru': 'Страхование'}, 'TEMPLATE_IMAGE_FOLDER': "insurance"},
+                     'jewelry': {'NAME': {'title': 'Jewelry', 'title_ru': 'Роскошь и украшения'}, 'TEMPLATE_IMAGE_FOLDER': "jewelry"},
+                     'medicine': {'NAME': {'title': 'Medicine', 'title_ru': 'Медицина и здоровье'}, 'TEMPLATE_IMAGE_FOLDER': "medicine"},
+                     'real_estate': {'NAME': {'title': 'Real estate', 'title_ru': 'Недвижимость'}, 'TEMPLATE_IMAGE_FOLDER': "real_estate"},
+                     'science': {'NAME': {'title': 'Science and Education', 'title_ru': 'Наука и Образование'}, 'TEMPLATE_IMAGE_FOLDER': "science"},
+                     'security': {'NAME': {'title': 'Security', 'title_ru': 'Безопасность'}, 'TEMPLATE_IMAGE_FOLDER': "security"},
+                     'transport': {'NAME': {'title': 'Transport', 'title_ru': 'Транспорт - АвтоМото'}, 'TEMPLATE_IMAGE_FOLDER': "transport"},
+
+                     }
+
+
+        for title, attr in templates.items():
+            cntr, res = ExternalSiteTemplate.objects.get_or_create(title=title, create_user=crt_usr)
+            if res:
+                cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
+                cntr.setAttributeValue({'TEMPLATE_IMAGE_FOLDER': attr['TEMPLATE_IMAGE_FOLDER']}, crt_usr)
