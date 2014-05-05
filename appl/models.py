@@ -295,6 +295,12 @@ class SystemMessages(Item):
      def __str__(self):
         return self.getName()
 
+class ExternalSiteTemplate(Item):
+    objects = models.Manager()
+    active = ItemManager()
+
+    def __str__(self):
+        return self.getName()
 
 
 class Notification(Item):

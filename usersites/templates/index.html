@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
 
 {% block title %}{{ title }}{% endblock %}
@@ -35,7 +36,7 @@
         {% endblock %}
         <div class="mainright">
         {% block slider %}
-             {% include "slider.html" %}
+           {% getUserSiteSlider %}
 
             {% endblock %}
 
