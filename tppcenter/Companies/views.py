@@ -675,13 +675,6 @@ def _tabsStaff(request, company, page=1):
     correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child__p2c__child'))
 
     for cab_id, cab_att in workersList.items(): #get Cabinet instance
-        if not len(cab_att):
-            usr_email = Cabinet.objects.get(pk=cab_id).user.email
-            cab_att = {
-                'USER_FIRST_NAME': ['Profile attributes for User with Cabinet ID: ' + str(cab_id) + ' did not define.'],
-                'EMAIL': usr_email
-            }
-            continue
         for t in correlation: #lookup into corelation list
             if t[1] == cab_id: #if Cabinet ID then...
                 dep_id = t[0] #...get Organization ID
