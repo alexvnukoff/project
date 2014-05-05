@@ -953,7 +953,7 @@ def sendMessage(request):
                 else:
                     email = email[0]
                     subject = _('New message')
-                mail = EmailMessage(subject, request.POST.get('message', ""), ['noreply@tppcenter.com'], [email])
+                mail = EmailMessage(subject, request.POST.get('message', ""), 'noreply@tppcenter.com', [email])
                 attachment = request.FILES.get('file', False)
                 if attachment:
                    mail.attach(attachment.name, attachment.read(), attachment.content_type)
