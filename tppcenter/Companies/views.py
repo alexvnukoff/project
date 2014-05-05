@@ -675,8 +675,6 @@ def _tabsStaff(request, company, page=1):
     correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child__p2c__child'))
 
     for cab_id, cab_att in workersList.items(): #get Cabinet instance
-        if not cab_att:
-            continue
         for t in correlation: #lookup into corelation list
             if t[1] == cab_id: #if Cabinet ID then...
                 dep_id = t[0] #...get Organization ID
