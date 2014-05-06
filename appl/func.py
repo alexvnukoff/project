@@ -919,7 +919,7 @@ def getListAdv(request):
             sqs = getActiveSQS().models(Tpp)
 
             if len(ids) > 0:
-                sqs = sqs.filter(django_id__in=ids)
+                sqs = sqs.filter(id__in=ids)
 
 
             for tpp in sqs: #Add filter of countries of each tpp
