@@ -159,14 +159,13 @@
             <script>
 
             </script>
-             <div class="banner-wrapper-left">
-                  {% block addv_news_left %}
+            <div class="banner-wrapper-left">
+                {% block addv_news_left %}
 
-                      {% endblock %}
+                {% endblock %}
 
-
-            {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
-             </div>
+                {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
+            </div>
         </div>
     {% endblock %}
         {% block center %}
@@ -193,9 +192,23 @@
 
         {% block right %}
             <div class="newsright">
+                <!-- Google Translate injection -->
+                <div id="google_translate_element"></div>
+                <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'en',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                            multilanguagePage: true}, 'google_translate_element');
+                    }
+                </script>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                <!-- /Google Translate injection -->
+
                 <div class="bannerleft nomargin">
                    {% right_tv %}
                 </div>
+
                 {% block addv_news %}
                 {% endblock %}
                 {% getTopOnPage item_id %}
@@ -203,9 +216,10 @@
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
                  </div>
             </div>
+
         {% endblock %}
 
-    </div>
+</div>
 
 {% endblock %}
 
