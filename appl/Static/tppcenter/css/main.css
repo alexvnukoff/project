@@ -162,3 +162,5 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
 .i-video{ background-position:-90px -195px;}
 #footer{ position:relative; float:left; width:100%; margin:18px 0 0 0; background-color:#f4f4f4; padding:5px 0 25px 0; color:#9b9b9b;
 background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#eeeeee)); background: -moz-linear-gradient(top, #fbfbfb, #eeeeee);}
+
+#google_translate_element{ padding-top: 3px; margin-left: 10px; }
