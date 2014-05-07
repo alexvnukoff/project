@@ -159,14 +159,13 @@
             <script>
 
             </script>
-             <div class="banner-wrapper-left">
-                  {% block addv_news_left %}
+            <div class="banner-wrapper-left">
+                {% block addv_news_left %}
 
-                      {% endblock %}
+                {% endblock %}
 
-
-            {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
-             </div>
+                {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
+            </div>
         </div>
     {% endblock %}
         {% block center %}
@@ -196,6 +195,7 @@
                 <div class="bannerleft nomargin">
                    {% right_tv %}
                 </div>
+
                 {% block addv_news %}
                 {% endblock %}
                 {% getTopOnPage item_id %}
@@ -203,9 +203,10 @@
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
                  </div>
             </div>
+
         {% endblock %}
 
-    </div>
+</div>
 
 {% endblock %}
 
