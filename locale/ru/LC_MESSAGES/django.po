@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-04 06:47+0000\n"
-"PO-Revision-Date: 2014-04-29 12:53+0200\n"
+"PO-Revision-Date: 2014-05-08 16:10+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2305,7 +2305,7 @@ msgstr "Сайт"
 
 #: tppcenter/UserSites/views.py:147
 msgid "You cannot add more than one site for your organization"
-msgstr ""
+msgstr "Вы не можете добавлять более одного сайта для вашей организации."
 
 #: tppcenter/UserSites/views.py:172 tppcenter/UserSites/views.py:225
 msgid "This domain is used, please try something else"
@@ -2318,28 +2318,24 @@ msgid "Vacancy"
 msgstr ""
 
 #: tppcenter/Vacancy/views.py:317 tppcenter/Vacancy/views.py:370
-#, fuzzy
 msgid "You have to choose vacancy"
-msgstr "Вы должны выбрать период"
+msgstr "Вы должны выбрать вакансию"
 
 #: tppcenter/Vacancy/views.py:450
 msgid "You cannot send more than one resume at the same job position."
-msgstr ""
+msgstr "Вы не можете отправлять более одно резюме на эту вакансию."
 
 #: tppcenter/Vacancy/views.py:453
-#, fuzzy
 msgid "You have successfully sent the resume."
-msgstr "Ваше сообщение было успешно отправлено"
+msgstr "Ваше резюме было успешно отправлено"
 
 #: tppcenter/Vacancy/views.py:456
-#, fuzzy
 msgid "Resume  are required"
-msgstr "Напишите текст сообщения или присоедините файл"
+msgstr "Требуется выбрать резюме"
 
 #: tppcenter/Vacancy/views.py:458
-#, fuzzy
 msgid "Only registred users can send resume"
-msgstr "Только зарегистрированные пользователи могут отправлять сообщения."
+msgstr "Только зарегистрированные пользователи могут отправлять резюме."
 
 #: tppcenter/Wall/views.py:10 tppcenter/templates/main_page.html:129
 #: tppcenter/templates/main_page.html:153
@@ -2399,7 +2395,7 @@ msgstr "Отправить сообщение"
 
 #: tppcenter/templates/base.html:184
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: tppcenter/templates/base.html:190
 #: tppcenter/templates/Messages/contentBox.html:14
@@ -2687,7 +2683,7 @@ msgstr "Тпп ТВ"
 #: tppcenter/templates/main_page.html:127
 #: tppcenter/templates/main_page.html:149
 msgid "Job requirements"
-msgstr ""
+msgstr "Объявления о работе."
 
 #: tppcenter/templates/main_page.html:146
 msgid "Analytic"
@@ -3228,9 +3224,8 @@ msgstr "Ничего не найдено"
 #: tppcenter/templates/Companies/tabStaff.html:117
 #: tppcenter/templates/Tpp/tabStaff.html:118
 #: tppcenter/templates/Vacancy/addForm.html:44
-#, fuzzy
 msgid "Select Department..."
-msgstr "Отдел"
+msgstr "Выберите отдел "
 
 #: tppcenter/templates/Companies/tabStaff.html:123
 #: tppcenter/templates/Companies/tabStaff.html:136
@@ -3729,76 +3724,70 @@ msgid "Departament"
 msgstr "Отдел"
 
 #: tppcenter/templates/Vacancy/addForm.html:61
-#, fuzzy
 msgid "Select Department to select vacancy..."
-msgstr "Отдел"
+msgstr "Выберите отдел, чтобы выбрать вакансию..."
 
 #: tppcenter/templates/Vacancy/addForm.html:76
 msgid "Name of vacancy"
-msgstr ""
+msgstr "Заголовок"
 
 #: tppcenter/templates/Vacancy/addForm.html:85
 msgid "City of vacancy"
-msgstr ""
+msgstr "Город"
 
 #: tppcenter/templates/Vacancy/addForm.html:92
 msgid "Type of employment"
-msgstr ""
+msgstr "Тип занятости"
 
 #: tppcenter/templates/Vacancy/addForm.html:102
 msgid "make vacancy anonymous"
-msgstr ""
+msgstr "Сделать объявление анонимным"
 
 #: tppcenter/templates/Vacancy/addForm.html:103
 msgid "name of company will be hidden"
-msgstr ""
+msgstr "Имя компании будет скрыто"
 
 #: tppcenter/templates/Vacancy/addForm.html:121
 #: tppcenter/templates/Vacancy/detailContent.html:76
-#, fuzzy
 msgid "Requirements"
-msgstr "Обязательные поля"
+msgstr "Требования"
 
 #: tppcenter/templates/Vacancy/addForm.html:128
 #: tppcenter/templates/Vacancy/detailContent.html:80
-#, fuzzy
 msgid "Terms"
-msgstr "условиями"
+msgstr "Условия"
 
 #: tppcenter/templates/Vacancy/detailContent.html:32
-#, fuzzy
 msgid "Send Resume"
-msgstr "Резюме"
+msgstr "Отправить резюме"
 
 #: tppcenter/templates/Vacancy/detailContent.html:42
-#, fuzzy
 msgid "Anonymous company"
-msgstr "Описание товара"
+msgstr "Имя компании скрыто"
 
 #: tppcenter/templates/Vacancy/detailContent.html:67
 msgid "Type of employments"
-msgstr ""
+msgstr "Тип занятости"
 
 #: tppcenter/templates/Vacancy/index.html:47
 msgid "You send resume on position:"
-msgstr ""
+msgstr "Резюме на должность:"
 
 #: tppcenter/templates/Vacancy/index.html:53
 msgid "Add new resume to profile"
-msgstr ""
+msgstr "Добавить новое резюме"
 
 #: tppcenter/templates/Vacancy/index.html:54
-#, fuzzy
 msgid "New resume"
-msgstr "Новое сообщение от Tppcenter"
+msgstr "Новое резюме"
 
 #: tppcenter/templates/Vacancy/index.html:58
 msgid "Send existing resume"
-msgstr ""
+msgstr "Послать существующее резюме:"
 
 #: tppcenter/templates/Vacancy/index.html:63
 msgid "No existing resumes"
-msgstr ""
+msgstr "Нет заполненных резюме"
 
 #: tppcenter/templates/Wall/contentPage.html:9
 msgid "Latest updates"
