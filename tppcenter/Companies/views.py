@@ -718,6 +718,18 @@ def _tabsStaff(request, company, page=1):
                     vac_att['DEPARTMENT_ID'] = [t[0]]
                     break
 
+        correlation = list(Department.objects.filter(c2p__parent=company).values_list('p2c__child__p2c__child', 'p2c__child'))
+
+        # add into worker's list attribute a new key 'VACANCY' with Vacancy ID
+        for cab_id, cab_att in workersList.items(): #get Cabinet instance
+            for t in correlation: #lookup into correlation list
+                if t[0] == cab_id: #if Cabinet ID is equal then...
+                    for vac_id, vac_attr in vacanciesList.items():
+                        if t[1] == vac_id:
+                            #... add a new key into User (Cabinet) attribute dictionary
+                            cab_att['VACANCY'] = vac_attr['NAME']
+                            break
+
     comp = Company.objects.get(pk=company)
     permissionsList = comp.getItemInstPermList(request.user)
 

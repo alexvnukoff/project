@@ -30,6 +30,10 @@
 <!-- script for Company-Staff delete content button -->
 <script type="text/javascript">
     $(function(){
+        $(document).on('mouseenter','#write-msg-to-staff', function(){
+            $(this).css('cursor', 'pointer');
+        });
+
 	    $(document).on('mouseenter','.table-staff tr', function(){
 
 		    $(this).children().find(".btnremove-small").show();
