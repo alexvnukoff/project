@@ -21,7 +21,7 @@ def get_wall_list(request):
 
 def _wallContent(request):
     #------------------Innov--------------------------#
-    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:3]
+    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:1]
     innov_ids = [project.id for project in innov_projects]
     innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
@@ -55,21 +55,21 @@ def _wallContent(request):
     #---------------News---------------------------------#
     #PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
-    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:3]
+    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:1]
     news_ids = [new.id for new in news]
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news_ids)
     func.addDictinoryWithCountryAndOrganization(news_ids, newsValues)
 
 
     #---------------BusinessProposal--------------------#
-    proposals = func.getActiveSQS().models(BusinessProposal).order_by("-obj_create_date")[:3]
+    proposals = func.getActiveSQS().models(BusinessProposal).order_by("-obj_create_date")[:1]
     proposals_ids = [proposal.id for proposal in proposals]
     proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals_ids)
     func.addDictinoryWithCountryAndOrganization(proposals_ids, proposalsValues)
 
 
     #--------------Exhibitions--------------------------#
-    exhibitions = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:3]
+    exhibitions = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:1]
     exhibitions_ids = [exhibition.id for exhibition in exhibitions]
     exhibitionsValues = Item.getItemsAttributesValues(('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
                                                        'END_EVENT_DATE', 'SLUG'), exhibitions_ids)
