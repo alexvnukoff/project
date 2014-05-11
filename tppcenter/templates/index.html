@@ -81,6 +81,19 @@
 <div class="wrapper">
     <div class="main">
     	<div class="sideleft">
+
+            <!-- Google Translate injection -->
+            <div id="google_translate_element_main"></div>
+            <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'en',
+                        multilanguagePage: true}, 'google_translate_element_main');
+                    }
+            </script>
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <!-- /Google Translate injection -->
+
         	<div class="community">
             	<span class="title">{% trans 'Community' %}</span>
                 <div class="slide-comm">
@@ -107,6 +120,9 @@
                     </ul>
                 </div>
             </div>
+
+
+
             <ul class="services">
             	<li>
                     <div class="imgmain imgservice sv1"></div>
