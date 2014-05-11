@@ -161,9 +161,20 @@
 
             </script>
             <div class="banner-wrapper-left">
+
                 {% block addv_news_left %}
 
                 {% endblock %}
+                <!-- Booking.com injection -->
+                <div class="bannerleft">
+                    <iframe src="https://www.booking.com/general.html?aid=388214&tmpl=searchbox&label=booking&width=200&bgcolor=FFF09C&lang=en"
+                            height="237" width="100%" frameborder="0" scrolling="no" name="sbox_iframe"
+                            style="padding: 0 0 0 0;">
+                    </iframe>
+                </div>
+                <!-- /Booking.com injection -->
+
+
 
                 {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
             </div>
