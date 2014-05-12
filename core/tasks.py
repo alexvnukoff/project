@@ -127,6 +127,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             product.sites.add(site.pk)
         else:
             product.sites.remove(site.pk)
+            product.sites.add(Site.objects.get(name='tppcenter').pk)
 
 
 
