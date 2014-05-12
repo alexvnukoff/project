@@ -807,7 +807,15 @@ def _tabsStaff(request, tpp, page=1):
                     if org_id == dep_id:    #if found the same Organization ID then...
                         #... set additional attributes for Users (Cabinets) before sending to web form
                         cab_att['DEPARTMENT'] = org_attr['NAME']
-                        cab_att['STATUS'] = ['Active']
+                        # check current User's activity
+                        for cab in cabinets:
+                            if cab.pk == cab_id:
+                                if cab.user.is_authenticated():
+                                    cab_att['STATUS'] = ['Active']
+                                else:
+                                    cab_att['STATUS'] = ['None']
+
+                                break
                         break
 
     paginator_range = func.getPaginatorRange(page)
@@ -842,6 +850,18 @@ def _tabsStaff(request, tpp, page=1):
                     #... add a new key into Vacancy attribute dictionary
                     vac_att['DEPARTMENT_ID'] = [t[0]]
                     break
+
+        correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('p2c__child__p2c__child', 'p2c__child'))
+
+        # add into worker's list attribute a new key 'VACANCY' with Vacancy ID
+        for cab_id, cab_att in workersList.items(): #get Cabinet instance
+            for t in correlation: #lookup into correlation list
+                if t[0] == cab_id: #if Cabinet ID is equal then...
+                    for vac_id, vac_attr in vacanciesList.items():
+                        if t[1] == vac_id:
+                            #... add a new key into User (Cabinet) attribute dictionary
+                            cab_att['VACANCY'] = vac_attr['NAME']
+                            break
 
     comp = Tpp.objects.get(pk=tpp)
     permissionsList = comp.getItemInstPermList(request.user)

@@ -38,9 +38,10 @@
                     <td width="24">&nbsp;</td>
                     <td>{% trans "Name" %}</td>
                     <td>{% trans "Department" %}</td>
-                    <td>{% trans "E-mail" %}</td>
-                    <td>{% trans "Joined Date" %}</td>
-                    <td class="status">{% trans "Status" %}</td>
+                    <td>{% trans "Position" %}</td>
+                    <td>{% trans "Contact" %}</td>
+                    <td>{% trans "Status" %}</td>
+                    <td class="status"></td>
                 </tr>
 
                 {% for id, attr in workersList.items %}
@@ -50,7 +51,7 @@
                     {% with attr.USER_LAST_NAME|first as l_name %}
                     {% with attr.EMAIL|first as email %}
                     {% with attr.DEPARTMENT|first as department %}
-                    {% with attr.CREATE_DATE|first|date:"d-M-y" as joined_date %}
+                    {% with attr.VACANCY|first as vacancy %}
                     {% with attr.STATUS|first as status %}
 
 
@@ -70,13 +71,14 @@
                             <td><a href="#" title="">{% trans "User with empty profile. Cabinet ID:" %} {{ id }}</a></td>
                         {% endif %}
                         <td>{{ department }}</td>
-                        {% if email %}
-                            <td><a href="#">{{ email }}</a></td>
+                        <td>{{ vacancy }}</td>
+                        <td><i class="staff-contact-msg img-status"></i></td>
+                        {% if status == 'Active' %}
+                            <td><i class="staff-status-active img-status"></i></td>
                         {% else %}
-                            <td><a href="#">{% trans "Undefined" %}</a></td>
+                            <td><i class="staff-status-passive img-status"></i></td>
                         {% endif %}
-                        <td>{{ joined_date }}</td>
-                        <td>{{ status }}
+                        <td>
                             {% if 'delete_cabinet' in permissionsList %}
                                 <i class="btnremove-small imgnews"></i>
                             {% endif %}
