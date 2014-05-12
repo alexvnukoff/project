@@ -124,10 +124,12 @@
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
                         <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
-                        <li><a  href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
+
+                        <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
+
                         <li><a href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
 
-                        <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+                        <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
 
                     </ul>
                 </div>
@@ -184,6 +186,7 @@
             <div class="news-center">
                 <div  class="keyword">
                     {% block keywords %}
+                        <div class="showFilter">
                         <i class="icon-key imgnews" id="filter-link"></i>
                         <ul class="list-key">
                         </ul>
@@ -192,6 +195,7 @@
                             <input type="text" name="q" value="{% searchQuery %}" placeholder="{% trans "Find.." %}" class="text" />
                             <input type="submit" name="" value="" class="i-search imgnews" />
                         </form>
+                        </div>
                         </div>
                     {% endblock %}
                 </div>

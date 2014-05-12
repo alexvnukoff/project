@@ -230,6 +230,11 @@ var ui =
         //Set current page to processing menu (top menu)
         ui.curPage.text(text);
 
+        if (url == '/wall/')
+              $('.newslink .left .add-new').hide();
+        else
+              $('.newslink .left .add-new').show();
+
         $('.newslink .left .add-new').attr('href', url + 'add/');
 
         ui.loading = ui.requester(url);

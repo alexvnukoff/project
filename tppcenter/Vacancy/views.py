@@ -38,6 +38,13 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
     title = ''
     resumesValues = ''
 
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
+    scripts = []
+
     if item_id is None:
         try:
             vacancyPage = _vacancyContent(request, page, my)
@@ -55,23 +62,36 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 
-    scripts = []
+
 
 
     current_section = _("Vacancy")
 
-    templateParams = {
-        'current_section': current_section,
-        'vacancyPage': vacancyPage,
-        'scripts': scripts,
-        'addNew': reverse('vacancy:add'),
-        'item_id': item_id,
-        'description': description,
-        'title': title,
-        'resumesValues': resumesValues
-    }
+    if not request.is_ajax():
 
-    return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
+        templateParams = {
+            'current_section': current_section,
+            'vacancyPage': vacancyPage,
+            'scripts': scripts,
+            'addNew': reverse('vacancy:add'),
+            'item_id': item_id,
+            'description': description,
+            'title': title,
+            'resumesValues': resumesValues
+        }
+
+        return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+         serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': vacancyPage,
+            'item_id': item_id,
+             'resumesValues': resumesValues
+         }
+
+         return HttpResponse(json.dumps(serialize))
+
 
 
 
@@ -283,6 +303,7 @@ def addVacancy(request):
          return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
+    company = item.pk
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -317,7 +338,8 @@ def addVacancy(request):
             vacancy_error = _('You have to choose vacancy')
 
     template = loader.get_template('Vacancy/addForm.html')
-    context = RequestContext(request, {'form': form, 'departmentsList': departmentsList, 'vacanciesList': vacanciesList, 'vacancy_error': vacancy_error })
+    context = RequestContext(request, {'form': form, 'departmentsList': departmentsList, 'vacanciesList': vacanciesList,
+                                       'vacancy_error': vacancy_error , 'company': company})
     vacancyPage = template.render(context)
 
     return vacancyPage
@@ -326,7 +348,7 @@ def addVacancy(request):
 def updateVacancy(request, item_id):
 
     item = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
-
+    organization = item.pk
     perm_list = item.getItemInstPermList(request.user)
 
     if 'change_requirement' not in perm_list:
@@ -337,8 +359,8 @@ def updateVacancy(request, item_id):
     requirement = Requirement.objects.get(pk=item_id)
     vacancy_selected = Vacancy.objects.get(p2c__child=requirement).pk
 
-    current_company = request.session.get('current_company', False)
-    result = getDepartamentsAndVacancies(current_company)
+
+    result = getDepartamentsAndVacancies(organization)
     departmentsList = result[0]
     vacanciesList = result[1]
     vacancy_error = ""
@@ -378,7 +400,8 @@ def updateVacancy(request, item_id):
         'vacancy_error': vacancy_error,
         'vacancy_selected': vacancy_selected,
         'departmentsList': departmentsList,
-        'vacanciesList': vacanciesList
+        'vacanciesList': vacanciesList,
+        'company': organization
 
     }
 
@@ -458,3 +481,75 @@ def sendResume(request):
              response = _('Only registred users can send resume')
 
         return HttpResponse(response)
+
+
+
+def addDepartamentAjax(request):
+    status = 400
+    if request.is_ajax():
+        if request.user.is_authenticated() and request.POST.get('COMPANY', False):
+            if request.POST.get('DEPARTMENT', False):
+                try:
+                    comp = Company.objects.get(pk=int(request.POST.get('COMPANY', "")))
+                    dep = request.POST.get('DEPARTMENT', '')
+                    usr = request.user
+                    obj_dep = Department.objects.create(title=dep, create_user=usr)
+                    Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
+                    comp.reindexItem()
+                    obj_dep.setAttributeValue({'NAME': dep}, usr)
+                    obj_dep.reindexItem()
+                    response = obj_dep.pk
+                    status = 200
+                except:
+                     response = _('The error occurred')
+                     status = 400
+
+
+            else:
+                response = _('Department name  is required')
+        else:
+             response = _('Only registred users can add department')
+
+        return HttpResponse(response,status=status)
+
+
+def addVacancyAjax(request):
+    status = 400
+    if request.is_ajax():
+        if request.user.is_authenticated() and request.POST.get('DEPARTMENT', False):
+            if request.POST.get('VACANCY', False):
+                try:
+                    dep_id = int(request.POST.get('DEPARTMENT', False))
+                    company = Company.objects.get(pk=int(request.POST.get('COMPANY', False)))
+                    obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
+                    usr = request.user
+                    vacancyName = request.POST.get('VACANCY', False)
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+                    if not res:
+                        vac.delete()
+                        response = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}
+                    else:
+                        try:
+                            Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                            obj_dep.reindexItem()
+                            vac.reindexItem()
+                            response = vac.pk
+                            status = 200
+                        except Exception as e:
+                            response = _('Can not create Relationship between Vacancy %(vac_name)s and Department ID '
+                                             '%(dep_name)s. The reason is: %(reason)s') % {"vac_name": vacancyName,
+                                                                                           "dep_name": str(obj_dep.pk),
+                                                                                           "reason": str(e)}
+                            vac.delete()
+                except Exception as e:
+                    response = _('Can not create Vacancy for Department ID: %(dep_id)s. The reason is: %(reason)s')\
+                                    % {"dep_id": str(obj_dep.pk), "reason": str(e)}
+
+
+            else:
+                response = _('Vacancy name  is required')
+        else:
+             response = _('Only registred users can add vacancy')
+
+        return HttpResponse(response,status=status)
