@@ -139,7 +139,8 @@ def getUserSiteSlider(context):
 @register.inclusion_tag('site_sidebar.html', takes_context=True)
 def getUserSiteMenu(context):
 
-    request = context.get('request')
+
+    midea_url = settings.MEDIA_URL
 
 
 
@@ -155,4 +156,4 @@ def getUserSiteMenu(context):
 
 
 
-    return {'addPagesValues':addPagesValues}
+    return {'addPagesValues': addPagesValues, 'midea_url': midea_url }
