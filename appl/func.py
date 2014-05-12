@@ -439,6 +439,9 @@ def findKeywords(tosearch):
 
 
 def notify(message_type, notificationtype, **params):
+    '''
+
+    '''
     user = params['user']
     params['user'] = user.pk
     message = SystemMessages.objects.get(type=message_type)

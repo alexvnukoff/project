@@ -41,7 +41,7 @@ class Connection(SockJSConnection):
     @tornado.gen.engine
     def listen_redis(self):
         """
-        Вешаем подписчиков на каналы сообщений.
+            Вешаем подписчиков на каналы сообщений.
         """
         self.redis_client = tornadoredis.Client(
                 host=ORDERS_REDIS_HOST,
