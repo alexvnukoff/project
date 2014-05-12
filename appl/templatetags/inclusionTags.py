@@ -124,7 +124,7 @@ def getUserSiteSlider(context):
 
         user_site_slider = user_site_slider[0]
 
-        slider_dir = 'tppcenter/img/templates/' + user_site_slider[0]
+        slider_dir = 'tppcenter/img/templates/' + user_site_slider
 
         dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
 
