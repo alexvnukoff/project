@@ -21,5 +21,8 @@
                <!-- <li><a href="#">Фотогалерея</a></li>-->
                 <li><a href="{% url 'structure:main' %}">{% trans 'Company structure' %}</a></li>
                 <li><a href="{% url 'contact:main' %}">{% trans 'Contact us' %}</a></li>
+                {% for id,  page in addPagesValues.items %}
+                      <li><a href="{% url 'additionalPage' id %}">{{ page.NAME|first }}</a></li>
+                {% endfor %}
             </ul>
         </div>

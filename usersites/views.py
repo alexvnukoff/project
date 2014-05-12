@@ -1,6 +1,6 @@
 from haystack.backends import SQ
 from appl.func import getActiveSQS
-from appl.models import Product,  UserSites, News, BusinessProposal
+from appl.models import Product,  UserSites, News, BusinessProposal, AdditionalPages
 from core.models import Item
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
@@ -8,12 +8,18 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 
 
-def get_wall(request):
-    contentPage = _get_content(request)
+def get_wall(request, page_id=None):
+    if page_id is not None:
+        contentPage = getAdditionalPage(request, page_id)
+        current_section = ""
+        title = ""
+    else:
+        contentPage = _get_content(request)
+        current_section = _("Wall")
+        title = _("Wall")
 
 
-    current_section = _("Wall")
-    title = _("Wall")
+
 
     templateParams = {
     'current_section': current_section,
@@ -82,6 +88,27 @@ def _get_content(request):
      rendered = template.render(context)
 
      return rendered
+
+
+
+def getAdditionalPage(request, page_id=None):
+    if page_id:
+
+         pageValues = AdditionalPages.objects.get(pk=page_id).getAttributeValues('NAME', 'DETAIL_TEXT')
+
+         templateParams = {'pageValues': pageValues, }
+
+         template = loader.get_template('additional_page.html')
+         context = RequestContext(request, templateParams)
+         rendered = template.render(context)
+
+         return rendered
+
+
+
+
+
+
 
 
 

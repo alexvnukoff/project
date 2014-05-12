@@ -548,6 +548,9 @@
                                     {% trans "About" %}
                                 </a>
                             </li>
+                             {% for page in additionalPages %}
+                                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
+                                {% endfor %}
                             <li>
                                 <a href="#cpn-tabs-recvisits">
                                     {% trans "Recvisits" %}
@@ -619,6 +622,11 @@
                         	{{ content|cleanHtml|safe }}
                         </div>
                     </div>
+                    {% for page in additionalPages %}
+                        <div id="tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                         </div>
+                    {% endfor %}
                     <div id="cpn-tabs-recvisits">
                         <div class="tpp-dt-content"></div>
                     </div>

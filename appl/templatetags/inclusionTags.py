@@ -1,7 +1,7 @@
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -134,3 +134,25 @@ def getUserSiteSlider(context):
 
 
     return {'file_count':file_count ,  'user_site_slider': user_site_slider}
+
+
+@register.inclusion_tag('site_sidebar.html', takes_context=True)
+def getUserSiteMenu(context):
+
+    request = context.get('request')
+
+
+
+
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    organization = user_site.organization.pk
+
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
+    addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
+
+
+
+
+
+
+    return {'addPagesValues':addPagesValues}
