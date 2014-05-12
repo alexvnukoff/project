@@ -38,6 +38,13 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
     title = ''
     resumesValues = ''
 
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
+    scripts = []
+
     if item_id is None:
         try:
             vacancyPage = _vacancyContent(request, page, my)
@@ -55,23 +62,36 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 
-    scripts = []
+
 
 
     current_section = _("Vacancy")
 
-    templateParams = {
-        'current_section': current_section,
-        'vacancyPage': vacancyPage,
-        'scripts': scripts,
-        'addNew': reverse('vacancy:add'),
-        'item_id': item_id,
-        'description': description,
-        'title': title,
-        'resumesValues': resumesValues
-    }
+    if not request.is_ajax():
 
-    return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
+        templateParams = {
+            'current_section': current_section,
+            'vacancyPage': vacancyPage,
+            'scripts': scripts,
+            'addNew': reverse('vacancy:add'),
+            'item_id': item_id,
+            'description': description,
+            'title': title,
+            'resumesValues': resumesValues
+        }
+
+        return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+         serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': vacancyPage,
+            'item_id': item_id,
+             'resumesValues': resumesValues
+         }
+
+         return HttpResponse(json.dumps(serialize))
+
 
 
 

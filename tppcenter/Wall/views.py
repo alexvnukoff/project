@@ -1,9 +1,12 @@
+from django.conf import settings
+from django.http import HttpResponse
 from appl import func
 from appl.models import InnovationProject, Product, BusinessProposal, Exhibition, News, Branch, NewsCategories
 from core.models import Item
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
+import json
 
 def get_wall_list(request):
 
@@ -11,12 +14,30 @@ def get_wall_list(request):
 
     wallPage = _wallContent(request)
 
-    templateParams = {
-        'current_section': current_section,
-        'wallPage': wallPage
-    }
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
 
-    return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
+    scripts = []
+
+    if not request.is_ajax():
+
+        templateParams = {
+            'current_section': current_section,
+            'wallPage': wallPage
+        }
+
+        return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': wallPage,
+
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _wallContent(request):
