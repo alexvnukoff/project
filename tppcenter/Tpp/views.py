@@ -807,7 +807,15 @@ def _tabsStaff(request, tpp, page=1):
                     if org_id == dep_id:    #if found the same Organization ID then...
                         #... set additional attributes for Users (Cabinets) before sending to web form
                         cab_att['DEPARTMENT'] = org_attr['NAME']
-                        cab_att['STATUS'] = ['Active']
+                        # check current User's activity
+                        for cab in cabinets:
+                            if cab.pk == cab_id:
+                                if cab.user.is_authenticated():
+                                    cab_att['STATUS'] = ['Active']
+                                else:
+                                    cab_att['STATUS'] = ['None']
+
+                                break
                         break
 
     paginator_range = func.getPaginatorRange(page)

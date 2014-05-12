@@ -40,7 +40,7 @@
                     <td>{% trans "Position" %}</td>
                     <td>{% trans "Contact" %}</td>
                     <td>{% trans "Status" %}</td>
-                    <td class="status">{% trans "Action" %}</td>
+                    <td class="status"></td>
                 </tr>
 
                 {% for id, attr in workersList.items %}
@@ -71,8 +71,12 @@
                         {% endif %}
                         <td>{{ department }}</td>
                         <td>{{ vacancy }}</td>
-                        <td><a href="" title="" class="write-msg-to-staff">{% trans "Write..." %}</a></td>
-                        <td>{{ status }}</td>
+                        <td><i class="staff-contact-msg img-status"></i></td>
+                        {% if status == 'Active' %}
+                            <td><i class="staff-status-active img-status"></i></td>
+                        {% else %}
+                            <td><i class="staff-status-passive img-status"></i></td>
+                        {% endif %}
                         <td>
                             {% if 'delete_cabinet' in permissionsList %}
                                 <i class="btnremove-small imgnews"></i>
