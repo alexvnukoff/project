@@ -968,7 +968,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         if not my:
             filters, searchFilter = filterLive(request)
 
-            sqs = getActiveSQS().models(model).order_by('-obj_create_date')
+            sqs = getActiveSQS().models(model).filter(sites=settings.SITE_ID).order_by('-obj_create_date')
             if model is News:
                sqs = sqs.filter(categories__gt=0)
 

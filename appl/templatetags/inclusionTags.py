@@ -121,22 +121,16 @@ def getUserSiteSlider(context):
     user_site_slider = UserSites.objects.get(sites__id=settings.SITE_ID).getAttributeValues("TEMPLATE")
     file_count = 0
     if len(user_site_slider) > 0:
+
+        user_site_slider = user_site_slider[0]
+
         slider_dir = 'tppcenter/img/templates/' + user_site_slider[0]
 
-
-
         dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
-
 
         file_count = len(glob.glob(dir+"/*.jpg"))
 
 
 
 
-
-
-
-
-
-
-    return {'file_count':file_count ,  'user_site_slider': user_site_slider[0]}
+    return {'file_count':file_count ,  'user_site_slider': user_site_slider}
