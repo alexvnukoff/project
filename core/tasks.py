@@ -121,7 +121,9 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
         site = Site.objects.get(name='centerpokupok')
+
         if is_b2c_product:
+            product.sites.all().delete()
             product.sites.add(site.pk)
         else:
             product.sites.remove(site.pk)
