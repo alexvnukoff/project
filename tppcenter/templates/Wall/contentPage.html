@@ -2,10 +2,11 @@
 {% load i18n %}
 {% load CustomFilters %}
 <script>
-    $('.keyword').html('');
+        $('.showFilter').hide();
 </script>
+<div class="container">
 
- <div class="companies">
+
           	<div class="wall-title">{% trans 'Latest updates' %}</div>
 
              {% if innovValues  %}
@@ -300,4 +301,5 @@
 
 
 
-  </div>
+
+</div>

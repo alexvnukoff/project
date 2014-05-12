@@ -2,10 +2,11 @@
 {% load i18n %}
 {% load CustomFilters %}
 <script>
-    $('.keyword').html('');
+    $('.showFilter').hide();
 </script>
- {% include "main/local_menu_script.html" %}
+
 <div class="container">
+ {% include "main/local_menu_script.html" %}
     <div class="companies">
     {% include "main/paginator.html" %}
 
