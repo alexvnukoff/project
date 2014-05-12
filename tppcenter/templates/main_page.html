@@ -124,7 +124,10 @@
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
                         <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
+
                         <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
+
+                        <li><a href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
 
                         <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
 
@@ -144,9 +147,9 @@
                         <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
                         <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
                         <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
-                        <li><a href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
                         <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
                         <li><a href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
+                        <li><a href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
 
 
                         <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
@@ -159,14 +162,24 @@
             <script>
 
             </script>
-             <div class="banner-wrapper-left">
-                  {% block addv_news_left %}
+            <div class="banner-wrapper-left">
 
-                      {% endblock %}
+                {% block addv_news_left %}
+
+                {% endblock %}
+                <!-- Booking.com injection -->
+                <div class="bannerleft">
+                    <iframe src="https://www.booking.com/general.html?aid=388214&tmpl=searchbox&label=booking&width=200&bgcolor=FFF09C&lang=en"
+                            height="237" width="100%" frameborder="0" scrolling="no" name="sbox_iframe"
+                            style="padding: 0 0 0 0;">
+                    </iframe>
+                </div>
+                <!-- /Booking.com injection -->
 
 
-            {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
-             </div>
+
+                {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
+            </div>
         </div>
     {% endblock %}
         {% block center %}
@@ -198,6 +211,7 @@
                 <div class="bannerleft nomargin">
                    {% right_tv %}
                 </div>
+
                 {% block addv_news %}
                 {% endblock %}
                 {% getTopOnPage item_id %}
@@ -205,9 +219,10 @@
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
                  </div>
             </div>
+
         {% endblock %}
 
-    </div>
+</div>
 
 {% endblock %}
 
