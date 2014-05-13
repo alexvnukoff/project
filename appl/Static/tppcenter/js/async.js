@@ -18,17 +18,15 @@ $(document).ready(function() {
                 {
                     el = $(".imgnews.i-note")
                     num = el.siblings(".num").text()
-
                     el.siblings(".num").text(parseInt(num)+1)
-                } else if (type == 'private_massage')
-                {
-                    alert('QQQQ');
-                    //$(document).trigger('new_message', [data.sender])
-                    //console.log(msg)
-
                 }
-
-
+                else if (type == 'private_massage')
+                {
+                    //$(document).trigger('new_message', [data.sender])
+                    el = $(".imgnews.i-mail")
+                    num = el.siblings(".num").text()
+                    el.siblings(".num").text(parseInt(num)+1)
+                }
             }
 
             socket.onclose = function(e){
