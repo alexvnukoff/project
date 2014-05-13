@@ -978,8 +978,7 @@ def sendMessage(request):
                                             receiver=Cabinet.objects.get(pk=int(company_pk)).user)
                         # msg_obj.reindexItem()
 
-                        #func.sendTask('private_message', recipient=msg_obj.receiver.pk)
-                        func.sendTask('private_message', recipient=request.user.pk)
+                        func.sendTask('private_message', recipient=msg_obj.receiver.pk)
 
                         response = _('You have successfully sent the message.')
                     else:
