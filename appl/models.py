@@ -312,18 +312,6 @@ class Notification(Item):
         return self.getName()
 
 
-class Message(Item):
-    receiver = models.ForeignKey(User, related_name="rcvr2msg")
-    sender = models.ForeignKey(User, related_name="sndr2msg")
-#   msg_text = models.CharField(max_length=1024)
-#   related_msg = models.ForeignKey(Message, related_name="pmsg2cmsg")
-#   attachment = models.FileField()
-    was_read = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.getName()
-
-
 class Category(Item):
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -625,6 +613,7 @@ class Exhibition(Item):
 
 
 class Messages(Item):
+    was_read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

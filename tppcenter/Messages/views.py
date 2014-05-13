@@ -234,7 +234,7 @@ def _getContactList(request, sender, recipient):
     return False
 
 @login_required(login_url='/login/')
-def addMessages(request):
+def addMessages(request, text=None, recipient=None):
 
     # who is the sender ?
     current_company = request.session.get('current_company', False)
@@ -249,8 +249,10 @@ def addMessages(request):
 
 
     #TODO: Artur limit of chars for message
-    recipient = int(request.POST.get('active'))
-    text = request.POST.get('text')
+    if recipient == None:
+        recipient = int(request.POST.get('active'))
+    if text == None:
+        text = request.POST.get('text')
 
     if len(text) == 0:
         raise ValueError('Empty message')
@@ -264,7 +266,7 @@ def addMessages(request):
     message.setAttributeValue({'DETAIL_TEXT': text}, request.user)
     trans_real.deactivate()
 
-    notify = None
+    notify = True
 
     try:
         recipient = Cabinet.objects.get(pk=recipient)

@@ -4,7 +4,7 @@ from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery, AdditionalPages
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery, AdditionalPages, Messages
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
 from core.amazonMethods import add
@@ -23,6 +23,7 @@ from tppcenter.forms import ItemForm, BasePages
 from django.utils.translation import trans_real
 import logging
 import json
+from tppcenter.Messages.views import addMessages
 
 logger = logging.getLogger('django.request')
 
@@ -984,27 +985,11 @@ def sendMessage(request):
         if request.user.is_authenticated() and request.POST.get('company', False):
             if request.POST.get('message', False) or request.FILES.get('file', False):
                 company_pk = request.POST.get('company')
+
                 #this condition as temporary design for separation Users and Organizations
                 if Cabinet.objects.filter(pk=int(company_pk)).exists():
-                    values = {}
-                    values.update({'DETAIL_TEXT': request.POST.get('message', ""), 'ATTACHMENT': request.FILES.get('file', False)})
-
-                    form = ItemForm('Message', values=values)
-                    form.clean()
-                    if form.is_valid():
-                        site = settings.SITE_ID
-                        msg_obj = form.save(request.user, site, disableNotify=True,
-                                            sender=request.user,
-                                            receiver=Cabinet.objects.get(pk=int(company_pk)).user)
-                        # msg_obj.reindexItem()
-
-                        #func.sendTask('private_message', recipient=msg_obj.receiver.pk)
-                        func.sendTask('private_massage', recipient=msg_obj.receiver.pk)
-
-
-                        response = _('You have successfully sent the message.')
-                    else:
-                        response = _('Message or file are required')
+                    addMessages(request, text=request.POST.get('message', ""), recipient=int(company_pk))
+                    response = _('You have successfully sent the message.')
                 # /temporary condition for separation Users and Companies
 
                 else:
