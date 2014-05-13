@@ -67,7 +67,10 @@
                 <div class="left">
                     {% if addNew %}
                         <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% else %}
+                          <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% endif %}
+
                 </div>
 
                 <!-- Google Translate injection -->

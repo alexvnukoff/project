@@ -1,7 +1,7 @@
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -121,9 +121,41 @@ def getUserSiteSlider(context):
     user_site_slider = UserSites.objects.get(sites__id=settings.SITE_ID).getAttributeValues("TEMPLATE")
     file_count = 0
     if len(user_site_slider) > 0:
-        slider_dir = 'tppcenter/img/templates/' + user_site_slider[0]
+
+
+        user_site_slider = user_site_slider[0]
+
+        slider_dir = 'tppcenter/img/templates/' + user_site_slider
 
         dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
 
         file_count = len(glob.glob(dir+"/*.jpg"))
-    return {'file_count':file_count ,  'user_site_slider': user_site_slider[0]}
+
+
+
+
+    return {'file_count':file_count ,  'user_site_slider': user_site_slider}
+
+
+@register.inclusion_tag('site_sidebar.html', takes_context=True)
+def getUserSiteMenu(context):
+
+
+    midea_url = settings.MEDIA_URL
+
+
+
+
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    organization = user_site.organization.pk
+
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
+    addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
+
+
+
+
+
+
+    return {'addPagesValues': addPagesValues, 'midea_url': midea_url }
+

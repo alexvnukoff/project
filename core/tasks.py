@@ -121,10 +121,13 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
         site = Site.objects.get(name='centerpokupok')
+
         if is_b2c_product:
+            product.sites.all().delete()
             product.sites.add(site.pk)
         else:
             product.sites.remove(site.pk)
+            product.sites.add(Site.objects.get(name='tppcenter').pk)
 
 
 
@@ -187,6 +190,10 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
 
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
 
     values = {}
     values.update(post)
@@ -238,6 +245,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         #this logic was moved into appl.models signal post_save from Department creation
         #g = Group.objects.get(name=company.community)
         #g.user_set.add(user)
+        pages.save(parent=company.id, user=user)
         company.reindexItem()
 
 

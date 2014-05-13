@@ -24,4 +24,5 @@ urlpatterns = patterns('',
     url(r'^products/', include(usersites.Products.urls, namespace='products')),
     url(r'^contact/', include(usersites.Contact.urls, namespace='contact')),
     url(r'^structure/', include(usersites.CompanyStructure.urls, namespace='structure')),
+    url(r'^page-(?P<page_id>[0-9]+)/$', usersites.views.get_wall, name='additionalPage'),
 )

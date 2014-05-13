@@ -22,9 +22,11 @@ $(document).ready(function() {
                 }
                 else if (type == 'private_massage')
                 {
-                    //$(document).trigger('new_message', [data.sender])
+
+
                     el = $(".imgnews.i-mail")
                     num = el.siblings(".num").text()
+
                     el.siblings(".num").text(parseInt(num)+1)
                 }
             }

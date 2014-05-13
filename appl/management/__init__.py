@@ -176,7 +176,7 @@ def databaseInitialization(sender, **kwargs):
                     "TEMPLATE": 'Chr',
                     'TERMS': 'Str',
                     'TPP': 'Chr',
-                    'TYPE_OF_EMPLOYMENT': 'Str',
+                    'TYPE_OF_EMPLOYMENT': 'Chr',
                     'YOUTUBE_CODE': 'Chr',
                     'USER_MIDDLE_NAME': 'Chr',
                     'USER_LAST_NAME': 'Chr',

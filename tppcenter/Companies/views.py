@@ -1,9 +1,10 @@
 from django.core.mail import EmailMessage
 from django.db.models import Q
+from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery, AdditionalPages
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
 from core.amazonMethods import add
@@ -18,7 +19,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from tppcenter.forms import ItemForm
+from tppcenter.forms import ItemForm, BasePages
 from django.utils.translation import trans_real
 import logging
 import json
@@ -230,9 +231,11 @@ def _companiesDetailContent(request, item_id):
 
         country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME', 'COUNTRY_FLAG'))
 
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
         template = loader.get_template('Companies/detailContent.html')
 
-        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id, 'additionalPages': additionalPages})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
         cache.set(description_cache_name, (description, title), 60*60*24*7)
@@ -804,6 +807,10 @@ def addCompany(request):
     countries = func.getItemsList("Country", 'NAME')
     tpp = func.getItemsList("Tpp", 'NAME')
 
+    pages = None
+
+
+
 
     if request.POST:
 
@@ -813,6 +820,11 @@ def addCompany(request):
         values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+            pages = pages.new_objects
 
         form = ItemForm('Company', values=values)
         form.clean()
@@ -828,7 +840,7 @@ def addCompany(request):
 
     template = loader.get_template('Companies/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp, 'pages': pages})
 
     newsPage = template.render(context)
 
@@ -857,6 +869,13 @@ def updateCompany(request, item_id):
     tpp = func.getItemsList("Tpp", 'NAME')
 
     company = Company.objects.get(pk=item_id)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     branches = {}
     currentBranch = ''
@@ -903,7 +922,8 @@ def updateCompany(request, item_id):
         'choosen_country': choosen_country,
         'countries': countries,
         'choosen_tpp': choosen_tpp,
-        'tpp': tpp
+        'tpp': tpp,
+        'pages': pages
     }
 
     context = RequestContext(request, templateParams)
@@ -978,7 +998,9 @@ def sendMessage(request):
                                             receiver=Cabinet.objects.get(pk=int(company_pk)).user)
                         # msg_obj.reindexItem()
 
-                        func.sendTask('private_message', recipient=msg_obj.receiver.pk)
+                        #func.sendTask('private_message', recipient=msg_obj.receiver.pk)
+                        func.sendTask('private_massage', recipient=msg_obj.receiver.pk)
+
 
                         response = _('You have successfully sent the message.')
                     else:
