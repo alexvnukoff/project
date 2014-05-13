@@ -28,7 +28,8 @@ $(document).ready(function() {
                     num = el.siblings(".num").text()
 
                     el.siblings(".num").text(parseInt(num)+1)
-                    $(document).trigger('new_message', [data.sender])
+                    $(document).trigger('new_message', [data.fromUser])
+
                 }
             }
 

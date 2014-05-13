@@ -5,6 +5,8 @@ import django
 from django.utils.importlib import import_module
 from django.conf import settings
 import json
+from appl.models import *
+
 
 # start of kmike's sources
 _engine = import_module(settings.SESSION_ENGINE)
@@ -101,7 +103,9 @@ class Connection(SockJSConnection):
 
                 recipient = message_body.get('recipient', False)
 
-                if recipient == self.user.pk:
+
+
+                if Cabinet.objects.get(pk=int(recipient)).user.pk == self.user.pk:
                     self.sendNoification(message, message_body)
 
     def sendNoification(self, message, message_body):
