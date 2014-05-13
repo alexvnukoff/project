@@ -54,7 +54,6 @@
                     {% with attr.VACANCY|first as vacancy %}
                     {% with attr.STATUS|first as status %}
 
-
                     <tr data-cabinet="{{ id }}">
                         <td>
                             <div class="avatar">
@@ -72,7 +71,7 @@
                         {% endif %}
                         <td>{{ department }}</td>
                         <td>{{ vacancy }}</td>
-                        <td><i class="staff-contact-msg img-status"></i></td>
+                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ f_name }} {{ m_name }} {{ l_name }}" data-id="{{ id }}"></i></td>
                         {% if status == 'Active' %}
                             <td><i class="staff-status-active img-status"></i></td>
                         {% else %}
