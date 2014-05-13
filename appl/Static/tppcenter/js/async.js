@@ -22,7 +22,10 @@ $(document).ready(function() {
                     el.siblings(".num").text(parseInt(num)+1)
                 } else if (type == 'private_massage')
                 {
-                    $(document).trigger('new_message', [data.sender])
+                    alert('QQQQ');
+                    //$(document).trigger('new_message', [data.sender])
+                    //console.log(msg)
+
                 }
 
 

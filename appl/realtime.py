@@ -96,11 +96,12 @@ class Connection(SockJSConnection):
             if message.channel == 'notification' and message_body.get('user', False) == self.user.pk:
                 self.sendNoification(message, message_body)
 
+            #send message to recipient
             if message.channel == 'private_massage':
 
                 recipient = message_body.get('recipient', False)
 
-                if recipient == self.user.pk:
+                if recipient:
                     self.sendNoification(message, message_body)
 
     def sendNoification(self, message, message_body):

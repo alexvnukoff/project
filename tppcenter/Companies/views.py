@@ -984,25 +984,47 @@ def sendMessage(request):
         if request.user.is_authenticated() and request.POST.get('company', False):
             if request.POST.get('message', False) or request.FILES.get('file', False):
                 company_pk = request.POST.get('company')
+                #this condition as temporary design for separation Users and Organizations
+                if Cabinet.objects.filter(pk=int(company_pk)).exists():
+                    values = {}
+                    values.update({'DETAIL_TEXT': request.POST.get('message', ""), 'ATTACHMENT': request.FILES.get('file', False)})
 
-                email = Company.objects.get(pk=int(company_pk)).getAttributeValues('EMAIL')
-                if len(email) == 0:
-                    email = 'admin@tppcenter.com'
-                    subject = _('This message was sent to company with id:') + company_pk
+                    form = ItemForm('Message', values=values)
+                    form.clean()
+                    if form.is_valid():
+                        site = settings.SITE_ID
+                        msg_obj = form.save(request.user, site, disableNotify=True,
+                                            sender=request.user,
+                                            receiver=Cabinet.objects.get(pk=int(company_pk)).user)
+                        # msg_obj.reindexItem()
+
+                        #func.sendTask('private_message', recipient=msg_obj.receiver.pk)
+                        func.sendTask('private_message', recipient=request.user.pk)
+
+                        response = _('You have successfully sent the message.')
+                    else:
+                        response = _('Message or file are required')
+                # /temporary condition for separation Users and Companies
+
                 else:
-                    email = email[0]
-                    subject = _('New message')
-                mail = EmailMessage(subject, request.POST.get('message', ""), 'noreply@tppcenter.com', [email])
-                attachment = request.FILES.get('file', False)
-                if attachment:
-                   mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                mail.send()
-                response = _('You have successfully sent the message.')
+                    email = Company.objects.get(pk=int(company_pk)).getAttributeValues('EMAIL')
+                    if len(email) == 0:
+                        email = 'admin@tppcenter.com'
+                        subject = _('This message was sent to company with id:') + company_pk
+                    else:
+                        email = email[0]
+                        subject = _('New message')
+                    mail = EmailMessage(subject, request.POST.get('message', ""), 'noreply@tppcenter.com', [email])
+                    attachment = request.FILES.get('file', False)
+                    if attachment:
+                       mail.attach(attachment.name, attachment.read(), attachment.content_type)
+                    mail.send()
+                    response = _('You have successfully sent the message.')
 
             else:
                 response = _('Message or file are required')
         else:
-             response = _('Only registred users can send the messages')
+             response = _('Only registered users can send the messages')
 
         return HttpResponse(response)
 
