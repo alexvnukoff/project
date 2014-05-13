@@ -249,7 +249,7 @@ def addMessages(request, text=None, recipient=None):
         sender = Organization.objects.get(pk=current_company)
 
 
-    #TODO: Artur limit of chars for message
+
     if recipient is None:
         recipient = int(request.POST.get('active'))
     if text is None:
