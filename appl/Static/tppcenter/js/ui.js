@@ -559,6 +559,7 @@ var messagesUI = {
                 messagesUI.getMessages( active_id );
                 textarea.val( '' );
                 textarea.removeAttr( 'disabled' );
+                messagesUI.scroollMessageDown();
 
             },
 
@@ -655,6 +656,8 @@ var messagesUI = {
             var jqxhr = $.get( loadUrl, 'box=1', function(data) {
                 messagesUI.messagesLoader.hide();
                 $('.custom-content:last').after(data);
+
+
             });
         }
 
