@@ -84,6 +84,7 @@ def databaseInitialization(sender, **kwargs):
                     'ADDITIONAL_SKILL': 'Str',
                     'ADDITIONAL_STUDY': 'Str',
                     'ACCOUNT_NUMBER': 'Chr',
+                    'ATTACHMENT': 'Ffl',
                     'BANK_ACCOUNT': 'Chr',
                     'BANK_DETAILS': 'Str',
                     'BIRTHDAY': 'Dat',
@@ -256,9 +257,9 @@ def databaseInitialization(sender, **kwargs):
 
                     'Requirement': {'NAME': True, 'CITY': True, 'TYPE_OF_EMPLOYMENT': True, 'KEYWORD': False,
                                     'DETAIL_TEXT': True, 'REQUIREMENTS': True, 'TERMS': True,
-                                    'IS_ANONYMOUS_VACANCY': False}
+                                    'IS_ANONYMOUS_VACANCY': False},
 
-
+                    'Message': {'DETAIL_TEXT': True, 'ATTACHMENT': False}
     }
 
     for type, attributes in content_type.items():
