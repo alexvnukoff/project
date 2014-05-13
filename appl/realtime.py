@@ -101,7 +101,7 @@ class Connection(SockJSConnection):
 
                 recipient = message_body.get('recipient', False)
 
-                if recipient:
+                if recipient == self.user.pk:
                     self.sendNoification(message, message_body)
 
     def sendNoification(self, message, message_body):
