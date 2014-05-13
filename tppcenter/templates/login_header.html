@@ -40,7 +40,19 @@
                     </div>
 
                     <div class="event-holder" title="{% trans 'Messages' %}">
-                        <i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">0</a>
+                        <i class="imgnews i-mail showevent" id="showevent"></i>
+                        <a href="#" class="showevent num" >{% mail %}</a>
+                        <div class="formevent">
+                        	<i class="close-event imgnews" ></i>
+                            <div class="notify-header"><h4>{% trans 'Messages'  %}</h4></div>
+                            <div class="list-holder">
+                                <ul>
+
+                                </ul>
+                            </div>
+                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
+                        </div>
+
                     </div>
 
                     <div class="event-holder" title="{% trans 'Friend request' %}">
@@ -55,7 +67,10 @@
                 <div class="left">
                     {% if addNew %}
                         <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% else %}
+                          <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% endif %}
+
                 </div>
 
                 <!-- Google Translate injection -->
