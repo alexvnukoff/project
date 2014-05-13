@@ -999,7 +999,8 @@ def sendMessage(request):
                         # msg_obj.reindexItem()
 
                         #func.sendTask('private_message', recipient=msg_obj.receiver.pk)
-                        func.sendTask('private_message', recipient=request.user.pk)
+                        func.sendTask('private_massage', recipient=request.user.pk)
+
 
                         response = _('You have successfully sent the message.')
                     else:
