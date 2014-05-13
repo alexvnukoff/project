@@ -122,6 +122,7 @@ def getUserSiteSlider(context):
     file_count = 0
     if len(user_site_slider) > 0:
 
+
         user_site_slider = user_site_slider[0]
 
         slider_dir = 'tppcenter/img/templates/' + user_site_slider
@@ -157,3 +158,4 @@ def getUserSiteMenu(context):
 
 
     return {'addPagesValues': addPagesValues, 'midea_url': midea_url }
+

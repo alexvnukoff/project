@@ -285,6 +285,18 @@ def setNotification(context):
         notification = None
     return notification
 
+
+@register.simple_tag(name='mail', takes_context=True)
+def setMessage(context):
+    request = context.get('request')
+    user = request.user
+    if user.is_authenticated():
+        message = Message.objects.filter(receiver=request.user, was_read=False).count()
+    else:
+        message = None
+    return message
+
+
 @register.simple_tag(name='flags', takes_context=True)
 def setFlags(context, country, url_country, url_country_parametr):
 
