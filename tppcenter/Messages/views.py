@@ -122,7 +122,9 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
 
     messages = Messages.objects.filter(c2p__parent=recipient)
 
-    messages.update(was_read=True)
+    messages_to_update= messages.filter(c2p__parent=Cabinet.objects.get(user=request.user).pk, c2p__type='relation')
+    messages_to_update.update(was_read=True)
+
     messages = messages.filter(c2p__parent=sender)
 
     if date is not None and lid is not None:
@@ -201,7 +203,7 @@ def _getContactList(request, sender, recipient):
     org = Organization.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
     cabinets = Cabinet.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
 
-    unread = dict(Cabinet.objects.filter(pk__in=chatsList).filter(p2c__child__in=Messages.objects.filter(was_read=False)).annotate(unread=Count('p2c__child')).values_list('pk','unread'))
+    unread = dict(Cabinet.objects.filter(pk__in=chatsList).filter(p2c__child__in=Messages.objects.filter(was_read=False, c2p__parent=Cabinet.objects.get(user=request.user).pk, c2p__type='relation')).annotate(unread=Count('p2c__child')).values_list('pk','unread'))
 
 
 
