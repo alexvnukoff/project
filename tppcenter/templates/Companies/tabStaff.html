@@ -6,12 +6,16 @@
     $(function(){
         // save Vacancy list content for swapping and init vacancies for first department
         savedItems = $('#vacancy-list').html();
+        //remove file attachment from message window through which send message to Staff
+        $('#file-title').remove();
+        $('#file-input').remove();
         // pull Vacancies related to selected Department in popup combobox
         $(document).on('change','#dep-list', function() {
 			depID = $('#dep-list').find(':selected').data('department');
 			$('#vacancy-list').html(savedItems);
 			$('#vacancy-list option:not([class = ' + depID + '])').remove();
 		});
+
     });
 </script>
 <script>
