@@ -203,7 +203,7 @@ def _getContactList(request, sender, recipient):
     org = Organization.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
     cabinets = Cabinet.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
 
-    unread = dict(Cabinet.objects.filter(pk__in=chatsList).filter(p2c__child__in=Messages.objects.filter(was_read=False)).annotate(unread=Count('p2c__child')).values_list('pk','unread'))
+    unread = dict(Cabinet.objects.filter(pk__in=chatsList).filter(p2c__child__in=Messages.objects.filter(was_read=False, c2p__type='relation')).annotate(unread=Count('p2c__child')).values_list('pk','unread'))
 
 
 
