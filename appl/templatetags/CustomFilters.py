@@ -291,7 +291,8 @@ def setMessage(context):
     request = context.get('request')
     user = request.user
     if user.is_authenticated():
-        message = Messages.objects.filter(c2p__parent=request.user, was_read=False).count()
+        cab_pk = Cabinet.objects.get(user=request.user)
+        message = Messages.objects.filter(c2p__parent=cab_pk, was_read=False).count()
     else:
         message = None
     return message
