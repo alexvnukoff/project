@@ -28,7 +28,10 @@ $(document).ready(function() {
                     num = el.text()
 
                     el.text(parseInt(num)+1)
-                    $(document).trigger('new_message', [data.fromUser])
+
+                     if(window.location.href.indexOf("messages") > -1){
+                           $(document).trigger('new_message', [data.fromUser])
+                         }
 
                 }
             }
