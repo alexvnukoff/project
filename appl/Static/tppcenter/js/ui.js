@@ -592,6 +592,9 @@ var messagesUI = {
 
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
+
+
+
                 },
 
                 dataType: 'html',
@@ -635,6 +638,9 @@ var messagesUI = {
         var recipientID = $(this).data('user-id');
         var messages = $('#custom-content-' + recipientID);
         var old = $(messagesUI.chatList + ' .' + messagesUI.curChat)
+
+
+        $('#unread-'+recipientID).text("");
 
         if ( old.length > 0 )
         {

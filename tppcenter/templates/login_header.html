@@ -40,18 +40,9 @@
                     </div>
 
                     <div class="event-holder" title="{% trans 'Messages' %}">
-                        <i class="imgnews i-mail showevent" id="showevent"></i>
-                        <a href="#" class="showevent num" >{% mail %}</a>
-                        <div class="formevent">
-                        	<i class="close-event imgnews" ></i>
-                            <div class="notify-header"><h4>{% trans 'Messages'  %}</h4></div>
-                            <div class="list-holder">
-                                <ul>
+                          <a href="{% url 'messages:main' %}" ><i class="imgnews i-mail " id="showevent"></i></a>
+                        <a href="{% url 'messages:main' %}" class=" num" >{% mail %}</a>
 
-                                </ul>
-                            </div>
-                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
-                        </div>
 
                     </div>
 

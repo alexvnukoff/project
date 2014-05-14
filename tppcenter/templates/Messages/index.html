@@ -34,9 +34,9 @@
 
 {% block keywords %}{% endblock %}
 
-{% block left %}{% endblock %}
 
-{% block center %}
+
+ {% block content %}
     <div class="analytics">
 				<div class="community">
                 	<div class="messages-l">
@@ -97,6 +97,7 @@
                                         {% with attr.USER_FIRST_NAME|first as first_name %}
                                         {% with attr.USER_MIDDLE_NAME|first as middle_name %}
                                         {% with attr.IMAGE|first as image %}
+                                        {% with attr.UNREAD as unread %}
 
                                         {% if active == id %}
 
@@ -118,10 +119,12 @@
                                             <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="#">
                                                 {{ first_name }} {{ last_name }}
                                             </a>
+                                        <span style="color: red;padding-left: 10px;" id="unread-{{ id }}"  >{{ unread }}</span>
                                         </li>
 
                                         {% endif %}
 
+                                        {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
@@ -143,5 +146,4 @@
             </div>
 {% endblock %}
 
-{% block right %}{% endblock %}
 

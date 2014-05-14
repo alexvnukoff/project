@@ -3,7 +3,7 @@ from appl.models import Cabinet, Messages, Organization
 from core.models import Item, Relationship
 from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
-from django.db.models import Max, ObjectDoesNotExist
+from django.db.models import Max, ObjectDoesNotExist, Count
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, HttpResponse
 from django.utils.translation import gettext as _
@@ -121,6 +121,8 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
 
 
     messages = Messages.objects.filter(c2p__parent=recipient)
+
+    messages.update(was_read=True)
     messages = messages.filter(c2p__parent=sender)
 
     if date is not None and lid is not None:
@@ -163,6 +165,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     for messageID in messagesList.keys():
         messagesList[messageID]['OWNER'] = ownerDict[messageID]
 
+
     #get latest messages ordered from new to older
     messagesList=OrderedDict(reversed(list(messagesList.items())))
 
@@ -198,6 +201,11 @@ def _getContactList(request, sender, recipient):
     org = Organization.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
     cabinets = Cabinet.objects.filter(pk__in=chatsList).values_list('pk', flat=True)
 
+    unread = dict(Cabinet.objects.filter(pk__in=chatsList).filter(p2c__child__in=Messages.objects.filter(was_read=False)).annotate(unread=Count('p2c__child')).values_list('pk','unread'))
+
+
+
+
     if len(cabinets) > 0 or len(org) > 0 or recipient is not None:
         #Some chat selected if we have one or the new recipient is valid
 
@@ -224,7 +232,10 @@ def _getContactList(request, sender, recipient):
             elif id in org:
                 organizations[id] = chat
             else:
+
+                chat['UNREAD'] = unread.get(id, "")
                 cabinets[id] = chat
+
 
             if recipient is not None and recipient == id:
                 recipient = chat
