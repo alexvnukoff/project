@@ -24,10 +24,10 @@ $(document).ready(function() {
                 {
 
 
-                    el = $(".imgnews.i-mail")
-                    num = el.siblings(".num").text()
+                    el = $("#mailcounter")
+                    num = el.text()
 
-                    el.siblings(".num").text(parseInt(num)+1)
+                    el.text(parseInt(num)+1)
                     $(document).trigger('new_message', [data.fromUser])
 
                 }
