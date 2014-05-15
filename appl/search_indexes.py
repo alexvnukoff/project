@@ -1431,6 +1431,7 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
 class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     country = indexes.IntegerField(null=True)
+    email = indexes.CharField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
 
@@ -1485,6 +1486,9 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
 
         #Get parent active date
         parendStart = None
+
+        emailIndex = self.fields['email'].index_fieldname
+        self.prepared_data[emailIndex] = obj.user.email
 
         #END DATE
         if not obj.end_date:

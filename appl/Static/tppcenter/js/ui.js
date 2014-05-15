@@ -523,9 +523,10 @@ var messagesUI = {
 
     scroollMessageDown: function()
     {//Scroll the message holder last message
-
+        var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
         var content = $( messagesUI.messageBox + ':visible' );
-        var height = content.find( messagesUI.messageList ).height();
+        var content2 = $( '#custom-content-'+ active_id );
+        var height = content2.find( messagesUI.messageList ).height();
 
         content.scrollTop( height );
 
@@ -560,6 +561,7 @@ var messagesUI = {
                 textarea.val( '' );
                 textarea.removeAttr( 'disabled' );
                 messagesUI.scroollMessageDown();
+                messagesUI.bindScroll()
 
             },
 
@@ -592,6 +594,7 @@ var messagesUI = {
 
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
+                    messagesUI.bindScroll()
 
 
 
@@ -662,10 +665,14 @@ var messagesUI = {
             var jqxhr = $.get( loadUrl, 'box=1', function(data) {
                 messagesUI.messagesLoader.hide();
                 $('.custom-content:last').after(data);
+                messagesUI.scroollMessageDown();
+
 
 
             });
         }
+
+
 
         return false;
     },
