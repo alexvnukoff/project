@@ -33,6 +33,7 @@ import tppcenter.Greetings
 import tppcenter.Greetings.urls
 import tppcenter.Resume.urls
 import tppcenter.Vacancy.urls
+import tppcenter.Users.urls
 
 import tppcenter.UserSites.urls
 
@@ -67,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
     url(r'^resume/', include(tppcenter.Resume.urls, namespace='resume')),
     url(r'^site/', include(tppcenter.UserSites.urls, namespace='site')),
+    url(r'^users/', include(tppcenter.Users.urls, namespace='users')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
 
