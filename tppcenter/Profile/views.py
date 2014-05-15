@@ -81,9 +81,13 @@ def _profileContent(request):
                 'IMAGE': file
             }, request.user)
 
+
+
             Relationship.objects.filter(parent__in=Country.objects.all(), child=cabinet).delete()
             Relationship.setRelRelationship(parent=Country.objects.get(pk=int(form.cleaned_data['country'])),
                                             child=cabinet, user=request.user)
+
+            cabinet.reindexItem()
 
             if form.cleaned_data['email'] != request.user.email:
                 user = request.user

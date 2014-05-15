@@ -188,7 +188,9 @@ def user_login(request):
                    user.is_manager = True
                    user.save()
                    group.user_set.add(user)
+                   cabinet.reindexItem()
                    return HttpResponseRedirect(reverse('profile:main'))
+
                else:
                    return HttpResponseRedirect(reverse('wall:main'))
 
