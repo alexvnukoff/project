@@ -94,6 +94,9 @@
 
     <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
 
+    <!-- Google Translate-->
+    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11"></meta>
+
 </head>
 
 <body>
@@ -181,8 +184,8 @@
                     <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
                 </li>
                 <li>
-                	<label>{% trans 'File' %}</label>
-                    <input name="file" type="file" />
+                	<label id="file-title">{% trans 'File' %}</label>
+                    <input name="file" id="file-input" type="file" />
                     <input name="company" id="toCompany" type="hidden" />
                 </li>
                 <li class="end">
@@ -197,5 +200,11 @@
     </div>
 </div>
 <div class="black_overlay" id="fade-contact"></div>
+
+
+{% block vacancy %}
+
+
+{% endblock %}
 </body>
 </html>

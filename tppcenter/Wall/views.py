@@ -1,9 +1,12 @@
+from django.conf import settings
+from django.http import HttpResponse
 from appl import func
 from appl.models import InnovationProject, Product, BusinessProposal, Exhibition, News, Branch, NewsCategories
 from core.models import Item
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
+import json
 
 def get_wall_list(request):
 
@@ -11,17 +14,87 @@ def get_wall_list(request):
 
     wallPage = _wallContent(request)
 
-    templateParams = {
-        'current_section': current_section,
-        'wallPage': wallPage
-    }
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
 
-    return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
+    scripts = []
+
+    if not request.is_ajax():
+
+        templateParams = {
+            'current_section': current_section,
+            'wallPage': wallPage
+        }
+
+        return render_to_response("Wall/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': wallPage,
+
+        }
+
+        return HttpResponse(json.dumps(serialize))
 
 
 def _wallContent(request):
+
+    filters, searchFilter = func.filterLive(request)
+
+    innov_projects = func.getActiveSQS().models(InnovationProject)
+    products = func.getActiveSQS().models(Product)
+    proposals = func.getActiveSQS().models(BusinessProposal)
+    exhibitions = func.getActiveSQS().models(Exhibition)
+
+
+
+    if len(searchFilter) > 0:
+        innov_projects = innov_projects.filter(searchFilter)
+        products = products.filter(searchFilter)
+        proposals = proposals.filter(searchFilter)
+        exhibitions = exhibitions.filter(searchFilter)
+
+    q = request.GET.get('q', '')
+
+    if q != '':
+        innov_projects = innov_projects.filter(title=q)
+        products = products.filter(title=q)
+        proposals = proposals.filter(title=q)
+        exhibitions = exhibitions.filter(title=q)
+
+    sortFields = {
+          'date': 'id',
+          'name': 'title_sort'
+    }
+
+    order = []
+
+    sortField1 = request.GET.get('sortField1', 'date')
+    sortField2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+
+    if sortField1 and sortField1 in sortFields:
+        if order1 == 'desc':
+            order.append('-' + sortFields[sortField1])
+        else:
+            order.append(sortFields[sortField1])
+    else:
+        order.append('-id')
+
+
+
+    innov_projects = innov_projects.order_by(*order)[:1]
+    products = products.order_by(*order)[:4]
+    proposals = proposals.order_by(*order)[:1]
+    exhibitions = exhibitions.order_by(*order)[:1]
+
     #------------------Innov--------------------------#
-    innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:3]
+    #innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:1]
     innov_ids = [project.id for project in innov_projects]
     innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
@@ -47,7 +120,7 @@ def _wallContent(request):
 
 
     #----------------Product----------------------------#
-    products = func.getActiveSQS().models(Product).order_by("-obj_create_date")[:4]
+
     products_ids = [product.id for product in products]
     productsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), products_ids)
     func.addDictinoryWithCountryAndOrganization(products_ids, productsValues)
@@ -55,21 +128,21 @@ def _wallContent(request):
     #---------------News---------------------------------#
     #PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
-    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:3]
+    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:1]
     news_ids = [new.id for new in news]
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news_ids)
     func.addDictinoryWithCountryAndOrganization(news_ids, newsValues)
 
 
     #---------------BusinessProposal--------------------#
-    proposals = func.getActiveSQS().models(BusinessProposal).order_by("-obj_create_date")[:3]
+
     proposals_ids = [proposal.id for proposal in proposals]
     proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals_ids)
     func.addDictinoryWithCountryAndOrganization(proposals_ids, proposalsValues)
 
 
     #--------------Exhibitions--------------------------#
-    exhibitions = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:3]
+
     exhibitions_ids = [exhibition.id for exhibition in exhibitions]
     exhibitionsValues = Item.getItemsAttributesValues(('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
                                                        'END_EVENT_DATE', 'SLUG'), exhibitions_ids)
@@ -79,11 +152,16 @@ def _wallContent(request):
     template = loader.get_template('Wall/contentPage.html')
 
     templateParams = {
-        'newsValues': newsValues,
-        'exhibitionsValues': exhibitionsValues,
-        'productsValues': productsValues,
-        'innovValues': innovValues,
-        'proposalsValues': proposalsValues
+       'filters': filters,
+       'sortField1': sortField1,
+       'sortField2': sortField2,
+       'order1': order1,
+       'order2': order2,
+       'newsValues': newsValues,
+       'exhibitionsValues': exhibitionsValues,
+       'productsValues': productsValues,
+       'innovValues': innovValues,
+       'proposalsValues': proposalsValues
     }
 
     context = RequestContext(request, templateParams)

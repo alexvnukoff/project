@@ -1,7 +1,7 @@
  {% load i18n %}
  {% load CustomFilters %}
   <div class="sidebar">
-        	<a href="#"><i class="" id="logo"><img src="{{ MEDIA_URL }}big/{% logo %}"/></i></a>
+        	<a href="#"><i class="" id="logo"><img src="{{ midea_url }}big/{% logo %}"/></i></a>
             <div class="bgcart">
             	<i class="iconcart imgmain"></i>
                 <b>В вашей корзине 0 товаров</b>
@@ -21,5 +21,8 @@
                <!-- <li><a href="#">Фотогалерея</a></li>-->
                 <li><a href="{% url 'structure:main' %}">{% trans 'Company structure' %}</a></li>
                 <li><a href="{% url 'contact:main' %}">{% trans 'Contact us' %}</a></li>
+                {% for id,  page in addPagesValues.items %}
+                      <li><a href="{% url 'additionalPage' id %}">{{ page.NAME|first }}</a></li>
+                {% endfor %}
             </ul>
         </div>

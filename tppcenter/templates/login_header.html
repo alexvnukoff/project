@@ -9,8 +9,29 @@
         	<a href="/"><i class="imgnews news-logo"></i></a>
         	<a href="{% url "project:about" %}" title="">{% trans 'About' %}</a> | <a href="{% url "project:faq" %}" title="">{% trans 'FAQ' %}</a> | <a href="{% url "project:contact" %}" title="">{% trans 'Contact' %}</a>
         </div>
+        <div class="tophead-center">
+            <!-- in User is not login show Google translate box here -->
+            {% if not user.email %}
+                <!-- Google Translate injection -->
+                <div id="google_translate_element"></div>
+                <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'en',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                            multilanguagePage: true}, 'google_translate_element');
+                    }
+                </script>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                <!-- /Google Translate injection -->
+            {% endif %}
+        </div>
         <div class="tophead-r">
-        	{% if user.email %}<a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>{% else %}<a href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>{% endif %}
+        	{% if user.email %}
+                <a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>
+            {% else %}
+                <a href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -40,7 +61,10 @@
                     </div>
 
                     <div class="event-holder" title="{% trans 'Messages' %}">
-                        <i class="imgnews i-mail" id="showevent"></i> <a href="#" class="num">0</a>
+                          <a href="{% url 'messages:main' %}" ><i class="imgnews i-mail " id="showevent"></i></a>
+                        <a href="{% url 'messages:main' %}" class=" num" id="mailcounter" >{% mail %}</a>
+
+
                     </div>
 
                     <div class="event-holder" title="{% trans 'Friend request' %}">
@@ -55,8 +79,25 @@
                 <div class="left">
                     {% if addNew %}
                         <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                    {% else %}
+                          <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% endif %}
+
                 </div>
+
+                <!-- Google Translate injection -->
+                <div id="google_translate_element"></div>
+                <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'en',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                            multilanguagePage: true}, 'google_translate_element');
+                    }
+                </script>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                <!-- /Google Translate injection -->
+
                 <a href="#" class="btnprofile"><i class="imgnews bullet"></i> {% trans 'Profile' %}</a>
             </div>
         </div>

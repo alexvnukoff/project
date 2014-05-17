@@ -273,6 +273,44 @@ $(document).ready(function()
 
 	});
 
+    $(document).on('click', "#send-resume", function()
+    {
+        $('#send_succsefuly').hide()
+	    document.getElementById('light-vacancy').style.display='block';
+        document.getElementById('fade-vacancy').style.display='block';
+
+
+	});
+
+     $(document).on('click', "#cancel-vacancy", function()
+     {
+          document.getElementById('light-vacancy').style.display='none';
+          document.getElementById('fade-vacancy').style.display='none';
+     });
+
+    $(document).on('click', "#send-vacancy", function()
+    {
+        $('#send_resume_succsefuly').text("Please wait to response.....").show();
+        var dataPost  = {'VACANCY': $('#vacancy-id').val(),
+                        'RESUME':  $('#resume-id').val()
+                    };
+        $.ajax({
+            url: '/vacancy/send/',
+            type: 'post',
+            data : dataPost ,
+            success:function(data) {
+                    $('#send_resume_succsefuly').text(data).show()
+            }
+        });
+
+
+
+
+
+
+	});
+
+
 	$(document).on('click', ".close-event", function()
     {
 		$(".formevent").hide();

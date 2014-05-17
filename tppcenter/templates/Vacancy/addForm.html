@@ -1,0 +1,320 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load set_var %}
+
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<script type="text/javascript">
+        $(function() {
+
+            $( ".date" ).datepicker();
+
+        });
+    $(function(){
+        // save Vacancy list content for swapping and init vacancies for first department
+        savedItems = $('#vacancy-list').html();
+        // pull Vacancies related to selected Department in popup combobox
+        $(document).on('change','#dep-list', function() {
+			depID = $('#dep-list').find(':selected').data('department');
+			$('#vacancy-list').html(savedItems);
+			$('#vacancy-list option:not([class = ' + depID + '])').remove();
+		});
+    });
+
+    $(function(){
+	    $(document).on('click', "#addDep", function(){
+            $('#add-dep-popup').show();
+            document.getElementById('fade-contact').style.display='block';
+
+
+
+            return false;
+        });
+         $(document).on('click', "#addVac", function(){
+            $('#add-vac-popup').show();
+            document.getElementById('fade-contact').style.display='block';
+
+
+
+            return false;
+        });
+
+        $(document).on('click', "#btn-cancel-vacancy", function(){
+            $('#add-vac-popup').hide();
+
+            document.getElementById('fade-contact').style.display='none';
+             $("#waitToresponseVac").hide();
+
+
+
+
+            return false;
+        });
+
+        $(document).on('click', "#btn-cancel-depart", function(){
+            $('#add-dep-popup').hide();
+            $("#waitToresponseDep").hide();
+            document.getElementById('fade-contact').style.display='none';
+
+
+
+            return false;
+        });
+
+        $(document).on('click', "#btn-add-depart", function(){
+            $("#waitToresponseDep").text("Please wait to response.....").show();
+          var  company_id = {{ company }};
+          var  dep_name =  $('#dep-name').val();
+
+          var dataPost  = {'COMPANY': company_id,
+                          'DEPARTMENT': dep_name
+         };
+
+         $.ajax({
+            url: '/vacancy/addDepartment/',
+            type: 'post',
+            data : dataPost ,
+            complete:function(data, textStatus) {
+
+
+                    if (data.status == 200)
+                    {
+                         var dep_id = data.responseText;
+                        $('#waitToresponseDep').text('Departament successfully added ').show();
+                        var option = new Option(dep_name,dep_id);
+                        $("#dep-list")[0].options.add(option);
+
+                        option.setAttribute('data-department', dep_id);
+
+                    }
+                    else
+                    {
+                         $('#waitToresponseDep').text(data.responseText).show();
+                    }
+
+            }
+         });
+
+
+
+        });
+
+        $(document).on('click', "#btn-add-vacancy", function(){
+          $("#waitToresponseVac").text("Please wait to response.....").show();
+          var  company_id = {{ company }};
+          var  dep_id =  $('option:selected', "#dep-list").attr('data-department');
+          var vacancy_name = $('#vac-name').val();
+          if (!dep_id.trim()){
+               $('#waitToresponseVac').text('You should to choose departament ').show();
+                 return false;
+          }
+
+
+          var dataPost  = {'DEPARTMENT': dep_id, 'VACANCY': vacancy_name, 'COMPANY': company_id };
+
+         $.ajax({
+            url: '/vacancy/addVacancy/',
+            type: 'post',
+            data : dataPost ,
+            complete:function(data, textStatus) {
+
+
+                    if (data.status == 200)
+                    {
+                         var vac_id = data.responseText;
+
+
+                        $('#waitToresponseVac').text('Vacancy successfully added ').show();
+                        var option = new Option(vacancy_name ,vac_id);
+                        $("#vacancy-list")[0].options.add(option);
+                         option.setAttribute('data-vacancy', vac_id);
+                         option.setAttribute('class', dep_id);
+                         savedItems += (option.outerHTML);
+
+
+                    }
+                    else
+                    {
+                         $('#waitToresponseVac').text(data.responseText).show();
+                    }
+
+            }
+         });
+
+
+
+        });
+
+
+	});
+</script>
+
+{% block keywords %}{% endblock %}
+
+<div class="newsform">
+
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        {% with form.fields.NAME.initial as name %}
+        {% with form.fields.CITY.initial as city %}
+        {% with form.fields.TYPE_OF_EMPLOYMENT.initial as type_og_employment %}
+        {% with form.fields.KEYWORD.initial as keyword %}
+        {% with form.fields.DETAIL_TEXT.initial as detail_text %}
+        {% with form.fields.REQUIREMENTS.initial as requirements %}
+        {% with form.fields.TERMS.initial as terms %}
+         {% with form.fields.IS_ANONYMOUS_VACANCY.initial as anonymous %}
+				<ul class="tenderline">
+                	<li>
+                    	<div class="clumn1">
+                        	<label>{% trans 'Departament' %} <font color="#FF0000">*</font></label>
+                            <select  id="dep-list" style="width:62%;">
+                                <option data-department="" value="" disabled selected>{% trans "Select Department..." %}</option>
+                                {% for id, attr in departmentsList.items %}
+                                {% with attr.NAME|first as department %}
+                                    <option data-department="{{ id }}">{{ department }}</option>
+                                {% endwith %}
+                                {% empty %}
+                                    <div class="no-results">{% trans "Empty" %}</div>
+                                {% endfor %}
+                            </select>
+
+                          <img id="addDep" style="padding: 7px 0 0 10px;" src="{% static 'tppcenter/img/addbtn.png' %}">
+
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Vacancy' %} <font color="#FF0000">*</font></label>
+                            {% if vacancy_error %}
+                                <div class="error-handler"><div class="formserror">{{ vacancy_error }}</div></div>
+                            {% endif %}
+                            <select name="VACANCY" id="vacancy-list" style="width:80%;">
+                                {% if not vacancy_selected %}
+                                    <option  disabled selected>{% trans "Select Department to select vacancy..." %}</option>
+                                {% endif %}
+                                {% for id, attr in vacanciesList.items %}
+                                {% with attr.NAME|first as vacancy %}
+                                {% with attr.DEPARTMENT_ID|first as dep_id %}
+                                    <option data-vacancy="{{ id }}" value="{{ id }}" class="{{ dep_id }}" {% if id == vacancy_selected %} selected {% endif %}>{{ vacancy }}</option>
+                                {% endwith %}
+                                {% endwith %}
+                                {% empty %}
+                                    <div class="no-results">{% trans "Empty" %}</div>
+                                {% endfor %}
+                        </select>
+
+                         <img id="addVac" style="padding: 7px 0 0 10px;" src="{% static 'tppcenter/img/addbtn.png' %}">
+
+                        </div>
+                    </li>
+                    <li>
+                        <label>{% trans 'Name of vacancy' %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.NAME %}
+                             <div class="error-handler"><div class="formserror">{{ form.errors.NAME }}</div></div>
+                        {% endif %}
+                        <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
+                    </li>
+
+                    <li>
+                    	 <div class="clumn1">
+                        	<label>{% trans 'City of vacancy' %} </label>
+                             {% if form.errors.CITY %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.CITY }}</div></div>
+                             {% endif %}
+                            <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" style="width:91%;" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Type of employment' %} <font color="#FF0000">*</font></label>
+                            {% if form.errors.TYPE_OF_EMPLOYMENT %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.TYPE_OF_EMPLOYMENT }}</div></div>
+                            {% endif %}
+                            <input type="text" name="TYPE_OF_EMPLOYMENT"  value="{{ type_og_employment }}" placeholder="" class="text" style="width:91%;" />
+                        </div>
+                    </li>
+                    <li>
+                        <div class="clumn1">
+                        	<input type="checkbox" name="IS_ANONYMOUS_VACANCY" {% if anonymous %} checked {% endif %}/>
+                        	— {% trans "make vacancy anonymous" %} <br />
+                            ({% trans 'name of company will be hidden' %})
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Keywords' %}</label>
+                            {% if form.errors.KEYWORD %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                            {% endif %}
+                            <input type="text" name="KEYWORD" value="{{ keyword }}" placeholder="" class="text" style="width:91%;" />
+                        </div>
+                    </li>
+                    <li>
+                    	<label>{% trans 'Description' %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.DETAIL_TEXT %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                        {% endif %}
+                        <div class="">  <textarea name="DETAIL_TEXT" rows="4">{{ detail_text }}</textarea></div>
+                    </li>
+                    <li>
+                    	<label>{% trans 'Requirements' %}</label>
+                        {% if form.errors.REQUIREMENTS %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.REQUIREMENTS }}</div></div>
+                        {% endif %}
+                        <textarea name="REQUIREMENTS" rows="4">{{ requirements }}</textarea>
+                    </li>
+                    <li>
+                    	<label>{% trans 'Terms' %}</label>
+                        {% if form.errors.TERMS %}
+                                  <div class="error-handler"><div class="formserror">{{ form.errors.TERMS }}</div></div>
+                        {% endif %}
+                        <textarea name="TERMS" rows="4">{{ terms }}</textarea>
+                    </li>
+                </ul>
+                  <div class="newform-button">
+                    <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+                    <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+                  </div>
+
+
+
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+    </form>
+</div>
+            <div class="staffadd" id="add-dep-popup">
+                <i class="close-formadd imgnews"></i>
+                <div class="title">{% trans "Department name" %}</div>
+                <div id="waitToresponseDep" hidden="hidden" style="font-size: small;color: #004400;text-align: center;"><span> {% trans 'Please wait to response...' %}</span></div>
+                <div class="staffaddin">
+                    <input type="text" name="" id="dep-name" class="textstructure" />
+                    <div class="formadd-button">
+                        <a class="btntype2" id="btn-add-depart" href="#">{% trans "Add" %}</a>
+                        <a class="btntype1" id="btn-cancel-depart" href="#">{% trans "Cancel" %}</a>
+                    </div>
+                </div>
+            </div>
+  <div class="vacadd" id="add-vac-popup">
+                <i class="close-formadd imgnews"></i>
+                <div class="title">{% trans "Vacancy title" %}</div>
+                <div id="waitToresponseVac" hidden="hidden" style="font-size: small;color: #004400;text-align: center;"><span> {% trans 'Please wait to response...' %}</span></div>
+                <div  class="staffaddin">
+                    <input type="text" name="" id="vac-name" class="textstructure" />
+                    <div class="formadd-button">
+                        <a class="btntype2" id="btn-add-vacancy" href="#">{% trans "Add" %}</a>
+                        <a class="btntype1" id="btn-cancel-vacancy" href="">{% trans "Cancel" %}</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+

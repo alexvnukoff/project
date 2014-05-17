@@ -121,10 +121,13 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
         site = Site.objects.get(name='centerpokupok')
+
         if is_b2c_product:
+            product.sites.all().delete()
             product.sites.add(site.pk)
         else:
             product.sites.remove(site.pk)
+            product.sites.add(Site.objects.get(name='tppcenter').pk)
 
 
 
@@ -187,6 +190,10 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
 
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
 
     values = {}
     values.update(post)
@@ -238,6 +245,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         #this logic was moved into appl.models signal post_save from Department creation
         #g = Group.objects.get(name=company.community)
         #g.user_set.add(user)
+        pages.save(parent=company.id, user=user)
         company.reindexItem()
 
 
@@ -392,7 +400,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     return True
 
 
-#@shared_task
+@shared_task
 def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -471,6 +479,49 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
     trans_real.deactivate()
     return True
+
+
+@shared_task
+def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+    vacancy = post.get('VACANCY', False)
+
+
+
+
+
+    form = ItemForm('Requirement', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+
+
+    requirement = form.save(user, site_id)
+    if requirement:
+
+        if vacancy:
+            Relationship.objects.filter(child=requirement, type='dependence').delete()
+            Relationship.setRelRelationship(parent=Vacancy.objects.get(pk=int(vacancy)), child=requirement, type='dependence', user=user)
+
+
+
+
+
+
+
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True
+
 
 
 

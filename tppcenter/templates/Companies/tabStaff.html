@@ -4,15 +4,27 @@
 
 <script type="text/javascript">
     $(function(){
-        // save Vacancy list content for swapping and inti vacancies for first department
+        // save Vacancy list content for swapping and init vacancies for first department
         savedItems = $('#vacancy-list').html();
+        //remove file attachment from message window through which send message to Staff
+        $('#file-title').remove();
+        $('#file-input').remove();
 
-        // pull Vacancies related to selected Department in popup comboboxes
+        // pull Vacancies related to selected Department in popup combobox
         $(document).on('change','#dep-list', function() {
 			depID = $('#dep-list').find(':selected').data('department');
 			$('#vacancy-list').html(savedItems);
 			$('#vacancy-list option:not([class = ' + depID + '])').remove();
 		});
+
+    });
+</script>
+<script>
+    // hide error message on click
+    $(function() {
+        $(document).on('click', '.error-msg p', function() {
+            $(this).fadeOut(800);
+        });
     });
 </script>
 
@@ -20,14 +32,20 @@
 <div id="staff-tabs" class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
+            <div class="error-msg">
+                {% if errorMessage %}
+                    <p>{{ errorMessage }}</p>
+                {% endif %}
+            </div>
             <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff">
                 <tr class="top">
                     <td width="24">&nbsp;</td>
                     <td>{% trans "Name" %}</td>
                     <td>{% trans "Department" %}</td>
-                    <td>{% trans "E-mail" %}</td>
-                    <td>{% trans "Joined Date" %}</td>
-                    <td class="status">{% trans "Status" %}</td>
+                    <td>{% trans "Position" %}</td>
+                    <td>{% trans "Contact" %}</td>
+                    <td>{% trans "Status" %}</td>
+                    <td class="status"></td>
                 </tr>
 
                 {% for id, attr in workersList.items %}
@@ -37,7 +55,7 @@
                     {% with attr.USER_LAST_NAME|first as l_name %}
                     {% with attr.EMAIL|first as email %}
                     {% with attr.DEPARTMENT|first as department %}
-                    {% with attr.CREATE_DATE|first|date:"d-M-y" as joined_date %}
+                    {% with attr.VACANCY|first as vacancy %}
                     {% with attr.STATUS|first as status %}
 
 
@@ -57,13 +75,14 @@
                             <td><a href="#" title="">{% trans "User with empty profile. Cabinet ID:" %} {{ id }}</a></td>
                         {% endif %}
                         <td>{{ department }}</td>
-                        {% if email %}
-                            <td><a href="#">{{ email }}</a></td>
+                        <td>{{ vacancy }}</td>
+                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ f_name }} {{ m_name }} {{ l_name }}" data-id="{{ id }}"></i></td>
+                        {% if status == 'Active' %}
+                            <td><i class="staff-status-active img-status"></i></td>
                         {% else %}
-                            <td><a href="#">{% trans "Undefined" %}</a></td>
+                            <td><i class="staff-status-passive img-status"></i></td>
                         {% endif %}
-                        <td>{{ joined_date }}</td>
-                        <td>{{ status }}
+                        <td>
                             {% if 'delete_cabinet' in permissionsList %}
                                 <i class="btnremove-small imgnews"></i>
                             {% endif %}

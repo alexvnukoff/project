@@ -230,6 +230,11 @@ var ui =
         //Set current page to processing menu (top menu)
         ui.curPage.text(text);
 
+        if (url == '/wall/')
+              $('.newslink .left .add-new').hide();
+        else
+              $('.newslink .left .add-new').show();
+
         $('.newslink .left .add-new').attr('href', url + 'add/');
 
         ui.loading = ui.requester(url);
@@ -518,9 +523,10 @@ var messagesUI = {
 
     scroollMessageDown: function()
     {//Scroll the message holder last message
-
+        var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
         var content = $( messagesUI.messageBox + ':visible' );
-        var height = content.find( messagesUI.messageList ).height();
+        var content2 = $( '#custom-content-'+ active_id );
+        var height = content2.find( messagesUI.messageList ).height();
 
         content.scrollTop( height );
 
@@ -554,6 +560,8 @@ var messagesUI = {
                 messagesUI.getMessages( active_id );
                 textarea.val( '' );
                 textarea.removeAttr( 'disabled' );
+                messagesUI.scroollMessageDown();
+                messagesUI.bindScroll()
 
             },
 
@@ -586,6 +594,10 @@ var messagesUI = {
 
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
+                    messagesUI.bindScroll()
+
+
+
                 },
 
                 dataType: 'html',
@@ -630,6 +642,9 @@ var messagesUI = {
         var messages = $('#custom-content-' + recipientID);
         var old = $(messagesUI.chatList + ' .' + messagesUI.curChat)
 
+
+        $('#unread-'+recipientID).text("");
+
         if ( old.length > 0 )
         {
             old.removeClass(messagesUI.curChat);
@@ -650,8 +665,14 @@ var messagesUI = {
             var jqxhr = $.get( loadUrl, 'box=1', function(data) {
                 messagesUI.messagesLoader.hide();
                 $('.custom-content:last').after(data);
+                messagesUI.scroollMessageDown();
+
+
+
             });
         }
+
+
 
         return false;
     },

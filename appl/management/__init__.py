@@ -84,6 +84,7 @@ def databaseInitialization(sender, **kwargs):
                     'ADDITIONAL_SKILL': 'Str',
                     'ADDITIONAL_STUDY': 'Str',
                     'ACCOUNT_NUMBER': 'Chr',
+                    'ATTACHMENT': 'Ffl',
                     'BANK_ACCOUNT': 'Chr',
                     'BANK_DETAILS': 'Str',
                     'BIRTHDAY': 'Dat',
@@ -122,6 +123,7 @@ def databaseInitialization(sender, **kwargs):
                     'IMAGE': 'Img',
                     'IMAGE_SMALL': 'Img',
                     'INSTITUTION': 'Chr',
+                    'IS_ANONYMOUS_VACANCY': 'Chr',
                     'INN': 'Chr',
                     'KEYWORD': 'Str',
                     'KPP': 'Chr',
@@ -147,12 +149,15 @@ def databaseInitialization(sender, **kwargs):
                     'POSITION_EXP_2': 'Chr',
                     'POSITION_EXP_3': 'Chr',
                     'PROFESSION': 'Chr',
+                    'REQUIREMENTS': 'Str',
                     'ROUTE_DESCRIPTION': 'Str',
                     'PRODUCT_NAME': 'Chr',
                     'RELEASE_DATE': 'Dat',
                     'SALARY': 'Chr',
                     'SEX': {'type': 'Chr', 'slots': ['Male', 'Female']},
                     'SITE_NAME': 'Chr',
+                    'SITE_LOGO': 'Img',
+                    'SITE_SLOGAN': 'Chr',
                     'SMALL_IMAGE': 'Img',
                     'SKYPE': 'Chr',
                     'SKU': 'Chr',
@@ -167,7 +172,11 @@ def databaseInitialization(sender, **kwargs):
                     'STUDY_START_DATE': 'Dat',
                     'TARGET_AUDIENCE': 'Chr',
                     'TELEPHONE_NUMBER': 'Chr',
+                    'TEMPLATE_IMAGE_FOLDER': 'Chr',
+                    "TEMPLATE": 'Chr',
+                    'TERMS': 'Str',
                     'TPP': 'Chr',
+                    'TYPE_OF_EMPLOYMENT': 'Chr',
                     'YOUTUBE_CODE': 'Chr',
                     'USER_MIDDLE_NAME': 'Chr',
                     'USER_LAST_NAME': 'Chr',
@@ -244,9 +253,13 @@ def databaseInitialization(sender, **kwargs):
                                'END_DATE_EXP_1': False, 'END_DATE_EXP_2': False, 'END_DATE_EXP_3': False,
                                'ADDITIONAL_STUDY': False, 'LANGUAGE_SKILL': False, 'COMPUTER_SKILL': False,
                                'ADDITIONAL_SKILL': False, 'SALARY': True, 'ADDITIONAL_INFORMATION': False,
-                               'INSTITUTION': False }
+                               'INSTITUTION': False },
 
+                    'Requirement': {'NAME': True, 'CITY': True, 'TYPE_OF_EMPLOYMENT': True, 'KEYWORD': False,
+                                    'DETAIL_TEXT': True, 'REQUIREMENTS': True, 'TERMS': True,
+                                    'IS_ANONYMOUS_VACANCY': False},
 
+                    'Message': {'DETAIL_TEXT': True, 'ATTACHMENT': False}
     }
 
     for type, attributes in content_type.items():

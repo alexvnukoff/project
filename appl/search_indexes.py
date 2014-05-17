@@ -1,3 +1,5 @@
+from django.utils.timezone import now
+
 __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
@@ -710,14 +712,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         couponIndex = self.fields['coupon'].index_fieldname
         couponEndIndex = self.fields['coupon_end'].index_fieldname
+        couponStartIndex = self.fields['coupon_start'].index_fieldname
 
         #Coupon Discount
         if 'COUPON_DISCOUNT' in attributes:
             self.prepared_data[couponIndex] = float(attributes['COUPON_DISCOUNT'][0]['title'])
             self.prepared_data[couponEndIndex] = attributes['COUPON_DISCOUNT'][0]['end_date']
+            self.prepared_data[couponStartIndex] = attributes['COUPON_DISCOUNT'][0]['start_date']
         else:
             self.prepared_data[couponIndex] = 0
             self.prepared_data[couponEndIndex] = datetime(1, 1, 1)
+            self.prepared_data[couponStartIndex] = now()
 
         #Company
         companyIndex = self.fields['company'].index_fieldname
@@ -1426,6 +1431,7 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
 class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     country = indexes.IntegerField(null=True)
+    email = indexes.CharField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
 
@@ -1480,6 +1486,9 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
 
         #Get parent active date
         parendStart = None
+
+        emailIndex = self.fields['email'].index_fieldname
+        self.prepared_data[emailIndex] = obj.user.email
 
         #END DATE
         if not obj.end_date:

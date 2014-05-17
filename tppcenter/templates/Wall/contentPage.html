@@ -1,11 +1,10 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-<script>
-    $('.keyword').html('');
-</script>
+<div class="container">
+  {% include "Wall/popupFilter.html" %}
 
- <div class="companies">
+
           	<div class="wall-title">{% trans 'Latest updates' %}</div>
 
              {% if innovValues  %}
@@ -300,4 +299,5 @@
 
 
 
-  </div>
+
+</div>

@@ -128,12 +128,13 @@ box-shadow:inset 0 0 3px #CCC;}
 .tender-info ul.inforesume li .resume{ float:left; color:#000; font-weight:bold;margin-left: -40px;width: 90px;}
 
 .vacancy-list{ position: relative; float: left; width: 100%;}
-.vacancy-list li{ position: relative; float: left; width: 516px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
-.vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold;}
+.vacancy-list li{ position: relative; float: left; width: 636px; background-color: #fafafa; margin: 10px 0 0 0; padding: 8px 12px;}
+.vacancy-list li .h2{ float: left; width: 100%; font-size: 16px; font-weight: bold; padding-top: 12px;}
 .vacancy-list li .logovacancy{ float: left; width: 70px; height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; margin: 8px 10px 0 0; display: inline;}
-.vacancy-list li .vacancy-desc{ position:relative; float:left; width:435px; margin:8px 0 0 0;}
+.vacancy-list li .vacancy-desc{ position:relative; float:left; width:555px; margin:8px 0 0 0;}
 .vacancy-list li .vacancy-desc .flag{ float:left; width:18px; height:12px; padding-right:5px;}
 .vacancy-list li .vacancy-desc .date{ color:#9b9b9b;}
+.vacancy-list li .vacancy-desc p{ line-height:18px;padding-top: 10px;font-family: sans-serif;font-size: 14px;}
 .vacancy-list li .vacancy-desc a.more{ display:block; text-align:right; padding-top:5px;}
 
 .tender-list li .line .clumn{ float:left; padding-right:25px;}
@@ -369,10 +370,12 @@ rgb(33,136,187) 100%);}
 .sitemap li a.lesssitemap{background:url(../img/less.png) no-repeat left center;}
 .sitemap li .sub{ position:relative; float:left; width:90%; margin-left:25px; display:none;}
 .sitemap li .sub li{ position:relative; float:left; width:90%; padding-left:25px; background:url(../img/bullet1.png) no-repeat left top; margin:5px 0 0 0;}
-.sitemap li:first-child .sub{ display:block;}
-
+/*.sitemap li:first-child .sub{ display:block;}
+*/
 .staffadd{ position:fixed; width:364px; top:200px; left:50%; margin-left:-182px;background-color:#FFF; border-radius:3px; padding-bottom:20px; z-index:1002; display:none;}
 .staffadd .title{ float:left; width:100%; border-bottom:1px #d9d9d9 solid; padding:8px 0; font-size:13px; font-weight:bold; text-align:center; color:#000;}
+.vacadd{ position:fixed; width:364px; top:200px; left:50%; margin-left:-182px;background-color:#FFF; border-radius:3px; padding-bottom:20px; z-index:1002; display:none;}
+.vacadd .title{ float:left; width:100%; border-bottom:1px #d9d9d9 solid; padding:8px 0; font-size:13px; font-weight:bold; text-align:center; color:#000;}
 .staffaddin{ position:relative; float:left; width:334px; margin:8px 15px 0px 15px; display:inline;}
 .staffaddin label, .staffaddin select{ float:left; line-height:24px;}
 .staffaddin select{ border:1px #bdbdbd solid; float:right;}
@@ -441,3 +444,14 @@ rgb(33,136,187) 100%);}
 .contactform li.end .btntype1, .contactform li.end .btntype2{ font-size:17px; padding:8px 40px;}
 .closecontact{ position:absolute;}
 
+.error-msg p {
+    background: #FC2D46;
+    color: #FFFFFF;
+    cursor: pointer;
+    padding: 5px;
+}
+/*---------- Styles for TPP and Company Staff -------------------*/
+.img-status{ background:url(../img/news.png);}
+.staff-status-passive{ width: 13px; height: 13px; background-position: -91px -130px; margin-left: 15px; float: left; display: inline;}
+.staff-status-active{ width: 13px; height: 13px; background-position: -104px -130px; margin-left: 15px; float: left; display: inline;}
+.staff-contact-msg{ width: 13px; height: 13px; background-position: -188px -90px; margin-left: 18px; float: left; display: inline; cursor: pointer;}

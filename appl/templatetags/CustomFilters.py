@@ -135,7 +135,7 @@ class DynUrlNode(template.Node):
         request = get_request()
         query_set = None
         if len(request.GET) > 0:
-            query_set = urlencode(request.GET)
+            query_set = request.GET.urlencode()
 
 
         url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)
@@ -284,6 +284,19 @@ def setNotification(context):
     else:
         notification = None
     return notification
+
+
+@register.simple_tag(name='mail', takes_context=True)
+def setMessage(context):
+    request = context.get('request')
+    user = request.user
+    if user.is_authenticated():
+        cab_pk = Cabinet.objects.get(user=request.user)
+        message = Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+    else:
+        message = None
+    return message
+
 
 @register.simple_tag(name='flags', takes_context=True)
 def setFlags(context, country, url_country, url_country_parametr):

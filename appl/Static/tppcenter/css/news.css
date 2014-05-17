@@ -175,7 +175,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .profile-title{ position:relative; float:left; width:100%; border-bottom:1px #cfcfcf solid; font-size:18px; font-weight:normal; padding:12px 0; text-indent:22px;}
 .profile-main{ position:relative; float:left; width:100%; border-bottom:1px #cfcfcf solid; padding:12px 0; color:#4a4a4a;}
 .profile-main .avatar{ float:left; width:150px; margin:0 0 0 22px; display:inline;}
-.profile-main .avatar img{ display:block; width:100%; box-shadow:0px 1px 1px #333;}
+.profile-main .avatar img{ display:block; max-width:150px;max-height: 156px; box-shadow:0px 1px 1px #333;}
 .profile-main .avatar .name{ display:block; padding-top:5px; color:#9b9b9b; font-style:italic;}
 .profile-info{ position:relative; float:left; width:365px; margin:0 0 0 20px; display:inline;}
 .profile-info li{ float:left; width:100%; margin:8px 0 0 0;}
@@ -247,7 +247,7 @@ rgb(33,136,187) 100%);}
 .listprd li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0 ;}
 .listprd li .link .flag{ float:left; width:18px; height:12px; margin-top:4px;}
 .listprd li .link .name{ display:inline-block; margin-left:6px; max-width:110px; height:70px; vertical-align:top;}
-.listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:15px; font-weight:bold;}
+.listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
 .listprd li .call{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
 .listprd li .btnbuy{ float:left; width:100%; margin:10px 0 0 0; font-size:12px; background:url(../img/btnbuy.gif) repeat-x; line-height:21px; text-align:center; color:#FFF; text-shadow:-1px -1px 1px #317ca1; border-radius:3px; box-shadow:0px 1px 2px #DDD;}
 .listprd li .btnbuy:hover{ text-decoration:none; opacity:0.9;filter:alpha(opacity=90);}

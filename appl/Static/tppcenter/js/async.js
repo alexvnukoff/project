@@ -18,14 +18,22 @@ $(document).ready(function() {
                 {
                     el = $(".imgnews.i-note")
                     num = el.siblings(".num").text()
-
                     el.siblings(".num").text(parseInt(num)+1)
-                } else if (type == 'private_massage')
-                {
-                    $(document).trigger('new_message', [data.sender])
                 }
+                else if (type == 'private_massage')
+                {
 
 
+                    el = $("#mailcounter")
+                    num = el.text()
+
+                    el.text(parseInt(num)+1)
+
+                     if(window.location.href.indexOf("messages") > -1){
+                           $(document).trigger('new_message', [data.fromUser])
+                         }
+
+                }
             }
 
             socket.onclose = function(e){

@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load CustomFilters %}
+{% load inclusionTags %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
   {% block header %}
         {% include 'header.html' %}
     {% endblock %}
@@ -26,12 +31,12 @@
             </div>
         </div>
       {% block sidebar %}
-           {% include "site_sidebar.html" %}
+           {% getUserSiteMenu %}
 
         {% endblock %}
         <div class="mainright">
         {% block slider %}
-             {% include "slider.html" %}
+           {% getUserSiteSlider %}
 
             {% endblock %}
 

@@ -172,6 +172,16 @@ class AdvOrder(Item):
     def __str__(self):
         return ''
 
+class Requirement(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+
+    def __str__(self):
+        return self.getName()
+
+
 class AdvBannerType(Item):
 
     active = ItemManager()
@@ -300,6 +310,12 @@ class SystemMessages(Item):
      def __str__(self):
         return self.getName()
 
+class ExternalSiteTemplate(Item):
+    objects = models.Manager()
+    active = ItemManager()
+
+    def __str__(self):
+        return self.getName()
 
 
 class Notification(Item):
@@ -603,7 +619,9 @@ class Exhibition(Item):
     def __str__(self):
         return self.getName()
 
+
 class Messages(Item):
+    was_read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -627,7 +645,7 @@ class Vacancy(Item):
 def companyCommunity(instance, **kwargs):
     '''
        Create default Department if Company hasn't it.
-    '''
+
     if not Department.objects.filter(c2p__parent=instance.pk).exists():
         request = get_request()
         if request:
@@ -675,13 +693,13 @@ def companyCommunity(instance, **kwargs):
             except Exception as e:
                 print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
                 pass
-
+    '''
 
 @receiver(post_save, sender=Tpp)
 def tppCommunity(instance, **kwargs):
     '''
        Create default Department if Tpp hasn't it.
-    '''
+
     if not Department.objects.filter(c2p__parent=instance.pk).exists():
         request = get_request()
         if request:
@@ -731,4 +749,4 @@ def tppCommunity(instance, **kwargs):
                     vac.delete()
             except Exception as e:
                 print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
-                pass
+    '''

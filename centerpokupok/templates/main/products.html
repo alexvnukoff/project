@@ -51,7 +51,7 @@
                                 <p>
                                     {% if category_id %}
                                          <a href="{% url "products:category" category_id %}" class="viewall">
-                                        {{ category_name }}
+                                        {{ category_name|truncatewords:3 }}
                                     {% endif %}
                                     </a>
                                 </p>
@@ -117,7 +117,7 @@
                                 <p>
                                     {% if category_id %}
                                       <a href="{% url "products:category" category_id %}" class="viewall">
-                                        {{ category_name }}
+                                        {{ category_name|truncatewords:3 }}
                                         {% endif %}
                                     </a>
                                 </p>

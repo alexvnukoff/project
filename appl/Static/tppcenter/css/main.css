@@ -20,6 +20,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-l a:hover{ color:#0089bc; text-decoration:none;}
 .tophead-r{ float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}
 .tophead-r a{ color:#0089bc; padding:0 5px;}
+.tophead-center { float: left;}
 .i-lock{ display:inline-block; width:16px; height:18px; background-position:0px 1px; margin:0 5px 0 0; vertical-align:middle;}
 .tophead-r a:hover{ text-decoration:underline;}
 #logo{ position:relative; float:left; width:286px; height:98px; margin:22px 0 0 0; background-position:0px 0px;}
@@ -163,3 +164,5 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f7), to(#e
 #footer{ position:relative; float:left; width:100%; margin:18px 0 0 0; background-color:#f4f4f4; padding:5px 0 25px 0; color:#9b9b9b;
 background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#eeeeee)); background: -moz-linear-gradient(top, #fbfbfb, #eeeeee);}
 
+#google_translate_element{ padding-top: 3px; margin-left: 7px; }
+/*#google_translate_element_main{ padding-bottom: 3px; margin-bottom: 10px; }*/

@@ -241,7 +241,7 @@ class ItemForm(forms.Form):
             return True
 
     @transaction.atomic
-    def save(self, user, site_id, dates=None, disableNotify=False, sizes=None):
+    def save(self, user, site_id, dates=None, disableNotify=False, sizes=None, **kwargs):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -258,7 +258,7 @@ class ItemForm(forms.Form):
         try:
             if not self.id:
                 site = site_id
-                self.obj = globals()[self.item](create_user=user)
+                self.obj = globals()[self.item](create_user=user, **kwargs)
                 self.obj.save()
                 self.obj.sites.add(site_id)
             else:

@@ -1,9 +1,10 @@
 from django.core.mail import EmailMessage
 from django.db.models import Q
+from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
-                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery
+                        Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery, AdditionalPages, Messages
 from core.models import Item, Relationship, User, Group
 from core.tasks import addNewCompany
 from core.amazonMethods import add
@@ -18,10 +19,11 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from tppcenter.forms import ItemForm
+from tppcenter.forms import ItemForm, BasePages
 from django.utils.translation import trans_real
 import logging
 import json
+from tppcenter.Messages.views import addMessages
 
 logger = logging.getLogger('django.request')
 
@@ -230,9 +232,11 @@ def _companiesDetailContent(request, item_id):
 
         country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME', 'COUNTRY_FLAG'))
 
+        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
         template = loader.get_template('Companies/detailContent.html')
 
-        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id})
+        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id, 'additionalPages': additionalPages})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
         cache.set(description_cache_name, (description, title), 60*60*24*7)
@@ -441,29 +445,41 @@ def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
-    #check if there Department for deletion
+    errorMessage = ''
+    usr = request.user
     comp = Company.objects.get(pk=company)
-    departmentForDeletion = request.POST.get('departmentID', 0)
 
+    # check Department for deletion
+    departmentForDeletion = request.POST.get('departmentDelID', 0)
     try:
         departmentForDeletion = int(departmentForDeletion)
     except ValueError:
         departmentForDeletion = 0
 
     if departmentForDeletion > 0:
+        # delete all Department's Vacancies
+        itm_lst = Item.objects.filter(pk=departmentForDeletion)
+        for itm in itm_lst:
+            try:
+                Item.hierarchy.deleteTree(itm.pk)
+            except Exception as e:
+                errorMessage = _('Can not delete Department hierarchy. The reason is: %(reason)s') % {"reason": str(e)}
+
+        # delete Department itself
         dep_lst = Department.objects.filter(pk=departmentForDeletion)
         for d in dep_lst:
             try:
                 d.delete()
             except Exception as e:
-                print('Can not delete Department. The reason is: ' + str(e))
+                errorMessage = _('Can not delete Department. The reason is: %(reason)s') % {"reason": str(e)}
                 pass
+
+        comp.reindexItem()
 
     #check if there Department for adding
     departmentToChange = request.POST.get('departmentName', '')
 
     if len(departmentToChange):
-        usr = request.user
         #if update department we receive previous name
         prevDepName = request.POST.get('prevDepName', '')
         try:
@@ -473,32 +489,68 @@ def _tabsStructure(request, company, page=1):
         except:
             obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
             Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
+            comp.reindexItem()
 
         obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
-
-        if not Vacancy.objects.filter(c2p__parent=obj_dep.pk).exists():
-            try:
-                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
-                trans_real.activate('ru') #activate russian locale
-                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
-                trans_real.deactivate() #deactivate russian locale
-
-                if not res:
-                    vac.delete()
-                    return False
-                try:
-                    Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
-                    #add current user to default Vacancy
-                except Exception as e:
-                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
-                            str(obj_dep.pk) + '. The reason is:' + str(e))
-                    vac.delete()
-            except Exception as e:
-                print('Can not create Vacancy for Department ID:' + str(obj_dep.pk) + '. The reason is:' + str(e))
-                pass
-
         obj_dep.reindexItem()
-        vac.reindexItem()
+
+    # add (edit) Vacancy to Department
+    vacancyName = request.POST.get('vacancyName', '')
+    if len(vacancyName):
+        #update vacancy if we received previous name
+        prevVacName = request.POST.get('prevVacName', '')
+        if len(prevVacName):
+            # edit Vacancy
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
+            try:
+                #check is there vacancy with 'old' name
+                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, c2p__parent=dep_id,
+                                          item2value__attr__title="NAME", item2value__title=prevVacName)
+                vac.setAttributeValue({'NAME': vacancyName}, usr)
+                vac.reindexItem()
+            except:
+                errorMessage = _('Could not find in DB Vacancy %(name)s') % {"name": vacancyName}
+                pass
+        else:
+            # add a new vacancy to Department
+            dep_id = request.POST.get('departmentID', 0)
+            dep_id = int(dep_id)
+            if dep_id > 0:
+                try:
+                    obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
+                    vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
+                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+                    if not res:
+                        vac.delete()
+                        errorMessage = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}
+                    else:
+                        try:
+                            Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
+                            obj_dep.reindexItem()
+                            vac.reindexItem()
+                        except Exception as e:
+                            errorMessage = _('Can not create Relationship between Vacancy %(vac_name)s and Department ID '
+                                             '%(dep_name)s. The reason is: %(reason)s') % {"vac_name": vacancyName,
+                                                                                           "dep_name": str(obj_dep.pk),
+                                                                                           "reason": str(e)}
+                            vac.delete()
+                except Exception as e:
+                    errorMessage = _('Can not create Vacancy for Department ID: %(dep_id)s. The reason is: %(reason)s')\
+                                    % {"dep_id": str(obj_dep.pk), "reason": str(e)}
+                    pass
+
+    # delete Vacancy from Department
+    vacancyID = request.POST.get('vacancyID', 0)
+    vacancyID = int(vacancyID)
+    if vacancyID > 0:
+        try:
+            vac = Vacancy.objects.get(pk=vacancyID)
+            vac.delete()
+        except Exception as e:
+            errorMessage = _('Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s') %\
+                                        {"dep_id": str(vacancyID), "reason": str(e)}
+            pass
 
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
     attr = ('NAME', 'SLUG')
@@ -519,6 +571,16 @@ def _tabsStructure(request, company, page=1):
         vacanciesList = []
     else:
         vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
+        # correlation between Departments and Vacancies
+        correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child'))
+
+        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
+        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
+            for t in correlation: #lookup into correlation list
+                if t[1] == vac_id: #if Vacancy ID is equal then...
+                    #... add a new key into Vacancy attribute dictionary
+                    vac_att['DEPARTMENT_ID'] = [t[0]]
+                    break
 
     templateParams = {
         'departmentsList': departmentsList,
@@ -528,6 +590,7 @@ def _tabsStructure(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
+        'errorMessage': errorMessage,
     }
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
@@ -552,6 +615,7 @@ def _tabsStaff(request, company, page=1):
                 Relationship.objects.filter(parent__c2p__parent__c2p__parent=company, child=cabinetToDetach,
                                             type='relation').delete()
         except Exception as e:
+            errorMessage = _('User %(user)s has not Cabinet.') % {"user": str(request.user)}
             pass
 
     # add a new user to department
@@ -577,29 +641,31 @@ def _tabsStaff(request, company, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
-                    #if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
                         # if no attached Cabinets to this Vacancy then ...
-                    cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
-                    if res:
-                        try:
-                            cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
-                                                    'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                            group = Group.objects.get(name='Company Creator')
-                            usr.is_manager = True
-                            usr.save()
-                            group.user_set.add(usr)
-                        except Exception as e:
-                            print('Can not set attributes for Cabinet ID:' + str(cab.pk) + '. The reason is:' + str(e))
+                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+                        if res:
+                            try:
+                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
+                                                        'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
+                                group = Group.objects.get(name='Company Creator')
+                                usr.is_manager = True
+                                usr.save()
+                                group.user_set.add(usr)
+                            except Exception as e:
+                                errorMessage = _('Can not set attributes for Cabinet ID: %(cab_id)s.\
+                                                The reason is: %(reason)s') % {"cab_id": str(cab.pk), "reason": str(e)}
+                        if isAdmin:
+                            flag = True
+                        else:
+                            flag = False
 
-                    if isAdmin:
-                        flag = True
+                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
+                                                                   create_user=usr)
                     else:
-                        flag = False
-
-                    Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                               create_user=usr)
-                    #else:
-                    #    errorMessage = 'You can not add user at vacancy which already busy.'
+                        errorMessage = _('You can not add user at Vacancy which already busy.')
+                else:
+                    errorMessage = _('You can not add user [%(user)s] at the company twice.') % {"user": str(usr)}
             except:
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
@@ -613,8 +679,6 @@ def _tabsStaff(request, company, page=1):
     correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child__p2c__child'))
 
     for cab_id, cab_att in workersList.items(): #get Cabinet instance
-        if not cab_att:
-            continue
         for t in correlation: #lookup into corelation list
             if t[1] == cab_id: #if Cabinet ID then...
                 dep_id = t[0] #...get Organization ID
@@ -622,7 +686,16 @@ def _tabsStaff(request, company, page=1):
                     if org_id == dep_id:    #if found the same Organization ID then...
                         #... set additional attributes for Users (Cabinets) before sending to web form
                         cab_att['DEPARTMENT'] = org_attr['NAME']
-                        cab_att['STATUS'] = ['Active']
+
+                        # check current User's activity
+                        for cab in cabinets:
+                            if cab.pk == cab_id:
+                                if cab.user.is_authenticated():
+                                    cab_att['STATUS'] = ['Active']
+                                else:
+                                    cab_att['STATUS'] = ['None']
+
+                                break
                         break
 
     paginator_range = func.getPaginatorRange(page)
@@ -657,6 +730,18 @@ def _tabsStaff(request, company, page=1):
                     #... add a new key into Vacancy attribute dictionary
                     vac_att['DEPARTMENT_ID'] = [t[0]]
                     break
+
+        correlation = list(Department.objects.filter(c2p__parent=company).values_list('p2c__child__p2c__child', 'p2c__child'))
+
+        # add into worker's list attribute a new key 'VACANCY' with Vacancy ID
+        for cab_id, cab_att in workersList.items(): #get Cabinet instance
+            for t in correlation: #lookup into correlation list
+                if t[0] == cab_id: #if Cabinet ID is equal then...
+                    for vac_id, vac_attr in vacanciesList.items():
+                        if t[1] == vac_id:
+                            #... add a new key into User (Cabinet) attribute dictionary
+                            cab_att['VACANCY'] = vac_attr['NAME']
+                            break
 
     comp = Company.objects.get(pk=company)
     permissionsList = comp.getItemInstPermList(request.user)
@@ -723,6 +808,10 @@ def addCompany(request):
     countries = func.getItemsList("Country", 'NAME')
     tpp = func.getItemsList("Tpp", 'NAME')
 
+    pages = None
+
+
+
 
     if request.POST:
 
@@ -732,6 +821,11 @@ def addCompany(request):
         values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+            pages = pages.new_objects
 
         form = ItemForm('Company', values=values)
         form.clean()
@@ -747,7 +841,7 @@ def addCompany(request):
 
     template = loader.get_template('Companies/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp, 'pages': pages})
 
     newsPage = template.render(context)
 
@@ -776,6 +870,13 @@ def updateCompany(request, item_id):
     tpp = func.getItemsList("Tpp", 'NAME')
 
     company = Company.objects.get(pk=item_id)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
 
     branches = {}
     currentBranch = ''
@@ -822,7 +923,8 @@ def updateCompany(request, item_id):
         'choosen_country': choosen_country,
         'countries': countries,
         'choosen_tpp': choosen_tpp,
-        'tpp': tpp
+        'tpp': tpp,
+        'pages': pages
     }
 
     context = RequestContext(request, templateParams)
@@ -876,6 +978,7 @@ def _tabsGallery(request, company):
     else:
         return render_to_response()
 
+
 def sendMessage(request):
     response = ""
     if request.is_ajax():
@@ -883,24 +986,31 @@ def sendMessage(request):
             if request.POST.get('message', False) or request.FILES.get('file', False):
                 company_pk = request.POST.get('company')
 
-                email = Company.objects.get(pk=int(company_pk)).getAttributeValues('EMAIL')
-                if len(email) == 0:
-                    email = 'admin@tppcenter.com'
-                    subject = _('This message was sent to company with id:') + company_pk
+                #this condition as temporary design for separation Users and Organizations
+                if Cabinet.objects.filter(pk=int(company_pk)).exists():
+                    addMessages(request, text=request.POST.get('message', ""), recipient=int(company_pk))
+                    response = _('You have successfully sent the message.')
+                # /temporary condition for separation Users and Companies
+
                 else:
-                    email = email[0]
-                    subject = _('New message')
-                mail = EmailMessage(subject, request.POST.get('message', ""), ['noreply@tppcenter.com'], [email])
-                attachment = request.FILES.get('file', False)
-                if attachment:
-                   mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                mail.send()
-                response = _('You have successfully sent the message.')
+                    email = Company.objects.get(pk=int(company_pk)).getAttributeValues('EMAIL')
+                    if len(email) == 0:
+                        email = 'admin@tppcenter.com'
+                        subject = _('This message was sent to company with id:') + company_pk
+                    else:
+                        email = email[0]
+                        subject = _('New message')
+                    mail = EmailMessage(subject, request.POST.get('message', ""), 'noreply@tppcenter.com', [email])
+                    attachment = request.FILES.get('file', False)
+                    if attachment:
+                       mail.attach(attachment.name, attachment.read(), attachment.content_type)
+                    mail.send()
+                    response = _('You have successfully sent the message.')
 
             else:
                 response = _('Message or file are required')
         else:
-             response = _('Only registred users can send the messages')
+             response = _('Only registered users can send the messages')
 
         return HttpResponse(response)
 

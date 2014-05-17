@@ -439,6 +439,9 @@ def findKeywords(tosearch):
 
 
 def notify(message_type, notificationtype, **params):
+    '''
+
+    '''
     user = params['user']
     params['user'] = user.pk
     message = SystemMessages.objects.get(type=message_type)
@@ -965,7 +968,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         if not my:
             filters, searchFilter = filterLive(request)
 
-            sqs = getActiveSQS().models(model)
+            sqs = getActiveSQS().models(model).order_by('-obj_create_date')
             if model is News:
                sqs = sqs.filter(categories__gt=0)
 

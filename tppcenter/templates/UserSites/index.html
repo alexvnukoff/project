@@ -30,6 +30,38 @@
     {% block js %}
         {{  block.super }}
           <script  type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
+          <script  type="text/javascript" src="{% static "tppcenter/js/jquery.slimscroll.min.js"%}"></script>
+             <script type="text/javascript">
+				$(document).ready(function(e) {
+                   $(".showtype").click(function(){
+					$(".external-type, #fade-profile").show();
+					});
+					$(".close-regform").click(function(){
+						$(".external-type, #fade-profile").hide();
+					});
+					$('.listtype').slimScroll({
+						height: '250px',
+						railVisible: true,
+						alwaysVisible: false
+
+					});
+                    $(".selectTemplate").click(function(event) {
+
+
+                        var folder = event.target.id;
+                        var src_1 = {% static "" %} + "tppcenter/img/templates/"+folder+ "/1.jpg";
+
+                        var src_2 ={% static "" %} +  "tppcenter/img/templates/"+folder+ "/2.jpg";
+
+
+                        $('.template1').attr('src',src_1);
+                        $('.template2').attr('src',src_2);
+                        $('#input-template').val(folder);
+
+                        $(".external-type, #fade-profile").hide();
+                  });
+                });
+              </script>
 
     {% endblock %}
 
@@ -41,3 +73,33 @@
 
 
      {% block content %} {{ sitePage }}{% endblock %}
+
+
+{% block vacancy %}
+    <div class="black_overlay" id="fade-profile"></div>
+    <div class="external-type">
+	<i class="close-regform imgnews"></i>
+    <div class="title">Выберите категорию</div>
+    <div class="listtype">
+    {% for id, attr in template_values.items %}
+      {% with attr.NAME|first as name %}
+      {% with attr.TEMPLATE_IMAGE_FOLDER|first as template_folder %}
+         {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
+              <ul>
+         {% endif %}
+              <li><a class="selectTemplate" id="{{ template_folder }}" href="#">{{ name }}</a></li>
+        {% if forloop.counter|divisibleby:"16" or forloop.counter == organizationsList|length %}
+              </ul>
+        {% endif %}
+       {% endwith %}
+       {% endwith %}
+    {% endfor %}
+
+
+
+
+
+    </div>
+
+
+{% endblock %}

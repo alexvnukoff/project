@@ -32,6 +32,8 @@ import tppcenter.Analytic.urls
 import tppcenter.Greetings
 import tppcenter.Greetings.urls
 import tppcenter.Resume.urls
+import tppcenter.Vacancy.urls
+import tppcenter.Users.urls
 
 import tppcenter.UserSites.urls
 
@@ -49,6 +51,7 @@ urlpatterns = patterns('',
     url(r'^$', tppcenter.views.home, name="main"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^addcon/', tppcenter.views.buildCountries),
+    url(r'^addTemp/', tppcenter.views.builTemplate),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
     url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
@@ -57,6 +60,7 @@ urlpatterns = patterns('',
     url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
     url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
+    url(r'^vacancy/', include(tppcenter.Vacancy.urls, namespace='vacancy')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),
@@ -64,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
     url(r'^resume/', include(tppcenter.Resume.urls, namespace='resume')),
     url(r'^site/', include(tppcenter.UserSites.urls, namespace='site')),
+    url(r'^users/', include(tppcenter.Users.urls, namespace='users')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
 
