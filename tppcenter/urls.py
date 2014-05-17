@@ -37,8 +37,8 @@ import tppcenter.Users.urls
 
 import tppcenter.UserSites.urls
 
-import tppcenter.adminTpp
-import tppcenter.adminTpp.urls
+import tppcenter.AdminTpp
+import tppcenter.AdminTpp.urls
 
 from tppcenter.News.views import NewsFeed
 
@@ -48,7 +48,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', tppcenter.views.home),
+    url(r'^$', tppcenter.views.home, name="main"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^addcon/', tppcenter.views.buildCountries),
     url(r'^addTemp/', tppcenter.views.builTemplate),
@@ -72,7 +72,7 @@ urlpatterns = patterns('',
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
 
-    url(r'^(admin-tpp/.+)$', include(tppcenter.Resume.urls, namespace='adminTpp')),
+    url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
 
 
     url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
@@ -87,9 +87,9 @@ urlpatterns = patterns('',
 
 
     # url(r'^blog/', include('blog.urls')),
-    url(r'^login/', tppcenter.views.user_login, name='login' ),
-    url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
-    url(r'^registration/', tppcenter.views.registration, name='register' ),
+    url(r'^login/', tppcenter.views.user_login, name='login'),
+    url(r'^logout/', tppcenter.views.user_logout, name='logout'),
+    url(r'^registration/', tppcenter.views.registration, name='register'),
 
     url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
 
