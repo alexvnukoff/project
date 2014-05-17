@@ -239,7 +239,7 @@ def getOwner(item):
     if not item:
         return None
 
-    obj = func.getActiveSQS().filter(django_id=item)
+    obj = func.getActiveSQS().filter(id=item)
 
     if len(obj) == 0:
         return None

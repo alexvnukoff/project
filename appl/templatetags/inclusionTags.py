@@ -63,7 +63,7 @@ def getMyCompaniesList(context):
     if current_company is not False and current_company not in companies_ids:
         companies_ids.append(current_company)
 
-    sqs = SearchQuerySet().filter(django_id__in=companies_ids).order_by('title')
+    sqs = SearchQuerySet().filter(id__in=companies_ids).order_by('title')
 
     companies_ids = [company.id for company in sqs]
 

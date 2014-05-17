@@ -160,8 +160,12 @@ def addBanner(request, bannerType):
         values['SITE_NAME'] = request.POST.get('SITE_NAME', "")
         values['IMAGE'] = request.FILES.get('IMAGE', "")
 
-        stDate = request.POST.get('st_date', '')
-        edDate = request.POST.get('ed_date', '')
+        values['START_EVENT_DATE'] = request.POST.get('st_date', '')
+        values['END_EVENT_DATE'] = request.POST.get('ed_date', '')
+        values['COST'] = 0
+
+        stDate = values['START_EVENT_DATE']
+        edDate = values['END_EVENT_DATE']
 
         #allowed filters
         filterList = ['tpp', 'country', 'branch']

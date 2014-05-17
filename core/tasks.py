@@ -531,17 +531,6 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     values['START_EVENT_DATE'] = stDate
     values['END_EVENT_DATE'] = edDate
 
-    form = ItemForm('AdvBanner', values=values)
-    form.clean()
-
-    item = form.save(user, site_id, disableNotify=True)
-
-    if not item:
-        raise Exception('Error occurred while saving form')
-
-    Item.objects.filter(pk=item.pk).update(end_date=now())
-    Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
-
     delta = edDate - stDate
     delta = delta.days
 
@@ -555,6 +544,20 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
         cost = costs[id].get('COST', [0])[0]
         costs[id] = cost
         total += float(cost) * delta
+
+    values['COST'] = total
+
+    form = ItemForm('AdvBanner', values=values)
+    form.clean()
+
+    item = form.save(user, site_id, disableNotify=True)
+
+    if not item:
+        raise Exception('Error occurred while saving form')
+
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
+    Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
+
 
     if current_company:
         dep = Item.objects.get(pk=current_company)
@@ -609,25 +612,11 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
 @transaction.atomic
 def addTopAttr(post, object, user, site_id, ids, org):
 
-    form = ItemForm('AdvTop', values={})
-    form.clean()
-
-    item = AdvTop(create_user=user)
-    item.save()
-
-    if not item:
-        raise Exception('Error occurred while saving form')
-
-    item.sites.add(site_id)
-
     stDate = post.get('st_date')
     edDate = post.get('ed_date')
 
     stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
     edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
-
-    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
-    Relationship.setRelRelationship(object, item, user=user, type="dependence")
 
     delta = edDate - stDate
     delta = delta.days
@@ -643,6 +632,24 @@ def addTopAttr(post, object, user, site_id, ids, org):
         costs[id] = cost
         total += float(cost) * delta
 
+    values = {
+        'COST': total,
+        'START_EVENT_DATE': stDate,
+        'END_EVENT_DATE': edDate
+    }
+
+    form = ItemForm('AdvTop', values=values)
+    form.clean()
+
+    item = form.save(user, site_id, disableNotify=True)
+
+    if not item:
+        raise Exception('Error occurred while saving form')
+
+    item.sites.add(site_id)
+
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
+    Relationship.setRelRelationship(object, item, user=user, type="dependence")
 
     history = {
         'costs': costs,
@@ -676,6 +683,8 @@ def addTopAttr(post, object, user, site_id, ids, org):
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
     Relationship.setRelRelationship(org, ord, user=user, type="relation")
+
+    return ord.pk
 
 
 

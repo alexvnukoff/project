@@ -82,9 +82,9 @@ urlpatterns = patterns('',
 
 
     # url(r'^blog/', include('blog.urls')),
-    url(r'^login/', tppcenter.views.user_login, name='login' ),
-    url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
-    url(r'^registration/', tppcenter.views.registration, name='register' ),
+    url(r'^login/', tppcenter.views.user_login, name='login'),
+    url(r'^logout/', tppcenter.views.user_logout, name='logout'),
+    url(r'^registration/', tppcenter.views.registration, name='register'),
 
     url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
 
