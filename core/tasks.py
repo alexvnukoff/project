@@ -566,7 +566,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     return True
 
 @transaction.atomic
-def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
+def addBannerAttr(post, files, user, site_id, ids, bType, current_company, factor):
     values = {}
 
     values['NAME'] = post.get('NAME', "")
@@ -594,7 +594,7 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
 
         cost = costs[id].get('COST', [0])[0]
         costs[id] = cost
-        total += float(cost) * delta
+        total += float(cost) * delta * factor
 
     values['COST'] = total
 
@@ -661,7 +661,7 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
 
 
 @transaction.atomic
-def addTopAttr(post, object, user, site_id, ids, org):
+def addTopAttr(post, object, user, site_id, ids, org, factor):
 
     stDate = post.get('st_date')
     edDate = post.get('ed_date')

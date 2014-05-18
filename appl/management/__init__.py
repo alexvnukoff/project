@@ -119,6 +119,7 @@ def databaseInitialization(sender, **kwargs):
                     'FLAG': 'Img',
                     'GALLERY_TOPIC': 'Chr',
                     'HEAD_PIC': 'Img',
+                    'HEIGHT': 'Int',
                     'ICQ': 'Chr',
                     'IMAGE': 'Img',
                     'IMAGE_SMALL': 'Img',
@@ -180,7 +181,9 @@ def databaseInitialization(sender, **kwargs):
                     'YOUTUBE_CODE': 'Chr',
                     'USER_MIDDLE_NAME': 'Chr',
                     'USER_LAST_NAME': 'Chr',
-                    'USER_FIRST_NAME': 'Chr'}
+                    'USER_FIRST_NAME': 'Chr',
+                    'WIDTH': 'Int'
+    }
 
     for attribute, type in attributes.items():
         if isinstance(type, dict):
