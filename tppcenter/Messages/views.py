@@ -1,3 +1,4 @@
+from django.utils import formats
 from appl import func
 from appl.models import Cabinet, Messages, Organization
 from core.models import Item, Relationship
@@ -10,7 +11,11 @@ from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
 from django.utils.translation import trans_real
 from copy import copy
-
+from datetime import datetime
+import pygeoip
+from pytz import *
+import os
+from django.conf import settings
 
 @login_required(login_url='/login/')
 def viewMessages(request, recipient=None):
@@ -122,7 +127,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
 
     messages = Messages.objects.filter(c2p__parent=recipient)
 
-    messages_to_update= messages.filter(c2p__parent=Cabinet.objects.get(user=request.user).pk, c2p__type='relation')
+    messages_to_update = messages.filter(c2p__parent=Cabinet.objects.get(user=request.user).pk, c2p__type='relation')
     messages_to_update.update(was_read=True)
 
     messages = messages.filter(c2p__parent=sender)
@@ -167,6 +172,27 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     for messageID in messagesList.keys():
         messagesList[messageID]['OWNER'] = ownerDict[messageID]
 
+    # convert message's create_date to native date for user
+    base_dir = 'tppcenter/GeoIPCity.dat' #database file with cities
+    dir = os.path.join(settings.MEDIA_ROOT, base_dir).replace('\\', '/')
+    gi = pygeoip.GeoIP(dir)
+    # get user's IP
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
+    data = gi.record_by_addr(ip)
+    # receive timezone for User IP
+    tz = timezone(pygeoip.time_zone_by_country_and_region(data['country_code'], data['region_code']))
+
+    for msg_id, msg_attr in messagesList.items():
+        timestamp = msg_attr['CREATE_DATE'][0].timestamp()
+        utc_dt = utc.localize(datetime.utcfromtimestamp(timestamp))
+        msg_attr['CREATE_DATE'] = [utc_dt.astimezone(tz)]
 
     #get latest messages ordered from new to older
     messagesList=OrderedDict(reversed(list(messagesList.items())))
