@@ -37,8 +37,8 @@ import tppcenter.Users.urls
 
 import tppcenter.UserSites.urls
 
-import tppcenter.AdminTpp
-import tppcenter.AdminTpp.urls
+#import tppcenter.AdminTpp
+#import tppcenter.AdminTpp.urls
 
 from tppcenter.News.views import NewsFeed
 
