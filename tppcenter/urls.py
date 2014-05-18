@@ -72,7 +72,7 @@ urlpatterns = patterns('',
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
 
-    url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
+    #url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
 
 
     url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
