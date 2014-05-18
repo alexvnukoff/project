@@ -259,7 +259,7 @@ def databaseInitialization(sender, **kwargs):
                                     'DETAIL_TEXT': True, 'REQUIREMENTS': True, 'TERMS': True,
                                     'IS_ANONYMOUS_VACANCY': False},
 
-                    'Message': {'DETAIL_TEXT': True, 'ATTACHMENT': False}
+                    'Messages': {'DETAIL_TEXT': True, 'ATTACHMENT': False}
     }
 
     for type, attributes in content_type.items():

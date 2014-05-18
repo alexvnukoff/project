@@ -490,7 +490,10 @@ def addDepartamentAjax(request):
         if request.user.is_authenticated() and request.POST.get('COMPANY', False):
             if request.POST.get('DEPARTMENT', False):
                 try:
-                    comp = Company.objects.get(pk=int(request.POST.get('COMPANY', "")))
+                    try:
+                        comp = Company.objects.get(pk=int(request.POST.get('COMPANY', "")))
+                    except:
+                        comp = Tpp.objects.get(pk=int(request.POST.get('COMPANY', "")))
                     dep = request.POST.get('DEPARTMENT', '')
                     usr = request.user
                     obj_dep = Department.objects.create(title=dep, create_user=usr)
@@ -520,7 +523,10 @@ def addVacancyAjax(request):
             if request.POST.get('VACANCY', False):
                 try:
                     dep_id = int(request.POST.get('DEPARTMENT', False))
-                    company = Company.objects.get(pk=int(request.POST.get('COMPANY', False)))
+                    try:
+                        company = Company.objects.get(pk=int(request.POST.get('COMPANY', False)))
+                    except:
+                        company = Tpp.objects.get(pk=int(request.POST.get('COMPANY', False)))
                     obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
                     usr = request.user
                     vacancyName = request.POST.get('VACANCY', False)

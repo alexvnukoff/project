@@ -167,6 +167,10 @@ class Branch(Item):
     def __str__(self):
         return self.getName()
 
+class AdvOrder(Item):
+
+    def __str__(self):
+        return ''
 
 class Requirement(Item):
 
@@ -180,6 +184,9 @@ class Requirement(Item):
 
 class AdvBannerType(Item):
 
+    active = ItemManager()
+    objects = models.Manager()
+
     enableBranch = models.BooleanField(default=False)
     enableTpp = models.BooleanField(default=False)
     enableCountry = models.BooleanField(default=True)
@@ -187,8 +194,8 @@ class AdvBannerType(Item):
     def __str__(self):
         return self.getName()
 
-class AdvTop(Item):
 
+class AdvertisementItem(Item):
 
     active = ItemManager()
     objects = models.Manager()
@@ -196,7 +203,15 @@ class AdvTop(Item):
     def __str__(self):
         return self.getName()
 
-class AdvBanner(Item):
+class AdvTop(AdvertisementItem):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+class AdvBanner(AdvertisementItem):
 
     active = ItemManager()
     objects = models.Manager()
@@ -518,13 +533,6 @@ class Rate(Item):
 
     def __str__(self):
         return ''
-
-
-class AdvOrder(Item):
-
-    def __str__(self):
-        return ''
-
 
 class Order(Item):
     active = ItemManager()
