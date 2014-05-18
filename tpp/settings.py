@@ -283,7 +283,7 @@ for lang in LANGUAGES:
         'INDEX_NAME': 'lang-' + lang[0],
     }
 
-
+USE_X_FORWARDED_HOST = True
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
