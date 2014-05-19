@@ -176,18 +176,29 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     base_dir = 'tppcenter/GeoIPCity.dat' #database file with cities
     dir = os.path.join(settings.MEDIA_ROOT, base_dir).replace('\\', '/')
     gi = pygeoip.GeoIP(dir)
+
     # get user's IP
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
-#    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-#    if x_forwarded_for:
-#        ip = x_forwarded_for.split(',')[0]
-#    else:
-    ip = request.META.get('REMOTE_ADDR')
+    if x_forwarded_for:
 
-    #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
+       
+
+
+        #ip = x_forwarded_for.split(',')[0]
+        #for HAProxy balancer
+        ip = request.META.get('HTTP_X_REAL_IP', None)
+
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
+    
     data = gi.record_by_addr(ip)
     # receive timezone for User IP
-    tz = timezone(pygeoip.time_zone_by_country_and_region(data['country_code'], data['region_code']))
+    if data is not None:
+        tz = timezone(pygeoip.time_zone_by_country_and_region(data['country_code'], data['region_code']))
+    else:
+        tz = timezone('Europe/Moscow')
 
     for msg_id, msg_attr in messagesList.items():
         timestamp = msg_attr['CREATE_DATE'][0].timestamp()
