@@ -179,6 +179,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
 
     # get user's IP
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
         #for HAProxy balancer
@@ -186,7 +187,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     else:
         ip = request.META.get('REMOTE_ADDR')
         #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
-
+    
     data = gi.record_by_addr(ip)
     # receive timezone for User IP
     if data is not None:
