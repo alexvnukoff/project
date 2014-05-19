@@ -181,14 +181,9 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
     if x_forwarded_for:
-
-       
-
-
-        #ip = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(',')[0]
         #for HAProxy balancer
-        ip = request.META.get('HTTP_X_REAL_IP', None)
-
+        #ip = request.META.get('HTTP_X_REAL_IP', None)
     else:
         ip = request.META.get('REMOTE_ADDR')
         #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
@@ -198,7 +193,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     if data is not None:
         tz = timezone(pygeoip.time_zone_by_country_and_region(data['country_code'], data['region_code']))
     else:
-        tz = timezone('Europe/Moscow')
+        tz = timezone('UTC')
 
     for msg_id, msg_attr in messagesList.items():
         timestamp = msg_attr['CREATE_DATE'][0].timestamp()
