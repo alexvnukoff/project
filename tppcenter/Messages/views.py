@@ -176,13 +176,19 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
     base_dir = 'tppcenter/GeoIPCity.dat' #database file with cities
     dir = os.path.join(settings.MEDIA_ROOT, base_dir).replace('\\', '/')
     gi = pygeoip.GeoIP(dir)
-    # get user's IP
 
+    # get user's IP
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
     if x_forwarded_for:
+
        
-        ip = x_forwarded_for.split(',')[0]
+
+
+        #ip = x_forwarded_for.split(',')[0]
+        #for HAProxy balancer
+        ip = request.META.get('HTTP_X_REAL_IP', None)
+
     else:
         ip = request.META.get('REMOTE_ADDR')
         #ip = '82.166.224.212' # IP for Jerusalem - just for debugging
