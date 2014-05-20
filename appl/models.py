@@ -11,6 +11,7 @@ from django.db.models.signals import post_save
 from django.utils.translation import trans_real
 from tpp.SiteUrlMiddleWare import get_request
 from django.dispatch import receiver
+from core.amazonMethods import addFile
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
@@ -621,6 +622,8 @@ class Exhibition(Item):
 
 
 class Messages(Item):
+    text = models.CharField(max_length=1024, null=False, default='EMPTY')
+    file = models.FileField(upload_to=addFile, null=True, max_length=255)
     was_read = models.BooleanField(default=False)
 
     def __str__(self):

@@ -166,6 +166,8 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
 
     #There is no multilingual messages
     trans_real.activate('en')
+
+#TODO Ilya remove message text into class field
     messagesList = Item.getItemsAttributesValues('DETAIL_TEXT', messages)
     trans_real.deactivate()
 
@@ -309,6 +311,7 @@ def addMessages(request, text=None, recipient=None):
 
     # create message text, only one standard language
     trans_real.activate('en')
+#TODO Ilya remove message text into class field
     message.setAttributeValue({'DETAIL_TEXT': text}, request.user)
     trans_real.deactivate()
 
