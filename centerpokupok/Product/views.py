@@ -111,7 +111,7 @@ def addComment(request, item_id):
 
         if form.is_valid():
             i = request.user
-            comment = form.save(request.user)
+            comment = form.save(request.user, settings.SITE_ID, disableNotify=True)
             parent = Product.objects.get(pk=item_id)
             Relationship.setRelRelationship(parent, comment, request.user)
             return HttpResponseRedirect(reverse("products:detail", args=[item_id]))
