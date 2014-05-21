@@ -393,12 +393,12 @@ def orderProduct(request, step=1):
 
         cabinet = Cabinet.objects.get(user=user)
         if request.POST.get('product', False) or not request.session.get("order", False):
-             address = cabinet.getAttributeValues("CITY", "COUNTRY", "ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
+             address = cabinet.getAttributeValues("ADDRESS_CITY", "ADDRESS_COUNTRY", "ADDRESS_ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
         else:
             session = request.session.get("order", False)
             if session:
-                address = {"CITY": [session.get("city", "")], "COUNTRY": [session.get("country", "")],
-                           "ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
+                address = {"ADDRESS_CITY": [session.get("city", "")], "ADDRESS_COUNTRY": [session.get("country", "")],
+                           "ADDRESS_ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
                            "TELEPHONE_NUMBER": [session.get("telephone_number", "")],
                            "SHIPPING_NAME": [session.get("recipient_name", "")]}
 
@@ -421,7 +421,7 @@ def orderProduct(request, step=1):
 
         return render_to_response("Product/orderStepOne.html", {'address': address, 'user': user, "orderForm": orderForm,
                                                                 'productValues': productValues ,'totalCost': totalCost,
-                                                                'curr_url': curr_url, 'countryList': countryList},
+                                                                'curr_url': curr_url},
                                                                  context_instance=RequestContext(request))
 
     elif step == '2':
@@ -444,7 +444,7 @@ def orderProduct(request, step=1):
         return render_to_response("Product/orderStepTwo.html", {'qty': qty, 'productValues': productValues,
                                                                 'orderDetails': orderDetails, 'totalSum': totalSum,
                                                                 "user": user,'curr_url': curr_url,
-                                                                'countryList': countryList})
+                                                                },context_instance=RequestContext(request))
     else:
         #-----Step three , cleaning of sessions , and creatin of new order object that related to cabinet of user ---#
         if request.session.get("order", False):
@@ -455,8 +455,8 @@ def orderProduct(request, step=1):
             slot_id = dict.getSlotID(productValues['CURRENCY'][0])
             productValues['CURRENCY'][0] = slot_id
             session = request.session['order']
-            address = {"CITY": [session.get("city", "")], "COUNTRY": [session.get("country", "")],
-                       "ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
+            address = {"ADDRESS_CITY": [session.get("city", "")], "ADDRESS_COUNTRY": [session.get("country", "")],
+                       "ADDRESS_ZIP": [session.get("zipcode", "")], "ADDRESS": [session.get("address", "")],
                        "TELEPHONE_NUMBER": [session.get("telephone_number", "")],
                        "DETAIL_TEXT": [session.get("comment", "")], "SHIPPING_NAME": [session.get("recipient_name", "")]}
             productValues['COST'][0] = float(_getRealCost(productValues)) * float(qty)
@@ -467,6 +467,7 @@ def orderProduct(request, step=1):
                 orderDict.update(productValues)
                 orderDict.update(address)
                 orderDict.update({"QUANTITY": qty})
+                del orderDict['CREATE_DATE']
                 order.setAttributeValue(orderDict, request.user)
                 cabinet = Cabinet.objects.get(user=request.user)
                 Relationship.setRelRelationship(cabinet, order, request.user)
@@ -477,8 +478,7 @@ def orderProduct(request, step=1):
         else:
             return HttpResponseRedirect("/")
 
-        return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url,
-                                                                   'countryList': countryList},
+        return render_to_response("Product/orderStepThree.html", {"user": request.user, 'curr_url': curr_url },
                                   context_instance=RequestContext(request))
 
 

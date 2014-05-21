@@ -56,9 +56,9 @@ def get_shipping_detail(request):
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
             cabinet = get_object_or_404(Cabinet, user=user.pk)
-            cabinet.setAttributeValue({'CITY': [order_form.cleaned_data['city']],
-                                       'COUNTRY': [order_form.cleaned_data['country']],
-                                       'ZIP': [order_form.cleaned_data['zipcode']],
+            cabinet.setAttributeValue({'ADDRESS_CITY': [order_form.cleaned_data['city']],
+                                       'ADDRESS_COUNTRY': [order_form.cleaned_data['country']],
+                                       'ADDRESS_ZIP': [order_form.cleaned_data['zipcode']],
                                        'ADDRESS': [order_form.cleaned_data['address']],
                                        'TELEPHONE_NUMBER': [order_form.cleaned_data['telephone_number']],
                                        'SHIPPING_NAME': [order_form.cleaned_data['recipient_name']]}, user)
