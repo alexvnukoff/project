@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load CustomFilters %}
 {% load i18n %}
 {% block title %}{% trans 'About' %}{% endblock %}
 
@@ -46,7 +47,7 @@
                 <div class="title-items">
                     <h2>{{ name }}</h2>
                 </div>
-                <div class="pagetext">{{ detail_text }}</div>
+                <div class="pagetext">{{ detail_text|cleanHtml|safe }}</div>
             </div>
         </div>
     </div>

@@ -93,11 +93,12 @@ def contact(request, company):
 
     #------------------- Company Details --------------------#
     attr = companyObj.getAttributeValues('NAME', 'IMAGE', 'SITE_NAME', 'EMAIL', 'TELEPHONE_NUMBER')
+    picture = attr.get('IMAGE', [''])[0]
     name = attr['NAME'][0]
 
 
     return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'attr': attr,
-                                                       'menu': 'contact', 'user': request.user},
+                                                       'menu': 'contact', 'user': request.user, 'picture': picture},
                               context_instance=RequestContext(request))
 
 def products(request, company, category=None, page=1):

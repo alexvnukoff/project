@@ -56,9 +56,9 @@ def get_shipping_detail(request):
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
             cabinet = get_object_or_404(Cabinet, user=user.pk)
-            cabinet.setAttributeValue({'CITY': [order_form.cleaned_data['city']],
-                                       'COUNTRY': [order_form.cleaned_data['country']],
-                                       'ZIP': [order_form.cleaned_data['zipcode']],
+            cabinet.setAttributeValue({'ADDRESS_CITY': [order_form.cleaned_data['city']],
+                                       'ADDRESS_COUNTRY': [order_form.cleaned_data['country']],
+                                       'ADDRESS_ZIP': [order_form.cleaned_data['zipcode']],
                                        'ADDRESS': [order_form.cleaned_data['address']],
                                        'TELEPHONE_NUMBER': [order_form.cleaned_data['telephone_number']],
                                        'SHIPPING_NAME': [order_form.cleaned_data['recipient_name']]}, user)
@@ -68,13 +68,13 @@ def get_shipping_detail(request):
 
     else:
         cabinet = get_object_or_404(Cabinet, user=user.pk)
-        address = cabinet.getAttributeValues("CITY", "COUNTRY", "ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
+        address = cabinet.getAttributeValues("ADDRESS_CITY", "ADDRESS_COUNTRY", "ADDRESS_ZIP", "ADDRESS", "TELEPHONE_NUMBER", "SHIPPING_NAME")
         if not address:
             address = {}
         order_form = OrderForm(initial={'recipient_name': address['SHIPPING_NAME'][0] if address.get('SHIPPING_NAME', False) else "",
-                                        'city': address['CITY'][0] if address.get('CITY', False) else "",
-                                        'country': address['COUNTRY'][0] if address.get('COUNTRY', False) else "",
-                                        'zipcode':address['ZIP'][0] if address.get('ZIP', False) else "",
+                                        'city': address['ADDRESS_CITY'][0] if address.get('ADDRESS_CITY', False) else "",
+                                        'country': address['ADDRESS_COUNTRY'][0] if address.get('ADDRESS_COUNTRY', False) else "",
+                                        'zipcode':address['ADDRESS_ZIP'][0] if address.get('ADDRESS_ZIP', False) else "",
                                         'address': address['ADDRESS'][0] if address.get('ADDRESS', False) else "",
                                         'telephone_number':address['TELEPHONE_NUMBER'][0] if address.get('TELEPHONE_NUMBER', False) else ""
                                         })
@@ -91,7 +91,7 @@ def get_order_history(request, page=1):
     curr_url = "order_history"
     cabinet = Cabinet.objects.filter(user=user)
     orders = Order.objects.filter(c2p__parent__in=cabinet).order_by("-pk")
-    attr = ("IMAGE", 'NAME', 'CURRENCY', 'COST', 'QUANTITY', 'CITY', 'COUNTRY', 'ADDRESS')
+    attr = ("IMAGE", 'NAME', 'CURRENCY', 'COST', 'QUANTITY', 'ADDRESS_CITY', 'ADDRESS_COUNTRY', 'ADDRESS')
     result = func.setPaginationForItemsWithValues(orders, *attr, page_num=5, page=page)
     orderList = result[0]
     #Paginator
