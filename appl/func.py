@@ -114,6 +114,7 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     attr = (list of item's attributes)
     page = number of current page
     '''
+
     clsObj = (globals()[cls])
 
     if not issubclass(clsObj, Item):
