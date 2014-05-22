@@ -4,8 +4,6 @@ from threading import current_thread
 import os
 from django.http import HttpResponseBadRequest
 
-
-
 class SiteUrlMiddleWare:
 
     def process_request(self, request):
