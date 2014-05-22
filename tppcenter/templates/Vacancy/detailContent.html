@@ -47,15 +47,18 @@ $(function() {
                         </li>
                     </ul>
                     <div class="social">
-                        <a href="https://facebook.com/tppcentercom"><i class="imgnews share-1"></i></a>
-                        <a href="https://vk.com/tppcentr"><i class="imgnews share-2"></i></a>
-                        <a href="#"><i class="imgnews share-3"></i></a>
-                        <a href="#"><i class="imgnews share-4"></i></a>
+                        <!-- Share for social networks -->
+                        <a href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-1"></i></a>
+                        <a href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-2"></i></a>
+                        <!--<a href="http://connect.mail.ru/share?url=URL&title=TITLE&description=DESC&imageurl=IMG_PATH" target="_blank" onclick="return Share.me(this);">{шарь меня правильно}</a>-->
+                        <a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-3"></i></a>
+                        <a href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)"><i class="imgnews share-4"></i></a>
+                        <!-- /Share for social networks -->
                     </div>
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
-                                <li><a href="#goods-tabs-1">Описание</a></li>
+                                <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
 
                             </ul>
                         </div>
