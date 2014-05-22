@@ -457,6 +457,7 @@ def deleteVacancy(request, item_id):
     instance = Requirement.objects.get(pk=item_id)
     instance.activation(eDate=now())
     instance.end_date = now()
+    instance.reindexItem()
 
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('vacancy:main'))
