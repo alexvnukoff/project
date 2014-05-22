@@ -15,7 +15,9 @@
                     {% with attr.CREATE_DATE.0 as date %}
                     <li>
 
+                    {% resolve items_perms id|slugify as permlist %}
 
+                    {% if 'delete_resume' in  permlist or 'change_resume' in permlist %}
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
@@ -27,6 +29,7 @@
 
                             </div>
                         </div>
+                        {% endif %}
 
                         <div class="title">
 
