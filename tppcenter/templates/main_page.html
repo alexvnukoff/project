@@ -123,13 +123,14 @@
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Insurance' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Crediting' %}</a></li>
-                        <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
+{% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-                        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
+{% endcomment %}        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
                         <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
                         <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
-                        <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
-                        <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+{% comment %}           <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
+{% endcomment %}        <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+
                     </ul>
                 </div>
             {% if user.email %}
@@ -145,17 +146,18 @@
                         <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Insurance' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Crediting' %}</a></li>
-                        <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
+{% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
                         <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
-                        <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
+{% endcomment %}        <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
                         <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
                         <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
                         <li><a href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
                         <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
                         <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
                         <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
-                        <!-- <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>-->
-                    </ul>
+                        <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
+{% comment %}           <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+{% endcomment %}    </ul>
                 </div>
             {% endif %}
 
