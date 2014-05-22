@@ -1,11 +1,10 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-<script>
-    $('.showFilter').hide();
-</script>
+
 
 <div class="container">
+{% include "Vacancy/popupFilter.html" %}
  {% include "main/local_menu_script.html" %}
     <div class="companies">
     {% include "main/paginator.html" %}
