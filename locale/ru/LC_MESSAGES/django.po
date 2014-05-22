@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-22 08:40+0000\n"
-"PO-Revision-Date: 2014-05-14 11:54+0200\n"
+"PO-Revision-Date: 2014-05-22 11:53+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2177,7 +2177,6 @@ msgid "Message or file are required"
 msgstr "Напишите текст сообщения или присоедините файл"
 
 #: tppcenter/Companies/views.py:1013
-#, fuzzy
 msgid "Only registered users can send the messages"
 msgstr "Только зарегистрированные пользователи могут отправлять сообщения."
 
@@ -2842,15 +2841,13 @@ msgstr "Оплатить"
 
 #: tppcenter/templates/AdvBanner/order.html:275
 #: tppcenter/templates/AdvTop/order.html:275
-#, fuzzy
 msgid "Order details"
-msgstr "Пользовательские данные"
+msgstr "Детали заказа"
 
 #: tppcenter/templates/AdvBanner/order.html:306
 #: tppcenter/templates/AdvTop/order.html:306
-#, fuzzy
 msgid "Order number"
-msgstr "История заказов"
+msgstr "Номер заказа"
 
 #: tppcenter/templates/AdvBanner/order.html:314
 #: tppcenter/templates/AdvTop/order.html:314
@@ -3806,7 +3803,6 @@ msgid "Sites"
 msgstr "Сайт"
 
 #: tppcenter/templates/Users/contentPage.html:46
-#, fuzzy
 msgid "Send the message"
 msgstr "Отправить личное сообщение"
 
