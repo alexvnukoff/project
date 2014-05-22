@@ -286,6 +286,18 @@ def addResume(request):
 
 def updateResume(request, item_id):
 
+    try:
+        item = Resume.objects.get(pk=item_id)
+    except ObjectDoesNotExist:
+        return func.emptyCompany()
+
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'change_resume' not in perm_list:
+        return func.permissionDenied()
+
+
     form = ItemForm('Resume', id=item_id)
 
     marital = Dictionary.objects.get(title='MARITAL_STATUS')
