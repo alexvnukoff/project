@@ -192,6 +192,10 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 
 
 #Were added by Expert Center -----------------------------------------------------
+#Free of charge period in days
+FREE_PERIOD = 60
+#User notification starts before till the end_date (in days)
+NOTIFICATION_BEFORE_END_DATE = 15
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
