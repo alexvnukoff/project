@@ -333,6 +333,7 @@ def deleteResume(request, item_id):
     instance = Resume.objects.get(pk=item_id)
     instance.activation(eDate=now())
     instance.end_date = now()
+    instance.reindexItem()
 
 
 
