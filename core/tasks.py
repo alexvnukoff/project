@@ -417,7 +417,7 @@ def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_co
         Relationship.setRelRelationship(parent=Cabinet.objects.get(user=user), child=resume, type='dependence', user=user)
 
 
-
+        resume.reindexItem()
 
         func.notify("item_created", 'notification', user=user)
 
@@ -513,7 +513,7 @@ def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, br
 
 
 
-
+            requirement.reindexItem()
 
 
 
