@@ -1,0 +1,278 @@
+{% extends "AdminTpp/baseAdmin.html" %}
+{% load staticfiles %}
+
+{% block title %}Adveretisement settnings{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <!-- DATA TABLES -->
+    <link href="{% static "admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Banners</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                    <table id="banner" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Site</th>
+                                                <th>Factor</th>
+                                                <th>Branch</th>
+                                                <th>Country</th>
+                                                <th>Tpp</th>
+                                                <th>Width</th>
+                                                <th>Height</th>
+                                                <th>Code</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="10" class="dataTables_empty">Loading data from server</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Site</th>
+                                                <th>Factor</th>
+                                                <th>Branch</th>
+                                                <th>Country</th>
+                                                <th>Tpp</th>
+                                                <th>Width</th>
+                                                <th>Height</th>
+                                                <th>Code</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <br />
+                                    <form method="POST">
+                                        <table id="add-banner" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Site</th>
+                                                    <th style="width: 100px;">Factor</th>
+                                                    <th>Branch</th>
+                                                    <th>Country</th>
+                                                    <th>Tpp</th>
+                                                    <th>Width</th>
+                                                    <th>Height</th>
+                                                    <th>Code</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input name="name" type="text" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <select name="site" class="form-control">
+                                                                {% for pk, name in sites.items %}
+                                                                <option value="{{ pk }}">{{ name }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group"><span class="input-group-addon">
+                                                            <i class="fa fa-dollar"></i></span>
+                                                            <input  type="text" class="form-control">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label><input name="branch" type="checkbox"/></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label><input name="country" type="checkbox"/></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label><input name="tpp" type="checkbox"/></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input  name="width" type="text" class="form-control"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input name="height" type="text" class="form-control"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input name="code" type="text" class="form-control"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="submit" class="savePrice btn btn-success" value="Add" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div><!-- /.box-body -->
+
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+        <!-- Bootstrap -->
+
+        <!-- DATA TABES SCRIPT -->
+
+        <!-- AdminLTE App -->
+
+
+        <!-- page script -->
+
+{% endblock %}
+
+{% block bottomScript %}
+    {{ block.super }}
+    <script src="{% static "admin-tpp/js/bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/plugins/datatables/jquery.dataTables.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/plugins/datatables/dataTables.bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/AdminLTE/app.js" %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+
+            $(document).on("click", ".savePrice", function() {
+                var price = parseFloat($(this).parents('tr').find('input').val());
+                var id = $(this).data('pk');
+                var button = $(this);
+                $(this).addClass("disabled");
+
+                $.post("{% url "AdminTpp:adv_save_price" %}", {'id': id, 'price': price}, function() {
+                    button.removeClass('disabled');
+                });
+
+            });
+           $('#banner').on( 'draw.dt', function () {
+                    $("input[type='checkbox'], input[type='radio']").iCheck({
+                        checkboxClass: 'icheckbox_minimal',
+                        radioClass: 'iradio_minimal'
+                    });
+            } ).dataTable( {
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": "{% url "AdminTpp:adv_sett" %}",
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [ 0, 1, 2, 3, 4, 5 ] },
+                    {
+                                "aTargets": [ 2 ],
+                                "mData": 2,
+                                "mRender": function ( data, type, full ) {
+
+                                    return '<div class="input-group"><span class="input-group-addon">' +
+                                            '<i class="fa fa-dollar"></i></span>' +
+                                            '<input value="' + data + '" type="text" class="form-control"></div>';
+
+                                }
+                    },
+                    {
+                        "aTargets": [ 3 ],
+                        "mData": 3,
+                        "mRender": function ( data, type, full ) {
+
+                            var checked = "";
+
+                            if (data == "1")
+                                checked = 'checked="checked"';
+
+                            return '<div class="checkbox"><label><input name="branch" ' + checked + ' type="checkbox"/></label></div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 4 ],
+                        "mData": 4,
+                        "mRender": function ( data, type, full ) {
+
+                            var checked = "";
+
+                            if (data == "1")
+                                checked = 'checked="checked"';
+
+                            return '<div class="checkbox"><label><input name="country" ' + checked + ' type="checkbox"/></label></div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 5 ],
+                        "mData": 5,
+                        "mRender": function ( data, type, full ) {
+
+                            var checked = "";
+
+                            if (data == "1")
+                                checked = 'checked="checked"';
+
+                            return '<div class="checkbox"><label><input name="tpp" ' + checked + ' type="checkbox"/></label></div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 6 ],
+                        "mData": 6,
+                        "mRender": function ( data, type, full ) {
+
+                            return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Width"/>' +
+                                    '</div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 7 ],
+                        "mData": 7,
+                        "mRender": function ( data, type, full ) {
+
+                            return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Height"/>' +
+                                    '</div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 8 ],
+                        "mData": 8,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Code"/>' +
+                                    '</div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 9 ],
+                        "mData": 9,
+                        "mRender": function ( data, type, full ) {
+
+                            return '<button data-pk="' + data + '" class="savePrice btn btn-success">Save</button>' +
+                                    ' <button data-pk="' + data + '" class="savePrice btn btn-danger">Remove</button>';
+
+                        }
+                    }
+               ]
+            });
+
+
+        });
+    </script>
+{% endblock %}
