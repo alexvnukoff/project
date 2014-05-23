@@ -1,3 +1,6 @@
+from haystack.backends import SQ
+from appl.func import getActiveSQS, filterLive, setPaginationForSearchWithValues, getUserPermsForObjectsList, \
+    getPaginatorRange
 from appl.models import Tender, Gallery, AdditionalPages, Organization, Resume, Cabinet
 from appl import func
 from core.tasks import addNewResume
@@ -32,47 +35,144 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
 
     title = ''
 
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css'
+    ]
+
 
 
     scripts = []
 
     if item_id is None:
-        resumepage = _resumeList(request)
+        resumepage = _resumeList(request, my=my, page=page)
     else:
         result = _resumeDetailContent(request, item_id)
         resumepage = result[0]
         title = result[1]
 
+    if not request.is_ajax():
+        templateParams =  {
+                'current_section': 'Resume',
+                'resumepage': resumepage,
+                'addNew': reverse('resume:add'),
+                'item_id': item_id,
+                 'title': title
+            }
 
-    templateParams =  {
-            'current_section': 'Resume',
-            'resumepage': resumepage,
-            'addNew': reverse('resume:add'),
-            'item_id': item_id,
-             'title': title
+        return render_to_response("Resume/index.html", templateParams, context_instance=RequestContext(request))
+    else:
+
+        serialize = {
+            'styles': styles,
+            'scripts': scripts,
+            'content': resumepage,
         }
 
-    return render_to_response("Resume/index.html", templateParams, context_instance=RequestContext(request))
+        return HttpResponse(json.dumps(serialize))
 
 
-def _resumeList(request):
+def _resumeList(request, my=None, page=1):
 
-    resumes = Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
-    resumes_id = [resume.pk for resume in resumes]
+    query = request.GET.urlencode()
 
-    if len(resumes_id) > 0:
-        attr = ('NAME', 'SLUG')
-        resumeValues = Item.getItemsAttributesValues(attr, resumes_id)
+    q = request.GET.get('q', '')
+
+    if not my:
+            filters, searchFilter = filterLive(request)
+
+            sqs = getActiveSQS().models(Resume).order_by('-obj_create_date')
+
+            if len(searchFilter) > 0: #Got filter values
+                sqs = sqs.filter(searchFilter)
+
+            if q != '': #Search for content
+                sqs = sqs.filter(SQ(title=q) | SQ(text=q))
+
+            sortFields = {
+                'date': 'id',
+                'name': 'title_sort'
+            }
+
+            order = []
+
+            sortField1 = request.GET.get('sortField1', 'date')
+            sortField2 = request.GET.get('sortField2', None)
+            order1 = request.GET.get('order1', 'desc')
+            order2 = request.GET.get('order2', None)
+
+            if sortField1 and sortField1 in sortFields:
+                if order1 == 'desc':
+                    order.append('-' + sortFields[sortField1])
+                else:
+                    order.append(sortFields[sortField1])
+            else:
+                order.append('-id')
+
+            if sortField2 and sortField2 in sortFields:
+                if order2 == 'desc':
+                    order.append('-' + sortFields[sortField2])
+                else:
+                    order.append(sortFields[sortField2])
+
+            proposal = sqs.order_by(*order)
+            url_paginator = "%s:paginator" % ('resume')
+
+            params = {
+                'filters': filters,
+                'sortField1': sortField1,
+                'sortField2': sortField2,
+                'order1': order1,
+                'order2': order2
+            }
     else:
-        resumeValues = ""
+            current_organization = request.session.get('current_company', False)
+
+            cabinet = Cabinet.objects.get(user=request.user.pk).pk
+            proposal = getActiveSQS().models(Resume).filter(cabinet=cabinet)
+
+
+            if q != '': #Search for content
+                proposal = proposal.filter(SQ(title=q) | SQ(text=q))
+
+            proposal.order_by('-obj_create_date')
+
+            url_paginator = "%s:my_main_paginator" % 'resume'
+            params = {}
+
+    result = setPaginationForSearchWithValues(proposal, *('NAME', 'SLUG'), page_num=5, page=page)
+
+    proposalList = result[0]
+    proposal_ids = [id for id in proposalList.keys()]
+    redactor = False
+    if request.user.is_authenticated():
+        items_perms = getUserPermsForObjectsList(request.user, proposal_ids, Resume.__name__)
+    else:
+        items_perms = ""
+
+
+    page = result[1]
+    paginator_range = getPaginatorRange(page)
+
+
+
 
     template = loader.get_template("Resume/contentPage.html")
+
     templateParams = {
-        'resumeValues': resumeValues,
-        'current_path': request.get_full_path()
+       'resumeValues': proposalList,
+       'page': page,
+       'paginator_range': paginator_range,
+       'url_paginator': url_paginator,
+       'items_perms': items_perms,
+       'current_path': request.get_full_path(),
+       'redactor': redactor
+
     }
+    templateParams.update(params)
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
+
 
     return rendered
 
@@ -186,6 +286,18 @@ def addResume(request):
 
 def updateResume(request, item_id):
 
+    try:
+        item = Resume.objects.get(pk=item_id)
+    except ObjectDoesNotExist:
+        return func.emptyCompany()
+
+
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'change_resume' not in perm_list:
+        return func.permissionDenied()
+
+
     form = ItemForm('Resume', id=item_id)
 
     marital = Dictionary.objects.get(title='MARITAL_STATUS')
@@ -233,6 +345,7 @@ def deleteResume(request, item_id):
     instance = Resume.objects.get(pk=item_id)
     instance.activation(eDate=now())
     instance.end_date = now()
+    instance.reindexItem()
 
 
 

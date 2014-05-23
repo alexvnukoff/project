@@ -1,12 +1,13 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
- {% include "main/local_menu_script.html" %}
+
 <div class="container">
     <div class="companies">
+    {% include "Wall/popupFilter.html" %}
+{% include "main/local_menu_script.html" %}
 
-
-
+{% include "main/paginator.html" %}
             <ul class="tender-list">
                 {% for id , attr in resumeValues.items %}
                     {% with attr.NAME.0 as name %}
@@ -14,7 +15,9 @@
                     {% with attr.CREATE_DATE.0 as date %}
                     <li>
 
+                    {% resolve items_perms id|slugify as permlist %}
 
+                    {% if 'delete_resume' in  permlist or 'change_resume' in permlist %}
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
@@ -26,6 +29,7 @@
 
                             </div>
                         </div>
+                        {% endif %}
 
                         <div class="title">
 
@@ -43,6 +47,7 @@
                 {% endfor %}
 
             </ul>
+    {% include "main/paginator.html" %}
 
     </div>
 </div>

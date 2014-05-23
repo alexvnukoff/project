@@ -163,6 +163,7 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
+USE_X_FORWARDED_HOST = True
 
 LANGUAGE_CODE = 'ru'
 
@@ -191,6 +192,10 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 
 
 #Were added by Expert Center -----------------------------------------------------
+#Free of charge period in days
+FREE_PERIOD = 60
+#User notification starts before till the end_date (in days)
+NOTIFICATION_BEFORE_END_DATE = 15
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
@@ -283,7 +288,7 @@ for lang in LANGUAGES:
         'INDEX_NAME': 'lang-' + lang[0],
     }
 
-
+USE_X_FORWARDED_HOST = True
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
