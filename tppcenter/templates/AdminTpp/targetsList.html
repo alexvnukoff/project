@@ -1,0 +1,102 @@
+
+{% load static from staticfiles %}
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>{% block title %}{% trans 'Targets List' %}{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
+        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
+        <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+
+		<script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
+        <script  type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
+
+
+        <script type="text/javascript" src="{% static 'tppcenter/js/jquery.slimscroll.min.js' %}"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                $( "#tabs" ).tabs();
+                $( ".tabfilter" ).tabs();
+
+
+                $(".messages-l").tabs();
+                $(".message-tabcontent").tabs();
+                $('.custom-ms').slimScroll({
+                    height: '750px',
+                    railVisible: true,
+                    alwaysVisible: false
+                });
+                $('.customtablein').slimScroll({
+                    height: '580px',
+                    railVisible: true,
+                    alwaysVisible: true
+                });
+                $('.ads-pricein').slimScroll({
+                    height: '270px',
+                    railVisible: true,
+                    alwaysVisible: true
+                });
+                //slimScroll fix
+                $('.arrow-scroll-down').click(function(){
+                    $(this).parent().find('.custom-ms').trigger('scrollContent', [1] );
+                    $(this).parent().find('.customtablein').trigger('scrollContent', [1] );
+                    $(this).parent().find('.clumnin').trigger('scrollContent', [1] );
+                    $(this).parent().find('.ads-pricein').trigger('scrollContent', [1] );
+                });
+
+                $('.arrow-scroll-up').click(function(){
+                    $('.custom-ms').trigger('scrollContent', [-1] );
+                    $('.customtablein').trigger('scrollContent', [-1] );
+                    $('.clumnin').trigger('scrollContent', [-1] );
+                    $('.ads-pricein').trigger('scrollContent', [-1] );
+                });
+            });
+        </script>
+        <style type="text/css">
+            .ads-details-center .filter {
+                margin-top: 15px;
+            }
+            .ads-details-center .filter label {
+                font-weight: bold;
+
+            }
+            .ads-details-center .ads-line:after {
+               content: "";
+               display: block;
+               clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="new-details">
+                <div class="ads-order-details">
+
+                        <div class="ads-price">
+                            <div class="arrow-scroll-up"></div>
+                            <div class="ads-pricein">
+                                <ul>
+                                    {% for name, cost in nameCost.items %}
+                                        <li><span class="left">{{ name }}</span><span class="right">{{ cost }} $</span></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="arrow-scroll-down"></div>
+                        </div>
+                        <div class="total-price brown">
+                            <span class="left">{% trans "Days Q-ty" %}:</span>
+                            <span class="right">{{ totalDays }}</span>
+                        </div>
+                        <div class="total-price white">
+                            <span class="left"><b>{% trans "Summary" %}:</b></span>
+                            <span class="right"><b>{{ totalCost }}</b><b> $</b></span>
+                        </div>
+                </div>
+        </div>
+    </body>
+</html>
