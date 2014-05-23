@@ -1,15 +1,13 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.query import QuerySet
 from core.models import Item, State, Relationship
 from core.hierarchy import hierarchyManager
 from core.models import User, ItemManager
-from django.db.models import Q
 from django.utils.timezone import now
 import datetime
 from django.db.models import Count, ObjectDoesNotExist
-from django.db.models.signals import post_save
-from django.utils.translation import trans_real
-from tpp.SiteUrlMiddleWare import get_request
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 #----------------------------------------------------------------------------------------------------------
@@ -642,9 +640,37 @@ class Vacancy(Item):
     def __str__(self):
         return self.getName()
 
+class staticPages(Item):
+
+    PAGE_TYPES = (
+        ('about', 'About'),
+        ('advices', 'Advices'),
+        ('contacts', 'Contacts'),
+    )
+
+    onTop = models.BooleanField(default=False)
+    pageType = models.CharField(max_length=200, choices=PAGE_TYPES)
+
+    def __str__(self):
+        return self.getName()
+
+class topTypes(Item):
+    modelType = models.ForeignKey(ContentType, related_name="top")
+
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
+@receiver(pre_save)
+def itemInstanceType(instance, **kwargs):
+
+    if not issubclass(instance.__class__, Item):
+        return
+
+    if not getattr(instance, "contentType", None) or instance.contentType == '':
+        object = ContentType.objects.get(model=str(instance.__class__.__name__).lower())
+        instance.contentType = object
+
+
 @receiver(post_save, sender=Company)
 def companyCommunity(instance, **kwargs):
     '''
