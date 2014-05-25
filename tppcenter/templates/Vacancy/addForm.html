@@ -168,10 +168,10 @@
                     	<div class="clumn1">
                         	<label>{% trans 'Departament' %} <font color="#FF0000">*</font></label>
                             <select  id="dep-list" style="width:62%;">
-                                <option data-department="" value="" disabled selected>{% trans "Select Department..." %}</option>
+                                <option data-department="" value="" disabled selected>{% trans "Choose from list..." %}</option>
                                 {% for id, attr in departmentsList.items %}
                                 {% with attr.NAME|first as department %}
-                                    <option data-department="{{ id }}">{{ department }}</option>
+                                    <option data-department="{{ id }}" {% if id == department_selected %} selected{% endif %}>{{ department }}</option>
                                 {% endwith %}
                                 {% empty %}
                                     <div class="no-results">{% trans "Empty" %}</div>
@@ -182,7 +182,7 @@
 
                         </div>
                         <div class="clumn2">
-                        	<label>{% trans 'Vacancy' %} <font color="#FF0000">*</font></label>
+                        	<label>{% trans 'Position' %} <font color="#FF0000">*</font></label>
                             {% if vacancy_error %}
                                 <div class="error-handler"><div class="formserror">{{ vacancy_error }}</div></div>
                             {% endif %}
@@ -226,7 +226,15 @@
                             {% if form.errors.TYPE_OF_EMPLOYMENT %}
                                   <div class="error-handler"><div class="formserror">{{ form.errors.TYPE_OF_EMPLOYMENT }}</div></div>
                             {% endif %}
-                            <input type="text" name="TYPE_OF_EMPLOYMENT"  value="{{ type_og_employment }}" placeholder="" class="text" style="width:91%;" />
+
+                             <select  name="TYPE_OF_EMPLOYMENT" style="width: 94%;">
+                            {% for type in type_slots %}
+                                <option value="{{ type.id }}" {% if type.id == type_og_employment %} selected="selected" {% endif %}>
+                                    {{ type.title }}
+                                </option>
+                            {% endfor %}
+                            </select>
+
                         </div>
                     </li>
                     <li>

@@ -3,7 +3,7 @@ from django.utils.timezone import now
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
                         Cabinet, InnovationProject, Vacancy, Requirement, Resume
-from core.models import Item, Relationship, Group, User
+from core.models import Item, Relationship, Group, User, Dictionary
 from core.tasks import addNewTpp, addNewRequirement
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -87,7 +87,7 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'content': vacancyPage,
             'item_id': item_id,
-             'resumesValues': resumesValues
+            'resumesValues': resumesValues
          }
 
          return HttpResponse(json.dumps(serialize))
@@ -109,72 +109,72 @@ def _vacancyContent(request, page=1, my=None):
     if not cached:
 
         if not my:
-           vacancies = Requirement.active.get_active()
+
            url_paginator = "vacancy:paginator"
            params = {}
 
-           # filters, searchFilter = func.filterLive(request)
+           filters, searchFilter = func.filterLive(request)
 
-          # sqs = func.getActiveSQS().models(Tpp)
+           sqs = func.getActiveSQS().models(Requirement)
 
-            #if len(searchFilter) > 0:
-             #   sqs = sqs.filter(searchFilter)
+           if len(searchFilter) > 0:
+              sqs = sqs.filter(searchFilter)
 
-           # if q != '':
-            #    sqs = sqs.filter(title=q)
+           if q != '':
+               sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-            #sortFields = {
-             #   'date': 'id',
-             #   'name': 'title_sort'
-            #}
+           sortFields = {
+              'date': 'id',
+              'name': 'title_sort'
+           }
 
-            #order = []
+           order = []
 
-            #sortField1 = request.GET.get('sortField1', 'date')
-            #sortField2 = request.GET.get('sortField2', None)
-            #order1 = request.GET.get('order1', 'desc')
-            #order2 = request.GET.get('order2', None)
+           sortField1 = request.GET.get('sortField1', 'date')
+           sortField2 = request.GET.get('sortField2', None)
+           order1 = request.GET.get('order1', 'desc')
+           order2 = request.GET.get('order2', None)
 
-            #if sortField1 and sortField1 in sortFields:
-            #   if order1 == 'desc':
-            #        order.append('-' + sortFields[sortField1])
-            #   else:
-            #        order.append(sortFields[sortField1])
-            #else:
-            #    order.append('-id')
+           if sortField1 and sortField1 in sortFields:
+              if order1 == 'desc':
+                   order.append('-' + sortFields[sortField1])
+              else:
+                   order.append(sortFields[sortField1])
+           else:
+               order.append('-id')
 
-            # if sortField2 and sortField2 in sortFields:
-            #    if order2 == 'desc':
-            #       order.append('-' + sortFields[sortField2])
-            #   else:
-            #       order.append(sortFields[sortField2])
-
-
-            #tpp = sqs.order_by(*order)
+           if sortField2 and sortField2 in sortFields:
+               if order2 == 'desc':
+                  order.append('-' + sortFields[sortField2])
+               else:
+                  order.append(sortFields[sortField2])
 
 
-            #params = {
-             #   'filters': filters,
-              #  'sortField1': sortField1,
-               # 'sortField2': sortField2,
-                #'order1': order1,
-                #'order2': order2
-            #}
+           vacancies = sqs.order_by(*order)
+
+
+           params = {
+               'filters': filters,
+               'sortField1': sortField1,
+               'sortField2': sortField2,
+               'order1': order1,
+               'order2': order2
+           }
         else:
             current_organization = request.session.get('current_company', False)
 
 
-            #read all Organizations which hasn't foreign key from Department and current User is create user or worker
-            vacancies = Requirement.active.get_active().filter(c2p__parent__c2p__parent__c2p__parent=current_organization)
+
+            vacancies = func.getActiveSQS().models(Requirement).filter(organization=current_organization)
 
             url_paginator = "vacancy:my_main_paginator"
             params = {}
 
 
-        attr = ('NAME', 'DETAIL_TEXT', 'CITY' ,'SLUG')
+        attr = ('NAME', 'DETAIL_TEXT', 'CITY', 'SLUG')
 
 
-        result = func.setPaginationForItemsWithValues(vacancies, *attr,  page_num=5, page=page)
+        result = func.setPaginationForSearchWithValues(vacancies, *attr,  page_num=5, page=page)
 
         vacancyList = result[0]
         vacancy_ids = [id for id in vacancyList.keys()]
@@ -316,6 +316,9 @@ def addVacancy(request):
     vacanciesList = result[1]
     vacancy_error = ""
 
+    type = Dictionary.objects.get(title='TYPE_OF_EMPLOYMENT')
+    type_slots = type.getSlotsList()
+
 
 
     if request.POST:
@@ -339,7 +342,7 @@ def addVacancy(request):
 
     template = loader.get_template('Vacancy/addForm.html')
     context = RequestContext(request, {'form': form, 'departmentsList': departmentsList, 'vacanciesList': vacanciesList,
-                                       'vacancy_error': vacancy_error , 'company': company})
+                                       'vacancy_error': vacancy_error , 'company': company, 'type_slots': type_slots})
     vacancyPage = template.render(context)
 
     return vacancyPage
@@ -351,6 +354,9 @@ def updateVacancy(request, item_id):
     organization = item.pk
     perm_list = item.getItemInstPermList(request.user)
 
+    type = Dictionary.objects.get(title='TYPE_OF_EMPLOYMENT')
+    type_slots = type.getSlotsList()
+
     if 'change_requirement' not in perm_list:
         return func.permissionDenied()
 
@@ -358,6 +364,7 @@ def updateVacancy(request, item_id):
 
     requirement = Requirement.objects.get(pk=item_id)
     vacancy_selected = Vacancy.objects.get(p2c__child=requirement).pk
+    department_selected = Department.objects.get(p2c__child=vacancy_selected).pk
 
 
     result = getDepartamentsAndVacancies(organization)
@@ -401,7 +408,9 @@ def updateVacancy(request, item_id):
         'vacancy_selected': vacancy_selected,
         'departmentsList': departmentsList,
         'vacanciesList': vacanciesList,
-        'company': organization
+        'company': organization,
+        'department_selected': department_selected,
+        'type_slots': type_slots
 
     }
 
@@ -457,6 +466,7 @@ def deleteVacancy(request, item_id):
     instance = Requirement.objects.get(pk=item_id)
     instance.activation(eDate=now())
     instance.end_date = now()
+    instance.reindexItem()
 
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('vacancy:main'))

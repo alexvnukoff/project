@@ -7,6 +7,7 @@ from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
 from django.db.models import Q
 import os
+from django.core.cache import cache
 
 register = template.Library()
 
@@ -22,7 +23,21 @@ def getTopOnPage(context, item_id=None):
         filterAdv = func.getListAdv(request)
 
 
-    return {'MEDIA_URL': MEDIA_URL,  'modelTop': func.getTops(request, filterAdv) }
+    cached = False
+    cache_name = "adv_top_cache"
+
+    if filterAdv is None:
+        cached = cache.get(cache_name)
+
+    if not cached:
+        tops = func.getTops(request, filterAdv)
+
+        if filterAdv is None:
+            cache.set(cache_name, tops, 60 * 60)
+    else:
+        tops = cache.get(cache_name)
+
+    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops}
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
 def getBanners(context, item_id=None, *places):
@@ -35,7 +50,22 @@ def getBanners(context, item_id=None, *places):
     else:
         filterAdv = func.getListAdv(request)
 
-    return {'MEDIA_URL': MEDIA_URL, 'banners': func.getBanners(places, settings.SITE_ID, filterAdv)}
+    cached = False
+    cache_name = "adv_banner_cache"
+
+    if filterAdv is None:
+        cached = cache.get(cache_name)
+
+    if not cached:
+        banners = func.getBanners(places, settings.SITE_ID, filterAdv)
+
+        if filterAdv is None:
+            cache.set(cache_name, banners, 60 * 60)
+    else:
+        banners = cache.get(cache_name)
+
+
+    return {'MEDIA_URL': MEDIA_URL, 'banners': banners}
 
 @register.inclusion_tag('main/currentCompany.html', takes_context=True)
 def getMyCompaniesList(context):

@@ -784,27 +784,27 @@ def getTops(request, filterAdv=None):
     '''
 
     models = {
-        Product: {
+        Product.__name__: {
             'count': 5, #Limit of this type to fetch
             'text': _('Products'), #Title
             'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
         },
-        InnovationProject: {
+        InnovationProject.__name__: {
             'count': 5,
             'text': _('Innovation Projects'),
             'detailUrl': 'innov:detail'
         },
-        Company: {
+        Company.__name__: {
             'count': 5,
             'text': _('Companies'),
             'detailUrl': 'companies:detail'
         },
-        BusinessProposal: {
+        BusinessProposal.__name__: {
             'count': 5,
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
-        Exhibition: {
+        Exhibition.__name__: {
             'count': 5,
             'text': _('Exhibitions'),
             'detailUrl': 'exhibitions:detail'
@@ -816,9 +816,9 @@ def getTops(request, filterAdv=None):
 
     for model, modelDict in models.items():
 
-        sub = model.objects.all()
         #Get all active context advertisement of some specific type
-        top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence").values_list('c2p__parent', flat=True)
+        top = AdvTop.active.get_active().filter(c2p__parent__contentType__model=model.lower(), c2p__type="dependence")\
+            .values_list('c2p__parent', flat=True)
 
 
         if filterAdv is not None and len(filterAdv) > 0: #Do we have some filters depended on current page ?
@@ -828,11 +828,9 @@ def getTops(request, filterAdv=None):
 
         tops = list(top)
 
-        sModel = model.__name__
-
         if len(tops) > 0:
             topList += tops
-            modelTop[sModel] = tops
+            modelTop[model] = tops
 
 
     topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
@@ -846,23 +844,20 @@ def getTops(request, filterAdv=None):
 
         for model in models:
 
-
-            sModel = model.__name__
-
-            if sModel not in modelTop:
+            if model not in modelTop:
                 continue
 
 
-            if sModel not in tops:
-                tops[sModel] = {}
-                tops[sModel]['MODEL'] = models[model] #Some template helper
-                tops[sModel]['elements'] = {} #Items with attributes are stored here
-                tops[sModel]['ids'] = [] #List of items to get their flags
+            if model not in tops:
+                tops[model] = {}
+                tops[model]['MODEL'] = models[model] #Some template helper
+                tops[model]['elements'] = {} #Items with attributes are stored here
+                tops[model]['ids'] = [] #List of items to get their flags
 
-            if id in modelTop[sModel]:
+            if id in modelTop[model]:
                 attrs['DETAIL_TEXT'] = cleanFromHtml(attrs.get('DETAIL_TEXT', [''])[0])
-                tops[sModel]['elements'][id] = attrs
-                tops[sModel]['ids'].append(id)
+                tops[model]['elements'][id] = attrs
+                tops[model]['ids'].append(id)
 
                 break
 

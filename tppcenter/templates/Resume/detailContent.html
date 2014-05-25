@@ -41,14 +41,19 @@ $(function() {
             {% with resumeValues.ADDITIONAL_SKILL.0 as additional_skill %}
             {% with resumeValues.SALARY.0 as salary %}
             {% with resumeValues.ADDITIONAL_INFORMATION.0 as additional_information %}
+            {% with resumeValues.CABINET as cabinet %}
 
 
 
                <div class="tender-info" id="resume-dt">
 					<ul class="inforesume">
                     	<li>
-                        	<label>{% trans 'Name' %}:</label>
+                        	<label>{% trans 'Vacancy name' %}:</label>
                             <span class="right">{{ name }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'User name' %}:</label>
+                            <span class="right">{{ cabinet }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Birthday' %}:</label>
@@ -177,6 +182,7 @@ $(function() {
 
 
 
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

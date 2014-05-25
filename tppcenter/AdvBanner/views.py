@@ -144,6 +144,14 @@ def addBanner(request, bannerType):
     '''
 
     btype = get_object_or_404(AdvBannerType, pk=bannerType)
+    properties = btype.getAttributeValues('HEIGHT', 'WIDTH', 'FACTOR')
+
+    if not isinstance(properties, dict):
+        properties = {}
+
+    bannerHeight = int(properties.get('HEIGHT', [0])[0])
+    bannerWidth = int(properties.get('WIDTH', [0])[0])
+    factor = float(properties.get('FACTOR', [1])[0])
 
     form = None
     stDate = ''
@@ -227,7 +235,7 @@ def addBanner(request, bannerType):
                 if form.is_valid():
                     im = ImageFile(values['IMAGE'])
 
-                    if im.height > 100 and im.width > 200:
+                    if im.height != bannerHeight or im.width != bannerWidth:
                         form.errors.update({"IMAGE": _("Image dimension should not exceed")})
 
                 if form.is_valid():
@@ -254,7 +262,8 @@ def addBanner(request, bannerType):
         if form.is_valid():
             try:
                 current_company = request.session.get('current_company', False)
-                order = addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype, current_company)
+                order = addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype, current_company,
+                                      factor)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 

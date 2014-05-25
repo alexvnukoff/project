@@ -37,8 +37,8 @@ import tppcenter.Users.urls
 
 import tppcenter.UserSites.urls
 
-#import tppcenter.AdminTpp
-#import tppcenter.AdminTpp.urls
+import tppcenter.AdminTpp
+import tppcenter.AdminTpp.urls
 
 from tppcenter.News.views import NewsFeed
 
@@ -72,7 +72,7 @@ urlpatterns = patterns('',
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
 
 
-    #url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
+    url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
 
 
     url(r'^register/exhibition/$', tppcenter.views.registerToExebition),

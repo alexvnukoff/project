@@ -12,6 +12,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Resume.views.get_resume_list, name='main'),
+     url(r'^page/(?P<page>[0-9]+)?/$', tppcenter.Resume.views.get_resume_list, name="paginator"),
+     url(r'^my/$', tppcenter.Resume.views.get_resume_list,{'my':True}, name='my_main'),
+     url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Resume.views.get_resume_list,{'my':True}, name="my_main_paginator"),
 
 
 

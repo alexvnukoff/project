@@ -337,6 +337,7 @@ class Item(models.Model):
     proc = models.ForeignKey(Process, null=True, blank=True)
     sites = models.ManyToManyField(Site, related_name='item')
     community = models.ForeignKey(Group, null=True, blank=True)
+    contentType = models.ForeignKey(ContentType, null=True, blank=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
