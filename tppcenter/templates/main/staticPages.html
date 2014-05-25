@@ -1,0 +1,20 @@
+{% load i18n %}
+<ul class="clumn">
+                <li>{% trans 'About' %}</li>
+                {% for slug, name in pagesDict.about %}
+                    <li><a href="{% url "project:detail" slug %}">{{ name }}</a></li>
+                {% endfor %}
+            </ul>
+
+            <ul class="clumn">
+                <li>{% trans 'Advices' %}</li>
+                {% for slug, name in pagesDict.advices %}
+                    <li><a href="{% url "project:detail" slug %}">{{ name }}</a></li>
+                {% endfor %}
+            </ul>
+            <ul class="clumn">
+                <li>{% trans 'Contacts' %}</li>
+                {% for slug, name in pagesDict.contacts %}
+                    <li><a href="{% url "project:detail" slug %}">{{ name }}</a></li>
+                {% endfor %}
+            </ul>

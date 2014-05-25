@@ -1,5 +1,6 @@
 import json
 from dateutil.parser import parse
+from django.contrib.sites.models import Site
 from appl.models import Organization, Branch, Tpp, Country, AdvOrder
 from core.models import Item
 from core.tasks import addTopAttr
@@ -10,6 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
+from paypal.standard.forms import PayPalPaymentsForm
 import datetime
 
 @login_required(login_url='/login/')
@@ -85,6 +87,7 @@ def addTop(request, item):
     '''
 
     object = get_object_or_404(Item, pk=item)
+    factor = float(object.contentType.top.getAttributeValues('COST')[0])
 
     current_organization = request.session.get('current_company', False)
 
@@ -195,7 +198,7 @@ def addTop(request, item):
 
         if form.is_valid():
             try:
-                order = addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org)
+                order = addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org, factor)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 
@@ -220,7 +223,8 @@ def addTop(request, item):
         'edDate': edDate,
         'filterAttr': filterAttr,
         'filters': filter,
-        'itemName': itemName
+        'itemName': itemName,
+        'factor': factor
     }
 
     return render_to_response('AdvTop/addForm.html', templateParams, context_instance=RequestContext(request))
@@ -276,15 +280,34 @@ def resultOrder(request, orderID):
     endDate = parse(ordWithValues.get('END_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
 
     current_section = _('Tops')
+    domain = Site.objects.get(pk=1).domain
+    cost = '{0:.2f}'.format(ordWithValues.get('COST', [0])[0])
+
+        # What you want the button to do.
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": cost,
+        "item_name": _('Advertisement'),
+        "invoice": orderID,
+        "notify_url": "http://www." + domain + '/' + reverse('paypal-ipn'),
+        "return_url": "http://www." + domain + '/',
+        "cancel_return": "http://www." + domain + '/',
+
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+
 
     templateParams = {
         'current_section': current_section,
         'nameCost': nameCostDict,
-        'totalCost': ordWithValues.get('COST', [0])[0],
+        'totalCost': cost,
         'startDate': startDate,
         'endDate': endDate,
         'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
-        'order': orderID
+        'order': orderID,
+        "form": form
     }
 
-    return render_to_response('AdvTopr/order.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('AdvTop/order.html', templateParams, context_instance=RequestContext(request))

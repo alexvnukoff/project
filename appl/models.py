@@ -536,6 +536,9 @@ class Order(Item):
     active = ItemManager()
     objects = models.Manager()
 
+    payed = models.BooleanField(default=False)
+    payDate = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return ''
 
@@ -655,7 +658,7 @@ class staticPages(Item):
         return self.getName()
 
 class topTypes(Item):
-    modelType = models.ForeignKey(ContentType, related_name="top")
+    modelType = models.OneToOneField(ContentType, related_name="top")
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
@@ -780,3 +783,16 @@ def tppCommunity(instance, **kwargs):
             except Exception as e:
                 print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
     '''
+
+from paypal.standard.ipn.signals import payment_was_successful
+
+def show_me_the_money(sender, **kwargs):
+    ipn_obj = sender
+    # You need to check 'payment_status' of the IPN
+
+    if ipn_obj.payment_status == "Completed":
+        # Undertake some action depending upon `ipn_obj`.
+        if ipn_obj.custom == "Upgrade all users!":
+            Users.objects.update(paid=True)
+
+payment_was_successful.connect(show_me_the_money)

@@ -6,7 +6,8 @@
 {% block style %}
     {{ block.super }}
     <!-- DATA TABLES -->
-    <link href="{% static "admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css"
+          xmlns="http://www.w3.org/1999/html"/>
 {% endblock %}
 
 
@@ -53,8 +54,15 @@
                                             </tr>
                                         </tfoot>
                                     </table>
-                                    <br />
+                                    {% if result %}
+
+                                        {% for type, eror in result.errors.items %}
+                                            <p class="text-red">{{ eror }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <p></p>
                                     <form method="POST">
+                                    {% csrf_token %}
                                         <table id="add-banner" class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
@@ -137,6 +145,54 @@
                         </div>
                     </div>
 
+<div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Tops</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                        <table id="tops" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Factor</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for pk, attrs in tops.items %}
+                                                {% with attrs.NAME|first as name %}
+                                                {% with attrs.COST|first as factor %}
+                                                <tr>
+
+                                                    <td>
+                                                        {{ name }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group"><span class="input-group-addon">
+                                                            <i class="fa fa-dollar"></i></span>
+                                                            <input value="{{ factor }}" type="text" class="form-control">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <button data-pk="{{ pk }}" class="saveTop btn btn-success" >Save</button>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                                {% endwith %}
+                                                {% endwith %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                </div><!-- /.box-body -->
+
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
         <!-- Bootstrap -->
 
         <!-- DATA TABES SCRIPT -->
@@ -157,13 +213,24 @@
     <script type="text/javascript">
         $(function() {
 
-            $(document).on("click", ".savePrice", function() {
-                var price = parseFloat($(this).parents('tr').find('input').val());
-                var id = $(this).data('pk');
+            $(document).on('click', '.saveTop', function() {
+               var factor = $(this).parents('tr').find('input').val();
+
+               var button = $(this);
+               $(this).addClass("disabled");
+
+               $.post("{% url "AdminTpp:adv_sett" %}", {'factor': factor, 'pk': $(this).data('pk'), 'type': 'top'}, function() {
+                    button.removeClass('disabled');
+               });
+            });
+
+            $(document).on("click", ".saveType", function() {
+                var ser = $(this).parents('tr').find('input').serialize();
+
                 var button = $(this);
                 $(this).addClass("disabled");
 
-                $.post("{% url "AdminTpp:adv_save_price" %}", {'id': id, 'price': price}, function() {
+                $.post("{% url "AdminTpp:adv_sett" %}", ser, function() {
                     button.removeClass('disabled');
                 });
 
@@ -186,9 +253,19 @@
 
                                     return '<div class="input-group"><span class="input-group-addon">' +
                                             '<i class="fa fa-dollar"></i></span>' +
-                                            '<input value="' + data + '" type="text" class="form-control"></div>';
+                                            '<input name="factor" value="' + data + '" type="text" class="form-control"></div>';
 
                                 }
+                    },
+                    {
+                        "aTargets": [ 0 ],
+                        "mData": 0,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="name"/>' +
+                                    '</div>';
+                        }
                     },
                     {
                         "aTargets": [ 3 ],
@@ -235,7 +312,7 @@
                         "mRender": function ( data, type, full ) {
 
                             return '<div class="form-group">' +
-                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Width"/>' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="width"/>' +
                                     '</div>';
                         }
                     },
@@ -245,7 +322,7 @@
                         "mRender": function ( data, type, full ) {
 
                             return '<div class="form-group">' +
-                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Height"/>' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="height"/>' +
                                     '</div>';
                         }
                     },
@@ -255,7 +332,7 @@
                         "mRender": function ( data, type, full ) {
 
                              return '<div class="form-group">' +
-                                        '<input value="' + data + '" type="text" class="form-control" placeholder="Code"/>' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="code"/>' +
                                     '</div>';
                         }
                     },
@@ -264,8 +341,11 @@
                         "mData": 9,
                         "mRender": function ( data, type, full ) {
 
-                            return '<button data-pk="' + data + '" class="savePrice btn btn-success">Save</button>' +
-                                    ' <button data-pk="' + data + '" class="savePrice btn btn-danger">Remove</button>';
+                            return '<input type="hidden" name="pk" value="' + data + '" />' +
+                                    '<button class="saveType btn btn-success">Save</button> ' +
+                                    '<a href="/admin-tpp/adv/delete-type/' + data + '/">' +
+                                    '<button class="deleteType btn btn-danger">Remove</button>' +
+                                    '</a>';
 
                         }
                     }

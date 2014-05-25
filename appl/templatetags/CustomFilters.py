@@ -413,10 +413,5 @@ def detail_page_to_tppcenter(context, url, slug=None):
     else:
         url = (reverse(viewname=url, urlconf=tppcenter.urls,   prefix=prefix))
 
-
-
-
-
-
     return 'http://' + url
 

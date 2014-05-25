@@ -24,5 +24,9 @@ urlpatterns = patterns('',
     url(r'^adv/prices/load/branch/$', tppcenter.AdminTpp.views.adv_price, {'ladModel': Branch}, name='adv_load_branch'),
     url(r'^adv/prices/$', tppcenter.AdminTpp.views.adv_price, name='adv_price'),
     url(r'^adv/settings/$', tppcenter.AdminTpp.views.adv_settings, name='adv_sett'),
+    url(r'^adv/delete-type/([0-9]+)/$', tppcenter.AdminTpp.views.adv_remove_banner_type),
+    url(r'^pages/$', tppcenter.AdminTpp.views.pages, name="pages"),
+    url(r'^pages/edit/([0-9]+)/$', tppcenter.AdminTpp.views.pages, name="pages_edit"),
+    url(r'^pages/delete/([0-9]+)/$', tppcenter.AdminTpp.views.pages_delete, name="pages_delete"),
 
 )

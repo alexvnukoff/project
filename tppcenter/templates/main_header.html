@@ -1,9 +1,10 @@
 {% load i18n %}
+{% load inclusionTags %}
 
 <div class="tophead">
 	<div class="wrapper">
     	<div class="tophead-l">
-        	<a href="{% url "project:about" %}" title="">{% trans 'About' %}</a> | <a href="{% url "project:faq" %}" title="">{% trans 'FAQ' %}</a> | <a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a> | <a href="{% url "project:contact" %}" title="">{% trans 'Contact' %}</a>
+        	{% showTopStaticPages %}
         </div>
         <div class="tophead-r">
         	<a href="{% url 'login' %}" title=""><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'register' %}" title=""><font>{% trans 'Sign up' %}</font></a>

@@ -31,10 +31,14 @@ def gatPositions(request):
     if 'add_adv_banner' not in perm_list:
         return HttpResponseRedirect(reverse('denied'))
     '''
+
     bannerType = AdvBannerType.objects.all().values('pk', 'sites__name')
 
     bannerType_ids = [btype['pk'] for btype in bannerType]
-    bannerNames = Item.getItemsAttributesValues('NAME', bannerType_ids)
+
+    attrs = ('NAME', 'WIDTH', 'HEIGHT')
+
+    bannerNames = Item.getItemsAttributesValues(attrs, bannerType_ids)
     sites = {}
 
     for btype in bannerType:
@@ -292,7 +296,8 @@ def addBanner(request, bannerType):
         'stDate': stDate,
         'edDate': edDate,
         'filterAttr': filterAttr,
-        'filters': filter
+        'filters': filter,
+        'factor': factor
     }
 
     return render_to_response('AdvBanner/addForm.html', templateParams, context_instance=RequestContext(request))
