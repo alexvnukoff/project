@@ -168,7 +168,7 @@
                     	<div class="clumn1">
                         	<label>{% trans 'Departament' %} <font color="#FF0000">*</font></label>
                             <select  id="dep-list" style="width:62%;">
-                                <option data-department="" value="" disabled selected>{% trans "Choose from list..." %}</option>
+                                <option data-department="" value="" disabled selected>{% trans "Choose department..." %}</option>
                                 {% for id, attr in departmentsList.items %}
                                 {% with attr.NAME|first as department %}
                                     <option data-department="{{ id }}" {% if id == department_selected %} selected{% endif %}>{{ department }}</option>
@@ -188,7 +188,7 @@
                             {% endif %}
                             <select name="VACANCY" id="vacancy-list" style="width:80%;">
                                 {% if not vacancy_selected %}
-                                    <option  disabled selected>{% trans "Select Department to select vacancy..." %}</option>
+                                    <option  disabled selected>{% trans "Choose from list..." %}</option>
                                 {% endif %}
                                 {% for id, attr in vacanciesList.items %}
                                 {% with attr.NAME|first as vacancy %}
