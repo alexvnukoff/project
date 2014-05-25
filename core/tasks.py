@@ -216,7 +216,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     sizes = {
             'big': {'box': (150, 140), 'fit': False},
             'small': {'box': (70, 70), 'fit': False},
-            'th': {'box':(30, 30), 'fit': True}
+            'th': {'box': (30, 30), 'fit': True}
             }
 
     company = form.save(user, site_id, sizes=sizes)
@@ -241,6 +241,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
         else:
             time = now() + datetime.timedelta(days=settings.FREE_PERIOD)
             company.end_date = time
+            company.paid_till_date = time
             company.save()
 
         #this logic was moved into appl.models signal post_save from Department creation
