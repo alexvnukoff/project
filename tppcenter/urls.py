@@ -40,6 +40,9 @@ import tppcenter.UserSites.urls
 import tppcenter.AdminTpp
 import tppcenter.AdminTpp.urls
 
+import tppcenter.Adv
+import tppcenter.Adv.urls
+
 from tppcenter.News.views import NewsFeed
 
 
@@ -82,6 +85,7 @@ urlpatterns = patterns('',
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
     url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
     url(r'^advtop/', include(tppcenter.AdvTop.urls, namespace='adv_top')),
+    url(r'^adv/', include(tppcenter.Adv.urls, namespace='Adv')),
 
 
 
@@ -98,6 +102,8 @@ urlpatterns = patterns('',
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
     url(r'^admin/tpp/', include(admin.site.urls)),
+
+    url(r'^adv/paypal/', include('paypal.standard.ipn.urls')),
 
 
 
