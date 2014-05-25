@@ -716,6 +716,7 @@ def pages(request, editPage=None):
 
                     if onTop is not None:
                         page.onTop = onTop
+
                     page.pageType = type
                     page.save()
 
