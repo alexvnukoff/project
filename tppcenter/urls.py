@@ -103,7 +103,7 @@ urlpatterns = patterns('',
     url(r'^ping/', tppcenter.views.ping),
     url(r'^admin/tpp/', include(admin.site.urls)),
 
-    url(r'^adv/paypal/', include('paypal.standard.ipn.urls')),
+    #url(r'^adv/paypal/', include('paypal.standard.ipn.urls')),
 
 
 
