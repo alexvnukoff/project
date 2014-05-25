@@ -3,7 +3,7 @@ from django.utils.timezone import now
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
                         Cabinet, InnovationProject, Vacancy, Requirement, Resume
-from core.models import Item, Relationship, Group, User
+from core.models import Item, Relationship, Group, User, Dictionary
 from core.tasks import addNewTpp, addNewRequirement
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -316,6 +316,9 @@ def addVacancy(request):
     vacanciesList = result[1]
     vacancy_error = ""
 
+    type = Dictionary.objects.get(title='TYPE_OF_EMPLOYMENT')
+    type_slots = type.getSlotsList()
+
 
 
     if request.POST:
@@ -339,7 +342,7 @@ def addVacancy(request):
 
     template = loader.get_template('Vacancy/addForm.html')
     context = RequestContext(request, {'form': form, 'departmentsList': departmentsList, 'vacanciesList': vacanciesList,
-                                       'vacancy_error': vacancy_error , 'company': company})
+                                       'vacancy_error': vacancy_error , 'company': company, 'type_slots': type_slots})
     vacancyPage = template.render(context)
 
     return vacancyPage
@@ -350,6 +353,9 @@ def updateVacancy(request, item_id):
     item = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
     organization = item.pk
     perm_list = item.getItemInstPermList(request.user)
+
+    type = Dictionary.objects.get(title='TYPE_OF_EMPLOYMENT')
+    type_slots = type.getSlotsList()
 
     if 'change_requirement' not in perm_list:
         return func.permissionDenied()
@@ -403,7 +409,8 @@ def updateVacancy(request, item_id):
         'departmentsList': departmentsList,
         'vacanciesList': vacanciesList,
         'company': organization,
-        'department_selected': department_selected
+        'department_selected': department_selected,
+        'type_slots': type_slots
 
     }
 

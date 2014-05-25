@@ -13,6 +13,8 @@
                     {% with attr.NAME.0 as name %}
                     {% with attr.SLUG.0 as slug %}
                     {% with attr.CREATE_DATE.0 as date %}
+                    {% with attr.CABINET as cabinet %}
+
                     <li>
 
                     {% resolve items_perms id|slugify as permlist %}
@@ -38,7 +40,9 @@
                         <h2><a href="{% url "resume:detail" slug %}" >{{ name }}</a></h2>
 
                         <a href="{% url "resume:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <div class="line">{% trans 'User name' %}:{% if cabinet %}<a href="#"> {{ cabinet }}</a>{% endif %}</div>
                     </li>
+                    {% endwith %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}

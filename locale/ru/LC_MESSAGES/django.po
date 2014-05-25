@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-22 08:40+0000\n"
-"PO-Revision-Date: 2014-05-23 09:37+0200\n"
+"PO-Revision-Date: 2014-05-25 10:44+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2753,7 +2753,7 @@ msgstr "Тпп ТВ"
 #: tppcenter/templates/main_page.html:129
 #: tppcenter/templates/main_page.html:153
 msgid "Job requirements"
-msgstr "Требуется"
+msgstr "Требуются"
 
 #: tppcenter/templates/main_page.html:151
 msgid "Analytic"
@@ -3816,7 +3816,7 @@ msgstr "Выберите отдел, чтобы выбрать вакансию.
 
 #: tppcenter/templates/Vacancy/addForm.html:209
 msgid "Name of vacancy"
-msgstr "Заголовок"
+msgstr "Название вакансии"
 
 #: tppcenter/templates/Vacancy/addForm.html:218
 msgid "City of vacancy"
@@ -3832,7 +3832,7 @@ msgstr "Сделать объявление анонимным"
 
 #: tppcenter/templates/Vacancy/addForm.html:236
 msgid "name of company will be hidden"
-msgstr "Имя компании будет скрыто"
+msgstr "Название компании будет скрыто"
 
 #: tppcenter/templates/Vacancy/addForm.html:254
 #: tppcenter/templates/Vacancy/detailContent.html:76
