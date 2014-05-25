@@ -75,7 +75,7 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
 def _resumeList(request, my=None, page=1):
 
     query = request.GET.urlencode()
-
+    cabinetValues = None
     q = request.GET.get('q', '')
 
     if not my:
@@ -116,6 +116,12 @@ def _resumeList(request, my=None, page=1):
                     order.append(sortFields[sortField2])
 
             proposal = sqs.order_by(*order)
+            cabinet_ids =[resume.cabinet for resume in sqs]
+            resume_cabinet_dict = {resume.id: resume.cabinet for resume in sqs}
+
+            cabinetValues = Item.getItemsAttributesValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'), cabinet_ids)
+
+
             url_paginator = "%s:paginator" % ('resume')
 
             params = {
@@ -125,6 +131,7 @@ def _resumeList(request, my=None, page=1):
                 'order1': order1,
                 'order2': order2
             }
+
     else:
             current_organization = request.session.get('current_company', False)
 
@@ -144,6 +151,14 @@ def _resumeList(request, my=None, page=1):
 
     proposalList = result[0]
     proposal_ids = [id for id in proposalList.keys()]
+
+    if cabinetValues:
+       for id, proposal in proposalList.items():
+
+           proposal['CABINET'] = (cabinetValues[resume_cabinet_dict[id]].get('USER_LAST_NAME', [" "])[0] + " " +
+           cabinetValues[resume_cabinet_dict[id]].get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues[resume_cabinet_dict[id]].get('USER_MIDDLE_NAME', [" "])[0]).strip()
+
+
     redactor = False
     if request.user.is_authenticated():
         items_perms = getUserPermsForObjectsList(request.user, proposal_ids, Resume.__name__)
@@ -184,7 +199,12 @@ def _resumeList(request, my=None, page=1):
 def _resumeDetailContent(request, item_id):
 
     resume = get_object_or_404(Resume, pk=item_id)
+    cabinet = Cabinet.objects.get(p2c__child=item_id)
 
+    attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
+    cabinetValues =  cabinet.getAttributeValues('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
+    user_name = (cabinetValues.get('USER_LAST_NAME', [" "])[0] + " " +
+           cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
 
     attr = (
         'NAME', 'BIRTHDAY', 'MARITAL_STATUS', 'NATIONALITY', 'TELEPHONE_NUMBER','ADDRESS', 'FACULTY', 'PROFESSION',
@@ -195,6 +215,7 @@ def _resumeDetailContent(request, item_id):
     )
 
     resumeValues = resume.getAttributeValues(*attr)
+    resumeValues.update({'CABINET': user_name})
 
     title = resumeValues.get('NAME', False)[0] if resumeValues.get('NAME', False) else ""
 
