@@ -14,16 +14,18 @@ class Command(NoArgsCommand):
                    SystemMessages, ExternalSiteTemplate, Notification, Category, License, Greeting, Gallery, Service,
                    Favorite, Invoice, News, Resume, Article, Review, Rate, Rating, Payment, Shipment, Tender, Basket,
                    Cabinet, Document, AdditionalPages, Exhibition, Messages, Vacancy]
+        try:
+            for model in models:
 
-        for model in models:
+                if model.objects.all().count() == 0:
+                    print("Pass " + model.__name__)
+                    continue
 
-            if model.objects.all().count() == 0:
-                print("Pass " + model.__name__)
-                continue
+                for item in model.objects.filter(contentType__isnull=True):
+                    item.save()
 
-            for item in model.objects.all():
-                item.save()
+                    print(item.__class__.__name__ + ": " + str(item.pk))
 
-                print(item.__class__.__name__ + ": " + item.pk)
-
-        print('The End!')
+            print('The End!')
+        except:
+            print('Except ' + model.__name__)
