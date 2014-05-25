@@ -26,8 +26,8 @@ def getTopOnPage(context, item_id=None):
     cached = False
     cache_name = "adv_top_cache"
 
-    if filterAdv is None:
-        cached = cache.get(cache_name)
+    #if filterAdv is None:
+    #    cached = cache.get(cache_name)
 
     if not cached:
         tops = func.getTops(request, filterAdv)
@@ -53,8 +53,8 @@ def getBanners(context, item_id=None, *places):
     cached = False
     cache_name = "adv_banner_cache"
 
-    if filterAdv is None:
-        cached = cache.get(cache_name)
+    #if filterAdv is None:
+    #    cached = cache.get(cache_name)
 
     if not cached:
         banners = func.getBanners(places, settings.SITE_ID, filterAdv)
