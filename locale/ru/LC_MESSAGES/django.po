@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-25 08:16+0000\n"
-"PO-Revision-Date: 2014-05-25 10:44+0200\n"
+"POT-Creation-Date: 2014-05-25 09:29+0000\n"
+"PO-Revision-Date: 2014-05-25 12:36+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3628,9 +3628,8 @@ msgstr ""
 
 #: tppcenter/templates/Resume/addForm.html:58
 #: tppcenter/templates/Resume/detailContent.html:51
-#, fuzzy
 msgid "Vacancy name"
-msgstr "Вакансия"
+msgstr "Название вакансии"
 
 #: tppcenter/templates/Resume/addForm.html:73
 msgid "Marital Status"
@@ -3748,9 +3747,8 @@ msgstr "Дата публикации"
 
 #: tppcenter/templates/Resume/contentPage.html:43
 #: tppcenter/templates/Resume/detailContent.html:55
-#, fuzzy
 msgid "User name"
-msgstr "Имя"
+msgstr "Имя пользователя"
 
 #: tppcenter/templates/Resume/detailContent.html:63
 msgid "Marital status"
@@ -3836,12 +3834,12 @@ msgid "Departament"
 msgstr "Отдел"
 
 #: tppcenter/templates/Vacancy/addForm.html:171
-msgid "Choose from list..."
-msgstr ""
+msgid "Choose department..."
+msgstr "Выберите отдел..."
 
 #: tppcenter/templates/Vacancy/addForm.html:191
-msgid "Select Department to select vacancy..."
-msgstr "Выберите отдел, чтобы выбрать вакансию..."
+msgid "Choose from list..."
+msgstr "Выберите из списка..."
 
 #: tppcenter/templates/Vacancy/addForm.html:209
 msgid "Name of vacancy"
@@ -3996,6 +3994,9 @@ msgstr "Работник"
 #: usersites/templates/Contact/contentPage.html:52
 msgid "You email"
 msgstr "Ваша почта"
+
+#~ msgid "Select Department to select vacancy..."
+#~ msgstr "Выберите отдел, чтобы выбрать вакансию..."
 
 #~ msgid "Joined Date"
 #~ msgstr "Дата включения"
