@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 from celery import shared_task, task
 import json
 from appl import func
+from django.conf import settings
 
 
 @shared_task
@@ -238,7 +239,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
             Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=tpp, child=company, user=user)
         else:
-            time = now() + datetime.timedelta(days=60)
+            time = now() + datetime.timedelta(days=settings.FREE_PERIOD)
             company.end_date = time
             company.save()
 

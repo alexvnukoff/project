@@ -73,6 +73,7 @@ class Tpp(Organization):
         return self.getName()
 
 class Company(Organization):
+    paid_till_date = models.DateField(null=True)
 
     class Meta:
         permissions = (
