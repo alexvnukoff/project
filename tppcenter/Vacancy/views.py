@@ -358,6 +358,7 @@ def updateVacancy(request, item_id):
 
     requirement = Requirement.objects.get(pk=item_id)
     vacancy_selected = Vacancy.objects.get(p2c__child=requirement).pk
+    department_selected = Department.objects.get(p2c__child=vacancy_selected).pk
 
 
     result = getDepartamentsAndVacancies(organization)
@@ -401,7 +402,8 @@ def updateVacancy(request, item_id):
         'vacancy_selected': vacancy_selected,
         'departmentsList': departmentsList,
         'vacanciesList': vacanciesList,
-        'company': organization
+        'company': organization,
+        'department_selected': department_selected
 
     }
 

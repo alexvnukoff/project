@@ -171,7 +171,7 @@
                                 <option data-department="" value="" disabled selected>{% trans "Select Department..." %}</option>
                                 {% for id, attr in departmentsList.items %}
                                 {% with attr.NAME|first as department %}
-                                    <option data-department="{{ id }}">{{ department }}</option>
+                                    <option data-department="{{ id }}" {% if id == department_selected %} selected{% endif %}>{{ department }}</option>
                                 {% endwith %}
                                 {% empty %}
                                     <div class="no-results">{% trans "Empty" %}</div>
