@@ -11,7 +11,7 @@ from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from tppcenter.forms import ItemForm
-from paypal.standard.forms import PayPalPaymentsForm
+#from paypal.standard.forms import PayPalPaymentsForm
 import datetime
 
 @login_required(login_url='/login/')
@@ -280,6 +280,7 @@ def resultOrder(request, orderID):
     endDate = parse(ordWithValues.get('END_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
 
     current_section = _('Tops')
+    '''
     domain = Site.objects.get(pk=1).domain
     cost = '{0:.2f}'.format(ordWithValues.get('COST', [0])[0])
 
@@ -297,7 +298,7 @@ def resultOrder(request, orderID):
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
-
+    '''
 
     templateParams = {
         'current_section': current_section,
@@ -306,8 +307,8 @@ def resultOrder(request, orderID):
         'startDate': startDate,
         'endDate': endDate,
         'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
-        'order': orderID,
-        "form": form
+        'order': orderID
+        #"form": form
     }
 
     return render_to_response('AdvTop/order.html', templateParams, context_instance=RequestContext(request))

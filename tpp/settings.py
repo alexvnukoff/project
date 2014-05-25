@@ -87,8 +87,8 @@ INSTALLED_APPS = (
     'appl',
     'legacy_data',
     'djcelery',
-    'loginas',
-    'paypal.standard.ipn'
+    'loginas'
+    #'paypal.standard.ipn'
     #'debug_toolbar'
 )
 
