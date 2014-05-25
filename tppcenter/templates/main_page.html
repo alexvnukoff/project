@@ -136,7 +136,10 @@
             {% if user.email %}
                 <div id="tabs-2">
                     <ul class="tab1-cate">
-                    	<li><a href="{%url 'news:my_main' %}">{% trans 'News' %}</a></li>
+                        {% if user.is_commando or user.is_superuser %}
+                            <li><a href="{% url "AdminTpp:adv" %}">{% trans 'Admin Panel' %}</a></li>
+                        {% endif %}
+                    	<li><a href="{% url 'news:my_main' %}">{% trans 'News' %}</a></li>
                         <li><a href="{% url 'products:my_main' %}">{% trans 'Products' %}</a></li>
                         <li><a href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
                         <li><a href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
