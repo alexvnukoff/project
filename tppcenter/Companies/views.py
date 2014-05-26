@@ -224,7 +224,7 @@ def _companiesDetailContent(request, item_id):
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
 
-        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
+        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS', 'SLUG',
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
         #check free membership period
         if company.paid_till_date != None:

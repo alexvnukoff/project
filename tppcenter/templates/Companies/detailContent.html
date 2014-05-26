@@ -498,6 +498,7 @@
 
 <div class="companies">
             {% with companyValues.ID.0 as id %}
+            {% with companyValues.SLUG.0 as slug %}
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
             {% with companyValues.IMAGE.0 as image %}
@@ -536,20 +537,20 @@
 
                             <!-- Script for PayPal payment button -->
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
-                            <div>
+                            <div style="padding-left: 30px">
                                 <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend69@gmail.com"
-                                    data-name="1-year www.b24online.com membership"
-                                    data-number="ID:{{ id }} [{{ name }}]" {% comment %} Company's database ID and name {% endcomment %}
+                                    data-name="{% trans '1-year www.b24online.com membership' %}"
+                                    data-number="{{ name }} [ID:{{ id }}]" {% comment %} Company's database ID and name {% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="9"
-                                    data-callback="www.tppcenter.com/paypal/membership"
+                                    data-callback="www.tppcenter.com/companies/detail/{{ slug }}"
                                     data-env="sandbox"
                                 ></script>
                             </div>
                         </div>
                     {% endif %}
-                    {% comment %} Pay membership button {% endcomment %}
+                    {% comment %} /Pay membership button {% endcomment %}
                     {% if anons %}
                         <p>{{ anons|cleanHtml|safe }}</p>
                     {% else %}
@@ -715,6 +716,7 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
