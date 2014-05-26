@@ -7,7 +7,7 @@
 	<div class="news">
     	<div class="tophead-l">
         	<a href="/"><i class="imgnews news-logo"></i></a>
-        	<a href="{% url "project:about" %}" title="">{% trans 'About' %}</a> | <a href="{% url "project:faq" %}" title="">{% trans 'FAQ' %}</a> | <a href="{% url "project:contact" %}" title="">{% trans 'Contact' %}</a>
+        	{% showTopStaticPages %}
         </div>
         <div class="tophead-center">
             <!-- in User is not login show Google translate box here -->

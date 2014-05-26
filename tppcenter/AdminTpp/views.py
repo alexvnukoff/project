@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.utils.timezone import now
-from appl.models import Cabinet, AdvertisementItem, AdvOrder, Country, AdvBannerType
+from appl.models import Cabinet, AdvertisementItem, AdvOrder, Country, AdvBannerType, topTypes, staticPages
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from haystack.query import SearchQuerySet
@@ -14,6 +14,8 @@ import json
 from tpp.settings import MEDIA_URL
 from tppcenter.forms import ItemForm
 from django.utils.translation import gettext as _
+from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 
 @login_required(login_url="/login/")
@@ -294,7 +296,7 @@ def advTargets(request, advID):
         'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
     }
 
-    return render_to_response('adminTpp/targetsList.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('AdminTpp/targetsList.html', templateParams, context_instance=RequestContext(request))
 
 
 @login_required(login_url="/login/")
@@ -402,104 +404,146 @@ def adv_settings(request):
 
     if request.is_ajax():
 
+        if request.POST:
 
-        displayStart = int(request.GET.get('iDisplayStart', 1))
-        displayLen = int(request.GET.get('iDisplayLength', 10))
+            type = request.POST.get('type', 'banner')
 
-        if displayStart == 1:
-            page = 1
+            if type == 'banner':
+                _add_update_banner_type(request)
+            else:
+                pk = int(request.POST.get('pk', None))
+                factor = int(request.POST.get('factor', 1))
+
+                if pk:
+                    try:
+                        top = topTypes.objects.get(pk=pk)
+
+                        top.setAttributeValue({'COST': factor}, request.user)
+                    except ObjectDoesNotExist:
+                        pass
+
+            return HttpResponse()
         else:
-            page = int(displayStart / displayLen + 1)
+            displayStart = int(request.GET.get('iDisplayStart', 1))
+            displayLen = int(request.GET.get('iDisplayLength', 10))
 
-        types = AdvBannerType.objects.all()
+            if displayStart == 1:
+                page = 1
+            else:
+                page = int(displayStart / displayLen + 1)
 
-        paginator = Paginator(types, 10)
+            types = AdvBannerType.objects.all()
 
-        try:
-            onPage = paginator.page(page)
-        except Exception:
-            onPage = paginator.page(1)
+            paginator = Paginator(types, 10)
 
-        country_ids = [itm.id for itm in onPage.object_list]
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
 
-        ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'COST', 'WIDTH', 'HEIGHT'), country_ids)
+            country_ids = [itm.id for itm in onPage.object_list]
 
-        resultData = []
+            ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'COST', 'WIDTH', 'HEIGHT'), country_ids)
 
-        for type in onPage.object_list:
+            resultData = []
 
-            if type.pk not in ItemsWithValues:
-                ItemsWithValues[type.pk] = {}
-            elif not isinstance(ItemsWithValues[type.pk], dict):
-                ItemsWithValues[type.pk] = {}
+            for type in onPage.object_list:
 
-            attrs = ItemsWithValues[type.pk]
+                if type.pk not in ItemsWithValues:
+                    ItemsWithValues[type.pk] = {}
+                elif not isinstance(ItemsWithValues[type.pk], dict):
+                    ItemsWithValues[type.pk] = {}
 
-            #Full name
-            name = attrs.get('NAME', [""])[0]
-            factor = float(attrs.get('COST', [0.0])[0])
-            width = attrs.get('WIDTH', [0])[0]
-            height = attrs.get('HEIGHT', [0])[0]
+                attrs = ItemsWithValues[type.pk]
 
-            branch = 1 if type.enableBranch else 0
-            country = 1 if type.enableCountry else 0
-            tpp = 1 if type.enableTpp else 0
-            site = type.sites.all()[0].name
+                #Full name
+                name = attrs.get('NAME', [""])[0]
+                factor = float(attrs.get('COST', [0.0])[0])
+                width = attrs.get('WIDTH', [0])[0]
+                height = attrs.get('HEIGHT', [0])[0]
 
-            #Creating list of result data
-            resultNode = [name, site, factor, branch, country, tpp, width, height, type.title, type.pk]
+                branch = 1 if type.enableBranch else 0
+                country = 1 if type.enableCountry else 0
+                tpp = 1 if type.enableTpp else 0
+                site = type.sites.all()[0].name
 
-            resultData.append(resultNode)
+                #Creating list of result data
+                resultNode = [name, site, factor, branch, country, tpp, width, height, type.title, type.pk]
+
+                resultData.append(resultNode)
 
 
-        return HttpResponse(json.dumps({
-            "sEcho": int(request.GET.get('sEcho', 1)),
-            "iTotalRecords": paginator.count,
-            "iTotalDisplayRecords": paginator.count,
-            "aaData" : resultData
-        }))
+            return HttpResponse(json.dumps({
+                "sEcho": int(request.GET.get('sEcho', 1)),
+                "iTotalRecords": paginator.count,
+                "iTotalDisplayRecords": paginator.count,
+                "aaData" : resultData
+            }))
     else:
+
+        result = False
+
+        if request.POST:
+            result = _add_update_banner_type(request)
 
         sites = {}
 
         for site in Site.objects.all():
             sites.update({site.pk: site.name})
 
-        templateParams = {'sites': sites}
+        tops = [top.pk for top in topTypes.objects.all()]
+
+        topAttr = Item.getItemsAttributesValues(('COST', 'NAME'), tops)
+
+        templateParams = {'sites': sites, 'result': None, 'tops': topAttr}
+
+        if not isinstance(result, bool):
+            templateParams['result'] = result
 
         return render_to_response("AdminTpp/adv_sett.html", templateParams, context_instance=RequestContext(request))
 
 
-@login_required(login_url="/login/")
-def adv_add_banner_type(request):
-
-    if not request.user.is_commando and not request.user.is_superuser:
-        return HttpResponseBadRequest()
+def _add_update_banner_type(request):
 
     form = None
 
-    if request.post:
+    if request.POST:
 
         user = request.user
 
+        pk = request.POST.get('pk', None)
+
+        if pk:
+
+            try:
+                type = AdvBannerType.objects.get(pk=pk)
+            except ObjectDoesNotExist:
+                return form
+
         values = {
             'NAME': request.POST.get('name', ""),
-            'WIDTH': request.POST.get('width', 0),
-            'HEIGHT': request.POST.get('height', 0)
+            'WIDTH': int(request.POST.get('width', 0)),
+            'HEIGHT': int(request.POST.get('height', 0))
         }
 
         code = request.POST.get('code', "")
         site = request.POST.get('site', 0)
-        tpp = request.POST.get('tpp', None)
-        country = request.POST.get('country', None)
-        branch = request.POST.get('branch', None)
+        tpp = True if request.POST.get('tpp', False) else False
+        country = True if request.POST.get('country', False) else False
+        branch = True if request.POST.get('branch', False) else False
 
         form = ItemForm('AdvBannerType', values=values)
         form.clean()
 
         if form.is_valid():
 
-            if not Site.objects.filter(pk=site).exists():
+            if pk:
+                if not AdvBannerType.objects.filter(title=code, pk=pk).exists() and AdvBannerType.objects.filter(title=code).exists():
+                    form.errors.update({"CODE": _("Banner type already exists")})
+            elif AdvBannerType.objects.filter(title=code).exists():
+                form.errors.update({"CODE": _("Banner type already exists")})
+
+            if not pk and not Site.objects.filter(pk=site).exists():
                 form.errors.update({"SITE": _("Invalid site")})
 
             if values['HEIGHT'] <= 0:
@@ -515,7 +559,186 @@ def adv_add_banner_type(request):
                 form.errors.update({"CODE": _("Invalid code")})
 
             if form.is_valid():
-                pass
+                if not pk:
+                    type = form.save(user, site, disableNotify=True)
+                else:
+                    type.setAttributeValue(values, user)
+
+                type.title = code
+                type.enableCountry = country
+                type.enableTpp = tpp
+                type.enableBranch = branch
+                type.save()
+
+                return True
+
+
+
+        return form
+
+    return False
+
+@login_required(login_url="/login/")
+def adv_remove_banner_type(request, typeID):
+
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+
+    ad = get_object_or_404(AdvBannerType, pk=typeID)
+    ad.delete()
+
+
+    return HttpResponseRedirect(reverse("AdminTpp:adv_sett"))
+
+@login_required(login_url="/login/")
+def pages_delete(request, pk):
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+    obj = get_object_or_404(staticPages, pk=pk)
+
+    obj.delete()
+
+    return HttpResponseRedirect(reverse("AdminTpp:pages"))
+
+@login_required(login_url="/login/")
+def pages(request, editPage=None):
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+    PAGE_TYPES = dict(staticPages.PAGE_TYPES)
+
+    if editPage:
+        obj = get_object_or_404(staticPages, pk=editPage)
+
+
+    if request.is_ajax():
+
+        if request.POST:
+            name = request.POST.get('NAME', "")
+            onTop = True if request.POST.get('onTop', False) else False
+
+            if len(name) > 0:
+                obj.onTop = onTop
+                obj.save()
+                obj.setAttributeValue({'NAME': name}, request.user)
+
+            return HttpResponse()
+        else:
+
+            displayStart = int(request.GET.get('iDisplayStart', 1))
+            displayLen = int(request.GET.get('iDisplayLength', 10))
+
+            if displayStart == 1:
+                page = 1
+            else:
+                page = int(displayStart / displayLen + 1)
+
+            pages = staticPages.objects.all()
+
+            paginator = Paginator(pages, 10)
+
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
+
+            pages_ids = [itm.id for itm in onPage.object_list]
+
+            ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'DESCRIPTION'), pages_ids)
+
+            resultData = []
+
+            for page in onPage.object_list:
+
+                if page.pk not in ItemsWithValues:
+                    ItemsWithValues[page.pk] = {}
+                elif not isinstance(ItemsWithValues[page.pk], dict):
+                    ItemsWithValues[page.pk] = {}
+
+                attrs = ItemsWithValues[page.pk]
+
+                #Full name
+                name = attrs.get('NAME', [""])[0]
+
+                #Creating list of result data
+                resultNode = [name, int(page.onTop), PAGE_TYPES[page.pageType], page.pk]
+
+                resultData.append(resultNode)
+
+
+            return HttpResponse(json.dumps({
+                    "sEcho": int(request.GET.get('sEcho', 1)),
+                    "iTotalRecords": paginator.count,
+                    "iTotalDisplayRecords": paginator.count,
+                    "aaData" : resultData
+            }))
+    else:
+
+        form = None
+
+        user = request.user
+        type = ''
+
+        if request.POST:
+
+            values = {
+                'NAME': request.POST.get('NAME', ""),
+                'DETAIL_TEXT':  request.POST.get('DETAIL_TEXT', "")
+            }
+
+            form = ItemForm('staticPages', values=values)
+            form.clean()
+
+            onTop = request.POST.get('onTop', None)
+
+            if onTop is not None:
+                onTop = True if onTop else False
+
+            type = request.POST.get('type', None)
+
+            if form.is_valid():
+
+                if not type or type not in PAGE_TYPES:
+                    form.errors.update({'TYPE': _('Invalid type')})
+
+
+                if form.is_valid():
+                    if editPage:
+                        page = obj
+                        page.setAttributeValue(values, user)
+                    else:
+                        page = form.save(user, settings.SITE_ID, disableNotify=True)
+
+                    if onTop is not None:
+                        page.onTop = onTop
+
+                    page.pageType = type
+                    page.save()
+
+                    return HttpResponseRedirect(reverse("AdminTpp:pages"))
+
+        elif editPage:
+
+            type = obj.pageType
+            attr = obj.getAttributeValues('NAME', 'DETAIL_TEXT')
+
+            values = {
+                'NAME': attr.get('NAME', [""])[0],
+                'DETAIL_TEXT':  attr.get('DETAIL_TEXT', [""])[0]
+            }
+
+            form = ItemForm('staticPages', values=values)
+
+
+        templateParams = {'types': staticPages.PAGE_TYPES, 'form': form, 'selectedType': type}
+
+        return render_to_response("AdminTpp/pages.html", templateParams, context_instance=RequestContext(request))
+
 
 
 

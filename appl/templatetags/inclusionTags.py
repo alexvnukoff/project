@@ -1,7 +1,7 @@
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -26,8 +26,8 @@ def getTopOnPage(context, item_id=None):
     cached = False
     cache_name = "adv_top_cache"
 
-    if filterAdv is None:
-        cached = cache.get(cache_name)
+    #if filterAdv is None:
+    #    cached = cache.get(cache_name)
 
     if not cached:
         tops = func.getTops(request, filterAdv)
@@ -53,8 +53,8 @@ def getBanners(context, item_id=None, *places):
     cached = False
     cache_name = "adv_banner_cache"
 
-    if filterAdv is None:
-        cached = cache.get(cache_name)
+    #if filterAdv is None:
+    #    cached = cache.get(cache_name)
 
     if not cached:
         banners = func.getBanners(places, settings.SITE_ID, filterAdv)
@@ -170,11 +170,7 @@ def getUserSiteSlider(context):
 @register.inclusion_tag('site_sidebar.html', takes_context=True)
 def getUserSiteMenu(context):
 
-
     midea_url = settings.MEDIA_URL
-
-
-
 
     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
     organization = user_site.organization.pk
@@ -182,10 +178,37 @@ def getUserSiteMenu(context):
     additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
     addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
 
-
-
-
-
-
     return {'addPagesValues': addPagesValues, 'midea_url': midea_url }
+
+@register.inclusion_tag('main/staticPages.html')
+def showStaticPages():
+
+    pages = [page.pk for page in staticPages.objects.all()]
+
+    pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
+
+    pages = {}
+
+    for page in staticPages.objects.all():
+
+        name = pageWithAttr[page.pk].get('NAME', [""])[0]
+        slug = pageWithAttr[page.pk].get('SLUG', [""])[0]
+
+        if page.pageType not in pages:
+            pages[page.pageType] = []
+
+        pages[page.pageType].append((slug, name))
+
+
+    return {'pagesDict': pages}
+
+
+@register.inclusion_tag('main/topStaticPages.html')
+def showTopStaticPages():
+
+    pages = [page.pk for page in staticPages.objects.filter(onTop=True)]
+
+    pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
+
+    return {'pagesDict': pageWithAttr}
 

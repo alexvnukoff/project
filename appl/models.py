@@ -537,6 +537,9 @@ class Order(Item):
     active = ItemManager()
     objects = models.Manager()
 
+    payed = models.BooleanField(default=False)
+    payDate = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return ''
 
@@ -656,7 +659,7 @@ class staticPages(Item):
         return self.getName()
 
 class topTypes(Item):
-    modelType = models.ForeignKey(ContentType, related_name="top")
+    modelType = models.OneToOneField(ContentType, related_name="top")
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers

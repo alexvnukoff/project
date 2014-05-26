@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -111,28 +112,7 @@
 {% block footer %}
     <div class="wrapper">
         <div class="linkbottom">
-            <ul class="clumn">
-                <li>{% trans 'About' %}</li>
-                <li><a href="{% url "project:about" %}">{% trans 'About' %}</a></li>
-                <li><a href="{% url "project:adv" %}">{% trans 'Advertise with us' %}</a></li>
-                <li><a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a></li>
-                <li><a href="{% url "project:offer" %}">{% trans 'Public offer' %}</a></li>
-                <li><a href="{% url "greetings:main" %}">{% trans 'Greetings' %}</a></li>
-                <li><a href="{% url "project:pay" %}">{% trans 'Payment System' %}</a></li>
-            </ul>
-            <ul class="clumn">
-                <li>{% trans 'Advices' %}</li>
-                <li><a href="{% url "project:shop" %}">{% trans 'Create online shop' %}</a></li>
-                <li><a href="{% url "project:event" %}">{% trans 'Post announcement event' %}</a></li>
-                <li><a href="{% url "project:proposal" %}">{% trans 'Add a business proposal' %}</a></li>
-                <li><a href="{% url "project:partner" %}">{% trans 'Find a Business Partner' %}</a></li>
-                <li><a href="{% url "project:site" %}">{% trans 'Your own site' %}</a></li>
-            </ul>
-            <ul class="clumn">
-                <li>{% trans 'Contacts' %}</li>
-                <li><a href="{% url "project:contact" %}">{% trans 'Contact' %}</a></li>
-                <li><a href="{% url "project:faq" %}">{% trans 'FAQ' %}</a></li>
-            </ul>
+            {% showStaticPages %}
             <ul class="clumn">
                 <li>
                     <a href="https://vk.com/tppcentr"><i class="imgmain iconsocial i-blog"></i></a>

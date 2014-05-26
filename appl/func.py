@@ -914,12 +914,9 @@ def getListAdv(request):
 
         if name != 'tpp': #Add filter items to advertisement filter
             filtersAdv += ids
-        else:
-            sqs = getActiveSQS().models(Tpp)
 
-            if len(ids) > 0:
-                sqs = sqs.filter(id__in=ids)
-
+        elif len(ids) > 0:
+            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
 
             for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
