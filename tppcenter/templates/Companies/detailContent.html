@@ -497,7 +497,7 @@
 </script>
 
 <div class="companies">
-
+            {% with companyValues.ID.0 as id %}
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
             {% with companyValues.IMAGE.0 as image %}
@@ -533,7 +533,20 @@
                     {% if show_button %}
                         <div class="payjoin">
                             <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
-                            <a href="#" class="btnpay">{% trans "Pay membership" %}</a>
+
+                            <!-- Script for PayPal payment button -->
+                            {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
+                            <div>
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend69@gmail.com"
+                                    data-name="1-year www.b24online.com membership"
+                                    data-number="ID:{{ id }} [{{ name }}]" {% comment %} Company's database ID and name {% endcomment %}
+                                    data-quantity="1"
+                                    data-button="paynow"
+                                    data-amount="9"
+                                    data-callback="www.tppcenter.com/paypal/membership"
+                                    data-env="sandbox"
+                                ></script>
+                            </div>
                         </div>
                     {% endif %}
                     {% comment %} Pay membership button {% endcomment %}
@@ -702,6 +715,7 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

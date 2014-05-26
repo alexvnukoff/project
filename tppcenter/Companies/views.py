@@ -234,6 +234,7 @@ def _companiesDetailContent(request, item_id):
         else:
             companyValues['SHOW_PAYMENT_BUTTON'] = [False]
         #/check free membership period
+        companyValues['ID'] = [item_id]
 
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
