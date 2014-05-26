@@ -294,7 +294,7 @@ def advTargets(request, advID):
         'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
     }
 
-    return render_to_response('adminTpp/targetsList.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('AdminTpp/targetsList.html', templateParams, context_instance=RequestContext(request))
 
 
 @login_required(login_url="/login/")
