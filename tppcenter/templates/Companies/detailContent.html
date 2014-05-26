@@ -507,6 +507,8 @@
             {% with companyValues.FAX.0 as fax %}
             {% with companyValues.ANONS.0 as anons %}
             {% with companyValues.SITE_NAME.0 as site_name %}
+            {% with companyValues.SHOW_PAYMENT_BUTTON.0 as show_button %}
+            {% with companyValues.DAYS_BEFORE_END.0 as days_till_end %}
 
             {% with country.FLAG.0 as country_flag %}
             {% with country.COUNTRY_FLAG.0 as flag_class %}
@@ -523,14 +525,21 @@
                      {{ name }}
                     </h3>
                     {% if image %}
-                    <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}" />
+                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}" />
                     {% else %}
-                    <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
+                        <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
+                    {% if show_button %}
+                        <div class="payjoin">
+                            <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
+                            <a href="#" class="btnpay">{% trans "Pay membership" %}</a>
+                        </div>
+                    {% endif %}
+
                     {% if anons %}
-                      <p>{{ anons|cleanHtml|safe }}</p>
+                        <p>{{ anons|cleanHtml|safe }}</p>
                     {% else %}
-                      <p>{{ content|cleanHtml|safe }}</p>
+                        <p>{{ content|cleanHtml|safe }}</p>
                     {% endif %}
                 </div>
                 <div class="social">
@@ -692,6 +701,8 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

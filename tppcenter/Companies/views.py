@@ -1,3 +1,4 @@
+import datetime
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.forms.models import modelformset_factory
@@ -225,6 +226,14 @@ def _companiesDetailContent(request, item_id):
 
         companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
+        #check free membership period
+        if company.paid_till_date != None:
+            if (company.paid_till_date - datetime.datetime.now().date()).days <= settings.NOTIFICATION_BEFORE_END_DATE:
+                companyValues['SHOW_PAYMENT_BUTTON'] = [True]
+                companyValues['DAYS_BEFORE_END'] = [settings.NOTIFICATION_BEFORE_END_DATE]
+        else:
+            companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+        #/check free membership period
 
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
