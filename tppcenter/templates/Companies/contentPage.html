@@ -65,9 +65,9 @@
                                 {% endif %}
                                 <div class="desc">
                                     {% if anons %}
-                                         {{ anons|cleanHtml|safe }}
+                                         {{ anons|cleanHtml|safe|truncatechars:200 }}
                                     {% else %}
-                                         {{ about_company|cleanHtml|safe|truncatewords_html:30 }}
+                                         {{ about_company|cleanHtml|safe|truncatewords_html:200 }}
                                     {% endif %}
 
 
