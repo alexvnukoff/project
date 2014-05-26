@@ -1,0 +1,189 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<link type="text/css" href="{% static 'tppcenter/css/company.css' %}" rel="stylesheet" />
+ <link type="text/css" href="{% static 'tppcenter/css/news.css' %}" rel="stylesheet" />
+ <link type="text/css" href="{% static 'tppcenter/css/flags.css' %}" rel="stylesheet" />
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'product');
+</script>
+  <div class="goods-details">
+            {% with productValues.NAME.0 as name %}
+            {% with productValues.SKU.0 as sku %}
+            {% with productValues.COST.0 as cost %}
+            {% with productValues.CURRENCY.0 as currency %}
+            {% with productValues.IMAGE.0 as image %}
+            {% with productValues.DETAIL_TEXT.0 as content %}
+            {% with productValues.MEASUREMENT_UNIT.0 as meas_unit %}
+            {% with productValues.DOCUMENT_1.0 as doc_1 %}
+            {% with productValues.DOCUMENT_2.0 as doc_2 %}
+            {% with productValues.DOCUMENT_3.0 as doc_3 %}
+            {% with companyValues.NAME.0 as company_name %}
+            {% with companyValues.ADDRESS.0 as company_address %}
+            {% with companyValues.FAX.0 as company_fax %}
+            {% with companyValues.TELEPHONE_NUMBER.0 as company_telephone %}
+            {% with companyValues.SITE_NAME.0 as site_name %}
+            {% with companyValues.COMPANY_ID as company_id %}
+            {% with companyValues.COUNTRY_NAME.0 as country_name %}
+            {% with companyValues.FLAG_CLASS.0 as country_flag %}
+            {% with companyValues.COUNTRY_ID as country_id %}
+            {% with companyValues.SLUG|first as country_slug %}
+
+            	<h1>{{ name }}  {{ sku }}</h1>
+                <div class="goods-details-left">
+                	<div class="gallery">
+                        <div id="panel">
+                            {% if image %}
+                              <img id="largeImage" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                            {% else %}
+                              <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </div>
+                        <div id="thumbs">
+                            {% for photo in photos %}
+                               <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="social">
+                        <!-- Share for social networks -->
+                        <a href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-1"></i></a>
+                        <a href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-2"></i></a>
+                        <!--<a href="http://connect.mail.ru/share?url=URL&title=TITLE&description=DESC&imageurl=IMG_PATH" target="_blank" onclick="return Share.me(this);">{шарь меня правильно}</a>-->
+                        <a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-3"></i></a>
+                        <a href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)"><i class="imgnews share-4"></i></a>
+                        <!-- /Share for social networks -->
+                    </div>
+                </div>
+                <div class="goods-details-center">
+                	<ul>
+                    	<li>
+                        	<label>{% trans "Price" %}:</label>
+                            <p>
+                                {% if price %}
+                                     {{ currency|getSymbol }} {{ cost }}
+                                {% else %}
+                                     {% trans 'Contact to price' %}
+                                {% endif %}
+                            </p>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Unit' %}:</label>
+                            <p>{{ meas_unit }}</p>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Amount' %}:</label>
+                            <input type="text" name="" value="" class="text" style="width:60%;" />
+                        </li>
+                        <li>
+                        	<label>{% trans 'Deleviry method' %}:</label>
+                            <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
+                            <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
+                            <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
+                       </li>
+                       <li><a class="bigbuy contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="{% url 'contact:main' %}" >{% trans 'Countact us' %}</a></li>
+                    </ul>
+                </div>
+                <ul class="goods-info">
+                   <li class="top">
+                        <div class="iconinfo"><i class="sprite {{ country_flag }}" title="{{ country_name }}"></i> </div>
+                        <div class="nameinfo"><b><a href="#">{{ company_name }}</a></b></div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                        <div class="nameinfo">{{ company_address }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                        <div class="nameinfo">{{ company_telephone }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                        <div class="nameinfo">{{ company_fax }}</div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                        <div class="nameinfo"><a href="#">{{ site_name }}</a></div>
+                   </li>
+                   <li>
+                        <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+                        <div class="nameinfo"> <a class="contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="{% url "contact:main" %}" >{% trans 'Contact us' %}</a></div>
+                   </li>
+                </ul>
+                <div class="goods-details-tab">
+                    <div class="tab-cate">
+                        <ul>
+                            <li><a href="#goods-tabs-1">{% trans 'About company' %}</a></li>
+                            <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                            <li><a href="#goods-tabs-3">Отзывы</a></li>
+                            {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="goods-tabs-1">
+                        <div class="content-goods-tab">{{ content|cleanHtml|safe }}</div>
+                    </div>
+                    <div id="goods-tabs-2">
+                        <div class="content-goods-tab">
+                            {% if doc_1 %}
+                                <a href="{{ MEDIA_URL}}document/{{ doc_1 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                            {% if doc_2 %}
+                                  <a href="{{ MEDIA_URL}}document/{{ doc_2 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                           {% if doc_3 %}
+                                 <a href="{{ MEDIA_URL}}document/{{ doc_3 }}">{% trans 'Link to the document' %}</a><br>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div id="goods-tabs-3">
+                        <div class="content-goods-tab">
+
+                        </div>
+                    </div>
+                    {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                                 <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                         </div>
+                     {% endfor %}
+                   </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+     </div>
+

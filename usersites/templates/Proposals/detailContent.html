@@ -1,0 +1,185 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+    <link type="text/css" href="{% static 'tppcenter/css/company.css' %}" rel="stylesheet" />
+ <link type="text/css" href="{% static 'tppcenter/css/news.css' %}" rel="stylesheet" />
+ <link type="text/css" href="{% static 'tppcenter/css/flags.css' %}" rel="stylesheet" />
+<script>
+$(function() {
+	$(".prj-details-tab").tabs();});
+</script>
+
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'proposal');
+</script>
+
+  <div class="tender">
+            {% with proposalValues.NAME.0 as name %}
+
+            {% with proposalValues.DETAIL_TEXT.0 as content %}
+            {% with proposalValues.DOCUMENT_1.0 as doc_1 %}
+            {% with proposalValues.DOCUMENT_2.0 as doc_2 %}
+            {% with proposalValues.DOCUMENT_3.0 as doc_3 %}
+            {% with proposalValues.FLAG_CLASS.0 as flag_class %}
+
+            {% with proposalValues.ORGANIZATION_FLAG.0 as org_flag %}
+            {% with proposalValues.ORGANIZATION_NAME.0 as org_name %}
+            {% with proposalValues.ORGANIZATION_SLUG.0 as org_slug %}
+            {% with proposalValues.ORGANIZATION_URL as org_url %}
+            {% with proposalValues.ORGANIZATION_IMAGE.0 as org_image %}
+            {% with proposalValues.ORGANIZATION_ID.0 as org_id %}
+            {% with proposalValues.COUNTRY_NAME|first as country_name %}
+            {% with proposalValues.COUNTRY_FLAG|first as flag %}
+             {% with proposalValues.COUNTRY_ID as country_id %}
+             {% with proposalValues.ORGANIZATION_EMAIL|first as org_email %}
+            {% with proposalValues.ORGANIZATION_SITE_NAME|first as org_site %}
+            {% with proposalValues.ORGANIZATION_ADDRESS|first as org_address %}
+            {% with proposalValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}
+            {% with proposalValues.ORGANIZATION_FAX|first as org_fax %}
+
+
+               <div class="tender-details-title">
+               		{% if flag_class %}
+                         <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
+                            {% elif org_flag %}
+                         <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  title="{{ org_name }}"/>
+                            {% else %}
+                         <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" />
+                            {% endif %}
+                    <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
+               </div>
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="tender-bottom">
+                    	<div class="tender-bottom-left">
+                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                            <a href="#">{{ org_name }}</a>
+                            </div>
+                    </div>
+                    <div class="innov-details">
+                    	<p></p>
+                    </div>
+                    <div class="prj-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                                <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
+                                {% for page in additionalPages %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	{{ content|cleanHtml|safe }}
+                            </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+                                {% if doc_1 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_2 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_2 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+                                {% if doc_3 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_3 }}">{% trans 'Link to the File' %}</a> </p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                <ul class="tpp-gallery">
+                                    {% for photo in photos %}
+                                        <li>
+                                            <div class="b-img">
+                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
+                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
+                                                </a>
+                                                <div class="viewimge">
+                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
+                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="gray-img"></div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-4">
+                            <div class="content-goods-tab">
+                                <ul class="innov-tab-content">
+                                	<li>
+                                    	<span class="left">{% trans 'Address' %}: </span>
+                                        <span class="right">{{ org_address }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Telephone number' %}: </span>
+                                        <span class="right">{{ org_telephone }} </span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Fax' %}: </span>
+                                        <span class="right">{{ org_fax }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ org_email }}</span>
+                                    </li>
+                                    <li>
+                                    	<span class="left">{% trans 'WWW' %}: </span>
+                                        <span class="right">{{ org_site }}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        {% for page in additionalPages %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                         </div>
+                        {% endfor %}
+                    </div>
+               </div>
+
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+     </div>
+
+
