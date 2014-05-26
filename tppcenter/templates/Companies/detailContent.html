@@ -529,13 +529,14 @@
                     {% else %}
                         <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
+                    {% comment %} Pay membership button {% endcomment %}
                     {% if show_button %}
                         <div class="payjoin">
                             <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
                             <a href="#" class="btnpay">{% trans "Pay membership" %}</a>
                         </div>
                     {% endif %}
-
+                    {% comment %} Pay membership button {% endcomment %}
                     {% if anons %}
                         <p>{{ anons|cleanHtml|safe }}</p>
                     {% else %}
