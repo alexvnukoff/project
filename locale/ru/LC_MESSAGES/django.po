@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-25 09:29+0000\n"
-"PO-Revision-Date: 2014-05-25 12:36+0200\n"
+"PO-Revision-Date: 2014-05-27 16:50+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2214,7 +2214,7 @@ msgstr "Инновационные проекты "
 
 #: tppcenter/Messages/views.py:82
 msgid "Private messages"
-msgstr "Отправить личное сообщение"
+msgstr "Отправить сообщение"
 
 #: tppcenter/News/views.py:62 tppcenter/News/views.py:99
 #: tppcenter/templates/index.html:153 tppcenter/templates/main_page.html:116
