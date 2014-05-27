@@ -35,7 +35,16 @@ var ui =
             selector: '#filter-tpp',
             name: 'filter[tpp]'
         },
-
+        company:
+        {
+            selector: '#filter-company',
+            name: 'filter[company]'
+        },
+        bp_category:
+        {
+            selector: '#filter-bp_category',
+            name: 'filter[bp_category]'
+        },
         branch:
         {
             selector: '#filter-branch',

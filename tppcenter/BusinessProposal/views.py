@@ -1,5 +1,5 @@
 from appl import func
-from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch
+from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch, BpCategories
 from core.models import Item
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
@@ -169,6 +169,11 @@ def addBusinessProposal(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+
+    categories = BpCategories.objects.all()
+    categories_id = [categorory.id for categorory in categories]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
     pages = None
     if request.POST:
 
@@ -201,7 +206,7 @@ def addBusinessProposal(request):
 
     template = loader.get_template('BusinessProposal/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages, 'categories': categories})
 
     proposalsPage = template.render(context)
 
@@ -220,10 +225,19 @@ def updateBusinessProposal(request, item_id):
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
+    categories = BpCategories.objects.all()
+    categories_id = [categorory.id for categorory in categories]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
     try:
         currentBranch = Branch.objects.get(p2c__child=item_id)
     except Exception:
         currentBranch = ""
+
+    try:
+        currentCategory = BpCategories.objects.get(p2c__child=item_id)
+    except Exception:
+        currentCategory = ""
 
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -281,7 +295,9 @@ def updateBusinessProposal(request, item_id):
         'form': form,
         'pages': pages,
         'currentBranch': currentBranch,
-        'branches': branches
+        'branches': branches,
+        'currentCategory': currentCategory,
+        'categories': categories,
     }
 
     context = RequestContext(request, templateParams)
