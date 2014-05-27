@@ -537,13 +537,13 @@
 
                             <!-- Script for PayPal payment button -->
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
-                            <div style="padding-left: 30px">
-                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend69@gmail.com"
+                            <div id="paypal-membership" style="padding-left: 30px">
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"
                                     data-name="{% trans '1-year www.b24online.com membership' %}"
                                     data-number="{{ name }} [ID:{{ id }}]" {% comment %} Company's database ID and name {% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
-                                    data-amount="9"
+                                    data-amount="1"
                                     data-callback="www.tppcenter.com/companies/detail/{{ slug }}"
                                     data-env="sandbox"
                                 ></script>
