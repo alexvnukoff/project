@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-25 09:29+0000\n"
-"PO-Revision-Date: 2014-05-27 16:50+0200\n"
+"PO-Revision-Date: 2014-05-27 16:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -3827,7 +3827,7 @@ msgstr "Сайт"
 
 #: tppcenter/templates/Users/contentPage.html:46
 msgid "Send the message"
-msgstr "Отправить личное сообщение"
+msgstr "Отправить сообщение"
 
 #: tppcenter/templates/Vacancy/addForm.html:169
 msgid "Departament"
