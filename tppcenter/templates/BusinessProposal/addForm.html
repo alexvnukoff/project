@@ -123,6 +123,17 @@ $(function() {
                     {% endfor %}
                 </select>
             </li>
+            <li>
+                <label>{% trans 'Category' %} <font color="#FF0000">*</font></label>
+
+                <select id="id_CATEGORY" name="CATEGORY">
+                    {% for id, category in categories.items %}
+                        <option value="{{ id }}" {% if currentCategory.id == id %}selected="selected"{% endif %} >
+                            {{ category.NAME|first }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </li>
         </ul>
         <div class="append-formin">
             <div class="addpage-title">{% trans 'Additional pages' %}</div>

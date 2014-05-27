@@ -217,6 +217,13 @@ class AdvBanner(AdvertisementItem):
     def __str__(self):
         return self.getName()
 
+class BpCategories(Item):
+
+
+    def __str__(self):
+        return self.getName()
+
+
 
 class NewsCategories(Item):
 

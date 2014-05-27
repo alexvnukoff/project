@@ -672,7 +672,7 @@ def filterLive(request):
     ids = []
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'branch']
+    filterList = ['tpp', 'country', 'company', 'branch', 'bp_category']
 
     #get all filter parameters from request GET
     for name in filterList:

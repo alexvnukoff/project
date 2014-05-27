@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 from appl.models import Country, Organization, Branch, Category, Company, Tpp, Gallery, Cabinet, Notification, \
-    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate
+    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate, BpCategories
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from core.models import Item, User
@@ -385,7 +385,7 @@ def jsonFilter(request):
 
         if filter == 'tpp':
             model = Tpp
-        elif filter == "companies":
+        elif filter == "company":
             model = Company
         elif filter == "category":
             model = Category
@@ -393,6 +393,8 @@ def jsonFilter(request):
             model = Branch
         elif filter == 'country':
             model = Country
+        elif filter == 'bp_category':
+            model = BpCategories
 
         if model:
 

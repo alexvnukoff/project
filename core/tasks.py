@@ -159,6 +159,8 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     values.update(post)
     values.update(files)
 
+    category = post.get('CATEGORY', None)
+
 
     form = ItemForm('BusinessProposal', values=values, id=item_id, addAttr=addAttr)
     form.clean()
@@ -173,6 +175,13 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
             rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id)
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
+
+        if category:
+            category = BpCategories.objects.get(pk=category)
+            rel = Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id)
+            Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id).delete()
+            Relationship.setRelRelationship(parent=category, child=proposal, user=user)
+
 
         if current_company:
             Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)

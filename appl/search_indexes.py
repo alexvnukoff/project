@@ -3,7 +3,8 @@ from django.utils.timezone import now
 __author__ = 'Art'
 from haystack import indexes
 from appl.models import Company, Country, Tpp, News, Product, Category, Branch, NewsCategories, \
-    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV, Department, Vacancy, Resume, Requirement, Organization
+    BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV, Department, Vacancy, Resume, Requirement, Organization, \
+    BpCategories
 from core.models import Relationship
 from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -163,6 +164,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
+    bp_category = indexes.IntegerField(null=True)
     id = indexes.IntegerField()
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
@@ -249,6 +251,18 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
         #company , tpp
         companyIndex = self.fields['company'].index_fieldname
         tppIndexfield = self.fields['tpp'].index_fieldname
+
+        bp_categoryIndex = self.fields['bp_category'].index_fieldname
+        cat = BpCategories.objects.filter(p2c__child=obj.pk)
+
+        if cat.exists():
+
+            cat = cat[0]
+            self.prepared_data[bp_categoryIndex] = cat.pk
+        else:
+            self.prepared_data[bp_categoryIndex] = 0
+
+
 
         comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
@@ -371,6 +385,38 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare(self, obj):
         self.prepared_data = super(BranchIndex, self).prepare(obj)
+
+        attr = obj.getAttributeValues('NAME')
+
+        if len(attr) == 0 or attr[0].strip() == '':
+            return self.prepared_data
+
+        sortIndex = self.fields['title_sort'].index_fieldname
+        textIndex = self.fields['text'].index_fieldname
+        titleAutoIndex = self.fields['title_auto'].index_fieldname
+
+        self.prepared_data[sortIndex] = attr[0].lower().strip()
+        self.prepared_data[textIndex] = attr[0].strip()
+        self.prepared_data[titleAutoIndex] = attr[0].strip()
+
+        return self.prepared_data
+
+########################## BpCategories Index #############################
+
+class BpCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, null=True)
+    title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
+    id = indexes.IntegerField()
+    title_auto = indexes.NgramField(null=True)
+
+    def get_model(self):
+        return BpCategories
+
+    def prepare_id(self, obj):
+        return obj.pk
+
+    def prepare(self, obj):
+        self.prepared_data = super(BpCategoriesIndex, self).prepare(obj)
 
         attr = obj.getAttributeValues('NAME')
 
