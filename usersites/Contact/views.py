@@ -21,7 +21,7 @@ def get_news_list(request):
        name = request.POST.get('NAME', False)
        from_email = request.POST.get('EMAIL', False)
        message = request.POST.get('MESSAGE', False)
-       if name and message and from_email:
+       if name and message and from_email and request.POST.get('recaptcha_response_field'):
 
             response = captcha.submit(
                 request.POST.get('recaptcha_challenge_field'),
@@ -30,7 +30,7 @@ def get_news_list(request):
                 request.META['REMOTE_ADDR'],)
 
 
-            if response.is_valid:
+            if response.error_code.decode("utf-8") == 'success':
 
                  if email is None:
 
@@ -39,7 +39,7 @@ def get_news_list(request):
                  else:
                         email = email[0]
                         subject = _('New message from ') + name
-                 mail = EmailMessage(subject, message, from_email, from_email)
+                 mail = EmailMessage(subject, message, from_email, [email])
                  mail.send()
 
 
