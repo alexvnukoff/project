@@ -78,7 +78,7 @@
                 <select name="COUNTRY">
                     {% for id , atrr in countries.items %}
                         {% with atrr.NAME|first as country  %}
-                        <option value="{{ id }}"{% if choosen_country.id == id %} selected="selected" {% endif %}>
+                        <option value="{{ id }}"{% if choosen_country == id %} selected="selected" {% endif %}>
                             {{ country }}
                         </option>
                         {% endwith %}
@@ -184,7 +184,7 @@
                                 <label>{% trans 'Industry' %}<font color="#FF0000">*</font></label>
                                 <select id="id_BRANCH" name="BRANCH">
                                      {% for id, branch in branches.items %}
-                                       <option value="{{ id }}" {% if currentBranch.id == id %}selected="selected"{% endif %} >
+                                       <option value="{{ id }}" {% if currentBranch == id %}selected="selected"{% endif %} >
                                            {{ branch.NAME|first }}
                                        </option>
                                      {% endfor %}
@@ -196,7 +196,7 @@
                                 <option value="">{% trans "Choose CCI" %}</option>
                                 {% for id , atrr in tpp.items %}
                                     {% with atrr.NAME|first as tpp  %}
-                                        <option value="{{ id }}"{% if choosen_tpp.id == id %} selected="selected" {% endif %}>
+                                        <option value="{{ id }}"{% if choosen_tpp == id %} selected="selected" {% endif %}>
                                             {{ tpp }}
                                         </option>
                                     {% endwith %}
