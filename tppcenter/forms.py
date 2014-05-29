@@ -489,6 +489,7 @@ class BasePages(BaseModelFormSet):
         self.toDelete = []
         self.files_to_delete = []
         super(BasePages, self).__init__(*args, **kwargs)
+
         post = args[0] if args else False
         files = args[1] if args and len(args) > 0 else False
 
@@ -503,6 +504,7 @@ class BasePages(BaseModelFormSet):
             super(BasePages, self).save(False)
         else:
             self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
+
 
 
     @transaction.atomic
@@ -549,6 +551,11 @@ class BasePages(BaseModelFormSet):
 
 
 
+def custom_field_callback(field):
+        if field.name == 'content':
+            return field.formfield(required=False)
+        elif field.name == 'title':
+            return field.formfield(required=True)
 
 
 

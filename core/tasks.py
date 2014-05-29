@@ -3,7 +3,7 @@ from appl.models import *
 from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
 from django.contrib.sites.models import Site
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages, custom_field_callback
 from django.contrib.sites.models import Site
 from celery import shared_task, task
 import json
@@ -73,7 +73,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -152,13 +152,15 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
     values = {}
     values.update(post)
     values.update(files)
+
+    category = post.get('CATEGORY', None)
 
 
     form = ItemForm('BusinessProposal', values=values, id=item_id, addAttr=addAttr)
@@ -174,6 +176,13 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
             rel = Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id)
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
+
+        if category:
+            category = BpCategories.objects.get(pk=category)
+            rel = Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id)
+            Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id).delete()
+            Relationship.setRelRelationship(parent=category, child=proposal, user=user)
+
 
         if current_company:
             Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
@@ -369,7 +378,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -434,7 +443,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -533,7 +542,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 

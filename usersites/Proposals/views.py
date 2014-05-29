@@ -1,12 +1,12 @@
 from haystack.backends import SQ
 from appl import func
 from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginatorRange
-from appl.models import BusinessProposal,  UserSites
+from appl.models import BusinessProposal,  UserSites, Gallery, AdditionalPages
 from core.models import Item
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import  HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
@@ -103,10 +103,32 @@ def _get_content(request, page):
 
 
 def _getdetailcontent(request, item_id, slug):
-    pass
+     proposal = get_object_or_404(BusinessProposal, pk=item_id)
+     proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+     description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
+     description = func.cleanFromHtml(description)
+     title = proposalValues.get('NAME', False)[0] if proposalValues.get('NAME', False) else ""
+
+     photos = Gallery.objects.filter(c2p__parent=item_id)
+
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+     func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues, withContacts=True)
+
+     template = loader.get_template('Proposals/detailContent.html')
+
+     templateParams = {
+        'proposalValues': proposalValues,
+        'photos': photos,
+        'additionalPages': additionalPages,
+        'item_id': item_id
+     }
+
+     context = RequestContext(request, templateParams)
+     rendered = template.render(context)
 
 
-    return HttpResponse("")
+     return rendered
 
 
 

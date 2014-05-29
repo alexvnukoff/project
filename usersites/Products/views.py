@@ -1,12 +1,12 @@
 from haystack.backends import SQ
 from appl import func
 from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginatorRange
-from appl.models import Product, UserSites
+from appl.models import Product, UserSites, AdditionalPages, Company, Country, Gallery
 from core.models import Item
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import  HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
@@ -103,10 +103,57 @@ def _get_content(request, page):
 
 
 def _getdetailcontent(request, item_id, slug):
-    pass
+     product = get_object_or_404(Product, pk=item_id)
+
+     attr = (
+        'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
+        'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
+        'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
+     )
+
+     productValues = product.getAttributeValues(*attr)
 
 
-    return HttpResponse("")
+
+     photos = Gallery.objects.filter(c2p__parent=item_id)
+
+     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+
+     country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
+
+     company = Company.objects.get(p2c__child=item_id)
+     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
+     companyValues.update({'COMPANY_ID': company.id})
+
+
+     countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
+
+     toUpdate = {
+        'COUNTRY_NAME': countriesList.get('NAME', 0),
+        'COUNTRY_FLAG': countriesList.get('FLAG', 0),
+        'FLAG_CLASS': countriesList.get('COUNTRY_FLAG', 0),
+        'COUNTRY_ID':  country.id
+     }
+
+     companyValues.update(toUpdate)
+
+     template = loader.get_template('Products/detailContent.html')
+
+     templateParams = {
+        'productValues': productValues,
+        'photos': photos,
+        'additionalPages': additionalPages,
+        'companyValues': companyValues,
+        'item_id': item_id
+     }
+
+     context = RequestContext(request, templateParams)
+     rendered = template.render(context)
+
+
+
+
+     return rendered
 
 
 
