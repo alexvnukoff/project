@@ -744,7 +744,7 @@ def _tabsStaff(request, tpp, page=1):
         isAdmin = int(request.POST.get('isAdmin', 0))
         if len(departmentName):
             try:
-                dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title='NAME',
+                dep = Department.objects.get(c2p__parent__organization=tpp, item2value__attr__title='NAME',
                                              item2value__title=departmentName)
                 try:
                     vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME',
