@@ -813,7 +813,10 @@ def addCompany(request):
 
     currentBranch = int(request.POST.get('BRANCH', 0))
     choosen_country = int(request.POST.get('COUNTRY', 0))
-    choosen_tpp = int(request.POST.get('TPP', 0)) if isinstance(request.POST.get('TPP', 0), int) else 0
+    try:
+        choosen_tpp = int(request.POST.get('TPP', 0))
+    except:
+        choosen_tpp = 0
 
 
 
