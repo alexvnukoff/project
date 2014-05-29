@@ -12,7 +12,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', tppcenter.AdminTpp.views.dashboard, name='main'),
+    url(r'^$', tppcenter.AdminTpp.views.users, name='main'),
     url(r'^users/$', tppcenter.AdminTpp.views.users, name='users'),
     url(r'^adv/$', tppcenter.AdminTpp.views.adv, name='adv'),
     url(r'^adv/activate/([0-9]+)/$', tppcenter.AdminTpp.views.advActivate),
@@ -28,5 +28,8 @@ urlpatterns = patterns('',
     url(r'^pages/$', tppcenter.AdminTpp.views.pages, name="pages"),
     url(r'^pages/edit/([0-9]+)/$', tppcenter.AdminTpp.views.pages, name="pages_edit"),
     url(r'^pages/delete/([0-9]+)/$', tppcenter.AdminTpp.views.pages_delete, name="pages_delete"),
+    url(r'^greetings/$', tppcenter.AdminTpp.views.greetings, name="greetings"),
+    url(r'^greetings/edit/([0-9]+)/$', tppcenter.AdminTpp.views.greetings, name="greetings_edit"),
+    url(r'^greetings/delete/([0-9]+)/$', tppcenter.AdminTpp.views.greetings_delete, name="greetings_delete"),
 
 )
