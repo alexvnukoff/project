@@ -744,7 +744,7 @@ def _tabsStaff(request, tpp, page=1):
         isAdmin = int(request.POST.get('isAdmin', 0))
         if len(departmentName):
             try:
-                dep = Department.objects.get(c2p__parent=tpp, item2value__attr__title='NAME',
+                dep = Department.objects.get(c2p__parent__organization=tpp, item2value__attr__title='NAME',
                                              item2value__title=departmentName)
                 try:
                     vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME',
@@ -785,7 +785,9 @@ def _tabsStaff(request, tpp, page=1):
                         errorMessage = _('You can not add user at Vacancy which already busy.')
                 else:
                     errorMessage = _('You can not add user [%(user)s] at the company twice.') % {"user": str(usr)}
-            except:
+            except Exception as e:
+                errorMessage = _('Could not add User ID: %(user_id).\
+                                  The reason is: %(reason)s') % {"user_id": userEmail, "reason": str(e)}
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
 
