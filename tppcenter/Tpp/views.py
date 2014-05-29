@@ -96,7 +96,7 @@ def _tppContent(request, page=1, my=None):
     if not cached:
 
         if not my:
-            filters, searchFilter = func.filterLive(request)
+            filters, searchFilter = func.filterLive(request, model_name=Tpp.__name__)
 
             sqs = func.getActiveSQS().models(Tpp)
 
@@ -287,7 +287,7 @@ def addTpp(request):
 
     user_groups = user.groups.values_list('name', flat=True)
 
-    if not user.is_manager or not 'Tpp Creator' in user_groups:
+    if not user.is_manager or not 'TPP Creator' in user_groups:
         return func.permissionDenied()
 
     if request.POST:
