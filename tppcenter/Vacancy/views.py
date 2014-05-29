@@ -113,7 +113,7 @@ def _vacancyContent(request, page=1, my=None):
            url_paginator = "vacancy:paginator"
            params = {}
 
-           filters, searchFilter = func.filterLive(request)
+           filters, searchFilter = func.filterLive(request, model_name=Requirement.__name__)
 
            sqs = func.getActiveSQS().models(Requirement)
 

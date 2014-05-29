@@ -91,7 +91,7 @@ def _innovContent(request, page=1, my=None):
     if not cached:
 
         if not my:
-            filters, searchFilter = func.filterLive(request)
+            filters, searchFilter = func.filterLive(request, InnovationProject.__name__)
 
             sqs = func.getActiveSQS().models(InnovationProject)
 
