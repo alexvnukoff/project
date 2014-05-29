@@ -1,0 +1,250 @@
+{% extends "AdminTpp/baseAdmin.html" %}
+{% load staticfiles %}
+
+{% block title %}Adveretisement settnings{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <!-- DATA TABLES -->
+    <link href="{% static "admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css"
+          xmlns="http://www.w3.org/1999/html"/>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Pges</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                    <table id="pages" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Th</th>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Tpp</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="dataTables_empty">Loading data from server</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Th</th>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Tpp</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div><!-- /.box-body -->
+
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">Add new page</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+
+                                {% if form.errors %}
+                                    {% for type, eror in result.errors.items %}
+                                        <p class="text-red">{{ eror }}</p>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% with form.fields.DETAIL_TEXT.initial as text %}
+                                {% with form.fields.NAME.initial as title %}
+                                {% with form.fields.IMAGE.initial as image %}
+                                {% with form.fields.TPP.initial as tpp %}
+                                {% with form.fields.POSITION.initial as position %}
+                                <form enctype="multipart/form-data" method="POST" action="" xmlns="http://www.w3.org/1999/html">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                         {% if form.errors.IMAGE  %}
+                                            <label class="control-label" for="inputError">
+                                                <i class="fa fa-times-circle-o"></i>
+                                                {{ form.errors.IMAGE }}
+                                            </label>
+                                        {% endif %}
+                                        {% if image %}
+                                            <div><img src="{{ MEDIA_URL }}small/{{ image.name }}"></div>
+                                        {% endif %}
+                                        <input name="IMAGE" type="file" />
+
+                                    </div>
+                                    <div class="form-group">
+                                         {% if form.errors.NAME  %}
+                                            <label class="control-label" for="inputError">
+                                                <i class="fa fa-times-circle-o"></i>
+                                                {{ form.errors.NAME }}
+                                            </label>
+                                        {% endif %}
+                                        <input name="NAME" type="text" class="form-control" value="{{ title }}" placeholder="Title">
+                                    </div>
+                                    <div class="form-group">
+                                         {% if form.errors.POSITION  %}
+                                            <label class="control-label" for="inputError">
+                                                <i class="fa fa-times-circle-o"></i>
+                                                {{ form.errors.POSITION }}
+                                            </label>
+                                        {% endif %}
+                                        <input name="POSITION" type="text" class="form-control" value="{{ position }}" placeholder="Position">
+                                    </div>
+                                    <div class="form-group">
+                                         {% if form.errors.TPP  %}
+                                            <label class="control-label" for="inputError">
+                                                <i class="fa fa-times-circle-o"></i>
+                                                {{ form.errors.TPP }}
+                                            </label>
+                                        {% endif %}
+                                        <input name="TPP" type="text" class="form-control" value="{{ tpp }}" placeholder="TPP">
+                                    </div>
+
+                                    <div class="form-group">
+                                        {% if form.errors.DETAIL_TEXT  %}
+                                            <label class="control-label" for="inputError">
+                                                <i class="fa fa-times-circle-o"></i>
+                                                {{ form.errors.DETAIL_TEXT }}
+                                            </label>
+                                        {% endif %}
+                                        <textarea class="tiny" name="DETAIL_TEXT" >{{ text }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" class="btn btn-success" value="save" />
+                                    </div>
+
+                                </form>
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                                </div><!-- /.box-body -->
+
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+        <!-- Bootstrap -->
+
+        <!-- DATA TABES SCRIPT -->
+
+        <!-- AdminLTE App -->
+
+
+        <!-- page script -->
+
+{% endblock %}
+
+{% block bottomScript %}
+    {{ block.super }}
+    <script src="{% static "admin-tpp/js/bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/plugins/datatables/jquery.dataTables.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/plugins/datatables/dataTables.bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "admin-tpp/js/AdminLTE/app.js" %}" type="text/javascript"></script>
+            <script src="{% static "tppcenter/js/tinymce/tinymce.min.js"%}"></script>
+        <script src="{% static "tppcenter/js/tinymce/jquery.tinymce.min.js"%}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+
+            $('.tiny').tinymce({
+                        mode:"textareas",
+                        selector: '.tiny',
+                        plugins : "image wordcount media textcolor hr autolink link lists print preview",
+                        language : 'ru'
+                    });
+
+            $(document).on('click', '.savePage', function() {
+               var ser = $(this).parents('tr').find('input').serialize();
+
+               var button = $(this);
+               $(this).addClass("disabled");
+
+               $.post("/admin-tpp/greetings/edit/" + $(this).data('pk') + "/", ser, function() {
+                    button.removeClass('disabled');
+               });
+            });
+
+           $('#pages').on( 'draw.dt', function () {
+                    $("input[type='checkbox'], input[type='radio']").iCheck({
+                        checkboxClass: 'icheckbox_minimal',
+                        radioClass: 'iradio_minimal'
+                    });
+            } ).dataTable( {
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": "{% url "AdminTpp:greetings" %}",
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [ 0, 1, 2, 3] },
+                    {
+                        "aTargets": [ 0 ],
+                        "mData": 0,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<img src="' + data + '" />';
+                        }
+                    },
+                    {
+                        "aTargets": [ 1 ],
+                        "mData": 1,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="NAME"/>' +
+                                    '</div>';
+                        }
+                    },
+                                        {
+                        "aTargets": [ 2 ],
+                        "mData": 2,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="POSITION"/>' +
+                                    '</div>';
+                        }
+                    },
+                                        {
+                        "aTargets": [ 3 ],
+                        "mData": 3,
+                        "mRender": function ( data, type, full ) {
+
+                             return '<div class="form-group">' +
+                                        '<input value="' + data + '" type="text" class="form-control" name="TPP"/>' +
+                                    '</div>';
+                        }
+                    },
+                    {
+                        "aTargets": [ 4 ],
+                        "mData": 4,
+                        "mRender": function ( data, type, full ) {
+
+                            return '<button data-pk="' + data + '" class="savePage btn btn-success">Save</button> ' +
+                                    '<a href="/admin-tpp/greetings/edit/' + data + '/">' +
+                                    '<button class="btn btn-info">Edit</button>' +
+                                    '</a> ' +
+                                    '<a href="/admin-tpp/greetings/delete/' + data + '/">' +
+                                    '<button class="btn btn-danger">Remove</button>' +
+                                    '</a>';
+
+                        }
+                    }
+               ]
+            });
+
+
+        });
+    </script>
+{% endblock %}
