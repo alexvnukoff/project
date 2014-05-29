@@ -79,7 +79,7 @@ def _resumeList(request, my=None, page=1):
     q = request.GET.get('q', '')
 
     if not my:
-            filters, searchFilter = filterLive(request)
+            filters, searchFilter = filterLive(request, Resume.__name__)
 
             sqs = getActiveSQS().models(Resume).order_by('-obj_create_date')
 
