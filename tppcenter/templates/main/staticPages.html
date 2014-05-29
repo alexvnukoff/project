@@ -4,6 +4,7 @@
                 {% for slug, name in pagesDict.about %}
                     <li><a href="{% url "project:detail" slug %}">{{ name }}</a></li>
                 {% endfor %}
+                <li><a href="{% url "greetings:main" %}">{% trans 'Greetings' %}</a></li>
             </ul>
 
             <ul class="clumn">
