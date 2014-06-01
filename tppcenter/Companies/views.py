@@ -97,7 +97,7 @@ def _companiesContent(request, page=1, my=None):
 
     if not cached:
 
-        if not my or not request.user:
+        if not my:
             filters, searchFilter = func.filterLive(request, model_name=Company.__name__)
             sqs = func.getActiveSQS().models(Company)
 
@@ -148,7 +148,7 @@ def _companiesContent(request, page=1, my=None):
         else:
             current_organization = request.session.get('current_company', False)
 
-            cab = Cabinet.objects.get(user=request.user)
+            cab = Cabinet.objects.get(user=request.user.pk)
             #read all Organizations which hasn't foreign key from Department and current User is create user or worker
             companies = Company.active.get_active().filter(Q(create_user=request.user) |
                                                     Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
