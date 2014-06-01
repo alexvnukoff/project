@@ -16,6 +16,7 @@ from tppcenter.forms import ItemForm
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.core.cache import cache
 
 
 @login_required(login_url="/login/")
@@ -178,10 +179,13 @@ def adv(request):
             end_event_date = parse(advAttr.get('END_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
             start_event_date = parse(advAttr.get('START_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
 
-            if not end_event_date:
-                active = 0
+            if now() >= advObj.end_date:
+                active = 2
             else:
-                active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
+                if not end_event_date:
+                    active = 0
+                else:
+                    active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
 
             if getattr(advObj, 'adv_top', None):
                 type = 'Top'
@@ -601,6 +605,9 @@ def pages_delete(request, pk):
 
     obj = get_object_or_404(staticPages, pk=pk)
 
+    cache.delete('static_pages_all_bottom')
+    cache.delete('static_pages_all_top')
+
     obj.delete()
 
     return HttpResponseRedirect(reverse("AdminTpp:pages"))
@@ -627,6 +634,9 @@ def pages(request, editPage=None):
                 obj.onTop = onTop
                 obj.save()
                 obj.setAttributeValue({'NAME': name}, request.user)
+
+                cache.delete('static_pages_all_bottom')
+                cache.delete('static_pages_all_top')
 
             return HttpResponse()
         else:
@@ -716,6 +726,9 @@ def pages(request, editPage=None):
 
                     page.pageType = type
                     page.save()
+
+                    cache.delete('static_pages_all_bottom')
+                    cache.delete('static_pages_all_top')
 
                     return HttpResponseRedirect(reverse("AdminTpp:pages"))
 

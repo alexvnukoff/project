@@ -857,6 +857,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
     },
 
     loadURL: '/',
+    structureURL: '/',
 
     fail_upload : '',
 
@@ -867,7 +868,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         wasUploaded: ''
     },
 
-    init : function(lang, swf, image, upload_url, loadURL)
+    init : function(lang, swf, image, upload_url, loadURL, structureURL)
     {
         galleryUpload.lang = lang;
 
@@ -883,6 +884,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
 
         galleryUpload.loadURL = loadURL;
+        galleryUpload.structureURL = structureURL;
 
 
         $('#file_upload').uploadify(galleryUpload.options);
@@ -921,8 +923,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         }
 
         if ( queueData.uploadsSuccessful > 0 ) {
-            $.GET(galleryUpload.loadURL, function(data) {
-                $('.tpp-gallery').replaceWith(data);
+            $.GET(galleryUpload.structureURL, function(data) {
+                $('.galleryHolder').replaceWith(data);
             });
         }
 

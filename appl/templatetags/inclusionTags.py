@@ -26,14 +26,14 @@ def getTopOnPage(context, item_id=None):
     cached = False
     cache_name = "adv_top_cache"
 
-    #if filterAdv is None:
-    #    cached = cache.get(cache_name)
+    if filterAdv is None:
+        cached = cache.get(cache_name)
 
     if not cached:
         tops = func.getTops(request, filterAdv)
 
         if filterAdv is None:
-            cache.set(cache_name, tops, 60 * 60)
+            cache.set(cache_name, tops, 60 * 10)
     else:
         tops = cache.get(cache_name)
 
@@ -53,14 +53,14 @@ def getBanners(context, item_id=None, *places):
     cached = False
     cache_name = "adv_banner_cache"
 
-    #if filterAdv is None:
-    #    cached = cache.get(cache_name)
+    if filterAdv is None:
+        cached = cache.get(cache_name)
 
     if not cached:
         banners = func.getBanners(places, settings.SITE_ID, filterAdv)
 
         if filterAdv is None:
-            cache.set(cache_name, banners, 60 * 60)
+            cache.set(cache_name, banners, 60 * 10)
     else:
         banners = cache.get(cache_name)
 
@@ -183,21 +183,32 @@ def getUserSiteMenu(context):
 @register.inclusion_tag('main/staticPages.html')
 def showStaticPages():
 
-    pages = [page.pk for page in staticPages.objects.all()]
+    cache_name = "static_pages_all_bottom"
 
-    pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
 
-    pages = {}
+    cached = cache.get(cache_name)
 
-    for page in staticPages.objects.all():
+    if not cached:
 
-        name = pageWithAttr[page.pk].get('NAME', [""])[0]
-        slug = pageWithAttr[page.pk].get('SLUG', [""])[0]
+        pages = [page.pk for page in staticPages.objects.all()]
 
-        if page.pageType not in pages:
-            pages[page.pageType] = []
+        pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
 
-        pages[page.pageType].append((slug, name))
+        pages = {}
+
+        for page in staticPages.objects.all():
+
+            name = pageWithAttr[page.pk].get('NAME', [""])[0]
+            slug = pageWithAttr[page.pk].get('SLUG', [""])[0]
+
+            if page.pageType not in pages:
+                pages[page.pageType] = []
+
+            pages[page.pageType].append((slug, name))
+
+            cache.set(cache_name, pages, 60 * 60 * 24 * 7)
+    else:
+        pages = cache.get(cache_name)
 
 
     return {'pagesDict': pages}
@@ -206,9 +217,18 @@ def showStaticPages():
 @register.inclusion_tag('main/topStaticPages.html')
 def showTopStaticPages():
 
-    pages = [page.pk for page in staticPages.objects.filter(onTop=True)]
+    cache_name = "static_pages_all_top"
+    cached = cache.get(cache_name)
 
-    pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
+    if not cached:
+
+        pages = [page.pk for page in staticPages.objects.filter(onTop=True)]
+
+        pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
+        cache.set(cache_name, pageWithAttr, 60 * 60 * 24 * 7)
+
+    else:
+        pageWithAttr = cache.get(cache_name)
 
     return {'pagesDict': pageWithAttr}
 

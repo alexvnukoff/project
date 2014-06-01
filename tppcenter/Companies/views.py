@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -963,26 +964,30 @@ def deleteCompany(request, item_id):
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 
-@login_required(login_url='/login/')
-def _tabsGallery(request, company):
+def _tabsGallery(request, item, page=1):
 
-    company = get_object_or_404(Company, pk=company)
-
-
+    item = get_object_or_404(Company, pk=item)
     file = request.FILES.get('Filedata', None)
+
+    permissionsList = item.getItemInstPermList(request.user)
+
+    has_perm = False
+
+    if 'change_tpp' in permissionsList:
+        has_perm = True
+
 
     if file is not None:
 
-        permissionsList = company.getItemInstPermList(request.user)
 
-        if 'change_company' in permissionsList:
+        if has_perm:
 
             try:
                 file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
                 instance = Gallery(photo=file, create_user=request.user)
                 instance.save()
 
-                Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
+                Relationship.setRelRelationship(parent=item, child=instance, user=request.user, type='dependence')
 
                 return HttpResponse('')
             except Exhibition:
@@ -990,7 +995,52 @@ def _tabsGallery(request, company):
         else:
             return HttpResponseBadRequest()
     else:
-        return render_to_response()
+        photos = Gallery.objects.filter(c2p__parent=item).all()
+
+        paginator = Paginator(photos, 10)
+
+        try:
+            onPage = paginator.page(page)
+        except Exception:
+            onPage = paginator.page(1)
+
+        url_paginator = "companies:tab_gallery_paged"
+        paginator_range = func.getPaginatorRange(onPage)
+
+        templateParams = {
+            'page': page,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'gallery': onPage.object_list,
+            'has_perm': has_perm
+        }
+
+
+        return render_to_response('Companies/tabGallery.html', templateParams, context_instance=RequestContext(request))
+
+
+def _galleryStructure(request, itam, page=1):
+
+    photos = Gallery.objects.filter(c2p__parent=itam).all()
+
+    paginator = Paginator(photos, 10)
+
+    try:
+        onPage = paginator.page(page)
+    except Exception:
+        onPage = paginator.page(1)
+
+    url_paginator = "companies:tab_gallery_paged"
+    paginator_range = func.getPaginatorRange(onPage)
+
+    templateParams = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'gallery': onPage.object_list
+    }
+
+    return render_to_response('Companies/tag_gallery_structure.html', templateParams, context_instance=RequestContext(request))
 
 
 def sendMessage(request):
