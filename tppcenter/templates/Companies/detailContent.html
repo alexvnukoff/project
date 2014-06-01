@@ -544,7 +544,8 @@
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="1"
-                                    data-callback="www.tppcenter.com/companies/detail/{{ slug }}"
+                                    {% comment %}data-callback="www.tppcenter.com/payments/{{ slug }}" {% endcomment %}
+                                    data-callback="http://tppcenter.ngrok.com/payments/"
                                     data-env="sandbox"
                                 ></script>
                                 {% comment %}
@@ -555,7 +556,6 @@
                                 Sandbox Signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AC4CvkAkiTi9Z2vEGtM41XjTq2OI
                                 Sandbox Endpoint: https://svcs.sandbox.paypal.com/AdaptivePayments/Pay
                                 Production Endpoint: https://api-3t.paypal.com/nvp
-
                                 {% endcomment %}
                             </div>
                         </div>
