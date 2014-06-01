@@ -923,12 +923,9 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         }
 
         if ( queueData.uploadsSuccessful > 0 ) {
-            $.GET(galleryUpload.structureURL, function(data) {
-                $('.galleryHolder').replaceWith(data);
-            });
+            $('.galleryHolder').load(galleryUpload.structureURL);
         }
 
         galleryUpload.fail_upload = '';
-
     }
 };
