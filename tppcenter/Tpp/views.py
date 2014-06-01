@@ -931,7 +931,8 @@ def _tabsGallery(request, item, page=1):
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
             'gallery': onPage.object_list,
-            'has_perm': has_perm
+            'has_perm': has_perm,
+            'item_id': item
         }
 
 
