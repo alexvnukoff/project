@@ -98,8 +98,7 @@ def _companiesContent(request, page=1, my=None):
     if not cached:
 
         if not my or not request.user:
-            filters, searchFilter = func.filterLive(request)
-
+            filters, searchFilter = func.filterLive(request, model_name=Company.__name__)
             sqs = func.getActiveSQS().models(Company)
 
             if len(searchFilter) > 0:
@@ -812,6 +811,15 @@ def addCompany(request):
     pages = None
 
 
+    currentBranch = int(request.POST.get('BRANCH', 0))
+    choosen_country = int(request.POST.get('COUNTRY', 0))
+    try:
+        choosen_tpp = int(request.POST.get('TPP', 0))
+    except:
+        choosen_tpp = 0
+
+
+
 
 
     if request.POST:
@@ -823,10 +831,14 @@ def addCompany(request):
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
 
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+
+
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=5, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
         if getattr(pages, 'new_objects', False):
             pages = pages.new_objects
+        else:
+            pages = ""
 
         form = ItemForm('Company', values=values)
         form.clean()
@@ -842,7 +854,8 @@ def addCompany(request):
 
     template = loader.get_template('Companies/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp, 'pages': pages})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'countries': countries, 'tpp': tpp, 'pages': pages,
+                                       'choosen_tpp': choosen_tpp, 'choosen_country': choosen_country, 'currentBranch': currentBranch })
 
     newsPage = template.render(context)
 
@@ -859,11 +872,11 @@ def updateCompany(request, item_id):
     if 'change_company' not in perm_list:
         return func.permissionDenied()
     try:
-        choosen_country = Country.objects.get(p2c__child__id=item_id)
+        choosen_country = Country.objects.get(p2c__child__id=item_id).pk
     except ObjectDoesNotExist:
         choosen_country = ""
     try:
-        choosen_tpp = Tpp.objects.get(p2c__child__id=item_id)
+        choosen_tpp = Tpp.objects.get(p2c__child__id=item_id).pk
     except ObjectDoesNotExist:
         choosen_tpp = ""
 
@@ -889,7 +902,7 @@ def updateCompany(request, item_id):
         branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
         try:
-            currentBranch = Branch.objects.get(p2c__child=item_id)
+            currentBranch = Branch.objects.get(p2c__child=item_id).pk
         except ObjectDoesNotExist:
             pass
 

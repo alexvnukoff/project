@@ -1,3 +1,5 @@
+import urllib
+from django.http import QueryDict
 from core.models import *
 from appl.models import *
 from django.db.models import Count, F
@@ -657,7 +659,7 @@ def organizationIsCompany(item_id):
         return True
     return False
 
-def filterLive(request):
+def filterLive(request, model_name=None):
     '''
         Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
 
@@ -665,6 +667,27 @@ def filterLive(request):
 
 
     '''
+    if model_name:
+        if request.GET and not request.session.get(model_name, False):
+            request.session[model_name] = request.GET.urlencode()
+            getParameters = QueryDict(request.session.get(model_name, False))
+        elif len(request.GET) > 1 and request.GET.urlencode() != request.session.get(model_name, ""):
+            if 'filter' in request.GET.urlencode():
+                 request.session[model_name] = request.GET.urlencode()
+                 getParameters = QueryDict(request.session.get(model_name, ""))
+            else:
+                del request.session[model_name]
+                getParameters = QueryDict(request.session.get(model_name, ""))
+
+
+        elif request.session.get(model_name, False):
+            getParameters = QueryDict(request.session.get(model_name, False))
+        else:
+            getParameters = request.GET
+    else:
+        getParameters = request.GET
+
+
 
     searchFilter = []
     filtersIDs = {}
@@ -679,7 +702,8 @@ def filterLive(request):
         filtersIDs[name] = []
         filters[name] = []
 
-        for pk in request.GET.getlist('filter[' + name + '][]', []):
+
+        for pk in getParameters.getlist('filter[' + name + '][]', []):
             try:
                 filtersIDs[name].append(int(pk))
             except ValueError:
@@ -959,7 +983,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     if not cached:
 
         if not my:
-            filters, searchFilter = filterLive(request)
+            filters, searchFilter = filterLive(request, model_name=model.__name__)
 
             sqs = getActiveSQS().models(model).order_by('-obj_create_date')
             if model is News:
