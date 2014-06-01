@@ -40,6 +40,8 @@ urlpatterns = patterns('',
      url(r'^tabs/proposal/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsProposals, name="tab_proposal_paged"),
      url(r'^tabs/innov/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov"),
      url(r'^tabs/innov/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov_paged"),
-     url(r'^tabs/gallery/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsGallery, name="tabs_gallery"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/$', tppcenter.Companies.views._tabsGallery, name="tabs_gallery"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsGallery, name="tabs_gallery_paged"),
+     url(r'^tabs/gallery_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._galleryStructure, name="gallery_structure"),
 
 )
