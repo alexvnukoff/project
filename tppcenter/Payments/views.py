@@ -3,7 +3,10 @@ from django.template import RequestContext
 
 
 def getPaymentDetails(request):
-
+    """
+        Process IPN form PayPal.
+        For debugging on local host use: >ngrok.exe -authtoken IV7A72mC4qsjPl5wCVoa -subdomain=tppcenter 80
+    """
     payment_details = {}
 
     templateParams = {
