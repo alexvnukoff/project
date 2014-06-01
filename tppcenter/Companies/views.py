@@ -97,9 +97,8 @@ def _companiesContent(request, page=1, my=None):
 
     if not cached:
 
-        if not my:
+        if not my or not request.user:
             filters, searchFilter = func.filterLive(request, model_name=Company.__name__)
-
             sqs = func.getActiveSQS().models(Company)
 
             if len(searchFilter) > 0:
