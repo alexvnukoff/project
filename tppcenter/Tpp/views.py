@@ -976,5 +976,6 @@ def galleryRemoveItem(request, item):
 
 
     if 'change_tpp' in permissionsList:
-        photo.remove()
+        photo.delete()
 
+    return HttpResponse()

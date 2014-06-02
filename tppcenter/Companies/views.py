@@ -1056,7 +1056,7 @@ def galleryRemoveItem(request, item):
 
 
     if 'change_company' in permissionsList:
-        photo.remove()
+        photo.delete()
 
     return HttpResponse()
 

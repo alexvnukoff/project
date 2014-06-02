@@ -940,7 +940,9 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         $('.galleryHolder').html(galleryUpload.loader);
 
         $.get(link, function(data) {
-            $('.galleryHolder').html(galleryUpload.loader);
+            $('.galleryHolder').load(galleryUpload.structureURL);
         });
+        
+        return false;
     }
 };
