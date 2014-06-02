@@ -6,12 +6,14 @@
                     <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
                         <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
                     </a>
-                    <div class="deleteimge">
-                        <a class="removePhoto" href="{% url "tpp:gallery_remove_item" photo.pk %}">
-                            <i class="imgnews delete"></i>
-                            <span class="deletext">{% trans "remove" %}</span>
-                        </a>
-                    </div>
+                    {% if has_perm %}
+                        <div class="deleteimge">
+                            <a class="removePhoto" href="{% url "tpp:gallery_remove_item" photo.pk %}">
+                                <i class="imgnews delete"></i>
+                                <span class="deletext">{% trans "remove" %}</span>
+                            </a>
+                        </div>
+                    {% endif %}
                     <div class="viewimge">
                     <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
                         <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
