@@ -533,14 +533,17 @@
                     {% comment %} Pay membership button {% endcomment %}
                     {% if show_button %}
                         <div class="payjoin">
-                            <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
-
+                            {% if days_till_end == 0 %}
+                                <span>{% trans "Free period is expired. Please, pay for the next year." %}</span>
+                            {% else %}
+                                <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
+                            {% endif %}
                             <!-- Script for PayPal payment button -->
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
                             <div id="paypal-membership" style="padding-left: 30px">
                                 <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"
                                     data-name="{% trans '1-year www.b24online.com membership' %}"
-                                    data-number="{{ name }} [ID:{{ id }}]" {% comment %} Company's database ID and name {% endcomment %}
+                                    data-number="{{ id }}" {% comment %} Company's database ID{% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="1"
