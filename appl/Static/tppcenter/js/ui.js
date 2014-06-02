@@ -888,6 +888,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         galleryUpload.loadURL = loadURL;
         galleryUpload.structureURL = structureURL;
 
+        $(document).on("click", ".removePhoto", galleryUpload.removePhoto);
+
 
         $('#file_upload').uploadify(galleryUpload.options);
 
@@ -931,5 +933,14 @@ var galleryUpload = { //Async gallery uploader (uploadify)
 
     onUploadStart: function() {
         $('.galleryHolder').html(galleryUpload.loader);
+    },
+
+    removePhoto: function() {
+        var link = $(this).attr("href");
+        $('.galleryHolder').html(galleryUpload.loader);
+
+        $.get(link, function(data) {
+            $('.galleryHolder').html(galleryUpload.loader);
+        });
     }
 };
