@@ -233,9 +233,12 @@ def _companiesDetailContent(request, item_id):
                 companyValues['SHOW_PAYMENT_BUTTON'] = [True]
                 companyValues['DAYS_BEFORE_END'] = [days_till_end]
             else:
-                company.end_date = now()
-                companyValues['SHOW_PAYMENT_BUTTON'] = [True]
-                companyValues['DAYS_BEFORE_END'] = [0]
+                if(days_till_end > 0):
+                    companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+                else:
+                    company.end_date = now()
+                    companyValues['SHOW_PAYMENT_BUTTON'] = [True]
+                    companyValues['DAYS_BEFORE_END'] = [0]
         else:
             companyValues['SHOW_PAYMENT_BUTTON'] = [False]
         #/check free membership period

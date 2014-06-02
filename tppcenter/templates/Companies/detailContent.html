@@ -534,7 +534,7 @@
                     {% if show_button %}
                         <div class="payjoin">
                             {% if days_till_end == 0 %}
-                                <span>{% trans "Free period is expired. Please, pay for the next year." %}</span>
+                                <span>{% trans "Free period is expired." %}</span>
                             {% else %}
                                 <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
                             {% endif %}
