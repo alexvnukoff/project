@@ -42,7 +42,7 @@
 
         var swf = '{% static "tppcenter/uploadify.swf" %}';
         var uploader = '{% url "companies:tabs_gallery" item_id %}';
-        var structureURL = '{% url "companies:gallery_structure" item_id page %}';
+        var structureURL = '{% url "companies:gallery_structure" item_id pageNum %}';
         var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
 
         galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader, buttonImage);
