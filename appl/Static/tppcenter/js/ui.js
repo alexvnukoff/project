@@ -858,6 +858,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
 
     loadURL: '/',
     structureURL: '/',
+    loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
 
     fail_upload : '',
 
@@ -882,6 +883,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
         galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
         galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
+        galleryUpload.options['onUploadStart'] = galleryUpload.onUploadStart;
 
         galleryUpload.loadURL = loadURL;
         galleryUpload.structureURL = structureURL;
@@ -922,10 +924,12 @@ var galleryUpload = { //Async gallery uploader (uploadify)
             alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
         }
 
-        if ( queueData.uploadsSuccessful > 0 ) {
-            $('.galleryHolder').load(galleryUpload.structureURL);
-        }
+        $('.galleryHolder').load(galleryUpload.structureURL);
 
         galleryUpload.fail_upload = '';
+    },
+
+    onUploadStart: function() {
+        $('.galleryHolder').html(galleryUpload.loader);
     }
 };
