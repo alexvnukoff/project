@@ -45,7 +45,7 @@
         var structureURL = '{% url "tpp:gallery_structure" item_id pageNum %}';
         var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
 
-        galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader, buttonImage);
+        galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader, buttonImage, structureURL);
     </script>
     <!-- /Gallery uploader -->
 {% endif %}
