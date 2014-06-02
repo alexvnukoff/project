@@ -941,7 +941,7 @@ def _tabsGallery(request, item, page=1):
         return render_to_response('Tpp/tabGallery.html', templateParams, context_instance=RequestContext(request))
 
 
-def _galleryStructure(request, item, page=1):
+def galleryStructure(request, item, page=1):
 
     item = get_object_or_404(Tpp, pk=item)
     photos = Gallery.objects.filter(c2p__parent=item).all()
@@ -966,4 +966,15 @@ def _galleryStructure(request, item, page=1):
     }
 
     return render_to_response('Tpp/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+
+def galleryRemoveItem(request, item):
+    photo = get_object_or_404(Gallery, pk=item)
+
+    comp = Company.objects.get(p2c__child=photo)
+
+    permissionsList = comp.getItemInstPermList(request.user)
+
+
+    if 'change_tpp' in permissionsList:
+        photo.remove()
 

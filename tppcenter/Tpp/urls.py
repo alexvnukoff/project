@@ -43,5 +43,6 @@ urlpatterns = patterns('',
      url(r'^tabs/staff/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsStaff, name="tab_staff_paged"),
      url(r'^tabs/gallery/(?P<item>[0-9]+)/$', tppcenter.Tpp.views._tabsGallery, name="tabs_gallery"),
      url(r'^tabs/gallery/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tabsGallery, name="tabs_gallery_paged"),
-     url(r'^tabs/gallery_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._galleryStructure, name="gallery_structure"),
+     url(r'^tabs/gallery_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.galleryStructure, name="gallery_structure"),
+     url(r'^tabs/gallery/remove/(?P<item>[0-9]+)/$', tppcenter.Tpp.views.galleryRemoveItem, name="gallery_remove_item"),
 )

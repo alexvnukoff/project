@@ -972,7 +972,7 @@ def _tabsGallery(request, item, page=1):
 
     has_perm = False
 
-    if 'change_tpp' in permissionsList:
+    if 'change_company' in permissionsList:
         has_perm = True
 
 
@@ -1021,7 +1021,7 @@ def _tabsGallery(request, item, page=1):
         return render_to_response('Companies/tabGallery.html', templateParams, context_instance=RequestContext(request))
 
 
-def _galleryStructure(request, item, page=1):
+def galleryStructure(request, item, page=1):
 
     item = get_object_or_404(Company, pk=item)
     photos = Gallery.objects.filter(c2p__parent=item).all()
@@ -1046,6 +1046,19 @@ def _galleryStructure(request, item, page=1):
     }
 
     return render_to_response('Companies/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+
+def galleryRemoveItem(request, item):
+    photo = get_object_or_404(Gallery, pk=item)
+
+    comp = Company.objects.get(p2c__child=photo)
+
+    permissionsList = comp.getItemInstPermList(request.user)
+
+
+    if 'change_company' in permissionsList:
+        photo.remove()
+
+    return HttpResponse()
 
 
 def sendMessage(request):
