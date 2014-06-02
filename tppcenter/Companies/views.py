@@ -1020,7 +1020,7 @@ def _tabsGallery(request, item, page=1):
         return render_to_response('Companies/tabGallery.html', templateParams, context_instance=RequestContext(request))
 
 
-def _galleryStructure(request, itam, page=1):
+def galleryStructure(request, itam, page=1):
 
     photos = Gallery.objects.filter(c2p__parent=itam).all()
 
