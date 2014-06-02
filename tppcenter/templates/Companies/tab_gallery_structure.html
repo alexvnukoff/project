@@ -3,9 +3,7 @@
         {% for photo in gallery %}
             <li>
                 <div class="b-img">
-                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
                         <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
-                    </a>
                     {% if has_perm %}
                         <div class="deleteimge">
                             <a class="removePhoto" href="{% url "companies:gallery_remove_item" photo.pk %}">
