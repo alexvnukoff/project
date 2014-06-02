@@ -1012,7 +1012,8 @@ def _tabsGallery(request, item, page=1):
             'url_paginator': url_paginator,
             'gallery': onPage.object_list,
             'has_perm': has_perm,
-            'item_id': item.pk
+            'item_id': item.pk,
+            'pageNum': page
         }
 
 
@@ -1037,7 +1038,8 @@ def _galleryStructure(request, itam, page=1):
         'page': onPage,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'gallery': onPage.object_list
+        'gallery': onPage.object_list,
+        'pageNum': page
     }
 
     return render_to_response('Companies/tag_gallery_structure.html', templateParams, context_instance=RequestContext(request))
