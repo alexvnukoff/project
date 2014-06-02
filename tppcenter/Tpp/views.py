@@ -927,7 +927,7 @@ def _tabsGallery(request, item, page=1):
         paginator_range = func.getPaginatorRange(onPage)
 
         templateParams = {
-            'page': page,
+            'page': onPage,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
             'gallery': onPage.object_list,
@@ -954,7 +954,7 @@ def _galleryStructure(request, item, page=1):
     paginator_range = func.getPaginatorRange(onPage)
 
     templateParams = {
-        'page': page,
+        'page': onPage,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'gallery': onPage.object_list
