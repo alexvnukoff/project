@@ -1003,7 +1003,7 @@ def _tabsGallery(request, item, page=1):
         except Exception:
             onPage = paginator.page(1)
 
-        url_paginator = "companies:tab_gallery_paged"
+        url_paginator = "companies:tabs_gallery_paged"
         paginator_range = func.getPaginatorRange(onPage)
 
         templateParams = {
@@ -1013,16 +1013,18 @@ def _tabsGallery(request, item, page=1):
             'gallery': onPage.object_list,
             'has_perm': has_perm,
             'item_id': item.pk,
-            'pageNum': page
+            'pageNum': page,
+            'url_parameter': item.pk
         }
 
 
         return render_to_response('Companies/tabGallery.html', templateParams, context_instance=RequestContext(request))
 
 
-def _galleryStructure(request, itam, page=1):
+def _galleryStructure(request, item, page=1):
 
-    photos = Gallery.objects.filter(c2p__parent=itam).all()
+    item = get_object_or_404(Company, pk=item)
+    photos = Gallery.objects.filter(c2p__parent=item).all()
 
     paginator = Paginator(photos, 10)
 
@@ -1031,7 +1033,7 @@ def _galleryStructure(request, itam, page=1):
     except Exception:
         onPage = paginator.page(1)
 
-    url_paginator = "companies:tab_gallery_paged"
+    url_paginator = "companies:tabs_gallery_paged"
     paginator_range = func.getPaginatorRange(onPage)
 
     templateParams = {
@@ -1039,10 +1041,11 @@ def _galleryStructure(request, itam, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'gallery': onPage.object_list,
-        'pageNum': page
+        'pageNum': page,
+        'url_parameter': item.pk,
     }
 
-    return render_to_response('Companies/tag_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Companies/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
 
 
 def sendMessage(request):

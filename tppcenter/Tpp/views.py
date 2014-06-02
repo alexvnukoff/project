@@ -887,7 +887,7 @@ def _tabsStaff(request, tpp, page=1):
 
 def _tabsGallery(request, item, page=1):
 
-    item = get_object_or_404(Company, pk=item)
+    item = get_object_or_404(Tpp, pk=item)
     file = request.FILES.get('Filedata', None)
 
     permissionsList = item.getItemInstPermList(request.user)
@@ -923,7 +923,7 @@ def _tabsGallery(request, item, page=1):
         except Exception:
             onPage = paginator.page(1)
 
-        url_paginator = "tpp:tab_gallery_paged"
+        url_paginator = "tpp:tabs_gallery_paged"
         paginator_range = func.getPaginatorRange(onPage)
 
         templateParams = {
@@ -933,7 +933,8 @@ def _tabsGallery(request, item, page=1):
             'gallery': onPage.object_list,
             'has_perm': has_perm,
             'item_id': item.pk,
-            'pageNum': page
+            'pageNum': page,
+            'url_parameter': item.pk
         }
 
 
@@ -942,6 +943,7 @@ def _tabsGallery(request, item, page=1):
 
 def _galleryStructure(request, item, page=1):
 
+    item = get_object_or_404(Tpp, pk=item)
     photos = Gallery.objects.filter(c2p__parent=item).all()
 
     paginator = Paginator(photos, 10)
@@ -951,7 +953,7 @@ def _galleryStructure(request, item, page=1):
     except Exception:
         onPage = paginator.page(1)
 
-    url_paginator = "tpp:tab_gallery_paged"
+    url_paginator = "tpp:tabs_gallery_paged"
     paginator_range = func.getPaginatorRange(onPage)
 
     templateParams = {
@@ -959,8 +961,9 @@ def _galleryStructure(request, item, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'gallery': onPage.object_list,
-        'pageNum': page
+        'pageNum': page,
+        'url_parameter': item.pk
     }
 
-    return render_to_response('Tpp/tag_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Tpp/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
 
