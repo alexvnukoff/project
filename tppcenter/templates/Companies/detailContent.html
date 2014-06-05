@@ -27,43 +27,6 @@
 <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
 <script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
 
-
-<!-- Gallery uploader -->
-<style>
-    .uploader {
-        max-height: 130px;
-        overflow-y: hidden;
-    }
-    #queue, #file_upload {
-        float: left;
-        margin-left: 20px;
-    }
-    .uploader:after {
-       content: "";
-       display: block;
-       clear: both;
-    }
-</style>
-
-<script>
-    LANG['UPLOAD'] = {
-        'uploading': '{% trans "Uploading" %}',
-        'success': '{% trans "Uploaded" %}',
-        'fail': '{% trans "Fail" %}',
-        'wasUploaded': '{% trans "The following files was not uploaded" %}'
-    };
-
-    var swf = '{% static "tppcenter/uploadify.swf" %}';
-    var uploader = '{% url "companies:tabs_gallery" item_id %}';
-    var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
-
-    $(document).ready(function($) {
-
-       //galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader);
-    });
-</script>
-<!-- /Gallery uploader -->
-
 <!-- Google maps -->
 <script type="text/javascript">
     var marker;
@@ -572,7 +535,7 @@
                             </li>
                             -->
                             <li>
-                                <a href="#cpn-tabs-gallery">
+                                <a data-id="gallery-tabs" href="{% url "companies:tabs_gallery" item_id %}">
                                     {% trans "Gallery" %}
                                 </a>
                             </li>
@@ -638,27 +601,6 @@
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
                     -->
-                    <div id="cpn-tabs-gallery">
-                        <div class="tpp-dt-content">
-                        <!--
-                            <div class="uploader">
-                                <form>
-                                    <input id="file_upload" name="file_upload" type="file" multiple="true">
-                                    <div id="queue"></div>
-
-                                </form>
-                            </div>
-                            <ul class="tpp-gallery">
-                                {% comment %}
-                                    {% for photo in photos %}
-                                        {% include "Companies/tabGalleryPhoto.html" %}
-                                    {% endfor %}
-                                {% endcomment %}
-                            </ul>
-                        -->
-                        </div>
-
-                    </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
 

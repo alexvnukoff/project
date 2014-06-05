@@ -99,7 +99,7 @@ INSTALLED_APPS = (
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
-CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin
+CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period

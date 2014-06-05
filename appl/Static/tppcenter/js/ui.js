@@ -857,6 +857,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
     },
 
     loadURL: '/',
+    structureURL: '/',
+    loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
 
     fail_upload : '',
 
@@ -867,7 +869,7 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         wasUploaded: ''
     },
 
-    init : function(lang, swf, image, upload_url, loadURL)
+    init : function(lang, swf, image, upload_url, loadURL, structureURL)
     {
         galleryUpload.lang = lang;
 
@@ -881,8 +883,12 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
         galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
         galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
+        galleryUpload.options['onUploadStart'] = galleryUpload.onUploadStart;
 
         galleryUpload.loadURL = loadURL;
+        galleryUpload.structureURL = structureURL;
+
+        $(document).on("click", ".removePhoto", galleryUpload.removePhoto);
 
 
         $('#file_upload').uploadify(galleryUpload.options);
@@ -920,13 +926,23 @@ var galleryUpload = { //Async gallery uploader (uploadify)
             alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
         }
 
-        if ( queueData.uploadsSuccessful > 0 ) {
-            $.GET(galleryUpload.loadURL, function(data) {
-                $('.tpp-gallery').replaceWith(data);
-            });
-        }
+        $('.galleryHolder').load(galleryUpload.structureURL);
 
         galleryUpload.fail_upload = '';
+    },
 
+    onUploadStart: function() {
+        $('.galleryHolder').html(galleryUpload.loader);
+    },
+
+    removePhoto: function() {
+        var link = $(this).attr("href");
+        $('.galleryHolder').html(galleryUpload.loader);
+
+        $.get(link, function(data) {
+            $('.galleryHolder').load(galleryUpload.structureURL);
+        });
+        
+        return false;
     }
 };

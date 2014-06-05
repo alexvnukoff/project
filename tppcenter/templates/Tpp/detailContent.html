@@ -518,10 +518,11 @@
                             </li>
                             -->
                             <li>
-                                <a href="#cpn-tabs-gallery">
-                                    {% trans "Gallery" %}
+                                <a data-id="tabs-gallery" href="{% url "tpp:tabs_gallery" item_id %}">
+                                     {% trans "Gallery" %}
                                 </a>
                             </li>
+
                             <li>
                                 <a data-id="tenders-tenders" href="{% url "tpp:tab_tenders" item_id %}">
                                     {% trans "Tenders" %}
@@ -577,9 +578,6 @@
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
                     -->
-                    <div id="cpn-tabs-gallery">
-                        <div class="tpp-dt-content"></div>
-                    </div>
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
 

@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -98,7 +99,6 @@ def _companiesContent(request, page=1, my=None):
 
         if not my:
             filters, searchFilter = func.filterLive(request, model_name=Company.__name__)
-
             sqs = func.getActiveSQS().models(Company)
 
             if len(searchFilter) > 0:
@@ -148,7 +148,7 @@ def _companiesContent(request, page=1, my=None):
         else:
             current_organization = request.session.get('current_company', False)
 
-            cab = Cabinet.objects.get(user=request.user)
+            cab = Cabinet.objects.get(user=request.user.pk)
             #read all Organizations which hasn't foreign key from Department and current User is create user or worker
             companies = Company.active.get_active().filter(Q(create_user=request.user) |
                                                     Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
@@ -963,26 +963,30 @@ def deleteCompany(request, item_id):
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 
-@login_required(login_url='/login/')
-def _tabsGallery(request, company):
+def _tabsGallery(request, item, page=1):
 
-    company = get_object_or_404(Company, pk=company)
-
-
+    item = get_object_or_404(Company, pk=item)
     file = request.FILES.get('Filedata', None)
+
+    permissionsList = item.getItemInstPermList(request.user)
+
+    has_perm = False
+
+    if 'change_company' in permissionsList:
+        has_perm = True
+
 
     if file is not None:
 
-        permissionsList = company.getItemInstPermList(request.user)
 
-        if 'change_company' in permissionsList:
+        if has_perm:
 
             try:
                 file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
                 instance = Gallery(photo=file, create_user=request.user)
                 instance.save()
 
-                Relationship.setRelRelationship(parent=company, child=instance, user=request.user, type='dependence')
+                Relationship.setRelRelationship(parent=item, child=instance, user=request.user, type='dependence')
 
                 return HttpResponse('')
             except Exhibition:
@@ -990,7 +994,71 @@ def _tabsGallery(request, company):
         else:
             return HttpResponseBadRequest()
     else:
-        return render_to_response()
+        photos = Gallery.objects.filter(c2p__parent=item).all()
+
+        paginator = Paginator(photos, 10)
+
+        try:
+            onPage = paginator.page(page)
+        except Exception:
+            onPage = paginator.page(1)
+
+        url_paginator = "companies:tabs_gallery_paged"
+        paginator_range = func.getPaginatorRange(onPage)
+
+        templateParams = {
+            'page': onPage,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'gallery': onPage.object_list,
+            'has_perm': has_perm,
+            'item_id': item.pk,
+            'pageNum': page,
+            'url_parameter': item.pk
+        }
+
+
+        return render_to_response('Companies/tabGallery.html', templateParams, context_instance=RequestContext(request))
+
+
+def galleryStructure(request, item, page=1):
+
+    item = get_object_or_404(Company, pk=item)
+    photos = Gallery.objects.filter(c2p__parent=item).all()
+
+    paginator = Paginator(photos, 10)
+
+    try:
+        onPage = paginator.page(page)
+    except Exception:
+        onPage = paginator.page(1)
+
+    url_paginator = "companies:tabs_gallery_paged"
+    paginator_range = func.getPaginatorRange(onPage)
+
+    templateParams = {
+        'page': onPage,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'gallery': onPage.object_list,
+        'pageNum': page,
+        'url_parameter': item.pk,
+    }
+
+    return render_to_response('Companies/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+
+def galleryRemoveItem(request, item):
+    photo = get_object_or_404(Gallery, pk=item)
+
+    comp = Company.objects.get(p2c__child=photo)
+
+    permissionsList = comp.getItemInstPermList(request.user)
+
+
+    if 'change_company' in permissionsList:
+        photo.delete()
+
+    return HttpResponse()
 
 
 def sendMessage(request):

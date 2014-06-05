@@ -26,11 +26,12 @@
                                                 <th>Last login</th>
                                                 <th>Date joined</th>
                                                 <th>IP</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="5" class="dataTables_empty">Loading data from server</td>
+                                                <td colspan="6" class="dataTables_empty">Loading data from server</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
@@ -40,6 +41,7 @@
                                                 <th>Last login</th>
                                                 <th>Date joined</th>
                                                 <th>IP</th>
+                                                <th>Action</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -72,7 +74,18 @@
                 "bServerSide": true,
                 "sAjaxSource": "{% url "AdminTpp:users" %}",
                 "aoColumnDefs": [
-                  { 'bSortable': false, 'aTargets': [ 0 ] }
+                  { 'bSortable': false, 'aTargets': [ 0 ] },
+                                            {
+                        "aTargets": [ 5 ],
+                        "mData": 5,
+                        "mRender": function ( data, type, full ) {
+
+                            return '<a href="/login/user/' + data + '/">' +
+                                    '<button class="btn btn-info">Login</button>' +
+                                    '</a>';
+
+                        }
+                    }
                ]
             } );
             });

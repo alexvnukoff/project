@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.utils.timezone import now
-from appl.models import Cabinet, AdvertisementItem, AdvOrder, Country, AdvBannerType, topTypes, staticPages
+from appl.models import Cabinet, AdvertisementItem, AdvOrder, Country, AdvBannerType, topTypes, staticPages, Greeting
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from haystack.query import SearchQuerySet
@@ -16,6 +16,7 @@ from tppcenter.forms import ItemForm
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.core.cache import cache
 
 
 @login_required(login_url="/login/")
@@ -82,7 +83,7 @@ def users(request):
         cabinets = [itm.id for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues(('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'), cabinets)
-        users = User.objects.filter(cabinet__pk__in=cabinets).values('email', 'last_login', 'date_joined', 'ip', 'cabinet').order_by('email')
+        users = User.objects.filter(cabinet__pk__in=cabinets).values('email', 'last_login', 'date_joined', 'ip', 'cabinet', "pk").order_by('pk')
 
 
 
@@ -110,6 +111,7 @@ def users(request):
             resultNode.append(cabinet.get('last_login', "").strftime('%Y-%m-%dT%H:%M:%S'))
             resultNode.append(cabinet.get('date_joined', "").strftime('%Y-%m-%dT%H:%M:%S'))
             resultNode.append(cabinet.get('ip', ""))
+            resultNode.append(cabinet.get('pk', "0"))
 
             resultData.append(resultNode)
 
@@ -177,10 +179,13 @@ def adv(request):
             end_event_date = parse(advAttr.get('END_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
             start_event_date = parse(advAttr.get('START_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
 
-            if not end_event_date:
-                active = 0
+            if now() >= advObj.end_date:
+                active = 2
             else:
-                active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
+                if not end_event_date:
+                    active = 0
+                else:
+                    active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
 
             if getattr(advObj, 'adv_top', None):
                 type = 'Top'
@@ -600,6 +605,9 @@ def pages_delete(request, pk):
 
     obj = get_object_or_404(staticPages, pk=pk)
 
+    cache.delete('static_pages_all_bottom')
+    cache.delete('static_pages_all_top')
+
     obj.delete()
 
     return HttpResponseRedirect(reverse("AdminTpp:pages"))
@@ -626,6 +634,9 @@ def pages(request, editPage=None):
                 obj.onTop = onTop
                 obj.save()
                 obj.setAttributeValue({'NAME': name}, request.user)
+
+                cache.delete('static_pages_all_bottom')
+                cache.delete('static_pages_all_top')
 
             return HttpResponse()
         else:
@@ -691,7 +702,7 @@ def pages(request, editPage=None):
                 'DETAIL_TEXT':  request.POST.get('DETAIL_TEXT', "")
             }
 
-            form = ItemForm('staticPages', values=values)
+            form = ItemForm('staticPages', values=values, id=editPage)
             form.clean()
 
             onTop = request.POST.get('onTop', None)
@@ -708,17 +719,16 @@ def pages(request, editPage=None):
 
 
                 if form.is_valid():
-                    if editPage:
-                        page = obj
-                        page.setAttributeValue(values, user)
-                    else:
-                        page = form.save(user, settings.SITE_ID, disableNotify=True)
+                    page = form.save(user, settings.SITE_ID, disableNotify=True)
 
                     if onTop is not None:
                         page.onTop = onTop
 
                     page.pageType = type
                     page.save()
+
+                    cache.delete('static_pages_all_bottom')
+                    cache.delete('static_pages_all_top')
 
                     return HttpResponseRedirect(reverse("AdminTpp:pages"))
 
@@ -738,6 +748,138 @@ def pages(request, editPage=None):
         templateParams = {'types': staticPages.PAGE_TYPES, 'form': form, 'selectedType': type}
 
         return render_to_response("AdminTpp/pages.html", templateParams, context_instance=RequestContext(request))
+
+
+@login_required(login_url="/login/")
+def greetings_delete(request, pk):
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+    obj = get_object_or_404(staticPages, pk=pk)
+
+    obj.delete()
+
+    return HttpResponseRedirect(reverse("AdminTpp:greetings"))
+
+@login_required(login_url="/login/")
+def greetings(request, editPage=None):
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+    if editPage:
+        obj = get_object_or_404(Greeting, pk=editPage)
+
+
+    if request.is_ajax():
+
+        if request.POST:
+            name = request.POST.get('NAME', "")
+            position = request.POST.get('POSITION', "")
+            tpp = request.POST.get('TPP', "")
+
+            if len(name) > 0:
+
+                obj.setAttributeValue({'NAME': name, 'POSITION': position, 'TPP': tpp}, request.user)
+
+            return HttpResponse()
+        else:
+
+            displayStart = int(request.GET.get('iDisplayStart', 1))
+            displayLen = int(request.GET.get('iDisplayLength', 10))
+
+            if displayStart == 1:
+                page = 1
+            else:
+                page = int(displayStart / displayLen + 1)
+
+            pages = Greeting.objects.all()
+
+            paginator = Paginator(pages, 10)
+
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
+
+            pages_ids = [itm.id for itm in onPage.object_list]
+
+            ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'POSITION', 'TPP'), pages_ids)
+
+            resultData = []
+
+            for page in onPage.object_list:
+
+                if page.pk not in ItemsWithValues:
+                    ItemsWithValues[page.pk] = {}
+                elif not isinstance(ItemsWithValues[page.pk], dict):
+                    ItemsWithValues[page.pk] = {}
+
+                attrs = ItemsWithValues[page.pk]
+
+                #Full name
+                name = attrs.get('NAME', [""])[0]
+                image = attrs.get('IMAGE', [""])[0]
+                position = attrs.get('POSITION', [""])[0]
+                tpp = attrs.get('TPP', [""])[0]
+
+                #Creating list of result data
+                resultNode = [settings.MEDIA_URL + "th/" + image, name, position, tpp, page.pk]
+
+                resultData.append(resultNode)
+
+
+            return HttpResponse(json.dumps({
+                    "sEcho": int(request.GET.get('sEcho', 1)),
+                    "iTotalRecords": paginator.count,
+                    "iTotalDisplayRecords": paginator.count,
+                    "aaData" : resultData
+            }))
+    else:
+
+        form = None
+
+        user = request.user
+        type = ''
+
+        if request.POST:
+
+            values = {
+                'NAME': request.POST.get('NAME', ""),
+                'DETAIL_TEXT':  request.POST.get('DETAIL_TEXT', ""),
+                'POSITION': request.POST.get('POSITION', ""),
+                'TPP': request.POST.get('TPP', ""),
+                'IMAGE': request.FILES.get('IMAGE', "")
+            }
+
+
+            form = ItemForm('Greeting', values=values, id=editPage)
+            form.clean()
+
+            if form.is_valid():
+                page = form.save(user, settings.SITE_ID, disableNotify=True)
+
+                return HttpResponseRedirect(reverse("AdminTpp:greetings"))
+
+        elif editPage:
+
+            attr = obj.getAttributeValues('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'TPP')
+
+            values = {
+                'NAME': attr.get('NAME', [""])[0],
+                'DETAIL_TEXT':  attr.get('DETAIL_TEXT', [""])[0],
+                'POSITION': attr.get('POSITION', [""])[0],
+                'TPP': attr.get('TPP', [""])[0],
+                'IMAGE': attr.get('IMAGE', [""])[0]
+            }
+
+            form = ItemForm('Greeting', values=values)
+
+
+        templateParams = {'form': form}
+
+        return render_to_response("AdminTpp/greetings.html", templateParams, context_instance=RequestContext(request))
 
 
 

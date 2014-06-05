@@ -1,0 +1,25 @@
+{% load i18n %}
+    <ul class="tpp-gallery">
+        {% for photo in gallery %}
+            <li>
+                <div class="b-img">
+                        <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
+                    {% if has_perm %}
+                        <div class="deleteimge">
+                            <a class="removePhoto" href="{% url "companies:gallery_remove_item" photo.pk %}">
+                                <i class="imgnews delete"></i>
+                                <span class="deletext">{% trans "remove" %}</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="viewimge">
+                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
+                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                    </a>
+                    </div>
+                    <div class="gray-img"></div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% include "main/paginator.html" %}
