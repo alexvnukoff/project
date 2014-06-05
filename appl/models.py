@@ -5,10 +5,14 @@ from core.models import Item, State, Relationship
 from core.hierarchy import hierarchyManager
 from core.models import User, ItemManager
 from django.utils.timezone import now
-import datetime
+from datetime import datetime, timedelta
 from django.db.models import Count, ObjectDoesNotExist
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+import urllib.error
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
@@ -513,6 +517,210 @@ class Payment(Item):
     def __str__(self):
         return ''
 
+class PayPalPayment(Payment):
+    """
+    Defines entity for PayPal payments
+    """
+    address_city = models.CharField(blank=True, null=True, max_length=1024)
+    address_country = models.CharField(blank=True, null=True, max_length=1024)
+    address_country_code = models.CharField(blank=True, null=True, max_length=1024)
+    address_name = models.CharField(blank=True, null=True, max_length=1024)
+    address_state = models.CharField(blank=True, null=True, max_length=1024)
+    address_status = models.CharField(blank=True, null=True, max_length=1024)
+    address_street = models.CharField(blank=True, null=True, max_length=1024)
+    address_zip = models.CharField(blank=True, null=True, max_length=32)
+    business = models.CharField(blank=True, null=True, max_length=255)          # receiver's business account e-mail
+    charset = models.CharField(blank=True, null=True, max_length=32)            # receiver's charset
+    custom = models.CharField(blank=True, null=True, max_length=1024)           # custom field for our purpose
+    first_name = models.CharField(blank=True, null=True, max_length=128)        # first name of payer
+    last_name = models.CharField(blank=True, null=True, max_length=128)         # last name of payer
+    handling_amount = models.CharField(blank=True, null=True, max_length=32)    # payer's account amount
+    ipn_track_id = models.CharField(blank=True, null=True, max_length=64)       # instant payment notification id
+    item_name = models.CharField(blank=True, null=True, max_length=1024)        # payment purpose
+    item_number = models.CharField(blank=True, null=True, max_length=1024)      # payment subject
+    mc_currency = models.CharField(blank=True, null=True, max_length=4)         # payment currency
+    mc_fee = models.CharField(blank=True, null=True, max_length=16)             # payment fee
+    mc_gross = models.CharField(blank=True, null=True, max_length=32)           # payment sum
+    notify_version = models.CharField(blank=True, null=True, max_length=16)
+    payer_business_name = models.CharField(blank=True, null=True, max_length=1024)
+    payer_email = models.CharField(blank=True, null=True, max_length=255)
+    payer_id = models.CharField(blank=True, null=True, max_length=255)
+    payer_status = models.CharField(blank=True, null=True, max_length=32)
+    payment_date = models.DateTimeField(blank=True, null=True)                  # payment date in PDT (Pacific Daylight Time)
+    payment_fee = models.CharField(blank=True, null=True, max_length=16)        # payment transaction fee
+    payment_gross = models.CharField(blank=True, null=True, max_length=32)      # payment sum
+    payment_status = models.CharField(blank=True, null=True, max_length=32)
+    payment_type = models.CharField(blank=True, null=True, max_length=32)
+    pending_reason = models.CharField(blank=True, null=True, max_length=255)
+    protection_eligibility = models.CharField(blank=True, null=True, max_length=32)
+    quantity = models.CharField(blank=True, null=True, max_length=16)           # purchase q-ty
+    receiver_email = models.CharField(blank=True, null=True, max_length=255)
+    receiver_id = models.CharField(blank=True, null=True, max_length=255)
+    residence_country = models.CharField(blank=True, null=True, max_length=1024)
+    shipping = models.CharField(blank=True, null=True, max_length=32)           # cost of shipping
+    tax = models.CharField(blank=True, null=True, max_length=32)                # tax for shipping
+    test_ipn = models.CharField(blank=True, null=True, max_length=4)            # ipn from sandbox
+    transaction_subject = models.CharField(blank=True, null=True, max_length=1024)
+    txn_id = models.CharField(unique=True, max_length=128)
+    txn_type = models.CharField(blank=True, null=True, max_length=255)
+    verify_sign = models.CharField(blank=True, null=True, max_length=1024)
+
+
+    class Meta:
+        permissions = (
+            ("read_paypalpayment", "Can read paypalpayment"),
+        )
+
+
+    def __str__(self):
+        return 'tx-id: ' + self.txn_id
+
+
+    def verifyAndSave(self, request, pay_env=0):
+        """
+        Verify notification from PayPal and save all attributes.
+        Pay_env = 0 if this is a test environment
+        """
+        if request.method == 'POST':
+            # SEND POSTBACK FOR PAYMENT VALIDATION
+            # prepares provided data set to inform PayPal we wish to validate the response
+            data = request.POST.copy()
+            data['cmd'] = "_notify-validate"
+            params = urlencode(data).encode('utf-8')
+            # sends the data and request to the PayPal
+            if pay_env != 0:
+                req = Request('https://www.paypal.com/cgi-bin/webscr', params)
+            else:
+                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr', params)
+            #reads the response back from PayPal
+            response = urlopen(req)
+            status = response.read()
+            # If not verified
+            if not status == b"VERIFIED":
+                return False
+            else:
+                self.payment_status = 'VERIFIED'
+
+            txn_id = request.POST.get['txn_id', '']
+            if len(txn_id):
+                pp_tx, flag = self.objects.get_or_create(txn_id=txn_id, create_user=User.objects.get(email='special@tppcenter.com'))
+                if flag:
+                    pp_tx.txn_id = txn_id
+            else:
+                return False
+
+            pp_tx.address_city = request.POST.get['address_city', '']
+            pp_tx.address_country = request.POST.get['address_country', '']
+            pp_tx.address_country_code = request.POST.get['address_country_code', '']
+            pp_tx.address_name = request.POST.get['address_name', '']
+            pp_tx.address_state = request.POST.get['address_state', '']
+            pp_tx.address_status = request.POST.get['address_status', '']
+            pp_tx.address_street = request.POST.get['address_street', '']
+            pp_tx.address_zip = request.POST.get['address_zip', '']
+            pp_tx.business = request.POST.get['business', '']
+            pp_tx.charset = request.POST.get['charset', '']
+            pp_tx.custom = request.POST.get['custom', '']
+            pp_tx.first_name = request.POST.get['first_name', '']
+            pp_tx.last_name = request.POST.get['last_name', '']
+            pp_tx.handling_amount = request.POST.get['handling_amount', '']
+            pp_tx.ipn_track_id = request.POST.get['ipn_track_id', '']
+            pp_tx.item_name = request.POST.get['item_name', '']
+            pp_tx.item_number = request.POST.get['item_number', '']
+            pp_tx.mc_currency = request.POST.get['mc_currency', '']
+            pp_tx.mc_fee = request.POST.get['mc_fee', '']
+            pp_tx.mc_gross = request.POST.get['mc_gross', '']
+            pp_tx.notify_version = request.POST.get['notify_version', '']
+            pp_tx.payer_business_name = request.POST.get['payer_business_name', '']
+            pp_tx.payer_email = request.POST.get['payer_email', '']
+            pp_tx.payer_id = request.POST.get['payer_id', '']
+            pp_tx.payer_status = request.POST.get['payer_status', '']
+            # receive date in PDT bound
+            pp_tx.payment_date = datetime.strptime(request.POST.get['payment_date', ''][:-3], "%H:%M:%S %b %d, %Y")
+            pp_tx.payment_fee = request.POST.get['payment_fee', '']
+            pp_tx.payment_gross = request.POST.get['payment_gross', '']
+            pp_tx.payment_status = request.POST.get['payment_status', '']
+            pp_tx.payment_type = request.POST.get['payment_type', '']
+            pp_tx.pending_reason = request.POST.get['pending_reason', '']
+            pp_tx.protection_eligibility = request.POST.get['protection_eligibility', '']
+            pp_tx.quantity = request.POST.get['quantity', '']
+            pp_tx.receiver_email = request.POST.get['receiver_email', '']
+            pp_tx.receiver_id = request.POST.get['receiver_id', '']
+            pp_tx.residence_country = request.POST.get['residence_country', '']
+            pp_tx.shipping = request.POST.get['shipping', '']
+            pp_tx.tax = request.POST.get['tax', '']
+            pp_tx.test_ipn = request.POST.get['test_ipn', '']
+            pp_tx.transaction_subject = request.POST.get['transaction_subject', '']
+            pp_tx.txn_type = request.POST.get['txn_type', '']
+            pp_tx.verify_sign = request.POST.get['verify_sign', '']
+            pp_tx.save()
+
+            return True
+        else:
+            return False
+
+
+    def getPaymentDatePDT(self):
+        """
+        Returns payment date for PDT bound (original)
+        """
+        return self.payment_date
+
+
+    def getPaymentDateUTC(self):
+        """
+        Returns payment date for UTC bound. Receive date in PDT format (UTC = PDT + 7 hours)
+        """
+        return self.payment_date + timedelta(hours=7)
+
+
+    def getAllAttributes(self):
+        """
+        Returns all payment attributes as dictionary
+        """
+        return {}
+
+
+    def getSender(self):
+        """
+        Return payment sender instance
+        """
+        return ''
+
+
+    def getReceiver_s(self):
+        """
+        Return list of payment receiver(s)
+        """
+        return []
+
+
+    def getSumm(self):
+        """
+        Return payment sum and currency
+        """
+        return 0, ''
+
+
+    def getStatus(self):
+        """
+        Return current payment status
+        """
+        return ''
+
+
+    def setStatus(self, status):
+        """
+        Set current payment status
+        """
+        self.payment_status = status
+        if self.save():
+            return True
+        else:
+            return False
+
+
+    def getItemNumber(self):
+        return self.item_number
 
 class Shipment(Item):
 
