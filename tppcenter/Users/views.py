@@ -67,7 +67,7 @@ def get_users_content(request, page=1):
 
     q = request.GET.get('q', '')
 
-    filters, searchFilter = filterLive(request)
+    filters, searchFilter = filterLive(request, model_name=Cabinet.__name__)
 
     sqs = SearchQuerySet().models(Cabinet).order_by('-obj_create_date')
 

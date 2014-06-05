@@ -1,7 +1,8 @@
+from django.core.paginator import Paginator
 from django.db.models import Q
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy
+                        Cabinet, InnovationProject, Vacancy, Gallery
 from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp
 from django.conf import settings
@@ -9,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
@@ -22,7 +23,11 @@ from django.utils import timezone
 from datetime import datetime
 from django.core.cache import cache
 from django.utils.translation import trans_real
+from core.amazonMethods import add
+
 import logging
+
+
 logger = logging.getLogger('django.request')
 
 def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
@@ -96,7 +101,7 @@ def _tppContent(request, page=1, my=None):
     if not cached:
 
         if not my:
-            filters, searchFilter = func.filterLive(request)
+            filters, searchFilter = func.filterLive(request, model_name=Tpp.__name__)
 
             sqs = func.getActiveSQS().models(Tpp)
 
@@ -287,7 +292,7 @@ def addTpp(request):
 
     user_groups = user.groups.values_list('name', flat=True)
 
-    if not user.is_manager or not 'Tpp Creator' in user_groups:
+    if not user.is_manager or not 'TPP Creator' in user_groups:
         return func.permissionDenied()
 
     if request.POST:
@@ -882,3 +887,97 @@ def _tabsStaff(request, tpp, page=1):
 
     return render_to_response('Tpp/tabStaff.html', templateParams, context_instance=RequestContext(request))
 
+def _tabsGallery(request, item, page=1):
+
+    item = get_object_or_404(Tpp, pk=item)
+    file = request.FILES.get('Filedata', None)
+
+    permissionsList = item.getItemInstPermList(request.user)
+
+    has_perm = False
+
+    if 'change_tpp' in permissionsList:
+        has_perm = True
+
+    if file is not None:
+
+        if has_perm:
+
+            try:
+                file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
+                instance = Gallery(photo=file, create_user=request.user)
+                instance.save()
+
+                Relationship.setRelRelationship(parent=item, child=instance, user=request.user, type='dependence')
+
+                return HttpResponse('')
+            except Exhibition:
+                return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+    else:
+        photos = Gallery.objects.filter(c2p__parent=item).all()
+
+        paginator = Paginator(photos, 10)
+
+        try:
+            onPage = paginator.page(page)
+        except Exception:
+            onPage = paginator.page(1)
+
+        url_paginator = "tpp:tabs_gallery_paged"
+        paginator_range = func.getPaginatorRange(onPage)
+
+        templateParams = {
+            'page': onPage,
+            'paginator_range': paginator_range,
+            'url_paginator': url_paginator,
+            'gallery': onPage.object_list,
+            'has_perm': has_perm,
+            'item_id': item.pk,
+            'pageNum': page,
+            'url_parameter': item.pk
+        }
+
+
+        return render_to_response('Tpp/tabGallery.html', templateParams, context_instance=RequestContext(request))
+
+
+def galleryStructure(request, item, page=1):
+
+    item = get_object_or_404(Tpp, pk=item)
+    photos = Gallery.objects.filter(c2p__parent=item).all()
+
+    paginator = Paginator(photos, 10)
+
+    try:
+        onPage = paginator.page(page)
+    except Exception:
+        onPage = paginator.page(1)
+
+    url_paginator = "tpp:tabs_gallery_paged"
+    paginator_range = func.getPaginatorRange(onPage)
+
+    templateParams = {
+        'page': onPage,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'gallery': onPage.object_list,
+        'pageNum': page,
+        'url_parameter': item.pk
+    }
+
+    return render_to_response('Tpp/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
+
+def galleryRemoveItem(request, item):
+    photo = get_object_or_404(Gallery, pk=item)
+
+    comp = Company.objects.get(p2c__child=photo)
+
+    permissionsList = comp.getItemInstPermList(request.user)
+
+
+    if 'change_tpp' in permissionsList:
+        photo.delete()
+
+    return HttpResponse()

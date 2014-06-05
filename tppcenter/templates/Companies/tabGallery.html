@@ -1,0 +1,51 @@
+{% load i18n %}
+{% load staticfiles %}
+<div class="tpp-dt-content">
+    {% if has_perm %}
+        <div class="uploader">
+                <form>
+                    <input id="file_upload" name="file_upload" type="file" multiple="true">
+                    <div id="queue"></div>
+                </form>
+        </div>
+    {% endif %}
+    <div class="galleryHolder">
+        {% include "Companies/tab_gallery_structure.html" %}
+    </div>
+</div>
+
+{% if has_perm %}
+    <!-- Gallery uploader -->
+    <style>
+        .uploader {
+            max-height: 130px;
+            overflow-y: hidden;
+        }
+        #queue, #file_upload {
+            float: left;
+            margin-left: 20px;
+        }
+        .uploader:after {
+           content: "";
+           display: block;
+           clear: both;
+        }
+    </style>
+
+    <script>
+        LANG['UPLOAD'] = {
+            'uploading': '{% trans "Uploading" %}',
+            'success': '{% trans "Uploaded" %}',
+            'fail': '{% trans "Fail" %}',
+            'wasUploaded': '{% trans "The following files was not uploaded" %}'
+        };
+
+        var swf = '{% static "tppcenter/uploadify.swf" %}';
+        var uploader = '{% url "companies:tabs_gallery" item_id %}';
+        var structureURL = '{% url "companies:gallery_structure" item_id pageNum %}';
+        var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
+
+        galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader, buttonImage, structureURL);
+    </script>
+    <!-- /Gallery uploader -->
+{% endif %}

@@ -46,13 +46,16 @@ def basket(request, page=1):
         end_event_date = parse(advAttr.get('END_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
         start_event_date = parse(advAttr.get('START_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
 
-        if not end_event_date:
-            active = 0
-        else:
-            active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
-
         if now() >= advObj.end_date:
             active = 2
+        else:
+
+            if not end_event_date:
+                active = 0
+            else:
+                active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
+
+
 
         if getattr(advObj, 'adv_top', None):
             type = _('Top')

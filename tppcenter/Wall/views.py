@@ -42,7 +42,7 @@ def get_wall_list(request):
 
 def _wallContent(request):
 
-    filters, searchFilter = func.filterLive(request)
+    filters, searchFilter = func.filterLive(request, model_name='Wall')
 
     innov_projects = func.getActiveSQS().models(InnovationProject)
     products = func.getActiveSQS().models(Product)

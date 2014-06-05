@@ -113,9 +113,15 @@
                             "mRender": function ( data, type, full ) {
 
                                 if (data == "0"){
-                                    return '<a href="' + activeURL + full[7] + '/">Activate</a>';
+                                    return '<a href="' + activeURL + full[7] + '/">' +
+                                    '<button class="btn btn-success">Activate</button>' +
+                                    '</a>';
+                                } else if(data == "2") {
+                                    return "Expired"
                                 } else {
-                                    return '<a href="' + deactiveURL + full[7] + '/">Deactivate</a>';
+                                    return '<a href="' + deactiveURL + full[7] + '/">' +
+                                    '<button class="btn btn-danger">Deactivate</button>' +
+                                    '</a>';
                                 }
 
                             }
