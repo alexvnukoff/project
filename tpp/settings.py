@@ -106,7 +106,9 @@ ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -171,7 +173,7 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 USE_X_FORWARDED_HOST = True
 
-LANGUAGE_CODE = 'ru'
+
 
 TIME_ZONE = 'UTC'
 
@@ -213,10 +215,12 @@ AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
 
+SESSION_COOKIE_DOMAIN = '.tppcenter.com'
+
 gettext = lambda s: s
 LANGUAGES = (
     ('ru', gettext('Russia')),
-    #('am', gettext('Armenia')),
+    ('am', gettext('Armenia')),
     #('az', gettext('Azerbaijan')),
     #('be', gettext('Belarus')),
     ('en', gettext('England')),
@@ -242,7 +246,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'en': ('ru',),
     'ru': ('en',),
     'he': ('en',),
-    #'am': ('ru',),
+    'am': ('en',),
     #'az': ('ru',),
     #'be': ('ru',),
     #'et': ('ru',),

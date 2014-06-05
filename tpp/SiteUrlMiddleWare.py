@@ -3,6 +3,7 @@ from django.conf import settings
 from threading import current_thread
 import os
 from django.http import HttpResponseBadRequest
+from django.utils import translation
 
 class SiteUrlMiddleWare:
 
@@ -38,6 +39,41 @@ class SiteUrlMiddleWare:
                      os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
 
 
+
+
+
+
+
+
+class LocaleMiddleware(object):
+    """
+    This is a very simple middleware that parses a request
+    and decides what translation object to install in the current
+    thread context. This allows pages to be dynamically
+    translated to the language the user desires (if the language
+    is available, of course).
+    """
+
+    def process_request(self, request):
+
+       settings.LANGUAGE_CODE = 'ru'
+       url = request.META.get('HTTP_HOST', False)
+       lang = url.split('.')[0] if url else None
+
+       if lang:
+            languages = [lan[0] for lan in settings.LANGUAGES]
+            if lang in languages:
+                 settings.LANGUAGE_CODE = lang
+
+
+
+
+       translation.activate(settings.LANGUAGE_CODE)
+
+    def process_response(self, request, response):
+        translation.deactivate()
+
+        return response
 
 
 class GlobalRequest(object):

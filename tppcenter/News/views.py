@@ -284,7 +284,7 @@ def _getdetailcontent(request, item_id):
             newsCategory = NewsCategories.objects.get(p2c__child=item_id)
             category_value = newsCategory.getAttributeValues('NAME')
             newValues.update({'CATEGORY_NAME': category_value})
-            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
+            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id, ).exclude(id=new.id)[:3]
             similar_news_ids = [sim_news.pk for sim_news in similar_news]
             similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
         except ObjectDoesNotExist:
