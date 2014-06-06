@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 import datetime
 from appl.models import Company, PayPalPayment
 
@@ -25,12 +26,12 @@ def verify_payment_status(request):
                         comp.paid_till_date = new_end_date
                         comp.save()
                     except:
-                        return False
+                        return HttpResponse('False')
                 else:
-                    return False
+                    return HttpResponse('False')
             else:
-                return False
+                return HttpResponse('False')
         else:
-            return False
+            return HttpResponse('False')
     else:
-        return False
+        return HttpResponse('False')

@@ -5,7 +5,8 @@ from core.models import Item, State, Relationship
 from core.hierarchy import hierarchyManager
 from core.models import User, ItemManager
 from django.utils.timezone import now
-from datetime import datetime, timedelta
+import datetime
+from time import mktime, strptime
 from django.db.models import Count, ObjectDoesNotExist
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
@@ -601,58 +602,55 @@ class PayPalPayment(Payment):
             else:
                 self.payment_status = 'VERIFIED'
 
-            txn_id = request.POST.get['txn_id', '']
-            if len(txn_id):
-                pp_tx, flag = self.objects.get_or_create(txn_id=txn_id, create_user=User.objects.get(email='special@tppcenter.com'))
-                if flag:
-                    pp_tx.txn_id = txn_id
-            else:
-                return False
+            self.txn_id = request.POST['txn_id']
+            self.address_city = request.POST['address_city']
+            self.address_country = request.POST['address_country']
+            self.address_country_code = request.POST['address_country_code']
+            self.address_name = request.POST['address_name']
+            self.address_state = request.POST['address_state']
+            self.address_status = request.POST['address_status']
+            self.address_street = request.POST['address_street']
+            self.address_zip = request.POST['address_zip']
+            self.business = request.POST['business']
+            self.charset = request.POST['charset']
+            self.custom = request.POST['custom']
+            self.first_name = request.POST['first_name']
+            self.last_name = request.POST['last_name']
+            self.handling_amount = request.POST['handling_amount']
+            self.ipn_track_id = request.POST['ipn_track_id']
+            self.item_name = request.POST['item_name']
+            self.item_number = request.POST['item_number']
+            self.mc_currency = request.POST['mc_currency']
+            self.mc_fee = request.POST['mc_fee']
+            self.mc_gross = request.POST['mc_gross']
+            self.notify_version = request.POST['notify_version']
+            self.payer_business_name = request.POST['payer_business_name']
+            self.payer_email = request.POST['payer_email']
+            self.payer_id = request.POST['payer_id']
+            self.payer_status = request.POST['payer_status']
 
-            pp_tx.address_city = request.POST.get['address_city', '']
-            pp_tx.address_country = request.POST.get['address_country', '']
-            pp_tx.address_country_code = request.POST.get['address_country_code', '']
-            pp_tx.address_name = request.POST.get['address_name', '']
-            pp_tx.address_state = request.POST.get['address_state', '']
-            pp_tx.address_status = request.POST.get['address_status', '']
-            pp_tx.address_street = request.POST.get['address_street', '']
-            pp_tx.address_zip = request.POST.get['address_zip', '']
-            pp_tx.business = request.POST.get['business', '']
-            pp_tx.charset = request.POST.get['charset', '']
-            pp_tx.custom = request.POST.get['custom', '']
-            pp_tx.first_name = request.POST.get['first_name', '']
-            pp_tx.last_name = request.POST.get['last_name', '']
-            pp_tx.handling_amount = request.POST.get['handling_amount', '']
-            pp_tx.ipn_track_id = request.POST.get['ipn_track_id', '']
-            pp_tx.item_name = request.POST.get['item_name', '']
-            pp_tx.item_number = request.POST.get['item_number', '']
-            pp_tx.mc_currency = request.POST.get['mc_currency', '']
-            pp_tx.mc_fee = request.POST.get['mc_fee', '']
-            pp_tx.mc_gross = request.POST.get['mc_gross', '']
-            pp_tx.notify_version = request.POST.get['notify_version', '']
-            pp_tx.payer_business_name = request.POST.get['payer_business_name', '']
-            pp_tx.payer_email = request.POST.get['payer_email', '']
-            pp_tx.payer_id = request.POST.get['payer_id', '']
-            pp_tx.payer_status = request.POST.get['payer_status', '']
             # receive date in PDT bound
-            pp_tx.payment_date = datetime.strptime(request.POST.get['payment_date', ''][:-3], "%H:%M:%S %b %d, %Y")
-            pp_tx.payment_fee = request.POST.get['payment_fee', '']
-            pp_tx.payment_gross = request.POST.get['payment_gross', '']
-            pp_tx.payment_status = request.POST.get['payment_status', '']
-            pp_tx.payment_type = request.POST.get['payment_type', '']
-            pp_tx.pending_reason = request.POST.get['pending_reason', '']
-            pp_tx.protection_eligibility = request.POST.get['protection_eligibility', '']
-            pp_tx.quantity = request.POST.get['quantity', '']
-            pp_tx.receiver_email = request.POST.get['receiver_email', '']
-            pp_tx.receiver_id = request.POST.get['receiver_id', '']
-            pp_tx.residence_country = request.POST.get['residence_country', '']
-            pp_tx.shipping = request.POST.get['shipping', '']
-            pp_tx.tax = request.POST.get['tax', '']
-            pp_tx.test_ipn = request.POST.get['test_ipn', '']
-            pp_tx.transaction_subject = request.POST.get['transaction_subject', '']
-            pp_tx.txn_type = request.POST.get['txn_type', '']
-            pp_tx.verify_sign = request.POST.get['verify_sign', '']
-            pp_tx.save()
+            ts = strptime(request.POST['payment_date'][:-4], "%H:%M:%S %b %d, %Y")
+            self.payment_date = datetime.datetime.fromtimestamp(mktime(ts))
+
+            self.payment_fee = request.POST['payment_fee']
+            self.payment_gross = request.POST['payment_gross']
+            self.payment_status = request.POST['payment_status']
+            self.payment_type = request.POST['payment_type']
+            self.pending_reason = request.POST['pending_reason']
+            self.protection_eligibility = request.POST['protection_eligibility']
+            self.quantity = request.POST['quantity']
+            self.receiver_email = request.POST['receiver_email']
+            self.receiver_id = request.POST['receiver_id']
+            self.residence_country = request.POST['residence_country']
+            self.shipping = request.POST['shipping']
+            self.tax = request.POST['tax']
+            self.test_ipn = request.POST['test_ipn']
+            self.transaction_subject = request.POST['transaction_subject']
+            self.txn_type = request.POST['txn_type']
+            self.verify_sign = request.POST['verify_sign']
+            self.create_user = User.objects.get(email='special@tppcenter.com')
+            self.save()
 
             return True
         else:
@@ -670,7 +668,7 @@ class PayPalPayment(Payment):
         """
         Returns payment date for UTC bound. Receive date in PDT format (UTC = PDT + 7 hours)
         """
-        return self.payment_date + timedelta(hours=7)
+        return self.payment_date + datetime.timedelta(hours=7)
 
 
     def getAllAttributes(self):
