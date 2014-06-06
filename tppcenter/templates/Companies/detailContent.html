@@ -460,7 +460,8 @@
 </script>
 
 <div class="companies">
-
+            {% with companyValues.ID.0 as id %}
+            {% with companyValues.SLUG.0 as slug %}
             {% with companyValues.NAME.0 as name %}
             {% with companyValues.DETAIL_TEXT.0 as content %}
             {% with companyValues.IMAGE.0 as image %}
@@ -470,6 +471,8 @@
             {% with companyValues.FAX.0 as fax %}
             {% with companyValues.ANONS.0 as anons %}
             {% with companyValues.SITE_NAME.0 as site_name %}
+            {% with companyValues.SHOW_PAYMENT_BUTTON.0 as show_button %}
+            {% with companyValues.DAYS_BEFORE_END.0 as days_till_end %}
 
             {% with country.FLAG.0 as country_flag %}
             {% with country.COUNTRY_FLAG.0 as flag_class %}
@@ -486,14 +489,48 @@
                      {{ name }}
                     </h3>
                     {% if image %}
-                    <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}" />
+                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}" />
                     {% else %}
-                    <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
+                        <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
+                    {% comment %} Pay membership button {% endcomment %}
+                    {% if show_button %}
+                        <div class="payjoin">
+                            {% if days_till_end == 0 %}
+                                <span>{% trans "Free period is expired." %}</span>
+                            {% else %}
+                                <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
+                            {% endif %}
+                            <!-- Script for PayPal payment button -->
+                            {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
+                            <div id="paypal-membership" style="padding-left: 30px">
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"
+                                    data-name="{% trans '1-year www.b24online.com membership' %}"
+                                    data-number="Company ID: {{ id }} ({{ name }})" {% comment %} Company's database ID{% endcomment %}
+                                    data-quantity="1"
+                                    data-button="paynow"
+                                    data-amount="100"
+                                    {% comment %}data-callback="www.tppcenter.com/payments/" {% endcomment %}
+                                    data-callback="http://tppcenter.ngrok.com/payments/"
+                                    data-env="sandbox"
+                                ></script>
+                                {% comment %}
+                                PayPal Debugging Info
+                                Sandbox ApplID: APP-80W284485P519543T
+                                Sandbox Username: afend-developer_api1.tppcenter.com
+                                Sandbox Password: 1401112459
+                                Sandbox Signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AC4CvkAkiTi9Z2vEGtM41XjTq2OI
+                                Sandbox Endpoint: https://svcs.sandbox.paypal.com/AdaptivePayments/Pay
+                                Production Endpoint: https://api-3t.paypal.com/nvp
+                                {% endcomment %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% comment %} /Pay membership button {% endcomment %}
                     {% if anons %}
-                      <p>{{ anons|cleanHtml|safe }}</p>
+                        <p>{{ anons|cleanHtml|safe }}</p>
                     {% else %}
-                      <p>{{ content|cleanHtml|safe }}</p>
+                        <p>{{ content|cleanHtml|safe }}</p>
                     {% endif %}
                 </div>
                 <div class="social">
@@ -634,6 +671,10 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
