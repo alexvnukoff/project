@@ -790,7 +790,9 @@ def _tabsStaff(request, tpp, page=1):
                         errorMessage = _('You can not add user at Vacancy which already busy.')
                 else:
                     errorMessage = _('You can not add user [%(user)s] at the company twice.') % {"user": str(usr)}
-            except:
+            except Exception as e:
+                errorMessage = _('Could not add User ID: %(user_id).\
+                                  The reason is: %(reason)s') % {"user_id": userEmail, "reason": str(e)}
                 logger.exception("Error in tab staff",  exc_info=True)
                 pass
 

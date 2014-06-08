@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 from celery import shared_task, task
 import json
 from appl import func
+from django.conf import settings
 
 
 @shared_task
@@ -224,7 +225,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     sizes = {
             'big': {'box': (150, 140), 'fit': False},
             'small': {'box': (70, 70), 'fit': False},
-            'th': {'box':(30, 30), 'fit': True}
+            'th': {'box': (30, 30), 'fit': True}
             }
 
     company = form.save(user, site_id, sizes=sizes)
@@ -247,8 +248,9 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
             Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=tpp, child=company, user=user)
         else:
-            time = now() + datetime.timedelta(days=60)
+            time = now() + datetime.timedelta(days=settings.FREE_PERIOD)
             company.end_date = time
+            company.paid_till_date = time
             company.save()
 
         #this logic was moved into appl.models signal post_save from Department creation

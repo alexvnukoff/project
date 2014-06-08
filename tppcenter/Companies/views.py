@@ -1,3 +1,4 @@
+import datetime
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -223,8 +224,25 @@ def _companiesDetailContent(request, item_id):
     if not cached:
         company = get_object_or_404(Company, pk=item_id)
 
-        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS',
+        companyValues = company.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'IMAGE', 'POSITION', 'ADDRESS', 'SLUG',
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
+        #check free membership period
+        if company.paid_till_date != None:
+            days_till_end = (company.paid_till_date - datetime.datetime.now().date()).days
+            if (days_till_end <= settings.NOTIFICATION_BEFORE_END_DATE and days_till_end > 0):
+                companyValues['SHOW_PAYMENT_BUTTON'] = [True]
+                companyValues['DAYS_BEFORE_END'] = [days_till_end]
+            else:
+                if(days_till_end > 0):
+                    companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+                else:
+                    company.end_date = now()
+                    companyValues['SHOW_PAYMENT_BUTTON'] = [True]
+                    companyValues['DAYS_BEFORE_END'] = [0]
+        else:
+            companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+        #/check free membership period
+        companyValues['ID'] = [item_id]
 
         description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
         description = func.cleanFromHtml(description)
