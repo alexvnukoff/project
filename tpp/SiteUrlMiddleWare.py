@@ -76,6 +76,7 @@ class LocaleMiddleware(object):
         return response
 
 
+
 class GlobalRequest(object):
     _requests = {}
 

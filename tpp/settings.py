@@ -26,6 +26,8 @@ ADMINS = (
     ('Iliya', 'afend@tppcenter.com'),
 )
 
+
+
 MANAGERS = ADMINS
 
 # Quick-start development settings - unsuitable for production
