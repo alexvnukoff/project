@@ -100,11 +100,9 @@ def newsForm(request, action, item_id=None):
 
     if action == 'delete':
        newsPage = deleteNews(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addNews(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):

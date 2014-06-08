@@ -143,11 +143,9 @@ def tenderForm(request, action, item_id=None):
 
     if action == 'delete':
         tendersPage = deleteTender(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         tendersPage = addTender(request)
-
-    if action == 'update':
+    elif action == 'update':
         tendersPage = updateTender(request, item_id)
 
     if isinstance(tendersPage, HttpResponseRedirect) or isinstance(tendersPage, HttpResponse):

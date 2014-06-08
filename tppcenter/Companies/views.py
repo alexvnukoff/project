@@ -773,11 +773,9 @@ def companyForm(request, action, item_id=None):
 
     if action == 'delete':
         newsPage = deleteCompany(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addCompany(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateCompany(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):

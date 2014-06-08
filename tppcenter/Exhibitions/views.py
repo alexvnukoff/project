@@ -139,11 +139,9 @@ def exhibitionForm(request, action, item_id=None):
 
     if action == 'delete':
         exhibitionPage = deleteExhibition(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         exhibitionPage = addExhibition(request)
-
-    if action == 'update':
+    elif action == 'update':
         exhibitionPage = updateExhibition(request, item_id)
 
     if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):

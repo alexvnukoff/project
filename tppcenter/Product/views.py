@@ -156,11 +156,9 @@ def productForm(request, action, item_id=None):
 
     if action == 'delete':
         productsPage = deleteProduct(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         productsPage = addProducts(request)
-
-    if action == 'update':
+    elif action == 'update':
         productsPage = updateProduct(request, item_id)
 
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
