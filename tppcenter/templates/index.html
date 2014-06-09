@@ -81,6 +81,38 @@
 <div class="wrapper">
     <div class="main">
     	<div class="sideleft">
+         <select id="lang_select" style="height: 29px;width: 182px;" >
+                        <option>{% trans 'Language' %}</option>
+                        <option value="ru">{% trans "Russian" %}</option>
+                        <option value="am">{% trans "Armenian" %}</option>
+                        <option value="en">{% trans "English" %}</option>
+
+                    </select>
+                  <script>
+                    $( "#lang_select" ).change(function(e) {
+                        if (!$( this ).val())
+                        return;
+
+                        path = (window.location.host).split('.');
+                        if (path[0] == 'www'){
+                            delete path[0]
+                        }
+
+                        if (path.length > 2){
+                            host = path[1] + '.' + path[2]
+                        }
+                        else{
+                            host = window.location.host
+                        }
+
+
+                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
+                                window.location.pathname + window.location.search + window.location.hash;
+
+                    });
+
+                </script>
+
 
             <!-- Google Translate injection -->
             <div id="google_translate_element_main"></div>

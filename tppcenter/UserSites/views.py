@@ -108,13 +108,9 @@ def resumeForm(request, action, item_id=None):
 
     if action == 'delete':
         sitePage = deleteResume(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         sitePage = addSite(request)
-
-
-
-    if action == 'update':
+    elif action == 'update':
         sitePage = updateSite(request, item_id)
 
     if isinstance(sitePage, HttpResponseRedirect) or isinstance(sitePage, HttpResponse):

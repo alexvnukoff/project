@@ -791,11 +791,9 @@ def companyForm(request, action, item_id=None):
 
     if action == 'delete':
         newsPage = deleteCompany(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addCompany(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateCompany(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -1042,6 +1040,16 @@ def _tabsGallery(request, item, page=1):
 def galleryStructure(request, item, page=1):
 
     item = get_object_or_404(Company, pk=item)
+
+    file = request.FILES.get('Filedata', None)
+
+    permissionsList = item.getItemInstPermList(request.user)
+
+    has_perm = False
+
+    if 'change_company' in permissionsList:
+        has_perm = True
+
     photos = Gallery.objects.filter(c2p__parent=item).all()
 
     paginator = Paginator(photos, 10)
@@ -1061,6 +1069,7 @@ def galleryStructure(request, item, page=1):
         'gallery': onPage.object_list,
         'pageNum': page,
         'url_parameter': item.pk,
+        'has_perm': has_perm
     }
 
     return render_to_response('Companies/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))

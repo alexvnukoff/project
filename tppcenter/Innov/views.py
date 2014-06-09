@@ -316,11 +316,9 @@ def innovForm(request, action, item_id=None):
 
     if action == 'delete':
         newsPage = deleteInnov(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addProject(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateProject(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):

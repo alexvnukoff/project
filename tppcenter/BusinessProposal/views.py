@@ -132,11 +132,9 @@ def proposalForm(request, action, item_id=None):
 
     if action == 'delete':
         proposalsPage = deleteProposal(request,item_id)
-
-    if action == 'add':
+    elif action == 'add':
         proposalsPage = addBusinessProposal(request)
-
-    if action =='update':
+    elif action =='update':
         proposalsPage = updateBusinessProposal(request, item_id)
 
     if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
