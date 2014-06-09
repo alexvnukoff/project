@@ -904,7 +904,7 @@ class Item(models.Model):
 
             try:
                 with transaction.atomic():
-                    Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+                    #Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
                     Value.objects.bulk_create(bulkInsert)
 
                     #TODO: Artur fix it
@@ -917,15 +917,26 @@ class Item(models.Model):
                 raise e
 
         else:
-            # here update attributes' values
+            # here UPDATE attributes' values
             session_lang = get_language()
             fact_attr_in_value = Value.objects.filter(item=self).all()
-            for val in fact_attr_in_value:
-                if isinstance(attrWithValues[val.attr.title], str):
-                    val.__dict__['title_' + session_lang] = attrWithValues[val.attr.title]
-                    val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
-                    val.save()
+            fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
+            attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
+            for a in attr_from_db:
+                for val in fact_attr_in_value:
+                    if a.title != val.attr.title:
+                        continue
+                    else:
+                        if a.dict == None:
+                            val.__dict__['title_' + session_lang] = attrWithValues[val.attr.title]
+                            val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
+                        else:
+                            slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
+                            val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                            val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
+                        val.save()
+                        continue
         return True
 
     def getSiblings(self, includeSelf=True):
