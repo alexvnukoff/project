@@ -248,7 +248,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'en': ('ru',),
     'ru': ('en',),
     'he': ('en',),
-    'am': ('en',),
+    'am': ('ru',),
     #'az': ('ru',),
     #'be': ('ru',),
     #'et': ('ru',),
