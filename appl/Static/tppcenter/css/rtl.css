@@ -30,7 +30,7 @@ body, input, textarea, select{ text-align:right;}
 .tophead-l{ float:right; text-align:right;}
 .tophead-r{ float:left;}
 .news-logo{ float:right;}
-.community .newstitle label{ float:right; padding-right:8px; direction:rtl!important; padding-right:12px;}
+.community .newstitle label{ float:right; padding-right:8px;}
 .community .newstitle .notify{ float:left;}
 .community .newslink .left{ float:right; margin-right:12px;}
 .btnprofile, .less{ left:22px!important; right:auto!important;}
@@ -83,7 +83,7 @@ body, input, textarea, select{ text-align:right;}
     -o-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     -sand-transform: rotate(90deg);}
-.localmenu{ left:auto; right:0;}
+.localmenu{ left:0; right:auto;}
 .tender-action .icon-action{ float:right;}
 .tender-action .deletext{ padding-right:5px; padding-left:0;}
 .tender-list li .button-r{ right:auto; left:10px;}
@@ -201,5 +201,3 @@ div.fileinputs{ float:right; margin-right:30px;}
 .innov-tab-content li label{ width:92%;}
 .wall-title-bg{ direction:rtl;}
 .vacancy-list li .vacancy-desc a.more{ text-align:left;}
-
-.current-company .cpn-current{ direction:rtl;background:url(../img/arrow-white.png) no-repeat left center;}
