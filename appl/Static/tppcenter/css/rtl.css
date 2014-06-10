@@ -150,6 +150,8 @@ body, input, textarea, select{ text-align:right;}
 .step3form li .right input.text, .step3form li .right textarea{ float:right;}
 .b-img{ float:right;}
 div.fileinputs{ float:right; margin-right:30px;}
+div.org-contacts ul li span.right{float: left;}
+div.org-contacts ul li span.left{float: right;}
 .btn-nextstep{ direction:rtl;}
 .listprd li .link .flag{ float:right; }
 .listprd li .link .name{ margin-left:0;}
