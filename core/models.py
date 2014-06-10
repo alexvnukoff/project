@@ -909,7 +909,6 @@ class Item(models.Model):
 
             except IntegrityError as e:
                 raise e
-
         else:
             # here UPDATE attributes' values
             session_lang = get_language()
