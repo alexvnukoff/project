@@ -265,7 +265,8 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
