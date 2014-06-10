@@ -822,7 +822,6 @@ class Item(models.Model):
             elif isinstance(attrWithValues['NAME'], str):
                 attrWithValues['SLUG'] = Item.createItemSlug(attrWithValues['NAME'], self.pk)
 
-
         queries = []
         bulkInsert = []
         notBulk = []
@@ -927,7 +926,7 @@ class Item(models.Model):
                         # if passed argument itself is NOT a Dictionary, then...
                         if not isinstance(attrWithValues[val.attr.title], dict):
                             if a.dict == None:
-                                val.__dict__['title_' + session_lang] = attrWithValues[val.attr.title]
+                                val.__dict__['title_' + session_lang] = str(attrWithValues[val.attr.title])
                                 val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
                             else:
                                 slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
@@ -938,7 +937,7 @@ class Item(models.Model):
                             for arg_key, arg_val in attrWithValues[val.attr.title].items():
                                 if int(arg_key) == val.id:
                                     if a.dict == None:
-                                        val.__dict__['title_' + session_lang] = arg_val
+                                        val.__dict__['title_' + session_lang] = str(arg_val)
                                         val.__dict__['sha1_code'] = createHash(arg_val)
                                     else:
                                         slot = Slot.objects.get(id=arg_key, dict=a.dict)
