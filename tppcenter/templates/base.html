@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
+
 {% load inclusionTags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -111,6 +112,10 @@
 
 
 {% block footer %}
+
+    {% if site|getSide %}
+     <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/rtl.css"%}" />
+    {% endif %}
     <div class="wrapper">
         <div class="linkbottom">
             {% showStaticPages %}

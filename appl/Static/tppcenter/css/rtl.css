@@ -1,9 +1,11 @@
 body, input, textarea, select{ text-align:right;}
+
 .header-r li .text-r{ padding: 0 10px 0 0;}
 .tophead-l{ text-align:left;}
 .services li .imgservice{ float:right; border-left: 1px solid #D2D4D8; border-right:0;}
 .services li .nameservice{ border-right:1px #FFF solid; border-left:0; text-align:right!important; padding:0px 10px 0 0;}
 .slide-comm, .bx-wrapper{ direction:ltr!important;}
+.sprite{margin-right: 0;margin-left: 10px;}
 .review-l ul.listcm li .topcm .flag{ float:right; margin-right:0;}
 .review-l ul.listcm li .topcm .date{ float:right; padding-right:8px;}
 .btnview{ float:right;}
@@ -44,7 +46,7 @@ body, input, textarea, select{ text-align:right;}
 .news-center{ float:right; margin-right:18px;}
 .tab1-cate li a{ padding-right:10px;}
 .ui-tabs-nav li{ float:right;}
-.list-ads li .top .flag{ float:right; margin-left:5px;}
+.list-ads li .top .flag{ float:right; }
 .list-ads li .infoads .thumb{ float:right; margin-left:8px;}
 .search-key{ float:left; margin-left:8px;}
 .list-key{ float:right; margin-right:8px;}
@@ -76,7 +78,7 @@ body, input, textarea, select{ text-align:right;}
 .table-deals, .addpage-title, .table-analytics{ direction:rtl;}
 .table-analytics tr td{ padding-right:8px;}
 .listnews li .thumb{ float:right;}
-.tender-list li .title .flag{ float:right; padding-left:8px;}
+.tender-list li .title .flag{ float:right; }
 .btn-afisha{ right: auto; left:0;
 -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
@@ -89,7 +91,7 @@ body, input, textarea, select{ text-align:right;}
 .tender-list li .button-r{ right:auto; left:10px;}
 .tender-list li h2{ float:right;}
 .tender-list li .linkmore{ right:auto; left:10px;}
-.tender-details-title .flag{ float:right; padding-left:8px;}
+.tender-details-title .flag{ float:right; }
 .tender-button{ right:auto; left:0;}
 .tender-info .title{ float:right;}
 .tender-bottom-left .thumb{ float:right; padding-left:8px;}
@@ -149,7 +151,7 @@ body, input, textarea, select{ text-align:right;}
 .b-img{ float:right;}
 div.fileinputs{ float:right; margin-right:30px;}
 .btn-nextstep{ direction:rtl;}
-.listprd li .link .flag{ float:right; padding-left:5px;}
+.listprd li .link .flag{ float:right; }
 .listprd li .link .name{ margin-left:0;}
 .goods-details-left, .goods-details-center{ float:right;}
 .goods-details-center{ margin-right:18px; margin-left:0;}
@@ -171,7 +173,7 @@ div.fileinputs{ float:right; margin-right:30px;}
 .new-details .date{ direction:rtl;}
 .content-news .gallery{ float:right; margin-left:10px;}
 .related-news ul li .date{ direction:rtl;}
-.related-news ul li .date img.flag{ float:right; padding-left:5px;}
+.related-news ul li .date img.flag{ float:right; }
 .tender-info ul.inforesume li label, .tender-info ul.inforesume li .right{ float:right;}
 .tender-info ul.inforesume li label{ text-align:left; direction:rtl;}
 .tender-info ul.inforesume li .right{ padding-right:5px;}
@@ -180,7 +182,7 @@ div.fileinputs{ float:right; margin-right:30px;}
 .tenderform .tenderline li label{ width:99%;}
 .tenderform .captcha{ float:right;}
 .tenderline li input.text{ float:right; margin-right:10px;}
-.deal-details .flag{ float:right; padding-left:5px;}
+.deal-details .flag{ float:right; }
 .tpp-gallery li{ float:right; margin-right:12px; margin-left:0;}
 .companies .social{ text-align:right;}
 .addpage-form label{ width:95%;}
@@ -196,8 +198,10 @@ div.fileinputs{ float:right; margin-right:30px;}
 .profilebutton{ width:100%;}
 .profile-l .btnbb{ float:right;}
 .vacancy-list li .logovacancy{ float:right; margin: 8px 0 0 10px;}
-.vacancy-list li .vacancy-desc .flag{ float:right; padding-left:5px;}
+.vacancy-list li .vacancy-desc .flag{ float:right; }
 .vacancy-button{ right:auto; left:0;}
 .innov-tab-content li label{ width:92%;}
 .wall-title-bg{ direction:rtl;}
+.vacancy-list li .vacancy-desc {width: 630px;}
+
 .vacancy-list li .vacancy-desc a.more{ text-align:left;}

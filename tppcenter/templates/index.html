@@ -289,7 +289,7 @@
                          {% if org_flag %}
                         	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                          {% else %}
-                             <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                             <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
 
                          {% endif %}
                             <a style="width: 75%;" href="{% url 'products:detail' slug %}">{{ name }}</a>
@@ -328,7 +328,7 @@
                                   {% if org_flag %}
                                 	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
                                   {% else %}
-                                      <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                                      <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                                   {% endif %}
                                     <div class="date">
                                         <p><b>{{ date_event|makeDate|date:"d M Y"}}</b></p>
@@ -371,7 +371,7 @@
                                   {% if org_flag %}
                                 	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}"/>
                                   {% else %}
-                                     <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                                     <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                                   {% endif %}
                                         <p><b>{{ country_name }}</b></p>
                                     <div class="date">
