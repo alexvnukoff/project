@@ -312,14 +312,15 @@
         </div>
         <div class="ads-order-details" style="margin-left: 10px;">
             <div>{% trans "Thank you for order, you will be notified when the adveretisement be applied" %}</div>
-
-            <a id="pay" href="#" class="btnprice">{% trans "Pay" %}</a>
-            <script>
-                $('#pay').click(function() {
-                   $(this).parent().find('form').submit();
-                    return false;
-                });
-            </script>
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"
+                                    data-name="{% trans 'Advertisement' %}"
+                                    data-number="{{ orderID }}"
+                                    data-quantity="1"
+                                    data-button="paynow"
+                                    data-amount="{{ cost }}"
+                                    data-callback="http://tppcenter.com/advertisement/"
+                                    data-env="sandbox"
+                                ></script>
         </div>
 </div>
 {% endblock %}
