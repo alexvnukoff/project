@@ -187,7 +187,7 @@ def adv(request):
                 else:
                     active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
 
-            if getattr(advObj, 'adv_top', None):
+            if getattr(advObj, 'advtop', None):
                 type = 'Top'
             else:
                 type = 'Banner'
