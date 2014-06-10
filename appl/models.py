@@ -115,7 +115,7 @@ class Company(Organization):
     def reindexItem(self):
         super(Company, self).reindexItem()
 
-        classes = [Product, News, Tender, InnovationProject, BusinessProposal, Exhibition]
+        classes = [Product, News, Tender, InnovationProject, BusinessProposal, Exhibition, Department]
 
         for klass in classes:
             objects = klass.objects.filter(c2p__parent_id=self.pk)
