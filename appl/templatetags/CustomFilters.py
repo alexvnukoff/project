@@ -21,6 +21,11 @@ import tppcenter.urls
 register = template.Library()
 
 
+@register.filter(name='getSide')
+def getSide(value):
+
+    return settings.LANGUAGE_CODE == 'he' or settings.LANGUAGE_CODE == 'ar'
+
 @register.filter(name='sort')
 def sort(value):
     if value:
@@ -63,6 +68,10 @@ def formatPrice(value):
 def getSymbol(value):
 
     return currencySymbol(value)
+
+
+
+
 
 @register.filter(name='split')
 def split(str, splitter):

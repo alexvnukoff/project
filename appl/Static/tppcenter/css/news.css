@@ -35,7 +35,7 @@ div.org-contacts ul li span.left{ color: #9b9b9b;}
 .new-details{ position:relative; float:left; width:100%; margin:15px 0 0 0;}
 .new-details h1{ font-size:18px; font-weight:bold; padding-bottom:5px;}
 .new-details .date{ color:#9b9b9b;}
-.new-details .date img.flag{ width:18px; height:12px;}
+.new-details .date img.flag{ }
 .content-news{ position:relative; float:left; width:640px; padding:10px; background-color:#fafafa; color:#595959; margin:15px 0 0 0;}
 .content-news .gallery{ float:left; width:150px; margin:0px 8px 8px 0; display:inline;}
 .social{ position:relative; float:left; width:100%; margin:12px 0 0 0;}
@@ -54,7 +54,7 @@ div.org-contacts ul li span.left{ color: #9b9b9b;}
 .related-news ul li a{ display:block; font-size:13px; font-weight:bold;}
 .related-news ul li .description  { font-size: 11px; }
 .related-news ul li .date{ color:#9b9b9b;}
-.related-news ul li .date img.flag{ width:18px; height:12px; padding-right:4px;}
+.related-news ul li .date img.flag{ }
 .related-news ul li p{ padding-top:8px;}
 .related-news ul li a.more{ position: absolute; bottom: 10px; right: 10px; font-size:12px; font-weight:normal;}
 .related-news ul li:nth-child(4n){ border-right:0;}
@@ -86,7 +86,7 @@ border-style: solid; border-width: 0 6px 4px 6px; border-color: transparent tran
 .formevent .notify-footer { border-bottom:0; text-align:center; padding:5px 0;}
 .formevent .list-holder { max-height: 140px; overflow-y: auto; }
 .formevent ul li{ position:relative; float:left; width:100%; border-bottom:1px #d9d9d9 solid; border-top:1px #FFF solid; padding:10px 0;}
-.formevent ul li .flag{ float:left; width:18px; height:12px; margin: 2px 0 0 5px; display:inline;}
+.formevent ul li .flag{ float:left; }
 .formevent ul li .image{ float:left; width:25px; height:25px; margin: 2px 0 0 8px; display:inline;}
 .formevent ul li .info{ float:left; width:165px; margin: 0 0 0 10px; display:inline; color:#4a4a4a; line-height:15px;}
 .formevent ul li a.viewmore{color:#0089bc; line-height:14px;}
@@ -162,7 +162,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .list-ads{ position:relative; float:left; width:178px; margin:0 10px; display:inline;}
 .list-ads li{ float:left; width:100%; padding:12px 0; border-top:1px #FFF solid; border-bottom:1px #cacaca solid;}
 .list-ads li .top{ float: left; width:100%;}
-.list-ads li .top .flag{ float:left; width:18px; height:12px; margin-right:5px;}
+.list-ads li .top .flag{ float:left; }
 .list-ads li .top a.linkads{ display:inline-block; max-width:145px; word-break:break-all; font-weight: bold;}
 .list-ads li .infoads{ float:left; width:100%; margin:5px 0 0 0; font-size:11px; color:#4a4a4a;}
 .list-ads li .infoads .thumb{ float:left; max-width:60px; max-height:52px; background:url(../img/shadow-ads.png) no-repeat bottom left; padding-bottom:2px; margin-right:8px; display:inline;}
@@ -245,7 +245,7 @@ rgb(33,136,187) 100%);}
 
 
 .listprd li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0 ;}
-.listprd li .link .flag{ float:left; width:18px; height:12px; margin-top:4px;}
+.listprd li .link .flag{ float:left; }
 .listprd li .link .name{ display:inline-block; margin-left:6px; max-width:110px; height:70px; vertical-align:top;}
 .listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
 .listprd li .call{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
@@ -310,7 +310,7 @@ rgb(33,136,187) 100%);}
 .goods-info li{ float: left; width: 100%; margin: 8px 0 0 0;}
 .goods-info li .iconinfo{ float: left; width: 25px;}
 .goods-info li .nameinfo{ float: left; max-width: 170px;}
-.goods-info li .flag{ width: 18px; height: 12px;}
+.goods-info li .flag{ }
 .goods-info li b{ color: #000;}
 .goods-info li.top{margin: 0px 0px 10px 0px;}
 .goods-info li .iconinfo i{ display: inline-block; vertical-align: middle;}
@@ -327,7 +327,7 @@ box-shadow:inset 0 0 3px #CCC;}
 .keyword.disable .icon-key{ background-position: -35px -25px;}
 .keyword.disable .list-key li{ background-color: #414141; color: #959595;}
 .goods-details .top-my{ float: left; width: 100%; margin-bottom: 15px;}
-.goods-details .top-my .flag{ float: left; width: 15px; height: 12px; margin:5px 5px 0 0;}
+.goods-details .top-my .flag{ float: left; }
 .goods-details .name{ float: left; font-size: 18px; font-weight: normal; max-width: 500px;}
 .my-goods-info{ float: right; width: 485px;}
 .my-goods-info li{ float: left; width: 100%; margin: 10px 0 0 0;}
@@ -352,7 +352,7 @@ box-shadow:inset 0 0 3px #CCC;}
 #tv-list li{ position:relative; float:left; width:166px; margin:20px 20px 0 0; padding:8px 0; background-color:#fafafa; color:#595959; line-height:16px;}
 #tv-list li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0; padding-left:8px;}
 #tv-list li .title-tv{ float:left; width:100%; color:#9b9b9b;}
-#tv-list li .title-tv .flag{ float:left; width:18px; height:12px; padding:0px 8px;}
+#tv-list li .title-tv .flag{ float:left; }
 #tv-list li .video{ float:left; width:100%; margin:8px 0 0 0;}
 #tv-list li:nth-child(3n){ margin-right:0;}
 

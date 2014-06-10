@@ -47,7 +47,7 @@ $(function() {
                		 {% if org_flag %}
                                <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                         {% else %}
-                               <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                               <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                     <font class="name">{% if org_name %}{{ org_name }}{% else %}{{ country_name }}{% endif %}</font>
                </div>

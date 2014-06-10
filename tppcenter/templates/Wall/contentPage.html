@@ -41,11 +41,11 @@
 
                         <div class="title">
                         {% if cabinet_country_flag %}
-                             <i class="sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
+                             <i class="flag sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
                         {% elif org_flag %}
                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
                         {% elif flag %}
-                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                             <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
@@ -115,7 +115,7 @@
                         {% if org_flag %}
                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
                          {% else %}
-                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                          {% endif %}
                             <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
                         </div>
@@ -160,7 +160,7 @@
                          {% if org_flag %}
                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                          {% else %}
-                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                          {% endif %}
                             <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>
                         </div>
@@ -217,7 +217,7 @@
                                {% if org_flag %}
                                      <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  alt="{{ org_name }}" title="{{ org_name }}"/>
                                {% else %}
-                                      <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                                      <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                                {% endif %}
                             {% endif %}
                                 {{ date|date:'d M Y' }}</p>
@@ -266,7 +266,7 @@
                       </div>
                         <div class="link">
 
-                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
 
                         <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
                        </div>
