@@ -82,7 +82,8 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _tenderDetailContent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
@@ -143,11 +144,9 @@ def tenderForm(request, action, item_id=None):
 
     if action == 'delete':
         tendersPage = deleteTender(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         tendersPage = addTender(request)
-
-    if action == 'update':
+    elif action == 'update':
         tendersPage = updateTender(request, item_id)
 
     if isinstance(tendersPage, HttpResponseRedirect) or isinstance(tendersPage, HttpResponse):

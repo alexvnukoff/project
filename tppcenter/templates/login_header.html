@@ -3,15 +3,20 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
+
 <div class="tophead">
 	<div class="news">
     	<div class="tophead-l">
         	<a href="/"><i class="imgnews news-logo"></i></a>
         	{% showTopStaticPages %}
+
         </div>
+
         <div class="tophead-center">
             <!-- in User is not login show Google translate box here -->
             {% if not user.email %}
+
+
                 <!-- Google Translate injection -->
                 <div id="google_translate_element"></div>
                 <script type="text/javascript">
@@ -22,16 +27,57 @@
                             multilanguagePage: true}, 'google_translate_element');
                     }
                 </script>
+
                 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
                 <!-- /Google Translate injection -->
+
             {% endif %}
         </div>
-        <div class="tophead-r">
+        <div class="tophead-r" style="width: 180px;">
+        <select id="lang_select" style="height: 29px;width: 100px;" >
+                        <option>{% trans 'Language' %}</option>
+                        <option value="ru">{% trans "Russian" %}</option>
+                        <option value="am">{% trans "Armenian" %}</option>
+                        <option value="en">{% trans "English" %}</option>
+
+                    </select>
+
+
         	{% if user.email %}
-                <a href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>
+                <a style="margin-left: 20px;" href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>
             {% else %}
-                <a href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>
+                <a style="margin-left: 20px;" href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>
             {% endif %}
+
+
+
+                <script>
+                    $( "#lang_select" ).change(function(e) {
+                        if (!$( this ).val())
+                        return;
+
+                        path = (window.location.host).split('.');
+                        if (path[0] == 'www'){
+                            delete path[0]
+                        }
+
+                        if (path.length > 2){
+                            host = path[1] + '.' + path[2]
+                        }
+                        else{
+                            host = window.location.host
+                        }
+
+
+                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
+                                window.location.pathname + window.location.search + window.location.hash;
+
+                    });
+
+                </script>
+
+
+
         </div>
     </div>
 </div>
@@ -85,8 +131,9 @@
 
                 </div>
 
+
                 <!-- Google Translate injection -->
-                <div id="google_translate_element"></div>
+                <div style="padding-left: 270px;" id="google_translate_element"></div>
                 <script type="text/javascript">
                     function googleTranslateElementInit() {
                         new google.translate.TranslateElement({
@@ -96,7 +143,9 @@
                     }
                 </script>
                 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
                 <!-- /Google Translate injection -->
+
 
                 <a href="#" class="btnprofile"><i class="imgnews bullet"></i> {% trans 'Profile' %}</a>
             </div>

@@ -972,7 +972,9 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
 
     cached = False
-    cache_name = "%s_list_result_page_%s" % (model.__name__, page)
+    lang = settings.LANGUAGE_CODE
+
+    cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
     query = request.GET.urlencode()
 
     q = request.GET.get('q', '')

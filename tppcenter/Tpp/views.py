@@ -91,7 +91,8 @@ def _tppContent(request, page=1, my=None):
 
     #tpp = Tpp.active.get_active().order_by('-pk')
     cached = False
-    cache_name = "tpp_list_result_page_%s" % page
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_tpp_list_result_page_%s" % (lang, page)
 
     q = request.GET.get('q', '')
 
@@ -223,7 +224,8 @@ def _tppContent(request, page=1, my=None):
 
 def _tppDetailContent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
     if not cached:

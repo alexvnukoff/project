@@ -84,8 +84,8 @@ def submit (recaptcha_challenge_field,
     
     httpresp = urlopen (request)
 
-    return_values = httpresp.read ().splitlines ();
-    httpresp.close();
+    return_values = httpresp.read ().splitlines ()
+    httpresp.close()
 
     return_code = return_values [0]
 

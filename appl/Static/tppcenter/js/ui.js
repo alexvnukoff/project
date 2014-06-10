@@ -850,8 +850,8 @@ var galleryUpload = { //Async gallery uploader (uploadify)
 
     options : {
         uploadLimit: 20,
-        height   : 130,
-        width    : 150,
+        height   : 105,
+        width    : 110,
         auto     : true,
         queueID  : 'queue'
     },
