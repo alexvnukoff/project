@@ -75,7 +75,9 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 def _getDetailContent(request, item_id):
-    cache_name = "detail_%s" % item_id
+
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     query = request.GET.urlencode()
     cached = cache.get(cache_name)
