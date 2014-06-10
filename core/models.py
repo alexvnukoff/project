@@ -791,13 +791,9 @@ class Item(models.Model):
                 Example:
                     attr = {
                                 'NAME': 'bla',
-                                'DISCOUNT': [95,
-                                    {
-                                        'end_date': now(),
-                                        'title': 50,
-                                        'create_user': request.user #not required
-                                    }
-                                ]
+                                'POSSIBLE_CURRENCY': {'0':'USD',    '0':'RUB'}      # example for insert
+                                'POSSIBLE_CURRENCY': {'34':'USD',   '48':'RUB'}     # example for udpate
+                                # attribute name     value_id:value1 value_id:value2
                             }
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
@@ -835,7 +831,6 @@ class Item(models.Model):
 
         #get all passed attributes
         existsAttributes = Attribute.objects.filter(title__in=attributes)
-
         if len(existsAttributes) != len(attrWithValues):
             raise ValueError("Attribute does not exists")
 
@@ -927,13 +922,26 @@ class Item(models.Model):
                     if a.title != val.attr.title:
                         continue
                     else:
-                        if a.dict == None:
-                            val.__dict__['title_' + session_lang] = attrWithValues[val.attr.title]
-                            val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
+                        # if passed argument itself is NOT a Dictionary, then...
+                        if not isinstance(attrWithValues[val.attr.title], dict):
+                            if a.dict == None:
+                                val.__dict__['title_' + session_lang] = attrWithValues[val.attr.title]
+                                val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
+                            else:
+                                slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
+                                val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
                         else:
-                            slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
-                            val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
-                            val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
+                            # if passed argument itself is Dictionary, then...
+                            for arg_key, arg_val in attrWithValues[val.attr.title].items():
+                                if int(arg_key) == val.id:
+                                    if a.dict == None:
+                                        val.__dict__['title_' + session_lang] = arg_val
+                                        val.__dict__['sha1_code'] = createHash(arg_val)
+                                    else:
+                                        slot = Slot.objects.get(id=arg_key, dict=a.dict)
+                                        val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                        val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
                         val.save()
                         continue
