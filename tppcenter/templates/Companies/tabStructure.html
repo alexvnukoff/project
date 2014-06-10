@@ -35,6 +35,7 @@
             <ul class="sitemap">
                 {% for id, attr in departmentsList.items %}
                     {% with attr.NAME|first as name %}
+                    {% if name %}
                     <li data-department="{{ id }}">
                         <a href="#" title="{{ name }}">{{ name }}</a>
                         <ul class="sub">
@@ -49,6 +50,7 @@
                             {% endfor %}
                         </ul>
                     </li>
+                   {% endif %}
                     {% endwith %}
                 {% empty %}
                     <div class="no-results">{% trans "No Departments found." %}</div>
