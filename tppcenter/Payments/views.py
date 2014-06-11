@@ -19,6 +19,8 @@ def verify_payment_status(request):
                 s = [token for token in item_number.split() if token.isdigit()]
                 item_id = s[0]
                 if len(item_id):
+                    # here additional checks: receiver email, sum, currency
+
                     try:
                         comp = Company.objects.get(pk=int(item_id))
                         new_end_date = comp.paid_till_date + datetime.timedelta(days=365)
