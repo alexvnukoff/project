@@ -22,11 +22,19 @@
                     <div class="title">
                         <p><b>Зарегистрируйтесь</b></p>
                     </div>
-                    <ul class="formregister">
-                        <li><input type="text" name="" class="text" placeholder="E-mail" /></li>
-                        <li><input type="text" name="" class="text" placeholder="Пароль" /></li>
-                        <li><input type="text" name="" class="text" placeholder="Повторите пароль" /></li>
-                        <li class="end"><a href="#" class="btnreg">Зарегистрироваться</a></li>
+                   <form method='post' action='http://tppcenter.com/'>
+                     {% csrf_token %}
+                     <ul class="formregister">
+                    	<li><input id="id_email"  class="text"  name="email" type="email" placeholder="E-mail"/></li>
+                        <li> <input id="id_password1" type="password"  class="text "  name="password1" placeholder="{% trans 'Password' %}"/></li>
+                        <li><input id="id_password2" type="password"  class="text"  name="password2" placeholder="{% trans 'Confirm password' %}"/></li>
+                        <li>
+                        	<input type="checkbox" name="tos" />
+                            {% trans 'I agree to' %} <a href="#">{% trans 'the term' %}</a>
+                        </li>
+
+                        <li class="end"><input type="submit" name="Register" class="btnreg" value="{% trans "Sign up" %}"></li>
                     </ul>
+                   </form>
                 </div>
             </div>
