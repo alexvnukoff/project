@@ -69,7 +69,7 @@ LOGGING = {
 }
 
 
-CSRF_COOKIE_DOMAIN = ".tppcenter.com"
+
 # Application definition
 
 INSTALLED_APPS = (
