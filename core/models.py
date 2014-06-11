@@ -915,7 +915,30 @@ class Item(models.Model):
             fact_attr_in_value = Value.objects.filter(item=self).all()
             fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
             attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
+            '''
+            # if passed argument is a new for this item (was not saved before) then...
+            for a in attrWithValues.items():
+                if not fact_attr_in_value.filter(attr__title=a[0]).exists():
+                    if not isinstance(a, dict):
+                        v = Value.objects.create(attr=Attribute.objects.get(title=a[0]), sha1_code=createHash(a[1]),
+                                            create_user=user, title=a[1])
+                        v.__dict__['title_' + session_lang] = str(a[1])
+                    else:
+                        # if passed argument itself is Dictionary which was not saved before, then...
+                        curr_attr = fact_attr_in_value.get(attr__title=a[0])
+                        if curr_attr.dict == None:
+                            val.__dict__['title_' + session_lang] = str(arg_val)
+                            val.__dict__['sha1_code'] = createHash(arg_val)
+                        else:
+                                    slot = Slot.objects.get(id=arg_key, dict=a.dict)
+                                    val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                    val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
+
+                    v.save
+            '''
+            # for attributes which were already saved before...
             for a in attr_from_db:
+                # if attribute from db not in arguments list then continue
                 if not a.title in attrWithValues:
                     continue
                 for val in fact_attr_in_value:
