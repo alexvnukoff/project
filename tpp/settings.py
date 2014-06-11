@@ -109,7 +109,8 @@ REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
 
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.sessions.middleware.SessionMiddleware',
+    'tpp.TppSessioinMiddleWare.SessionHostDomainMiddleware',
     'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
