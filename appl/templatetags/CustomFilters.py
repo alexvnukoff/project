@@ -274,11 +274,15 @@ def setUserName(context):
     user = request.user
 
     if user.is_authenticated():
+        cabinet = Cabinet.objects.filter(user=request.user)
+        if cabinet.exists():
+            cabinet = cabinet[0]
+            name = cabinet.getAttributeValues('USER_FIRST_NAME','USER_LAST_NAME')
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
+            if not name.get('USER_FIRST_NAME', False) and not name.get('USER_FIRST_NAME', False):
+                user_name = user.email
+            else:
+                user_name = name.get('USER_FIRST_NAME', [''])[0] + ' ' + name.get('USER_LAST_NAME', [''])[0]
     else:
         user_name = None
 
