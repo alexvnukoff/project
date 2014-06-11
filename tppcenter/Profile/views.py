@@ -11,6 +11,7 @@ from django.utils.translation import ugettext as _
 from tppcenter.Profile.profileForms import ProfileForm
 from tppcenter.views import user_logout
 import uuid
+from django.utils.translation import trans_real
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
@@ -32,6 +33,9 @@ def getProfileForm(request):
 
 
 def _profileContent(request):
+
+    lang_code = settings.LANGUAGE_CODE
+    trans_real.activate(lang_code)
 
     user_groups = request.user.groups.values_list('pk', flat=True)
 
@@ -160,6 +164,7 @@ def _profileContent(request):
     }
 
     context = RequestContext(request, templateParams)
+    trans_real.deactivate()
 
     return template.render(context)
 
