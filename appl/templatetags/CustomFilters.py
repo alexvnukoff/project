@@ -279,7 +279,7 @@ def setUserName(context):
             cabinet = cabinet[0]
             name = cabinet.getAttributeValues('USER_FIRST_NAME','USER_LAST_NAME')
 
-            if not name.get('USER_FIRST_NAME', False) and not name.get('USER_FIRST_NAME', False):
+            if not isinstance(name, dict) and not name.get('USER_FIRST_NAME', False) and not name.get('USER_LAST_NAME', False):
                 user_name = user.email
             else:
                 user_name = name.get('USER_FIRST_NAME', [''])[0] + ' ' + name.get('USER_LAST_NAME', [''])[0]
