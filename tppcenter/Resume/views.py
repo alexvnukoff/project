@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_protect
 from haystack.backends import SQ
 from appl.func import getActiveSQS, filterLive, setPaginationForSearchWithValues, getUserPermsForObjectsList, \
     getPaginatorRange
@@ -239,6 +240,7 @@ def _resumeDetailContent(request, item_id):
 
 
 
+@csrf_protect
 @login_required(login_url='/login/')
 def resumeForm(request, action, item_id=None):
     if item_id:
