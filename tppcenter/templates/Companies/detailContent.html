@@ -505,15 +505,15 @@
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
                             <div id="paypal-membership" style="padding-left: 30px">
                                 <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"
-                                    {% comment %}afend-developer@tppcenter.com" {% endcomment %}
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"{% endcomment %}
                                     data-name="{% trans '1-year www.b24online.com membership' %}"
                                     data-number="Company ID: {{ id }} ({{ name }})" {% comment %} Company's database ID{% endcomment %}
-                                    data-quantity="1"
+                                    data-quantity="100"
                                     data-button="paynow"
                                     data-amount="1"
                                     data-callback="www.tppcenter.com/payments/"
                                     {% comment %}data-callback="http://tppcenter.ngrok.com/payments/"
-                                    data-env="sandbox"{% endcomment %}
+                                    data-env="sandbox" {% endcomment %}
                                 ></script>
                                 {% comment %}
                                 PayPal Debugging Info
