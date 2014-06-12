@@ -81,13 +81,18 @@
 <div class="wrapper">
     <div class="main">
     	<div class="sideleft">
-         <select id="lang_select" style="height: 29px;width: 182px;" >
+          <select id="lang_select" style="height: 29px;width: 183px;" >
                         <option>{% trans 'Language' %}</option>
-                        <option value="ru">{% trans "Russian" %}</option>
+
                         <option value="am">{% trans "Armenian" %}</option>
+                        <option value="ar">{% trans "Arabic" %}</option>
                         <option value="en">{% trans "English" %}</option>
+                        <option value="he">{% trans "Hebrew" %}</option>
+                        <option value="ru">{% trans "Russian" %}</option>
+
 
                     </select>
+
                   <script>
                     $( "#lang_select" ).change(function(e) {
                         if (!$( this ).val())
