@@ -47,7 +47,7 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
 
 def _getdetailcontent(request, item_id):
 
-    cache_name = "%s_detail_%s" % get_language(), item_id
+    cache_name = "%s_detail_%s" % (get_language(), item_id)
     description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
@@ -84,7 +84,7 @@ def _getdetailcontent(request, item_id):
 def _getContent(request, page):
 
     cached = False
-    cache_name = "%s_greeting_list_result_page_%s" % get_language(), page
+    cache_name = "%s_greeting_list_result_page_%s" % (get_language(), page)
 
     if not request.user.is_authenticated():
         cached = cache.get(cache_name)
