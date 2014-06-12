@@ -280,9 +280,10 @@ def resultOrder(request, orderID):
     endDate = parse(ordWithValues.get('END_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
 
     current_section = _('Tops')
+    cost = '{0:.2f}'.format(ordWithValues.get('COST', [0])[0])
     '''
     domain = Site.objects.get(pk=1).domain
-    cost = '{0:.2f}'.format(ordWithValues.get('COST', [0])[0])
+
 
         # What you want the button to do.
     paypal_dict = {
