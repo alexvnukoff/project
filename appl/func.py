@@ -970,7 +970,8 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      return page
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
-    category = kwargs['category']
+    if 'category' in kwargs:
+        category = kwargs['category']
 
     cached = False
     lang = settings.LANGUAGE_CODE
