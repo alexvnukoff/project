@@ -3,7 +3,7 @@ from appl.models import (Article, Basket, Company, Cabinet, Department, Document
                          Rate, Rating, Review, Service, Shipment, Gallery, Category, Country, Comment, Favorite,
                          Greeting, Exhibition, SystemMessages, Notification, Branch, NewsCategories, InnovationProject,
                          BusinessProposal, AdditionalPages, Messages, AdvBanner, AdvBannerType, AdvOrder, AdvTop, topTypes,
-                        staticPages, Requirement, BpCategories, UserSites, ExternalSiteTemplate, Resume, Vacancy)
+                        staticPages, Requirement, BpCategories, UserSites, ExternalSiteTemplate, Resume, Vacancy, PayPalPayment)
 
 from core.models import Relationship, Value
 
@@ -98,7 +98,7 @@ admin.site.register(SystemMessages, AdditionalAdmin)
 admin.site.register(Vacancy, AdditionalAdmin)
 
 admin.site.register(UserSites, AdditionalAdmin)
-
+admin.site.register(PayPalPayment, AdditionalAdmin)
 
 
 

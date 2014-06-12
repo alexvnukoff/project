@@ -176,16 +176,18 @@ def adv(request):
             else:
                 advAttr = advAttrValues[advObj.pk]
 
-            end_event_date = parse(advAttr.get('END_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
+            end_event_date = parse(advAttr.get('END_EVENT_DATE', [None])[0])
             start_event_date = parse(advAttr.get('START_EVENT_DATE', [None])[0]).strftime("%Y-%m-%d")
+            nowTime = parse(now().strftime("%Y-%m-%d"))
 
-            if now() >= advObj.end_date:
+
+            if nowTime >= end_event_date:
                 active = 2
             else:
-                if not end_event_date:
+                if not end_event_date.strftime("%Y-%m-%d"):
                     active = 0
                 else:
-                    active = 1 if (end_event_date == advObj.end_date.strftime("%Y-%m-%d")) else 0
+                    active = 1 if (end_event_date.strftime("%Y-%m-%d") == advObj.end_date.strftime("%Y-%m-%d")) else 0
 
             if getattr(advObj, 'advtop', None):
                 type = 'Top'
@@ -209,7 +211,7 @@ def adv(request):
                 owner.get('NAME', [""])[0],
                 "",
                 start_event_date,
-                end_event_date,
+                end_event_date.strftime("%Y-%m-%d"),
                 active,
                 float(advAttr.get('COST', [0])[0]),
                 advObj.pk,
