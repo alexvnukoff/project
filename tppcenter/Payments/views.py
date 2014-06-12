@@ -4,7 +4,7 @@ import datetime
 from appl.models import Company, PayPalPayment, AdvOrder
 from core.models import Relationship, User
 from tpp import settings
-
+from dateutil.parser import parse
 
 def verify_payment_status(request):
     """
@@ -76,7 +76,10 @@ def pay_for_adv(request):
                 user = User.objects.filter(is_superuser=True)[0]
 
                 Relationship.setRelRelationship(order, payment, user)
-
+                end_date = order.getAttributeValues('END_EVENT_DATE')
+                order.end_date = parse(end_date[0])
+                order.save()
+                return HttpResponse('')
             else:
                 return HttpResponse('False')
         else:
