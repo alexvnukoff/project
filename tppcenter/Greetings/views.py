@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, get_language
 from django.template import RequestContext, loader
 
 def get_greetings_list(request, page=1, item_id=None, slug=None):
@@ -47,7 +47,7 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
 
 def _getdetailcontent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    cache_name = "%s_detail_%s" % get_language(), item_id
     description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
@@ -84,7 +84,7 @@ def _getdetailcontent(request, item_id):
 def _getContent(request, page):
 
     cached = False
-    cache_name = "greeting_list_result_page_%s" % page
+    cache_name = "%s_greeting_list_result_page_%s" % get_language(), page
 
     if not request.user.is_authenticated():
         cached = cache.get(cache_name)

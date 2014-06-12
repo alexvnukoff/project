@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from django.db.models import Q
 import os
 from django.core.cache import cache
+from django.utils.translation import get_language
 
 register = template.Library()
 
@@ -24,7 +25,7 @@ def getTopOnPage(context, item_id=None):
 
 
     cached = False
-    cache_name = "adv_top_cache"
+    cache_name = "%s_adv_top_cache" % get_language()
 
     if filterAdv is None:
         cached = cache.get(cache_name)
@@ -51,7 +52,7 @@ def getBanners(context, item_id=None, *places):
         filterAdv = func.getListAdv(request)
 
     cached = False
-    cache_name = "adv_banner_cache"
+    cache_name = "%s_adv_banner_cache" % get_language()
 
     if filterAdv is None:
         cached = cache.get(cache_name)
@@ -183,7 +184,7 @@ def getUserSiteMenu(context):
 @register.inclusion_tag('main/staticPages.html')
 def showStaticPages():
 
-    cache_name = "static_pages_all_bottom"
+    cache_name = "%s_static_pages_all_bottom" % get_language()
 
 
     cached = cache.get(cache_name)
@@ -217,7 +218,7 @@ def showStaticPages():
 @register.inclusion_tag('main/topStaticPages.html')
 def showTopStaticPages():
 
-    cache_name = "static_pages_all_top"
+    cache_name = "%s_static_pages_all_top" % get_language()
     cached = cache.get(cache_name)
 
     if not cached:
