@@ -11,6 +11,7 @@ from core.models import Item, User, Relationship
 from dateutil.parser import parse
 from django.contrib.sites.models import Site
 import json
+from django.utils.translation import get_language
 from tpp.settings import MEDIA_URL
 from tppcenter.forms import ItemForm
 from django.utils.translation import gettext as _
@@ -607,8 +608,8 @@ def pages_delete(request, pk):
 
     obj = get_object_or_404(staticPages, pk=pk)
 
-    cache.delete('static_pages_all_bottom')
-    cache.delete('static_pages_all_top')
+    cache.delete('%s_static_pages_all_bottom' % get_language())
+    cache.delete('%s_static_pages_all_top' % get_language())
 
     obj.delete()
 
@@ -637,8 +638,8 @@ def pages(request, editPage=None):
                 obj.save()
                 obj.setAttributeValue({'NAME': name}, request.user)
 
-                cache.delete('static_pages_all_bottom')
-                cache.delete('static_pages_all_top')
+                cache.delete('%s_static_pages_all_bottom' % get_language())
+                cache.delete('%s_static_pages_all_top' % get_language())
 
             return HttpResponse()
         else:
@@ -729,8 +730,8 @@ def pages(request, editPage=None):
                     page.pageType = type
                     page.save()
 
-                    cache.delete('static_pages_all_bottom')
-                    cache.delete('static_pages_all_top')
+                    cache.delete('%s_static_pages_all_bottom' % get_language())
+                    cache.delete('%s_static_pages_all_top' % get_language())
 
                     return HttpResponseRedirect(reverse("AdminTpp:pages"))
 
