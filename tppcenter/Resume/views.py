@@ -203,8 +203,11 @@ def _resumeDetailContent(request, item_id):
 
     attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
     cabinetValues =  cabinet.getAttributeValues('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
-    user_name = (cabinetValues.get('USER_LAST_NAME', [" "])[0] + " " +
-           cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
+    if not isinstance(cabinetValues, list):
+        user_name = (cabinetValues.get('USER_LAST_NAME', [" "])[0] + " " +
+               cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
+    else:
+        user_name = _("Name not found")
 
     attr = (
         'NAME', 'BIRTHDAY', 'MARITAL_STATUS', 'NATIONALITY', 'TELEPHONE_NUMBER','ADDRESS', 'FACULTY', 'PROFESSION',
