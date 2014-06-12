@@ -13,7 +13,7 @@ def verify_payment_status(request):
     """
     payment = PayPalPayment()
     # for production call: payment.verifyAndSave(request, pay_env=1)
-    if payment.verifyAndSave(request):
+    if payment.verifyAndSave(request, pay_env=1):
         #update company's end_date and paid_till-date
         item_number = payment.getItemNumber()
         if len(item_number):
@@ -23,15 +23,21 @@ def verify_payment_status(request):
                 item_id = s[0]
                 if len(item_id):
                     # here additional checks: receiver email, sum, currency
+                    status = request.POST.get('payment_status')
+                    receiver = request.POST.get('receiver_email')
+                    amount = request.POST.get('mc_gross')
+                    currency = request.POST.get('mc_currency')
 
-                    try:
-                        comp = Company.objects.get(pk=int(item_id))
-                        new_end_date = comp.paid_till_date + datetime.timedelta(days=365)
-                        comp.end_date = new_end_date
-                        comp.paid_till_date = new_end_date
-                        comp.save()
-                    except:
-                        return HttpResponse('False')
+                    if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and int(amount) == 100 \
+                            and currency == 'USD':
+                        try:
+                            comp = Company.objects.get(pk=int(item_id))
+                            new_end_date = comp.paid_till_date + datetime.timedelta(days=365)
+                            comp.end_date = new_end_date
+                            comp.paid_till_date = new_end_date
+                            comp.save()
+                        except:
+                            return HttpResponse('False')
                 else:
                     return HttpResponse('False')
             else:
