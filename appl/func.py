@@ -969,12 +969,19 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      page = template.render(context)
      return page
 
-def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
+def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
+    category = kwargs['category']
 
     cached = False
     lang = settings.LANGUAGE_CODE
+    url_parameter = []
 
-    cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
+    if category:
+         cache_name = "category_%s_list_result_page_%s" % (model.__name__, page)
+         url_parameter = category
+    else:
+         cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
+
     query = request.GET.urlencode()
 
     q = request.GET.get('q', '')
@@ -989,7 +996,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
             sqs = getActiveSQS().models(model).order_by('-obj_create_date')
             if model is News:
-               sqs = sqs.filter(categories__gt=0)
+               if category:
+                   sqs = sqs.filter(categories=category)
+               else:
+                   sqs = sqs.filter(categories__gt=0)
 
             if len(searchFilter) > 0: #Got filter values
                 sqs = sqs.filter(searchFilter)
@@ -1024,7 +1034,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                     order.append(sortFields[sortField2])
 
             proposal = sqs.order_by(*order)
-            url_paginator = "%s:paginator" % (url)
+
+            if category:
+                url_paginator = "news:news_categories_paginator"
+            else:
+                url_paginator = "%s:paginator" % (url)
 
             params = {
                 'filters': filters,
@@ -1087,6 +1101,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'proposalList': proposalList,
             'page': page,
             'paginator_range': paginator_range,
+            'url_parameter' : url_parameter,
             'url_paginator': url_paginator,
             'items_perms': items_perms,
             'current_path': request.get_full_path(),

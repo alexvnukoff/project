@@ -22,7 +22,7 @@ import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None):
+def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=None):
 
 
     if item_id:
@@ -42,7 +42,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
     try:
         if not item_id:
             attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
-            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
+            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my, category=category)
 
         else:
             result = _getdetailcontent(request, item_id)
