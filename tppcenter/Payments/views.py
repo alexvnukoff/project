@@ -28,7 +28,7 @@ def verify_payment_status(request):
                     amount = request.POST.get('mc_gross')
                     currency = request.POST.get('mc_currency')
 
-                    if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and int(amount) == 100 \
+                    if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and int(amount) == 1 \
                             and currency == 'USD':
                         try:
                             comp = Company.objects.get(pk=int(item_id))

@@ -265,7 +265,7 @@ def _companiesDetailContent(request, item_id):
         rendered = cache.get(cache_name)
         result = cache.get(description_cache_name)
         description = result[0] if isinstance(result, list) else ""
-        title = result[1] if isinstance(result, list) esle ""
+        title = result[1] if isinstance(result, list) else ""
 
     return rendered, description, title
 
