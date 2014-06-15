@@ -21,7 +21,7 @@
                 </div>
                 <div class="infoprd">
                     <a href="{% url "greetings:detail" slug %}" class="name">{{ name }}</a>
-                    {{ content|truncatewords_html:"30"|linebreaksbr|cleanHtml|safe }}
+                    {{ content|truncatewords_html:"30"|cleanHtml|safe }}
                 <br />
                 <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
                 <p><strong>{% trans "Position" %}:</strong> {{ position }}</p>
