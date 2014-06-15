@@ -761,6 +761,11 @@ def greetings_delete(request, pk):
 
     obj = get_object_or_404(staticPages, pk=pk)
 
+    cache.delete('home_page')
+    cache.delete('%s_home_page' % get_language())
+    cache.delete('%s_detail_%s' % (get_language(), pk))
+    cache.delete('%s_description_%s' % (get_language(), pk))
+
     obj.delete()
 
     return HttpResponseRedirect(reverse("AdminTpp:greetings"))
@@ -785,6 +790,11 @@ def greetings(request, editPage=None):
             if len(name) > 0:
 
                 obj.setAttributeValue({'NAME': name, 'POSITION': position, 'TPP': tpp}, request.user)
+
+                cache.delete('home_page')
+                cache.delete('%s_home_page' % get_language())
+                cache.delete('%s_detail_%s' % (get_language(), editPage))
+                cache.delete('%s_description_%s' % (get_language(), editPage))
 
             return HttpResponse()
         else:
@@ -862,6 +872,13 @@ def greetings(request, editPage=None):
 
             if form.is_valid():
                 page = form.save(user, settings.SITE_ID, disableNotify=True)
+                cache.delete('home_page')
+                cache.delete('%s_home_page' % get_language())
+
+                if editPage:
+
+                    cache.delete('%s_detail_%s' % (get_language(), editPage))
+                    cache.delete('%s_description_%s' % (get_language(), editPage))
 
                 return HttpResponseRedirect(reverse("AdminTpp:greetings"))
 
