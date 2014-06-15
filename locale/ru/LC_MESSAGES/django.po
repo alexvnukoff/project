@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-15 11:28+0000\n"
-"PO-Revision-Date: 2014-06-12 09:52+0200\n"
+"PO-Revision-Date: 2014-06-15 14:36+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -2024,7 +2024,7 @@ msgstr ""
 #: tpp/settings.py:245 tppcenter/templates/index.html:88
 #: tppcenter/templates/login_header.html:41
 msgid "Arabic"
-msgstr ""
+msgstr "Арабский"
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
@@ -2083,14 +2083,12 @@ msgid "Invalid type"
 msgstr ""
 
 #: tppcenter/Adv/views.py:61
-#, fuzzy
 msgid "Top"
-msgstr "ТПП"
+msgstr "Топ"
 
 #: tppcenter/Adv/views.py:63
-#, fuzzy
 msgid "Banner"
-msgstr "Реклама"
+msgstr "Баннер"
 
 #: tppcenter/AdvBanner/views.py:52 tppcenter/AdvBanner/views.py:290
 #: tppcenter/AdvBanner/views.py:355 tppcenter/AdvTop/views.py:216
@@ -2330,9 +2328,8 @@ msgid "Your own site"
 msgstr "Собственный интернет-сайт"
 
 #: tppcenter/Resume/views.py:211
-#, fuzzy
 msgid "Name not found"
-msgstr "Ничего не найдено"
+msgstr "Имя не указанно"
 
 #: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:129
 #: tppcenter/templates/main_page.html:158
@@ -2538,14 +2535,12 @@ msgid "Select organizations"
 msgstr "Выбрать организацию"
 
 #: tppcenter/templates/baseFilter.html:11
-#, fuzzy
 msgid "Select company"
-msgstr "Выбереть страну"
+msgstr "Выбрать компанию"
 
 #: tppcenter/templates/baseFilter.html:13
-#, fuzzy
 msgid "Select category"
-msgstr "Выбереть страну"
+msgstr "Выбрать категорию"
 
 #: tppcenter/templates/baseFilter.html:68
 #: tppcenter/templates/AdvBanner/addForm.html:334
@@ -2600,23 +2595,23 @@ msgstr "Банк инновационных проектов"
 
 #: tppcenter/templates/index.html:85 tppcenter/templates/login_header.html:38
 msgid "Mother tongue"
-msgstr ""
+msgstr "Родной язык"
 
 #: tppcenter/templates/index.html:87 tppcenter/templates/login_header.html:40
 msgid "Armenian"
-msgstr ""
+msgstr "Армянский "
 
 #: tppcenter/templates/index.html:89 tppcenter/templates/login_header.html:42
 msgid "English"
-msgstr ""
+msgstr "Английский"
 
 #: tppcenter/templates/index.html:90 tppcenter/templates/login_header.html:43
 msgid "Hebrew"
-msgstr ""
+msgstr "Иврит"
 
 #: tppcenter/templates/index.html:91 tppcenter/templates/login_header.html:44
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: tppcenter/templates/index.html:135
 msgid "Community"
@@ -3468,9 +3463,8 @@ msgstr ""
 
 #: tppcenter/templates/Companies/tabStaff.html:146
 #: tppcenter/templates/Tpp/tabStaff.html:144
-#, fuzzy
 msgid "Administrator"
-msgstr "Армения"
+msgstr "Администратор"
 
 #: tppcenter/templates/Companies/tabStructure.html:56
 #: tppcenter/templates/Tpp/tabStructure.html:53
@@ -4035,17 +4029,16 @@ msgid "Permission denied"
 msgstr "Доступ запрещен"
 
 #: tppcenter/templates/main/paginator.html:5
-#, fuzzy
 msgid "Total pages"
-msgstr "Дополнительные страницы"
+msgstr "Всего страниц"
 
 #: tppcenter/templates/main/paginator.html:7
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: tppcenter/templates/main/paginator.html:21
 msgid "Forward"
-msgstr ""
+msgstr "Вперед"
 
 #: tppcenter/templates/main/staticPages.html:4
 msgid "Project news"
@@ -4101,28 +4094,24 @@ msgid "the terms of use"
 msgstr "правилами использования "
 
 #: usersites/Contact/views.py:38
-#, fuzzy
 msgid "This message was sent to company:"
-msgstr "Сообщение отправлено компании с  id"
+msgstr "Сообщение отправлено компании :"
 
 #: usersites/Contact/views.py:41
-#, fuzzy
 msgid "New message from "
-msgstr "Новое сообщение от Tppcenter"
+msgstr "Новое сообщение от "
 
 #: usersites/Contact/views.py:47
-#, fuzzy
 msgid "The message was succesfuly send "
-msgstr "были удачно сохранены"
+msgstr "Сообщение было удачно отправлено"
 
 #: usersites/Contact/views.py:50
 msgid "Incoorect Recapcha"
 msgstr ""
 
 #: usersites/Contact/views.py:55
-#, fuzzy
 msgid "All field are required"
-msgstr "Напишите текст сообщения или присоедините файл"
+msgstr "Все поля обязательны"
 
 #: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
 #: usersites/templates/contentPage.html:7
