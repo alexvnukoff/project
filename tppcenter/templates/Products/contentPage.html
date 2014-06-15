@@ -50,7 +50,7 @@
                             {% if flag_class %}
                                  <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% endif %}
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
+                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:45 }}</a>
                        </div>
                         <div class="price">
                             {% if price %}
