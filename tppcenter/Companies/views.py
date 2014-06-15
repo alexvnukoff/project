@@ -230,17 +230,21 @@ def _companiesDetailContent(request, item_id):
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
         #check free membership period
         if company.paid_till_date != None:
-            days_till_end = (company.paid_till_date - datetime.datetime.now().date()).days
-            if (days_till_end <= settings.NOTIFICATION_BEFORE_END_DATE and days_till_end > 0):
-                companyValues['SHOW_PAYMENT_BUTTON'] = [True]
-                companyValues['DAYS_BEFORE_END'] = [days_till_end]
-            else:
-                if(days_till_end > 0):
-                    companyValues['SHOW_PAYMENT_BUTTON'] = [False]
-                else:
-                    company.end_date = now()
+            user = request.user
+            if user.id != None and Relationship.objects.filter(child=user, parent__c2p__parent__c2p__parent=item_id, is_admin=True).exists():
+                days_till_end = (company.paid_till_date - datetime.datetime.now().date()).days
+                if (days_till_end <= settings.NOTIFICATION_BEFORE_END_DATE and days_till_end > 0):
                     companyValues['SHOW_PAYMENT_BUTTON'] = [True]
-                    companyValues['DAYS_BEFORE_END'] = [0]
+                    companyValues['DAYS_BEFORE_END'] = [days_till_end]
+                else:
+                    if(days_till_end > 0):
+                        companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+                    else:
+                        company.end_date = now()
+                        companyValues['SHOW_PAYMENT_BUTTON'] = [True]
+                        companyValues['DAYS_BEFORE_END'] = [0]
+            else:
+                companyValues['SHOW_PAYMENT_BUTTON'] = [False]
         else:
             companyValues['SHOW_PAYMENT_BUTTON'] = [False]
         #/check free membership period
