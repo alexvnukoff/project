@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-12 06:40+0000\n"
+"POT-Creation-Date: 2014-06-15 11:28+0000\n"
 "PO-Revision-Date: 2014-06-12 09:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgstr "Выставки"
 msgid "Sorry but you cannot modify this item "
 msgstr "К сожалению  вы не можете изменить этот пункт"
 
-#: appl/templatetags/inclusionTags.py:107 tppcenter/Profile/views.py:19
+#: appl/templatetags/inclusionTags.py:108 tppcenter/Profile/views.py:19
 #: tppcenter/templates/login_header.html:94
 #: tppcenter/templates/login_header.html:154
 #: tppcenter/templates/main_page.html:159
@@ -2005,23 +2005,23 @@ msgstr ""
 msgid "registration profiles"
 msgstr ""
 
-#: tpp/settings.py:225
+#: tpp/settings.py:228
 msgid "Russia"
 msgstr ""
 
-#: tpp/settings.py:226
+#: tpp/settings.py:229
 msgid "Armenia"
 msgstr ""
 
-#: tpp/settings.py:229
+#: tpp/settings.py:232
 msgid "England"
 msgstr ""
 
-#: tpp/settings.py:241
+#: tpp/settings.py:244
 msgid "Israel"
 msgstr ""
 
-#: tpp/settings.py:242 tppcenter/templates/index.html:88
+#: tpp/settings.py:245 tppcenter/templates/index.html:88
 #: tppcenter/templates/login_header.html:41
 msgid "Arabic"
 msgstr ""
@@ -2054,31 +2054,31 @@ msgstr "Вы можете связаться с ним по электронно
 msgid "Registartion to event"
 msgstr "Регистрация на мероприятие"
 
-#: tppcenter/AdminTpp/views.py:547 tppcenter/AdminTpp/views.py:549
+#: tppcenter/AdminTpp/views.py:550 tppcenter/AdminTpp/views.py:552
 msgid "Banner type already exists"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:552
+#: tppcenter/AdminTpp/views.py:555
 msgid "Invalid site"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:555
+#: tppcenter/AdminTpp/views.py:558
 msgid "Invalid height"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:558
+#: tppcenter/AdminTpp/views.py:561
 msgid "Invalid width"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:561
+#: tppcenter/AdminTpp/views.py:564
 msgid "Invalid targeting"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:564
+#: tppcenter/AdminTpp/views.py:567
 msgid "Invalid code"
 msgstr ""
 
-#: tppcenter/AdminTpp/views.py:718
+#: tppcenter/AdminTpp/views.py:721
 msgid "Invalid type"
 msgstr ""
 
@@ -2247,7 +2247,7 @@ msgstr "Инновационные проекты "
 msgid "Private messages"
 msgstr "Отправить сообщение"
 
-#: tppcenter/News/views.py:62 tppcenter/News/views.py:99
+#: tppcenter/News/views.py:63 tppcenter/News/views.py:100
 #: tppcenter/templates/index.html:190 tppcenter/templates/main_page.html:116
 #: tppcenter/templates/main_page.html:141
 #: tppcenter/templates/Companies/detailContent.html:572
@@ -2329,7 +2329,12 @@ msgstr "Добавить бизнес предложение"
 msgid "Your own site"
 msgstr "Собственный интернет-сайт"
 
-#: tppcenter/Resume/views.py:246 tppcenter/templates/main_page.html:129
+#: tppcenter/Resume/views.py:211
+#, fuzzy
+msgid "Name not found"
+msgstr "Ничего не найдено"
+
+#: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:129
 #: tppcenter/templates/main_page.html:158
 #: tppcenter/templates/Resume/index.html:10
 msgid "Resume"
@@ -2594,9 +2599,8 @@ msgid "Innovation projects"
 msgstr "Банк инновационных проектов"
 
 #: tppcenter/templates/index.html:85 tppcenter/templates/login_header.html:38
-#, fuzzy
-msgid "Language"
-msgstr "Владение иностранными языками"
+msgid "Mother tongue"
+msgstr ""
 
 #: tppcenter/templates/index.html:87 tppcenter/templates/login_header.html:40
 msgid "Armenian"
@@ -4145,6 +4149,10 @@ msgstr "Работник"
 #: usersites/templates/Contact/contentPage.html:60
 msgid "You email"
 msgstr "Ваша почта"
+
+#, fuzzy
+#~ msgid "Language"
+#~ msgstr "Владение иностранными языками"
 
 #, fuzzy
 #~ msgid "Crediting"
