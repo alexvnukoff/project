@@ -206,4 +206,15 @@ div.org-contacts ul li span.left{float: right;}
 .wall-title-bg{ direction:rtl;}
 .vacancy-list li .vacancy-desc {width: 630px;}
 
+.slide1{ width:770px; height:260px; background-image:url(../img/right/slide1.jpg);}
+.slide2{ width:770px; height:260px; background-image:url(../img/right/slide2.jpg);}
+.slide3{ width:770px; height:260px; background-image:url(../img/right/slide3.jpg);}
+.slide4{ width:770px; height:260px; background-image:url(../img/right/slide4.jpg);}
+
+.slide3 .desc{ padding-right:175px!important;}
+.slide4 .desc{ width:330px; padding-right:155px;}
+.slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align: left; padding-bottom:12px;}
+.desc ul.list li{ float:left; padding-left: 51px; margin-top:5px; font-size:14px; background:url(../img/bullet.png) no-repeat top left; padding-bottom:5px; font-family:Arial, Helvetica, sans-serif;}
+
+
 .vacancy-list li .vacancy-desc a.more{ text-align:left;}
