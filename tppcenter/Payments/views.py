@@ -13,32 +13,45 @@ def verify_payment_status(request):
     """
     payment = PayPalPayment()
     # for production call: payment.verifyAndSave(request, pay_env=1)
-    if payment.verifyAndSave(request, pay_env=1):
-        #update company's end_date and paid_till-date
-        item_number = payment.getItemNumber()
-        if len(item_number):
-            if 'Company ID:' in item_number:
-                #get Company ID from string
-                s = [token for token in item_number.split() if token.isdigit()]
-                item_id = s[0]
-                if len(item_id):
-                    # here additional checks: receiver email, sum, currency
-                    status = request.POST.get('payment_status')
-                    receiver = request.POST.get('receiver_email')
-                    amount = request.POST.get('mc_gross')
-                    currency = request.POST.get('mc_currency')
+    if payment.verifyAndSave(request, pay_env=0):
+        if payment.getPaymentStatus() == 'Completed':
+            #update company's end_date and paid_till-date
+            item_number = payment.getItemNumber()
+            if len(item_number):
+                if 'Company ID:' in item_number:
+                    #get Company ID from string
+                    s = [token for token in item_number.split() if token.isdigit()]
+                    item_id = s[0]
+                    if len(item_id):
+                        # here additional checks: receiver email, sum, currency
+                        receiver = payment.getPaymentReceiver_s()
+                        amount = payment.getPaymentAmount()
+                        currency = payment.getPaymentCurrency()
 
-#                    if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and int(amount) == 1 \
-                    if int(amount) == 1 \
-                            and currency == 'USD':
-                        try:
-                            comp = Company.objects.get(pk=int(item_id))
-                            new_end_date = comp.paid_till_date + datetime.timedelta(days=365)
-                            comp.end_date = new_end_date
-                            comp.paid_till_date = new_end_date
-                            comp.save()
-                        except:
+                        if receiver == settings.PAYPAL_RECEIVER_EMAIL and float(amount) == 1.0 and currency == 'USD':
+                            try:
+                                comp = Company.objects.get(pk=int(item_id))
+                                new_end_date = comp.paid_till_date + datetime.timedelta(days=365)
+                                comp.end_date = new_end_date
+                                comp.paid_till_date = new_end_date
+                                comp.save()
+                            except:
+                                return HttpResponse('False')
+
+                            if User.objects.filter(email=receiver).exists():
+                                user = User.objects.get(email=receiver)
+                            else:
+                                try:
+                                    rel = Relationship.objects.filter(parent__c2p__parent__c2p__parent=comp.pk, type='relation', is_admin=True)[0]
+                                    user = User.objects.get(id=rel.child.id)
+                                except:
+                                    user = User.objects.filter(is_superuser=True)[0]
+
+                            Relationship.setRelRelationship(comp, payment, user)
+                        else:
                             return HttpResponse('False')
+                    else:
+                        return HttpResponse('False')
                 else:
                     return HttpResponse('False')
             else:
@@ -47,6 +60,8 @@ def verify_payment_status(request):
             return HttpResponse('False')
     else:
         return HttpResponse('False')
+
+    return HttpResponse()
 
 
 def pay_for_adv(request):
