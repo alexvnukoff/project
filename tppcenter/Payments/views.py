@@ -70,8 +70,7 @@ def pay_for_adv(request):
             amount = request.POST.get('mc_gross')
             currency = request.POST.get('mc_currency')
 
-            if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and amount == orderCost \
-                    and currency == 'USD':
+            if status == "Completed" and receiver == settings.PAYPAL_RECEIVER_EMAIL and currency == 'USD':
 
                 user = User.objects.filter(is_superuser=True)[0]
 
