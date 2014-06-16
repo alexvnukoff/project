@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None):
+def get_news_list(request, page=1, item_id=None, my=None, slug=None, language=None):
 
 
     if item_id:
@@ -23,7 +23,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
     try:
         if not item_id:
 
-            contentPage = _get_content(request, page)
+            contentPage = _get_content(request, page, language)
 
         else:
             contentPage = _getdetailcontent(request, item_id, slug)
@@ -56,14 +56,18 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 
-def _get_content(request, page):
+def _get_content(request, page, language):
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
 
      sqs = getActiveSQS().models(News).filter(SQ(tpp=organization) |
                                               SQ(company=organization)).order_by('-obj_create_date')
-
-     url_paginator = 'news:paginator'
+     if not language:
+         url_paginator = 'news:paginator'
+         news_url = 'news:detail'
+     else:
+         url_paginator ="news_lang:paginator"
+         news_url = 'news_lang:detail'
 
      attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
 
@@ -76,10 +80,12 @@ def _get_content(request, page):
      paginator_range = getPaginatorRange(page)
 
      templateParams = {
+         'url_parameter': language if language else [],
          'url_paginator': url_paginator,
          'content': content,
          'page': page,
-         'paginator_range': paginator_range
+         'paginator_range': paginator_range,
+         'news_url': news_url
 
      }
 
@@ -118,7 +124,7 @@ def _getdetailcontent(request, item_id, slug):
        'newValues': newValues,
        'photos': photos,
        'item_id': item_id,
-      }
+     }
 
      context = RequestContext(request, templateParams)
      rendered = template.render(context)

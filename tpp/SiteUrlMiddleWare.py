@@ -59,11 +59,19 @@ class LocaleMiddleware(object):
        settings.LANGUAGE_CODE = 'ru'
        url = request.META.get('HTTP_HOST', False)
        lang = url.split('.')[0] if url else None
+       path = request.path.split('/')
+       languages = [lan[0] for lan in settings.LANGUAGES]
+
+
 
        if lang:
-            languages = [lan[0] for lan in settings.LANGUAGES]
             if lang in languages:
                  settings.LANGUAGE_CODE = lang
+       if len(path) > 0:
+            if path[1] in languages:
+                settings.LANGUAGE_CODE = lang
+
+
 
 
 

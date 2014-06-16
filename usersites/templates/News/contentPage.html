@@ -11,7 +11,7 @@
                      {% with attr.CREATE_DATE.0 as create_date %}
 
             	<li>
-                	<h3><a href="{% url "news:detail" slug %}">{{ name }}</a></h3>
+                	<h3><a href="{% dynurl news_url url_parameter slug %}">{{ name }}</a></h3>
                     <div class="thumb"><img style="max-width: 70px;" src="{{ MEDIA_URL }}small/{{ image }} " alt="" /></div>
                     <div class="desc">
                     	<p class="date">
@@ -25,7 +25,7 @@
                                  {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
                         </p>
-                        <p class="linkmore"><a href="{% url "news:detail" slug %}">{% trans "more" %}...</a></p>
+                        <p class="linkmore"><a href="{% dynurl news_url url_parameter slug %}">{% trans "more" %}...</a></p>
                     </div>
                 </li>
                      {% endwith %}

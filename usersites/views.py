@@ -8,13 +8,13 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 
 
-def get_wall(request, page_id=None):
+def get_wall(request, page_id=None, language=None):
     if page_id is not None:
         contentPage = getAdditionalPage(request, page_id)
         current_section = ""
         title = ""
     else:
-        contentPage = _get_content(request)
+        contentPage = _get_content(request,language)
         current_section = _("Wall")
         title = _("Wall")
 
@@ -36,7 +36,7 @@ def get_wall(request, page_id=None):
 
 
 
-def _get_content(request):
+def _get_content(request, language):
      a = settings.SITE_ID
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
@@ -69,6 +69,15 @@ def _get_content(request):
 
      productValues = Item.getItemsAttributesValues(attr, product_ids)
 
+     if language:
+         news_url = "news_lang:detail"
+         proposal_url = 'proposal_lang:detail'
+         products_url = 'products_lang:detail'
+     else:
+         news_url = "news:detail"
+         proposal_url = 'proposal:detail'
+         products_url = 'products:detail'
+
 
 
 
@@ -78,7 +87,12 @@ def _get_content(request):
      templateParams = {
          'newsValues': newsValues,
          'proposalValues': proposalValues,
-         'productValues': productValues
+         'productValues': productValues,
+         'url_parameter': language if language else [],
+         'news_url': news_url,
+         'products_url': products_url,
+         'proposal_url': proposal_url
+
 
 
      }

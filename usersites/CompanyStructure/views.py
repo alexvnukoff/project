@@ -6,9 +6,9 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-def get_structure_list(request, page=1):
+def get_structure_list(request, page=1, language=None):
 
-    contentPage = _get_content(request, page)
+    contentPage = _get_content(request, page, language)
 
 
 
@@ -30,13 +30,19 @@ def get_structure_list(request, page=1):
 
 
 
-def _get_content(request, page):
+def _get_content(request, page, language):
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk
 
      departaments = Department.objects.filter(c2p__parent=organization, c2p__type='hierarchy').order_by('-pk')
 
-     url_paginator = 'structure:paginator'
+     if not language:
+         url_paginator = 'structure:paginator'
+
+     else:
+         url_paginator ="structure_lang:paginator"
+        
+
 
      attr = ('NAME',)
 
@@ -78,7 +84,9 @@ def _get_content(request, page):
          'url_paginator': url_paginator,
          'content': content,
          'page': page,
-         'paginator_range': paginator_range
+         'paginator_range': paginator_range,
+
+         'url_parameter': language if language else [],
 
      }
 
