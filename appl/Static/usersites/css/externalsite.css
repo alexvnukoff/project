@@ -76,7 +76,7 @@ h2.titlemodule{ position:relative; float:left; width:100%; font-size:21px; font-
 .signup .i-lock{ display:inline-block; width:16px; height:18px; background-position:-45px -78px; margin-right:5px; vertical-align:middle;}
 .signup a{ text-decoration:underline;}
 
-.companyinfo{ position:relative; float:left; width:100%; margin:35px 0 0 0; text-align:center; height:42px; line-height:42px; color:#333; background:#f4f3f3;}
+.companyinfo{ position:relative; float:left; width:100%; margin:35px 0 0 0; text-align:center; /* margin-left: 2px; */ height: 54px; /* line-height:42px; */ color:#333; background:#f4f3f3;}
 .footer{ position:relative; float:left; width:100%; padding:18px 0; background:#505050;}
 .footer .logofooter{ float:left; width:69px; height:77px; background-position:0px -104px; margin-right:15px; display:inline;}
 .footer .adress{ float:left; width:300px; font-size:11px; color:#b6b6b6;}

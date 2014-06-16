@@ -62,6 +62,22 @@
                     });
 
                 </script>
+
+
+          <div id="google_translate_element_main"></div>
+            <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'en',
+                        multilanguagePage: true}, 'google_translate_element_main');
+                    }
+            </script>
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <style type="text/css">
+                .goog-te-combo {
+                  width: 220px;
+                }
+          </style>
             <div class="search">
             	<input type="text" name="" placeholder="Поиск…" class="text" />
                 <input type="button" name="" class="btns imgmain" />
@@ -76,8 +92,6 @@
                <!-- <li><a href="#">Фотогалерея</a></li>-->
                 <li><a href="{% dynurl structure_url url_parameter %}">{% trans 'Company structure' %}</a></li>
                 <li><a href="{% dynurl contact_url url_parameter %}">{% trans 'Contact us' %}</a></li>
-                {% for id,  page in addPagesValues.items %}
-                      <li><a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a></li>
-                {% endfor %}
+
             </ul>
         </div>
