@@ -28,7 +28,7 @@ def verify_payment_status(request):
                         amount = payment.getPaymentAmount()
                         currency = payment.getPaymentCurrency()
 
-                        if receiver == settings.PAYPAL_RECEIVER_EMAIL and float(amount) == 1.0 and currency == 'USD':
+                        if receiver == settings.PAYPAL_RECEIVER_EMAIL and float(amount) == 100.0 and currency == 'USD':
                             try:
                                 comp = Company.objects.get(pk=int(item_id))
                                 new_end_date = comp.paid_till_date + datetime.timedelta(days=365)

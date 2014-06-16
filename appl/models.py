@@ -611,66 +611,65 @@ class PayPalPayment(Payment):
 #            else:
 #                self.payment_status = 'VERIFIED'
 
-            if not PayPalPayment.objects.filter(txn_id=request.POST['txn_id']).exists():
-                self.txn_id = request.POST['txn_id']
-                self.address_city = request.POST['address_city']
-                self.address_country = request.POST['address_country']
-                self.address_country_code = request.POST['address_country_code']
-                self.address_name = request.POST['address_name']
-                self.address_state = request.POST['address_state']
-                self.address_status = request.POST['address_status']
-                self.address_street = request.POST['address_street']
-                self.address_zip = request.POST['address_zip']
-                self.business = request.POST['business']
-                self.charset = request.POST['charset']
-                self.custom = request.POST['custom']
-                self.first_name = request.POST['first_name']
-                self.last_name = request.POST['last_name']
-                self.handling_amount = request.POST['handling_amount']
-                self.ipn_track_id = request.POST['ipn_track_id']
-                self.item_name = request.POST['item_name']
-                self.item_number = request.POST['item_number']
-                self.mc_currency = request.POST['mc_currency']
-                self.mc_fee = request.POST['mc_fee']
-                self.mc_gross = request.POST['mc_gross']
-                self.notify_version = request.POST['notify_version']
-                self.payer_business_name = request.POST['payer_business_name']
-                self.payer_email = request.POST['payer_email']
-                self.payer_id = request.POST['payer_id']
-                self.payer_status = request.POST['payer_status']
+            if not PayPalPayment.objects.filter(txn_id=request.POST.get('txn_id', '')).exists():
+                self.txn_id = request.POST.get('txn_id', '')
+                self.address_city = request.POST.get('address_city', '')
+                self.address_country = request.POST.get('address_country', '')
+                self.address_country_code = request.POST.get('address_country_code', '')
+                self.address_name = request.POST.get('address_name', '')
+                self.address_state = request.POST.get('address_state', '')
+                self.address_status = request.POST.get('address_status', '')
+                self.address_street = request.POST.get('address_street', '')
+                self.address_zip = request.POST.get('address_zip', '')
+                self.business = request.POST.get('business', '')
+                self.charset = request.POST.get('charset', '')
+                self.custom = request.POST.get('custom', '')
+                self.first_name = request.POST.get('first_name', '')
+                self.last_name = request.POST.get('last_name', '')
+                self.handling_amount = request.POST.get('handling_amount', '')
+                self.ipn_track_id = request.POST.get('ipn_track_id', '')
+                self.item_name = request.POST.get('item_name', '')
+                self.item_number = request.POST.get('item_number', '')
+                self.mc_currency = request.POST.get('mc_currency', '')
+                self.mc_fee = request.POST.get('mc_fee', '')
+                self.mc_gross = request.POST.get('mc_gross', '')
+                self.notify_version = request.POST.get('notify_version', '')
+                self.payer_business_name = request.POST.get('payer_business_name', '')
+                self.payer_email = request.POST.get('payer_email', '')
+                self.payer_id = request.POST.get('payer_id', '')
+                self.payer_status = request.POST.get('payer_status', '')
 
                 # receive date in PDT bound
                 from pytz import timezone
-                ts = strptime(request.POST['payment_date'][:-4], "%H:%M:%S %b %d, %Y")
+                ts = strptime(request.POST.get('payment_date', '00:00:00 1 Jan, 2014')[:-4], "%H:%M:%S %b %d, %Y")
                 pd = datetime.datetime.fromtimestamp(mktime(ts))
                 self.payment_date = pd.replace(tzinfo=timezone('US/Pacific'))
 
-                self.payment_fee = request.POST['payment_fee']
-                self.payment_gross = request.POST['payment_gross']
-                self.payment_status = request.POST['payment_status']
-                self.payment_type = request.POST['payment_type']
-                if self.payment_status != 'Completed':
-                    self.pending_reason = request.POST['pending_reason']
-                self.protection_eligibility = request.POST['protection_eligibility']
-                self.quantity = request.POST['quantity']
-                self.receiver_email = request.POST['receiver_email']
-                self.receiver_id = request.POST['receiver_id']
-                self.residence_country = request.POST['residence_country']
-                self.shipping = request.POST['shipping']
-                self.tax = request.POST['tax']
-                self.test_ipn = request.POST['test_ipn']
-                self.transaction_subject = request.POST['transaction_subject']
-                self.txn_type = request.POST['txn_type']
-                self.verify_sign = request.POST['verify_sign']
+                self.payment_fee = request.POST.get('payment_fee', '')
+                self.payment_gross = request.POST.get('payment_gross', '')
+                self.payment_status = request.POST.get('payment_status', '')
+                self.payment_type = request.POST.get('payment_type', '')
+                self.pending_reason = request.POST.get('pending_reason', '')
+                self.protection_eligibility = request.POST.get('protection_eligibility', '')
+                self.quantity = request.POST.get('quantity', '')
+                self.receiver_email = request.POST.get('receiver_email', '')
+                self.receiver_id = request.POST.get('receiver_id', '')
+                self.residence_country = request.POST.get('residence_country', '')
+                self.shipping = request.POST.get('shipping', '')
+                self.tax = request.POST.get('tax', '')
+                self.test_ipn = request.POST.get('test_ipn', '')
+                self.transaction_subject = request.POST.get('transaction_subject', '')
+                self.txn_type = request.POST.get('txn_type', '')
+                self.verify_sign = request.POST.get('verify_sign', '')
                 self.create_user = User.objects.get(email='special@tppcenter.com')
                 try:
                     self.save()
                 except Exception as e:
                     pass
             else:
-                pp_rec = PayPalPayment.objects.get(txn_id=request.POST['txn_id'])
-                if pp_rec.payment_status != request.POST['payment_status']:
-                    pp_rec.payment_status = request.POST['payment_status']
+                pp_rec = PayPalPayment.objects.get(txn_id=request.POST.get('txn_id', ''))
+                if pp_rec.payment_status != request.POST.get('payment_status', ''):
+                    pp_rec.payment_status = request.POST.get('payment_status', '')
                     pp_rec.save()
 
             return True

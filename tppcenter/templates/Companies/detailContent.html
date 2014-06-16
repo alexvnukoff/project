@@ -503,17 +503,18 @@
                             {% endif %}
                             <!-- Script for PayPal payment button -->
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
-                            <div id="paypal-membership" style="padding-left: 30px">
+                            <div id="paypal-membership" style="padding-left: 30px; padding-bottom: 10px">
                                 <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com"{% endcomment %}
                                 {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com" {% endcomment %}
                                     data-name="{% trans '1-year www.b24online.com membership' %}"
                                     data-number="Company ID: {{ id }} ({{ name }})" {% comment %} Company's database ID{% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
-                                    data-amount="1"
+                                    data-amount="100"
                                     data-callback="www.tppcenter.com/payments/"
                                     {% comment %}data-callback="http://tppcenter.ngrok.com/payments/" {% endcomment %}
-                                    data-env="www"
+                                    data-env=""
                                 ></script>
                                 {% comment %}
                                 PayPal Debugging Info
