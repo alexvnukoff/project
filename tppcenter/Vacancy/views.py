@@ -261,8 +261,13 @@ def _vacancyDetailContent(request, item_id):
     else:
         rendered = cache.get(cache_name)
         result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        if result is not None :
+            description = result[0]
+            title = result[1]
+        else:
+            description = ""
+            title = ""
+
 
     return rendered, description, title
 

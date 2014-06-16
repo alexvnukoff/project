@@ -6,9 +6,9 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from recaptcha.client import captcha
 
-def get_news_list(request):
+def get_news_list(request, language=None):
 
-   result = _get_content(request)
+   result = _get_content(request, language)
    contentPage = result[0]
    email = result[1]
 
@@ -75,7 +75,7 @@ def get_news_list(request):
 
 
 
-def _get_content(request):
+def _get_content(request, language):
 
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization

@@ -1,3 +1,6 @@
+ {% load CustomFilters %}
 <div class="tophead">
-
+    {% for id,  page in addPagesValues.items %}
+          <a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a>
+    {% endfor %}
 </div>

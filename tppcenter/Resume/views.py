@@ -1,3 +1,4 @@
+
 from haystack.backends import SQ
 from appl.func import getActiveSQS, filterLive, setPaginationForSearchWithValues, getUserPermsForObjectsList, \
     getPaginatorRange

@@ -35,7 +35,11 @@
             <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
                <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/flags.css"%}" />
             <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+
         {% endblock %}
+
+
+
 
         {% block js %}
             <script type="application/javascript">
@@ -106,16 +110,24 @@
     {% block header %}
 
     {% endblock %}
+    {% block rtl %}
+         {% if site|getSide %}
+              <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/rtl.css"%}" />
+          {% endif %}
+    {% endblock %}
 
     {% block body %}
+
+
+
+
+
     {% endblock %}
 
 
 {% block footer %}
 
-    {% if site|getSide %}
-     <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/rtl.css"%}" />
-    {% endif %}
+
     <div class="wrapper">
         <div class="linkbottom">
             {% showStaticPages %}
