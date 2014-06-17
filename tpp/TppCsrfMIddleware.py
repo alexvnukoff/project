@@ -120,13 +120,7 @@ class CsrfViewMiddleware(object):
 
         # Wait until request.META["CSRF_COOKIE"] has been manipulated before
         # bailing out, so that get_token still works
-        host = request.get_host().split(':')[0]
-        exemp_host = ["b24online.com"]
-        if len(host.split(".")) > 2:
-            host = host.split(".")
-            host = host[1] + "." + host[2]
-        if host in exemp_host:
-            return None
+
 
 
 
@@ -183,7 +177,16 @@ class CsrfViewMiddleware(object):
             if request_csrf_token == "":
                 # Fall back to X-CSRFToken, to make things easier for AJAX,
                 # and possible for PUT/DELETE.
+                host = request.get_host().split(':')[0]
+                exemp_host = ["b24online.com"]
+                if len(host.split(".")) > 2:
+                    host = host.split(".")
+                    host = host[1] + "." + host[2]
+                if host in exemp_host:
+                    return None
                 request_csrf_token = request.META.get('HTTP_X_CSRFTOKEN', '')
+
+
 
             if not constant_time_compare(request_csrf_token, csrf_token):
                 return self._reject(request, REASON_BAD_TOKEN)
