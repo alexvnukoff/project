@@ -3,7 +3,7 @@ from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from appl import func
 from appl.models import Company, Product, Exhibition, Country, News, Tender, BusinessProposal, Organization, Department, \
                         Branch, Tpp, InnovationProject, Cabinet, Vacancy, Gallery, AdditionalPages, Messages

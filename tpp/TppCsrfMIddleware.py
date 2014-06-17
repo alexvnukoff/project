@@ -117,8 +117,19 @@ class CsrfViewMiddleware(object):
             # available to the view.
             request.META["CSRF_COOKIE"] = _get_new_csrf_key()
 
+
         # Wait until request.META["CSRF_COOKIE"] has been manipulated before
         # bailing out, so that get_token still works
+        host = request.get_host().split(':')[0]
+        exemp_host = ["b24online.com"]
+        if len(host.split(".")) > 2:
+            host = host.split(".")
+            host = host[1] + "." + host[2]
+        if host in exemp_host:
+            return None
+
+
+
         if getattr(callback, 'csrf_exempt', False):
             return None
 
