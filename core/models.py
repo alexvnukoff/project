@@ -940,7 +940,7 @@ class Item(models.Model):
                                 v.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
                                 v.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
-                            v.save
+                            v.save()
 
             # for attributes which were already saved before...
             for a in attr_from_db:

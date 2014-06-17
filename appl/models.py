@@ -587,9 +587,9 @@ class PayPalPayment(Payment):
             # prepares provided data set to inform PayPal we wish to validate the response
             params = urlencode('').encode('utf-8')
             if pay_env != 0:
-                req = Request('https://www.paypal.com/cgi-bin/webscr', params)
+                req = Request('https://www.paypal.com/cgi-bin/webscr/', params)
             else:
-                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr', params)
+                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr/', params)
             # send empty POST 200 response to PayPal
             response = urlopen(req)
 #
@@ -598,9 +598,9 @@ class PayPalPayment(Payment):
             data['cmd'] = "_notify-validate"
             params = urlencode(data).encode('utf-8')
             if pay_env != 0:
-                req = Request('https://www.paypal.com/cgi-bin/webscr', params)
+                req = Request('https://www.paypal.com/cgi-bin/webscr/', params)
             else:
-                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr', params)
+                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr/', params)
 
             #reads the response back from PayPal
             response = urlopen(req)
@@ -730,6 +730,9 @@ class PayPalPayment(Payment):
 
     def getItemNumber(self):
         return self.item_number
+
+    def getItemQty(self):
+        return self.quantity
 
 class Shipment(Item):
 

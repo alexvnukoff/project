@@ -9,6 +9,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-     url(r'^$', tppcenter.Payments.views.verify_payment_status, name="verify_payment_status"),
+     url(r'^membership/$', tppcenter.Payments.views.membership_payment, name="membership_payment"),
+     url(r'^product/$', tppcenter.Payments.views.product_payment, name="product_payment"),
      url(r'^advertisement/$', tppcenter.Payments.views.pay_for_adv, name="pay_for_adv"),
 )
