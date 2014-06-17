@@ -114,11 +114,9 @@ MIDDLEWARE_CLASSES = (
 
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'tpp.TppSessioinMiddleWare.SessionHostDomainMiddleware',
     'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
