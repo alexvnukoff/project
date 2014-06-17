@@ -14,7 +14,7 @@ def membership_payment(request):
     """
     payment = PayPalPayment()
     # for production call: payment.verifyAndSave(request, pay_env=1)
-    if payment.verifyAndSave(request, pay_env=0):
+    if payment.verifyAndSave(request, pay_env=1):
         if payment.getPaymentStatus() == 'Completed':
             #update company's end_date and paid_till-date
             item_number = payment.getItemNumber()
@@ -73,7 +73,7 @@ def product_payment(request):
     """
     payment = PayPalPayment()
     # for production call: payment.verifyAndSave(request, pay_env=1)
-    if payment.verifyAndSave(request, pay_env=0):
+    if payment.verifyAndSave(request, pay_env=1):
         if payment.getPaymentStatus() == 'Completed':
             #create relationship between Product and payment transaction
             item_number = payment.getItemNumber()
