@@ -12,13 +12,9 @@ from django.conf import settings
 
 def get_products_list(request, page=1, item_id=None, my=None, slug=None):
 
-
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
-
-
-
 
     try:
         if not item_id:
@@ -30,14 +26,8 @@ def get_products_list(request, page=1, item_id=None, my=None, slug=None):
             if isinstance(contentPage, HttpResponse):
                 return contentPage
 
-
-
     except ObjectDoesNotExist:
         contentPage = func.emptyCompany()
-
-
-
-
 
     current_section = _("Products")
     title = _("Products")
@@ -49,12 +39,6 @@ def get_products_list(request, page=1, item_id=None, my=None, slug=None):
     }
 
     return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
-
-
-
-
-
-
 
 
 def _get_content(request, page):
@@ -91,17 +75,6 @@ def _get_content(request, page):
      return rendered
 
 
-
-
-
-
-
-
-
-
-
-
-
 def _getdetailcontent(request, item_id, slug):
      product = get_object_or_404(Product, pk=item_id)
 
@@ -112,20 +85,12 @@ def _getdetailcontent(request, item_id, slug):
      )
 
      productValues = product.getAttributeValues(*attr)
-
-
-
      photos = Gallery.objects.filter(c2p__parent=item_id)
-
      additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
      country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
-
      company = Company.objects.get(p2c__child=item_id)
      companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
      companyValues.update({'COMPANY_ID': company.id})
-
-
      countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
 
      toUpdate = {
@@ -136,7 +101,6 @@ def _getdetailcontent(request, item_id, slug):
      }
 
      companyValues.update(toUpdate)
-
      template = loader.get_template('Products/detailContent.html')
 
      templateParams = {
@@ -150,21 +114,4 @@ def _getdetailcontent(request, item_id, slug):
      context = RequestContext(request, templateParams)
      rendered = template.render(context)
 
-
-
-
      return rendered
-
-
-
-
-
-
-
-
-
-
-
-
-
-

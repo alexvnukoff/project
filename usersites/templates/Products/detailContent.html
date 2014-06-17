@@ -9,7 +9,6 @@ $(function() {
 	 $(".goods-details-tab").tabs();});
 </script>
 
-
 <script>
     {% getOwner item_id as owner %}
 
@@ -22,7 +21,18 @@ $(function() {
     {% endif %}
     ga('set', 'dimension2', 'product');
 </script>
-  <div class="goods-details">
+
+<script>
+    //PayPal: get amount from input field and add into PayPal button generated form
+    $(function() {
+        $(document).on('click','.paypal-button', function(){
+            var amount = $("#item-amount").val();
+            $('input[name="quantity"]').val(amount);
+        });
+    });
+</script>
+
+<div class="goods-details">
             {% with productValues.NAME.0 as name %}
             {% with productValues.SKU.0 as sku %}
             {% with productValues.COST.0 as cost %}
@@ -75,7 +85,7 @@ $(function() {
                     	<li>
                         	<label>{% trans "Price" %}:</label>
                             <p>
-                                {% if price %}
+                                {% if cost %}
                                      {{ currency|getSymbol }} {{ cost }}
                                 {% else %}
                                      {% trans 'Contact to price' %}
@@ -88,7 +98,7 @@ $(function() {
                         </li>
                         <li>
                         	<label>{% trans 'Amount' %}:</label>
-                            <input type="text" name="" value="" class="text" style="width:60%;" />
+                            <input id="item-amount" type="text" name="" value="1" class="text" style="width:60%;"/>
                         </li>
                         <li>
                         	<label>{% trans 'Deleviry method' %}:</label>
@@ -97,8 +107,29 @@ $(function() {
                             <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
                             <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
                             <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
+                        </li>
+                        <li>
+                            {% if cost %}
+                                <!-- Script for PayPal payment button -->
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"{% endcomment %}
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com"{% endcomment %}
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"
+                                    data-name="{% trans 'Payment for Product: ' %}{{ item_id }}/{{ sku }} {{ name }}."
+                                    data-number="{{ item_id }}/{{ sku }}. Company ID: {{ company_id }} ({{ company_name }})" {% comment %} Company's database ID{% endcomment %}
+                                    data-quantity="1"
+                                    data-button="paynow"
+                                    data-amount="{{ cost }}"
+                                    data-currency="{{ currency }}"
+                                    {% comment %}data-callback="www.tppcenter.com/payments/"{% endcomment %}
+                                    data-callback="http://tppcenter.ngrok.com/payments/"
+                                    {% comment %}data-env="sandbox"{% endcomment %}
+                                    data-env="sandbox"
+                                    data-charset="utf-8" {% comment %}for non-english names passing to PayPal {% endcomment %}
+                                ></script>
+                            {% else %}
+                                <a class="bigbuy contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="{% url 'contact:main' %}" >{% trans 'Countact us' %}</a>
+                            {% endif %}
                        </li>
-                       <li><a class="bigbuy contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="{% url 'contact:main' %}" >{% trans 'Countact us' %}</a></li>
                     </ul>
                 </div>
                 <ul class="goods-info">
@@ -185,5 +216,5 @@ $(function() {
             {% endwith %}
             {% endwith %}
             {% endwith %}
-     </div>
+</div>
 
