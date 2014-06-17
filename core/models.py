@@ -798,7 +798,7 @@ class Item(models.Model):
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
         item_id = self.pk
-        cache_name = "detail_%s" % item_id
+        cache_name = "%s_detail_%s" % (get_language(), item_id)
         description_cache_name = "description_%s" % item_id
 
         cache.delete(cache_name)

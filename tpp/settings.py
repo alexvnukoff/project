@@ -110,13 +110,12 @@ REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
 
-    #'django.contrib.sessions.middleware.SessionMiddleware',
+
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
-    'tpp.TppSessioinMiddleWare.SessionHostDomainMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -128,6 +127,7 @@ MIDDLEWARE_CLASSES = (
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
 }
+
 
 
 ROOT_URLCONF = 'tpp.urls'
@@ -182,6 +182,7 @@ USE_X_FORWARDED_HOST = True
 
 
 TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
