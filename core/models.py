@@ -911,7 +911,8 @@ class Item(models.Model):
                 raise e
         else:
             # here UPDATE attributes' values
-            session_lang = get_language()
+            #session_lang = get_language()
+            session_lang = settings.LANGUAGE_CODE
             fact_attr_in_value = Value.objects.filter(item=self).all()
             fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
             attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
@@ -940,7 +941,7 @@ class Item(models.Model):
                                 v.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
                                 v.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
-                            v.save
+                            v.save()
 
             # for attributes which were already saved before...
             for a in attr_from_db:
