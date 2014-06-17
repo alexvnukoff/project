@@ -32,6 +32,8 @@ class SiteUrlMiddleWare:
 
 
         except Site.DoesNotExist:
+
+
             site = Site.objects.get(name='tppcenter')
             settings.SITE_ID = site.pk
             request.urlconf = "tppcenter.urls"
