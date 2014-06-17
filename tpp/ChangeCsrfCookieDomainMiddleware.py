@@ -24,6 +24,8 @@ class ChangeCsrfCookieDomainMiddleware:
           allowed = settings.ALLOWED_HOSTS
           if host in allowed:
              settings.CSRF_COOKIE_DOMAIN = host
+             settings.SESSION_COOKIE_DOMAIN = host
+
 
 
 
