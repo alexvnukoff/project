@@ -167,11 +167,23 @@ def getUserSiteSlider(context):
 
     return {'file_count':file_count ,  'user_site_slider': user_site_slider}
 
+@register.inclusion_tag('header.html', takes_context=True)
+def getUserSitTopMenu(context):
+    path = context['request'].path.split('/')
+    languages = [lan[0] for lan in settings.LANGUAGES]
+    url_parameter = []
 
-@register.inclusion_tag('site_sidebar.html', takes_context=True)
-def getUserSiteMenu(context):
+    additionalPages_url = 'additionalPage'
+    if len(path) > 0:
+       if path[1] in languages:
+          url_parameter = path[1]
+
+          additionalPages_url = 'additionalPage_lang'
+
+
 
     midea_url = settings.MEDIA_URL
+
 
     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
     organization = user_site.organization.pk
@@ -179,7 +191,39 @@ def getUserSiteMenu(context):
     additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
     addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
 
-    return {'addPagesValues': addPagesValues, 'midea_url': midea_url }
+    return {'addPagesValues': addPagesValues, 'midea_url': midea_url, 'url_parameter':  url_parameter,
+            'additionalPages_url': additionalPages_url}
+
+
+
+@register.inclusion_tag('site_sidebar.html', takes_context=True)
+def getUserSiteMenu(context):
+
+    path = context['request'].path.split('/')
+    languages = [lan[0] for lan in settings.LANGUAGES]
+    url_parameter = []
+    news_url = 'news:main'
+    main_url = 'main'
+    proposal_url = 'proposal:main'
+    products_url = 'products:main'
+    contact_url = 'contact:main'
+    structure_url = 'structure:main'
+
+    if len(path) > 0:
+       if path[1] in languages:
+          url_parameter = path[1]
+          news_url = "news_lang:main"
+          main_url = 'main_lang'
+          proposal_url = 'proposal_lang:main'
+          products_url = 'products_lang:main'
+          contact_url = 'contact_lang:main'
+          structure_url = 'structure_lang:main'
+
+    midea_url = settings.MEDIA_URL
+
+    return { 'midea_url': midea_url, 'url_parameter':  url_parameter,
+            "news_url": news_url, 'main_url': main_url, 'proposal_url': proposal_url, 'products_url': products_url,
+            "contact_url": contact_url,'structure_url': structure_url}
 
 @register.inclusion_tag('main/staticPages.html')
 def showStaticPages():

@@ -46,8 +46,8 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
-    '.BC-CIS.COM', # Also allow FQDN and subdomains
-    '.B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.bc-cis.com', # Also allow FQDN and subdomains
+    '.b24online.com', # Also allow FQDN and subdomains
     '.centerpokupok.com'
 ]
 
@@ -111,11 +111,12 @@ REGISTRATION_OPEN = True    #Registration now is open
 MIDDLEWARE_CLASSES = (
 
     #'django.contrib.sessions.middleware.SessionMiddleware',
+    'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'tpp.TppSessioinMiddleWare.SessionHostDomainMiddleware',
     'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
-     'tpp.TppCsrfMIddleware.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

@@ -32,7 +32,10 @@ class SiteUrlMiddleWare:
 
 
         except Site.DoesNotExist:
-            settings.SITE_ID = 1
+
+
+            site = Site.objects.get(name='tppcenter')
+            settings.SITE_ID = site.pk
             request.urlconf = "tppcenter.urls"
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
@@ -59,11 +62,19 @@ class LocaleMiddleware(object):
        settings.LANGUAGE_CODE = 'ru'
        url = request.META.get('HTTP_HOST', False)
        lang = url.split('.')[0] if url else None
+       path = request.path.split('/')
+       languages = [lan[0] for lan in settings.LANGUAGES]
+
+
 
        if lang:
-            languages = [lan[0] for lan in settings.LANGUAGES]
             if lang in languages:
                  settings.LANGUAGE_CODE = lang
+       if len(path) > 0:
+            if path[1] in languages:
+                settings.LANGUAGE_CODE = path[1]
+
+
 
 
 
