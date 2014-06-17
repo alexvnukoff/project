@@ -911,7 +911,8 @@ class Item(models.Model):
                 raise e
         else:
             # here UPDATE attributes' values
-            session_lang = get_language()
+            #session_lang = get_language()
+            session_lang = settings.LANGUAGE_CODE
             fact_attr_in_value = Value.objects.filter(item=self).all()
             fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
             attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)

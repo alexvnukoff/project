@@ -111,18 +111,18 @@ $(function() {
                         <li>
                             {% if cost %}
                                 <!-- Script for PayPal payment button -->
-                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"{% endcomment %}
+                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=migirov@gmail.com"
                                 {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com"{% endcomment %}
-                                <script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"
+                                {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"{% endcomment %}
                                     data-name="{% trans 'Payment for Product: ' %}{{ item_id }}/{{ sku }} {{ name }}."
                                     data-number="{{ item_id }} {{ sku }} (Company: {{ company_id }} {{ company_name }})" {% comment %} Product's database ID{% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="{{ cost }}"
                                     data-currency="{{ currency }}"
-                                    {% comment %}data-callback="www.tppcenter.com/payments/"{% endcomment %}
-                                    data-callback="http://tppcenter.ngrok.com/payments/product/"
-                                    data-env="sandbox"
+                                    data-callback="www.tppcenter.com/payments/product/"
+                                    {% comment %}data-callback="http://tppcenter.ngrok.com/payments/product/"{% endcomment %}
+                                    data-env=""
                                     data-charset="utf-8" {% comment %}for non-english names passing to PayPal {% endcomment %}
                                 ></script>
                             {% else %}
