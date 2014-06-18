@@ -65,7 +65,7 @@ def _siteList(request):
     try:
         site = UserSites.active.get_active().get(organization=current_organization)
         siteValues = site.getAttributeValues('NAME', 'SLUG')
-        items_perms = func.getUserPermsForObjectsList(request.user, [current_organization], Organization.__name__)
+        items_perms = func.getUserPermsForObjectsList(request.user, [current_organization], Organization    .__name__)
     except ObjectDoesNotExist:
         siteValues = ""
         items_perms = ''
@@ -78,7 +78,7 @@ def _siteList(request):
         'siteValues': siteValues,
         'current_path': request.get_full_path(),
         'items_perms': items_perms,
-        'id': site.pk if site else ""
+        'id': current_organization
     }
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
