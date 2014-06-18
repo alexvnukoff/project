@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.forms.models import modelformset_factory
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy, Gallery
+                        Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
 from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp
 from django.conf import settings
@@ -15,7 +16,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from haystack.query import SQ, SearchQuerySet
-from tppcenter.forms import ItemForm
+from tppcenter.forms import ItemForm, BasePages
 import json
 from core.tasks import addNewTpp
 from django.conf import settings
@@ -296,6 +297,8 @@ def addTpp(request):
     countries = func.getItemsList("Country", 'NAME')
     user = request.user
 
+    pages = None
+
     user_groups = user.groups.values_list('name', flat=True)
 
     if not user.is_manager or not 'TPP Creator' in user_groups:
@@ -309,6 +312,13 @@ def addTpp(request):
         values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
 
+        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=5, fields=("content", 'title'))
+        pages = Page(request.POST, request.FILES, prefix="pages")
+        if getattr(pages, 'new_objects', False):
+            pages = pages.new_objects
+        else:
+            pages = ""
+
         form = ItemForm('Tpp', values=values)
         form.clean()
 
@@ -319,7 +329,7 @@ def addTpp(request):
             return HttpResponseRedirect(reverse('tpp:main'))
 
     template = loader.get_template('Tpp/addForm.html')
-    context = RequestContext(request, {'form': form, 'countries': countries})
+    context = RequestContext(request, {'form': form, 'countries': countries, 'pages': pages})
     tppPage = template.render(context)
 
     return tppPage
@@ -344,6 +354,14 @@ def updateTpp(request, item_id):
     tpp = Tpp.objects.get(pk=item_id)
 
     form = ItemForm('Tpp', id=item_id)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
+
 
 
 
@@ -373,7 +391,8 @@ def updateTpp(request, item_id):
         'form': form,
         'choosen_country': choosen_country,
         'countries': countries,
-        'tpp': tpp
+        'tpp': tpp,
+        'pages': pages
     }
 
     context = RequestContext(request, templateParams)
