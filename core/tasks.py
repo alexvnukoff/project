@@ -326,6 +326,10 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
 
     values = {}
     values.update(post)
@@ -362,6 +366,8 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
         if country:
             Relationship.objects.filter(parent__in=Country.objects.all(), child=tpp.id).delete()
             Relationship.setRelRelationship(parent=country, child=tpp, user=user, type='dependence')
+
+        pages.save(parent=tpp.id, user=user)
 
         tpp.reindexItem()
 
