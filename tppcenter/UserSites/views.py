@@ -1,5 +1,5 @@
 
-from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate
+from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate, Gallery
 from appl import func
 from core.tasks import addNewSite
 from core.models import Item
@@ -12,7 +12,8 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from tppcenter.forms import ItemForm
+from tppcenter.forms import ItemForm, BasePhotoGallery
+from django.forms.models import modelformset_factory
 from django.contrib.sites.models import Site
 
 
@@ -152,6 +153,8 @@ def addSite(request):
 
 
     if request.POST:
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
 
         user = request.user
 
@@ -163,12 +166,12 @@ def addSite(request):
         form.clean()
 
 
-        if form.is_valid():
+        if gallery.is_valid() and form.is_valid():
             site = Site.objects.filter(domain=values['NAME'][0] + '.tppcenter.com')
             if not site.exists():
 
                 func.notify("item_creating", 'notification', user=request.user)
-                addNewSite(request.POST, request.FILES, user, current_organization,  lang_code=settings.LANGUAGE_CODE)
+                addNewSite.delay(request.POST, request.FILES, user, current_organization,  lang_code=settings.LANGUAGE_CODE)
                 return HttpResponseRedirect(reverse('site:main'))
             else:
                   form.errors.update({"NAME": _("This domain is used, please try something else")})
@@ -200,12 +203,21 @@ def updateSite(request, item_id):
 
     form = ItemForm('UserSites', id=item_id)
 
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+       photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+
 
 
 
 
     if request.POST:
         user = request.user
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
 
         values = {}
         values.update(request.POST)
@@ -214,12 +226,12 @@ def updateSite(request, item_id):
         form = ItemForm('UserSites', values=values, id=item_id)
         form.clean()
 
-        if form.is_valid():
+        if gallery.is_valid() and  form.is_valid():
             site = Site.objects.filter(domain=values['NAME'][0] + '.tppcenter.com')
 
             if not site.exists() or UserSites.objects.filter(sites__id__in=site, organization=current_organization).exists():
                 func.notify("item_creating", 'notification', user=request.user)
-                addNewSite(request.POST, request.FILES, user, current_organization,  item_id=item_id,
+                addNewSite.delay(request.POST, request.FILES, user, current_organization,  item_id=item_id,
                                    lang_code=settings.LANGUAGE_CODE)
 
                 return HttpResponseRedirect(reverse('site:main'))
@@ -231,6 +243,8 @@ def updateSite(request, item_id):
     templateParams = {
 
         'form': form,
+        'gallery': gallery,
+        'photos': photos,
 
     }
 

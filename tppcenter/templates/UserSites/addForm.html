@@ -1,4 +1,6 @@
+{% load i18n %}
 {% load staticfiles %}
+{% load CustomFilters %}
 <script>
     $(function() {
 
@@ -86,6 +88,39 @@
 
                         </div>
                     </li>
+                <li>
+                 <div class="left"> <a href="#" class="">Или используйте свои картинки </a>: (размер 700Х183)</div>
+                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="5" />
+                <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+                <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="5" />
+                <div class="right">
+                <ul>
+                    {% for i in '01234'|make_list %}
+                {% resolve photos i as img %}
+
+
+                <li>
+                        {% if img %}
+                            <div class="b-img" style="width: 198px;height: 58px;">
+                                <img style="width: 198px;height: 58px; " src='{{ MEDIA_URL }}big/{{ img.photo.name }}'>
+                                <div class="deleteimge">
+                                    <i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>
+                                </div>
+                                <div class="gray-img" style="width: 198px;height: 58px; "></div>
+                                <input id="delete" type="checkbox" name="del[]" value="{{ img.pk }}" hidden="hidden" />
+                                <div>
+                                    <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="fileinputs">
+                            <input name="form-{{ i }}-photo" type="file" style="width: 100%" >
+                        </div>
+                </li>
+                {% endfor %}
+                </ul>
+                </div>
+                </li>
                     <li>
                     	<div class="left">Описание для подвала: (максимум 200 символов)</div>
                         {% if form.errors.DETAIL_TEXT %}

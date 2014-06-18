@@ -749,9 +749,12 @@ def addTopAttr(post, object, user, site_id, ids, org, factor):
     return ord.pk
 
 
-
+@shared_task
 def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang_code=None):
     trans_real.activate(lang_code)
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(post, files)
 
     values = {}
     values.update(post)
@@ -769,9 +772,12 @@ def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang
             user_site.save()
             user_site.sites.add(site.pk)
             user_site.sites.all().exclude(pk=site.pk).delete()
+
+            gallery.save(parent=user_site.id, user=user)
         else:
             if created:
                 site.delete()
+
 
 
         func.notify("item_created", 'notification', user=user)
