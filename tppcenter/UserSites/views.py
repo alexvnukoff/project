@@ -65,7 +65,7 @@ def _siteList(request):
     try:
         site = UserSites.active.get_active().get(organization=current_organization)
         siteValues = site.getAttributeValues('NAME', 'SLUG')
-        items_perms = func.getUserPermsForObjectsList(request.user, [current_organization], Company.__name__)
+        items_perms = func.getUserPermsForObjectsList(request.user, [current_organization], Organization.__name__)
     except ObjectDoesNotExist:
         siteValues = ""
         items_perms = ''
