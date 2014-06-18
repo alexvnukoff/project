@@ -1,5 +1,5 @@
 
-from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate, Gallery
+from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate, Gallery, Company
 from appl import func
 from core.tasks import addNewSite
 from core.models import Item
@@ -65,7 +65,7 @@ def _siteList(request):
     try:
         site = UserSites.active.get_active().get(organization=current_organization)
         siteValues = site.getAttributeValues('NAME', 'SLUG')
-        items_perms = func.getUserPermsForObjectsList(request.user, [site.pk], UserSites.__name__)
+        items_perms = func.getUserPermsForObjectsList(request.user, [current_organization], Company.__name__)
     except ObjectDoesNotExist:
         siteValues = ""
         items_perms = ''
