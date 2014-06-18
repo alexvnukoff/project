@@ -245,6 +245,7 @@ LANGUAGES = (
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
     ('ar', gettext('Arabic')),
+    ('zh', gettext('Chinese')),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
@@ -257,6 +258,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'he': ('en',),
     'am': ('ru',),
     'ar': ('en',),
+    'zh': ('en',),
     #'az': ('ru',),
     #'be': ('ru',),
     #'et': ('ru',),
