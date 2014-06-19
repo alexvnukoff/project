@@ -21,11 +21,11 @@
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
                                 {% if 'change_usersites' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'site:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'site:update' site_id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
 
                                  {% if 'delete_usersites' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'site:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'site:delete' site_id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                  {% endif %}
                             </div>
                         </div>

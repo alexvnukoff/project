@@ -78,7 +78,8 @@ def _siteList(request):
         'siteValues': siteValues,
         'current_path': request.get_full_path(),
         'items_perms': items_perms,
-        'id': current_organization
+        'id': current_organization,
+        'site_id': site.pk if site else ""
     }
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
