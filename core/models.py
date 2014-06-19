@@ -19,6 +19,7 @@ from random import randint
 from tpp.SiteUrlMiddleWare import get_request
 from unidecode import unidecode
 from django.core.cache import cache
+from django.utils.translation import trans_real
 
 import warnings
 import datetime
@@ -196,6 +197,7 @@ class Dictionary(models.Model):
 
     def getSlotID(self, title):
         slot = Slot.objects.get(dict=self.id, title=title)
+
         return slot.id
 
     def deleteSlot(self, slotTitle):
@@ -576,12 +578,7 @@ class Item(models.Model):
                                          attr__title__in=attr, item__in=items)\
             .select_related('attr__title', 'item__create_date', 'item__title')
 
-
-
-
-
         valuesAttribute = {}
-
 
         for key in range(0, len(items)):
             if items[key] in valuesAttribute:
@@ -595,7 +592,6 @@ class Item(models.Model):
 
         if len(valuesObj) > 0:
             valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
-
 
         for valuesObj in valuesObj:
 
@@ -620,7 +616,6 @@ class Item(models.Model):
 
             if valuesObj.attr.title not in valuesAttribute[itemPk]:
                 valuesAttribute[itemPk][valuesObj.attr.title] = []
-
 
             if fullAttrVal:
                 attrValDict = {
@@ -911,8 +906,7 @@ class Item(models.Model):
                 raise e
         else:
             # here UPDATE attributes' values
-            #session_lang = get_language()
-            session_lang = settings.LANGUAGE_CODE
+            session_lang = trans_real.get_language()
             fact_attr_in_value = Value.objects.filter(item=self).all()
             fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
             attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
