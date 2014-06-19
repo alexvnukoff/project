@@ -1,7 +1,7 @@
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -149,23 +149,31 @@ def getUserSiteSlider(context):
     import glob
 
 
-    user_site_slider = UserSites.objects.get(sites__id=settings.SITE_ID).getAttributeValues("TEMPLATE")
-    file_count = 0
-    if len(user_site_slider) > 0:
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    photos = Gallery.objects.filter(c2p__parent=user_site)
+    if not photos.exists():
+        user_site_slider = user_site.getAttributeValues("TEMPLATE")
+        file_count = 0
+        if len(user_site_slider) > 0:
 
 
-        user_site_slider = user_site_slider[0]
+            user_site_slider = user_site_slider[0]
 
-        slider_dir = 'tppcenter/img/templates/' + user_site_slider
+            slider_dir = 'tppcenter/img/templates/' + user_site_slider
 
-        dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
+            dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
 
-        file_count = len(glob.glob(dir+"/*.jpg"))
-
-
+            file_count = len(glob.glob(dir+"/*.jpg"))
 
 
-    return {'file_count':file_count ,  'user_site_slider': user_site_slider}
+
+
+        return {'file_count':file_count ,  'user_site_slider': user_site_slider, 'custom_slider': False}
+
+    else:
+         media_url = settings.MEDIA_URL
+         return {'photos':photos , 'media_url': media_url, 'custom_slider': True}
+
 
 @register.inclusion_tag('header.html', takes_context=True)
 def getUserSitTopMenu(context):
@@ -174,11 +182,13 @@ def getUserSitTopMenu(context):
     url_parameter = []
 
     additionalPages_url = 'additionalPage'
+    about_us_url = 'about_us'
     if len(path) > 0:
        if path[1] in languages:
           url_parameter = path[1]
 
           additionalPages_url = 'additionalPage_lang'
+          about_us_url = 'about_us_lang'
 
 
 
@@ -192,7 +202,7 @@ def getUserSitTopMenu(context):
     addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
 
     return {'addPagesValues': addPagesValues, 'midea_url': midea_url, 'url_parameter':  url_parameter,
-            'additionalPages_url': additionalPages_url}
+            'additionalPages_url': additionalPages_url, 'about_us_url': about_us_url}
 
 
 

@@ -36,6 +36,9 @@ urlpatterns = patterns('',
     url(r'^structure/', include(usersites.CompanyStructure.urls, namespace='structure')),
     url(r'^(?P<language>[a-zA-Z]{2})/structure/', include(usersites.CompanyStructure.urls, namespace='structure_lang')),
 
+    url(r'^about/$', usersites.views.get_wall,{'about': True},   name='about_us'),
+    url(r'^(?P<language>[a-zA-Z]{2})/about/', usersites.views.get_wall, {'about': True}, name='about_us_lang'),
+
     url(r'^page-(?P<page_id>[0-9]+)/$', usersites.views.get_wall, name='additionalPage'),
     url(r'^(?P<language>[a-zA-Z]{2})/page-(?P<page_id>[0-9]+)/', usersites.views.get_wall, name='additionalPage_lang'),
 )

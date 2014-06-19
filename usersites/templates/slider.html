@@ -10,12 +10,17 @@
                           <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
                           <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
                        {% else %}
-                         {% mkrange file_count as some_range %}
-                        {{ mkrange }}
-                         {% for file in some_range %}
-                            <li><img src="{% static "" %}tppcenter/img/templates/{{ user_site_slider }}/{{ file|add:'1' }}.jpg" alt="" /></li>
-                        {% endfor %}
-
+                            {% if custom_slider %}
+                                     {% for photo in photos %}
+                                          <li style="width: 700px;height: 183px;"><img src="{{ media_url }}original/{{ photo.photo }}" alt="" /></li>
+                                     {% endfor %}
+                            {% else %}
+                                     {% mkrange file_count as some_range %}
+                                     {{ mkrange }}
+                                     {% for file in some_range %}
+                                         <li><img src="{% static "" %}tppcenter/img/templates/{{ user_site_slider }}/{{ file|add:'1' }}.jpg" alt="" /></li>
+                                     {% endfor %}
+                            {% endif %}
                     {% endif %}
                 </ul>
                 <div class="register">
