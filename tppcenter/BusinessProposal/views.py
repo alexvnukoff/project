@@ -215,6 +215,13 @@ def addBusinessProposal(request):
 def updateBusinessProposal(request, item_id):
     item = Organization.objects.get(p2c__child_id=item_id)
 
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+         photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+
     perm_list = item.getItemInstPermList(request.user)
 
     if 'change_businessproposal' not in perm_list:
@@ -247,21 +254,19 @@ def updateBusinessProposal(request, item_id):
         else:
              pages = pages.queryset
 
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
 
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
         form = ItemForm('BusinessProposal', id=item_id)
 
     if request.POST:
 
+        pages = ""
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
+        gallery.clean()
 
 
 
@@ -274,6 +279,7 @@ def updateBusinessProposal(request, item_id):
 
         form = ItemForm('BusinessProposal', values=values, id=item_id)
         form.clean()
+
 
         if gallery.is_valid() and form.is_valid():
 

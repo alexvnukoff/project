@@ -413,6 +413,18 @@ class BasePhotoGallery(BaseModelFormSet):
 
         self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
 
+    def isValid(self):
+        errors = self._errors
+        if errors:
+            for error in errors:
+                error = error.get('photo', False)
+                if error:
+                    return False
+        return True
+
+
+
+
     @transaction.atomic
     def save(self, parent=None, user=None,  commit=False):
         """
@@ -464,6 +476,7 @@ class BasePhotoGallery(BaseModelFormSet):
 
             if self.toDelete:
                 delete(self.toDelete)
+
 
 
 
