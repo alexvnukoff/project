@@ -324,7 +324,7 @@ def addTpp(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(reverse('tpp:main'))
 
@@ -380,7 +380,7 @@ def updateTpp(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                             lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(request.GET.get('next', reverse('tpp:main')))
