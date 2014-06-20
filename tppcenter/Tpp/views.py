@@ -401,10 +401,7 @@ def updateTpp(request, item_id):
     return tppPage
 
 def _tabsCompanies(request, tpp, page=1):
-    cache_name = "Companies_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         companies = func.getActiveSQS().models(Company).filter(tpp=tpp)
         attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
 
@@ -425,17 +422,12 @@ def _tabsCompanies(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached
 
-    return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsNews(request, tpp, page=1):
-    cache_name = "News_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         news = func.getActiveSQS().models(News).filter(company=0, tpp=tpp)
         attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
@@ -456,18 +448,13 @@ def _tabsNews(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached
 
-    return render_to_response('Tpp/tabNews.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Tpp/tabNews.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsTenders(request, tpp, page=1):
-    cache_name = "Tenders_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         tenders = func.getActiveSQS().models(Tender).filter(company=0, tpp=tpp)
         attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
 
@@ -488,17 +475,12 @@ def _tabsTenders(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached
 
-    return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsExhibitions(request, tpp, page=1):
-    cache_name = "Exhibitions_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         exhibition = func.getActiveSQS().models(Exhibition).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
 
@@ -519,19 +501,14 @@ def _tabsExhibitions(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached   
 
 
-    return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsProposals(request, tpp, page=1):
-    cache_name = "Proposal_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         products = func.getActiveSQS().models(BusinessProposal).filter(company=0, tpp=tpp)
         attr = ('NAME', 'SLUG')
 
@@ -552,18 +529,13 @@ def _tabsProposals(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached
 
-    return render_to_response('Companies/tabProposal.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Companies/tabProposal.html', templateParams, context_instance=RequestContext(request))
 
 
 def _tabsInnovs(request, tpp, page=1):
-    cache_name = "Innov_tab_tpp_%s_page_%s" % (tpp, page)
-    cached = cache.get(cache_name)
 
-    if not cached:
         products = func.getActiveSQS().models(InnovationProject).filter(company=0, tpp=tpp)
         attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
 
@@ -584,11 +556,9 @@ def _tabsInnovs(request, tpp, page=1):
             'url_paginator': url_paginator,
             'url_parameter': tpp
         }
-        cache.set(cache_name, templateParams, 60*60)
-    else:
-        templateParams = cached
 
-    return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
+
+        return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
 
 def _tabsStructure(request, tpp, page=1):
     '''
