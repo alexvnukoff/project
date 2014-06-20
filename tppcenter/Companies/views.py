@@ -841,7 +841,7 @@ def addCompany(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID,
+            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID,
                                 branch=branch, lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(reverse('companies:main'))
@@ -916,7 +916,7 @@ def updateCompany(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 

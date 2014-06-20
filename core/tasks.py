@@ -196,7 +196,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     trans_real.deactivate()
     return True
 
-@shared_task
+#@shared_task
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
 
