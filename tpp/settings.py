@@ -99,7 +99,6 @@ INSTALLED_APPS = (
 # For installations on which you want to use the sandbox,
 # set PAYPAL_TEST to True.  Ensure PAYPAL_RECEIVER_EMAIL is set to
 # your sandbox account email too.
-# PAYPAL_TEST = True
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
