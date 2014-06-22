@@ -4,6 +4,7 @@ from django.forms.models import modelformset_factory
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
                         Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
+from core import translation
 from core.models import Item, Relationship, Group, User
 from core.tasks import addNewTpp
 from django.conf import settings
@@ -324,7 +325,7 @@ def addTpp(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('tpp:main'))
 
@@ -380,8 +381,8 @@ def updateTpp(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                            lang_code=settings.LANGUAGE_CODE)
+            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+                            lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next', reverse('tpp:main')))
 

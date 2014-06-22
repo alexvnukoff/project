@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from tppcenter.Profile.profileForms import ProfileForm
 from tppcenter.views import user_logout
 import uuid
@@ -34,7 +34,7 @@ def getProfileForm(request):
 
 def _profileContent(request):
 
-    lang_code = settings.LANGUAGE_CODE
+    lang_code = trans_real.get_language()
     trans_real.activate(lang_code)
 
     user_groups = request.user.groups.values_list('pk', flat=True)

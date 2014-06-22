@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from haystack.query import SQ, SearchQuerySet
 from tppcenter.forms import ItemForm
 import json
@@ -341,7 +341,7 @@ def addVacancy(request):
 
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
-            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('vacancy:main'))
         if not request.POST.get('VACANCY', False):
@@ -400,7 +400,7 @@ def updateVacancy(request, item_id):
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
             addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                            lang_code=settings.LANGUAGE_CODE)
+                            lang_code=trans_real.get_language())
             return HttpResponseRedirect(request.GET.get('next', reverse('vacancy:main')))
         if not request.POST.get('VACANCY', False):
             vacancy_error = _('You have to choose vacancy')

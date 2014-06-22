@@ -13,7 +13,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.feedgenerator import Rss201rev2Feed
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm ,BasePhotoGallery
 from pytz import timezone
@@ -159,7 +159,7 @@ def addNews(request):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
-                                   lang_code=settings.LANGUAGE_CODE)
+                                   lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('news:main'))
 
@@ -234,7 +234,7 @@ def updateNew(request, item_id):
             func.notify("item_creating", 'notification', user=request.user)
 
             addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                   lang_code=settings.LANGUAGE_CODE)
+                                   lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('news:main'))
 

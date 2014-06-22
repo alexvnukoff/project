@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import trans_real, ugettext as _
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm, BasePages
 from django.utils.translation import trans_real
@@ -841,8 +841,8 @@ def addCompany(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID,
-                                branch=branch, lang_code=settings.LANGUAGE_CODE)
+            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID,
+                                branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('companies:main'))
 
@@ -916,7 +916,7 @@ def updateCompany(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 

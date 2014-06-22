@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+from django.utils.translation import trans_real
 import json
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
@@ -199,7 +200,7 @@ def addBusinessProposal(request):
             func.notify("item_creating", 'notification', user=request.user)
 
             addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+                                current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('proposal:main'))
 
@@ -286,7 +287,7 @@ def updateBusinessProposal(request, item_id):
             func.notify("item_creating", 'notification', user=request.user)
 
             addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
-                                lang_code=settings.LANGUAGE_CODE)
+                                lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
