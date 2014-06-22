@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from haystack.query import SQ, SearchQuerySet
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
@@ -381,7 +381,9 @@ def addProject(request):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch, current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+                                current_company=current_company, lang_code=trans_real.get_language())
+
             return HttpResponseRedirect(reverse('innov:main'))
 
 
@@ -449,7 +451,9 @@ def updateProject(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch, lang_code=settings.LANGUAGE_CODE)
+            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+                                branch=branch, lang_code=trans_real.get_language())
+
             return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
 
     template = loader.get_template('Innov/addForm.html')

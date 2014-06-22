@@ -16,7 +16,7 @@ from django.forms.models import modelformset_factory
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
 
@@ -296,7 +296,7 @@ def addResume(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('resume:main'))
 
@@ -342,7 +342,7 @@ def updateResume(request, item_id):
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                               lang_code=settings.LANGUAGE_CODE)
+                               lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('resume:main'))
 
