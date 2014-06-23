@@ -496,7 +496,7 @@ def setCurrent(request, item_id):
 
 
     return HttpResponseRedirect(request.GET.get('next'), '/')
-'''
+
 def buildCountries(request):
     if not request.user.is_superuser:
         raise PermissionError('you have not enough permissions')
@@ -710,7 +710,7 @@ def buildCountries(request):
 
 
     return HttpResponse('Successfully')
-       '''
+      
 
 def builTemplate(request):
     if request.user.is_superuser:
