@@ -267,10 +267,6 @@ $(document).ready(function()
             }
         });
         $("#messageToCompany")[0].reset();
-
-
-
-
 	});
 
     $(document).on('click', "#send-resume", function()
@@ -282,11 +278,11 @@ $(document).ready(function()
 
 	});
 
-     $(document).on('click', "#cancel-vacancy", function()
-     {
-          document.getElementById('light-vacancy').style.display='none';
-          document.getElementById('fade-vacancy').style.display='none';
-     });
+    $(document).on('click', "#cancel-vacancy", function()
+    {
+        document.getElementById('light-vacancy').style.display='none';
+        document.getElementById('fade-vacancy').style.display='none';
+    });
 
     $(document).on('click', "#send-vacancy", function()
     {
@@ -302,12 +298,6 @@ $(document).ready(function()
                     $('#send_resume_succsefuly').text(data).show()
             }
         });
-
-
-
-
-
-
 	});
 
 
