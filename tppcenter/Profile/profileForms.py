@@ -23,9 +23,9 @@ class ProfileForm(forms.Form):
       middle_name = forms.CharField(required=False, label=_("Middle name"))
       middle_name.widget.attrs.update({'class': 'text'})
 
-      #countries = func.getItemsList("Country", 'NAME')
-      #countries = ([(id, country['NAME'][0]) for id, country in countries.items()])
-      #country = forms.ChoiceField(required=False, widget=forms.Select(), choices=countries)
+      countries = func.getItemsList("Country", 'NAME')
+      countries = ([(id, country['NAME'][0]) for id, country in countries.items()])
+      country = forms.ChoiceField(required=False, widget=forms.Select(), choices=countries)
 
       dictSex = Dictionary.objects.get(title='SEX')
       slots = tuple(dictSex.getSlotsList().values_list("id", "title"))
