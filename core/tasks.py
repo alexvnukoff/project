@@ -269,7 +269,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
 
 
-#@shared_task
+@shared_task
 def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
