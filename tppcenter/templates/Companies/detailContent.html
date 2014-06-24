@@ -479,6 +479,11 @@
             {% with country.NAME.0 as country_name %}
 
 
+            {% with organizationValues.NAME.0 as org_name %}
+            {% with organizationValues.SLUG.0 as org_slug %}
+
+
+
                 <div class="deal-details">
                     <h3>
                      {% if flag_class %}
@@ -536,6 +541,9 @@
                     {% else %}
                         <p>{{ content|cleanHtml|safe }}</p>
                     {% endif %}
+                {% if org_name %}
+                     <p><b>{% trans 'Member of' %}</b> <a href="{% url 'tpp:detail' org_slug %}">{{ org_name }}</a></p>
+                {% endif %}
                 </div>
                 <div class="social">
                     <!-- Share for social networks -->
@@ -675,6 +683,8 @@
                         </div>
                     </div>
                 </div>
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
