@@ -87,10 +87,8 @@
             var sel_font_color = '#FFFFFF'; //white
 
             $(document).ready(function(){
-                var pathname = window.location.pathname;
-                pathname = pathname.replace(/\//g, "\\\/");
-                elem = $('a[href*='+pathname+']');
-                //orig_font_color = $(elem).css('color');
+                var pathname = window.location.pathname.split('/')[1];
+                elem = $('.tab1-cate > li > a[href*='+pathname+']');
                 orig_bg_color = $(elem).parent('li').css('background-color');
                 $(elem).parent('li').css('background-color', sel_bg_color);
                 $(elem).css('color', sel_font_color);
