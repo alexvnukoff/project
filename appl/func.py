@@ -1077,7 +1077,13 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                if model != Tpp:
+                if model == Company:
+                    cab = Cabinet.objects.get(user=request.user.pk)
+
+                    #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+                    proposal = Company.active.get_active().filter(Q(create_user=request.user) |
+                                                            Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+                elif model != Tpp:
                     proposal = getActiveSQS().models(model).\
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
@@ -1111,8 +1117,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
 
 
+        if model == Company:
+            addDictinoryWithCountryToCompany(proposal_ids, proposalList, add_organization=True)
+        else:
+            addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
-        addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
         page = result[1]
         paginator_range = getPaginatorRange(page)

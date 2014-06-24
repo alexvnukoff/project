@@ -50,7 +50,9 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 
     if not item_id:
         try:
-            newsPage = _companiesContent(request, page=page, my=my)
+            attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG', 'ANONS')
+            newsPage = func.setContent(request, Company, attr, 'companies',
+                                              'Companies/contentPage.html', 5, page=page, my=my)
 
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
@@ -85,135 +87,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         }
 
         return HttpResponse(json.dumps(serialize))
-
-
-def _companiesContent(request, page=1, my=None):
-    cached = False
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_company_list_result_page_%s" % (lang, page)
-
-    q = request.GET.get('q', '')
-
-    if not my and func.cachePisibility(request):
-        cached = cache.get(cache_name)
-
-    if not cached:
-
-        if not my:
-            filters, searchFilter = func.filterLive(request, model_name=Company.__name__)
-            sqs = func.getActiveSQS().models(Company)
-
-            if len(searchFilter) > 0:
-                sqs = sqs.filter(searchFilter)
-
-            if q != '':
-                sqs = sqs.filter(title=q)
-
-            sortFields = {
-                'date': 'id',
-                'name': 'title_sort'
-            }
-
-            order = []
-
-            sortField1 = request.GET.get('sortField1', 'date')
-            sortField2 = request.GET.get('sortField2', None)
-            order1 = request.GET.get('order1', 'desc')
-            order2 = request.GET.get('order2', None)
-
-            if sortField1 and sortField1 in sortFields:
-                if order1 == 'desc':
-                    order.append('-' + sortFields[sortField1])
-                else:
-                    order.append(sortFields[sortField1])
-            else:
-                order.append('-id')
-
-            if sortField2 and sortField2 in sortFields:
-                if order2 == 'desc':
-                    order.append('-' + sortFields[sortField2])
-                else:
-                    order.append(sortFields[sortField2])
-
-            companies = sqs.order_by(*order)
-
-            url_paginator = "companies:paginator"
-
-            params = {
-                'filters': filters,
-                'sortField1': sortField1,
-                'sortField2': sortField2,
-                'order1': order1,
-                'order2': order2
-            }
-
-        else:
-            current_organization = request.session.get('current_company', False)
-
-            cab = Cabinet.objects.get(user=request.user.pk)
-            #read all Organizations which hasn't foreign key from Department and current User is create user or worker
-            companies = Company.active.get_active().filter(Q(create_user=request.user) |
-                                                    Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
-
-
-
-
-
-
-
-
-            url_paginator = "companies:my_main_paginator"
-
-            params = {}
-
-
-
-
-        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'SLUG', 'ANONS')
-
-        if not my:
-             result = func.setPaginationForSearchWithValues(companies, *attr,  page_num=5, page=page)
-        else:
-            result = func.setPaginationForItemsWithValues(companies, *attr,  page_num=5, page=page)
-
-        companyList = result[0]
-        company_ids = [id for id in companyList.keys()]
-
-
-        if request.user.is_authenticated():
-            items_perms = func.getUserPermsForObjectsList(request.user, company_ids, Company.__name__)
-        else:
-            items_perms = ""
-
-        func.addDictinoryWithCountryToCompany(company_ids, companyList, add_organization=True)
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-
-        template = loader.get_template('Companies/contentPage.html')
-
-        templateParams = {
-            'companyList': companyList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'items_perms': items_perms,
-            'current_path': request.get_full_path()
-        }
-
-        templateParams.update(params)
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        if not my and func.cachePisibility(request):
-            cache.set(cache_name, rendered)
-
-    else:
-        rendered = cache.get(cache_name)
-
-    return rendered
 
 
 
