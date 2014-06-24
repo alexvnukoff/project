@@ -185,7 +185,7 @@ def _companiesContent(request, page=1, my=None):
         else:
             items_perms = ""
 
-        func.addDictinoryWithCountryToCompany(company_ids, companyList)
+        func.addDictinoryWithCountryToCompany(company_ids, companyList, add_organization=True)
 
         page = result[1]
         paginator_range = func.getPaginatorRange(page)
@@ -260,12 +260,18 @@ def _companiesDetailContent(request, item_id):
         title = companyValues.get('NAME', False)[0] if companyValues.get('NAME', False) else ""
 
         country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME', 'COUNTRY_FLAG'))
+        organization = Organization.objects.filter(p2c__child=company, p2c__type='relation')
+
+        organizationValues = ""
+        if organization.exists():
+            organizationValues = organization[0].getAttributeValues(*("NAME", 'SLUG'))
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
 
         template = loader.get_template('Companies/detailContent.html')
 
-        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id, 'additionalPages': additionalPages})
+        context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id, 'additionalPages': additionalPages,
+                                           'organizationValues': organizationValues})
         rendered = template.render(context)
         cache.set(cache_name, rendered, 60*60*24*7)
         cache.set(description_cache_name, (description, title), 60*60*24*7)

@@ -25,6 +25,9 @@
                         {% with attr.FLAG_CLASS|first as flag_class %}
                         {% with attr.COUNTRY_FLAG|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
+                        {% with attr.ORGANIZATION_NAME.0 as org_name %}
+                        {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
+                        {% with attr.ORGANIZATION_URL as org_url %}
                          <li>
                            {% resolve items_perms id|slugify as permlist %}
 
@@ -64,6 +67,9 @@
                                  <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
                                 {% endif %}
                                 <div class="desc">
+                                {% if org_name %}
+                                    <p class="link"><b>Member of</b> <a href="{% url org_url org_slug %}">{{ org_name }}</a></p>
+                                {% endif %}
                                     {% if anons %}
                                          {{ anons|cleanHtml|safe|truncatechars:200 }}
                                     {% else %}
@@ -102,6 +108,9 @@
                                 </div>
                             </div>
                         </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}

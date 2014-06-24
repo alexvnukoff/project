@@ -579,15 +579,22 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 
 
 
-def addDictinoryWithCountryToCompany(ids, itemList):
+def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
 
         countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
         countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
-
         for country in countries:
             country_dict[country['p2c__child']] = country['pk']
+
+        organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='relation').values('p2c__child', 'pk')
+        organizations_ids = [organization['pk'] for organization in organizations]
+        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
+        organizations_dict = {}
+        for organization in organizations:
+            organizations_dict[organization['p2c__child']] = organization['pk']
+
 
         for id, company in itemList.items():
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
@@ -599,6 +606,21 @@ def addDictinoryWithCountryToCompany(ids, itemList):
             except Exception as e:
                 print('Passed Company ID:'+id+'has not attribute list. The reason is:'+e+'Please, rebuild index.')
                 pass
+            if add_organization:
+                if organizations_dict.get(id, False):
+                    if organizationIsCompany(id):
+                        url = 'companies:detail'
+                    else:
+                        url = 'tpp:detail'
+
+                    toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                                'ORGANIZATION_URL': url}
+                    company.update(toUpdate)
+
+
 
 
 
