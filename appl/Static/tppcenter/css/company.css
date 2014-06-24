@@ -9,7 +9,7 @@
 .company-list li .company-infor .logocompany{ float: left; max-width: 70px; max-height: 60px; background: url(../img/shadow-cpn.png) no-repeat left bottom; padding-bottom: 4px; margin: 0 10px 0 12px; display: inline;}
 .company-list li .company-infor .desc{ float: left; width: 348px; color: #595959;}
 .company-list li .company-infor .desc a.more{ display: block; padding-top: 12px;}
-.company-list li .company-infor .desc p.link{ display:block; padding:0;}
+.company-list li .company-infor .desc p.link{ display:block; padding:0; padding-bottom: 5px;}
 .company-list li .company-infor .companycontact{ float: right; width: 175px;  border-left: 1px #e1e1e1 solid; padding-left:10px;}
 .company-list li .company-infor .companycontact .line{ float: left; width: 100%; margin: 0 0 8px 0;}
 .company-list li .company-infor .companycontact .line .iconinfo{ float: left; width: 25px;}
