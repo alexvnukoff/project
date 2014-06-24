@@ -42,7 +42,7 @@
                         {% endif %}
                 	</div>
                     <div class="link">
-                        <a href="{%  url 'tv:detail' slug %}" class="name">{{ name|truncatewords:5 }} </a>
+                        <a href="{%  url 'tv:detail' slug %}" class="name">{{ name|truncatechars:50 }} </a>
                     </div>
                 </li>
                     {% endwith %}
