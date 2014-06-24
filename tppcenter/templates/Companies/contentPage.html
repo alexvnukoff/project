@@ -68,7 +68,7 @@
                                 {% endif %}
                                 <div class="desc">
                                 {% if org_name %}
-                                    <p class="link"><b>{% trans 'Member of' %}</b> <a href="{% url org_url org_slug %}">{{ org_name }}</a></p>
+                                    <p  class="link"><b>{% trans 'Member of' %}</b> <a href="{% url org_url org_slug %}">{{ org_name|truncatechars:30 }}</a></p>
                                 {% endif %}
                                     {% if anons %}
                                          {{ anons|cleanHtml|safe|truncatechars:200 }}

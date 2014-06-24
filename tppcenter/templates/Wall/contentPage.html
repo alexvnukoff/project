@@ -273,7 +273,7 @@
 
                            <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
 
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
+                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:40 }}</a>
                        </div>
                         <div class="price">
                              {% if price %}
