@@ -108,7 +108,7 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
 
     return attributeValues, page  #Return List Item and Page object of current page
 
-#TODO: Jenya change func name
+
 def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     '''
     Method  return List of Item of specific class including Pagination
@@ -275,7 +275,7 @@ def setStructureForHiearhy(dictinory, items):
     '''
     level = 0
     dictStructured = {}
-    #TODO: Parent not always be first because of sorting
+
     for node in dictinory:
         if node['LEVEL'] == 1:
             nameOfList = items[node['ID']]['NAME'][0].strip()
