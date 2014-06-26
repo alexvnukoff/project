@@ -45,7 +45,7 @@
                         {{ form.middle_name }}
                          {% if form.middle_name.errors   %}<div class="formerror">{{ form.middle_name.errors.as_text }}</div>{% endif %}
                     </li>
-                    <li style="margin-bottom: 15px;">
+                    <li style="margin-bottom: 10px;">
                     	<label>{% trans 'Email' %}</label>
                         {{ form.email }}
                          {% if form.email.errors %}<div class="formerror">{{ form.errors.email }}</div>{% endif %}
@@ -74,7 +74,7 @@
 
                     <li>
                     	<label>{% trans 'Sex' %}</label>
-                        <div style="margin-bottom: 15px;" class="radio">
+                        <div class="radio">
                            {% for choice in form.sex %}
                                {{ choice }}
                             {% endfor %}
@@ -82,7 +82,7 @@
                         </div>
                     </li>
                     <li>
-                    	<label class="small">{% trans 'Birthday' %}</label>
+                    	<label>{% trans 'Birthday' %}</label>
                         {{ form.birthday }}
                          {% if form.birthday.errors   %}<div class="formerror">{{ form.birthday.errors.as_text }}</div>{% endif %}
                     </li>
