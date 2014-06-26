@@ -17,6 +17,12 @@
 			$('#vacancy-list option:not([class = ' + depID + '])').remove();
 		});
 
+        // pull Department related to selected Vacancy in popup combobox
+        $(document).on('change','#vacancy-list', function() {
+			depID = $('#vacancy-list').find(':selected').data('department');
+			$('#dep-list option[data-department=' + depID + ']').prop('selected', true);
+            return false;
+		});
     });
 </script>
 <script>
@@ -132,11 +138,11 @@
                 </select>
                 <label>{% trans "/Vacancy" %}</label>
                 <select id="vacancy-list" style="width:62%;">
-                    <option disabled selected></option>
+                    <option disabled selected>{% trans "Select Vacancy..." %}</option>
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
                     {% with attr.DEPARTMENT_ID|first as dep_id %}
-                        <option data-vacancy="{{ id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                        <option data-vacancy="{{ id }}" data-department="{{ dep_id }}" class="{{ dep_id }}">{{ vacancy }}</option>
                     {% endwith %}
                     {% endwith %}
                     {% empty %}
