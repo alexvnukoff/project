@@ -268,11 +268,12 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#d
 .profile-clumn li input.text, select{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
 .profile-clumn li input.date{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px; background:#FFF url(../img/date.png) no-repeat right center;}
 
-.profile-clumn li select{ padding:6px; width:98%;}
+.profile-clumn li select{ padding:4px; width:100%;}
 .profile-clumn li .company{ float:left; width:228px; border:1px #bdbdbd solid; background-color:#FFF;}
 .profile-clumn li .company li{ display:block; padding:6px 8px 7px 8px; color:#484848; margin-bottom:0; width:212px; cursor:pointer;}
 .profile-clumn li .company li.selected{ background-color:#4a4a4a; color:#FFF;}
-.profile-clumn li .radio{ float:left; width:100%; height:28px;}
+.profile-clumn li .radio{ float:left; width:100%; height:14px; margin-bottom: 18px;}
+.profile-clumn li .radio label {width:40%;}
 .profilebutton{ position:relative; float:right; width:470px; text-align:center; margin:25px 0 0 0;}
 .profilebutton .btntype1, .profilebutton .btntype2{ font-size:16px;}
 .listnews img {max-width: 100px; max-height: 120px;}
