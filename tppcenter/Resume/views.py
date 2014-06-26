@@ -243,7 +243,7 @@ def _resumeDetailContent(request, item_id):
 @login_required(login_url='/login/')
 def resumeForm(request, action, item_id=None):
     if item_id:
-       if not Resume.active.get_active().filter(pk=item_id, c2p__parent=Cabinet.objects.get(user=request.user.pk)).exists():
+       if not Resume.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
 
@@ -363,6 +363,16 @@ def updateResume(request, item_id):
 
 
 def deleteResume(request, item_id):
+
+    try:
+        item = Resume.objects.get(pk=item_id)
+    except ObjectDoesNotExist:
+        return func.emptyCompany()
+    
+    perm_list = item.getItemInstPermList(request.user)
+
+    if 'delete_resume' not in perm_list:
+        return func.permissionDenied()
 
 
     instance = Resume.objects.get(pk=item_id)
