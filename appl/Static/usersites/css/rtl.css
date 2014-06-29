@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+.menutop .linkleft{ float:right;}
+.notify{ float:left;}
+.sidebar{ float:right;}
+.mainright{ float:left;}
+.search input.text{text-align:right; width:80%;}
+.iconcart{ float:right;}
+.register{ right:auto; left:44px;}
+.formregister li input.text{ text-align:right;}
+h1.titlepage{ text-align:right;}
+.walllist{ direction:rtl;}
+.walllist li .thumb{ margin-right:auto; margin-left:10px;}
+.bgcart{ width:96%; padding-left:10px;}
+.breadcrumb{direction:rtl;}
+.categories li a{ text-align:right; padding:7px 10px 7px 0px;}
+.companyinfo{ direction:rtl;}
+.footer .logofooter, .footer .adress, .footer .ads{ float:right;}
+.footer .logofooter{ margin-right:auto; margin-left:15px;}
+.footer .ads{ margin-left:auto; margin-right:15px;}
+.tophead, .country, .title-details, .company-dt{ direction:rtl;}
+.company-dt .logo-cpn{ float:right; padding-right: 0; padding-left:12px;}
+.ui-tabs-nav li{ float:right; margin:4px 8px 0 0;}
+.innov-tab-content li .left{ float:right; direction:rtl; text-align:left;}
+.innov-tab-content li .right{ float:left; text-align:right; width:78%;}
+h3.titlecpn, .phoneinfo{ direction:rtl;}
+.phoneinfo li .left{ float:right;}
+.phoneinfo li .right{ width:85%;}
+h4.titlecate, .table-company{ direction:rtl;}
+.map-l{ float:right; direction:rtl;}
+.ggmap{ float:left;}
+.map-l li .left{ float:right;}
+.contact-form, .default, .list-cart{ direction:rtl;}
+.btn-pay{ float:left;}
+.btn-update{ float:right;}
+.titlemodule{ direction:rtl;}
+.gallery li{ float:right; margin-right:0; margin-left:20px;}
+.gallery li:nth-child(4n){ margin-left:0;}
+.page404{ direction:rtl;}
+.content-goods-tab{ direction:rtl;}
+.prd-details-left{ float:right;}
+.prd-info{ direction:rtl; float:left;}
+.prd-info li label{ float:right;}
+.prd-info li .rightinfo{ float:left;}
+.prd-info{ width:400px; margin-right:50px;}
+.listprd li .link{ direction:rtl;}
+.listprd li .link .flag{ float:right;}
+.listprd li .link .name{ margin-left:0; margin-right:5px;}
+.listprd li .price, .listprd li .call{ text-align:right;}
+.listprd li{ float:right; margin: 20px 0 0 12px;}
+.listprd li:nth-child(4n){ margin-left:0;}
+.prj-details-desc{ direction:rtl;}
+.sprite{float: right;}
