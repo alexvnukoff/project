@@ -50,4 +50,7 @@ h4.titlecate, .table-company{ direction:rtl;}
 .listprd li{ float:right; margin: 20px 0 0 12px;}
 .listprd li:nth-child(4n){ margin-left:0;}
 .prj-details-desc{ direction:rtl;}
-.sprite{float: right;}
+.content-news .gallery{ float:right;margin: 0 0 8px 8px;}
+.content-news{ direction:rtl; width:680px;}
+.social{ text-align:right;}
+.sprite{float:right;}
