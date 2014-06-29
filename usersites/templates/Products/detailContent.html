@@ -1,12 +1,10 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-<link type="text/css" href="{% static 'tppcenter/css/company.css' %}" rel="stylesheet" />
- <link type="text/css" href="{% static 'tppcenter/css/news.css' %}" rel="stylesheet" />
- <link type="text/css" href="{% static 'tppcenter/css/flags.css' %}" rel="stylesheet" />
+
 <script>
 $(function() {
-	 $(".goods-details-tab").tabs();});
+	 $(".prj-details-tab").tabs();});
 </script>
 
 <script>
@@ -54,8 +52,14 @@ $(function() {
             {% with companyValues.COUNTRY_ID as country_id %}
             {% with companyValues.SLUG|first as country_slug %}
 
-            	<h1>{{ name }}  {{ sku }}</h1>
-                <div class="goods-details-left">
+            	<div class="country">
+                    {% if flag_class %}
+                             <i class="sprite {{ country_flag }}" title="{{ country_name }}"></i>
+                                {% elif org_flag %}
+                                {% endif %}
+                    <label class="name-c">{{ name }}  {{ sku }}</label>
+                </div>
+                <div class="prd-details-left">
                 	<div class="gallery">
                         <div id="panel">
                             {% if image %}
@@ -80,33 +84,39 @@ $(function() {
                         <!-- /Share for social networks -->
                     </div>
                 </div>
-                <div class="goods-details-center">
-                	<ul>
+
+                	<ul  class="prd-info">
                     	<li>
                         	<label>{% trans "Price" %}:</label>
-                            <p>
+                            <div class="rightinfo">
                                 {% if cost %}
-                                     {{ currency|getSymbol }} {{ cost }}
+                                    <font class="num">  {{ currency|getSymbol }} {{ cost }}</font>
                                 {% else %}
                                      {% trans 'Contact to price' %}
                                 {% endif %}
-                            </p>
+                          </div>
                         </li>
                         <li>
                         	<label>{% trans 'Unit' %}:</label>
-                            <p>{{ meas_unit }}</p>
+                            <div class="rightinfo">
+                                <font class="num"> {{ meas_unit }}</font>
+                            </div>
                         </li>
                         <li>
                         	<label>{% trans 'Amount' %}:</label>
-                            <input id="item-amount" type="text" name="" value="1" class="text" style="width:60%;"/>
+                             <div class="rightinfo">
+                                  <input id="item-amount" type="text" name="" value="1" class="text" style="width:60%;"/>
+                            </div>
                         </li>
                         <li>
                         	<label>{% trans 'Deleviry method' %}:</label>
-                            <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
-                            <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
-                            <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
-                            <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
-                            <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
+                             <div class="rightinfo">
+                                    <span class="trans-services"><i class="imgmain transport trans-1"></i></span>
+                                    <span class="trans-services"><i class="imgmain transport trans-2"></i></span>
+                                    <span class="trans-services"><i class="imgmain transport trans-3"></i></span>
+                                    <span class="trans-services"><i class="imgmain transport trans-4"></i></span>
+                                    <span class="trans-services"><i class="imgmain transport trans-5"></i></span>
+                             </div>
                         </li>
                         <li>
                             {% if cost %}
@@ -130,34 +140,9 @@ $(function() {
                             {% endif %}
                        </li>
                     </ul>
-                </div>
-                <ul class="goods-info">
-                   <li class="top">
-                        <div class="iconinfo"><i class="sprite {{ country_flag }}" title="{{ country_name }}"></i> </div>
-                        <div class="nameinfo"><b><a href="#">{{ company_name }}</a></b></div>
-                   </li>
-                   <li>
-                        <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
-                        <div class="nameinfo">{{ company_address }}</div>
-                   </li>
-                   <li>
-                        <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
-                        <div class="nameinfo">{{ company_telephone }}</div>
-                   </li>
-                   <li>
-                        <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
-                        <div class="nameinfo">{{ company_fax }}</div>
-                   </li>
-                   <li>
-                        <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
-                        <div class="nameinfo"><a href="#">{{ site_name }}</a></div>
-                   </li>
-                   <li>
-                        <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
-                        <div class="nameinfo"> <a class="contact-us" data-name="{{ name }}" data-id="{{ country_id }}" href="{% url "contact:main" %}" >{% trans 'Contact us' %}</a></div>
-                   </li>
-                </ul>
-                <div class="goods-details-tab">
+
+
+                <div class="prj-details-tab">
                     <div class="tab-cate">
                         <ul>
                             <li><a href="#goods-tabs-1">{% trans 'About company' %}</a></li>

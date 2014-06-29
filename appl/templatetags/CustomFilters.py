@@ -3,6 +3,7 @@ from copy import copy
 import urllib
 from urllib.request import FancyURLopener
 from django.contrib.sites.models import Site
+from django.utils.translation import trans_real
 from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
@@ -24,7 +25,9 @@ register = template.Library()
 @register.filter(name='getSide')
 def getSide(value):
 
-    return settings.LANGUAGE_CODE == 'he' or settings.LANGUAGE_CODE == 'ar'
+    is_right = trans_real.get_language() == 'he' or trans_real.get_language() == 'ar'
+
+    return is_right
 
 @register.filter(name='sort')
 def sort(value):
