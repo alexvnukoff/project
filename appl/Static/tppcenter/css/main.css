@@ -132,7 +132,7 @@ border-style:solid; border-width: 20px 0 0 16px; border-color: transparent trans
 .review-l ul.listcm li{ float:left; width:100%; padding:15px 0; border-bottom:1px #d9d9d9 solid; border-top:1px #FFF solid;}
 .review-l ul.listcm li .topcm{ float:left; width:85%; margin:0 0 0 12px; display:inline; color:#9b9b9b;}
 .review-l ul.listcm li .topcm b{ color:#484848;}
-.review-l ul.listcm li .topcm .flag{ float:left; width:18px; height:12px; margin:2px 8px 0 0;}
+.review-l ul.listcm li .topcm .flag{ float:left; width:21px; height:16px; margin:2px 8px 0 0;}
 .review-l ul.listcm li .topcm .date{ float:left;}
 .review-l ul.listcm li .linkcm{ float:left; width:88%; padding:8px 0 0 12px; font-size:13px;}
 .review-l ul.listcm li:last-child{ border-bottom:0;}
