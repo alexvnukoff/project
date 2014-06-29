@@ -345,7 +345,7 @@ class Category(Item):
 
 
     def __str__(self):
-        return self.title
+         return self.getName()
 
 class Product(Item):
 
