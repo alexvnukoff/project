@@ -123,7 +123,7 @@ border-style:solid; border-width: 20px 0 0 16px; border-color: transparent trans
 .pr-best-price li .thumb{ position:relative; float:left; width:150px; height:150px; background-color: #ffffff; box-shadow:0px 1px 1px #b4b3b3;position: relative;}
 .pr-best-price li .thumb img{max-width: 150px;max-height: 150px;position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;}
 .pr-best-price li .location{ float:left; width:100%; margin:8px 0 0 0;}
-.pr-best-price li .location .flag{ float:left; width:18px; height:12px; margin:3px 0 0 0;}
+.pr-best-price li .location .flag{ float:left; width:21px; height:16px; margin:3px 0 0 0;}
 .pr-best-price li .location a{ float:left; color:#0089bc; padding-left:6px; width:84%;}
 .review{ position:relative; float:left; width:100%; margin:30px 0 0 0;}
 .review-l{ float:left; width:240px;}
