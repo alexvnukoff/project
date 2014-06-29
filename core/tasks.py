@@ -430,8 +430,9 @@ def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_co
 
     resume = form.save(user, site_id)
     if resume:
-        Relationship.objects.filter(parent=Cabinet.objects.get(user=user), child=resume).delete()
-        Relationship.setRelRelationship(parent=Cabinet.objects.get(user=user), child=resume, type='dependence', user=user)
+        relationship = Relationship.objects.filter(child=resume)
+        if not relationship.exists():
+            Relationship.setRelRelationship(parent=Cabinet.objects.get(user=user), child=resume, type='dependence', user=user)
 
 
         resume.reindexItem()
