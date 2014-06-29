@@ -206,7 +206,7 @@
                         </div>
                     </li>
                     <li>
-                        <label>{% trans 'Name of vacancy' %} <font color="#FF0000">*</font></label>
+                        <label>{% trans 'Vacancy title' %} <font color="#FF0000">*</font></label>
                         {% if form.errors.NAME %}
                              <div class="error-handler"><div class="formserror">{{ form.errors.NAME }}</div></div>
                         {% endif %}
@@ -241,7 +241,7 @@
                         <div class="clumn1">
                         	<input type="checkbox" name="IS_ANONYMOUS_VACANCY" {% if anonymous %} checked {% endif %}/>
                         	— {% trans "make vacancy anonymous" %} <br />
-                            ({% trans 'name of company will be hidden' %})
+                            ({% trans 'company title will be hidden' %})
                         </div>
                         <div class="clumn2">
                         	<label>{% trans 'Keywords' %}</label>

@@ -43,7 +43,7 @@
                         {% else %}
                                <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
-                            <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}, {% trans 'Date of publication' %}: {{ date|date:"d M Y" }}</font>
+                            <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}, {% trans 'Publication date' %}: {{ date|date:"d M Y" }}</font>
                         </div>
                         <h2><a href="{% url "tenders:detail" slug %}" >{{ name }}</a></h2>
                         <div class="line">{% trans 'Starting price' %}: <font class="number">{{ currency|getSymbol }} {{ cost }}</font></div>

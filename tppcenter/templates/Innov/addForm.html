@@ -34,7 +34,7 @@ $(function() {
 
     <div class="uploadimgage">
         <div>
-            <label class="sapce">{% trans 'Target audience' %}</label>
+            <label class="sapce">{% trans 'Scope' %}</label>
              {% if form.errors.TARGET_AUDIENCE %}
                     <div class="error-handler"> <div class="formserror">{{ form.errors.TARGET_AUDIENCE }}</div></div>
              {% endif %}
@@ -48,7 +48,7 @@ $(function() {
             <textarea name="KEYWORD"  rows="4" style="width:95%;">{{ keyword }}</textarea>
         </div>
         <div>
-            <label class="sapce">{% trans 'Realese date' %}</label>
+            <label class="sapce">{% trans 'Release date' %}</label>
             {% if form.errors.REALESE_DATE %}
                 <div class="error-handler"> <div class="formserror">{{ form.errors.REALESE_DATE }}</div></div>
             {% endif %}
@@ -63,7 +63,7 @@ $(function() {
         </div>
         <div>
             <div class="clumn1">
-                <label  class="sapce">{% trans 'Cost of project' %}<font color="#FF0000">*</font></label>
+                <label  class="sapce">{% trans 'Project cost' %}<font color="#FF0000">*</font></label>
                 {% if form.errors.COST %}<div class="error-handler"> <div class="formserror">{{ form.errors.COST }}</div></div>{% endif %}
                 <input type="text" name="COST" value="{{ cost }}" placeholder="" class="text" />
             </div>

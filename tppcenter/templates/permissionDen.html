@@ -1,16 +1,12 @@
-
 {% load i18n %}
 
-
-
-
-            {% block content %}
-            <div class="blogin">
-
-           <div style="margin-top: 20px;padding: 10px 46px 20px 46px;font-size: 15px;">
-           <div style="margin: 40px;font-size: 15px;font-weight: bold;" > {% trans 'Sorry but you cannot manipulate with this item , if you have created company you need choose it in you  ' %}
+{% block content %}
+    <div class="blogin">
+        <div style="margin-top: 20px;padding: 10px 46px 20px 46px;font-size: 15px;">
+            <div style="margin: 40px;font-size: 15px;font-weight: bold;" > {% trans 'Sorry, but you cannot manage this item. If you have created company you need choose it in your  ' %}
                 <a href='{% url 'profile:main' %}'>{% trans 'profile' %}</a>, {% trans ' or create ' %}
-              <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a></div>
-           </div>
+                <a href='{% url 'companies:add' %}'>{% trans 'new company ' %}</a>
             </div>
-          {% endblock %}
+        </div>
+    </div>
+{% endblock %}

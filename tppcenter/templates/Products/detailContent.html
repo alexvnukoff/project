@@ -77,7 +77,7 @@ $(function() {
                                 {% if price %}
                                      {{ currency|getSymbol }} {{ cost }}
                                 {% else %}
-                                     {% trans 'Contact to price' %}
+                                     {% trans 'Get price' %}
                                 {% endif %}
                             </p>
                         </li>
@@ -90,7 +90,7 @@ $(function() {
                             <input type="text" name="" value="" class="text" style="width:60%;" />
                         </li>
                         <li>
-                        	<label>{% trans 'Deleviry method' %}:</label>
+                        	<label>{% trans 'Delivery method' %}:</label>
                             <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
                             <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
                             <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
