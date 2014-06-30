@@ -365,7 +365,7 @@ $.fn.onChangeSet = function(e) {
                         </select>
                     </div>
                     <div class="clumn4">
-                        <label class="sapce">{% trans 'Measerument unit' %} <font color="#FF0000">*</font></label>
+                        <label class="sapce">{% trans 'Measurement unit' %} <font color="#FF0000">*</font></label>
                         <select id="id_MEASUREMENT_UNIT" name="MEASUREMENT_UNIT">
                             {% for meas in measurement_slots %}
                                 <option value="{{ meas.id }}" {% if meas.id == meas_unit %} selected="selected" {% endif %}>

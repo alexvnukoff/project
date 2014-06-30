@@ -8,7 +8,7 @@ from django.utils.timezone import now
 import datetime
 from time import mktime, strptime
 from django.db.models import Count, ObjectDoesNotExist
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -900,6 +900,23 @@ def itemInstanceType(instance, **kwargs):
     if not getattr(instance, "contentType", None) or instance.contentType == '':
         object = ContentType.objects.get(model=str(instance.__class__.__name__).lower())
         instance.contentType = object
+
+
+#----------------debug site deletion--------------------------------------------------------------------
+from django.contrib.sites.models import Site
+from tpp.SiteUrlMiddleWare import get_request
+from django.core.mail import EmailMessage
+
+@receiver(pre_delete, sender=Site)
+def delSiteMonitor(instance, **kwargs):
+    '''
+       Create default Department if Company hasn't it.
+    '''
+    request = get_request()
+    subject = str(instance.name) + ' ' + str(request.user) + ' ' + str(datetime.datetime.now())
+    mail = EmailMessage(subject, '', 'noreply@tppcenter.com', ['afend69@gmail.com', 'jenyapri@tppcenter.com'])
+    mail.send()
+#-------------------------------------------------------------------------------------------------------
 
 
 @receiver(post_save, sender=Company)
