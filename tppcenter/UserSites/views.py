@@ -109,7 +109,8 @@ def resumeForm(request, action, item_id=None):
     template_values = Item.getItemsAttributesValues(('NAME', 'TEMPLATE_IMAGE_FOLDER'), templates_ids)
 
     if action == 'delete':
-        sitePage = deleteResume(request, item_id)
+        pass
+        #sitePage = deleteResume(request, item_id)
     elif action == 'add':
         sitePage = addSite(request)
     elif action == 'update':
