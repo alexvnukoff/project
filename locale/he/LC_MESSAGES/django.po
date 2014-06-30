@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-30 09:25+0000\n"
-"PO-Revision-Date: 2014-06-30 12:03+0200\n"
+"PO-Revision-Date: 2014-06-30 15:18+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
@@ -603,12 +603,12 @@ msgstr "אתה חוסך"
 #: usersites/templates/contentPage.html:103
 #: usersites/templates/Products/contentPage.html:21
 msgid "Buy"
-msgstr "שמירה"
+msgstr "קנה"
 
 #: centerpokupok/templates/Company/coupons.html:150
 #: centerpokupok/templates/Coupons/index.html:244
 msgid "Till the end"
-msgstr "עד הסוך"
+msgstr "עד הסוף"
 
 #: centerpokupok/templates/Company/header.html:25
 msgid "Store No"
@@ -655,7 +655,7 @@ msgstr "על החברה"
 
 #: centerpokupok/templates/Company/index.html:136
 msgid "You are saving"
-msgstr "אתה בטוח עכשיו"
+msgstr "אתה חוסך"
 
 #: centerpokupok/templates/Company/index.html:191
 #: centerpokupok/templates/Product/new.html:5
@@ -709,7 +709,7 @@ msgstr "מיין לפי"
 #: centerpokupok/templates/Coupons/index.html:167
 #: tppcenter/templates/Products/addForm.html:344
 msgid "Discount"
-msgstr "הנחות / מבצעים"
+msgstr "הנחה"
 
 #: centerpokupok/templates/Coupons/index.html:174
 #: centerpokupok/templates/Coupons/index.html:178
@@ -928,7 +928,7 @@ msgstr "משלוח חינם"
 
 #: centerpokupok/templates/Product/index.html:186
 msgid "positive feedback"
-msgstr "פידבקים חיוביים"
+msgstr "משובים חיוביים"
 
 #: centerpokupok/templates/Product/index.html:187
 #: centerpokupok/templates/Product/new.html:193
@@ -941,7 +941,7 @@ msgstr "אנשי מכירות"
 
 #: centerpokupok/templates/Product/orderStepOne.html:7
 msgid "Order step one"
-msgstr "הזמנה, צעד ראשון"
+msgstr "הזמנה - צעד ראשון"
 
 #: centerpokupok/templates/Product/orderStepOne.html:22
 msgid "Start page"
@@ -1000,7 +1000,7 @@ msgstr "המשך"
 
 #: centerpokupok/templates/Product/orderStepThree.html:6
 msgid "Order Step three"
-msgstr "הזמנה, צעד שלישי"
+msgstr "הזמנה - ציד שלישי"
 
 #: centerpokupok/templates/Product/orderStepThree.html:32
 msgid "Thank you for  shopping on our site,"
@@ -1018,7 +1018,7 @@ msgstr "תוכל לצפות בהזמנות שלך"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:7
 msgid "Order step two"
-msgstr "הזמנה, צעד שני"
+msgstr "הזמנה - צעד שני"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:29
 msgid "Home Page"
@@ -1163,9 +1163,8 @@ msgid "Order History"
 msgstr "הסטוריית הזמנות"
 
 #: centerpokupok/templates/main/cabinet_menu.html:20
-#, fuzzy
 msgid "Eva"
-msgstr "חווה"
+msgstr ""
 
 #: centerpokupok/templates/main/cabinet_menu.html:21
 msgid "Virtual Agent"
@@ -1226,7 +1225,7 @@ msgstr "פרופיל"
 
 #: centerpokupok/templates/registration/activate.html:8
 msgid "Sorry but you activation key is invalid"
-msgstr "מצטערים, מפתח ההפעלה אינו תקין"
+msgstr "מצטערים, קוד ההפעלה אינו תקין"
 
 #: centerpokupok/templates/registration/activation_complete.html:6
 #: tppcenter/templates/registration/registration_complete.html:7
@@ -1270,7 +1269,7 @@ msgstr "ימים"
 #: centerpokupok/templates/registration/activation_email.html:10
 #: tppcenter/templates/registration/activation_email.html:10
 msgid "Sincerely, Administration of, "
-msgstr "בברכה, הנהלת ה"
+msgstr "בברכה, הנהלת"
 
 #: centerpokupok/templates/registration/activation_email_subject.html:2
 #: tppcenter/templates/registration/activation_email_subject.html:2
@@ -1316,7 +1315,7 @@ msgstr "משנה סיסמא"
 #: centerpokupok/templates/registration/password_change_done.html:5
 #: tppcenter/templates/registration/password_change_done.html:5
 msgid "The password has been changed successfully!"
-msgstr "הסיסמה שונתה בהצלחה"
+msgstr "הסיסמא שונתה בהצלחה"
 
 #: centerpokupok/templates/registration/password_change_form.html:8
 #: centerpokupok/templates/registration/password_reset_confirm.html:52
@@ -1986,7 +1985,7 @@ msgstr "רוסיה"
 
 #: tpp/settings.py:230
 msgid "Armenia"
-msgstr ""
+msgstr "ארמניה"
 
 #: tpp/settings.py:233
 msgid "England"
@@ -1998,11 +1997,11 @@ msgstr "ישראל"
 
 #: tpp/settings.py:246
 msgid "Arabic"
-msgstr ""
+msgstr "ערבית"
 
 #: tpp/settings.py:247
 msgid "Chinese"
-msgstr ""
+msgstr "סינית"
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
@@ -2061,14 +2060,12 @@ msgid "Invalid type"
 msgstr ""
 
 #: tppcenter/Adv/views.py:61
-#, fuzzy
 msgid "Top"
-msgstr "אקספרט סנטר"
+msgstr ""
 
 #: tppcenter/Adv/views.py:63
-#, fuzzy
 msgid "Banner"
-msgstr "באנרים"
+msgstr "באנר"
 
 #: tppcenter/AdvBanner/views.py:52 tppcenter/AdvBanner/views.py:290
 #: tppcenter/AdvBanner/views.py:355 tppcenter/AdvTop/views.py:216
@@ -2207,9 +2204,8 @@ msgid "Message or file are required"
 msgstr "הודעה או הוספת קובץ נדרשים"
 
 #: tppcenter/Companies/views.py:979
-#, fuzzy
 msgid "Only registered users can send the messages"
-msgstr "ההודעה יכולה להישלח רק על ידי משתמש רשום"
+msgstr "ררק משתמשים רשומים יעולים לשלוח הודעה"
 
 #: tppcenter/Greetings/views.py:35 tppcenter/templates/index.html:443
 #: tppcenter/templates/Greetings/index.html:10
@@ -2308,9 +2304,8 @@ msgid "Your own site"
 msgstr "האתר שלך"
 
 #: tppcenter/Resume/views.py:211
-#, fuzzy
 msgid "Name not found"
-msgstr "לא נמצאו משרדים"
+msgstr "השם לא נמצא"
 
 #: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:138
 #: tppcenter/templates/main_page.html:168
@@ -2514,14 +2509,12 @@ msgid "Select organizations"
 msgstr "בחר ארגון"
 
 #: tppcenter/templates/baseFilter.html:11
-#, fuzzy
 msgid "Select company"
-msgstr "בחר מדינה"
+msgstr "בחר ארגון"
 
 #: tppcenter/templates/baseFilter.html:13
-#, fuzzy
 msgid "Select category"
-msgstr "בחר מדינה"
+msgstr "בחר קטגוריה"
 
 #: tppcenter/templates/baseFilter.html:68
 #: tppcenter/templates/AdvBanner/addForm.html:334
@@ -2577,7 +2570,7 @@ msgstr "פרוייקטים חדשניים"
 #: tppcenter/templates/index.html:85 tppcenter/templates/login_header.html:38
 #: usersites/templates/site_sidebar.html:11
 msgid "Mother tongue"
-msgstr ""
+msgstr "שפת אם"
 
 #: tppcenter/templates/index.html:136
 msgid "Community"
@@ -2687,7 +2680,7 @@ msgstr "לתנאי השימוש"
 
 #: tppcenter/templates/index.html:318
 msgid "Affiche"
-msgstr ""
+msgstr "אירועים"
 
 #: tppcenter/templates/index.html:360
 msgid "All exhibitions and forums"
@@ -2778,11 +2771,10 @@ msgstr "דרישות התפקיד"
 
 #: tppcenter/templates/main_page.html:148
 msgid "Admin Panel"
-msgstr ""
+msgstr "מרכז בקרה"
 
 #: tppcenter/templates/main_page.html:164
 #: tppcenter/templates/AdvTop/order.html:316
-#, fuzzy
 msgid "Advertisement"
 msgstr "פרסם אצלנו"
 
@@ -2795,7 +2787,6 @@ msgid "Find.."
 msgstr "מצא"
 
 #: tppcenter/templates/permissionDen.html:6
-#, fuzzy
 msgid ""
 "Sorry, but you cannot manage this item. If you have created company you need "
 "choose it in your  "
@@ -2808,7 +2799,6 @@ msgid " or create "
 msgstr "או ליצור"
 
 #: tppcenter/templates/permissionDen.html:8
-#, fuzzy
 msgid "a new company "
 msgstr "חברה חדשה"
 
@@ -2834,9 +2824,8 @@ msgid "Summary"
 msgstr "תקציר"
 
 #: tppcenter/templates/Adv/basket.html:7
-#, fuzzy
 msgid "Advertisement basket"
-msgstr "פרסם אצלנו"
+msgstr "סל מודעות"
 
 #: tppcenter/templates/Adv/basket.html:19
 msgid "Type"
@@ -2900,22 +2889,20 @@ msgstr "שלם"
 
 #: tppcenter/templates/AdvBanner/order.html:275
 #: tppcenter/templates/AdvTop/order.html:275
-#, fuzzy
 msgid "Order details"
-msgstr "פרטי משתמש"
+msgstr "פרטי הזמנה"
 
 #: tppcenter/templates/AdvBanner/order.html:306
 #: tppcenter/templates/AdvTop/order.html:306
-#, fuzzy
 msgid "Order number"
-msgstr "סיכום הזמנה"
+msgstr "מספר הזמנה"
 
 #: tppcenter/templates/AdvBanner/order.html:314
 #: tppcenter/templates/AdvTop/order.html:314
 msgid ""
 "Thank you for order, you will be notified when the advertisement will "
 "published"
-msgstr ""
+msgstr "תודה על פנייתך, תעודכן כאשר המודעה תתפרסם"
 
 #: tppcenter/templates/AdvTop/tops.html:8
 msgid "Paid ads"
@@ -3333,7 +3320,6 @@ msgid "Free period will expire in "
 msgstr ""
 
 #: tppcenter/templates/Companies/detailContent.html:508
-#, fuzzy
 msgid " days."
 msgstr "ימים"
 
@@ -3379,7 +3365,6 @@ msgstr "נכשל"
 
 #: tppcenter/templates/Companies/tabGallery.html:40
 #: tppcenter/templates/Tpp/tabGallery.html:40
-#, fuzzy
 msgid "The following files were not uploaded"
 msgstr "הקבצים והשדות לא עודכנו"
 
@@ -3388,9 +3373,8 @@ msgstr "הקבצים והשדות לא עודכנו"
 #: tppcenter/templates/Innov/contentPage.html:64
 #: tppcenter/templates/Tpp/tabInnov.html:9
 #: tppcenter/templates/Wall/contentPage.html:53
-#, fuzzy
 msgid "Project cost"
-msgstr "כתובת אתר הפרוייקט"
+msgstr "מחיר הפרוייקט"
 
 #: tppcenter/templates/Companies/tabStaff.html:50
 #: tppcenter/templates/Companies/tabStaff.html:128
@@ -3446,9 +3430,8 @@ msgstr "משרה פנויה"
 
 #: tppcenter/templates/Companies/tabStaff.html:141
 #: tppcenter/templates/Tpp/tabStaff.html:140
-#, fuzzy
 msgid "Select Vacancy..."
-msgstr "בחר תחום"
+msgstr "בחר משרה"
 
 #: tppcenter/templates/Companies/tabStaff.html:152
 #: tppcenter/templates/Tpp/tabStaff.html:151
@@ -3501,7 +3484,6 @@ msgstr "כלי ארגון"
 #: tppcenter/templates/Exhibitions/detailContent.html:230
 #: tppcenter/templates/registration/registration.html:8
 #: tppcenter/templates/registration/registration.html:30
-#, fuzzy
 msgid "Sign Up"
 msgstr "הירשם"
 
@@ -3514,7 +3496,6 @@ msgid "Name and Email are required"
 msgstr "שם ודוא\"ל נדרשים"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:203
-#, fuzzy
 msgid "You are registered successfully."
 msgstr "תהליך הרישום הסתיים בהצלחה"
 
@@ -3534,7 +3515,6 @@ msgid "Keyword"
 msgstr "מילת מפתח"
 
 #: tppcenter/templates/Innov/addForm.html:51
-#, fuzzy
 msgid "Release date"
 msgstr "תאריך הוצאה"
 
@@ -3654,7 +3634,6 @@ msgid "To(date)"
 msgstr "קבע מועד"
 
 #: tppcenter/templates/Products/addForm.html:368
-#, fuzzy
 msgid "Measurement unit"
 msgstr "יחידת מדידה"
 
@@ -3668,9 +3647,8 @@ msgid "Contact to price"
 msgstr "הצע מחיר"
 
 #: tppcenter/templates/Products/detailContent.html:80
-#, fuzzy
 msgid "Get price"
-msgstr "מחיר מיוחד"
+msgstr "קבל הצעת מחיר"
 
 #: tppcenter/templates/Products/detailContent.html:85
 #: usersites/templates/Products/detailContent.html:100
@@ -3724,13 +3702,12 @@ msgstr "מקצוע"
 
 #: tppcenter/templates/Project/event.html:16
 #: tppcenter/templates/Project/proposal.html:16
-#, fuzzy
 msgid "Post announcements"
 msgstr "פרסם הודעה על אירוע"
 
 #: tppcenter/templates/Project/offer.html:16
 msgid "Offer"
-msgstr ""
+msgstr "הצעה"
 
 #: tppcenter/templates/Resume/addForm.html:56
 msgid ""
@@ -3739,9 +3716,8 @@ msgid ""
 msgstr "אין במילוי פרטי קורות חיים משום התחייבות החברה לקבלך למשרה המוצעת באתר"
 
 #: tppcenter/templates/Resume/addForm.html:58
-#, fuzzy
 msgid "Vacancy name"
-msgstr "משרה פנויה"
+msgstr "שם משרה"
 
 #: tppcenter/templates/Resume/addForm.html:73
 msgid "Marital Status"
@@ -3849,9 +3825,8 @@ msgstr "אין לי התנגדות לבדיקת אמיתות המידע שמסר
 
 #: tppcenter/templates/Resume/contentPage.html:43
 #: tppcenter/templates/Resume/detailContent.html:55
-#, fuzzy
 msgid "User name"
-msgstr "שם פרטי"
+msgstr "שם משתמש"
 
 #: tppcenter/templates/Resume/detailContent.html:63
 msgid "Marital status"
@@ -3892,16 +3867,14 @@ msgid "Starting price"
 msgstr "מחיר התחלתי"
 
 #: tppcenter/templates/Tenders/addForm.html:132
-#, fuzzy
 msgid "Tender title"
-msgstr "שם המציע"
+msgstr "שם המכרז"
 
 #: tppcenter/templates/Tpp/addForm.html:137
 msgid "VATIN"
 msgstr ""
 
 #: tppcenter/templates/Tpp/addForm.html:154
-#, fuzzy
 msgid "Organization title"
 msgstr "שם הארגון"
 
@@ -3919,16 +3892,14 @@ msgid "Detail"
 msgstr "פרטים"
 
 #: tppcenter/templates/Tpp/index.html:10
-#, fuzzy
 msgid "TPP"
-msgstr "ערוץ טלוויזיה"
+msgstr "לשכת מסחר"
 
 #: tppcenter/templates/Tpp/tabCompanies.html:7
 msgid "Logo"
 msgstr "לוגו"
 
 #: tppcenter/templates/Tpp/tabStructure.html:72
-#, fuzzy
 msgid "Department title"
 msgstr "שם משרד"
 
@@ -3937,18 +3908,16 @@ msgid "Sites"
 msgstr "אתרים"
 
 #: tppcenter/templates/Users/contentPage.html:46
-#, fuzzy
 msgid "Send message"
-msgstr "שלח הודעה ל"
+msgstr "שלח הודעה"
 
 #: tppcenter/templates/Vacancy/addForm.html:169
 msgid "Departament"
 msgstr "מחלקה"
 
 #: tppcenter/templates/Vacancy/addForm.html:171
-#, fuzzy
 msgid "Choose department..."
-msgstr "בחר מועד"
+msgstr "בחר מחלקה"
 
 #: tppcenter/templates/Vacancy/addForm.html:191
 msgid "Choose from list..."
@@ -3967,7 +3936,6 @@ msgid "make vacancy anonymous"
 msgstr "להעלים את השם בשטח הפנוי"
 
 #: tppcenter/templates/Vacancy/addForm.html:244
-#, fuzzy
 msgid "company title will be hidden"
 msgstr "נא להסתיר את שם החברה"
 
@@ -4027,9 +3995,8 @@ msgid "Bussiness Proposals"
 msgstr "הצעות עסקיות"
 
 #: tppcenter/templates/Wall/contentPage.html:282
-#, fuzzy
 msgid "Get the price"
-msgstr "הצע מחיר"
+msgstr "קבל מחיר"
 
 #: tppcenter/templates/main/currentCompany.html:5
 msgid "Current organization"
@@ -4040,7 +4007,6 @@ msgid "Permission denied"
 msgstr "ההרשאה נדחתה"
 
 #: tppcenter/templates/main/paginator.html:5
-#, fuzzy
 msgid "Total pages"
 msgstr "דפים נוספים"
 
@@ -4053,9 +4019,8 @@ msgid "Forward"
 msgstr ""
 
 #: tppcenter/templates/main/staticPages.html:4
-#, fuzzy
 msgid "Project news"
-msgstr "שם הפרוייקט"
+msgstr "חדשות הפרוייקט"
 
 #: tppcenter/templates/main/staticPages.html:12
 msgid "Advices"
@@ -4072,36 +4037,30 @@ msgstr "כניסה"
 
 #: tppcenter/templates/registration/activate.html:3
 #: tppcenter/templates/registration/registration_complete.html:29
-#, fuzzy
 msgid "Registration is completed"
 msgstr "הרישום הושלם"
 
 #: tppcenter/templates/registration/activate.html:6
-#, fuzzy
 msgid "Your registration is complited"
 msgstr "ההרשמה הושלמה"
 
 #: tppcenter/templates/registration/activate.html:8
-#, fuzzy
 msgid "Sorry, but your activation key is invalid"
-msgstr "מצטערים, מפתח ההפעלה אינו תקין"
+msgstr "מצטערים, קוד ההפעלה אינו תקין"
 
 #: tppcenter/templates/registration/activation_complete.html:6
 msgid "Activation complete"
 msgstr "הפעולה הושלמה"
 
 #: tppcenter/templates/registration/activation_complete.html:28
-#, fuzzy
 msgid "Activation is completed"
-msgstr "הפעולה הושלמה"
+msgstr "הפעלת החשבון הושלמה"
 
 #: tppcenter/templates/registration/activation_complete.html:30
-#, fuzzy
 msgid "Thank you for registration! Now you can  "
 msgstr "תודה על השלמת הרשמתך למערכת, עכשיו אתה יכול "
 
 #: tppcenter/templates/registration/activation_complete.html:31
-#, fuzzy
 msgid "using email and password that you provided during sign up."
 msgstr "השתמש בכתובת המייל והסיסמא שסיפקת בעת הרישום"
 
@@ -4129,7 +4088,6 @@ msgid "Password reset"
 msgstr "תנאי שימוש"
 
 #: tppcenter/templates/registration/password_reset_confirm.html:31
-#, fuzzy
 msgid "Enter your new password below to change the old one:"
 msgstr "רשום את הסיסמא החדשה על מנת לשנות את הסיסמא הישנה:"
 
@@ -4142,7 +4100,6 @@ msgid "the terms of use"
 msgstr "תנאי שימוש"
 
 #: tppcenter/templates/registration/registration_complete.html:32
-#, fuzzy
 msgid ""
 "We sent you message. Please, check you email and click on the  link to "
 "activate your account. "
@@ -4152,33 +4109,28 @@ msgstr ""
 
 #: usersites/views.py:23 usersites/views.py:24
 #: usersites/templates/header.html:4
-#, fuzzy
 msgid "About us"
 msgstr "אודות"
 
 #: usersites/Contact/views.py:38
-#, fuzzy
 msgid "This message was sent to company:"
 msgstr "הודעה זו נשלחה לחברה עם קוד זהות"
 
 #: usersites/Contact/views.py:41
-#, fuzzy
 msgid "New message from "
 msgstr "הודעה חדשה"
 
 #: usersites/Contact/views.py:47
-#, fuzzy
 msgid "The message was succesfuly send "
-msgstr "נשמר בהצלחה"
+msgstr "ההודעה נשלחה"
 
 #: usersites/Contact/views.py:50
 msgid "Incoorect Recapcha"
 msgstr ""
 
 #: usersites/Contact/views.py:55
-#, fuzzy
 msgid "All field are required"
-msgstr "הודעה או הוספת קובץ נדרשים"
+msgstr "שדות חובה"
 
 #: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
 #: usersites/templates/contentPage.html:7
