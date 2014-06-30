@@ -5,87 +5,87 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Dima\n"
+"Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-26 08:06+0000\n"
-"PO-Revision-Date: 2014-06-26 10:54+0200\n"
-"Last-Translator: dima <dimarb012@gmail.com>\n"
+"POT-Creation-Date: 2014-05-13 06:59+0000\n"
+"PO-Revision-Date: 2014-06-30 12:03+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.5\n"
+"Language: he\n"
 
-#: appl/func.py:835 centerpokupok/templates/Company/header.html:48
+#: appl/func.py:788 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Company/products.html:6
 #: centerpokupok/templates/Product/detail.html:114
 #: centerpokupok/templates/Product/index.html:6
 #: centerpokupok/templates/Product/index.html:63
 #: centerpokupok/templates/Product/index.html:76
 #: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:51
-#: tppcenter/Product/views.py:156 tppcenter/templates/base.html:140
-#: tppcenter/templates/main_page.html:126
-#: tppcenter/templates/main_page.html:151
+#: tppcenter/Product/views.py:154 tppcenter/templates/base.html:142
+#: tppcenter/templates/main_page.html:117
+#: tppcenter/templates/main_page.html:140
 #: tppcenter/templates/Analytic/main.html:64
-#: tppcenter/templates/Companies/detailContent.html:612
+#: tppcenter/templates/Companies/detailContent.html:588
 #: tppcenter/templates/Products/index.html:10
-#: tppcenter/templates/Wall/contentPage.html:250
-#: usersites/Products/views.py:32 usersites/Products/views.py:33
+#: tppcenter/templates/Wall/contentPage.html:245
+#: usersites/Products/views.py:42 usersites/Products/views.py:43
 #: usersites/templates/contentPage.html:86
-#: usersites/templates/site_sidebar.html:92
+#: usersites/templates/site_sidebar.html:20
 msgid "Products"
 msgstr "מוצרים"
 
-#: appl/func.py:840 tppcenter/templates/main_page.html:129
-#: tppcenter/templates/main_page.html:154
+#: appl/func.py:793 tppcenter/templates/main_page.html:121
+#: tppcenter/templates/main_page.html:144
 #: tppcenter/templates/Analytic/main.html:72
-#: tppcenter/templates/Companies/detailContent.html:617
-#: tppcenter/templates/Tpp/detailContent.html:538
+#: tppcenter/templates/Companies/detailContent.html:593
+#: tppcenter/templates/Tpp/detailContent.html:534
 msgid "Innovation Projects"
 msgstr "פרוייקטים חדשניים"
 
-#: appl/func.py:845 tppcenter/Companies/views.py:66
-#: tppcenter/Companies/views.py:645 tppcenter/templates/base.html:141
-#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:171
-#: tppcenter/templates/main_page.html:128
-#: tppcenter/templates/main_page.html:153
+#: appl/func.py:798 tppcenter/Companies/views.py:61
+#: tppcenter/Companies/views.py:769 tppcenter/templates/base.html:143
+#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:133
+#: tppcenter/templates/main_page.html:120
+#: tppcenter/templates/main_page.html:143
 #: tppcenter/templates/Analytic/main.html:95
 #: tppcenter/templates/Companies/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:563
+#: tppcenter/templates/Tpp/detailContent.html:559
 msgid "Companies"
 msgstr "חברות"
 
-#: appl/func.py:850 tppcenter/templates/main_page.html:130
-#: tppcenter/templates/main_page.html:155
+#: appl/func.py:803 tppcenter/templates/main_page.html:122
+#: tppcenter/templates/main_page.html:145
 #: tppcenter/templates/Analytic/main.html:68
 #: tppcenter/templates/Analytic/main.html:111
 #: tppcenter/templates/BusinessProposal/index.html:10
-#: tppcenter/templates/Companies/detailContent.html:622
-#: tppcenter/templates/Tpp/detailContent.html:543
+#: tppcenter/templates/Companies/detailContent.html:598
+#: tppcenter/templates/Tpp/detailContent.html:539
 msgid "Business Proposals"
 msgstr "הצעות עסקיות"
 
-#: appl/func.py:855 tppcenter/Exhibitions/views.py:53
-#: tppcenter/Exhibitions/views.py:137
+#: appl/func.py:808 tppcenter/Exhibitions/views.py:53
+#: tppcenter/Exhibitions/views.py:136
 #: tppcenter/templates/Analytic/main.html:80
 #: tppcenter/templates/Analytic/main.html:115
-#: tppcenter/templates/Companies/detailContent.html:607
+#: tppcenter/templates/Companies/detailContent.html:583
 #: tppcenter/templates/Exhibitions/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:533
+#: tppcenter/templates/Tpp/detailContent.html:529
 #: tppcenter/templates/Wall/contentPage.html:98
 msgid "Exhibitions"
 msgstr "אירועים"
 
-#: appl/func.py:987
+#: appl/func.py:948
 msgid "Sorry but you cannot modify this item "
 msgstr "מצטערים, אינך יכול לשנות מוצר זה"
 
-#: appl/templatetags/inclusionTags.py:108 tppcenter/Profile/views.py:19
-#: tppcenter/templates/login_header.html:95
-#: tppcenter/templates/login_header.html:155
-#: tppcenter/templates/main_page.html:169
+#: appl/templatetags/inclusionTags.py:77 tppcenter/Profile/views.py:18
+#: tppcenter/templates/login_header.html:23
+#: tppcenter/templates/login_header.html:74
+#: tppcenter/templates/main_page.html:155
 #: tppcenter/templates/Profile/index.html:6
 msgid "Profile"
 msgstr "פרופיל"
@@ -114,7 +114,7 @@ msgstr "עיר"
 #: tppcenter/templates/Products/popupFilter.html:19
 #: tppcenter/templates/Profile/addForm.html:71
 #: tppcenter/templates/Tenders/popupFilter.html:19
-#: tppcenter/templates/Tpp/addForm.html:142
+#: tppcenter/templates/Tpp/addForm.html:141
 #: tppcenter/templates/TppTV/addForm.html:57
 #: tppcenter/templates/TppTV/popupFilter.html:19
 #: tppcenter/templates/main/user_profile.html:66
@@ -129,14 +129,13 @@ msgstr "מיקוד דואר"
 #: centerpokupok/forms.py:10
 #: tppcenter/templates/BusinessProposal/detailContent.html:126
 #: tppcenter/templates/Companies/addForm.html:176
-#: tppcenter/templates/Companies/detailContent.html:668
+#: tppcenter/templates/Companies/detailContent.html:666
 #: tppcenter/templates/Exhibitions/detailContent.html:166
 #: tppcenter/templates/Innov/detailContent.html:159
-#: tppcenter/templates/Resume/addForm.html:103
-#: tppcenter/templates/Resume/detailContent.html:75
-#: tppcenter/templates/Tpp/addForm.html:182
-#: tppcenter/templates/Tpp/detailContent.html:587
-#: usersites/templates/Proposals/detailContent.html:127
+#: tppcenter/templates/Resume/addForm.html:100
+#: tppcenter/templates/Resume/detailContent.html:70
+#: tppcenter/templates/Tpp/addForm.html:181
+#: tppcenter/templates/Tpp/detailContent.html:586
 msgid "Address"
 msgstr "כתובת"
 
@@ -155,14 +154,14 @@ msgid "Last name"
 msgstr "שם משפחה"
 
 #: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
-#: tppcenter/templates/Profile/addForm.html:85
-#: tppcenter/templates/Resume/addForm.html:66
-#: tppcenter/templates/Resume/detailContent.html:59
+#: tppcenter/templates/Profile/addForm.html:92
+#: tppcenter/templates/Resume/addForm.html:63
+#: tppcenter/templates/Resume/detailContent.html:54
 #: tppcenter/templates/main/user_profile.html:74
 msgid "Birthday"
 msgstr "תאריך לידה"
 
-#: centerpokupok/views.py:187 tppcenter/views.py:224
+#: centerpokupok/views.py:187 tppcenter/views.py:222
 msgid "Agreement with terms is required"
 msgstr "נדרש הסכם התניות"
 
@@ -203,8 +202,8 @@ msgstr "כיצד המערכת עובדת"
 msgid "Announcements and product reviews"
 msgstr "מידע וביקורת על המוצר"
 
-#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:16
-#: tppcenter/templates/Project/offer.html:16
+#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:15
+#: tppcenter/templates/base.html:119 tppcenter/templates/Project/offer.html:16
 msgid "Public offer"
 msgstr "הצעה פומבית"
 
@@ -218,7 +217,7 @@ msgstr "הירשם לעידכונים"
 
 #: centerpokupok/templates/base.html:50
 msgid "How to pay"
-msgstr "אמצעי תשלום"
+msgstr "כיצד משלמים"
 
 #: centerpokupok/templates/base.html:51
 msgid "Delivery option"
@@ -226,32 +225,33 @@ msgstr "אפשרויות משלוח"
 
 #: centerpokupok/templates/base.html:52
 msgid "Customers protection"
-msgstr "הגנה על צרכנים"
+msgstr "הגנת הצרכן"
 
 #: centerpokupok/templates/base.html:53
 msgid "Quick reference"
 msgstr "עיון מהיר"
 
 #: centerpokupok/templates/base.html:56
-#: tppcenter/templates/Companies/detailContent.html:591
-#: tppcenter/templates/Tpp/detailContent.html:516
+#: tppcenter/templates/Companies/detailContent.html:567
+#: tppcenter/templates/Tpp/detailContent.html:513
 msgid "Services"
 msgstr "שירותים"
 
 #: centerpokupok/templates/base.html:57
 #: centerpokupok/templates/Company/contact.html:4
 #: centerpokupok/templates/Company/contact.html:50
-#: tppcenter/Project/urls.py:20
-#: tppcenter/templates/Companies/contentPage.html:104
-#: tppcenter/templates/Products/detailContent.html:128
+#: tppcenter/Project/urls.py:19
+#: tppcenter/templates/Companies/contentPage.html:98
+#: tppcenter/templates/Products/detailContent.html:124
 #: tppcenter/templates/Project/contact.html:16
 #: tppcenter/templates/Tpp/contentPage.html:75
-#: usersites/templates/site_sidebar.html:95
-#: usersites/templates/Products/detailContent.html:162
+#: usersites/templates/site_sidebar.html:23
 msgid "Contact us"
 msgstr "צור קשר"
 
-#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:21
+#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:20
+#: tppcenter/templates/base.html:134 tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
 #: tppcenter/templates/Project/faq.html:16
 msgid "FAQ"
 msgstr "שאלות ותשובות"
@@ -265,14 +265,14 @@ msgid "Partner program"
 msgstr "תכנית שותפים"
 
 #: centerpokupok/templates/base.html:64
-#: centerpokupok/templates/Company/about.html:38
+#: centerpokupok/templates/Company/about.html:37
 #: centerpokupok/templates/Company/contact.html:37
 #: centerpokupok/templates/Company/index.html:79
 msgid "Subscribe to newsletter"
 msgstr "הרשמה לניוזלטר"
 
 #: centerpokupok/templates/base.html:66
-#: centerpokupok/templates/Company/about.html:40
+#: centerpokupok/templates/Company/about.html:39
 #: centerpokupok/templates/Company/contact.html:39
 #: centerpokupok/templates/Company/index.html:81
 msgid "Receive our weekly announcements and reviews of new products"
@@ -307,13 +307,13 @@ msgstr "דף הבית"
 #: centerpokupok/templates/header_small.html:7
 #: centerpokupok/templates/Company/header.html:8
 #: centerpokupok/templates/main/cabinet_menu.html:29
-#: usersites/templates/Contact/contentPage.html:53
+#: usersites/templates/Contact/contentPage.html:45
 msgid "Ask a question"
 msgstr "שאל שאלה"
 
 #: centerpokupok/templates/header_big.html:9
 msgid "Comsumer protection"
-msgstr "הגנה על צרכנים"
+msgstr "הגנת הצרכן"
 
 #: centerpokupok/templates/header_big.html:11
 #: centerpokupok/templates/Company/header.html:11
@@ -324,11 +324,11 @@ msgstr "צא"
 #: centerpokupok/templates/header_small.html:9
 #: centerpokupok/templates/Company/header.html:13
 #: centerpokupok/templates/registration/login.html:3
-#: tppcenter/templates/login_header.html:54
-#: tppcenter/templates/main_header.html:10
+#: tppcenter/templates/login_header.html:13
+#: tppcenter/templates/main_header.html:9
 #: tppcenter/templates/registration/login.html:46
 msgid "Sign in"
-msgstr "היכנס"
+msgstr "כנס"
 
 #: centerpokupok/templates/header_big.html:90
 msgid "Your workplace"
@@ -339,7 +339,7 @@ msgid "Workplace"
 msgstr "סביבת עבודה"
 
 #: centerpokupok/templates/header_big.html:92
-#: tppcenter/templates/login_header.html:52
+#: tppcenter/templates/login_header.html:13
 msgid "Sign out"
 msgstr "צא"
 
@@ -367,7 +367,7 @@ msgid "Search"
 msgstr "חפש"
 
 #: centerpokupok/templates/header_small.html:6
-#: tppcenter/templates/base.html:30 usersites/templates/base.html:21
+#: tppcenter/templates/base.html:28 usersites/templates/base.html:21
 msgid "Main page"
 msgstr "עמוד ראשי"
 
@@ -436,7 +436,7 @@ msgstr "צבע"
 #: tppcenter/templates/BusinessProposal/addForm.html:46
 #: tppcenter/templates/BusinessProposal/addForm.html:54
 #: tppcenter/templates/BusinessProposal/addForm.html:62
-#: tppcenter/templates/BusinessProposal/addForm.html:83
+#: tppcenter/templates/BusinessProposal/addForm.html:80
 msgid "Delete"
 msgstr "מחק"
 
@@ -446,7 +446,7 @@ msgstr "ברוך הבא"
 
 #: centerpokupok/templates/Cabinet/index.html:23
 msgid "Here, you can change your data, shipment address and monitor orders."
-msgstr "כאן ניתן לשנות את פרטייך, שיטת המשלוח ולעקוב אחר ההזמנות שלך"
+msgstr "כאן תוכל לשנות את נתוניך: כתובת למשלוח ונתוני הזמנות"
 
 #: centerpokupok/templates/Cabinet/index.html:26
 msgid "My profile"
@@ -458,17 +458,17 @@ msgstr "פרטי משתמש"
 
 #: centerpokupok/templates/Cabinet/index.html:45
 #: centerpokupok/templates/Cabinet/shippingAddress.html:39
-#: tppcenter/templates/BusinessProposal/addForm.html:159
+#: tppcenter/templates/BusinessProposal/addForm.html:145
 #: tppcenter/templates/Companies/addForm.html:259
 #: tppcenter/templates/Exhibitions/addForm.html:216
 #: tppcenter/templates/Innov/addForm.html:190
 #: tppcenter/templates/Products/addForm.html:435
-#: tppcenter/templates/Profile/addForm.html:108
-#: tppcenter/templates/Resume/addForm.html:324
+#: tppcenter/templates/Profile/addForm.html:115
+#: tppcenter/templates/Resume/addForm.html:321
 #: tppcenter/templates/Tenders/addForm.html:166
-#: tppcenter/templates/Tpp/addForm.html:240
+#: tppcenter/templates/Tpp/addForm.html:222
 #: tppcenter/templates/TppTV/addForm.html:111
-#: tppcenter/templates/Vacancy/addForm.html:277
+#: tppcenter/templates/Vacancy/addForm.html:269
 msgid "Save"
 msgstr "שמירה"
 
@@ -506,7 +506,7 @@ msgstr "קטגוריות"
 #: centerpokupok/templates/Product/new.html:96
 #: tppcenter/templates/Analytic/main.html:91
 #: tppcenter/templates/Innov/detailContent.html:94
-#: usersites/templates/site_sidebar.html:87
+#: usersites/templates/site_sidebar.html:15
 msgid "Main"
 msgstr "ראשי"
 
@@ -515,44 +515,45 @@ msgstr "ראשי"
 msgid "All categories"
 msgstr "כל הקטגוריות"
 
-#: centerpokupok/templates/Company/about.html:5
-#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:11
+#: centerpokupok/templates/Company/about.html:4
+#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:10
+#: tppcenter/templates/base.html:115 tppcenter/templates/base.html.py:116
+#: tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
 #: tppcenter/templates/BusinessProposal/detailContent.html:73
-#: tppcenter/templates/Companies/detailContent.html:572
+#: tppcenter/templates/Companies/detailContent.html:548
 #: tppcenter/templates/Project/about.html:16
-#: tppcenter/templates/Tpp/detailContent.html:500
-#: tppcenter/templates/main/staticPages.html:3
-#: usersites/templates/Proposals/detailContent.html:74
+#: tppcenter/templates/Tpp/detailContent.html:497
 msgid "About"
 msgstr "אודות"
 
-#: centerpokupok/templates/Company/about.html:26
+#: centerpokupok/templates/Company/about.html:25
 #: centerpokupok/templates/Company/contact.html:25
 msgid "special price"
 msgstr "מחיר מיוחד"
 
-#: centerpokupok/templates/Company/about.html:29
+#: centerpokupok/templates/Company/about.html:28
 #: centerpokupok/templates/Company/contact.html:28
 #: centerpokupok/templates/Company/index.html:70
 #: centerpokupok/templates/Product/detail.html:93
 msgid "Sale"
 msgstr "מכירה"
 
-#: centerpokupok/templates/Company/about.html:30
+#: centerpokupok/templates/Company/about.html:29
 #: centerpokupok/templates/Company/contact.html:29
 #: centerpokupok/templates/Company/index.html:71
 #: centerpokupok/templates/Product/detail.html:94
 msgid "winter collection"
 msgstr "קולקציית חורף"
 
-#: centerpokupok/templates/Company/about.html:42
+#: centerpokupok/templates/Company/about.html:41
 #: centerpokupok/templates/Company/contact.html:41
 #: centerpokupok/templates/Company/index.html:83
 msgid "Subscripe"
 msgstr "הירשם"
 
 #: centerpokupok/templates/Company/contact.html:60
-#: usersites/templates/Contact/contentPage.html:56
+#: usersites/templates/Contact/contentPage.html:48
 msgid "Your name"
 msgstr "שם"
 
@@ -561,9 +562,9 @@ msgid "Your email"
 msgstr "דואר אלקטרוני"
 
 #: centerpokupok/templates/Company/contact.html:74
-#: tppcenter/templates/base.html:181
+#: tppcenter/templates/base.html:183
 #: usersites/templates/CompanyStructure/contentPage.html:49
-#: usersites/templates/Contact/contentPage.html:65
+#: usersites/templates/Contact/contentPage.html:57
 msgid "Message"
 msgstr "הודעה"
 
@@ -593,7 +594,7 @@ msgstr "לקראת סיום"
 #: centerpokupok/templates/Company/coupons.html:119
 #: centerpokupok/templates/Coupons/index.html:144
 msgid "You save"
-msgstr "אתה בטוח עכשיו"
+msgstr "אתה חוסך"
 
 #: centerpokupok/templates/Company/coupons.html:127
 #: centerpokupok/templates/Company/index.html:144
@@ -601,16 +602,16 @@ msgstr "אתה בטוח עכשיו"
 #: centerpokupok/templates/Product/detail.html:211
 #: centerpokupok/templates/main/main_coupons.html:48
 #: tppcenter/templates/Products/contentPage.html:62
-#: tppcenter/templates/Wall/contentPage.html:285
+#: tppcenter/templates/Wall/contentPage.html:280
 #: usersites/templates/contentPage.html:103
 #: usersites/templates/Products/contentPage.html:21
 msgid "Buy"
-msgstr "קנה"
+msgstr "שמירה"
 
 #: centerpokupok/templates/Company/coupons.html:150
 #: centerpokupok/templates/Coupons/index.html:244
 msgid "Till the end"
-msgstr "עד הסוף"
+msgstr "עד הסוך"
 
 #: centerpokupok/templates/Company/header.html:25
 msgid "Store No"
@@ -639,17 +640,16 @@ msgid "Store main page"
 msgstr "חנות - עמוד ראשי"
 
 #: centerpokupok/templates/Company/header.html:50
+#: tppcenter/templates/base.html:132
 #: tppcenter/templates/BusinessProposal/detailContent.html:76
-#: tppcenter/templates/Companies/detailContent.html:638
+#: tppcenter/templates/Companies/detailContent.html:614
 #: tppcenter/templates/Exhibitions/detailContent.html:115
 #: tppcenter/templates/Innov/detailContent.html:97
-#: tppcenter/templates/Tpp/detailContent.html:558
-#: tppcenter/templates/Tpp/tabCompanies.html:9
-#: tppcenter/templates/main/staticPages.html:18 usersites/Contact/views.py:15
-#: usersites/Contact/views.py:16
-#: usersites/templates/Proposals/detailContent.html:77
+#: tppcenter/templates/Tpp/detailContent.html:554
+#: tppcenter/templates/Tpp/tabCompanies.html:9 usersites/Contact/views.py:11
+#: usersites/Contact/views.py:12
 msgid "Contacts"
-msgstr "קשרים"
+msgstr "אנשי קשר"
 
 #: centerpokupok/templates/Company/index.html:5
 msgid "Company main"
@@ -663,7 +663,7 @@ msgstr "אתה בטוח עכשיו"
 #: centerpokupok/templates/Product/new.html:5
 #: centerpokupok/templates/main/products.html:9
 msgid "Latest"
-msgstr "לאחרונה"
+msgstr "מוצרים אחרונים"
 
 #: centerpokupok/templates/Company/index.html:247
 #: centerpokupok/templates/main/products.html:75
@@ -673,23 +673,23 @@ msgstr "הנמכרים ביותר"
 #: centerpokupok/templates/Company/index.html:248
 #: centerpokupok/templates/main/main_coupons.html:9
 #: tppcenter/templates/BusinessProposal/contentPage.html:56
-#: tppcenter/templates/Companies/contentPage.html:80
+#: tppcenter/templates/Companies/contentPage.html:74
 #: tppcenter/templates/Exhibitions/contentPage.html:60
 #: tppcenter/templates/Innov/contentPage.html:80
-#: tppcenter/templates/News/detailContent.html:165
-#: tppcenter/templates/Resume/contentPage.html:42
+#: tppcenter/templates/News/detailContent.html:162
+#: tppcenter/templates/Resume/contentPage.html:36
 #: tppcenter/templates/Tenders/contentPage.html:51
 #: tppcenter/templates/Tpp/contentPage.html:54
 #: tppcenter/templates/UserSites/contentPage.html:40
-#: tppcenter/templates/Vacancy/contentPage.html:53
+#: tppcenter/templates/Vacancy/contentPage.html:54
 #: tppcenter/templates/Wall/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:128
-#: tppcenter/templates/Wall/contentPage.html:174
+#: tppcenter/templates/Wall/contentPage.html:125
+#: tppcenter/templates/Wall/contentPage.html:169
 msgid "More"
 msgstr "עוד"
 
 #: centerpokupok/templates/Company/index.html:302
-#: tppcenter/templates/index.html:272
+#: tppcenter/templates/index.html:234
 msgid "Best deals"
 msgstr "העסקאות הטובות ביותר"
 
@@ -715,7 +715,6 @@ msgstr "הנחות / מבצעים"
 
 #: centerpokupok/templates/Coupons/index.html:174
 #: centerpokupok/templates/Coupons/index.html:178
-#: tppcenter/templates/Adv/basket.html:21
 msgid "End Date"
 msgstr "מועד סיום"
 
@@ -730,9 +729,8 @@ msgstr "תאריך הפקה"
 #: centerpokupok/templates/Product/new.html:136
 #: tppcenter/templates/Companies/tabProducts.html:11
 #: tppcenter/templates/Companies/tabTenders.html:10
-#: tppcenter/templates/Products/detailContent.html:75
+#: tppcenter/templates/Products/detailContent.html:73
 #: tppcenter/templates/Tpp/tabTenders.html:10
-#: usersites/templates/Products/detailContent.html:86
 msgid "Price"
 msgstr "מחיר"
 
@@ -741,7 +739,7 @@ msgid "All "
 msgstr "הכל"
 
 #: centerpokupok/templates/Coupons/index.html:208
-#: tppcenter/templates/baseFilter.html:79
+#: tppcenter/templates/baseFilter.html:72
 msgid "All"
 msgstr "הכל"
 
@@ -770,8 +768,7 @@ msgid "View store"
 msgstr "עיין בחנות"
 
 #: centerpokupok/templates/News/detail.html:39
-#: tppcenter/templates/Products/detailContent.html:134
-#: usersites/templates/Products/detailContent.html:168
+#: tppcenter/templates/Products/detailContent.html:130
 msgid "About company"
 msgstr "אודות החברה"
 
@@ -780,10 +777,12 @@ msgid "Company products"
 msgstr "מוצרי החברה"
 
 #: centerpokupok/templates/News/detail.html:41
-#: tppcenter/templates/Companies/tabStaff.html:46
-#: tppcenter/templates/Tpp/tabStaff.html:45
+#: tppcenter/templates/base.html:133 tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/Companies/tabStaff.html:41
+#: tppcenter/templates/Tpp/tabStaff.html:42
 msgid "Contact"
-msgstr "יצירת קשר"
+msgstr "צור קשר"
 
 #: centerpokupok/templates/News/index.html:21
 #: centerpokupok/templates/News/index.html:73
@@ -816,7 +815,7 @@ msgstr "מיין לפי"
 #: centerpokupok/templates/Product/index.html:116
 #: centerpokupok/templates/Product/new.html:148
 msgid "Raiting"
-msgstr "דרוג"
+msgstr "דירוג"
 
 #: centerpokupok/templates/News/index.html:143
 #: tppcenter/templates/BusinessProposal/contentPage.html:52
@@ -826,9 +825,9 @@ msgstr "דרוג"
 #: tppcenter/templates/Tpp/tabInnov.html:10
 #: tppcenter/templates/Tpp/tabProposal.html:9
 #: tppcenter/templates/TppTV/addForm.html:71
-#: tppcenter/templates/Vacancy/contentPage.html:50
+#: tppcenter/templates/Vacancy/contentPage.html:51
 #: tppcenter/templates/Vacancy/detailContent.html:35
-#: tppcenter/templates/Wall/contentPage.html:170
+#: tppcenter/templates/Wall/contentPage.html:165
 #: usersites/templates/contentPage.html:20
 #: usersites/templates/contentPage.html:59
 #: usersites/templates/News/contentPage.html:19
@@ -850,7 +849,7 @@ msgstr "כל המדינות"
 
 #: centerpokupok/templates/Product/detail.html:6
 msgid "Product detail"
-msgstr "פרטים על המוצר"
+msgstr "פרטי המוצר"
 
 #: centerpokupok/templates/Product/detail.html:119
 msgid "Back to catalog"
@@ -865,16 +864,15 @@ msgid "Favorite"
 msgstr "מועדף"
 
 #: centerpokupok/templates/Product/detail.html:228
-#: tppcenter/templates/BusinessProposal/addForm.html:110
+#: tppcenter/templates/BusinessProposal/addForm.html:107
 #: tppcenter/templates/Companies/tabProducts.html:10
 #: tppcenter/templates/Exhibitions/addForm.html:179
 #: tppcenter/templates/Innov/addForm.html:126
 #: tppcenter/templates/Innov/addForm.html:153
 #: tppcenter/templates/Tenders/addForm.html:139
-#: tppcenter/templates/Tenders/detailContent.html:91
-#: tppcenter/templates/Vacancy/addForm.html:255
-#: tppcenter/templates/Vacancy/detailContent.html:61
-#: tppcenter/templates/Vacancy/detailContent.html:75
+#: tppcenter/templates/Tenders/detailContent.html:88
+#: tppcenter/templates/Vacancy/addForm.html:247
+#: tppcenter/templates/Vacancy/detailContent.html:72
 msgid "Description"
 msgstr "תיאור"
 
@@ -920,7 +918,7 @@ msgstr "הצג רק את"
 #: centerpokupok/templates/Product/index.html:92
 #: centerpokupok/templates/Product/new.html:124
 msgid "High raiting"
-msgstr "רייטינג (מדרוג) גבוה"
+msgstr "רייטינג גבוה"
 
 #: centerpokupok/templates/Product/index.html:97
 #: centerpokupok/templates/Product/new.html:129
@@ -967,18 +965,17 @@ msgstr "כתובת"
 #: centerpokupok/templates/Product/orderStepOne.html:109
 #: tppcenter/templates/BusinessProposal/detailContent.html:130
 #: tppcenter/templates/Companies/addForm.html:104
-#: tppcenter/templates/Companies/detailContent.html:672
+#: tppcenter/templates/Companies/detailContent.html:670
 #: tppcenter/templates/Exhibitions/detailContent.html:170
 #: tppcenter/templates/Exhibitions/detailContent.html:215
 #: tppcenter/templates/Innov/detailContent.html:163
-#: tppcenter/templates/Resume/addForm.html:95
-#: tppcenter/templates/Resume/detailContent.html:71
-#: tppcenter/templates/Tpp/addForm.html:99
-#: tppcenter/templates/Tpp/detailContent.html:591
+#: tppcenter/templates/Resume/addForm.html:92
+#: tppcenter/templates/Resume/detailContent.html:66
+#: tppcenter/templates/Tpp/addForm.html:98
+#: tppcenter/templates/Tpp/detailContent.html:590
 #: tppcenter/templates/main/user_profile.html:78
 #: usersites/templates/CompanyStructure/contentPage.html:22
-#: usersites/templates/Contact/contentPage.html:39
-#: usersites/templates/Proposals/detailContent.html:131
+#: usersites/templates/Contact/contentPage.html:34
 msgid "Telephone number"
 msgstr "מספר טלפון"
 
@@ -992,10 +989,9 @@ msgstr "הגב להזמנה שלך"
 
 #: centerpokupok/templates/Product/orderStepOne.html:143
 msgid "Payment method"
-msgstr "אמצעי תשלום"
+msgstr "צורת תשלום"
 
 #: centerpokupok/templates/Product/orderStepOne.html:151
-#: tppcenter/templates/AdvBanner/order.html:316
 msgid "Continue"
 msgstr "המשך"
 
@@ -1015,7 +1011,7 @@ msgstr "כאן"
 
 #: centerpokupok/templates/Product/orderStepThree.html:32
 msgid "you can view your order history"
-msgstr "צפה בהסטוריית ההזמנות שלך"
+msgstr "תוכל לצפות בהזמנות שלך"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:7
 msgid "Order step two"
@@ -1031,7 +1027,7 @@ msgstr "צעד ראשון"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:36
 msgid "Order summary"
-msgstr "סיכום הזמנתך"
+msgstr "סיכום הזמנה"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:42
 msgid "Your order"
@@ -1062,7 +1058,7 @@ msgstr "אשר הזמנה"
 #: centerpokupok/templates/registration/password_reset_form.html:41
 #: centerpokupok/templates/registration/registration_closed.html:48
 #: centerpokupok/templates/registration/registration_complete.html:49
-#: tppcenter/templates/index.html:211
+#: tppcenter/templates/index.html:173
 #: tppcenter/templates/Exhibitions/detailContent.html:98
 #: tppcenter/templates/registration/registration.html:8
 #: tppcenter/templates/registration/registration.html:30
@@ -1138,7 +1134,7 @@ msgstr "שאל אותנו שאלה"
 
 #: centerpokupok/templates/Registr/registr.html:66
 msgid "No, I am seller"
-msgstr "לא, אני מוכרן"
+msgstr "לא, אני סוחר"
 
 #: centerpokupok/templates/main/Category.html:5
 #: tppcenter/templates/News/addForm.html:90
@@ -1167,6 +1163,7 @@ msgid "Order History"
 msgstr "הסטוריית הזמנות"
 
 #: centerpokupok/templates/main/cabinet_menu.html:20
+#, fuzzy
 msgid "Eva"
 msgstr "חווה"
 
@@ -1201,7 +1198,7 @@ msgstr "עוד"
 
 #: centerpokupok/templates/main/products_discount.html:5
 msgid "Best proposals"
-msgstr "ההצעה הטובה ביותר"
+msgstr "ההצעות הטובות ביותר"
 
 #: centerpokupok/templates/registration/activate.html:3
 #: tppcenter/templates/registration/activate.html:3
@@ -1232,7 +1229,7 @@ msgstr "פרופיל"
 #: centerpokupok/templates/registration/activate.html:8
 #: tppcenter/templates/registration/activate.html:8
 msgid "Sorry but you activation key is invalid"
-msgstr "מצטערים, קוד ההפעלה אינו תקין"
+msgstr "מצטערים, מפתח ההפעלה אינו תקין"
 
 #: centerpokupok/templates/registration/activation_complete.html:6
 #: tppcenter/templates/registration/registration_complete.html:7
@@ -1253,7 +1250,7 @@ msgstr "להיכנס"
 #: centerpokupok/templates/registration/activation_complete.html:51
 #: tppcenter/templates/registration/activation_complete.html:31
 msgid "using the email and password you provided during registration."
-msgstr "השתמש בכתובת המייל והסיסמה שסיפקת בעת הרישום"
+msgstr "השתמש בכתובת המייל והסיסמא שסיפקת בעת הרישום"
 
 #: centerpokupok/templates/registration/activation_email.html:2
 #: tppcenter/templates/registration/activation_email.html:2
@@ -1263,7 +1260,7 @@ msgstr "הצטרפת לאתר"
 #: centerpokupok/templates/registration/activation_email.html:3
 #: tppcenter/templates/registration/activation_email.html:3
 msgid "If you have received this message in error, ignore it."
-msgstr "אם קיבלת הודעה זו בטעות, התעלם ממנה"
+msgstr "אם קיבלת הודעה זו בטעות, אנא התעלם ממנה."
 
 #: centerpokupok/templates/registration/activation_email.html:6
 #: tppcenter/templates/registration/activation_email.html:6
@@ -1279,7 +1276,7 @@ msgstr "ימים"
 #: centerpokupok/templates/registration/activation_email.html:10
 #: tppcenter/templates/registration/activation_email.html:10
 msgid "Sincerely, Administration of, "
-msgstr "ברגשי כבוד, מנהל תחום"
+msgstr "בברכה, הנהלת ה"
 
 #: centerpokupok/templates/registration/activation_email_subject.html:2
 #: tppcenter/templates/registration/activation_email_subject.html:2
@@ -1288,24 +1285,22 @@ msgstr "הרשם"
 
 #: centerpokupok/templates/registration/login.html:17
 #: tppcenter/templates/BusinessProposal/detailContent.html:138
-#: tppcenter/templates/Companies/detailContent.html:680
+#: tppcenter/templates/Companies/detailContent.html:678
 #: tppcenter/templates/Exhibitions/detailContent.html:178
 #: tppcenter/templates/Innov/detailContent.html:171
 #: tppcenter/templates/Profile/addForm.html:49
-#: tppcenter/templates/Tpp/detailContent.html:599
+#: tppcenter/templates/Tpp/detailContent.html:598
 #: tppcenter/templates/main/user_profile.html:48
-#: usersites/templates/Proposals/detailContent.html:139
 msgid "Email"
-msgstr "דוא\"ל"
+msgstr "דוא''ל"
 
 #: centerpokupok/templates/registration/login.html:23
 #: centerpokupok/templates/registration/registration_form.html:31
 #: centerpokupok/templates/registration/registration_form.html:42
-#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:258
+#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:220
 #: tppcenter/templates/registration/registration.html:46
-#: usersites/templates/slider.html:34
 msgid "Password"
-msgstr "סיסמה"
+msgstr "סיסמא"
 
 #: centerpokupok/templates/registration/login.html:31
 msgid "Forgot"
@@ -1313,14 +1308,14 @@ msgstr "שכחת"
 
 #: centerpokupok/templates/registration/login.html:31
 msgid "your password"
-msgstr "את הסיסמה שלך"
+msgstr "את הסיסמא שלך"
 
 #: centerpokupok/templates/registration/password_change_done.html:3
 #: centerpokupok/templates/registration/password_change_form.html:3
 #: tppcenter/templates/registration/password_change_done.html:3
 #: tppcenter/templates/registration/password_change_form.html:3
 msgid "Changing the password"
-msgstr "שינוי סיסמה"
+msgstr "משנה סיסמא"
 
 #: centerpokupok/templates/registration/password_change_done.html:5
 #: tppcenter/templates/registration/password_change_done.html:5
@@ -1332,7 +1327,7 @@ msgstr "הסיסמה שונתה בהצלחה"
 #: tppcenter/templates/registration/password_change_form.html:8
 #: tppcenter/templates/registration/password_reset_confirm.html:35
 msgid "Change password"
-msgstr "שנה סיסמה"
+msgstr "שנה סיסמא"
 
 #: centerpokupok/templates/registration/password_reset_complete.html:6
 msgid "Reset complete"
@@ -1341,7 +1336,7 @@ msgstr "האיפוס הושלם"
 #: centerpokupok/templates/registration/password_reset_complete.html:47
 #: tppcenter/templates/registration/password_reset_complete.html:32
 msgid "Your password has been changed!"
-msgstr "הסיסמה שלך שונתה"
+msgstr "הסיסמא שלך שונתה!"
 
 #: centerpokupok/templates/registration/password_reset_complete.html:48
 #: tppcenter/templates/registration/password_reset_complete.html:33
@@ -1355,16 +1350,16 @@ msgstr "אשר איפוס"
 #: centerpokupok/templates/registration/password_reset_confirm.html:48
 #: tppcenter/templates/registration/password_reset_confirm.html:31
 msgid "Enter your new password below to change the old password:"
-msgstr "רשום את הסיסמה החדשה למטה כדי להחליף את הסיסמה הישנה"
+msgstr "רשום את הסיסמא החדשה על מנת לשנות את הסיסמא הישנה:"
 
 #: centerpokupok/templates/registration/password_reset_done.html:8
 msgid "Password reset done"
-msgstr "איפוס סיסמה הושלם"
+msgstr "איפוס הסיסמא הושלם"
 
 #: centerpokupok/templates/registration/password_reset_done.html:48
 #: tppcenter/templates/registration/password_reset_done.html:31
 msgid "We sent you an e-mail message with a link to change your password."
-msgstr "שלחנו הודעה לתיבת הדואר האלקטרוני שלך עם קישור לשינוי הסיסמה שלך"
+msgstr "שלחנו הודעה לתיבת הדואר האלקטרוני שלך עם קישור לשינוי הסיסמא"
 
 #: centerpokupok/templates/registration/password_reset_done.html:49
 #: tppcenter/templates/registration/password_reset_done.html:32
@@ -1372,7 +1367,7 @@ msgid ""
 "Please, check you email. To change the password, click on the link in the "
 "message."
 msgstr ""
-"נא בדוק את תיבת הדואר האלקטרוני שלך. כדי לשנות את הסיסמה, הקלק על הקישור "
+"נא בדוק את תיבת הדואר האלקטרוני שלך. כדי לשנות את הסיסמא, הקלק על הקישור "
 "בהודעה"
 
 #: centerpokupok/templates/registration/password_reset_email.html:2
@@ -1384,7 +1379,7 @@ msgstr "שלום"
 #: tppcenter/templates/registration/password_reset_email.html:4
 msgid ""
 "You received this message because you have a request to change the password"
-msgstr "קבלת הודעה זו כי ביקשת לשנות סיסמה"
+msgstr "קיבלת הודעה זו מכוון שביקשת לשנות את סיסמתך"
 
 #: centerpokupok/templates/registration/password_reset_email.html:5
 #: tppcenter/templates/registration/password_reset_email.html:5
@@ -1398,16 +1393,16 @@ msgstr "אם לא פנית בבקשה זו לשינוי, אנא התעלם מה�
 msgid ""
 "To change the password, click the following to link or copy it into your "
 "browser:"
-msgstr "כדי לשנות את הסיסמה, הקלק הקלק על הקישור או העתק אותו"
+msgstr "כדי לשנות את הסיסמא, הקלק על הקישור או העתק אותו"
 
 #: centerpokupok/templates/registration/password_reset_email.html:11
 #: tppcenter/templates/registration/password_reset_email.html:11
 msgid "Sincerely, Administration of,"
-msgstr "ברגשי כבוד, מנהל תחום"
+msgstr "בברכה, ההנהלה"
 
 #: centerpokupok/templates/registration/password_reset_form.html:5
 msgid "Reset password"
-msgstr "אפס סיסמה"
+msgstr "אפס סיסמא"
 
 #: centerpokupok/templates/registration/password_reset_form.html:45
 #: tppcenter/templates/registration/password_reset_form.html:31
@@ -1415,12 +1410,12 @@ msgid ""
 "Forgot your password? Enter your e-mail and we will send you the required "
 "information to create a new password."
 msgstr ""
-"שכחת סיסמה? הכנס את כתובת הדואר האלקטרוני שלך ואנו נסייע לך ליצור סיסמה חדשה "
+"שכחת סיסמא? הכנס את כתובת הדואר האלקטרוני שלך ואנו נסייע לך ליצור סיסמא חדשה "
 
 #: centerpokupok/templates/registration/password_reset_form.html:49
 #: tppcenter/templates/registration/password_reset_form.html:35
 msgid "Sent password"
-msgstr "שלח סיסמה"
+msgstr "הסיסמא נשלחה"
 
 #: centerpokupok/templates/registration/registration_closed.html:6
 #: tppcenter/templates/registration/registration_closed.html:6
@@ -1443,8 +1438,8 @@ msgid ""
 "We sent you message. Please check you email and click on the  link to "
 "activate your account. "
 msgstr ""
-"אנחנו שולחים אליך הודעה, בדוק בבקשה את תיבת הדואר האלקטרוני שלך, לחץ על "
-"הקישור והפעל את חשבונך"
+"להפעלת חשבונך, אנא בדוק את תיבת הדואר האלקטרוני שלך והקלק על הקישור בגוף "
+"ההודעה"
 
 #: centerpokupok/templates/registration/registration_form.html:5
 msgid "Registration of customer"
@@ -1470,15 +1465,14 @@ msgid "terms"
 msgstr "תנאים"
 
 #: centerpokupok/templates/registration/registration_form.html:56
-#: tppcenter/templates/index.html:202 tppcenter/templates/index.html.py:224
-#: tppcenter/templates/index.html:250 tppcenter/templates/index.html.py:265
-#: tppcenter/templates/main_header.html:10
+#: tppcenter/templates/index.html:164 tppcenter/templates/index.html.py:186
+#: tppcenter/templates/index.html:212 tppcenter/templates/index.html.py:227
+#: tppcenter/templates/main_header.html:9
 #: tppcenter/templates/registration/registration.html:61
-#: usersites/templates/slider.html:41
 msgid "Sign up"
 msgstr "הירשם"
 
-#: core/models.py:85
+#: core/models.py:84
 msgid "date joined"
 msgstr "מועד הצטרפות"
 
@@ -1510,25 +1504,25 @@ msgstr "חפש כאן"
 #: modules-mod/django-haystack-es_types/haystack/panels.py:26
 #: modules-mod/django-haystack-master/build/lib/haystack/panels.py:26
 msgid "Haystack"
-msgstr "ערימת שחת"
+msgstr ""
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:50
 #: modules-mod/django-haystack-es_types/haystack/panels.py:50
 #: modules-mod/django-haystack-master/build/lib/haystack/panels.py:50
 msgid "Search Queries"
-msgstr "שאלת חיפוש"
+msgstr ""
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:5
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:5
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:5
 msgid "Query"
-msgstr "שאלה"
+msgstr ""
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:6
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:6
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:6
 msgid "Backend Alias"
-msgstr "כינוי"
+msgstr ""
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:7
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:7
@@ -1540,13 +1534,13 @@ msgstr "ציר זמן"
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:8
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:8
 msgid "Time"
-msgstr "שמן"
+msgstr "זמן"
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:9
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:9
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:9
 msgid "Kwargs"
-msgstr "Kwargs"
+msgstr ""
 
 #: modules-mod/djcelery/admin.py:51 modules-mod/djcelery/admin.py:58
 #: modules-mod/djcelery/models.py:27 modules-mod/djcelery/models.py:317
@@ -1568,7 +1562,7 @@ msgstr "שם"
 
 #: modules-mod/djcelery/admin.py:113
 msgid "Task detail"
-msgstr "שורת משימות"
+msgstr "פרטי משימה"
 
 #: modules-mod/djcelery/admin.py:114
 msgid "Tasks"
@@ -1693,10 +1687,8 @@ msgid "weeks"
 msgstr "שבועות"
 
 #: modules-mod/djcelery/humanize.py:16
-#: tppcenter/templates/AdvBanner/addForm.html:194
-#: tppcenter/templates/AdvBanner/order.html:193
-#: tppcenter/templates/AdvTop/addForm.html:194
-#: tppcenter/templates/AdvTop/order.html:193
+#: tppcenter/templates/AdvBanner/addForm.html:193
+#: tppcenter/templates/AdvTop/addForm.html:191
 #: tppcenter/templates/Products/addForm.html:36
 msgid "day"
 msgstr "יום"
@@ -1948,7 +1940,7 @@ msgstr "שלח מחדש מייל להפעלה"
 
 #: modules-mod/registration/forms.py:42
 msgid "Password (again)"
-msgstr "סיסמה (שוב)"
+msgstr "סיסמא (שוב)"
 
 #: modules-mod/registration/forms.py:66
 msgid "The two password fields didn't match."
@@ -1960,7 +1952,7 @@ msgstr "קראתי ואני מסכים לתנאי שימוש"
 
 #: modules-mod/registration/forms.py:78
 msgid "You must agree to the terms to register"
-msgstr "אתר חייב להסכים לתנאים כדי להירשם"
+msgstr "אתה חייב להסכים לתנאי השימוש כדי להירשם"
 
 #: modules-mod/registration/forms.py:94
 msgid ""
@@ -1981,7 +1973,7 @@ msgstr "משתמש"
 
 #: modules-mod/registration/models.py:181
 msgid "activation key"
-msgstr "מפתח הפעלה"
+msgstr "קוד הפעלה"
 
 #: modules-mod/registration/models.py:186
 msgid "registration profile"
@@ -1991,29 +1983,17 @@ msgstr "פרופיל הרשמה"
 msgid "registration profiles"
 msgstr "פרופילי הרשמה"
 
-#: tpp/settings.py:229
+#: tpp/settings.py:207
 msgid "Russia"
 msgstr "רוסיה"
 
-#: tpp/settings.py:230
-msgid "Armenia"
-msgstr ""
-
-#: tpp/settings.py:233
+#: tpp/settings.py:211
 msgid "England"
 msgstr "אנגליה"
 
-#: tpp/settings.py:245
+#: tpp/settings.py:223
 msgid "Israel"
 msgstr "ישראל"
-
-#: tpp/settings.py:246
-msgid "Arabic"
-msgstr ""
-
-#: tpp/settings.py:247
-msgid "Chinese"
-msgstr ""
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
@@ -2032,7 +2012,7 @@ msgstr "עובדים %(company)s"
 #: tppcenter/views.py:156
 #, python-format
 msgid "on the position of %(position)s . "
-msgstr "תפקיד  %(position)s "
+msgstr "בעמדה של %(position)s "
 
 #: tppcenter/views.py:157
 #, python-format
@@ -2043,147 +2023,104 @@ msgstr "אתה יכול ליצור עימו קשר בכתובת הדואר הא�
 msgid "Registartion to event"
 msgstr "הרשמה לאירוע"
 
-#: tppcenter/AdminTpp/views.py:550 tppcenter/AdminTpp/views.py:552
-msgid "Banner type already exists"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:555
-msgid "Invalid site"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:558
-msgid "Invalid height"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:561
-msgid "Invalid width"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:564
-msgid "Invalid targeting"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:567
-msgid "Invalid code"
-msgstr ""
-
-#: tppcenter/AdminTpp/views.py:721
-msgid "Invalid type"
-msgstr ""
-
-#: tppcenter/Adv/views.py:61
-#, fuzzy
-msgid "Top"
-msgstr "אקספרט סנטר"
-
-#: tppcenter/Adv/views.py:63
-#, fuzzy
-msgid "Banner"
-msgstr "באנרים"
-
-#: tppcenter/AdvBanner/views.py:52 tppcenter/AdvBanner/views.py:290
-#: tppcenter/AdvBanner/views.py:355 tppcenter/AdvTop/views.py:216
-#: tppcenter/templates/main_page.html:163
+#: tppcenter/AdvBanner/views.py:34 tppcenter/AdvBanner/views.py:244
+#: tppcenter/AdvTop/views.py:203 tppcenter/templates/main_page.html:148
 #: tppcenter/templates/AdvBanner/index.html:7
 msgid "Banners"
 msgstr "באנרים"
 
-#: tppcenter/AdvBanner/views.py:231 tppcenter/AdvTop/views.py:176
+#: tppcenter/AdvBanner/views.py:188 tppcenter/AdvTop/views.py:165
 msgid "You must choose one filter al least"
 msgstr "עליך לבחור מסנן אחד לפחות"
 
-#: tppcenter/AdvBanner/views.py:237
+#: tppcenter/AdvBanner/views.py:194
 msgid "The image size cannot exceed 50 KB"
 msgstr "גודל התמונה אינו יכול לעלות על 50 ק.ב."
 
-#: tppcenter/AdvBanner/views.py:243
+#: tppcenter/AdvBanner/views.py:200
 msgid "Image dimension should not exceed"
 msgstr "נושא התמונה לא התקבל"
 
-#: tppcenter/AdvBanner/views.py:250 tppcenter/AdvBanner/views.py:262
-#: tppcenter/AdvTop/views.py:184 tppcenter/AdvTop/views.py:195
+#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvBanner/views.py:219
+#: tppcenter/AdvTop/views.py:173 tppcenter/AdvTop/views.py:184
 msgid "You should choose a valid date range"
 msgstr "בחר תאריכים בטווח האפשרי"
 
-#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:190
+#: tppcenter/AdvBanner/views.py:214 tppcenter/AdvTop/views.py:179
 msgid "You should choose a date range"
 msgstr "בחר תאריכים בטווח"
 
-#: tppcenter/AdvBanner/views.py:272 tppcenter/AdvTop/views.py:203
+#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvTop/views.py:190
 msgid "Error occurred while trying to proceed your request"
-msgstr "שגיאה בניסיון להיכנס עם סיסמה או בקשה "
+msgstr "שגיאה בניסיון להיכנס עם סיסמא או בקשה "
 
-#: tppcenter/AdvBanner/views.py:282 tppcenter/AdvTop/views.py:211
+#: tppcenter/AdvBanner/views.py:236 tppcenter/AdvTop/views.py:198
 #: tppcenter/templates/baseFilter.html:10
 msgid "Select branch"
 msgstr "בחר תחום"
 
-#: tppcenter/AdvBanner/views.py:285 tppcenter/AdvTop/views.py:212
-#: tppcenter/templates/baseFilter.html:12
+#: tppcenter/AdvBanner/views.py:239 tppcenter/AdvTop/views.py:199
+#: tppcenter/templates/baseFilter.html:11
 msgid "Select country"
 msgstr "בחר מדינה"
 
-#: tppcenter/AdvBanner/views.py:288 tppcenter/AdvTop/views.py:213
+#: tppcenter/AdvBanner/views.py:242 tppcenter/AdvTop/views.py:200
 msgid "Select organization"
 msgstr "בחר ארגון"
 
-#: tppcenter/AdvTop/views.py:282
-msgid "Tops"
-msgstr ""
-
-#: tppcenter/BusinessProposal/views.py:57
-#: tppcenter/BusinessProposal/views.py:133
+#: tppcenter/BusinessProposal/views.py:56
+#: tppcenter/BusinessProposal/views.py:131
 msgid "Business Proposal"
 msgstr "הצעה עסקית"
 
-#: tppcenter/Companies/views.py:341 tppcenter/Tpp/views.py:586
+#: tppcenter/Companies/views.py:465 tppcenter/Tpp/views.py:585
 #, python-format
 msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
 msgstr "אינך יכול למחוק את הסטורית המחלקה. הסיבה היא %(reason)s"
 
-#: tppcenter/Companies/views.py:349 tppcenter/Tpp/views.py:594
+#: tppcenter/Companies/views.py:473 tppcenter/Tpp/views.py:593
 #, python-format
 msgid "Can not delete Department. The reason is: %(reason)s"
 msgstr "אינך יכול למחוק מחלקה. הסיבה היא: %(reason)s"
 
-#: tppcenter/Companies/views.py:388 tppcenter/Tpp/views.py:633
+#: tppcenter/Companies/views.py:512 tppcenter/Tpp/views.py:632
 #, python-format
 msgid "Could not find in DB Vacancy %(name)s"
 msgstr " %(name)s  DB לא הצלחת למצוא ב"
 
-#: tppcenter/Companies/views.py:401 tppcenter/Tpp/views.py:646
-#: tppcenter/Vacancy/views.py:554
+#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:645
+#: tppcenter/Vacancy/views.py:531
 #, python-format
 msgid "Can not set attributes for Vacancy %(name)s"
 msgstr "אין אפשרות להגדיר תכונות ל %(name)s  פנויים"
 
-#: tppcenter/Companies/views.py:408 tppcenter/Tpp/views.py:652
-#: tppcenter/Vacancy/views.py:563
+#: tppcenter/Companies/views.py:532 tppcenter/Tpp/views.py:651
+#: tppcenter/Vacancy/views.py:540
 #, python-format
 msgid ""
 "Can not create Relationship between Vacancy %(vac_name)s and Department ID "
 "%(dep_name)s. The reason is: %(reason)s"
 msgstr ""
 
-#: tppcenter/Companies/views.py:414 tppcenter/Tpp/views.py:658
-#: tppcenter/Vacancy/views.py:569
+#: tppcenter/Companies/views.py:538 tppcenter/Tpp/views.py:657
+#: tppcenter/Vacancy/views.py:546
 #, python-format
 msgid ""
 "Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
 "%(reason)s"
 msgstr ""
 
-#: tppcenter/Companies/views.py:426 tppcenter/Tpp/views.py:670
+#: tppcenter/Companies/views.py:550 tppcenter/Tpp/views.py:669
 #, python-format
 msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
 msgstr ""
 
-#: tppcenter/Companies/views.py:493 tppcenter/Tpp/views.py:737
+#: tppcenter/Companies/views.py:617 tppcenter/Tpp/views.py:736
 #, python-format
 msgid "User %(user)s has not Cabinet."
 msgstr ""
 
-#: tppcenter/Companies/views.py:531 tppcenter/Tpp/views.py:775
+#: tppcenter/Companies/views.py:655 tppcenter/Tpp/views.py:774
 #, python-format
 msgid ""
 "Can not set attributes for Cabinet ID: "
@@ -2191,59 +2128,58 @@ msgid ""
 "%(reason)s"
 msgstr ""
 
-#: tppcenter/Companies/views.py:541 tppcenter/Tpp/views.py:786
+#: tppcenter/Companies/views.py:665 tppcenter/Tpp/views.py:785
 msgid "You can not add user at Vacancy which already busy."
-msgstr "לא ניתן להוסיף לשתמש חדש לחדר שמתבצעות בו קניות"
+msgstr "לא ניתן להוסיף משתמש, מאחר והמשרה תפוסה"
 
-#: tppcenter/Companies/views.py:543 tppcenter/Tpp/views.py:788
+#: tppcenter/Companies/views.py:667 tppcenter/Tpp/views.py:787
 #, python-format
 msgid "You can not add user [%(user)s] at the company twice."
 msgstr ""
 
-#: tppcenter/Companies/views.py:958 tppcenter/Companies/views.py:974
-#: tppcenter/templates/base.html:172 tppcenter/templates/Vacancy/index.html:43
-msgid "You have successfully sent the message."
-msgstr "ההודעה נשלחה בהצלחה"
-
-#: tppcenter/Companies/views.py:965
+#: tppcenter/Companies/views.py:991
 msgid "This message was sent to company with id:"
 msgstr "הודעה זו נשלחה לחברה עם קוד זהות"
 
-#: tppcenter/Companies/views.py:968
+#: tppcenter/Companies/views.py:994
 msgid "New message"
 msgstr "הודעה חדשה"
 
-#: tppcenter/Companies/views.py:977
+#: tppcenter/Companies/views.py:1000 tppcenter/templates/base.html:174
+#: tppcenter/templates/Vacancy/index.html:43
+msgid "You have successfully sent the message."
+msgstr "ההודעה נשלחה בהצלחה"
+
+#: tppcenter/Companies/views.py:1003
 msgid "Message or file are required"
 msgstr "הודעה או הוספת קובץ נדרשים"
 
-#: tppcenter/Companies/views.py:979
-#, fuzzy
-msgid "Only registered users can send the messages"
+#: tppcenter/Companies/views.py:1005
+msgid "Only registred users can send the messages"
 msgstr "ההודעה יכולה להישלח רק על ידי משתמש רשום"
 
-#: tppcenter/Greetings/views.py:35 tppcenter/templates/index.html:443
+#: tppcenter/Greetings/views.py:35 tppcenter/templates/base.html:120
+#: tppcenter/templates/index.html:405
 #: tppcenter/templates/Greetings/index.html:10
-#: tppcenter/templates/main/staticPages.html:8
 msgid "Greetings"
 msgstr "ברכות"
 
-#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:316
+#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:314
 #: tppcenter/templates/Wall/contentPage.html:11
 msgid "Innovation Project"
 msgstr "פרוייקטים חדשניים"
 
-#: tppcenter/Messages/views.py:82
+#: tppcenter/Messages/views.py:77
 msgid "Private messages"
 msgstr "הודעה אישית"
 
-#: tppcenter/News/views.py:63 tppcenter/News/views.py:100
-#: tppcenter/templates/index.html:191 tppcenter/templates/main_page.html:125
-#: tppcenter/templates/main_page.html:150
-#: tppcenter/templates/Companies/detailContent.html:585
+#: tppcenter/News/views.py:62 tppcenter/News/views.py:99
+#: tppcenter/templates/index.html:153 tppcenter/templates/main_page.html:116
+#: tppcenter/templates/main_page.html:139
+#: tppcenter/templates/Companies/detailContent.html:561
 #: tppcenter/templates/News/index.html:11
-#: tppcenter/templates/Tpp/detailContent.html:510
-#: tppcenter/templates/Wall/contentPage.html:194 usersites/News/views.py:41
+#: tppcenter/templates/Tpp/detailContent.html:507
+#: tppcenter/templates/Wall/contentPage.html:189 usersites/News/views.py:41
 #: usersites/News/views.py:42 usersites/templates/contentPage.html:43
 msgid "News"
 msgstr "חדשות"
@@ -2269,10 +2205,10 @@ msgstr "Icq"
 
 #: tppcenter/Profile/profileForms.py:44
 msgid "Skype"
-msgstr "סקייפ"
+msgstr "Sלטפק"
 
 #: tppcenter/Profile/profileForms.py:56
-#: tppcenter/templates/Profile/addForm.html:95
+#: tppcenter/templates/Profile/addForm.html:102
 #: tppcenter/templates/main/user_profile.html:82
 #: usersites/templates/CompanyStructure/contentPage.html:23
 msgid "Mobile number"
@@ -2282,154 +2218,146 @@ msgstr "מספר טלפון נייד"
 msgid "Proffesion"
 msgstr "מקצוע"
 
-#: tppcenter/Profile/views.py:105
+#: tppcenter/Profile/views.py:97
 msgid "This email already in use"
-msgstr "כתובת דואר אלקטרוני זו נמצאת כבר בשימוש"
+msgstr "כתובת דואר אלקטרוני זו כבר נמצאת בשימוש"
 
-#: tppcenter/Project/urls.py:12 tppcenter/templates/Project/adv.html:16
+#: tppcenter/Project/urls.py:11 tppcenter/templates/base.html:117
+#: tppcenter/templates/Project/adv.html:16
 msgid "Advertise with us"
 msgstr "פרסם אצלנו"
 
-#: tppcenter/Project/urls.py:13 tppcenter/templates/index.html:75
+#: tppcenter/Project/urls.py:12 tppcenter/templates/base.html:121
+#: tppcenter/templates/index.html:75
 msgid "Payment System"
 msgstr "מערכת תשלום"
 
-#: tppcenter/Project/urls.py:14 tppcenter/templates/Project/terms.html:16
+#: tppcenter/Project/urls.py:13 tppcenter/templates/base.html:118
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/Project/terms.html:16
 msgid "Terms of use"
 msgstr "תנאי שימוש"
 
-#: tppcenter/Project/urls.py:15
+#: tppcenter/Project/urls.py:14 tppcenter/templates/base.html:128
 msgid "Find a Business Partner"
 msgstr "מצא שותף עסקי"
 
-#: tppcenter/Project/urls.py:17 tppcenter/templates/Project/shop.html:16
+#: tppcenter/Project/urls.py:16 tppcenter/templates/base.html:125
+#: tppcenter/templates/Project/shop.html:16
 msgid "Create online shop"
 msgstr "צור חנות באתר"
 
-#: tppcenter/Project/urls.py:18 tppcenter/templates/Project/event.html:16
+#: tppcenter/Project/urls.py:17 tppcenter/templates/base.html:126
+#: tppcenter/templates/Project/event.html:16
 #: tppcenter/templates/Project/proposal.html:16
 msgid "Post announcement event"
 msgstr "פרסם הודעה על אירוע"
 
-#: tppcenter/Project/urls.py:19 tppcenter/templates/Project/partner.html:16
+#: tppcenter/Project/urls.py:18 tppcenter/templates/base.html:127
+#: tppcenter/templates/Project/partner.html:16
 msgid "Add a business proposal"
 msgstr "הוסף הצעה עסקית"
 
-#: tppcenter/Project/urls.py:22 tppcenter/templates/Project/site.html:16
+#: tppcenter/Project/urls.py:21 tppcenter/templates/base.html:129
+#: tppcenter/templates/Project/site.html:16
 msgid "Your own site"
 msgstr "האתר שלך"
 
-#: tppcenter/Resume/views.py:211
-#, fuzzy
-msgid "Name not found"
-msgstr "לא נמצאו משרדים"
-
-#: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:138
-#: tppcenter/templates/main_page.html:168
+#: tppcenter/Resume/views.py:125 tppcenter/templates/main_page.html:130
+#: tppcenter/templates/main_page.html:152
 #: tppcenter/templates/Resume/index.html:10
 msgid "Resume"
 msgstr "קורות חיים"
 
-#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:142
-#: tppcenter/templates/index.html:179 tppcenter/templates/main_page.html:131
-#: tppcenter/templates/main_page.html:156
+#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:141
+#: tppcenter/templates/index.html:141 tppcenter/templates/main_page.html:123
+#: tppcenter/templates/main_page.html:146
 #: tppcenter/templates/Analytic/main.html:76
 #: tppcenter/templates/Analytic/main.html:119
-#: tppcenter/templates/Companies/detailContent.html:602
+#: tppcenter/templates/Companies/detailContent.html:578
 #: tppcenter/templates/Tenders/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:528
+#: tppcenter/templates/Tpp/detailContent.html:524
 msgid "Tenders"
 msgstr "מכרזים"
 
-#: tppcenter/Tpp/views.py:67 tppcenter/Tpp/views.py:278
+#: tppcenter/Tpp/views.py:60 tppcenter/Tpp/views.py:265
 #: tppcenter/templates/Tpp/index.html:10
 msgid "Tpp"
 msgstr "אקספרט סנטר"
-
-#: tppcenter/Tpp/views.py:790
-msgid ""
-"Could not add User ID: %(user_id).                                  The "
-"reason is: %(reason)s"
-msgstr ""
 
 #: tppcenter/TppTV/views.py:83
 msgid "TppTv"
 msgstr "אקספרט סנטר TV"
 
-#: tppcenter/UserSites/views.py:105 tppcenter/templates/main_page.html:166
+#: tppcenter/UserSites/views.py:103 tppcenter/templates/main_page.html:150
 #: tppcenter/templates/Tpp/tabCompanies.html:10
 msgid "Site"
 msgstr "אתר"
 
-#: tppcenter/UserSites/views.py:151
+#: tppcenter/UserSites/views.py:153
 msgid "You cannot add more than one site for your organization"
-msgstr "לא ניתן לרשום את הארגון שלך ביותר מאתר אחד"
+msgstr "אינך יכול להוסיף לארגון שלך יותר מאתר אחד"
 
-#: tppcenter/UserSites/views.py:178 tppcenter/UserSites/views.py:240
+#: tppcenter/UserSites/views.py:178 tppcenter/UserSites/views.py:231
 msgid "This domain is used, please try something else"
 msgstr "הדומיין כבר בשימוש, נסה דומיין אחר"
 
-#: tppcenter/Users/views.py:41 tppcenter/templates/main_page.html:139
-#: tppcenter/templates/main_page.html:171
-#: tppcenter/templates/Messages/index.html:49
-#: tppcenter/templates/Users/index.html:10
-msgid "Users"
-msgstr "משתמשים"
-
-#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:283
+#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:276
+#: tppcenter/templates/Vacancy/addForm.html:185
 #: tppcenter/templates/Vacancy/index.html:10
 msgid "Vacancy"
 msgstr "משרה פנויה"
 
-#: tppcenter/Vacancy/views.py:348 tppcenter/Vacancy/views.py:406
+#: tppcenter/Vacancy/views.py:338 tppcenter/Vacancy/views.py:392
 msgid "You have to choose vacancy"
-msgstr "עליך להחור משרה פנויה"
+msgstr "עליך לבחור משרה פנויה"
 
-#: tppcenter/Vacancy/views.py:490
+#: tppcenter/Vacancy/views.py:473
 msgid "You cannot send more than one resume at the same job position."
 msgstr "לא ניתן לשלוח את קורות חיים של יותר מאדם אחד באותה עמדה"
 
-#: tppcenter/Vacancy/views.py:493
+#: tppcenter/Vacancy/views.py:476
 msgid "You have successfully sent the resume."
 msgstr "קורות החיים נשלחו בהצלחה"
 
-#: tppcenter/Vacancy/views.py:496
+#: tppcenter/Vacancy/views.py:479
 msgid "Resume  are required"
 msgstr "נדרש קורות חיים"
 
-#: tppcenter/Vacancy/views.py:498
+#: tppcenter/Vacancy/views.py:481
 msgid "Only registred users can send resume"
 msgstr "ניתן לשלוח קורות חיים רק אם הנך משתמש רשום"
 
-#: tppcenter/Vacancy/views.py:524
+#: tppcenter/Vacancy/views.py:504
 msgid "The error occurred"
 msgstr "אירעה שגיאה"
 
-#: tppcenter/Vacancy/views.py:529
+#: tppcenter/Vacancy/views.py:509
 msgid "Department name  is required"
 msgstr "נדרש שם מחלקה"
 
-#: tppcenter/Vacancy/views.py:531
+#: tppcenter/Vacancy/views.py:511
 msgid "Only registred users can add department"
 msgstr "רק משתמשים רשומים יכולים להוסיף מחלקות"
 
-#: tppcenter/Vacancy/views.py:574
+#: tppcenter/Vacancy/views.py:551
 msgid "Vacancy name  is required"
-msgstr " שם המשרה"
+msgstr "נדרש שם משרה"
 
-#: tppcenter/Vacancy/views.py:576
+#: tppcenter/Vacancy/views.py:553
 msgid "Only registred users can add vacancy"
 msgstr "רק משתמשים רשומים יכולים להוסיף משרות פנויות"
 
-#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:140
-#: tppcenter/templates/Wall/index.html:6 usersites/views.py:19
-#: usersites/views.py:20
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:132
+#: tppcenter/templates/main_page.html:156
+#: tppcenter/templates/Wall/index.html:6 usersites/views.py:18
+#: usersites/views.py:19
 msgid "Wall"
 msgstr "קיר"
 
 #: tppcenter/templates/additionalPage.html:4
-#: tppcenter/templates/baseFilter.html:97
-#: tppcenter/templates/baseFilter.html:123
+#: tppcenter/templates/baseFilter.html:90
+#: tppcenter/templates/baseFilter.html:116
 #: tppcenter/templates/News/addForm.html:145
 #: tppcenter/templates/TppTV/addForm.html:94
 msgid "Title"
@@ -2440,7 +2368,6 @@ msgstr "כותרת"
 #: tppcenter/templates/News/addForm.html:41
 #: tppcenter/templates/News/addForm.html:69
 #: tppcenter/templates/Products/addForm.html:172
-#: tppcenter/templates/UserSites/addForm.html:107
 msgid "Remove"
 msgstr "הסר"
 
@@ -2455,70 +2382,70 @@ msgstr "הוסף עמוד"
 msgid "Content"
 msgstr "תוכן"
 
-#: tppcenter/templates/base.html:142
+#: tppcenter/templates/base.html:124
+msgid "Advices"
+msgstr "עצות"
+
+#: tppcenter/templates/base.html:144
 msgid "Partners"
 msgstr "שותפים"
 
-#: tppcenter/templates/base.html:150 tppcenter/templates/main_page.html:118
+#: tppcenter/templates/base.html:152 tppcenter/templates/main_page.html:109
 msgid "TPP-Center"
 msgstr "מרכז אקספרט סנטר"
 
-#: tppcenter/templates/base.html:150
+#: tppcenter/templates/base.html:152
 msgid "Center of chambers of commerce, associations, unions and guilds "
 msgstr "מרכז לשכות מסחר, עמותות, איגודים ואגודות"
 
-#: tppcenter/templates/base.html:177
+#: tppcenter/templates/base.html:179
 msgid "Send message to"
 msgstr "שלח הודעה ל"
 
-#: tppcenter/templates/base.html:185
+#: tppcenter/templates/base.html:187
 msgid "File"
-msgstr "תיקיה"
+msgstr "קובץ"
 
-#: tppcenter/templates/base.html:191
-#: tppcenter/templates/Messages/contentBox.html:15
+#: tppcenter/templates/base.html:193
+#: tppcenter/templates/Messages/contentBox.html:14
 #: tppcenter/templates/Vacancy/index.html:70
-#: usersites/templates/Contact/contentPage.html:88
+#: usersites/templates/Contact/contentPage.html:66
 msgid "Send"
 msgstr "שלח"
 
-#: tppcenter/templates/base.html:192
-#: tppcenter/templates/BusinessProposal/addForm.html:160
+#: tppcenter/templates/base.html:194
+#: tppcenter/templates/BusinessProposal/addForm.html:146
 #: tppcenter/templates/Companies/addForm.html:260
-#: tppcenter/templates/Companies/tabStaff.html:155
-#: tppcenter/templates/Companies/tabStructure.html:80
-#: tppcenter/templates/Companies/tabStructure.html:92
+#: tppcenter/templates/Companies/tabStaff.html:150
+#: tppcenter/templates/Companies/tabStructure.html:78
+#: tppcenter/templates/Companies/tabStructure.html:90
 #: tppcenter/templates/Exhibitions/addForm.html:217
 #: tppcenter/templates/Exhibitions/detailContent.html:231
 #: tppcenter/templates/Products/addForm.html:436
-#: tppcenter/templates/Profile/addForm.html:109
-#: tppcenter/templates/Resume/addForm.html:325
+#: tppcenter/templates/Profile/addForm.html:116
+#: tppcenter/templates/Resume/addForm.html:322
 #: tppcenter/templates/Tenders/addForm.html:167
-#: tppcenter/templates/Tpp/addForm.html:241
-#: tppcenter/templates/Tpp/tabStaff.html:153
+#: tppcenter/templates/Tpp/addForm.html:223
+#: tppcenter/templates/Tpp/tabStaff.html:151
 #: tppcenter/templates/Tpp/tabStructure.html:77
 #: tppcenter/templates/Tpp/tabStructure.html:89
 #: tppcenter/templates/TppTV/addForm.html:112
-#: tppcenter/templates/Vacancy/addForm.html:278
-#: tppcenter/templates/Vacancy/addForm.html:306
-#: tppcenter/templates/Vacancy/addForm.html:318
+#: tppcenter/templates/Vacancy/addForm.html:270
+#: tppcenter/templates/Vacancy/addForm.html:298
+#: tppcenter/templates/Vacancy/addForm.html:310
 #: tppcenter/templates/Vacancy/index.html:71
 msgid "Cancel"
 msgstr "בטל"
 
 #: tppcenter/templates/baseFilter.html:7
-#: tppcenter/templates/AdvBanner/addForm.html:225
-#: tppcenter/templates/AdvBanner/order.html:224
-#: tppcenter/templates/AdvTop/addForm.html:225
-#: tppcenter/templates/AdvTop/order.html:224
+#: tppcenter/templates/AdvBanner/addForm.html:224
+#: tppcenter/templates/AdvTop/addForm.html:222
 msgid "No result found"
 msgstr "לא נמצאו תוצאות"
 
 #: tppcenter/templates/baseFilter.html:8
-#: tppcenter/templates/AdvBanner/addForm.html:223
-#: tppcenter/templates/AdvBanner/order.html:222
-#: tppcenter/templates/AdvTop/addForm.html:223
-#: tppcenter/templates/AdvTop/order.html:222
+#: tppcenter/templates/AdvBanner/addForm.html:222
+#: tppcenter/templates/AdvTop/addForm.html:220
 msgid "Minimum length of search term is 3 characters"
 msgstr "אורך מינימאלי של מונח חיפוש הוא 3 תווים"
 
@@ -2526,54 +2453,44 @@ msgstr "אורך מינימאלי של מונח חיפוש הוא 3 תווים"
 msgid "Select organizations"
 msgstr "בחר ארגון"
 
-#: tppcenter/templates/baseFilter.html:11
-#, fuzzy
-msgid "Select company"
-msgstr "בחר מדינה"
-
-#: tppcenter/templates/baseFilter.html:13
-#, fuzzy
-msgid "Select category"
-msgstr "בחר מדינה"
-
-#: tppcenter/templates/baseFilter.html:68
-#: tppcenter/templates/AdvBanner/addForm.html:334
-#: tppcenter/templates/AdvTop/addForm.html:305
+#: tppcenter/templates/baseFilter.html:61
+#: tppcenter/templates/AdvBanner/addForm.html:333
+#: tppcenter/templates/AdvTop/addForm.html:302
 msgid "Filter"
 msgstr "מסנן"
 
-#: tppcenter/templates/baseFilter.html:80
-#: tppcenter/templates/main_page.html:119
+#: tppcenter/templates/baseFilter.html:73
+#: tppcenter/templates/main_page.html:110
 msgid "My"
 msgstr "שלי"
 
-#: tppcenter/templates/baseFilter.html:83
+#: tppcenter/templates/baseFilter.html:76
 msgid "Sorting"
 msgstr "תקציר"
 
-#: tppcenter/templates/baseFilter.html:89
-#: tppcenter/templates/baseFilter.html:117
+#: tppcenter/templates/baseFilter.html:82
+#: tppcenter/templates/baseFilter.html:110
 msgid "Field"
 msgstr "שדה"
 
-#: tppcenter/templates/baseFilter.html:94
-#: tppcenter/templates/baseFilter.html:122
+#: tppcenter/templates/baseFilter.html:87
+#: tppcenter/templates/baseFilter.html:115
 msgid "Creation date"
 msgstr "תאריך יצירה"
 
-#: tppcenter/templates/baseFilter.html:106
-#: tppcenter/templates/baseFilter.html:132
+#: tppcenter/templates/baseFilter.html:99
+#: tppcenter/templates/baseFilter.html:125
 msgid "Descending"
 msgstr "הנחה"
 
-#: tppcenter/templates/baseFilter.html:109
-#: tppcenter/templates/baseFilter.html:135
+#: tppcenter/templates/baseFilter.html:102
+#: tppcenter/templates/baseFilter.html:128
 msgid "Ascending"
 msgstr "התייקרות"
 
-#: tppcenter/templates/baseFilter.html:141
+#: tppcenter/templates/baseFilter.html:134
 msgid "Apply"
-msgstr "יישומים"
+msgstr "יישם"
 
 #: tppcenter/templates/index.html:7
 msgid "Tppcenter"
@@ -2587,40 +2504,35 @@ msgstr "B2C מרכז"
 msgid "Innovation projects"
 msgstr "פרוייקטים חדשניים"
 
-#: tppcenter/templates/index.html:85 tppcenter/templates/login_header.html:38
-#: usersites/templates/site_sidebar.html:11
-msgid "Mother tongue"
-msgstr ""
-
-#: tppcenter/templates/index.html:136
+#: tppcenter/templates/index.html:98
 msgid "Community"
 msgstr "קהילה"
 
-#: tppcenter/templates/index.html:148
+#: tppcenter/templates/index.html:110
 msgid "Work with"
 msgstr "עבודה עם"
 
-#: tppcenter/templates/index.html:167
+#: tppcenter/templates/index.html:129
 msgid "Producst and services"
 msgstr "מוצרים ושירותים"
 
-#: tppcenter/templates/index.html:175
+#: tppcenter/templates/index.html:137
 msgid "Business community"
 msgstr "קהילה עסקית"
 
-#: tppcenter/templates/index.html:183
+#: tppcenter/templates/index.html:145
 msgid "Innovative projects"
 msgstr "פרוייקטים חדשניים"
 
-#: tppcenter/templates/index.html:187
+#: tppcenter/templates/index.html:149
 msgid "Jobs"
 msgstr "עבודות"
 
-#: tppcenter/templates/index.html:203
+#: tppcenter/templates/index.html:165
 msgid "and get tools for business"
-msgstr "וכלים לעסקים"
+msgstr "וקבל כלים לניהול העסק שלך"
 
-#: tppcenter/templates/index.html:205
+#: tppcenter/templates/index.html:167
 msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
@@ -2628,182 +2540,169 @@ msgstr ""
 "בשנת 2014 הפורטל \"אקספרט סנטר\" זכה באות כבוד כהמנהיג העסקי של מדינות חבר "
 "העמים על תרומתו לפיתוח אינטגרציה בינלאומית לעסקים    "
 
-#: tppcenter/templates/index.html:212
+#: tppcenter/templates/index.html:174
 msgid "on the portal will allow you to"
-msgstr "באתר מאפשרת לך"
+msgstr "תאפשר לך"
 
-#: tppcenter/templates/index.html:214
+#: tppcenter/templates/index.html:176
 msgid "run a business behalf of the company"
-msgstr "לנהל את העסק שלך בלחיצת כפתור"
+msgstr "לנהל את העסק שלך"
 
-#: tppcenter/templates/index.html:215
+#: tppcenter/templates/index.html:177
 msgid "to buy goods as a private person"
 msgstr "לקנות מוצרים כאדם פרטי"
 
-#: tppcenter/templates/index.html:216
+#: tppcenter/templates/index.html:178
 msgid "draw attention toward your projects"
-msgstr "למשוך תשומת לב לפרוייקטים שלך"
+msgstr "למשוך תשומת לב אל הפרוייקטים שלך"
 
-#: tppcenter/templates/index.html:225
+#: tppcenter/templates/index.html:187
 msgid "and you will be able"
 msgstr "ותוכל "
 
-#: tppcenter/templates/index.html:227
+#: tppcenter/templates/index.html:189
 msgid "create your own online shop"
-msgstr "ליצור את חנות האונליין שלך"
+msgstr "ליצור את החנות שלך"
 
-#: tppcenter/templates/index.html:228
+#: tppcenter/templates/index.html:190
 msgid "to represent your products and services"
 msgstr "להציג את המוצרים והשירותים שלך"
 
-#: tppcenter/templates/index.html:229
+#: tppcenter/templates/index.html:191
 msgid "communicate with potential customers"
 msgstr "לתקשר עם לקוחות פוטנציאליים"
 
-#: tppcenter/templates/index.html:237
+#: tppcenter/templates/index.html:199
 msgid "Registred"
-msgstr "משתמשים רשומים"
+msgstr "משתמשים מורשים"
 
-#: tppcenter/templates/index.html:238
+#: tppcenter/templates/index.html:200
 msgid "users can"
-msgstr "נהנים מהאפשרויות הבאות"
+msgstr "יכולים"
 
-#: tppcenter/templates/index.html:240
+#: tppcenter/templates/index.html:202
 msgid "create their own websites"
-msgstr "יצירת אתר "
+msgstr "ליצור אתר חיצוני לארגון שלהם"
 
-#: tppcenter/templates/index.html:241
+#: tppcenter/templates/index.html:203
 msgid "puts advertising on the portal"
-msgstr "פרסום בכל האתר"
+msgstr "לפרסם בפורטל"
 
-#: tppcenter/templates/index.html:242
+#: tppcenter/templates/index.html:204
 msgid "create their own communities of interest"
-msgstr "יצירת קהילות בתחומי העניין שלך"
+msgstr "ליצור קהילות בעלות אינטרסים דומים"
 
-#: tppcenter/templates/index.html:251
+#: tppcenter/templates/index.html:213
 msgid "right now"
 msgstr "עכשיו"
 
-#: tppcenter/templates/index.html:259
+#: tppcenter/templates/index.html:221
 #: tppcenter/templates/registration/registration.html:52
-#: usersites/templates/slider.html:35
 msgid "Confirm password"
-msgstr "אשר סיסמה"
+msgstr "אשר סיסמא"
 
-#: tppcenter/templates/index.html:262 usersites/templates/slider.html:38
+#: tppcenter/templates/index.html:224
 msgid "I agree to"
-msgstr "אני מסכים ל"
+msgstr "אני מסכים"
 
-#: tppcenter/templates/index.html:262 usersites/templates/slider.html:38
+#: tppcenter/templates/index.html:224
 msgid "the term"
-msgstr "התנאים"
+msgstr "לתנאי השימוש"
 
-#: tppcenter/templates/index.html:318
+#: tppcenter/templates/index.html:280
 msgid "Affiche"
-msgstr "אירועים"
+msgstr ""
 
-#: tppcenter/templates/index.html:360
+#: tppcenter/templates/index.html:322
 msgid "All exhibitions and forums"
 msgstr "כל התערוכות והפורומים"
 
-#: tppcenter/templates/index.html:363
+#: tppcenter/templates/index.html:325
 msgid "Business offers"
 msgstr "הצעות עסקיות"
 
-#: tppcenter/templates/index.html:401
+#: tppcenter/templates/index.html:363
 msgid "All business offers"
 msgstr "כל ההצעות העסקיות"
 
-#: tppcenter/templates/index.html:406
+#: tppcenter/templates/index.html:368
 msgid "Introduction to London Markets"
 msgstr "הצגת השוק בלונדון"
 
-#: tppcenter/templates/index.html:413
+#: tppcenter/templates/index.html:375
 msgid "Download Presentation"
 msgstr "טען מצגת"
 
-#: tppcenter/templates/index.html:421
+#: tppcenter/templates/index.html:383
 msgid "Videoreference of V.Migirov"
 msgstr "צפה בוידאו של ולרי מיגירוב"
 
-#: tppcenter/templates/index.html:432
+#: tppcenter/templates/index.html:394
 msgid "Download Guide Site"
 msgstr "הורד מדריך אתר"
 
-#: tppcenter/templates/login_header.html:99
+#: tppcenter/templates/login_header.html:27
 msgid "System notifications"
-msgstr "מערכת החדשות"
+msgstr "התראות המערכת"
 
-#: tppcenter/templates/login_header.html:104
+#: tppcenter/templates/login_header.html:32
 msgid "Notifications"
-msgstr "חדשות"
+msgstr "התראות"
 
-#: tppcenter/templates/login_header.html:110
+#: tppcenter/templates/login_header.html:38
 msgid "See all"
 msgstr "ראה הכל"
 
-#: tppcenter/templates/login_header.html:114
-#: tppcenter/templates/main_page.html:170
+#: tppcenter/templates/login_header.html:42
 msgid "Messages"
 msgstr "הודעות"
 
-#: tppcenter/templates/login_header.html:121
+#: tppcenter/templates/login_header.html:46
 msgid "Friend request"
 msgstr "בקשת חברות"
 
-#: tppcenter/templates/login_header.html:124
+#: tppcenter/templates/login_header.html:49
 msgid "Notification in your communities"
 msgstr "מה חדש בקהילה שלך"
 
-#: tppcenter/templates/login_header.html:132
-#: tppcenter/templates/login_header.html:134
-#: tppcenter/templates/Companies/tabStaff.html:154
-#: tppcenter/templates/Companies/tabStructure.html:79
-#: tppcenter/templates/Companies/tabStructure.html:91
-#: tppcenter/templates/Tpp/tabStaff.html:152
+#: tppcenter/templates/login_header.html:57
+#: tppcenter/templates/Companies/tabStaff.html:149
+#: tppcenter/templates/Companies/tabStructure.html:77
+#: tppcenter/templates/Companies/tabStructure.html:89
+#: tppcenter/templates/Tpp/tabStaff.html:150
 #: tppcenter/templates/Tpp/tabStructure.html:76
 #: tppcenter/templates/Tpp/tabStructure.html:88
-#: tppcenter/templates/Vacancy/addForm.html:305
-#: tppcenter/templates/Vacancy/addForm.html:317
+#: tppcenter/templates/Vacancy/addForm.html:297
+#: tppcenter/templates/Vacancy/addForm.html:309
 msgid "Add"
 msgstr "הוסף"
 
-#: tppcenter/templates/main_page.html:127
-#: tppcenter/templates/main_page.html:152
+#: tppcenter/templates/main_page.html:119
+#: tppcenter/templates/main_page.html:142
 #: tppcenter/templates/Messages/index.html:46
 msgid "Organizations"
 msgstr "ארגונים"
 
-#: tppcenter/templates/main_page.html:132
-#: tppcenter/templates/main_page.html:157
+#: tppcenter/templates/main_page.html:124
+#: tppcenter/templates/main_page.html:147
 msgid "Exhibitions / Forums"
 msgstr "תערוכות / פורומים"
 
-#: tppcenter/templates/main_page.html:136
+#: tppcenter/templates/main_page.html:126
 #: tppcenter/templates/TppTV/index.html:10
 msgid "TPP TV"
 msgstr "ערוץ טלוויזיה"
 
-#: tppcenter/templates/main_page.html:137
-#: tppcenter/templates/main_page.html:167
+#: tppcenter/templates/main_page.html:128
+#: tppcenter/templates/main_page.html:151
 msgid "Job requirements"
-msgstr "משרות"
+msgstr "דרישות התפקיד"
 
-#: tppcenter/templates/main_page.html:148
-msgid "Admin Panel"
-msgstr ""
-
-#: tppcenter/templates/main_page.html:164
-#: tppcenter/templates/AdvTop/order.html:316
-#, fuzzy
-msgid "Advertisement"
-msgstr "פרסם אצלנו"
-
-#: tppcenter/templates/main_page.html:165
+#: tppcenter/templates/main_page.html:149
 msgid "Analytic"
 msgstr "ניתוח"
 
-#: tppcenter/templates/main_page.html:205
+#: tppcenter/templates/main_page.html:195
 msgid "Find.."
 msgstr "מצא"
 
@@ -2823,106 +2722,57 @@ msgstr "או ליצור"
 msgid "new company "
 msgstr "חברה חדשה"
 
-#: tppcenter/templates/AdminTpp/targetsList.html:7
-msgid "Targets List"
-msgstr ""
-
-#: tppcenter/templates/AdminTpp/targetsList.html:92
-#: tppcenter/templates/AdvBanner/addForm.html:359
-#: tppcenter/templates/AdvBanner/order.html:298
-#: tppcenter/templates/AdvTop/addForm.html:331
-#: tppcenter/templates/AdvTop/order.html:298
-msgid "Days Q-ty"
-msgstr "כמות ימים"
-
-#: tppcenter/templates/AdminTpp/targetsList.html:96
-#: tppcenter/templates/Adv/basket.html:22
-#: tppcenter/templates/AdvBanner/addForm.html:363
-#: tppcenter/templates/AdvBanner/order.html:302
-#: tppcenter/templates/AdvTop/addForm.html:335
-#: tppcenter/templates/AdvTop/order.html:302
-msgid "Summary"
-msgstr "תקציר"
-
-#: tppcenter/templates/Adv/basket.html:7
-#, fuzzy
-msgid "Advertisement basket"
-msgstr "פרסם אצלנו"
-
-#: tppcenter/templates/Adv/basket.html:19
-msgid "Type"
-msgstr ""
-
-#: tppcenter/templates/Adv/basket.html:20
-#: tppcenter/templates/AdvBanner/addForm.html:310
-#: tppcenter/templates/AdvBanner/order.html:290
-#: tppcenter/templates/AdvTop/addForm.html:293
-#: tppcenter/templates/AdvTop/order.html:290
-#: tppcenter/templates/Companies/addForm.html:96
-#: tppcenter/templates/Products/addForm.html:238
-#: tppcenter/templates/Tpp/addForm.html:85
-msgid "Start date"
-msgstr "תאריך התחלה"
-
-#: tppcenter/templates/Adv/basket.html:23
-#: tppcenter/templates/Companies/tabStaff.html:47
-#: tppcenter/templates/Tpp/tabStaff.html:46
-msgid "Status"
-msgstr "מעמד"
-
-#: tppcenter/templates/AdvBanner/addForm.html:292
+#: tppcenter/templates/AdvBanner/addForm.html:291
 msgid "Image file (Maximum 50KB)"
 msgstr "50KB העלה תמונה עד "
 
-#: tppcenter/templates/AdvBanner/addForm.html:303
+#: tppcenter/templates/AdvBanner/addForm.html:302
 msgid "Link URL"
 msgstr "קישור לאתר"
 
-#: tppcenter/templates/AdvBanner/addForm.html:316
+#: tppcenter/templates/AdvBanner/addForm.html:309
+#: tppcenter/templates/AdvTop/addForm.html:290
+#: tppcenter/templates/Companies/addForm.html:96
+#: tppcenter/templates/Products/addForm.html:238
+#: tppcenter/templates/Tpp/addForm.html:84
+msgid "Start date"
+msgstr "תאריך התחלה"
+
+#: tppcenter/templates/AdvBanner/addForm.html:315
 msgid "Image title"
 msgstr "כותרת תמונה"
 
-#: tppcenter/templates/AdvBanner/addForm.html:327
-#: tppcenter/templates/AdvBanner/order.html:294
-#: tppcenter/templates/AdvTop/addForm.html:298
-#: tppcenter/templates/AdvTop/order.html:294
+#: tppcenter/templates/AdvBanner/addForm.html:326
+#: tppcenter/templates/AdvTop/addForm.html:295
 #: tppcenter/templates/Companies/addForm.html:100
 #: tppcenter/templates/Companies/tabExhibitions.html:9
 #: tppcenter/templates/Companies/tabTenders.html:9
 #: tppcenter/templates/Products/addForm.html:247
-#: tppcenter/templates/Tpp/addForm.html:92
+#: tppcenter/templates/Tpp/addForm.html:91
 #: tppcenter/templates/Tpp/tabExhibitions.html:9
 #: tppcenter/templates/Tpp/tabTenders.html:9
 msgid "End date"
 msgstr "תאריך סיום"
 
-#: tppcenter/templates/AdvBanner/addForm.html:349
-#: tppcenter/templates/AdvTop/addForm.html:321
+#: tppcenter/templates/AdvBanner/addForm.html:348
+#: tppcenter/templates/AdvTop/addForm.html:318
 msgid "Basket"
 msgstr "סל"
 
-#: tppcenter/templates/AdvBanner/addForm.html:368
-#: tppcenter/templates/AdvTop/addForm.html:338
-msgid "Pay"
-msgstr "תשלום"
-
-#: tppcenter/templates/AdvBanner/order.html:275
-#: tppcenter/templates/AdvTop/order.html:275
-#, fuzzy
-msgid "Order details"
-msgstr "פרטי משתמש"
-
-#: tppcenter/templates/AdvBanner/order.html:306
-#: tppcenter/templates/AdvTop/order.html:306
-#, fuzzy
-msgid "Order number"
-msgstr "סיכום הזמנתך"
-
-#: tppcenter/templates/AdvBanner/order.html:314
-#: tppcenter/templates/AdvTop/order.html:314
-msgid ""
-"Thank you for order, you will be notified when the adveretisement be applied"
+#: tppcenter/templates/AdvBanner/addForm.html:358
+#: tppcenter/templates/AdvTop/addForm.html:328
+msgid "Days Q-ty"
 msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:362
+#: tppcenter/templates/AdvTop/addForm.html:332
+msgid "Summary"
+msgstr "תקציר"
+
+#: tppcenter/templates/AdvBanner/addForm.html:367
+#: tppcenter/templates/AdvTop/addForm.html:335
+msgid "Pay"
+msgstr "שלם"
 
 #: tppcenter/templates/AdvTop/tops.html:8
 msgid "Paid ads"
@@ -2943,14 +2793,15 @@ msgid "Views"
 msgstr "ציפיות"
 
 #: tppcenter/templates/Analytic/main.html:85
+#: tppcenter/templates/BusinessProposal/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/detailContent.html:219
 #: tppcenter/templates/News/popupFilter.html:21
-#: tppcenter/templates/Resume/addForm.html:180
-#: tppcenter/templates/Resume/addForm.html:213
-#: tppcenter/templates/Resume/addForm.html:246
-#: tppcenter/templates/Resume/detailContent.html:125
-#: tppcenter/templates/Resume/detailContent.html:133
-#: tppcenter/templates/Resume/detailContent.html:141
+#: tppcenter/templates/Resume/addForm.html:177
+#: tppcenter/templates/Resume/addForm.html:210
+#: tppcenter/templates/Resume/addForm.html:243
+#: tppcenter/templates/Resume/detailContent.html:120
+#: tppcenter/templates/Resume/detailContent.html:128
+#: tppcenter/templates/Resume/detailContent.html:136
 #: tppcenter/templates/Tenders/popupFilter.html:21
 #: tppcenter/templates/TppTV/popupFilter.html:21
 #: tppcenter/templates/Vacancy/detailContent.html:39
@@ -2965,7 +2816,7 @@ msgstr "אירועי הלשכה"
 #: tppcenter/templates/Exhibitions/addForm.html:109
 #: tppcenter/templates/Products/addForm.html:189
 #: tppcenter/templates/Tenders/addForm.html:67
-#: tppcenter/templates/Tenders/detailContent.html:93
+#: tppcenter/templates/Tenders/detailContent.html:90
 msgid "Documents"
 msgstr "מסמכים"
 
@@ -2989,46 +2840,44 @@ msgstr "מסמך 3"
 msgid "Images"
 msgstr "תמונות"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:75
-msgid "Load correct image"
-msgstr ""
-
-#: tppcenter/templates/BusinessProposal/addForm.html:82
+#: tppcenter/templates/BusinessProposal/addForm.html:79
 msgid "image"
 msgstr "תמונה"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:92
+#: tppcenter/templates/BusinessProposal/addForm.html:89
 #: tppcenter/templates/Companies/addForm.html:143
 #: tppcenter/templates/Exhibitions/addForm.html:93
 #: tppcenter/templates/Products/addForm.html:229
 #: tppcenter/templates/Tenders/addForm.html:122
-#: tppcenter/templates/Tpp/addForm.html:127
+#: tppcenter/templates/Tpp/addForm.html:126
 #: tppcenter/templates/TppTV/addForm.html:85
-#: tppcenter/templates/Vacancy/addForm.html:247
+#: tppcenter/templates/Vacancy/addForm.html:239
 msgid "Keywords"
 msgstr "מילת מפתח"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:102
+#: tppcenter/templates/BusinessProposal/addForm.html:99
 #: tppcenter/templates/Companies/tabExhibitions.html:7
 #: tppcenter/templates/Companies/tabInnov.html:8
 #: tppcenter/templates/Companies/tabProducts.html:9
 #: tppcenter/templates/Companies/tabProposal.html:8
-#: tppcenter/templates/Companies/tabStaff.html:43
+#: tppcenter/templates/Companies/tabStaff.html:38
 #: tppcenter/templates/Companies/tabTenders.html:7
 #: tppcenter/templates/Exhibitions/addForm.html:170
 #: tppcenter/templates/Exhibitions/detailContent.html:207
 #: tppcenter/templates/Products/addForm.html:260
 #: tppcenter/templates/Profile/addForm.html:39
+#: tppcenter/templates/Resume/addForm.html:55
+#: tppcenter/templates/Resume/detailContent.html:50
 #: tppcenter/templates/Tpp/tabCompanies.html:8
 #: tppcenter/templates/Tpp/tabExhibitions.html:7
 #: tppcenter/templates/Tpp/tabInnov.html:8
 #: tppcenter/templates/Tpp/tabProposal.html:8
-#: tppcenter/templates/Tpp/tabStaff.html:42
+#: tppcenter/templates/Tpp/tabStaff.html:39
 #: tppcenter/templates/Tpp/tabTenders.html:7
 msgid "Name"
 msgstr "שם"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:119
+#: tppcenter/templates/BusinessProposal/addForm.html:116
 #: tppcenter/templates/BusinessProposal/popupFilter.html:22
 #: tppcenter/templates/Companies/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/popupFilter.html:21
@@ -3042,60 +2891,50 @@ msgstr "שם"
 msgid "Branch"
 msgstr "סניף"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:130
-#: tppcenter/templates/BusinessProposal/popupFilter.html:21
-#: tppcenter/templates/News/addForm.html:87
-#: tppcenter/templates/Products/addForm.html:380
-#: tppcenter/templates/TppTV/addForm.html:44
-msgid "Category"
-msgstr "קטגוריה"
-
-#: tppcenter/templates/BusinessProposal/addForm.html:142
+#: tppcenter/templates/BusinessProposal/addForm.html:128
 #: tppcenter/templates/Companies/addForm.html:242
 #: tppcenter/templates/Exhibitions/addForm.html:200
 #: tppcenter/templates/Innov/addForm.html:173
 #: tppcenter/templates/Products/addForm.html:418
 #: tppcenter/templates/Tenders/addForm.html:149
-#: tppcenter/templates/Tpp/addForm.html:223
 msgid "Additional pages"
 msgstr "דפים נוספים"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:32
-#: tppcenter/templates/Companies/contentPage.html:39
+#: tppcenter/templates/Companies/contentPage.html:36
 #: tppcenter/templates/Exhibitions/contentPage.html:36
 #: tppcenter/templates/Innov/contentPage.html:42
 #: tppcenter/templates/News/contentPage.html:32
 #: tppcenter/templates/Products/contentPage.html:28
-#: tppcenter/templates/Resume/contentPage.html:27
+#: tppcenter/templates/Resume/contentPage.html:22
 #: tppcenter/templates/Tenders/contentPage.html:32
 #: tppcenter/templates/Tpp/contentPage.html:32
 #: tppcenter/templates/TppTV/contentPage.html:26
 #: tppcenter/templates/UserSites/contentPage.html:24
-#: tppcenter/templates/Vacancy/contentPage.html:33
+#: tppcenter/templates/Vacancy/contentPage.html:34
 msgid "edit"
 msgstr "עריכה"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:35
-#: tppcenter/templates/Companies/contentPage.html:43
+#: tppcenter/templates/Companies/contentPage.html:40
 #: tppcenter/templates/Exhibitions/contentPage.html:39
 #: tppcenter/templates/Innov/contentPage.html:45
 #: tppcenter/templates/Products/contentPage.html:31
 msgid "add top"
-msgstr "לחלק העליון של הדף"
+msgstr "הוסף טופ"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:38
-#: tppcenter/templates/Companies/contentPage.html:46
-#: tppcenter/templates/Companies/tab_gallery_structure.html:11
+#: tppcenter/templates/Companies/contentPage.html:43
+#: tppcenter/templates/Companies/tabGalleryPhoto.html:10
 #: tppcenter/templates/Exhibitions/contentPage.html:42
 #: tppcenter/templates/Innov/contentPage.html:48
 #: tppcenter/templates/News/contentPage.html:35
 #: tppcenter/templates/Products/contentPage.html:34
-#: tppcenter/templates/Resume/contentPage.html:30
+#: tppcenter/templates/Resume/contentPage.html:25
 #: tppcenter/templates/Tenders/contentPage.html:35
-#: tppcenter/templates/Tpp/tab_gallery_structure.html:12
 #: tppcenter/templates/TppTV/contentPage.html:27
 #: tppcenter/templates/UserSites/contentPage.html:28
-#: tppcenter/templates/Vacancy/contentPage.html:37
+#: tppcenter/templates/Vacancy/contentPage.html:38
 msgid "remove"
 msgstr "הסרה"
 
@@ -3110,12 +2949,12 @@ msgstr "הסרה"
 #: tppcenter/templates/Products/popupFilter.html:20
 #: tppcenter/templates/Tenders/popupFilter.html:20
 #: tppcenter/templates/TppTV/popupFilter.html:20
-#: tppcenter/templates/Wall/contentPage.html:173
+#: tppcenter/templates/Wall/contentPage.html:168
 msgid "Organization"
 msgstr "ארגון"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:72
-#: tppcenter/templates/Companies/contentPage.html:129
+#: tppcenter/templates/Companies/contentPage.html:120
 #: tppcenter/templates/Companies/tabExhibitions.html:44
 #: tppcenter/templates/Companies/tabInnov.html:39
 #: tppcenter/templates/Companies/tabNews.html:33
@@ -3127,7 +2966,7 @@ msgstr "ארגון"
 #: tppcenter/templates/Innov/contentPage.html:105
 #: tppcenter/templates/News/contentPage.html:85
 #: tppcenter/templates/Products/contentPage.html:74
-#: tppcenter/templates/Resume/contentPage.html:50
+#: tppcenter/templates/Resume/contentPage.html:42
 #: tppcenter/templates/Tenders/contentPage.html:67
 #: tppcenter/templates/Tpp/contentPage.html:94
 #: tppcenter/templates/Tpp/tabCompanies.html:44
@@ -3138,32 +2977,28 @@ msgstr "ארגון"
 #: tppcenter/templates/Tpp/tabTenders.html:44
 #: tppcenter/templates/TppTV/contentPage.html:58
 #: tppcenter/templates/UserSites/contentPage.html:46
-#: tppcenter/templates/Users/contentPage.html:57
-#: tppcenter/templates/Vacancy/contentPage.html:65
+#: tppcenter/templates/Vacancy/contentPage.html:66
 #: tppcenter/templates/main/notoficationlist.html:17
 msgid "No results found"
 msgstr "לא נמצאו תוצאות"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:74
 #: tppcenter/templates/Exhibitions/detailContent.html:113
-#: tppcenter/templates/Products/detailContent.html:135
-#: usersites/templates/Products/detailContent.html:169
-#: usersites/templates/Proposals/detailContent.html:75
+#: tppcenter/templates/Products/detailContent.html:131
 msgid "Document"
 msgstr "מסמכים"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:75
-#: tppcenter/templates/Companies/detailContent.html:597
+#: tppcenter/templates/Companies/detailContent.html:573
 #: tppcenter/templates/Exhibitions/detailContent.html:114
 #: tppcenter/templates/Innov/addForm.html:82
 #: tppcenter/templates/Innov/detailContent.html:96
 #: tppcenter/templates/News/addForm.html:59
 #: tppcenter/templates/Products/addForm.html:162
-#: tppcenter/templates/Tenders/detailContent.html:92
-#: tppcenter/templates/Tpp/detailContent.html:522
-#: usersites/templates/Proposals/detailContent.html:76
+#: tppcenter/templates/Tenders/detailContent.html:89
+#: tppcenter/templates/Tpp/detailContent.html:519
 msgid "Gallery"
-msgstr "גלריה"
+msgstr "גלרייה"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:90
 #: tppcenter/templates/BusinessProposal/detailContent.html:93
@@ -3171,43 +3006,36 @@ msgstr "גלריה"
 #: tppcenter/templates/Exhibitions/detailContent.html:129
 #: tppcenter/templates/Exhibitions/detailContent.html:132
 #: tppcenter/templates/Exhibitions/detailContent.html:135
-#: usersites/templates/Proposals/detailContent.html:91
-#: usersites/templates/Proposals/detailContent.html:94
-#: usersites/templates/Proposals/detailContent.html:97
 msgid "Link to the File"
 msgstr "קישור לתיקיה"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:112
-#: tppcenter/templates/Companies/tab_gallery_structure.html:17
+#: tppcenter/templates/Companies/tabGalleryPhoto.html:14
 #: tppcenter/templates/Exhibitions/detailContent.html:151
 #: tppcenter/templates/Innov/detailContent.html:145
-#: tppcenter/templates/Tenders/detailContent.html:112
-#: tppcenter/templates/Tpp/tab_gallery_structure.html:18
-#: usersites/templates/Proposals/detailContent.html:113
+#: tppcenter/templates/Tenders/detailContent.html:109
 msgid "zoom"
 msgstr "זום"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:134
 #: tppcenter/templates/Companies/addForm.html:124
-#: tppcenter/templates/Companies/detailContent.html:676
+#: tppcenter/templates/Companies/detailContent.html:674
 #: tppcenter/templates/Exhibitions/detailContent.html:174
 #: tppcenter/templates/Innov/detailContent.html:167
-#: tppcenter/templates/Tpp/addForm.html:106
-#: tppcenter/templates/Tpp/detailContent.html:595
-#: usersites/templates/Proposals/detailContent.html:135
+#: tppcenter/templates/Tpp/addForm.html:105
+#: tppcenter/templates/Tpp/detailContent.html:594
 msgid "Fax"
 msgstr "פקס"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:142
 #: tppcenter/templates/Companies/addForm.html:136
-#: tppcenter/templates/Companies/detailContent.html:684
+#: tppcenter/templates/Companies/detailContent.html:682
 #: tppcenter/templates/Exhibitions/detailContent.html:182
 #: tppcenter/templates/Innov/detailContent.html:175
 #: tppcenter/templates/Profile/addForm.html:54
-#: tppcenter/templates/Tpp/addForm.html:120
-#: tppcenter/templates/Tpp/detailContent.html:603
+#: tppcenter/templates/Tpp/addForm.html:119
+#: tppcenter/templates/Tpp/detailContent.html:602
 #: tppcenter/templates/main/user_profile.html:56
-#: usersites/templates/Proposals/detailContent.html:143
 msgid "WWW"
 msgstr "www"
 
@@ -3216,7 +3044,7 @@ msgstr "www"
 #: tppcenter/templates/Exhibitions/addForm.html:153
 #: tppcenter/templates/News/addForm.html:31
 #: tppcenter/templates/Products/addForm.html:129
-#: tppcenter/templates/Tpp/addForm.html:58
+#: tppcenter/templates/Tpp/addForm.html:57
 #: tppcenter/templates/TppTV/addForm.html:23
 msgid "Image"
 msgstr "תמונה"
@@ -3226,7 +3054,7 @@ msgid "Vatin"
 msgstr ""
 
 #: tppcenter/templates/Companies/addForm.html:110
-#: tppcenter/templates/Tpp/addForm.html:78
+#: tppcenter/templates/Tpp/addForm.html:77
 msgid "Director name"
 msgstr "שם המנהל"
 
@@ -3263,7 +3091,7 @@ msgid "Choose CCI"
 msgstr "CCI בחר"
 
 #: tppcenter/templates/Companies/addForm.html:209
-#: tppcenter/templates/Tpp/addForm.html:190
+#: tppcenter/templates/Tpp/addForm.html:189
 msgid "Place on the map"
 msgstr "סמן במפה"
 
@@ -3272,98 +3100,92 @@ msgid "Details"
 msgstr "פרטים"
 
 #: tppcenter/templates/Companies/addForm.html:216
-#: tppcenter/templates/Tpp/addForm.html:197
+#: tppcenter/templates/Tpp/addForm.html:196
 msgid "RRC"
 msgstr ""
 
 #: tppcenter/templates/Companies/addForm.html:219
-#: tppcenter/templates/Tpp/addForm.html:200
+#: tppcenter/templates/Tpp/addForm.html:199
 msgid "RCEO"
 msgstr ""
 
 #: tppcenter/templates/Companies/addForm.html:222
-#: tppcenter/templates/Tpp/addForm.html:203
+#: tppcenter/templates/Tpp/addForm.html:202
 msgid "RCOSD"
 msgstr ""
 
 #: tppcenter/templates/Companies/addForm.html:225
-#: tppcenter/templates/Tpp/addForm.html:206
+#: tppcenter/templates/Tpp/addForm.html:205
 msgid "ARCEA"
 msgstr "אזור"
 
 #: tppcenter/templates/Companies/addForm.html:228
-#: tppcenter/templates/Tpp/addForm.html:209
+#: tppcenter/templates/Tpp/addForm.html:208
 msgid "Accountant name"
 msgstr "שם בעל החשבון"
 
 #: tppcenter/templates/Companies/addForm.html:233
-#: tppcenter/templates/Tpp/addForm.html:214
+#: tppcenter/templates/Tpp/addForm.html:213
 msgid "Account number"
 msgstr "מספר חשבון"
 
 #: tppcenter/templates/Companies/addForm.html:236
-#: tppcenter/templates/Tpp/addForm.html:217
+#: tppcenter/templates/Tpp/addForm.html:216
 msgid "Bank details"
 msgstr "פרטי חשבון בנק"
 
-#: tppcenter/templates/Companies/contentPage.html:40
+#: tppcenter/templates/Companies/contentPage.html:37
 #: tppcenter/templates/Tpp/contentPage.html:33
 msgid "set current"
 msgstr "נמצא במערכת"
 
-#: tppcenter/templates/Companies/contentPage.html:71
-#: tppcenter/templates/Companies/detailContent.html:554
-msgid "Member of"
-msgstr ""
+#: tppcenter/templates/Companies/detailContent.html:50
+msgid "Uploading"
+msgstr "טוען"
 
-#: tppcenter/templates/Companies/detailContent.html:96
+#: tppcenter/templates/Companies/detailContent.html:51
+msgid "Uploaded"
+msgstr "הטעינה הושלמה"
+
+#: tppcenter/templates/Companies/detailContent.html:52
+msgid "Fail"
+msgstr "נכשל"
+
+#: tppcenter/templates/Companies/detailContent.html:53
+msgid "The following files was not uploaded"
+msgstr "הקבצים והשדות לא עודכנו"
+
+#: tppcenter/templates/Companies/detailContent.html:133
 #: tppcenter/templates/Tpp/detailContent.html:57
 msgid "Do you want to delete this record?"
-msgstr "אתה קוצה למחוק הקלטה זו?"
+msgstr "אתה רוצה למחוק הקלטה זו?"
 
-#: tppcenter/templates/Companies/detailContent.html:368
+#: tppcenter/templates/Companies/detailContent.html:405
 #: tppcenter/templates/Tpp/detailContent.html:329
 msgid "Do you want to delete this Vacancy?"
 msgstr "אתה רוצה למחוק משרה זו?"
 
-#: tppcenter/templates/Companies/detailContent.html:379
+#: tppcenter/templates/Companies/detailContent.html:416
 #: tppcenter/templates/Tpp/detailContent.html:340
 msgid "Do you want to delete this Department?"
 msgstr "אתה רוצה למחוק משרד זה?"
 
-#: tppcenter/templates/Companies/detailContent.html:506
-msgid "Free period is expired."
-msgstr ""
-
-#: tppcenter/templates/Companies/detailContent.html:508
-msgid "Free period will expire in "
-msgstr ""
-
-#: tppcenter/templates/Companies/detailContent.html:508
-#, fuzzy
-msgid " days."
-msgstr "ימים"
-
-#: tppcenter/templates/Companies/detailContent.html:519
-msgid "1-year www.b24online.com membership"
-msgstr ""
-
-#: tppcenter/templates/Companies/detailContent.html:580
-#: tppcenter/templates/Tpp/detailContent.html:505
+#: tppcenter/templates/Companies/detailContent.html:556
+#: tppcenter/templates/Tpp/detailContent.html:502
 msgid "Recvisits"
 msgstr ""
 
-#: tppcenter/templates/Companies/detailContent.html:627
-#: tppcenter/templates/Tpp/detailContent.html:548
+#: tppcenter/templates/Companies/detailContent.html:603
+#: tppcenter/templates/Tpp/detailContent.html:544
 #: usersites/CompanyStructure/views.py:15
 #: usersites/CompanyStructure/views.py:16
 msgid "Structure"
 msgstr "מבנה"
 
-#: tppcenter/templates/Companies/detailContent.html:632
-#: tppcenter/templates/Tpp/detailContent.html:553
+#: tppcenter/templates/Companies/detailContent.html:608
+#: tppcenter/templates/Tpp/detailContent.html:549
 msgid "Staff"
-msgstr "חומרים"
+msgstr "סגל"
 
 #: tppcenter/templates/Companies/tabExhibitions.html:8
 #: tppcenter/templates/Companies/tabTenders.html:8
@@ -3371,26 +3193,6 @@ msgstr "חומרים"
 #: tppcenter/templates/Tpp/tabTenders.html:8
 msgid "Start Event"
 msgstr "התחל אירוע"
-
-#: tppcenter/templates/Companies/tabGallery.html:37
-#: tppcenter/templates/Tpp/tabGallery.html:37
-msgid "Uploading"
-msgstr "טעינה"
-
-#: tppcenter/templates/Companies/tabGallery.html:38
-#: tppcenter/templates/Tpp/tabGallery.html:38
-msgid "Uploaded"
-msgstr "עדכון"
-
-#: tppcenter/templates/Companies/tabGallery.html:39
-#: tppcenter/templates/Tpp/tabGallery.html:39
-msgid "Fail"
-msgstr "נכשל"
-
-#: tppcenter/templates/Companies/tabGallery.html:40
-#: tppcenter/templates/Tpp/tabGallery.html:40
-msgid "The following files was not uploaded"
-msgstr "הקבצים והשדות לא עודכנו"
 
 #: tppcenter/templates/Companies/tabInnov.html:9
 #: tppcenter/templates/Innov/addForm.html:66
@@ -3400,77 +3202,82 @@ msgstr "הקבצים והשדות לא עודכנו"
 msgid "Cost of project"
 msgstr "עלות הפרוייקט"
 
-#: tppcenter/templates/Companies/tabStaff.html:44
-#: tppcenter/templates/Companies/tabStaff.html:122
-#: tppcenter/templates/Tpp/tabStaff.html:43
-#: tppcenter/templates/Tpp/tabStaff.html:120
+#: tppcenter/templates/Companies/tabStaff.html:39
+#: tppcenter/templates/Companies/tabStaff.html:117
+#: tppcenter/templates/Tpp/tabStaff.html:40
+#: tppcenter/templates/Tpp/tabStaff.html:118
 msgid "Department"
 msgstr "משרד / מחלקה"
 
-#: tppcenter/templates/Companies/tabStaff.html:45
+#: tppcenter/templates/Companies/tabStaff.html:40
 #: tppcenter/templates/Exhibitions/detailContent.html:223
 #: tppcenter/templates/Greetings/contentPage.html:27
 #: tppcenter/templates/Greetings/detailContent.html:18
-#: tppcenter/templates/Resume/addForm.html:187
-#: tppcenter/templates/Resume/addForm.html:220
-#: tppcenter/templates/Resume/addForm.html:253
-#: tppcenter/templates/Resume/detailContent.html:127
-#: tppcenter/templates/Resume/detailContent.html:135
-#: tppcenter/templates/Resume/detailContent.html:143
-#: tppcenter/templates/Tpp/tabStaff.html:44
-#: tppcenter/templates/Vacancy/addForm.html:185
+#: tppcenter/templates/Resume/addForm.html:184
+#: tppcenter/templates/Resume/addForm.html:217
+#: tppcenter/templates/Resume/addForm.html:250
+#: tppcenter/templates/Resume/detailContent.html:122
+#: tppcenter/templates/Resume/detailContent.html:130
+#: tppcenter/templates/Resume/detailContent.html:138
+#: tppcenter/templates/Tpp/tabStaff.html:41
 #: usersites/templates/CompanyStructure/contentPage.html:20
 msgid "Position"
 msgstr "עמדה"
 
-#: tppcenter/templates/Companies/tabStaff.html:75
-#: tppcenter/templates/Tpp/tabStaff.html:73
+#: tppcenter/templates/Companies/tabStaff.html:42
+#: tppcenter/templates/Tpp/tabStaff.html:43
+msgid "Status"
+msgstr "מעמד"
+
+#: tppcenter/templates/Companies/tabStaff.html:70
+#: tppcenter/templates/Tpp/tabStaff.html:71
 msgid "User with empty profile. Cabinet ID:"
 msgstr "המשתמש לא הזין פרטי פרופיל. מס' זהות: "
 
-#: tppcenter/templates/Companies/tabStaff.html:102
-#: tppcenter/templates/Tpp/tabStaff.html:100
+#: tppcenter/templates/Companies/tabStaff.html:97
+#: tppcenter/templates/Tpp/tabStaff.html:98
 msgid "No Staff found."
-msgstr "לא נמצא חומר"
+msgstr ""
 
-#: tppcenter/templates/Companies/tabStaff.html:124
-#: tppcenter/templates/Tpp/tabStaff.html:122
+#: tppcenter/templates/Companies/tabStaff.html:119
+#: tppcenter/templates/Tpp/tabStaff.html:120
+#: tppcenter/templates/Vacancy/addForm.html:171
 msgid "Select Department..."
 msgstr "בחר סוג משרד"
 
-#: tppcenter/templates/Companies/tabStaff.html:130
-#: tppcenter/templates/Companies/tabStaff.html:143
-#: tppcenter/templates/Tpp/tabStaff.html:128
-#: tppcenter/templates/Tpp/tabStaff.html:141
+#: tppcenter/templates/Companies/tabStaff.html:125
+#: tppcenter/templates/Companies/tabStaff.html:138
+#: tppcenter/templates/Tpp/tabStaff.html:126
+#: tppcenter/templates/Tpp/tabStaff.html:139
 #: tppcenter/templates/Vacancy/addForm.html:177
 #: tppcenter/templates/Vacancy/addForm.html:200
 msgid "Empty"
 msgstr "ריק"
 
-#: tppcenter/templates/Companies/tabStaff.html:133
-#: tppcenter/templates/Tpp/tabStaff.html:131
+#: tppcenter/templates/Companies/tabStaff.html:128
+#: tppcenter/templates/Tpp/tabStaff.html:129
 msgid "/Vacancy"
 msgstr "משרה פנויה"
 
-#: tppcenter/templates/Companies/tabStaff.html:146
-#: tppcenter/templates/Tpp/tabStaff.html:144
+#: tppcenter/templates/Companies/tabStaff.html:141
+#: tppcenter/templates/Tpp/tabStaff.html:142
 msgid "Administrator"
 msgstr "מנהל"
 
-#: tppcenter/templates/Companies/tabStructure.html:56
+#: tppcenter/templates/Companies/tabStructure.html:54
 #: tppcenter/templates/Tpp/tabStructure.html:53
 msgid "No Departments found."
 msgstr "לא נמצאו משרדים"
 
-#: tppcenter/templates/Companies/tabStructure.html:75
+#: tppcenter/templates/Companies/tabStructure.html:73
 #: tppcenter/templates/Tpp/tabStructure.html:72
-#: tppcenter/templates/Vacancy/addForm.html:300
+#: tppcenter/templates/Vacancy/addForm.html:292
 msgid "Department name"
 msgstr "שם משרד"
 
-#: tppcenter/templates/Companies/tabStructure.html:87
+#: tppcenter/templates/Companies/tabStructure.html:85
 #: tppcenter/templates/Tpp/tabStructure.html:84
-#: tppcenter/templates/Vacancy/addForm.html:312
+#: tppcenter/templates/Vacancy/addForm.html:304
 msgid "Vacancy title"
 msgstr "שם פנוי"
 
@@ -3494,7 +3301,7 @@ msgstr "מפה"
 #: tppcenter/templates/Innov/contentPage.html:69
 #: tppcenter/templates/Tenders/contentPage.html:50
 #: tppcenter/templates/Wall/contentPage.html:58
-#: tppcenter/templates/Wall/contentPage.html:127
+#: tppcenter/templates/Wall/contentPage.html:124
 msgid "Organizer"
 msgstr "כלי ארגון"
 
@@ -3516,7 +3323,7 @@ msgstr "הירשם"
 
 #: tppcenter/templates/Greetings/contentPage.html:30
 #: tppcenter/templates/News/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:230
+#: tppcenter/templates/Wall/contentPage.html:225
 msgid "Read more"
 msgstr "קרא עוד"
 
@@ -3532,7 +3339,7 @@ msgstr "מילת מפתח"
 #: tppcenter/templates/Innov/addForm.html:51
 #: tppcenter/templates/Innov/detailContent.html:119
 msgid "Realese date"
-msgstr "תאריך שחרור"
+msgstr "תאריך הוצאה"
 
 #: tppcenter/templates/Innov/addForm.html:58
 msgid "Project site"
@@ -3559,7 +3366,7 @@ msgstr "תכנית עסקית"
 
 #: tppcenter/templates/Innov/addForm.html:161
 msgid "Business plan file"
-msgstr "תיק תכנית עסקית"
+msgstr "קובץ תוכנית עסקית"
 
 #: tppcenter/templates/Innov/contentPage.html:61
 #: tppcenter/templates/Tenders/addForm.html:34
@@ -3585,9 +3392,19 @@ msgstr "קישור לתיקיית תכנית עסקית"
 msgid "Innovation project"
 msgstr "פרוייקט חדש"
 
-#: tppcenter/templates/Messages/contentBox.html:10
+#: tppcenter/templates/Messages/contentBox.html:9
 msgid "Send private message"
 msgstr "שלח הודעה אישית"
+
+#: tppcenter/templates/Messages/index.html:49
+msgid "Users"
+msgstr "משתמשים"
+
+#: tppcenter/templates/News/addForm.html:87
+#: tppcenter/templates/Products/addForm.html:380
+#: tppcenter/templates/TppTV/addForm.html:44
+msgid "Category"
+msgstr "קטגוריה"
 
 #: tppcenter/templates/News/addForm.html:101
 #: tppcenter/templates/TppTV/addForm.html:78
@@ -3604,8 +3421,8 @@ msgstr "בחר מדינה"
 msgid "Preview description"
 msgstr "תצוגה מקדימה"
 
-#: tppcenter/templates/News/detailContent.html:145
-#: tppcenter/templates/TppTV/detailContent.html:48
+#: tppcenter/templates/News/detailContent.html:142
+#: tppcenter/templates/TppTV/detailContent.html:45
 msgid "Similar news"
 msgstr "חדשות באותו נושא"
 
@@ -3621,7 +3438,7 @@ msgstr "חדשות אחרונות"
 #: tppcenter/templates/Tenders/addForm.html:89
 #: tppcenter/templates/Tenders/addForm.html:96
 #: tppcenter/templates/Tenders/addForm.html:114
-#: tppcenter/templates/Tpp/addForm.html:66
+#: tppcenter/templates/Tpp/addForm.html:65
 #: tppcenter/templates/TppTV/addForm.html:32
 msgid "delete"
 msgstr "מחיקה"
@@ -3636,11 +3453,11 @@ msgstr "הנחה זמנית"
 
 #: tppcenter/templates/Products/addForm.html:312
 msgid "From(date)"
-msgstr "מתאריך"
+msgstr "מאת "
 
 #: tppcenter/templates/Products/addForm.html:321
 msgid "To(date)"
-msgstr "לתאריך"
+msgstr "קבע מועד"
 
 #: tppcenter/templates/Products/addForm.html:368
 msgid "Measerument unit"
@@ -3651,225 +3468,209 @@ msgid "Post on b2c portal"
 msgstr "פרסם בפורטל המכירות"
 
 #: tppcenter/templates/Products/contentPage.html:59
-#: tppcenter/templates/Products/detailContent.html:80
-#: tppcenter/templates/Wall/contentPage.html:282
-#: usersites/templates/Products/detailContent.html:91
+#: tppcenter/templates/Products/detailContent.html:78
+#: tppcenter/templates/Wall/contentPage.html:277
 msgid "Contact to price"
 msgstr "הצע מחיר"
 
-#: tppcenter/templates/Products/detailContent.html:85
-#: usersites/templates/Products/detailContent.html:96
+#: tppcenter/templates/Products/detailContent.html:83
 msgid "Unit"
 msgstr "יחידה"
 
-#: tppcenter/templates/Products/detailContent.html:89
-#: usersites/templates/Products/detailContent.html:100
+#: tppcenter/templates/Products/detailContent.html:87
 msgid "Amount"
-msgstr "כמות"
+msgstr "הסכום"
 
-#: tppcenter/templates/Products/detailContent.html:93
-#: usersites/templates/Products/detailContent.html:104
+#: tppcenter/templates/Products/detailContent.html:91
 msgid "Deleviry method"
 msgstr "שיטת משלוח"
 
-#: tppcenter/templates/Products/detailContent.html:101
-#: usersites/templates/Products/detailContent.html:134
+#: tppcenter/templates/Products/detailContent.html:98
 msgid "Countact us"
 msgstr "צור קשר"
 
-#: tppcenter/templates/Products/detailContent.html:148
-#: tppcenter/templates/Products/detailContent.html:151
-#: tppcenter/templates/Products/detailContent.html:154
+#: tppcenter/templates/Products/detailContent.html:144
+#: tppcenter/templates/Products/detailContent.html:147
+#: tppcenter/templates/Products/detailContent.html:150
+#: tppcenter/templates/Tenders/detailContent.html:120
 #: tppcenter/templates/Tenders/detailContent.html:123
 #: tppcenter/templates/Tenders/detailContent.html:126
-#: tppcenter/templates/Tenders/detailContent.html:129
-#: usersites/templates/Products/detailContent.html:182
-#: usersites/templates/Products/detailContent.html:185
-#: usersites/templates/Products/detailContent.html:188
 msgid "Link to the document"
 msgstr "קישור למסמכים"
 
 #: tppcenter/templates/Profile/addForm.html:5
 msgid "Your profile was updated"
-msgstr "הפרופיל שלך עודכן בהצלחה"
+msgstr "הפרופיל שלך נערך מחדש"
 
 #: tppcenter/templates/Profile/addForm.html:25
 msgid "Change avatar"
-msgstr "שינוי תמונה"
+msgstr "שינוי פרטים"
 
-#: tppcenter/templates/Profile/addForm.html:76
+#: tppcenter/templates/Profile/addForm.html:75
+msgid "Your organization"
+msgstr "הארגון שלך"
+
+#: tppcenter/templates/Profile/addForm.html:83
 #: tppcenter/templates/main/user_profile.html:70
 msgid "Sex"
 msgstr "מין"
 
-#: tppcenter/templates/Profile/addForm.html:90
+#: tppcenter/templates/Profile/addForm.html:97
 msgid "Telephone Number"
 msgstr "מס' טלפון"
 
-#: tppcenter/templates/Profile/addForm.html:100
-#: tppcenter/templates/Resume/detailContent.html:108
+#: tppcenter/templates/Profile/addForm.html:107
+#: tppcenter/templates/Resume/detailContent.html:103
 #: tppcenter/templates/main/user_profile.html:90
 msgid "Profession"
 msgstr "מקצוע"
 
-#: tppcenter/templates/Resume/addForm.html:56
+#: tppcenter/templates/Resume/addForm.html:53
 msgid ""
 "Filling resume does not obligate company that publishes job on the site TPP-"
 "Center, enter into a contract of employment."
 msgstr "אין במילוי פרטי קורות חיים משום התחייבות החברה לקבלך למשרה המוצעת באתר"
 
-#: tppcenter/templates/Resume/addForm.html:58
-#: tppcenter/templates/Resume/detailContent.html:51
-#, fuzzy
-msgid "Vacancy name"
-msgstr "משרה פנויה"
-
-#: tppcenter/templates/Resume/addForm.html:73
+#: tppcenter/templates/Resume/addForm.html:70
 msgid "Marital Status"
-msgstr "מצב משפחתי"
+msgstr "מצב אישי"
 
-#: tppcenter/templates/Resume/addForm.html:88
+#: tppcenter/templates/Resume/addForm.html:85
 msgid "Citizenship"
 msgstr "אזרחות"
 
-#: tppcenter/templates/Resume/addForm.html:110
-#: tppcenter/templates/Resume/detailContent.html:86
+#: tppcenter/templates/Resume/addForm.html:107
+#: tppcenter/templates/Resume/detailContent.html:81
 msgid "Education"
 msgstr "השכלה"
 
-#: tppcenter/templates/Resume/addForm.html:113
-#: tppcenter/templates/Resume/detailContent.html:96
+#: tppcenter/templates/Resume/addForm.html:110
+#: tppcenter/templates/Resume/detailContent.html:91
 msgid "Institution"
 msgstr "מוסד לימודי"
 
-#: tppcenter/templates/Resume/addForm.html:121
-#: tppcenter/templates/Resume/detailContent.html:100
+#: tppcenter/templates/Resume/addForm.html:118
+#: tppcenter/templates/Resume/detailContent.html:95
 msgid "Faculty"
-msgstr "המחלקה"
+msgstr "כישורים אישיים"
 
-#: tppcenter/templates/Resume/addForm.html:128
-#: tppcenter/templates/Resume/detailContent.html:104
+#: tppcenter/templates/Resume/addForm.html:125
+#: tppcenter/templates/Resume/detailContent.html:99
 msgid "Study period"
 msgstr "תקופת לימודים"
 
-#: tppcenter/templates/Resume/addForm.html:136
-#: tppcenter/templates/Resume/addForm.html:202
-#: tppcenter/templates/Resume/addForm.html:235
-#: tppcenter/templates/Resume/addForm.html:268
+#: tppcenter/templates/Resume/addForm.html:133
+#: tppcenter/templates/Resume/addForm.html:199
+#: tppcenter/templates/Resume/addForm.html:232
+#: tppcenter/templates/Resume/addForm.html:265
 msgid "from"
 msgstr "מאת"
 
-#: tppcenter/templates/Resume/addForm.html:140
-#: tppcenter/templates/Resume/addForm.html:206
-#: tppcenter/templates/Resume/addForm.html:239
-#: tppcenter/templates/Resume/addForm.html:272
+#: tppcenter/templates/Resume/addForm.html:137
+#: tppcenter/templates/Resume/addForm.html:203
+#: tppcenter/templates/Resume/addForm.html:236
+#: tppcenter/templates/Resume/addForm.html:269
 msgid "to"
 msgstr "עבור"
 
-#: tppcenter/templates/Resume/addForm.html:147
+#: tppcenter/templates/Resume/addForm.html:144
 msgid "Specialty"
 msgstr "התמחות"
 
-#: tppcenter/templates/Resume/addForm.html:154
+#: tppcenter/templates/Resume/addForm.html:151
 msgid "Form of study"
-msgstr "מסגרת לימודים "
+msgstr "עבודות מחקר "
 
-#: tppcenter/templates/Resume/addForm.html:168
-#: tppcenter/templates/Resume/addForm.html:295
-#: tppcenter/templates/Resume/addForm.html:302
+#: tppcenter/templates/Resume/addForm.html:165
+#: tppcenter/templates/Resume/addForm.html:292
+#: tppcenter/templates/Resume/addForm.html:299
 msgid "Additionally"
-msgstr "בנוסף"
+msgstr "עוד"
 
-#: tppcenter/templates/Resume/addForm.html:175
-#: tppcenter/templates/Resume/detailContent.html:87
+#: tppcenter/templates/Resume/addForm.html:172
+#: tppcenter/templates/Resume/detailContent.html:82
 msgid "Experience"
-msgstr "ניסיון תעסוקתי"
+msgstr "ניסיון מקצועי"
 
-#: tppcenter/templates/Resume/addForm.html:177
+#: tppcenter/templates/Resume/addForm.html:174
 msgid "Specify the last 3 jobs"
-msgstr "פרט/י שלוש מקומות עבודה האחרונים "
+msgstr "פרט את שלוש עמקומות בהם עבדת"
 
-#: tppcenter/templates/Resume/addForm.html:194
+#: tppcenter/templates/Resume/addForm.html:191
 msgid "Worrk period"
 msgstr "תקופת עבודה"
 
-#: tppcenter/templates/Resume/addForm.html:227
-#: tppcenter/templates/Resume/addForm.html:260
+#: tppcenter/templates/Resume/addForm.html:224
+#: tppcenter/templates/Resume/addForm.html:257
 msgid "Work period"
 msgstr "תקופת עבודה"
 
-#: tppcenter/templates/Resume/addForm.html:278
-#: tppcenter/templates/Resume/detailContent.html:88
+#: tppcenter/templates/Resume/addForm.html:275
+#: tppcenter/templates/Resume/detailContent.html:83
 msgid "Skills"
 msgstr "כישורים אישיים"
 
-#: tppcenter/templates/Resume/addForm.html:281
+#: tppcenter/templates/Resume/addForm.html:278
 msgid "Languages skills"
-msgstr "שליטה בשפות"
+msgstr "כישורי שפות"
 
-#: tppcenter/templates/Resume/addForm.html:288
-#: tppcenter/templates/Resume/detailContent.html:162
+#: tppcenter/templates/Resume/addForm.html:285
+#: tppcenter/templates/Resume/detailContent.html:157
 msgid "Computer skills"
-msgstr "שליטה במחשב"
+msgstr "כישורי עבודה על מחשב"
 
-#: tppcenter/templates/Resume/addForm.html:305
+#: tppcenter/templates/Resume/addForm.html:302
 msgid "Your salary expectations"
 msgstr "ציפיות שכר"
 
-#: tppcenter/templates/Resume/addForm.html:312
+#: tppcenter/templates/Resume/addForm.html:309
 msgid "Information about which you wish to inform"
-msgstr "מידע נוסף שברצונך למסור"
+msgstr "איזה מידע ברצונך למסור לנו"
 
-#: tppcenter/templates/Resume/addForm.html:319
+#: tppcenter/templates/Resume/addForm.html:316
 msgid ""
 "I confirm that all information provided by me in this form on the site TPP-"
 "Center, are true and complete"
-msgstr "אני מאשר שכל המידע שמסרתי ל\"אקסטרט סנטר\" הינו מלא ושלם"
+msgstr "אני מאשר שכל המידע שמסרתי ל\"אקספרט סנטר\" הינו מלא ושלם"
 
-#: tppcenter/templates/Resume/addForm.html:320
+#: tppcenter/templates/Resume/addForm.html:317
 msgid "I don't mind for checking the information reported by me"
 msgstr "אין לי התנגדות לבדיקת אמיתות המידע שמסרתי"
 
-#: tppcenter/templates/Resume/contentPage.html:38
+#: tppcenter/templates/Resume/contentPage.html:32
 #: tppcenter/templates/Tenders/contentPage.html:46
 #: tppcenter/templates/UserSites/contentPage.html:36
 msgid "Date of publication"
 msgstr "תאריך הפרסום"
 
-#: tppcenter/templates/Resume/contentPage.html:43
-#: tppcenter/templates/Resume/detailContent.html:55
-#, fuzzy
-msgid "User name"
-msgstr "שם פרטי"
-
-#: tppcenter/templates/Resume/detailContent.html:63
+#: tppcenter/templates/Resume/detailContent.html:58
 msgid "Marital status"
 msgstr "מצב משפחתי"
 
-#: tppcenter/templates/Resume/detailContent.html:67
+#: tppcenter/templates/Resume/detailContent.html:62
 msgid "Citezenship"
 msgstr "אזרחות"
 
-#: tppcenter/templates/Resume/detailContent.html:79
+#: tppcenter/templates/Resume/detailContent.html:74
 msgid "Salary"
 msgstr "שכר"
 
-#: tppcenter/templates/Resume/detailContent.html:89
-#: tppcenter/templates/Resume/detailContent.html:112
+#: tppcenter/templates/Resume/detailContent.html:84
+#: tppcenter/templates/Resume/detailContent.html:107
 msgid "Additional"
 msgstr "עוד"
 
-#: tppcenter/templates/Resume/detailContent.html:129
-#: tppcenter/templates/Resume/detailContent.html:137
-#: tppcenter/templates/Resume/detailContent.html:145
+#: tppcenter/templates/Resume/detailContent.html:124
+#: tppcenter/templates/Resume/detailContent.html:132
+#: tppcenter/templates/Resume/detailContent.html:140
 msgid "Work  period"
 msgstr "תקופת עבודה"
 
-#: tppcenter/templates/Resume/detailContent.html:158
+#: tppcenter/templates/Resume/detailContent.html:153
 msgid "Language skills"
 msgstr "שפות נדרשות"
 
-#: tppcenter/templates/Resume/detailContent.html:166
+#: tppcenter/templates/Resume/detailContent.html:161
 msgid "Additional skills"
 msgstr "כישורים נדרשים"
 
@@ -3888,24 +3689,24 @@ msgstr "מחיר התחלתי"
 msgid "Tender name"
 msgstr "שם המציע"
 
-#: tppcenter/templates/Tpp/addForm.html:137
+#: tppcenter/templates/Tpp/addForm.html:136
 msgid "VATIN"
 msgstr ""
 
-#: tppcenter/templates/Tpp/addForm.html:154
+#: tppcenter/templates/Tpp/addForm.html:153
 msgid "Organization name"
 msgstr "שם הארגון"
 
-#: tppcenter/templates/Tpp/addForm.html:162
+#: tppcenter/templates/Tpp/addForm.html:161
 msgid "Preview description "
 msgstr "תצוגה מקדימה"
 
-#: tppcenter/templates/Tpp/addForm.html:169
+#: tppcenter/templates/Tpp/addForm.html:168
 #: tppcenter/templates/TppTV/addForm.html:101
 msgid "Detail description"
 msgstr "פירוט צרכים"
 
-#: tppcenter/templates/Tpp/addForm.html:194
+#: tppcenter/templates/Tpp/addForm.html:193
 msgid "Detail"
 msgstr "פרטים"
 
@@ -3917,74 +3718,64 @@ msgstr "לוגו"
 msgid "Sites"
 msgstr "אתרים"
 
-#: tppcenter/templates/Users/contentPage.html:46
-#, fuzzy
-msgid "Send the message"
-msgstr "שלח הודעה אישית"
-
 #: tppcenter/templates/Vacancy/addForm.html:169
 msgid "Departament"
 msgstr "מחלקה"
 
-#: tppcenter/templates/Vacancy/addForm.html:171
-#, fuzzy
-msgid "Choose department..."
-msgstr "בחר מועד"
-
 #: tppcenter/templates/Vacancy/addForm.html:191
-msgid "Choose from list..."
-msgstr ""
+msgid "Select Department to select vacancy..."
+msgstr "בחר  מחלקה ומשרה מתאימים"
 
 #: tppcenter/templates/Vacancy/addForm.html:209
 msgid "Name of vacancy"
-msgstr "שם המשרה"
+msgstr "סוגי משרות"
 
 #: tppcenter/templates/Vacancy/addForm.html:218
 msgid "City of vacancy"
-msgstr "מיקום המשרה"
+msgstr "משרות פנויות"
 
 #: tppcenter/templates/Vacancy/addForm.html:225
 msgid "Type of employment"
-msgstr "היקף המשרה"
+msgstr "סוג מקצוע"
 
-#: tppcenter/templates/Vacancy/addForm.html:243
+#: tppcenter/templates/Vacancy/addForm.html:235
 msgid "make vacancy anonymous"
-msgstr "לסמן כמשרה חסויה "
+msgstr "להעלים את השם בשטח הפנוי"
 
-#: tppcenter/templates/Vacancy/addForm.html:244
+#: tppcenter/templates/Vacancy/addForm.html:236
 msgid "name of company will be hidden"
-msgstr "ניתן להסתיר את שם החברה"
+msgstr "נא להסתיר את שם החברה"
 
-#: tppcenter/templates/Vacancy/addForm.html:262
-#: tppcenter/templates/Vacancy/detailContent.html:79
+#: tppcenter/templates/Vacancy/addForm.html:254
+#: tppcenter/templates/Vacancy/detailContent.html:76
 msgid "Requirements"
 msgstr "דרישות התפקיד"
 
-#: tppcenter/templates/Vacancy/addForm.html:269
-#: tppcenter/templates/Vacancy/detailContent.html:83
+#: tppcenter/templates/Vacancy/addForm.html:261
+#: tppcenter/templates/Vacancy/detailContent.html:80
 msgid "Terms"
 msgstr "תנאים"
 
-#: tppcenter/templates/Vacancy/addForm.html:301
-#: tppcenter/templates/Vacancy/addForm.html:313
+#: tppcenter/templates/Vacancy/addForm.html:293
+#: tppcenter/templates/Vacancy/addForm.html:305
 msgid "Please wait to response..."
-msgstr "אנא המתן לתגובה"
+msgstr "נא המתן לתקגובה"
 
 #: tppcenter/templates/Vacancy/detailContent.html:32
 msgid "Send Resume"
-msgstr "שלח קורות חיים"
+msgstr "שלח קורוח חיים"
 
 #: tppcenter/templates/Vacancy/detailContent.html:42
 msgid "Anonymous company"
 msgstr "חברה לא מזוהה"
 
-#: tppcenter/templates/Vacancy/detailContent.html:70
+#: tppcenter/templates/Vacancy/detailContent.html:67
 msgid "Type of employments"
 msgstr "סוג משרה"
 
 #: tppcenter/templates/Vacancy/index.html:47
 msgid "You send resume on position:"
-msgstr "שולח קורות חיים למשרה"
+msgstr "שלח קורות חיים ממוקדים "
 
 #: tppcenter/templates/Vacancy/index.html:53
 msgid "Add new resume to profile"
@@ -4004,9 +3795,9 @@ msgstr "הנתון לא נמצא"
 
 #: tppcenter/templates/Wall/contentPage.html:8
 msgid "Latest updates"
-msgstr "עדכונים אחרונים"
+msgstr "חדשות חמות"
 
-#: tppcenter/templates/Wall/contentPage.html:151
+#: tppcenter/templates/Wall/contentPage.html:146
 msgid "Bussiness Proposals"
 msgstr "הצעות עסקיות"
 
@@ -4017,28 +3808,6 @@ msgstr "הארגון הנוכחי"
 #: tppcenter/templates/main/denied.html:10
 msgid "Permission denied"
 msgstr "ההרשאה נדחתה"
-
-#: tppcenter/templates/main/paginator.html:5
-#, fuzzy
-msgid "Total pages"
-msgstr "דפים נוספים"
-
-#: tppcenter/templates/main/paginator.html:7
-msgid "Back"
-msgstr ""
-
-#: tppcenter/templates/main/paginator.html:21
-msgid "Forward"
-msgstr ""
-
-#: tppcenter/templates/main/staticPages.html:4
-#, fuzzy
-msgid "Project news"
-msgstr "שם הפרוייקט"
-
-#: tppcenter/templates/main/staticPages.html:12
-msgid "Advices"
-msgstr "עצות"
 
 #: tppcenter/templates/main/user_profile.html:24
 msgid "User profile"
@@ -4060,7 +3829,7 @@ msgstr "מרכז מומחים"
 
 #: tppcenter/templates/registration/login.html:26
 msgid "Authorization"
-msgstr "כניסה"
+msgstr "הרשאה"
 
 #: tppcenter/templates/registration/login.html:47
 msgid "Forgot password"
@@ -4075,7 +3844,7 @@ msgstr "שכחת סיסמה"
 #: tppcenter/templates/registration/password_reset_form.html:6
 #: tppcenter/templates/registration/password_reset_form.html:28
 msgid "Password reset"
-msgstr "איפוס סיסמה"
+msgstr "תנאי שימוש"
 
 #: tppcenter/templates/registration/registration.html:58
 msgid "I have read and accept"
@@ -4085,47 +3854,17 @@ msgstr "קראתי ואני מסכים לתנאים"
 msgid "the terms of use"
 msgstr "תנאי שימוש"
 
-#: usersites/views.py:23 usersites/views.py:24
-#: usersites/templates/header.html:4
-#, fuzzy
-msgid "About us"
-msgstr "אודות"
-
-#: usersites/Contact/views.py:38
-#, fuzzy
-msgid "This message was sent to company:"
-msgstr "הודעה זו נשלחה לחברה עם קוד זהות"
-
-#: usersites/Contact/views.py:41
-#, fuzzy
-msgid "New message from "
-msgstr "הודעה חדשה"
-
-#: usersites/Contact/views.py:47
-#, fuzzy
-msgid "The message was succesfuly send "
-msgstr "נשמר בהצלחה"
-
-#: usersites/Contact/views.py:50
-msgid "Incoorect Recapcha"
-msgstr ""
-
-#: usersites/Contact/views.py:55
-#, fuzzy
-msgid "All field are required"
-msgstr "הודעה או הוספת קובץ נדרשים"
-
 #: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
 #: usersites/templates/contentPage.html:7
-#: usersites/templates/site_sidebar.html:91
+#: usersites/templates/site_sidebar.html:19
 msgid "Business proposals"
 msgstr "הצעה עסקית"
 
-#: usersites/templates/site_sidebar.html:89
+#: usersites/templates/site_sidebar.html:17
 msgid "Company news"
 msgstr "חדשות"
 
-#: usersites/templates/site_sidebar.html:94
+#: usersites/templates/site_sidebar.html:22
 msgid "Company structure"
 msgstr " מבנה ארגוני"
 
@@ -4137,16 +3876,6 @@ msgstr "ציוד משרדי"
 msgid "Employee"
 msgstr "שכירים"
 
-#: usersites/templates/Contact/contentPage.html:60
+#: usersites/templates/Contact/contentPage.html:52
 msgid "You email"
 msgstr "דואר אלקטרוני"
-
-#: usersites/templates/Products/detailContent.html:119
-msgid "Payment for Product: "
-msgstr ""
-
-#~ msgid "Your organization"
-#~ msgstr "הארגון שלך"
-
-#~ msgid "Select Department to select vacancy..."
-#~ msgstr "בחר  מחלקה ומשרה מתאימים"
