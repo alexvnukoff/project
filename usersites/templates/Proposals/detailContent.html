@@ -1,9 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-    <link type="text/css" href="{% static 'tppcenter/css/company.css' %}" rel="stylesheet" />
- <link type="text/css" href="{% static 'tppcenter/css/news.css' %}" rel="stylesheet" />
- <link type="text/css" href="{% static 'tppcenter/css/flags.css' %}" rel="stylesheet" />
+
 <script>
 $(function() {
 	$(".prj-details-tab").tabs();});
@@ -22,7 +20,7 @@ $(function() {
     ga('set', 'dimension2', 'proposal');
 </script>
 
-  <div class="tender">
+
             {% with proposalValues.NAME.0 as name %}
 
             {% with proposalValues.DETAIL_TEXT.0 as content %}
@@ -47,27 +45,34 @@ $(function() {
             {% with proposalValues.ORGANIZATION_FAX|first as org_fax %}
 
 
-               <div class="tender-details-title">
-               		{% if flag_class %}
+
+
+
+
+
+
+
+
+                    <div class="country">
+               		  {% if flag_class %}
                          <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% elif org_flag %}
                          <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  title="{{ org_name }}"/>
                             {% else %}
                          <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" />
                             {% endif %}
-                    <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}</font>
-               </div>
-               <div class="tender-info">
-					<span class="title">{{ name }}</span>
-                    <div class="tender-bottom">
-                    	<div class="tender-bottom-left">
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
-                            <a href="#">{{ org_name }}</a>
-                            </div>
+                      {% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}
                     </div>
-                    <div class="innov-details">
-                    	<p></p>
+
+
+				    <h2 class="title-details">{{ name }}</h2>
+                    <div class="company-dt">
+                      	<img class="logo-cpn" src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
+                        <a href="#">{{ org_name }}</a>
                     </div>
+
+
+
                     <div class="prj-details-tab">
                         <div class="tab-cate">
                             <ul>
@@ -153,11 +158,11 @@ $(function() {
                          </div>
                         {% endfor %}
                     </div>
-               </div>
 
 
 
 
+
             {% endwith %}
             {% endwith %}
             {% endwith %}
@@ -180,6 +185,7 @@ $(function() {
             {% endwith %}
 
 
-     </div>
+
+
 
 
