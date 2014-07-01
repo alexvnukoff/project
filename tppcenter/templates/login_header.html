@@ -57,6 +57,14 @@
 
 
                 <script>
+                    $(document).ready(function() {
+                          var path = (window.location.host).split('.');
+                          path = path[0];
+                         $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === path )
+                                $(opt).attr('selected', 'selected');
+                        });
+                    });
                     $( "#lang_select" ).change(function(e) {
                         if (!$( this ).val())
                         return;
