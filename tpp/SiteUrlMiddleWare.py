@@ -34,8 +34,8 @@ class SiteUrlMiddleWare:
         except Site.DoesNotExist:
 
 
-            site = Site.objects.get(name='tppcenter')
-            settings.SITE_ID = site.pk
+
+            settings.SITE_ID = 1
             request.urlconf = "tppcenter.urls"
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
