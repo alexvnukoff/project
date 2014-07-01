@@ -85,7 +85,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
     category = post.get('CATEGORY', None)
-    is_b2c_product = post.get('B2C_PRODUCT', None)
+    #is_b2c_product = post.get('B2C_PRODUCT', None)
 
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
@@ -121,14 +121,14 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             parent = Organization.objects.get(pk=int(current_company))
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
-        site = Site.objects.get(name='centerpokupok')
+        #site = Site.objects.get(name='centerpokupok')
 
-        if is_b2c_product:
-            product.sites.all().delete()
-            product.sites.add(site.pk)
-        else:
-            product.sites.remove(site.pk)
-            product.sites.add(Site.objects.get(name='tppcenter').pk)
+        #if is_b2c_product:
+         #   product.sites.all().delete()
+          #  product.sites.add(site.pk)
+        #else:
+         #   product.sites.remove(site.pk)
+          #  product.sites.add(Site.objects.get(name='tppcenter').pk)
 
 
 
