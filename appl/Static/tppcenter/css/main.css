@@ -1,5 +1,6 @@
 @charset "utf-8";
 body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#4a4a4a;}
+.logo-main{ background:url(../img/b24_big.png) no-repeat; }
 .imgmain{ background:url(../img/imgmain.png);}
 .icons{ background:url(../img/icons.png);}
 .wrapper{ width:1000px; margin:0 auto;}
