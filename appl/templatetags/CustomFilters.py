@@ -238,9 +238,10 @@ def modelCount(model, owner=None):
 
     klass = (globals()[model])
 
-    sqs = func.getActiveSQS().models(klass)
+    sqs = klass.active.get_active().all()
 
     if isinstance(owner, int):
+        sqs = func.getActiveSQS().models(klass)
         sqs.filter(SQ(tpp=owner) | SQ(company=owner))
 
     return sqs.count()

@@ -52,7 +52,7 @@
 {% block body %}
 <div class="header">
 <div class="wrapper">
-	<a href="#"><i class="imgmain" id="logo"></i></a>
+	<a href="#"><i class="logo-main" id="logo"></i></a>
     <ul class="header-r">
 
 
@@ -95,6 +95,14 @@
                     </select>
 
                   <script>
+                       $(document).ready(function() {
+                          var path = (window.location.host).split('.');
+                          path = path[0];
+                         $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === path )
+                                $(opt).attr('selected', 'selected');
+                        });
+                    });
                     $( "#lang_select" ).change(function(e) {
                         if (!$( this ).val())
                         return;

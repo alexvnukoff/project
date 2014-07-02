@@ -7,7 +7,7 @@
 <div class="tophead">
 	<div class="news">
     	<div class="tophead-l">
-        	<a href="/"><i class="imgnews news-logo"></i></a>
+        	<a href="/"><i class="logo news-logo"></i></a>
         	{% showTopStaticPages %}
 
         </div>
@@ -57,6 +57,14 @@
 
 
                 <script>
+                    $(document).ready(function() {
+                          var path = (window.location.host).split('.');
+                          path = path[0];
+                         $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === path )
+                                $(opt).attr('selected', 'selected');
+                        });
+                    });
                     $( "#lang_select" ).change(function(e) {
                         if (!$( this ).val())
                         return;

@@ -1,5 +1,6 @@
 @charset "utf-8";
 .news{ width:1100px; margin:0 auto;}
+.logo{ background:url(../img/b24_small.png);}
 .imgnews{ background:url(../img/news.png);}
 .news-logo{ float:left; width:108px; height:23px; margin:3px 0 0 0; background-position:0px 0px;}
 .profile{ position:relative; float:left; width:100%;}
