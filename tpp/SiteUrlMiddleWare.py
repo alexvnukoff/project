@@ -35,7 +35,7 @@ class SiteUrlMiddleWare:
 
 
 
-            settings.SITE_ID = 1
+            settings.SITE_ID = 143
             request.urlconf = "tppcenter.urls"
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
