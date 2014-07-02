@@ -216,3 +216,6 @@ div.org-contacts ul li span.left{float: right;}
 .slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align: left; padding-bottom:12px;}
 .desc ul.list li{ padding-right:32px; padding-left:0; background:url(../img/bullet.png) no-repeat top right; float:right;width: 85%;}
 .vacancy-list li .vacancy-desc a.more{ text-align:left;}
+
+.slide2 .desc h2, .slide3 .desc h2, .slide4 .desc h2{ padding-bottom:0; text-align: center;}
+.slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align:center; padding-bottom:12px;}
