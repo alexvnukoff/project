@@ -38,6 +38,13 @@ class UserManager(BaseUserManager):
         request = get_request()
 
         if request:
+            try:
+                real_ip = request.META['HTTP_X_FORWARDED_FOR']
+                real_ip = real_ip.split(",")[0]
+                request.META['REMOTE_ADDR'] = real_ip
+            except:
+                pass
+
             ip = request.META['REMOTE_ADDR']
         else: # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
             ip = '0.'+str(randint(0, 255))+'.'+str(randint(0, 255))+'.'+str(randint(0, 255))
