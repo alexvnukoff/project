@@ -16,7 +16,7 @@ class SiteUrlMiddleWare:
         if current_domain is False:
             return HttpResponseBadRequest()
         
-        if current_domain[:4] == "www":
+        if current_domain[:3] == "www":
             current_domain = current_domain[4:]
         try:
             if domains.get(current_domain, False):
