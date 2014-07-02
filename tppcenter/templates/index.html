@@ -81,7 +81,7 @@
 <div class="wrapper">
     <div class="main">
     	<div class="sideleft">
-          <select id="lang_select" style="height: 29px;width: 183px;" >
+          <select id="lang_select" style="height: 24px;width: 200px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
                         <option>{% trans 'Mother tongue' %}</option>
 
                         <option value="am">Armenian</option>
@@ -121,15 +121,17 @@
 
 
             <!-- Google Translate injection -->
-            <div id="google_translate_element_main"></div>
-            <script type="text/javascript">
-                function googleTranslateElementInit() {
-                    new google.translate.TranslateElement({
-                        pageLanguage: 'en',
-                        multilanguagePage: true}, 'google_translate_element_main');
-                    }
-            </script>
-            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px; width: 200px;">
+                <script type="text/javascript">
+                    function googleTranslateElementInit() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'en',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                            multilanguagePage: true}, 'google_translate_element_main');
+                        }
+                </script>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </div>
             <!-- /Google Translate injection -->
 
         	<div class="community">
