@@ -979,11 +979,3 @@ def sendMessage(request):
              response = _('Only registered users can send the messages')
 
         return HttpResponse(response)
-
-
-
-
-
-
-
-
