@@ -24,7 +24,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-center { float: left;}
 .i-lock{ display:inline-block; width:16px; height:18px; background-position:0px 1px; margin:0 5px 0 0; vertical-align:middle;}
 .tophead-r a:hover{ text-decoration:underline;}
-#logo{ position:relative; float:left; width:286px; height:98px; margin:22px 0 0 0; background-position:0px 0px;}
+#logo{ position:relative; float:left; width:286px; height:98px; margin:10px 0 0 0; background-position:0px 0px;}
 #search{ position:relative; float:right; width:612px; padding:10px 6px 10px 10px; background-color:#4a4a4a; border-radius:3px; margin:30px 20px 0 0; display:inline;}
 .styled-select, .styled-select2{ position:relative; float: left; width: 200px; height: 30px; background: url(../img/arrowselect.png) no-repeat right #e6e6e6; margin: 0 4px 0 0;}
 .styled-select .textfilter, .styled-select .texttype, .styled-select .textpart{ position:relative; float:left; width:100%; height:100%; line-height:30px; color:#9b9b9b; text-indent:12px;}

@@ -129,15 +129,19 @@
 
 
             <!-- Google Translate injection -->
-            <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px; width: 200px;">
-                <script type="text/javascript">
-                    function googleTranslateElementInit() {
-                        new google.translate.TranslateElement({
-                            pageLanguage: 'en',
-                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                            multilanguagePage: true}, 'google_translate_element_main');
-                        }
-                </script>
+            <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
+                 <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'en',
+                        multilanguagePage: true}, 'google_translate_element_main');
+                    }
+            </script>
+                 <style type="text/css">
+                .goog-te-combo {
+                  width: 200px;
+                }
+          </style>
                 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
             </div>
             <!-- /Google Translate injection -->
