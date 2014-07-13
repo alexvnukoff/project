@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+  {% block header %}
+       {% getUserSitTopMenu %}
+    {% endblock %}
+
+  {% block body %}
+
+<div class="main">
+	<div class="wrapper">
+    	<div class="menutop">
+        	<div class="linkleft">
+            	<a href="{% detail_page_to_tppcenter "project:about" %}">О проекте</a>|<a href="{% detail_page_to_tppcenter "project:offer" %}">Услуги</a>|<a href="{% detail_page_to_tppcenter "project:faq" %}">Помощь</a>
+            </div>
+            <div class="signup">
+            	<i class="i-lock imgmain"></i>
+                <a href="#">Войти </a>
+            </div>
+            <div class="notify none">
+                <span><i class="imgmain i-note"></i></span>
+                <span><i class="imgmain i-mail"></i></span>
+                <span>
+                    <i class="imgmain i-user" id="showevent"></i>
+                </span>
+                <span><i class="imgmain i-book"></i></span>
+            </div>
+        </div>
+      {% block sidebar %}
+           {% getUserSiteMenu %}
+
+        {% endblock %}
+        <div class="mainright">
+        {% block slider %}
+           {% getUserSiteSlider %}
+
+            {% endblock %}
+
+           {% block content %}
+
+               <span style="padding-left: 225px;font-size: large;color: red;">{{ responseMessage }}</span>
+            <h1 class="titlepage">{{ current_section }}</h1>
+
+
+       {{ contentPage }}
+                   {% endblock %}
+        </div>
+    </div>
+</div>
+  {% endblock %}
+
+
+{% block footer %}
+   {% include 'footer.html' %}
+ {% endblock %}

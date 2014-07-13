@@ -167,8 +167,11 @@
                 total.text(newCost);
 
             }
-            $.fn.onChangeSet = function(e) {
 
+
+
+            $.fn.onChangeSet = function(e) {
+                var factor = {{ factor|stringformat:"f" }};
 
                 if ( e.added ) {
 
@@ -183,7 +186,7 @@
 
                     input.data('cost', e.added.cost);
 
-                    e.added.cost = parseFloat(e.added.cost);
+                    e.added.cost = parseFloat(e.added.cost) * factor;
                     cost = e.added.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                     html = $('<li></li>').addClass('basket-' + e.added.id);
@@ -203,7 +206,7 @@
                     toRemove.remove();
                     priceList.find('li.basket-' + e.removed.id).remove();
 
-                    totalCost -= parseFloat(cost);
+                    totalCost -= parseFloat(cost) * factor;
                     setTotal();
                 }
 

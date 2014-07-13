@@ -44,10 +44,7 @@ function updateURLParameter(param, paramVal, url)
     return baseURL + "?" + newAdditionalURL + rows_txt;
 }
 
-
-$(document).ready(function()
-{
-       function getCookie(name) {
+function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie != '') {
                 var cookies = document.cookie.split(';');
@@ -83,6 +80,8 @@ $(document).ready(function()
                 !(/^(\/\/|http:|https:).*/.test(url));
         }
 
+$(document).ready(function()
+{
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
@@ -202,6 +201,12 @@ $(document).ready(function()
         {
              $("#registration_error_ex").hide();
              $("#registration_succsefuly_ex").show();
+             var dataPost = {'NAME':form.name_register , 'EMAIL':form.email_register,
+                             'TELEPHONE': form.telephone_register, 'COMPANY': form.company_register,
+                             'POSITION': form.position_register, 'SEND_EMAIL': form.email_company_register,
+                             'EXEBITION': form.ex_name_register};
+
+             $.post('/register/exhibition/', dataPost );
 
         }
 
@@ -233,6 +238,68 @@ $(document).ready(function()
 		}
 	});
     */
+
+    $(document).on('click', ".contact-us", function()
+    {
+        $('#send_succsefuly').hide()
+	    document.getElementById('light-contact').style.display='block';
+        document.getElementById('fade-contact').style.display='block';
+        var company_name = $(this).data('name');
+        var company_id = $(this).data('id');
+        $("#toCompany").val(company_id);
+        $('#send_to').text(company_name);
+
+	});
+     $(document).on('click', "#cancel", function()
+     {
+          document.getElementById('light-contact').style.display='none';
+          document.getElementById('fade-contact').style.display='none';
+     });
+
+    $(document).on('click', "#send-message", function()
+    {
+        $('#send_succsefuly').text("Please wait to response.....").show();
+        $("#messageToCompany").ajaxSubmit({
+            url: '/companies/send/',
+            type: 'post',
+            success:function(data) {
+                    $('#send_succsefuly').text(data).show()
+            }
+        });
+        $("#messageToCompany")[0].reset();
+	});
+
+    $(document).on('click', "#send-resume", function()
+    {
+        $('#send_succsefuly').hide()
+	    document.getElementById('light-vacancy').style.display='block';
+        document.getElementById('fade-vacancy').style.display='block';
+
+
+	});
+
+    $(document).on('click', "#cancel-vacancy", function()
+    {
+        document.getElementById('light-vacancy').style.display='none';
+        document.getElementById('fade-vacancy').style.display='none';
+    });
+
+    $(document).on('click', "#send-vacancy", function()
+    {
+        $('#send_resume_succsefuly').text("Please wait to response.....").show();
+        var dataPost  = {'VACANCY': $('#vacancy-id').val(),
+                        'RESUME':  $('#resume-id').val()
+                    };
+        $.ajax({
+            url: '/vacancy/send/',
+            type: 'post',
+            data : dataPost ,
+            success:function(data) {
+                    $('#send_resume_succsefuly').text(data).show()
+            }
+        });
+	});
+
 
 	$(document).on('click', ".close-event", function()
     {
@@ -292,3 +359,54 @@ $(document).ready(function()
 
 });
 
+<!-- Share for social networks -->
+Share = {
+        vkontakte: function(purl, ptitle, pimg, text) {
+            url  = 'http://vkontakte.ru/share.php?';
+            url += 'url='          + encodeURIComponent(purl);
+            url += '&title='       + encodeURIComponent(ptitle);
+            url += '&description=' + encodeURIComponent(text);
+            url += '&image='       + encodeURIComponent(pimg);
+            url += '&noparse=true';
+            Share.popup(url);
+        },
+        odnoklassniki: function(purl, text) {
+            url  = 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1';
+            url += '&st.comments=' + encodeURIComponent(text);
+            url += '&st._surl='    + encodeURIComponent(purl);
+            Share.popup(url);
+        },
+        facebook: function(purl, ptitle, pimg, text) {
+            url  = 'http://www.facebook.com/sharer.php?s=100';
+            url += '&p[title]='     + encodeURIComponent(ptitle);
+            url += '&p[summary]='   + encodeURIComponent(text);
+            url += '&p[url]='       + encodeURIComponent(purl);
+            url += '&p[images][0]=' + encodeURIComponent(pimg);
+            Share.popup(url);
+        },
+        twitter: function(purl, ptitle) {
+            url  = 'http://twitter.com/share?';
+            url += 'text='      + encodeURIComponent(ptitle);
+            url += '&url='      + encodeURIComponent(purl);
+            url += '&counturl=' + encodeURIComponent(purl);
+            Share.popup(url);
+        },
+        mailru: function(purl, ptitle, pimg, text) {
+            url  = 'http://connect.mail.ru/share?';
+            url += 'url='          + encodeURIComponent(purl);
+            url += '&title='       + encodeURIComponent(ptitle);
+            url += '&description=' + encodeURIComponent(text);
+            url += '&imageurl='    + encodeURIComponent(pimg);
+            Share.popup(url)
+        },
+
+        me : function(el){
+            console.log(el.href);
+            Share.popup(el.href);
+            return false;
+        },
+        popup: function(url) {
+            window.open(url,'','toolbar=0,status=0,width=626,height=436');
+        }
+};
+<!-- /Share for social networks -->

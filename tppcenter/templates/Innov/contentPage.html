@@ -38,30 +38,30 @@
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                {% if 'delete_innovationproject' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'innov:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
                                 {% if 'change_innovationproject' in permlist %}
                                      <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'innov:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                                 {% if 'add_advtop' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                 {% endif %}
+                                 {% if 'delete_innovationproject' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'innov:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                  {% endif %}
                             </div>
                         </div>
                    {% endif %}
                         <div class="title">
                         {% if cabinet_country_flag %}
-                             <i class="sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
+                             <i class="flag sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
                         {% elif org_flag %}
                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
                         {% elif flag %}
-                           <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
                             <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
                         </div>
                         <h2><a href="{% url "innov:detail" slug %}">{{ name|truncatewords:14 }}</a></h2>
-                        <div class="desc">{% trans 'Cost of project' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>
+                        <div class="desc">{% trans 'Project cost' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>
                         <div class="line">
                             {% if branch_name != 0  %}
                         	    <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>

@@ -28,11 +28,11 @@
                     <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                {% if 'delete_tender' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tenders:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
                                 {% if 'change_tender' in permlist %}
                                      <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tenders:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
+                                {% if 'delete_tender' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tenders:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                 {% endif %}
                             </div>
                         </div>
@@ -41,9 +41,9 @@
                         {% if org_flag %}
                                <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                         {% else %}
-                               <i class="sprite {{ flag }}" title="{{ country_name }}"></i>
+                               <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
                         {% endif %}
-                            <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}, {% trans 'Date of publication' %}: {{ date|date:"d M Y" }}</font>
+                            <font class="name">{% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}, {% trans 'Publication date' %}: {{ date|date:"d M Y" }}</font>
                         </div>
                         <h2><a href="{% url "tenders:detail" slug %}" >{{ name }}</a></h2>
                         <div class="line">{% trans 'Starting price' %}: <font class="number">{{ currency|getSymbol }} {{ cost }}</font></div>

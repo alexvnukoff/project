@@ -26,12 +26,12 @@
                         {% with order.IMAGE|first as picture %}
                         {% with order.NAME|first as name %}
                         {% with order.QUANTITY|first as qty %}
-                        {% with order.CITY|first as city %}
-                        {% with order.COUNTRY|first as country %}
+                        {% with order.ADDRESS_CITY|first as city %}
+                        {% with order.ADDRESS_COUNTRY|first as country %}
                         {% with order.ADDRESS|first as address %}
 					<li>
 						<div class="thumb">
-							<img src="{{ MEDIA_URL }}small/{{ picture }} }" alt="{{ name }}" class="thumb" />
+							<img src="{{ MEDIA_URL }}small/{{ picture }} " alt="{{ name }}" class="thumb" />
 						</div>
 						<div class="infoproduct">
 							<p>{{ name }}</p>

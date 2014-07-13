@@ -7,10 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from tppcenter.Profile.profileForms import ProfileForm
 from tppcenter.views import user_logout
 import uuid
+from django.utils.translation import trans_real
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
@@ -32,6 +33,9 @@ def getProfileForm(request):
 
 
 def _profileContent(request):
+
+    lang_code = trans_real.get_language()
+    trans_real.activate(lang_code)
 
     user_groups = request.user.groups.values_list('pk', flat=True)
 
@@ -77,12 +81,17 @@ def _profileContent(request):
                 'USER_LAST_NAME': form.cleaned_data['last_name'],
                 'USER_FIRST_NAME': form.cleaned_data['first_name'],
                 'TELEPHONE_NUMBER': form.cleaned_data['telephone_number'],
+                'EMAIL': form.cleaned_data['email'],
                 'IMAGE': file
             }, request.user)
+
+
 
             Relationship.objects.filter(parent__in=Country.objects.all(), child=cabinet).delete()
             Relationship.setRelRelationship(parent=Country.objects.get(pk=int(form.cleaned_data['country'])),
                                             child=cabinet, user=request.user)
+
+            cabinet.reindexItem()
 
             if form.cleaned_data['email'] != request.user.email:
                 user = request.user
@@ -155,6 +164,7 @@ def _profileContent(request):
     }
 
     context = RequestContext(request, templateParams)
+    trans_real.deactivate()
 
     return template.render(context)
 

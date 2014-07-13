@@ -34,17 +34,17 @@
 
 {% block keywords %}{% endblock %}
 
-{% block left %}{% endblock %}
 
-{% block center %}
+
+ {% block content %}
     <div class="analytics">
 				<div class="community">
                 	<div class="messages-l">
                     	<div class="tab-cate">
                             <ul>
-                                <li {% if active in organizations %} class="ui-tabs-active" {% endif %}>
+                              <!--  <li {% if active in organizations %} class="ui-tabs-active" {% endif %}>
                                     <a href="#message-tabs-1">{% trans "Organizations" %}</a>
-                                </li>
+                                </li>-->
                                 <li {% if active in cabinets %} class="ui-tabs-active" {% endif %} >
                                     <a href="#message-tabs-2">{% trans "Users" %}</a>
                                 </li>
@@ -52,8 +52,8 @@
                         </div>
                         <div id="message-tabs-1">
                             <div class="message-tabcontent message-tabcontent-org">
-								<ul class="custom-ms">
-                                    <li style="display: none"><a href="#placeholder"></a> </li>
+								 <!--<ul class="custom-ms">
+                                   <li style="display: none"><a href="#placeholder"></a> </li>
 
                                     {% for id, attr in organizations.items %}
                                         {% with attr.NAME|first as name %}
@@ -84,7 +84,7 @@
                                         {% endwith %}
                                         {% endwith %}
                                     {% endfor %}
-                                </ul>
+                                </ul>-->
                             </div>
                         </div>
                         <div id="message-tabs-2">
@@ -97,6 +97,7 @@
                                         {% with attr.USER_FIRST_NAME|first as first_name %}
                                         {% with attr.USER_MIDDLE_NAME|first as middle_name %}
                                         {% with attr.IMAGE|first as image %}
+                                        {% with attr.UNREAD as unread %}
 
                                         {% if active == id %}
 
@@ -118,10 +119,12 @@
                                             <a data-url="{% url "messages:message_item" id  %}" data-user-id="{{ id }}" href="#">
                                                 {{ first_name }} {{ last_name }}
                                             </a>
+                                        <span style="color: red;padding-left: 10px;" id="unread-{{ id }}"  >{{ unread }}</span>
                                         </li>
 
                                         {% endif %}
 
+                                        {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
@@ -133,15 +136,14 @@
                         </div>
                     </div>
 
-                    {% if active %}
+
 
                             {% include "Messages/contentBox.html" %}
 
-                    {% endif %}
+
                     <div class="message-loader"><img src="/static/tppcenter/img/messages-loader.gif" /></div>
                 </div>
             </div>
 {% endblock %}
 
-{% block right %}{% endblock %}
 

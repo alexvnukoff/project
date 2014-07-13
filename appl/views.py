@@ -1,4 +1,5 @@
 from itertools import count
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from appl.models import *
 from core.models import Value, Item, Attribute, Dictionary
@@ -9,7 +10,6 @@ from django.conf import settings
 
 def set_news_list(request):
     #dict = Dictionary.objects.get(title="Sex")
-    #dict.deleteSlot("Jopa")
     id = settings.SITE_ID
 
 @login_required

@@ -1,8 +1,10 @@
 {% load CustomFilters %}
+{% load i18n %}
 {% if page.paginator.num_pages > 1 %}
         <div class="panging">
+        <span style="float: left;">{% trans "Total pages" %} : {{ page.paginator.num_pages }} </span>
              {%  if page.has_previous %}
-                    &larr; <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >Назад</a>
+                   &larr; <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >{% trans "Back" %}</a>
             {% endif %}
 
 
@@ -16,7 +18,7 @@
                  {% endifequal %}
                {% endfor %}
                {%  if page.has_next %}
-                          <a href="{% dynurl url_paginator url_parameter page.next_page_number%}" >Вперед</a>&rarr;
+                          <a href="{% dynurl url_paginator url_parameter page.next_page_number%}" >{% trans "Forward" %}</a>&rarr;
                {% endif %}
         </div>
  {% endif %}

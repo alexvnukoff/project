@@ -35,7 +35,16 @@ var ui =
             selector: '#filter-tpp',
             name: 'filter[tpp]'
         },
-
+        company:
+        {
+            selector: '#filter-company',
+            name: 'filter[company]'
+        },
+        bp_category:
+        {
+            selector: '#filter-bp_category',
+            name: 'filter[bp_category]'
+        },
         branch:
         {
             selector: '#filter-branch',
@@ -229,6 +238,11 @@ var ui =
         var text = $(this).text();
         //Set current page to processing menu (top menu)
         ui.curPage.text(text);
+
+        if (url == '/wall/')
+              $('.newslink .left .add-new').hide();
+        else
+              $('.newslink .left .add-new').show();
 
         $('.newslink .left .add-new').attr('href', url + 'add/');
 
@@ -518,9 +532,10 @@ var messagesUI = {
 
     scroollMessageDown: function()
     {//Scroll the message holder last message
-
+        var active_id = $( '.' + messagesUI.curChat + ' a' ).data( 'user-id' );
         var content = $( messagesUI.messageBox + ':visible' );
-        var height = content.find( messagesUI.messageList ).height();
+        var content2 = $( '#custom-content-'+ active_id );
+        var height = content2.find( messagesUI.messageList ).height();
 
         content.scrollTop( height );
 
@@ -554,6 +569,8 @@ var messagesUI = {
                 messagesUI.getMessages( active_id );
                 textarea.val( '' );
                 textarea.removeAttr( 'disabled' );
+                messagesUI.scroollMessageDown();
+                messagesUI.bindScroll()
 
             },
 
@@ -586,6 +603,10 @@ var messagesUI = {
 
                     selector.find( messagesUI.messageList ).append( data );
                     messagesUI.scroollMessageDown();
+                    messagesUI.bindScroll()
+
+
+
                 },
 
                 dataType: 'html',
@@ -630,6 +651,9 @@ var messagesUI = {
         var messages = $('#custom-content-' + recipientID);
         var old = $(messagesUI.chatList + ' .' + messagesUI.curChat)
 
+
+        $('#unread-'+recipientID).text("");
+
         if ( old.length > 0 )
         {
             old.removeClass(messagesUI.curChat);
@@ -650,8 +674,14 @@ var messagesUI = {
             var jqxhr = $.get( loadUrl, 'box=1', function(data) {
                 messagesUI.messagesLoader.hide();
                 $('.custom-content:last').after(data);
+                messagesUI.scroollMessageDown();
+
+
+
             });
         }
+
+
 
         return false;
     },
@@ -813,5 +843,106 @@ uiEvents = {
             if( uiEvents.boxParent.scrollTop() == top )
                 uiEvents.onScrollDown();
         });
+    }
+};
+
+var galleryUpload = { //Async gallery uploader (uploadify)
+
+    options : {
+        uploadLimit: 20,
+        height   : 105,
+        width    : 110,
+        auto     : true,
+        queueID  : 'queue'
+    },
+
+    loadURL: '/',
+    structureURL: '/',
+    loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
+
+    fail_upload : '',
+
+    lang : {
+        uploading: '',
+        success: '',
+        fail: '',
+        wasUploaded: ''
+    },
+
+    init : function(lang, swf, image, upload_url, loadURL, structureURL)
+    {
+        galleryUpload.lang = lang;
+
+        galleryUpload.options['formData'] = {
+            csrfmiddlewaretoken : getCookie('csrftoken')
+        };
+        galleryUpload.options['swf'] = swf;
+        galleryUpload.options['uploader'] = upload_url;
+        galleryUpload.options['buttonImage'] = image;
+        galleryUpload.options['itemTemplate'] = galleryUpload.getQueueTemplate();
+        galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
+        galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
+        galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
+        galleryUpload.options['onUploadStart'] = galleryUpload.onUploadStart;
+
+        galleryUpload.loadURL = loadURL;
+        galleryUpload.structureURL = structureURL;
+
+        $(document).on("click", ".removePhoto", galleryUpload.removePhoto);
+
+
+        $('#file_upload').uploadify(galleryUpload.options);
+
+    },
+
+    getQueueTemplate : function() {
+        return '<div id="${fileID}" class="uploadify-queue-item">' +
+                '<span class="fileName"><strong>' + galleryUpload.lang.uploading + '</strong>: ${fileName} (${fileSize})...' +
+                '</span></div>';
+    },
+
+    onUploadSuccess : function(file, data) {
+        var queue = $('#' + file.id);
+
+        queue.find('span').append( ' - ' + galleryUpload.lang.success );
+        queue.css('color', 'green');
+
+        //$('.tpp-gallery').prepend(data);
+    },
+
+    onUploadError : function(file) {
+        var queue = $('#' + file.id);
+
+        galleryUpload.fail_upload += file.name + "\r\n";
+
+        queue.find('span').append(' - ' + galleryUpload.lang.fail );
+        queue.css({color: 'red', fontWeight: 'bold'});
+    },
+
+    onQueueComplete : function(queueData) { //Show all failed uploads
+
+        if ( queueData.uploadsErrored > 0 )
+        {
+            alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
+        }
+
+        $('.galleryHolder').load(galleryUpload.structureURL);
+
+        galleryUpload.fail_upload = '';
+    },
+
+    onUploadStart: function() {
+        $('.galleryHolder').html(galleryUpload.loader);
+    },
+
+    removePhoto: function() {
+        var link = $(this).attr("href");
+        $('.galleryHolder').html(galleryUpload.loader);
+
+        $.get(link, function(data) {
+            $('.galleryHolder').load(galleryUpload.structureURL);
+        });
+        
+        return false;
     }
 };

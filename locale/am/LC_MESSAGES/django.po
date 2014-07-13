@@ -1,0 +1,3908 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-01 16:01+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: appl/func.py:788 centerpokupok/templates/Company/header.html:48
+#: centerpokupok/templates/Company/products.html:6
+#: centerpokupok/templates/Product/detail.html:114
+#: centerpokupok/templates/Product/index.html:6
+#: centerpokupok/templates/Product/index.html:63
+#: centerpokupok/templates/Product/index.html:76
+#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:51
+#: tppcenter/Product/views.py:154 tppcenter/templates/base.html:142
+#: tppcenter/templates/main_page.html:117
+#: tppcenter/templates/main_page.html:140
+#: tppcenter/templates/Analytic/main.html:64
+#: tppcenter/templates/Companies/detailContent.html:588
+#: tppcenter/templates/Products/index.html:10
+#: tppcenter/templates/Wall/contentPage.html:245
+#: usersites/Products/views.py:42 usersites/Products/views.py:43
+#: usersites/templates/contentPage.html:86
+#: usersites/templates/site_sidebar.html:20
+msgid "Products"
+msgstr "Ապրանքներ"
+
+#: appl/func.py:793 tppcenter/templates/main_page.html:121
+#: tppcenter/templates/main_page.html:144
+#: tppcenter/templates/Analytic/main.html:72
+#: tppcenter/templates/Companies/detailContent.html:593
+#: tppcenter/templates/Tpp/detailContent.html:534
+msgid "Innovation Projects"
+msgstr "Նորարական նախագծեր"
+
+#: appl/func.py:798 tppcenter/Companies/views.py:61
+#: tppcenter/Companies/views.py:769 tppcenter/templates/base.html:143
+#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:133
+#: tppcenter/templates/main_page.html:120
+#: tppcenter/templates/main_page.html:143
+#: tppcenter/templates/Analytic/main.html:95
+#: tppcenter/templates/Companies/index.html:10
+#: tppcenter/templates/Tpp/detailContent.html:559
+msgid "Companies"
+msgstr "Կազմակերպություններ"
+
+#: appl/func.py:803 tppcenter/templates/main_page.html:122
+#: tppcenter/templates/main_page.html:145
+#: tppcenter/templates/Analytic/main.html:68
+#: tppcenter/templates/Analytic/main.html:111
+#: tppcenter/templates/BusinessProposal/index.html:10
+#: tppcenter/templates/Companies/detailContent.html:598
+#: tppcenter/templates/Tpp/detailContent.html:539
+msgid "Business Proposals"
+msgstr "Բիզնես առաջարկներ"
+
+#: appl/func.py:808 tppcenter/Exhibitions/views.py:53
+#: tppcenter/Exhibitions/views.py:136
+#: tppcenter/templates/Analytic/main.html:80
+#: tppcenter/templates/Analytic/main.html:115
+#: tppcenter/templates/Companies/detailContent.html:583
+#: tppcenter/templates/Exhibitions/index.html:10
+#: tppcenter/templates/Tpp/detailContent.html:529
+#: tppcenter/templates/Wall/contentPage.html:98
+msgid "Exhibitions"
+msgstr "Ցուցահանդեսներ/Համաժողովներ"
+
+#: appl/func.py:948
+msgid "Sorry but you cannot modify this item "
+msgstr "Ներեցեք, բայց դուք չեք կարող փոփոխել այս նյութը"
+
+#: appl/templatetags/inclusionTags.py:77 tppcenter/Profile/views.py:18
+#: tppcenter/templates/login_header.html:23
+#: tppcenter/templates/login_header.html:74
+#: tppcenter/templates/main_page.html:155
+#: tppcenter/templates/Profile/index.html:6
+msgid "Profile"
+msgstr "Անձնական էջ"
+
+#: centerpokupok/forms.py:6
+msgid "Recipient name"
+msgstr "Հասցեատիրոջ անունը"
+
+#: centerpokupok/forms.py:7
+#: centerpokupok/templates/Product/orderStepOne.html:81
+#: tppcenter/templates/Companies/tabExhibitions.html:10
+#: tppcenter/templates/Exhibitions/addForm.html:58
+#: tppcenter/templates/Tpp/tabExhibitions.html:10
+msgid "City"
+msgstr "Քաղաք"
+
+#: centerpokupok/forms.py:8
+#: centerpokupok/templates/Product/orderStepOne.html:95
+#: tppcenter/templates/BusinessProposal/popupFilter.html:19
+#: tppcenter/templates/Companies/addForm.html:77
+#: tppcenter/templates/Companies/popupFilter.html:19
+#: tppcenter/templates/Exhibitions/popupFilter.html:19
+#: tppcenter/templates/Innov/popupFilter.html:19
+#: tppcenter/templates/News/addForm.html:109
+#: tppcenter/templates/News/popupFilter.html:19
+#: tppcenter/templates/Products/popupFilter.html:19
+#: tppcenter/templates/Profile/addForm.html:71
+#: tppcenter/templates/Tenders/popupFilter.html:19
+#: tppcenter/templates/Tpp/addForm.html:141
+#: tppcenter/templates/TppTV/addForm.html:57
+#: tppcenter/templates/TppTV/popupFilter.html:19
+#: tppcenter/templates/main/user_profile.html:66
+msgid "Country"
+msgstr "Երկիր "
+
+#: centerpokupok/forms.py:9
+#: centerpokupok/templates/Product/orderStepOne.html:88
+msgid "Zipcode"
+msgstr "Փոստային ինդեքս"
+
+#: centerpokupok/forms.py:10
+#: tppcenter/templates/BusinessProposal/detailContent.html:126
+#: tppcenter/templates/Companies/addForm.html:176
+#: tppcenter/templates/Companies/detailContent.html:666
+#: tppcenter/templates/Exhibitions/detailContent.html:166
+#: tppcenter/templates/Innov/detailContent.html:159
+#: tppcenter/templates/Resume/addForm.html:100
+#: tppcenter/templates/Resume/detailContent.html:70
+#: tppcenter/templates/Tpp/addForm.html:181
+#: tppcenter/templates/Tpp/detailContent.html:586
+msgid "Address"
+msgstr "Հասցե"
+
+#: centerpokupok/forms.py:11 tppcenter/Profile/profileForms.py:53
+msgid "Telephone"
+msgstr "Հեռախոսահամար"
+
+#: centerpokupok/forms.py:20
+msgid "Fisrt name"
+msgstr "Անուն"
+
+#: centerpokupok/forms.py:22 tppcenter/Profile/profileForms.py:16
+#: tppcenter/templates/Profile/addForm.html:34
+#: tppcenter/templates/main/user_profile.html:36
+msgid "Last name"
+msgstr "Ազգանուն"
+
+#: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
+#: tppcenter/templates/Profile/addForm.html:92
+#: tppcenter/templates/Resume/addForm.html:63
+#: tppcenter/templates/Resume/detailContent.html:54
+#: tppcenter/templates/main/user_profile.html:74
+msgid "Birthday"
+msgstr "Ծննդյան ամսաթիվ"
+
+#: centerpokupok/views.py:187 tppcenter/views.py:222
+msgid "Agreement with terms is required"
+msgstr "Համաձայնագրի համար անհրաժեշտ պայմանները"
+
+#: centerpokupok/Cabinet/views.py:36 centerpokupok/Cabinet/views.py:66
+msgid "was successfully saved "
+msgstr "հաջողությամբ պահպանված է"
+
+#: centerpokupok/Product/views.py:85
+#: centerpokupok/templates/Product/orderStepOne.html:139
+msgid "Comment"
+msgstr "Մեկնաբանություն/ մեկնաբանել"
+
+#: centerpokupok/Product/views.py:110
+msgid "You can send one comment per minute"
+msgstr "Դուք կարող եք ուղարկել րոպեում մեկ մեկնաբանություն"
+
+#: centerpokupok/templates/base.html:11
+#: centerpokupok/templates/header_big.html:22
+#: centerpokupok/templates/header_small.html:16
+#: centerpokupok/templates/index.html:4
+#: centerpokupok/templates/Company/header.html:7
+msgid "Shopcenter"
+msgstr "Առևտրի կենտրոն"
+
+#: centerpokupok/templates/base.html:41
+msgid "About project"
+msgstr "Ծրագրի մասին"
+
+#: centerpokupok/templates/base.html:42
+msgid "About system"
+msgstr "Համակարգի մասին"
+
+#: centerpokupok/templates/base.html:43
+msgid "How the system works"
+msgstr "Ինչպես է համակարգը աշխատում"
+
+#: centerpokupok/templates/base.html:44
+msgid "Announcements and product reviews"
+msgstr "Հայտարարություններ եւ ապրանքների նկարագրություններ/ դիտարկումներ "
+
+#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:15
+#: tppcenter/templates/base.html:119 tppcenter/templates/Project/offer.html:16
+msgid "Public offer"
+msgstr "Բաց առաջարկություններ"
+
+#: centerpokupok/templates/base.html:48
+msgid "How to buy"
+msgstr "Ինչպես գնել"
+
+#: centerpokupok/templates/base.html:49
+msgid "Subscribe to updates"
+msgstr "Բաժանորդագրվել թարմացումներին"
+
+#: centerpokupok/templates/base.html:50
+msgid "How to pay"
+msgstr "Ինչպես վճարել"
+
+#: centerpokupok/templates/base.html:51
+msgid "Delivery option"
+msgstr "Առաքման տարբերակ"
+
+#: centerpokupok/templates/base.html:52
+msgid "Customers protection"
+msgstr "Հաճախորդների պաշտպանություն"
+
+#: centerpokupok/templates/base.html:53
+msgid "Quick reference"
+msgstr "Արագ տեղեկագիր"
+
+#: centerpokupok/templates/base.html:56
+#: tppcenter/templates/Companies/detailContent.html:567
+#: tppcenter/templates/Tpp/detailContent.html:513
+msgid "Services"
+msgstr "Ծառայություններ"
+
+#: centerpokupok/templates/base.html:57
+#: centerpokupok/templates/Company/contact.html:4
+#: centerpokupok/templates/Company/contact.html:50
+#: tppcenter/Project/urls.py:19
+#: tppcenter/templates/Companies/contentPage.html:98
+#: tppcenter/templates/Products/detailContent.html:124
+#: tppcenter/templates/Project/contact.html:16
+#: tppcenter/templates/Tpp/contentPage.html:75
+#: usersites/templates/site_sidebar.html:23
+msgid "Contact us"
+msgstr "Հետադարձ կապ"
+
+#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:20
+#: tppcenter/templates/base.html:134 tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/Project/faq.html:16
+msgid "FAQ"
+msgstr "Հաճախակի տրվող հարցեր"
+
+#: centerpokupok/templates/base.html:59
+msgid "Ask about community"
+msgstr "Հարցեր բիզնես-միավորումների մասին"
+
+#: centerpokupok/templates/base.html:60
+msgid "Partner program"
+msgstr "Համագործակցության ծրագիր"
+
+#: centerpokupok/templates/base.html:64
+#: centerpokupok/templates/Company/about.html:37
+#: centerpokupok/templates/Company/contact.html:37
+#: centerpokupok/templates/Company/index.html:79
+msgid "Subscribe to newsletter"
+msgstr "Նորությունների բաժանորդագրություն"
+
+#: centerpokupok/templates/base.html:66
+#: centerpokupok/templates/Company/about.html:39
+#: centerpokupok/templates/Company/contact.html:39
+#: centerpokupok/templates/Company/index.html:81
+msgid "Receive our weekly announcements and reviews of new products"
+msgstr ""
+"Ստանալ ամենշաբաթյա հայտարարություններ եւ նոր ապրանքների նկարագրություններ/ "
+"դիտարկումներ"
+
+#: centerpokupok/templates/base.html:68
+msgid "Subscribe"
+msgstr "Բաժանորդագրվել"
+
+#: centerpokupok/templates/base.html:74
+msgid "Shopping center - buy with pleasure all over the world"
+msgstr "Առևտրի կենտրոն՝  հաճույքով կատարեք գնումներ ամբողջ աշխարհից"
+
+#: centerpokupok/templates/header_big.html:7
+#: centerpokupok/templates/Cabinet/favorite.html:17
+#: centerpokupok/templates/Cabinet/index.html:18
+#: centerpokupok/templates/Cabinet/orderHistory.html:17
+#: centerpokupok/templates/Cabinet/shippingAddress.html:17
+#: centerpokupok/templates/Product/orderStepThree.html:28
+#: centerpokupok/templates/Registr/registr.html:58
+#: centerpokupok/templates/registration/activation_complete.html:45
+#: centerpokupok/templates/registration/password_reset_complete.html:41
+#: centerpokupok/templates/registration/password_reset_confirm.html:43
+#: centerpokupok/templates/registration/password_reset_done.html:43
+#: centerpokupok/templates/registration/password_reset_form.html:40
+#: centerpokupok/templates/registration/registration_closed.html:47
+#: centerpokupok/templates/registration/registration_complete.html:48
+msgid "Home page"
+msgstr "Գլխավոր էջ"
+
+#: centerpokupok/templates/header_big.html:8
+#: centerpokupok/templates/header_small.html:7
+#: centerpokupok/templates/Company/header.html:8
+#: centerpokupok/templates/main/cabinet_menu.html:29
+#: usersites/templates/Contact/contentPage.html:45
+msgid "Ask a question"
+msgstr "Ուղղեք Ձեր հարցը"
+
+#: centerpokupok/templates/header_big.html:9
+msgid "Comsumer protection"
+msgstr "Սպառողների շահերի պաշտպանություն"
+
+#: centerpokupok/templates/header_big.html:11
+#: centerpokupok/templates/Company/header.html:11
+msgid "sign out"
+msgstr "Ելք"
+
+#: centerpokupok/templates/header_big.html:13
+#: centerpokupok/templates/header_small.html:9
+#: centerpokupok/templates/Company/header.html:13
+#: centerpokupok/templates/registration/login.html:3
+#: tppcenter/templates/login_header.html:13
+#: tppcenter/templates/main_header.html:9
+#: tppcenter/templates/registration/login.html:46
+msgid "Sign in"
+msgstr "Մուտք"
+
+#: centerpokupok/templates/header_big.html:90
+msgid "Your workplace"
+msgstr "Ձեր աշխատավայրը"
+
+#: centerpokupok/templates/header_big.html:91
+msgid "Workplace"
+msgstr "Աշխատավայր"
+
+#: centerpokupok/templates/header_big.html:92
+#: tppcenter/templates/login_header.html:13
+msgid "Sign out"
+msgstr "Ելք"
+
+#: centerpokupok/templates/header_big.html:94
+msgid "Sign up now"
+msgstr "Գրանցվեք հիմա"
+
+#: centerpokupok/templates/header_big.html:95
+msgid "Seller"
+msgstr "Վաճառող"
+
+#: centerpokupok/templates/header_big.html:96
+msgid "Customer"
+msgstr "Հաճախորդ"
+
+#: centerpokupok/templates/header_big.html:104
+msgid "Search Products"
+msgstr "Ապրանքների որոնում"
+
+#: centerpokupok/templates/header_big.html:108
+#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:22
+#: modules-mod/django-haystack-es_types/haystack/forms.py:22
+#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
+msgid "Search"
+msgstr "Որոնում"
+
+#: centerpokupok/templates/header_small.html:6
+#: tppcenter/templates/base.html:28 usersites/templates/base.html:21
+msgid "Main page"
+msgstr "Գլխավոր էջ"
+
+#: centerpokupok/templates/header_small.html:8
+#: centerpokupok/templates/Company/header.html:9
+#: centerpokupok/templates/Registr/registr.html:37
+#: centerpokupok/templates/registration/activation_complete.html:24
+#: centerpokupok/templates/registration/password_reset_complete.html:20
+#: centerpokupok/templates/registration/password_reset_confirm.html:22
+#: centerpokupok/templates/registration/password_reset_done.html:22
+#: centerpokupok/templates/registration/password_reset_form.html:19
+#: centerpokupok/templates/registration/registration_closed.html:26
+#: centerpokupok/templates/registration/registration_complete.html:27
+msgid "Consumer protection"
+msgstr "Սպառողների շահերի պաշտպանություն"
+
+#: centerpokupok/templates/index.html:66
+#: centerpokupok/templates/News/detail.html:46
+msgid "Special price"
+msgstr "Հատուկ գին"
+
+#: centerpokupok/templates/paginator.html:6
+msgid "Start"
+msgstr "Սկիզբ"
+
+#: centerpokupok/templates/paginator.html:9
+msgid "pages"
+msgstr "Էջեր"
+
+#: centerpokupok/templates/paginator.html:23
+msgid "End"
+msgstr "Ավարտ"
+
+#: centerpokupok/templates/popular.html:5
+msgid "Most popular products"
+msgstr "Ամենահայտնի ապրանքները"
+
+#: centerpokupok/templates/related_categories.html:4
+msgid "Related Categories"
+msgstr "Առնչվող բաժինները"
+
+#: centerpokupok/templates/Cabinet/favorite.html:5
+#: centerpokupok/templates/Cabinet/favorite.html:21
+#: centerpokupok/templates/Cabinet/orderHistory.html:5
+#: centerpokupok/templates/Cabinet/orderHistory.html:21
+msgid "Order history"
+msgstr "Պատվերի պատմությունը"
+
+#: centerpokupok/templates/Cabinet/favorite.html:38
+#: centerpokupok/templates/Cabinet/orderHistory.html:38
+#: centerpokupok/templates/Product/detail.html:134
+msgid "Product ID"
+msgstr "Ապրանքի ID"
+
+#: centerpokupok/templates/Cabinet/favorite.html:42
+#: centerpokupok/templates/Cabinet/orderHistory.html:44
+msgid "Size"
+msgstr "Չափս"
+
+#: centerpokupok/templates/Cabinet/favorite.html:43
+#: centerpokupok/templates/Cabinet/orderHistory.html:45
+msgid "Color"
+msgstr "Գույն"
+
+#: centerpokupok/templates/Cabinet/favorite.html:71
+#: tppcenter/templates/BusinessProposal/addForm.html:46
+#: tppcenter/templates/BusinessProposal/addForm.html:54
+#: tppcenter/templates/BusinessProposal/addForm.html:62
+#: tppcenter/templates/BusinessProposal/addForm.html:80
+msgid "Delete"
+msgstr "Ջնջել"
+
+#: centerpokupok/templates/Cabinet/index.html:22
+msgid "Welcome"
+msgstr "Բարի գալուստ"
+
+#: centerpokupok/templates/Cabinet/index.html:23
+msgid "Here, you can change your data, shipment address and monitor orders."
+msgstr ""
+"Այստեղ Դուք կարող եք փոխել Ձեր տվյալները, առաքման հասցեն և վերահսկել "
+"պատվերները"
+
+#: centerpokupok/templates/Cabinet/index.html:26
+msgid "My profile"
+msgstr "Իմ էջը"
+
+#: centerpokupok/templates/Cabinet/index.html:28
+msgid "User details "
+msgstr "Օգտվողի տվյալները"
+
+#: centerpokupok/templates/Cabinet/index.html:45
+#: centerpokupok/templates/Cabinet/shippingAddress.html:39
+#: tppcenter/templates/BusinessProposal/addForm.html:145
+#: tppcenter/templates/Companies/addForm.html:259
+#: tppcenter/templates/Exhibitions/addForm.html:216
+#: tppcenter/templates/Innov/addForm.html:190
+#: tppcenter/templates/Products/addForm.html:435
+#: tppcenter/templates/Profile/addForm.html:115
+#: tppcenter/templates/Resume/addForm.html:321
+#: tppcenter/templates/Tenders/addForm.html:166
+#: tppcenter/templates/Tpp/addForm.html:222
+#: tppcenter/templates/TppTV/addForm.html:111
+#: tppcenter/templates/Vacancy/addForm.html:269
+msgid "Save"
+msgstr "Պահպանել"
+
+#: centerpokupok/templates/Cabinet/orderHistory.html:48
+#: centerpokupok/templates/Product/detail.html:199
+msgid "Quantity"
+msgstr "Քանակ"
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:4
+#: centerpokupok/templates/Cabinet/shippingAddress.html:23
+msgid "Shipping Address"
+msgstr "Առաքման հասցեներ"
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:25
+msgid "Shipping Addres "
+msgstr "Առաքման հասցե"
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:26
+#: centerpokupok/templates/Product/orderStepOne.html:68
+msgid "Required fields"
+msgstr "Պահանջվող դաշտերը"
+
+#: centerpokupok/templates/Categories/index.html:6
+msgid "All Categories"
+msgstr "Բոլոր բաժինները"
+
+#: centerpokupok/templates/Categories/index.html:8
+msgid "Categories"
+msgstr "Բաժիններ"
+
+#: centerpokupok/templates/Categories/index.html:18
+#: centerpokupok/templates/Coupons/index.html:85
+#: centerpokupok/templates/Product/detail.html:106
+#: centerpokupok/templates/Product/index.html:60
+#: centerpokupok/templates/Product/new.html:96
+#: tppcenter/templates/Analytic/main.html:91
+#: tppcenter/templates/Innov/detailContent.html:94
+#: usersites/templates/site_sidebar.html:15
+msgid "Main"
+msgstr "Գլխավոր"
+
+#: centerpokupok/templates/Categories/index.html:23
+#: centerpokupok/templates/main/main_menu.html:102
+msgid "All categories"
+msgstr "Բոլոր բաժինները"
+
+#: centerpokupok/templates/Company/about.html:4
+#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:10
+#: tppcenter/templates/base.html:115 tppcenter/templates/base.html.py:116
+#: tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/BusinessProposal/detailContent.html:73
+#: tppcenter/templates/Companies/detailContent.html:548
+#: tppcenter/templates/Project/about.html:16
+#: tppcenter/templates/Tpp/detailContent.html:497
+msgid "About"
+msgstr "Մասին"
+
+#: centerpokupok/templates/Company/about.html:25
+#: centerpokupok/templates/Company/contact.html:25
+msgid "special price"
+msgstr "Հատուկ գին"
+
+#: centerpokupok/templates/Company/about.html:28
+#: centerpokupok/templates/Company/contact.html:28
+#: centerpokupok/templates/Company/index.html:70
+#: centerpokupok/templates/Product/detail.html:93
+msgid "Sale"
+msgstr "Զեղչ"
+
+#: centerpokupok/templates/Company/about.html:29
+#: centerpokupok/templates/Company/contact.html:29
+#: centerpokupok/templates/Company/index.html:71
+#: centerpokupok/templates/Product/detail.html:94
+msgid "winter collection"
+msgstr "Ձմեռային հավաքածու"
+
+#: centerpokupok/templates/Company/about.html:41
+#: centerpokupok/templates/Company/contact.html:41
+#: centerpokupok/templates/Company/index.html:83
+msgid "Subscripe"
+msgstr "Բաժանորդագրվել"
+
+#: centerpokupok/templates/Company/contact.html:60
+#: usersites/templates/Contact/contentPage.html:48
+msgid "Your name"
+msgstr "Ձեր անունը"
+
+#: centerpokupok/templates/Company/contact.html:67
+msgid "Your email"
+msgstr "Ձեր էլեկտրոնային հասցեն"
+
+#: centerpokupok/templates/Company/contact.html:74
+#: tppcenter/templates/base.html:183
+#: usersites/templates/CompanyStructure/contentPage.html:49
+#: usersites/templates/Contact/contentPage.html:57
+msgid "Message"
+msgstr "Հաղորդագրություն"
+
+#: centerpokupok/templates/Company/coupons.html:6
+#: centerpokupok/templates/Company/header.html:49
+#: centerpokupok/templates/Company/index.html:99
+#: centerpokupok/templates/Coupons/index.html:7
+#: centerpokupok/templates/Coupons/index.html:88
+#: centerpokupok/templates/Coupons/index.html:104
+#: centerpokupok/templates/Product/new.html:99
+#: centerpokupok/templates/main/main_coupons.html:8
+msgid "Coupons"
+msgstr "Արժեկտրոններ"
+
+#: centerpokupok/templates/Company/coupons.html:55
+#: centerpokupok/templates/Company/products.html:36
+msgid "Best buy products"
+msgstr "Գնելու լավագույն ապրանքները"
+
+#: centerpokupok/templates/Company/coupons.html:105
+#: centerpokupok/templates/Company/index.html:122
+#: centerpokupok/templates/Company/index.html:167
+#: centerpokupok/templates/Coupons/index.html:130
+msgid "Time till the end"
+msgstr "Վերջնաժամկետ"
+
+#: centerpokupok/templates/Company/coupons.html:119
+#: centerpokupok/templates/Coupons/index.html:144
+msgid "You save"
+msgstr "Դուք պահպանել եք"
+
+#: centerpokupok/templates/Company/coupons.html:127
+#: centerpokupok/templates/Company/index.html:144
+#: centerpokupok/templates/Coupons/index.html:152
+#: centerpokupok/templates/Product/detail.html:211
+#: centerpokupok/templates/main/main_coupons.html:48
+#: tppcenter/templates/Products/contentPage.html:62
+#: tppcenter/templates/Wall/contentPage.html:280
+#: usersites/templates/contentPage.html:103
+#: usersites/templates/Products/contentPage.html:21
+msgid "Buy"
+msgstr "Գնել"
+
+#: centerpokupok/templates/Company/coupons.html:150
+#: centerpokupok/templates/Coupons/index.html:244
+msgid "Till the end"
+msgstr "Մինչեւ վերջ"
+
+#: centerpokupok/templates/Company/header.html:25
+msgid "Store No"
+msgstr "Խանութի համարը"
+
+#: centerpokupok/templates/Company/header.html:30
+msgid "Search in the store"
+msgstr "Որոնում խանութում"
+
+#: centerpokupok/templates/Company/header.html:33
+msgid "Advanced search"
+msgstr "Ընդլայնված որոնում"
+
+#: centerpokupok/templates/Company/header.html:39
+#: centerpokupok/templates/Product/index.html:87
+#: centerpokupok/templates/Product/new.html:119
+msgid "Salesman online"
+msgstr " Oնլայն վաճառող"
+
+#: centerpokupok/templates/Company/header.html:41
+msgid "Write"
+msgstr "Գրել"
+
+#: centerpokupok/templates/Company/header.html:46
+msgid "Store main page"
+msgstr "Խանութի գլխավոր էջ"
+
+#: centerpokupok/templates/Company/header.html:50
+#: tppcenter/templates/base.html:132
+#: tppcenter/templates/BusinessProposal/detailContent.html:76
+#: tppcenter/templates/Companies/detailContent.html:614
+#: tppcenter/templates/Exhibitions/detailContent.html:115
+#: tppcenter/templates/Innov/detailContent.html:97
+#: tppcenter/templates/Tpp/detailContent.html:554
+#: tppcenter/templates/Tpp/tabCompanies.html:9 usersites/Contact/views.py:11
+#: usersites/Contact/views.py:12
+msgid "Contacts"
+msgstr "Կոնտակտներ"
+
+#: centerpokupok/templates/Company/index.html:5
+msgid "Company main"
+msgstr "Ընկերության գլխավոր էջ"
+
+#: centerpokupok/templates/Company/index.html:136
+msgid "You are saving"
+msgstr "Դուք պահպանել եք"
+
+#: centerpokupok/templates/Company/index.html:191
+#: centerpokupok/templates/Product/new.html:5
+#: centerpokupok/templates/main/products.html:9
+msgid "Latest"
+msgstr "Ամենավերջին"
+
+#: centerpokupok/templates/Company/index.html:247
+#: centerpokupok/templates/main/products.html:75
+msgid "Top sales"
+msgstr "Թոփ վաճառք"
+
+#: centerpokupok/templates/Company/index.html:248
+#: centerpokupok/templates/main/main_coupons.html:9
+#: tppcenter/templates/BusinessProposal/contentPage.html:56
+#: tppcenter/templates/Companies/contentPage.html:74
+#: tppcenter/templates/Exhibitions/contentPage.html:60
+#: tppcenter/templates/Innov/contentPage.html:80
+#: tppcenter/templates/News/detailContent.html:162
+#: tppcenter/templates/Resume/contentPage.html:36
+#: tppcenter/templates/Tenders/contentPage.html:51
+#: tppcenter/templates/Tpp/contentPage.html:54
+#: tppcenter/templates/UserSites/contentPage.html:40
+#: tppcenter/templates/Vacancy/contentPage.html:54
+#: tppcenter/templates/Wall/contentPage.html:69
+#: tppcenter/templates/Wall/contentPage.html:125
+#: tppcenter/templates/Wall/contentPage.html:169
+msgid "More"
+msgstr "Ավելին"
+
+#: centerpokupok/templates/Company/index.html:302
+#: tppcenter/templates/index.html:234
+msgid "Best deals"
+msgstr "Լավագույն գործարքներ"
+
+#: centerpokupok/templates/Company/products.html:127
+#: centerpokupok/templates/Product/index.html:208
+#: centerpokupok/templates/Product/new.html:210
+msgid "Sales"
+msgstr "Զեղչեր"
+
+#: centerpokupok/templates/Company/store_categories.html:4
+msgid "Store Categories"
+msgstr "Խանութների բաժիններ"
+
+#: centerpokupok/templates/Coupons/index.html:159
+msgid "Sort By"
+msgstr "Դասակարգել ըստ"
+
+#: centerpokupok/templates/Coupons/index.html:163
+#: centerpokupok/templates/Coupons/index.html:167
+#: tppcenter/templates/Products/addForm.html:344
+msgid "Discount"
+msgstr "Զեղչեր"
+
+#: centerpokupok/templates/Coupons/index.html:174
+#: centerpokupok/templates/Coupons/index.html:178
+msgid "End Date"
+msgstr "Ժամկետի ավարտը"
+
+#: centerpokupok/templates/Coupons/index.html:185
+#: centerpokupok/templates/Coupons/index.html:189
+msgid "Create Date"
+msgstr "Ստեղծման ամսաթիվը"
+
+#: centerpokupok/templates/Coupons/index.html:196
+#: centerpokupok/templates/Coupons/index.html:200
+#: centerpokupok/templates/Product/index.html:104
+#: centerpokupok/templates/Product/new.html:136
+#: tppcenter/templates/Companies/tabProducts.html:11
+#: tppcenter/templates/Companies/tabTenders.html:10
+#: tppcenter/templates/Products/detailContent.html:73
+#: tppcenter/templates/Tpp/tabTenders.html:10
+msgid "Price"
+msgstr "Գինը"
+
+#: centerpokupok/templates/Coupons/index.html:206
+msgid "All "
+msgstr "Ամբողջը"
+
+#: centerpokupok/templates/Coupons/index.html:208
+#: tppcenter/templates/baseFilter.html:72
+msgid "All"
+msgstr "Ամբողջը"
+
+#: centerpokupok/templates/Coupons/index.html:212
+#: centerpokupok/templates/Coupons/index.html:214
+msgid "Expire in 24 hours"
+msgstr "Լրանում է/սպառվում է 24 ժամում"
+
+#: centerpokupok/templates/Coupons/index.html:218
+#: centerpokupok/templates/Coupons/index.html:220
+msgid "Expire in 7 days"
+msgstr "Լրանում է/սպառվում է 7 օրում"
+
+#: centerpokupok/templates/News/detail.html:27
+#: centerpokupok/templates/News/index.html:15
+msgid "Product reviews"
+msgstr "Կարծիքներ  ապրանքի մասին"
+
+#: centerpokupok/templates/News/detail.html:28
+#: centerpokupok/templates/News/index.html:16
+msgid "Seller anounses"
+msgstr "Վաճառողի հայտարարությունները"
+
+#: centerpokupok/templates/News/detail.html:32
+msgid "View store"
+msgstr "Նայել խանութները"
+
+#: centerpokupok/templates/News/detail.html:39
+#: tppcenter/templates/Products/detailContent.html:130
+msgid "About company"
+msgstr "Ընկերության մասին"
+
+#: centerpokupok/templates/News/detail.html:40
+msgid "Company products"
+msgstr "Ընկերության ապրանքները"
+
+#: centerpokupok/templates/News/detail.html:41
+#: tppcenter/templates/base.html:133 tppcenter/templates/login_header.html:10
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/Companies/tabStaff.html:41
+#: tppcenter/templates/Tpp/tabStaff.html:42
+msgid "Contact"
+msgstr "Հետադարձ կապ"
+
+#: centerpokupok/templates/News/index.html:21
+#: centerpokupok/templates/News/index.html:73
+msgid "Recommended"
+msgstr "Խորհուրդ է տրվում"
+
+#: centerpokupok/templates/News/index.html:44
+msgid "Special Price"
+msgstr "Հատուկ գին"
+
+#: centerpokupok/templates/News/index.html:101
+msgid "All deals"
+msgstr "Բոլոր գործարքները"
+
+#: centerpokupok/templates/News/index.html:112
+msgid "Popular reviews"
+msgstr "Տարածված կարծիքները/դիտարկումները"
+
+#: centerpokupok/templates/News/index.html:137
+msgid "All products reviews"
+msgstr "Բոլոր ապրանքների կարծիքները/դիտարկումները"
+
+#: centerpokupok/templates/News/index.html:140
+#: centerpokupok/templates/Product/index.html:102
+#: centerpokupok/templates/Product/new.html:134
+msgid "Sort by"
+msgstr "Դասակարգել ըստ"
+
+#: centerpokupok/templates/News/index.html:141
+#: centerpokupok/templates/Product/index.html:116
+#: centerpokupok/templates/Product/new.html:148
+msgid "Raiting"
+msgstr "Վարկանիշ"
+
+#: centerpokupok/templates/News/index.html:143
+#: tppcenter/templates/BusinessProposal/contentPage.html:52
+#: tppcenter/templates/Companies/tabInnov.html:10
+#: tppcenter/templates/Companies/tabProposal.html:9
+#: tppcenter/templates/News/addForm.html:127
+#: tppcenter/templates/Tpp/tabInnov.html:10
+#: tppcenter/templates/Tpp/tabProposal.html:9
+#: tppcenter/templates/TppTV/addForm.html:71
+#: tppcenter/templates/Vacancy/contentPage.html:51
+#: tppcenter/templates/Vacancy/detailContent.html:35
+#: tppcenter/templates/Wall/contentPage.html:165
+#: usersites/templates/contentPage.html:20
+#: usersites/templates/contentPage.html:59
+#: usersites/templates/News/contentPage.html:19
+#: usersites/templates/Proposals/contentPage.html:17
+msgid "Date"
+msgstr "Ամսաթիվ"
+
+#: centerpokupok/templates/News/index.html:144
+msgid "Choose date"
+msgstr "Ընտրել ամսաթիվը"
+
+#: centerpokupok/templates/News/index.html:146
+msgid "Show product from"
+msgstr "Ցույց տալ ապրանքը"
+
+#: centerpokupok/templates/News/index.html:147
+msgid " all countries"
+msgstr "Բոլոր երկրները"
+
+#: centerpokupok/templates/Product/detail.html:6
+msgid "Product detail"
+msgstr "Տեղեկություններ ապրանքի մասին"
+
+#: centerpokupok/templates/Product/detail.html:119
+msgid "Back to catalog"
+msgstr "Վերադառնալ կատալոգին"
+
+#: centerpokupok/templates/Product/detail.html:181
+msgid "Discount will end in"
+msgstr "Զեղչերի ավարտը"
+
+#: centerpokupok/templates/Product/detail.html:215
+msgid "Favorite"
+msgstr "Նախընտրելի"
+
+#: centerpokupok/templates/Product/detail.html:228
+#: tppcenter/templates/BusinessProposal/addForm.html:107
+#: tppcenter/templates/Companies/tabProducts.html:10
+#: tppcenter/templates/Exhibitions/addForm.html:179
+#: tppcenter/templates/Innov/addForm.html:126
+#: tppcenter/templates/Innov/addForm.html:153
+#: tppcenter/templates/Tenders/addForm.html:139
+#: tppcenter/templates/Tenders/detailContent.html:88
+#: tppcenter/templates/Vacancy/addForm.html:247
+#: tppcenter/templates/Vacancy/detailContent.html:72
+msgid "Description"
+msgstr "Նկարագրություն"
+
+#: centerpokupok/templates/Product/detail.html:229
+#: centerpokupok/templates/Product/orderStepOne.html:117
+#: centerpokupok/templates/Product/orderStepTwo.html:53
+msgid "Delivery method"
+msgstr "Առաքման տարբերակը"
+
+#: centerpokupok/templates/Product/detail.html:229
+msgid "Return policy"
+msgstr "Վերադարձման կարգը"
+
+#: centerpokupok/templates/Product/detail.html:234
+msgid "Short description"
+msgstr "Կարճ նկարագրություն"
+
+#: centerpokupok/templates/Product/detail.html:238
+msgid "Complete description"
+msgstr "Ամբողջական նկարագրություն"
+
+#: centerpokupok/templates/Product/detail.html:256
+msgid "Transaction History & Feedback"
+msgstr "Գործարքների պատմությունն ու արձագանքները"
+
+#: centerpokupok/templates/Product/detail.html:312
+msgid "Post"
+msgstr "Փոստ"
+
+#: centerpokupok/templates/Product/detail.html:320
+msgid "Similar products"
+msgstr "Նմանատիպ ապրանքներ"
+
+#: centerpokupok/templates/Product/index.html:28
+msgid "Best discounts"
+msgstr "Լավագույն զեղչեր"
+
+#: centerpokupok/templates/Product/index.html:83
+#: centerpokupok/templates/Product/new.html:115
+msgid "Show only"
+msgstr "Ցույց տալ միայն"
+
+#: centerpokupok/templates/Product/index.html:92
+#: centerpokupok/templates/Product/new.html:124
+msgid "High raiting"
+msgstr "Բարձր վարկանիշ"
+
+#: centerpokupok/templates/Product/index.html:97
+#: centerpokupok/templates/Product/new.html:129
+msgid "Free shipping"
+msgstr "Անվճար առաքում"
+
+#: centerpokupok/templates/Product/index.html:186
+msgid "positive feedback"
+msgstr "Դրական արձագանքները"
+
+#: centerpokupok/templates/Product/index.html:187
+#: centerpokupok/templates/Product/new.html:193
+msgid "Write to salesman"
+msgstr "Գրել վաճառողին"
+
+#: centerpokupok/templates/Product/index.html:259
+msgid "Sellers"
+msgstr "Վաճառողներ"
+
+#: centerpokupok/templates/Product/orderStepOne.html:7
+msgid "Order step one"
+msgstr "Պատվիրել. քայլ առաջին"
+
+#: centerpokupok/templates/Product/orderStepOne.html:22
+msgid "Start page"
+msgstr "Մեկնարկային էջ"
+
+#: centerpokupok/templates/Product/orderStepOne.html:29
+msgid "Ordering"
+msgstr "Պատվիրել"
+
+#: centerpokupok/templates/Product/orderStepOne.html:67
+msgid "Shipping Addres"
+msgstr "Առաքման հասցե"
+
+#: centerpokupok/templates/Product/orderStepOne.html:74
+msgid "Recipient Name"
+msgstr "Ստացողի անունը"
+
+#: centerpokupok/templates/Product/orderStepOne.html:102
+msgid "Adress"
+msgstr "Հասցե"
+
+#: centerpokupok/templates/Product/orderStepOne.html:109
+#: tppcenter/templates/BusinessProposal/detailContent.html:130
+#: tppcenter/templates/Companies/addForm.html:104
+#: tppcenter/templates/Companies/detailContent.html:670
+#: tppcenter/templates/Exhibitions/detailContent.html:170
+#: tppcenter/templates/Exhibitions/detailContent.html:215
+#: tppcenter/templates/Innov/detailContent.html:163
+#: tppcenter/templates/Resume/addForm.html:92
+#: tppcenter/templates/Resume/detailContent.html:66
+#: tppcenter/templates/Tpp/addForm.html:98
+#: tppcenter/templates/Tpp/detailContent.html:590
+#: tppcenter/templates/main/user_profile.html:78
+#: usersites/templates/CompanyStructure/contentPage.html:22
+#: usersites/templates/Contact/contentPage.html:34
+msgid "Telephone number"
+msgstr "Հեռախոսահամար"
+
+#: centerpokupok/templates/Product/orderStepOne.html:120
+msgid "Choose delivery method"
+msgstr "Ընտրեք առաքման եղանակը"
+
+#: centerpokupok/templates/Product/orderStepOne.html:136
+msgid "Comment to your order"
+msgstr " Ձեր պատվերի մեկնաբանությունը"
+
+#: centerpokupok/templates/Product/orderStepOne.html:143
+msgid "Payment method"
+msgstr "Վճարման եղանակը"
+
+#: centerpokupok/templates/Product/orderStepOne.html:151
+msgid "Continue"
+msgstr "Շարունակել"
+
+#: centerpokupok/templates/Product/orderStepThree.html:6
+msgid "Order Step three"
+msgstr "Պատվիրել. քայլ երրորդ"
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+msgid "Thank you for  shopping on our site,"
+msgstr "Շնորհակալություն  մեր կայքից գնումներ կատարելու համար"
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+#: centerpokupok/templates/registration/password_reset_complete.html:48
+#: tppcenter/templates/registration/password_reset_complete.html:33
+msgid "here"
+msgstr "Այստեղ"
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+msgid "you can view your order history"
+msgstr "Դուք կարող եք տեսնել ձեր պատվերի պատմությունը"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:7
+msgid "Order step two"
+msgstr "Պատվիրել. քայլ երկրորդ"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:29
+msgid "Home Page"
+msgstr "Գլխավոր էջ"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:30
+msgid "Step One"
+msgstr "Քայլ առաջին"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:36
+msgid "Order summary"
+msgstr "Պատվերի ամփոփում"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:42
+msgid "Your order"
+msgstr "Ձեր պատվորը"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:60
+msgid "Payment"
+msgstr "Վճարում"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:66
+msgid "The total amount of your order"
+msgstr " Ձեր պատվերի ընդհանուր գումարը"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:74
+msgid "Make changes to your order"
+msgstr "Կատարել փոփոխություններ  Ձեր պատվերում"
+
+#: centerpokupok/templates/Product/orderStepTwo.html:75
+msgid "Confirm order"
+msgstr "Հաստատել պատվերը"
+
+#: centerpokupok/templates/Registr/registr.html:6
+#: centerpokupok/templates/Registr/registr.html:59
+#: centerpokupok/templates/registration/activation_complete.html:46
+#: centerpokupok/templates/registration/password_reset_complete.html:42
+#: centerpokupok/templates/registration/password_reset_confirm.html:44
+#: centerpokupok/templates/registration/password_reset_done.html:44
+#: centerpokupok/templates/registration/password_reset_form.html:41
+#: centerpokupok/templates/registration/registration_closed.html:48
+#: centerpokupok/templates/registration/registration_complete.html:49
+#: tppcenter/templates/index.html:173
+#: tppcenter/templates/Exhibitions/detailContent.html:98
+#: tppcenter/templates/registration/registration.html:8
+#: tppcenter/templates/registration/registration.html:30
+msgid "Registration"
+msgstr "Գրանցում"
+
+#: centerpokupok/templates/Registr/registr.html:33
+#: centerpokupok/templates/registration/activation_complete.html:20
+#: centerpokupok/templates/registration/password_reset_complete.html:16
+#: centerpokupok/templates/registration/password_reset_confirm.html:18
+#: centerpokupok/templates/registration/password_reset_done.html:18
+#: centerpokupok/templates/registration/password_reset_form.html:15
+#: centerpokupok/templates/registration/registration_closed.html:22
+#: centerpokupok/templates/registration/registration_complete.html:23
+msgid "On August 20 at the website registered"
+msgstr "Կայքում  գրանցվել է օգոստոսի 20-ին"
+
+#: centerpokupok/templates/Registr/registr.html:37
+#: centerpokupok/templates/registration/activation_complete.html:24
+#: centerpokupok/templates/registration/password_reset_complete.html:20
+#: centerpokupok/templates/registration/password_reset_confirm.html:22
+#: centerpokupok/templates/registration/password_reset_done.html:22
+#: centerpokupok/templates/registration/password_reset_form.html:19
+#: centerpokupok/templates/registration/registration_closed.html:26
+#: centerpokupok/templates/registration/registration_complete.html:27
+msgid "We protect the interests of our customers, so the site has a system"
+msgstr ""
+"Մենք պաշտպանում  ենք մեր հաճախորդների շահերը, ուստի և  կայքն ունի համակարգ"
+
+#: centerpokupok/templates/Registr/registr.html:42
+#: centerpokupok/templates/registration/activation_complete.html:29
+#: centerpokupok/templates/registration/password_reset_complete.html:25
+#: centerpokupok/templates/registration/password_reset_confirm.html:27
+#: centerpokupok/templates/registration/password_reset_done.html:27
+#: centerpokupok/templates/registration/password_reset_form.html:24
+#: centerpokupok/templates/registration/registration_closed.html:31
+#: centerpokupok/templates/registration/registration_complete.html:32
+msgid "The guaranteed delivery within 30 days"
+msgstr "Երաշխավորված առաքում 30 օրվա ընթացքում"
+
+#: centerpokupok/templates/Registr/registr.html:46
+#: centerpokupok/templates/registration/activation_complete.html:33
+#: centerpokupok/templates/registration/password_reset_complete.html:29
+#: centerpokupok/templates/registration/password_reset_confirm.html:31
+#: centerpokupok/templates/registration/password_reset_done.html:31
+#: centerpokupok/templates/registration/password_reset_form.html:28
+#: centerpokupok/templates/registration/registration_closed.html:35
+#: centerpokupok/templates/registration/registration_complete.html:36
+msgid "Return policy and warranty"
+msgstr "Վերադարձնելու պայմանները եւ երաշխիքները"
+
+#: centerpokupok/templates/Registr/registr.html:50
+#: centerpokupok/templates/registration/activation_complete.html:37
+#: centerpokupok/templates/registration/password_reset_complete.html:33
+#: centerpokupok/templates/registration/password_reset_confirm.html:35
+#: centerpokupok/templates/registration/password_reset_done.html:35
+#: centerpokupok/templates/registration/password_reset_form.html:32
+#: centerpokupok/templates/registration/registration_closed.html:39
+#: centerpokupok/templates/registration/registration_complete.html:40
+msgid ""
+"Freezing of seller's funds till then buyer  confirm receipt of the goods"
+msgstr ""
+"Վաճառողի միջոցների սառեցում մինչ այն պահը , երբ գնորդը կհաստատի, որ ստացել է "
+"գնված ապրանքը"
+
+#: centerpokupok/templates/Registr/registr.html:52
+#: centerpokupok/templates/registration/activation_complete.html:39
+#: centerpokupok/templates/registration/password_reset_complete.html:35
+#: centerpokupok/templates/registration/password_reset_confirm.html:37
+#: centerpokupok/templates/registration/password_reset_done.html:37
+#: centerpokupok/templates/registration/password_reset_form.html:34
+#: centerpokupok/templates/registration/registration_closed.html:41
+#: centerpokupok/templates/registration/registration_complete.html:42
+msgid "Ask us a question"
+msgstr "Ձեր հարցերը մեզ"
+
+#: centerpokupok/templates/Registr/registr.html:66
+msgid "No, I am seller"
+msgstr "Ոչ ես վաճառող եմ"
+
+#: centerpokupok/templates/main/Category.html:5
+#: tppcenter/templates/News/addForm.html:90
+#: tppcenter/templates/TppTV/addForm.html:46
+msgid "Choose category"
+msgstr "Ընտրեք բաժինը"
+
+#: centerpokupok/templates/main/Country.html:7
+msgid "Choose region"
+msgstr "Ընտրեք տարածաշրջանը"
+
+#: centerpokupok/templates/main/cabinet_menu.html:5
+msgid "My favorite products"
+msgstr "Իմ սիրելի ապրանքը"
+
+#: centerpokupok/templates/main/cabinet_menu.html:8
+msgid "Personal data"
+msgstr "Անձնական տվյալներ"
+
+#: centerpokupok/templates/main/cabinet_menu.html:11
+msgid "Shipment address"
+msgstr "Առաքման հասցե"
+
+#: centerpokupok/templates/main/cabinet_menu.html:14
+msgid "Order History"
+msgstr "Պատվերի պատմությունը"
+
+#: centerpokupok/templates/main/cabinet_menu.html:20
+msgid "Eva"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:21
+msgid "Virtual Agent"
+msgstr "Վիրտուալ գործակալ"
+
+#: centerpokupok/templates/main/cabinet_menu.html:23
+msgid "24 hour"
+msgstr "24 ժամ"
+
+#: centerpokupok/templates/main/cabinet_menu.html:24
+msgid "Smart Response"
+msgstr "Խելացի պատասխան"
+
+#: centerpokupok/templates/main/cabinet_menu.html:30
+msgid "Start chat"
+msgstr "Սկսել զրուցել"
+
+#: centerpokupok/templates/main/main_coupons.html:36
+msgid "Remaining time"
+msgstr "Մնացած  ժամանակ"
+
+#: centerpokupok/templates/main/products.html:10
+#: centerpokupok/templates/main/products.html:76
+#: usersites/templates/contentPage.html:29
+#: usersites/templates/contentPage.html:68
+#: usersites/templates/News/contentPage.html:28
+#: usersites/templates/Proposals/contentPage.html:26
+msgid "more"
+msgstr "Ավելին"
+
+#: centerpokupok/templates/main/products_discount.html:5
+msgid "Best proposals"
+msgstr "Լավագույն առաջարկներ"
+
+#: centerpokupok/templates/registration/activate.html:3
+#: tppcenter/templates/registration/activate.html:3
+msgid "Registration completed"
+msgstr "Գրանցումն ավարտված է"
+
+#: centerpokupok/templates/registration/activate.html:3
+#: tppcenter/templates/registration/activate.html:3
+msgid "Activation problem"
+msgstr "Ակտիվացման խնդիրներ"
+
+#: centerpokupok/templates/registration/activate.html:6
+#: tppcenter/templates/registration/activate.html:6
+msgid "Your registration complited"
+msgstr "Ձեր գրանցումն ավարտված է"
+
+#: centerpokupok/templates/registration/activate.html:6
+#: tppcenter/templates/registration/activate.html:6
+msgid "You can sign in"
+msgstr "Դուք կարող եք մուտք գործել"
+
+#: centerpokupok/templates/registration/activate.html:6
+#: tppcenter/templates/permissionDen.html:12
+#: tppcenter/templates/registration/activate.html:6
+msgid "profile"
+msgstr "Պրոֆիլ"
+
+#: centerpokupok/templates/registration/activate.html:8
+#: tppcenter/templates/registration/activate.html:8
+msgid "Sorry but you activation key is invalid"
+msgstr "Ներեցեք, բայց Ձեր  ակտիվացրած գաղտնաբառն անվավեր է"
+
+#: centerpokupok/templates/registration/activation_complete.html:6
+#: tppcenter/templates/registration/registration_complete.html:7
+#: tppcenter/templates/registration/registration_complete.html:29
+msgid "Registration complete"
+msgstr "Ձեր գրանցումն ավարտված է"
+
+#: centerpokupok/templates/registration/activation_complete.html:50
+#: tppcenter/templates/registration/activation_complete.html:30
+msgid "Thank you that you have completed the registration! Now you can  "
+msgstr ""
+"Շնորհակալություն, որ դուք ավարտեցիք գրանցումը, հիմա Դուք կարող եք մուտք "
+"գործել"
+
+#: centerpokupok/templates/registration/activation_complete.html:51
+#: tppcenter/templates/registration/activation_complete.html:31
+msgid "sign in"
+msgstr "Մուտք գործել"
+
+#: centerpokupok/templates/registration/activation_complete.html:51
+#: tppcenter/templates/registration/activation_complete.html:31
+msgid "using the email and password you provided during registration."
+msgstr ""
+"Օգտագործելով Էլեկտրոնային հասցեն եւ գաղտնաբառը, որը Դուք կիրառել եք գրանցման "
+"ժամանակ"
+
+#: centerpokupok/templates/registration/activation_email.html:2
+#: tppcenter/templates/registration/activation_email.html:2
+msgid "You joined to the site"
+msgstr "Դուք միացել եք կայքին"
+
+#: centerpokupok/templates/registration/activation_email.html:3
+#: tppcenter/templates/registration/activation_email.html:3
+msgid "If you have received this message in error, ignore it."
+msgstr "Եթե Դուք այս հաղորդագրությունը ստացել եք սխալմամբ, ապա անտեսեք այն."
+
+#: centerpokupok/templates/registration/activation_email.html:6
+#: tppcenter/templates/registration/activation_email.html:6
+msgid ""
+"In order to activate your account on the site, go, on the following link for "
+msgstr "Որպեսզի կայքում ակտիվացնեք Ձեր հաշիվը , անցեք հետեւյալ հղմամբ"
+
+#: centerpokupok/templates/registration/activation_email.html:6
+#: tppcenter/templates/registration/activation_email.html:6
+msgid " days:"
+msgstr "Օրեր"
+
+#: centerpokupok/templates/registration/activation_email.html:10
+#: tppcenter/templates/registration/activation_email.html:10
+msgid "Sincerely, Administration of, "
+msgstr "Հարգանքով՝\vԱդմինիստրացիա"
+
+#: centerpokupok/templates/registration/activation_email_subject.html:2
+#: tppcenter/templates/registration/activation_email_subject.html:2
+msgid "Registration on"
+msgstr "Գրանցում "
+
+#: centerpokupok/templates/registration/login.html:17
+#: tppcenter/templates/BusinessProposal/detailContent.html:138
+#: tppcenter/templates/Companies/detailContent.html:678
+#: tppcenter/templates/Exhibitions/detailContent.html:178
+#: tppcenter/templates/Innov/detailContent.html:171
+#: tppcenter/templates/Profile/addForm.html:49
+#: tppcenter/templates/Tpp/detailContent.html:598
+#: tppcenter/templates/main/user_profile.html:48
+msgid "Email"
+msgstr "Էլեկտրոնային հասցե"
+
+#: centerpokupok/templates/registration/login.html:23
+#: centerpokupok/templates/registration/registration_form.html:31
+#: centerpokupok/templates/registration/registration_form.html:42
+#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:220
+#: tppcenter/templates/registration/registration.html:46
+msgid "Password"
+msgstr "Գաղտնաբառ"
+
+#: centerpokupok/templates/registration/login.html:31
+msgid "Forgot"
+msgstr "Մոռացե՞լ եք"
+
+#: centerpokupok/templates/registration/login.html:31
+msgid "your password"
+msgstr "Ձեր գաղտնաբառը"
+
+#: centerpokupok/templates/registration/password_change_done.html:3
+#: centerpokupok/templates/registration/password_change_form.html:3
+#: tppcenter/templates/registration/password_change_done.html:3
+#: tppcenter/templates/registration/password_change_form.html:3
+msgid "Changing the password"
+msgstr "Փոխելով գաղտնաբառը"
+
+#: centerpokupok/templates/registration/password_change_done.html:5
+#: tppcenter/templates/registration/password_change_done.html:5
+msgid "The password has been changed successfully!"
+msgstr "Գաղտնաբառը հաջողությամբ փոխված է"
+
+#: centerpokupok/templates/registration/password_change_form.html:8
+#: centerpokupok/templates/registration/password_reset_confirm.html:52
+#: tppcenter/templates/registration/password_change_form.html:8
+#: tppcenter/templates/registration/password_reset_confirm.html:35
+msgid "Change password"
+msgstr "Փոխել գաղտնաբառը"
+
+#: centerpokupok/templates/registration/password_reset_complete.html:6
+msgid "Reset complete"
+msgstr "Վերականգնել ամբողջությամբ"
+
+#: centerpokupok/templates/registration/password_reset_complete.html:47
+#: tppcenter/templates/registration/password_reset_complete.html:32
+msgid "Your password has been changed!"
+msgstr "Ձեր գաղտնաբառը փոխվել է"
+
+#: centerpokupok/templates/registration/password_reset_complete.html:48
+#: tppcenter/templates/registration/password_reset_complete.html:33
+msgid "You can sign up"
+msgstr "Դուք կարող եք գրանցվել"
+
+#: centerpokupok/templates/registration/password_reset_confirm.html:8
+msgid "Reset confirm"
+msgstr "Հաստատել վերականգնումը"
+
+#: centerpokupok/templates/registration/password_reset_confirm.html:48
+#: tppcenter/templates/registration/password_reset_confirm.html:31
+msgid "Enter your new password below to change the old password:"
+msgstr "Մուտքագրեք Ձեր նոր գաղտնաբառը, ներքևում փոխելով հին գաղտնաբառը."
+
+#: centerpokupok/templates/registration/password_reset_done.html:8
+msgid "Password reset done"
+msgstr "Գաղտնաբառի վերականգնումն իրականացվել է"
+
+#: centerpokupok/templates/registration/password_reset_done.html:48
+#: tppcenter/templates/registration/password_reset_done.html:31
+msgid "We sent you an e-mail message with a link to change your password."
+msgstr ""
+"Մենք Ձեր էլեկտրոնային հասցեին ուղարկել ենք հաղորդագրություն, որի մեջ առկա "
+"հղումով անցնելով, կարող եք փոխել Ձեր գաղտնաբառը"
+
+#: centerpokupok/templates/registration/password_reset_done.html:49
+#: tppcenter/templates/registration/password_reset_done.html:32
+msgid ""
+"Please, check you email. To change the password, click on the link in the "
+"message."
+msgstr ""
+"Խնդրում ենք ստուգել Ձեր էլեկտրոնային փոստը:  Գաղտնաբառը փոխելու համար, "
+"սեղմեք հաղորդագրությունում առկա հղման վրա "
+
+#: centerpokupok/templates/registration/password_reset_email.html:2
+#: tppcenter/templates/registration/password_reset_email.html:2
+msgid "Hello"
+msgstr "Ողջույն"
+
+#: centerpokupok/templates/registration/password_reset_email.html:4
+#: tppcenter/templates/registration/password_reset_email.html:4
+msgid ""
+"You received this message because you have a request to change the password"
+msgstr ""
+"Դուք ստացաք այս հաղորդագրությունը, որովհետեւ դուք գաղտնաբառը փոխելու հայտ եք "
+"ուղարկել"
+
+#: centerpokupok/templates/registration/password_reset_email.html:5
+#: tppcenter/templates/registration/password_reset_email.html:5
+msgid ""
+"on centerpokupok If you did not make such a request, please ignore this "
+"message."
+msgstr ""
+"Եթե Դուք հարցում չեք ուղարկել  գնումների կենտրեն, ուրեմն անտեսեք այս "
+"հաղորդագրությունը"
+
+#: centerpokupok/templates/registration/password_reset_email.html:7
+#: tppcenter/templates/registration/password_reset_email.html:7
+msgid ""
+"To change the password, click the following to link or copy it into your "
+"browser:"
+msgstr ""
+"Գաղտնաբառը փոխելու համար  անցում կատարեք հետևյալ հղումով, կամ կրկնօրինակեք "
+"այն Ձեր բրաուզերի վրա"
+
+#: centerpokupok/templates/registration/password_reset_email.html:11
+#: tppcenter/templates/registration/password_reset_email.html:11
+msgid "Sincerely, Administration of,"
+msgstr "Հարգանքով՝Ադմինիստրացիա"
+
+#: centerpokupok/templates/registration/password_reset_form.html:5
+msgid "Reset password"
+msgstr "Վերականգնել գաղտնաբառը"
+
+#: centerpokupok/templates/registration/password_reset_form.html:45
+#: tppcenter/templates/registration/password_reset_form.html:31
+msgid ""
+"Forgot your password? Enter your e-mail and we will send you the required "
+"information to create a new password."
+msgstr ""
+"Մոռացե՞լ եք Ձեր գաղտնաբառը: Մուտքագրեք Ձեր էլեկտրոնային հասցեն և մենք  "
+"կուղարկենք Ձեզ անհրաժեշտ  տեղեկատվություն՝ նոր գաղտնաբառ ստեղծելու համար"
+
+#: centerpokupok/templates/registration/password_reset_form.html:49
+#: tppcenter/templates/registration/password_reset_form.html:35
+msgid "Sent password"
+msgstr "Գաղտնաբառն ուղարկված է"
+
+#: centerpokupok/templates/registration/registration_closed.html:6
+#: tppcenter/templates/registration/registration_closed.html:6
+#: tppcenter/templates/registration/registration_closed.html:28
+msgid "Registration error"
+msgstr "Գրանցվել չհաջողվեց"
+
+#: centerpokupok/templates/registration/registration_closed.html:52
+#: tppcenter/templates/registration/registration_closed.html:31
+msgid "Registration error. Please try again "
+msgstr "գրանցվել չհաջողվեց, խնդրում ենք փորձել կրկին"
+
+#: centerpokupok/templates/registration/registration_complete.html:7
+msgid "Registartion complete"
+msgstr "Գրանցումն ամբողջությամն կատարված է"
+
+#: centerpokupok/templates/registration/registration_complete.html:53
+#: tppcenter/templates/registration/registration_complete.html:32
+msgid ""
+"We sent you message. Please check you email and click on the  link to "
+"activate your account. "
+msgstr ""
+"Մենք ուղարկել ենք Ձեզ հաղորդագրություն: Խնդրում ենք ստուգել Ձեր Էլեկտրոնային "
+"փոստն ու անցեք ուղարկված հղումով՝ Ձեր հաշիվն ակտիվացնելու համար"
+
+#: centerpokupok/templates/registration/registration_form.html:5
+msgid "Registration of customer"
+msgstr " Հաճախորդի գրանցում"
+
+#: centerpokupok/templates/registration/registration_form.html:9
+msgid "Create new account"
+msgstr "Ստեղծել նոր հաշիվ"
+
+#: centerpokupok/templates/registration/registration_form.html:20
+#: modules-mod/registration/forms.py:38
+#: tppcenter/templates/Companies/addForm.html:131
+#: tppcenter/templates/registration/registration.html:41
+msgid "E-mail"
+msgstr "Էլեկտրոնային հասցե"
+
+#: centerpokupok/templates/registration/registration_form.html:55
+msgid "I agree to the"
+msgstr "Ես համաձայն եմ պայմաններին"
+
+#: centerpokupok/templates/registration/registration_form.html:55
+msgid "terms"
+msgstr "Պայմաններ"
+
+#: centerpokupok/templates/registration/registration_form.html:56
+#: tppcenter/templates/index.html:164 tppcenter/templates/index.html.py:186
+#: tppcenter/templates/index.html:212 tppcenter/templates/index.html.py:227
+#: tppcenter/templates/main_header.html:9
+#: tppcenter/templates/registration/registration.html:61
+msgid "Sign up"
+msgstr "Գրանցվել"
+
+#: core/models.py:84
+msgid "date joined"
+msgstr "Գրանցման ամսաթիվը"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:118
+#: modules-mod/django-haystack-es_types/haystack/admin.py:118
+#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:118
+#, python-format
+msgid "0 of %(count)d selected"
+msgid_plural "of %(count)d selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:120
+#: modules-mod/django-haystack-es_types/haystack/admin.py:120
+#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:120
+#, python-format
+msgid "%(total_count)s selected"
+msgid_plural "All %(total_count)s selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:96
+#: modules-mod/django-haystack-es_types/haystack/forms.py:96
+#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:96
+msgid "Search In"
+msgstr "Որոնել"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:26
+#: modules-mod/django-haystack-es_types/haystack/panels.py:26
+#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:26
+msgid "Haystack"
+msgstr ""
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:50
+#: modules-mod/django-haystack-es_types/haystack/panels.py:50
+#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:50
+msgid "Search Queries"
+msgstr "Հարցման որոնում"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:5
+#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:5
+#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:5
+msgid "Query"
+msgstr "Հարցում"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:6
+#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:6
+#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:6
+msgid "Backend Alias"
+msgstr "Ներքին ինտերֆեյսի ծածկանուն"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:7
+#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:7
+#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:7
+msgid "Timeline"
+msgstr "Ժամանակացույց"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:8
+#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:8
+#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:8
+msgid "Time"
+msgstr "Ժամանակ"
+
+#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:9
+#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:9
+#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:9
+msgid "Kwargs"
+msgstr ""
+
+#: modules-mod/djcelery/admin.py:51 modules-mod/djcelery/admin.py:58
+#: modules-mod/djcelery/models.py:27 modules-mod/djcelery/models.py:317
+msgid "state"
+msgstr "Պետություն"
+
+#: modules-mod/djcelery/admin.py:65 modules-mod/djcelery/models.py:326
+msgid "ETA"
+msgstr ""
+
+#: modules-mod/djcelery/admin.py:72
+msgid "when"
+msgstr "Ե՞րբ"
+
+#: modules-mod/djcelery/admin.py:79 modules-mod/djcelery/models.py:196
+#: modules-mod/djcelery/models.py:321
+msgid "name"
+msgstr "Անուն"
+
+#: modules-mod/djcelery/admin.py:113
+msgid "Task detail"
+msgstr "Մանրամասնել խնդիրը"
+
+#: modules-mod/djcelery/admin.py:114
+msgid "Tasks"
+msgstr "Խնդրի առարկան"
+
+#: modules-mod/djcelery/admin.py:129 modules-mod/djcelery/models.py:319
+msgid "UUID"
+msgstr ""
+
+#: modules-mod/djcelery/admin.py:153
+msgid "Revoke selected tasks"
+msgstr "Չեղյալ համարել ընտրված առաջադրանքները"
+
+#: modules-mod/djcelery/admin.py:159
+msgid "Terminate selected tasks"
+msgstr " Ընտրված առաջադրանքների դադարեցում"
+
+#: modules-mod/djcelery/admin.py:165
+msgid "Kill selected tasks"
+msgstr "Ավարտել ընտրված  առաջադրանքները"
+
+#: modules-mod/djcelery/admin.py:172
+#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:9
+msgid "Rate limit selected tasks"
+msgstr " Ընտրված առաջադրանքների սահմանափակում"
+
+#: modules-mod/djcelery/admin.py:185
+msgid "Rate limit selection"
+msgstr " Ընտրության սահմանափակում"
+
+#: modules-mod/djcelery/admin.py:210
+msgid "Node detail"
+msgstr "Գործառնական հանգույցի մանրամասները"
+
+#: modules-mod/djcelery/admin.py:211
+msgid "Worker Nodes"
+msgstr "Աշխատանքային հանգույց"
+
+#: modules-mod/djcelery/admin.py:218
+msgid "Shutdown selected worker nodes"
+msgstr "Ընտրված աշխատողի գործառնական հանգույցների  անջատում "
+
+#: modules-mod/djcelery/admin.py:222
+msgid "Enable event mode for selected nodes."
+msgstr ""
+
+#: modules-mod/djcelery/admin.py:227
+msgid "Disable event mode for selected nodes."
+msgstr ""
+
+#: modules-mod/djcelery/admin.py:257
+msgid "Task (registered)"
+msgstr "Առաջադրանք (գրանցված)"
+
+#: modules-mod/djcelery/admin.py:259
+msgid "Task (custom)"
+msgstr "Առաջադրանք (պատվերով)"
+
+#: modules-mod/djcelery/admin.py:271
+msgid "Need name of task"
+msgstr "Առաջադրանքի անհրաժեշտ անունը "
+
+#: modules-mod/djcelery/admin.py:282
+#, python-format
+msgid "Unable to parse JSON: %s"
+msgstr ""
+
+#: modules-mod/djcelery/humanize.py:8
+msgid "just now"
+msgstr "Հենց հիմա"
+
+#: modules-mod/djcelery/humanize.py:9
+msgid "{seconds} second ago"
+msgstr "{Վայրկյաններ} Վայրկյան առաջ"
+
+#: modules-mod/djcelery/humanize.py:9
+msgid "{seconds} seconds ago"
+msgstr "{Վայրկյաններ}Վայրկյաններ առաջ "
+
+#: modules-mod/djcelery/humanize.py:10
+msgid "{minutes} minute ago"
+msgstr "{Րոպեներ} րոպե առաջ"
+
+#: modules-mod/djcelery/humanize.py:10
+msgid "{minutes} minutes ago"
+msgstr "{Րոպեներ} րոպեներ առաջ"
+
+#: modules-mod/djcelery/humanize.py:11
+msgid "{hours} hour ago"
+msgstr "{Ժամեր} ժամ առաջ"
+
+#: modules-mod/djcelery/humanize.py:11
+msgid "{hours} hours ago"
+msgstr "{Ժամեր} ժամեր առաջ"
+
+#: modules-mod/djcelery/humanize.py:12
+msgid "yesterday at {time}"
+msgstr "Վաղը"
+
+#: modules-mod/djcelery/humanize.py:13
+msgid "year"
+msgstr "Տարի"
+
+#: modules-mod/djcelery/humanize.py:13
+msgid "years"
+msgstr "Տարիներ"
+
+#: modules-mod/djcelery/humanize.py:14
+msgid "month"
+msgstr "Ամիս"
+
+#: modules-mod/djcelery/humanize.py:14
+msgid "months"
+msgstr "Ամիսներ"
+
+#: modules-mod/djcelery/humanize.py:15
+msgid "week"
+msgstr "Շաբաթ"
+
+#: modules-mod/djcelery/humanize.py:15
+msgid "weeks"
+msgstr "Շաբաթներ"
+
+#: modules-mod/djcelery/humanize.py:16
+#: tppcenter/templates/AdvBanner/addForm.html:193
+#: tppcenter/templates/AdvTop/addForm.html:191
+#: tppcenter/templates/Products/addForm.html:36
+msgid "day"
+msgstr "Օր"
+
+#: modules-mod/djcelery/humanize.py:16
+msgid "days"
+msgstr "Օրեր"
+
+#: modules-mod/djcelery/humanize.py:23
+msgid "{number} {type} ago"
+msgstr "{Համար} {տեսակը} առաջ"
+
+#: modules-mod/djcelery/models.py:25
+msgid "task id"
+msgstr "Խնդիրի ID"
+
+#: modules-mod/djcelery/models.py:31
+msgid "done at"
+msgstr "Կատարվել է"
+
+#: modules-mod/djcelery/models.py:32 modules-mod/djcelery/models.py:329
+msgid "traceback"
+msgstr "Հետեւում է"
+
+#: modules-mod/djcelery/models.py:35
+msgid "meta"
+msgstr "Մեթադասընթաց"
+
+#: modules-mod/djcelery/models.py:41
+msgid "task state"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:42
+msgid "task states"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:59
+msgid "group id"
+msgstr "Կազմակերպության ID"
+
+#: modules-mod/djcelery/models.py:61
+msgid "created at"
+msgstr "Տեղադրված է"
+
+#: modules-mod/djcelery/models.py:68
+msgid "saved group result"
+msgstr "Պահպանել կազմակերպության տվյալը"
+
+#: modules-mod/djcelery/models.py:69
+msgid "saved group results"
+msgstr "Պահպանել կազմակերպության տվյալները"
+
+#: modules-mod/djcelery/models.py:81
+msgid "Days"
+msgstr "Օրեր"
+
+#: modules-mod/djcelery/models.py:82
+msgid "Hours"
+msgstr "Ժամեր"
+
+#: modules-mod/djcelery/models.py:83
+msgid "Minutes"
+msgstr "Րոպեներ"
+
+#: modules-mod/djcelery/models.py:84
+msgid "Seconds"
+msgstr "Վայրկյաններ"
+
+#: modules-mod/djcelery/models.py:85
+msgid "Microseconds"
+msgstr "Միլիվայրկյան"
+
+#: modules-mod/djcelery/models.py:89
+msgid "every"
+msgstr "Ամեն մի"
+
+#: modules-mod/djcelery/models.py:91
+msgid "period"
+msgstr "Առաջ"
+
+#: modules-mod/djcelery/models.py:95 modules-mod/djcelery/models.py:202
+msgid "interval"
+msgstr "Ինտերվալ"
+
+#: modules-mod/djcelery/models.py:96
+msgid "intervals"
+msgstr "Ինտերվալներ"
+
+#: modules-mod/djcelery/models.py:116
+msgid "every {0.period_singular}"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:117
+msgid "every {0.every} {0.period}"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:125
+msgid "minute"
+msgstr "Րոպե"
+
+#: modules-mod/djcelery/models.py:126
+msgid "hour"
+msgstr "Ժամ"
+
+#: modules-mod/djcelery/models.py:128
+msgid "day of week"
+msgstr "Շաբաթվա օր"
+
+#: modules-mod/djcelery/models.py:131
+msgid "day of month"
+msgstr "Ամսվա օր"
+
+#: modules-mod/djcelery/models.py:134
+msgid "month of year"
+msgstr "Տարվա ամիս"
+
+#: modules-mod/djcelery/models.py:138 modules-mod/djcelery/models.py:205
+msgid "crontab"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:139
+msgid "crontabs"
+msgstr ""
+
+#: modules-mod/djcelery/models.py:197
+msgid "Useful description"
+msgstr "Օգտակար նկարագրություն"
+
+#: modules-mod/djcelery/models.py:199
+msgid "task name"
+msgstr "Խնդրի անվանումը"
+
+#: modules-mod/djcelery/models.py:206
+msgid "Use one of interval/crontab"
+msgstr "Օգտագործեք  ինտերվալներից մեկը"
+
+#: modules-mod/djcelery/models.py:209 modules-mod/djcelery/models.py:324
+msgid "Arguments"
+msgstr "Փաստարկներ"
+
+#: modules-mod/djcelery/models.py:210
+msgid "JSON encoded positional arguments"
+msgstr "JSON կոդավորված դիրքային փաստարկներ"
+
+#: modules-mod/djcelery/models.py:213 modules-mod/djcelery/models.py:325
+msgid "Keyword arguments"
+msgstr "Փաստարկների հիմնաբառը"
+
+#: modules-mod/djcelery/models.py:214
+msgid "JSON encoded keyword arguments"
+msgstr "JSON փաստարկների կոդավորված հիմնաբառը"
+
+#: modules-mod/djcelery/models.py:217
+msgid "queue"
+msgstr "Հերթ"
+
+#: modules-mod/djcelery/models.py:218
+msgid "Queue defined in CELERY_QUEUES"
+msgstr "CELERY_QUEUES սահմանված հերթ "
+
+#: modules-mod/djcelery/models.py:221
+msgid "exchange"
+msgstr "Փոխանակում"
+
+#: modules-mod/djcelery/models.py:224
+msgid "routing key"
+msgstr "Երթուղայնացման բանալին"
+
+#: modules-mod/djcelery/models.py:227 modules-mod/djcelery/models.py:327
+msgid "expires"
+msgstr "Լրանում է"
+
+#: modules-mod/djcelery/models.py:230
+msgid "enabled"
+msgstr "Միացված է"
+
+#: modules-mod/djcelery/models.py:240
+msgid "description"
+msgstr "Նկարագրություն"
+
+#: modules-mod/djcelery/models.py:246
+msgid "periodic task"
+msgstr "Պարբերական առաջադրանք"
+
+#: modules-mod/djcelery/models.py:247
+msgid "periodic tasks"
+msgstr "Պարբերական առաջադրանքներ"
+
+#: modules-mod/djcelery/models.py:286
+msgid "hostname"
+msgstr "Սերվերի անվանումը"
+
+#: modules-mod/djcelery/models.py:287
+msgid "last heartbeat"
+msgstr "Վերջին  զարկ"
+
+#: modules-mod/djcelery/models.py:294 modules-mod/djcelery/models.py:336
+msgid "worker"
+msgstr "Աշխատող"
+
+#: modules-mod/djcelery/models.py:295
+msgid "workers"
+msgstr "Աշխատողներ"
+
+#: modules-mod/djcelery/models.py:323
+msgid "event received at"
+msgstr " Ստացվել է"
+
+#: modules-mod/djcelery/models.py:328
+msgid "result"
+msgstr "Արդյունք"
+
+#: modules-mod/djcelery/models.py:331
+msgid "execution time"
+msgstr "Կատարման ժամանակը"
+
+#: modules-mod/djcelery/models.py:332
+msgid "in seconds if task succeeded"
+msgstr "Վայրկյանում, եթե խնդիրը հաջողվել է"
+
+#: modules-mod/djcelery/models.py:334
+msgid "number of retries"
+msgstr "Հնարավոր փորձերի թիվը"
+
+#: modules-mod/djcelery/models.py:344
+msgid "task"
+msgstr "Խնդիր"
+
+#: modules-mod/djcelery/models.py:345
+msgid "tasks"
+msgstr "Խնդիրներ"
+
+#: modules-mod/djcelery/templates/admin/djcelery/change_list.html:7
+#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:6
+msgid "Home"
+msgstr "Գլխավոր"
+
+#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:22
+msgid "Rate limit"
+msgstr "փոխարժեքի սահմանաչափը"
+
+#: modules-mod/registration/admin.py:23
+msgid "Activate users"
+msgstr "Օգտվողների ակտիվացնում"
+
+#: modules-mod/registration/admin.py:43
+msgid "Re-send activation emails"
+msgstr "Կրկին ուղարկել- Էլեկտրոնայի նամակների ակտիվացում "
+
+#: modules-mod/registration/forms.py:42
+msgid "Password (again)"
+msgstr "Գաղտնաբառը (կրկին)"
+
+#: modules-mod/registration/forms.py:66
+msgid "The two password fields didn't match."
+msgstr " Գաղտնաբառի երկու դաշտերը չեն համընկնում."
+
+#: modules-mod/registration/forms.py:77
+msgid "I have read and agree to the Terms of Service"
+msgstr "Ես ծանոթացել եմ եւ համաձայն եմ ծառայության պայմաններին"
+
+#: modules-mod/registration/forms.py:78
+msgid "You must agree to the terms to register"
+msgstr "Դուք պետք է համաձայնվեք պայմանների հետ, որպեսզի կարողանաք գրանցվել"
+
+#: modules-mod/registration/forms.py:94
+msgid ""
+"This email address is already in use. Please supply a different email "
+"address."
+msgstr ""
+"Փոստի հասցեն արդեն օգտագործված է. Խնդրում ենք տրամադրել այլ էլփոստի հասցե:"
+
+#: modules-mod/registration/forms.py:121
+msgid ""
+"Registration using free email addresses is prohibited. Please supply a "
+"different email address."
+msgstr ""
+"Գրանցումն անվճար էլեկտրոնային հասցեներով արգելվում է. Խնդրում ենք տրամադրել "
+"այլ էլփոստի հասցե:"
+
+#: modules-mod/registration/models.py:180
+msgid "user"
+msgstr "Օգտվող"
+
+#: modules-mod/registration/models.py:181
+msgid "activation key"
+msgstr "Ակտիվացման բանալի"
+
+#: modules-mod/registration/models.py:186
+msgid "registration profile"
+msgstr "Պրոֆիլի գրանցում "
+
+#: modules-mod/registration/models.py:187
+msgid "registration profiles"
+msgstr "Պրոֆիլիների գրանցում "
+
+#: tpp/settings.py:207
+msgid "Russia"
+msgstr "Ռուսաստան"
+
+#: tpp/settings.py:211
+msgid "England"
+msgstr "Անգլիա"
+
+#: tpp/settings.py:223
+msgid "Israel"
+msgstr "Իսրայել"
+
+#: tppcenter/forms.py:224
+msgid "Image size must be less than 2 mb "
+msgstr "Նկարի չափերը պետք է լինեն ոչ պակաս, քան 2սմ"
+
+#: tppcenter/views.py:154
+#, python-format
+msgid "%(name)s , was registered to your event %(event)s ,"
+msgstr ""
+
+#: tppcenter/views.py:155
+#, python-format
+msgid "working in the %(company)s "
+msgstr ""
+
+#: tppcenter/views.py:156
+#, python-format
+msgid "on the position of %(position)s . "
+msgstr ""
+
+#: tppcenter/views.py:157
+#, python-format
+msgid "You can contact him at this email address %(email)s  "
+msgstr ""
+
+#: tppcenter/views.py:160 tppcenter/views.py:163
+msgid "Registartion to event"
+msgstr "Միջոցառման գրանցում"
+
+#: tppcenter/AdvBanner/views.py:34 tppcenter/AdvBanner/views.py:244
+#: tppcenter/AdvTop/views.py:203 tppcenter/templates/main_page.html:148
+#: tppcenter/templates/AdvBanner/index.html:7
+msgid "Banners"
+msgstr "Վահանակներ"
+
+#: tppcenter/AdvBanner/views.py:188 tppcenter/AdvTop/views.py:165
+msgid "You must choose one filter al least"
+msgstr "Դուք պետք է ընտրեք առնվազն մեկ ֆիլտր"
+
+#: tppcenter/AdvBanner/views.py:194
+msgid "The image size cannot exceed 50 KB"
+msgstr "Նկարի չափը չպետք է գերազանցի 50 ԿԲ"
+
+#: tppcenter/AdvBanner/views.py:200
+msgid "Image dimension should not exceed"
+msgstr "Նկարի չափը չպետք է գերազանցի"
+
+#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvBanner/views.py:219
+#: tppcenter/AdvTop/views.py:173 tppcenter/AdvTop/views.py:184
+msgid "You should choose a valid date range"
+msgstr "Դուք պետք է ընտրեք ամսաթվի  ճիշտ ժամանակահատված"
+
+#: tppcenter/AdvBanner/views.py:214 tppcenter/AdvTop/views.py:179
+msgid "You should choose a date range"
+msgstr "Դուք պետք է ընտրեք ճիշտ ամսաթիվ "
+
+#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvTop/views.py:190
+msgid "Error occurred while trying to proceed your request"
+msgstr "Սխալ է տեղի ունեցել Ձեր հարցմանը անցնելու ժամանակ"
+
+#: tppcenter/AdvBanner/views.py:236 tppcenter/AdvTop/views.py:198
+#: tppcenter/templates/baseFilter.html:10
+msgid "Select branch"
+msgstr "Ընտրել մասնաճյուղը"
+
+#: tppcenter/AdvBanner/views.py:239 tppcenter/AdvTop/views.py:199
+#: tppcenter/templates/baseFilter.html:11
+msgid "Select country"
+msgstr "Ընտրեք երկիրը"
+
+#: tppcenter/AdvBanner/views.py:242 tppcenter/AdvTop/views.py:200
+msgid "Select organization"
+msgstr "Ընտրեք կազմակերպությունը"
+
+#: tppcenter/BusinessProposal/views.py:56
+#: tppcenter/BusinessProposal/views.py:131
+msgid "Business Proposal"
+msgstr "Բիզնես առաջարկ"
+
+#: tppcenter/Companies/views.py:465 tppcenter/Tpp/views.py:585
+#, python-format
+msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:473 tppcenter/Tpp/views.py:593
+#, python-format
+msgid "Can not delete Department. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:512 tppcenter/Tpp/views.py:632
+#, python-format
+msgid "Could not find in DB Vacancy %(name)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:645
+#: tppcenter/Vacancy/views.py:531
+#, python-format
+msgid "Can not set attributes for Vacancy %(name)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:532 tppcenter/Tpp/views.py:651
+#: tppcenter/Vacancy/views.py:540
+#, python-format
+msgid ""
+"Can not create Relationship between Vacancy %(vac_name)s and Department ID "
+"%(dep_name)s. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:538 tppcenter/Tpp/views.py:657
+#: tppcenter/Vacancy/views.py:546
+#, python-format
+msgid ""
+"Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
+"%(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:550 tppcenter/Tpp/views.py:669
+#, python-format
+msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:617 tppcenter/Tpp/views.py:736
+#, python-format
+msgid "User %(user)s has not Cabinet."
+msgstr ""
+
+#: tppcenter/Companies/views.py:655 tppcenter/Tpp/views.py:774
+#, python-format
+msgid ""
+"Can not set attributes for Cabinet ID: "
+"%(cab_id)s.                                                The reason is: "
+"%(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:665 tppcenter/Tpp/views.py:785
+msgid "You can not add user at Vacancy which already busy."
+msgstr "Դուք չեք կարող ավելացնել օգտվողին հաստիքի համար որն արդեն զբաղված է."
+
+#: tppcenter/Companies/views.py:667 tppcenter/Tpp/views.py:787
+#, python-format
+msgid "You can not add user [%(user)s] at the company twice."
+msgstr ""
+
+#: tppcenter/Companies/views.py:991
+msgid "This message was sent to company with id:"
+msgstr "Այս նամակն ուղարկվել է ընկերության ID"
+
+#: tppcenter/Companies/views.py:994
+msgid "New message"
+msgstr "Նոր հաղորդագրություն"
+
+#: tppcenter/Companies/views.py:1000 tppcenter/templates/base.html:174
+#: tppcenter/templates/Vacancy/index.html:43
+msgid "You have successfully sent the message."
+msgstr "Դուք հաջողությամբ ուղարկել է հաղորդագրությունը"
+
+#: tppcenter/Companies/views.py:1003
+msgid "Message or file are required"
+msgstr " Պահանջվում է հաղորդագրություն կամ ֆայլ "
+
+#: tppcenter/Companies/views.py:1005
+msgid "Only registred users can send the messages"
+msgstr "Միայն գրանցված օգտվողները կարող են ուղարկել հաղորդագրություն"
+
+#: tppcenter/Greetings/views.py:35 tppcenter/templates/base.html:120
+#: tppcenter/templates/index.html:405
+#: tppcenter/templates/Greetings/index.html:10
+msgid "Greetings"
+msgstr "Ողջունում"
+
+#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:314
+#: tppcenter/templates/Wall/contentPage.html:11
+msgid "Innovation Project"
+msgstr "Ինովացիոն ծրագիր"
+
+#: tppcenter/Messages/views.py:77
+msgid "Private messages"
+msgstr "Անձնական հաղորդագրություն"
+
+#: tppcenter/News/views.py:62 tppcenter/News/views.py:99
+#: tppcenter/templates/index.html:153 tppcenter/templates/main_page.html:116
+#: tppcenter/templates/main_page.html:139
+#: tppcenter/templates/Companies/detailContent.html:561
+#: tppcenter/templates/News/index.html:11
+#: tppcenter/templates/Tpp/detailContent.html:507
+#: tppcenter/templates/Wall/contentPage.html:189 usersites/News/views.py:41
+#: usersites/News/views.py:42 usersites/templates/contentPage.html:43
+msgid "News"
+msgstr "Նորություններ"
+
+#: tppcenter/Profile/profileForms.py:20
+#: tppcenter/templates/main/user_profile.html:40
+msgid "First name"
+msgstr "Անուն"
+
+#: tppcenter/Profile/profileForms.py:23
+#: tppcenter/templates/Profile/addForm.html:44
+#: tppcenter/templates/main/user_profile.html:44
+msgid "Middle name"
+msgstr "Հայրանուն"
+
+#: tppcenter/Profile/profileForms.py:38
+msgid "Site name"
+msgstr "Կայքի անունը"
+
+#: tppcenter/Profile/profileForms.py:41
+msgid "Icq"
+msgstr "ICQ"
+
+#: tppcenter/Profile/profileForms.py:44
+msgid "Skype"
+msgstr "skype"
+
+#: tppcenter/Profile/profileForms.py:56
+#: tppcenter/templates/Profile/addForm.html:102
+#: tppcenter/templates/main/user_profile.html:82
+#: usersites/templates/CompanyStructure/contentPage.html:23
+msgid "Mobile number"
+msgstr "Հեռախոսահամար"
+
+#: tppcenter/Profile/profileForms.py:59
+msgid "Proffesion"
+msgstr "Մասնագիտություն"
+
+#: tppcenter/Profile/views.py:97
+msgid "This email already in use"
+msgstr "Էլեկտրոնային այս հասցեն արդեն օգտագործված է"
+
+#: tppcenter/Project/urls.py:11 tppcenter/templates/base.html:117
+#: tppcenter/templates/Project/adv.html:16
+msgid "Advertise with us"
+msgstr "Գովազդի տեղադրման պայմանները"
+
+#: tppcenter/Project/urls.py:12 tppcenter/templates/base.html:121
+#: tppcenter/templates/index.html:75
+msgid "Payment System"
+msgstr "Վճարման համակարգ"
+
+#: tppcenter/Project/urls.py:13 tppcenter/templates/base.html:118
+#: tppcenter/templates/main_header.html:6
+#: tppcenter/templates/Project/terms.html:16
+msgid "Terms of use"
+msgstr "Օգտագործման պայմաններ"
+
+#: tppcenter/Project/urls.py:14 tppcenter/templates/base.html:128
+msgid "Find a Business Partner"
+msgstr "Գտնել բիզնեսգործընկեր"
+
+#: tppcenter/Project/urls.py:16 tppcenter/templates/base.html:125
+#: tppcenter/templates/Project/shop.html:16
+msgid "Create online shop"
+msgstr "Ստեղծել Օնլայն Խանութ"
+
+#: tppcenter/Project/urls.py:17 tppcenter/templates/base.html:126
+#: tppcenter/templates/Project/event.html:16
+#: tppcenter/templates/Project/proposal.html:16
+msgid "Post announcement event"
+msgstr "Տեղադրել հայտարարություն իրադարձության մասին"
+
+#: tppcenter/Project/urls.py:18 tppcenter/templates/base.html:127
+#: tppcenter/templates/Project/partner.html:16
+msgid "Add a business proposal"
+msgstr "Ավելացնել բիզնես առաջարկ"
+
+#: tppcenter/Project/urls.py:21 tppcenter/templates/base.html:129
+#: tppcenter/templates/Project/site.html:16
+msgid "Your own site"
+msgstr "Ձեր անձնական էջը"
+
+#: tppcenter/Resume/views.py:125 tppcenter/templates/main_page.html:130
+#: tppcenter/templates/main_page.html:152
+#: tppcenter/templates/Resume/index.html:10
+msgid "Resume"
+msgstr "Ինքնակենսագրական"
+
+#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:141
+#: tppcenter/templates/index.html:141 tppcenter/templates/main_page.html:123
+#: tppcenter/templates/main_page.html:146
+#: tppcenter/templates/Analytic/main.html:76
+#: tppcenter/templates/Analytic/main.html:119
+#: tppcenter/templates/Companies/detailContent.html:578
+#: tppcenter/templates/Tenders/index.html:10
+#: tppcenter/templates/Tpp/detailContent.html:524
+msgid "Tenders"
+msgstr "Տենդերներ"
+
+#: tppcenter/Tpp/views.py:60 tppcenter/Tpp/views.py:265
+#: tppcenter/templates/Tpp/index.html:10
+msgid "Tpp"
+msgstr "TPP"
+
+#: tppcenter/TppTV/views.py:83
+msgid "TppTv"
+msgstr "Tpp հեռուտատեսություն"
+
+#: tppcenter/UserSites/views.py:103 tppcenter/templates/main_page.html:150
+#: tppcenter/templates/Tpp/tabCompanies.html:10
+msgid "Site"
+msgstr "Կայք"
+
+#: tppcenter/UserSites/views.py:153
+msgid "You cannot add more than one site for your organization"
+msgstr "Դուք չեք կարող ավելացնել ավելի քան մեկ կայք Ձեր կազմակերպության համար"
+
+#: tppcenter/UserSites/views.py:178 tppcenter/UserSites/views.py:231
+msgid "This domain is used, please try something else"
+msgstr "Այս տիրույթն օգտագործվում է, խնդրում ենք փորձել այլ բան"
+
+#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:276
+#: tppcenter/templates/Vacancy/addForm.html:185
+#: tppcenter/templates/Vacancy/index.html:10
+msgid "Vacancy"
+msgstr "Թափուր աշխատատեղ"
+
+#: tppcenter/Vacancy/views.py:338 tppcenter/Vacancy/views.py:392
+msgid "You have to choose vacancy"
+msgstr "Դուք պետք է ընտրեք հաստիքը"
+
+#: tppcenter/Vacancy/views.py:473
+msgid "You cannot send more than one resume at the same job position."
+msgstr ""
+"Դուք չեք կարող ուղարկել է ավելի քան մեկ ինքնակենսագրական միեւնույն հաստիքի "
+"համար"
+
+#: tppcenter/Vacancy/views.py:476
+msgid "You have successfully sent the resume."
+msgstr "Դուք հաջողությամբ ուղարկել եք ինքնակենսագրականը"
+
+#: tppcenter/Vacancy/views.py:479
+msgid "Resume  are required"
+msgstr "Պահանջվում է ինքնակենսագրական"
+
+#: tppcenter/Vacancy/views.py:481
+msgid "Only registred users can send resume"
+msgstr "Միայն գրանցվածները կարող են ուղարկել ինքնակենսագրականներ"
+
+#: tppcenter/Vacancy/views.py:504
+msgid "The error occurred"
+msgstr "Սխալ է տեղի ունեցել"
+
+#: tppcenter/Vacancy/views.py:509
+msgid "Department name  is required"
+msgstr "Անհրաժեշտ է բաժնի անվանումը"
+
+#: tppcenter/Vacancy/views.py:511
+msgid "Only registred users can add department"
+msgstr "Միայն գրանցվածները կարող են  նոր բաժին ստեղծել"
+
+#: tppcenter/Vacancy/views.py:551
+msgid "Vacancy name  is required"
+msgstr "Պահանջվում է հաստիքի անվանումը"
+
+#: tppcenter/Vacancy/views.py:553
+msgid "Only registred users can add vacancy"
+msgstr "Միայն գրանցվածները կարող են ավելացնել հաստիքներ"
+
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:132
+#: tppcenter/templates/main_page.html:156
+#: tppcenter/templates/Wall/index.html:6 usersites/views.py:18
+#: usersites/views.py:19
+msgid "Wall"
+msgstr "Պատ"
+
+#: tppcenter/templates/additionalPage.html:4
+#: tppcenter/templates/baseFilter.html:90
+#: tppcenter/templates/baseFilter.html:116
+#: tppcenter/templates/News/addForm.html:145
+#: tppcenter/templates/TppTV/addForm.html:94
+msgid "Title"
+msgstr "Անվանում"
+
+#: tppcenter/templates/additionalPage.html:8
+#: tppcenter/templates/Innov/addForm.html:94
+#: tppcenter/templates/News/addForm.html:41
+#: tppcenter/templates/News/addForm.html:69
+#: tppcenter/templates/Products/addForm.html:172
+msgid "Remove"
+msgstr "Հեռացնել"
+
+#: tppcenter/templates/additionalPage.html:10
+msgid "Add page"
+msgstr "Ավելացնել էջ"
+
+#: tppcenter/templates/additionalPage.html:15
+#: tppcenter/templates/Innov/addForm.html:191
+#: tppcenter/templates/News/addForm.html:162
+#: tppcenter/templates/News/addForm.html:184
+msgid "Content"
+msgstr "Պարունակություն"
+
+#: tppcenter/templates/base.html:124
+msgid "Advices"
+msgstr "Խորհուրդներ"
+
+#: tppcenter/templates/base.html:144
+msgid "Partners"
+msgstr "Գործընկերներ"
+
+#: tppcenter/templates/base.html:152 tppcenter/templates/main_page.html:109
+msgid "TPP-Center"
+msgstr "TPP-Center"
+
+#: tppcenter/templates/base.html:152
+msgid "Center of chambers of commerce, associations, unions and guilds "
+msgstr "Առևտրաարդյունաբերական պալատներ, ասոցացիաներ, միություններ, գիլդիաներ"
+
+#: tppcenter/templates/base.html:179
+msgid "Send message to"
+msgstr "Ուղարկել հաղորդագրություն"
+
+#: tppcenter/templates/base.html:187
+msgid "File"
+msgstr "Ֆայլ"
+
+#: tppcenter/templates/base.html:193
+#: tppcenter/templates/Messages/contentBox.html:14
+#: tppcenter/templates/Vacancy/index.html:70
+#: usersites/templates/Contact/contentPage.html:66
+msgid "Send"
+msgstr "Ուղարկել"
+
+#: tppcenter/templates/base.html:194
+#: tppcenter/templates/BusinessProposal/addForm.html:146
+#: tppcenter/templates/Companies/addForm.html:260
+#: tppcenter/templates/Companies/tabStaff.html:150
+#: tppcenter/templates/Companies/tabStructure.html:78
+#: tppcenter/templates/Companies/tabStructure.html:90
+#: tppcenter/templates/Exhibitions/addForm.html:217
+#: tppcenter/templates/Exhibitions/detailContent.html:231
+#: tppcenter/templates/Products/addForm.html:436
+#: tppcenter/templates/Profile/addForm.html:116
+#: tppcenter/templates/Resume/addForm.html:322
+#: tppcenter/templates/Tenders/addForm.html:167
+#: tppcenter/templates/Tpp/addForm.html:223
+#: tppcenter/templates/Tpp/tabStaff.html:151
+#: tppcenter/templates/Tpp/tabStructure.html:77
+#: tppcenter/templates/Tpp/tabStructure.html:89
+#: tppcenter/templates/TppTV/addForm.html:112
+#: tppcenter/templates/Vacancy/addForm.html:270
+#: tppcenter/templates/Vacancy/addForm.html:298
+#: tppcenter/templates/Vacancy/addForm.html:310
+#: tppcenter/templates/Vacancy/index.html:71
+msgid "Cancel"
+msgstr "Չեղյալ համարել"
+
+#: tppcenter/templates/baseFilter.html:7
+#: tppcenter/templates/AdvBanner/addForm.html:224
+#: tppcenter/templates/AdvTop/addForm.html:222
+msgid "No result found"
+msgstr "Արդյունք չկա"
+
+#: tppcenter/templates/baseFilter.html:8
+#: tppcenter/templates/AdvBanner/addForm.html:222
+#: tppcenter/templates/AdvTop/addForm.html:220
+msgid "Minimum length of search term is 3 characters"
+msgstr "Փնտրվող տերմինի նվազագույն երկարությունը 3 նիշ է"
+
+#: tppcenter/templates/baseFilter.html:9
+msgid "Select organizations"
+msgstr "Ընտրել կազմակերպությունները"
+
+#: tppcenter/templates/baseFilter.html:61
+#: tppcenter/templates/AdvBanner/addForm.html:333
+#: tppcenter/templates/AdvTop/addForm.html:302
+msgid "Filter"
+msgstr "Ֆիլտր"
+
+#: tppcenter/templates/baseFilter.html:73
+#: tppcenter/templates/main_page.html:110
+msgid "My"
+msgstr "Իմ"
+
+#: tppcenter/templates/baseFilter.html:76
+msgid "Sorting"
+msgstr "Տեսակավորող"
+
+#: tppcenter/templates/baseFilter.html:82
+#: tppcenter/templates/baseFilter.html:110
+msgid "Field"
+msgstr "Դաշտ"
+
+#: tppcenter/templates/baseFilter.html:87
+#: tppcenter/templates/baseFilter.html:115
+msgid "Creation date"
+msgstr "Ստեղծման ամսաթիվ"
+
+#: tppcenter/templates/baseFilter.html:99
+#: tppcenter/templates/baseFilter.html:125
+msgid "Descending"
+msgstr "Նվազող"
+
+#: tppcenter/templates/baseFilter.html:102
+#: tppcenter/templates/baseFilter.html:128
+msgid "Ascending"
+msgstr "Աճող"
+
+#: tppcenter/templates/baseFilter.html:134
+msgid "Apply"
+msgstr "Դիմել"
+
+#: tppcenter/templates/index.html:7
+msgid "Tppcenter"
+msgstr "Tpp Center"
+
+#: tppcenter/templates/index.html:63
+msgid "B2C center"
+msgstr "B2C կենտրոն"
+
+#: tppcenter/templates/index.html:69
+msgid "Innovation projects"
+msgstr "Ինովացիոն ծրագիր"
+
+#: tppcenter/templates/index.html:98
+msgid "Community"
+msgstr "Միավորում"
+
+#: tppcenter/templates/index.html:110
+msgid "Work with"
+msgstr "Աշխատել"
+
+#: tppcenter/templates/index.html:129
+msgid "Producst and services"
+msgstr "Ապրանքներ եւ Ծառայություններ"
+
+#: tppcenter/templates/index.html:137
+msgid "Business community"
+msgstr "Բիզնես միավորում"
+
+#: tppcenter/templates/index.html:145
+msgid "Innovative projects"
+msgstr "Ինովացիոն ծրագրեր"
+
+#: tppcenter/templates/index.html:149
+msgid "Jobs"
+msgstr "Աշխատանքներ"
+
+#: tppcenter/templates/index.html:165
+msgid "and get tools for business"
+msgstr "եւ գործիքներ բիզնեսի համար"
+
+#: tppcenter/templates/index.html:167
+msgid ""
+"In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
+"of the CIS\" for his contribution to the development of economic integration"
+msgstr ""
+"2014 թվականին TPP-Center պորտալը նշանավորվեց պարգեւատրմամբ  \"ԲԻԶՆԵՍ ԼԻԴԵՐ "
+"ԱՊՀ \" - իր ներդրած ավանդի, ինչպես նաեւ զարգացման տնտեսական ինտեգրման համար"
+
+#: tppcenter/templates/index.html:174
+msgid "on the portal will allow you to"
+msgstr "Պորտալում հնարավոր կլինի"
+
+#: tppcenter/templates/index.html:176
+msgid "run a business behalf of the company"
+msgstr "Ընկերության անունից առաջարկել բիզնե "
+
+#: tppcenter/templates/index.html:177
+msgid "to buy goods as a private person"
+msgstr "Գնել ապրանքներ `որպես մասնավոր անձ"
+
+#: tppcenter/templates/index.html:178
+msgid "draw attention toward your projects"
+msgstr "Ուշադրությունը սեւեռել դեպի ձեր ծրագրերը"
+
+#: tppcenter/templates/index.html:187
+msgid "and you will be able"
+msgstr "եւ դուք կկարողանաք"
+
+#: tppcenter/templates/index.html:189
+msgid "create your own online shop"
+msgstr "Ստեղծեք Ձեր սեփական օնլայն խանութը"
+
+#: tppcenter/templates/index.html:190
+msgid "to represent your products and services"
+msgstr "ներկայացրեք Ձեր ապրանքներն ու ծառայությունները"
+
+#: tppcenter/templates/index.html:191
+msgid "communicate with potential customers"
+msgstr " Հաղորդակցվելու պոտենցիալ հաճախորդների հետ"
+
+#: tppcenter/templates/index.html:199
+msgid "Registred"
+msgstr "Գրանցվածներ"
+
+#: tppcenter/templates/index.html:200
+msgid "users can"
+msgstr "Օգտագործողը կարող է՝"
+
+#: tppcenter/templates/index.html:202
+msgid "create their own websites"
+msgstr "Ստեղծել սեփական կայքեր"
+
+#: tppcenter/templates/index.html:203
+msgid "puts advertising on the portal"
+msgstr "Տեղադրել գովազդ պորտալում"
+
+#: tppcenter/templates/index.html:204
+msgid "create their own communities of interest"
+msgstr ""
+"Ստեղծել համագործակցություն սեփական նախաջեռնությամբ և հետաքրքրության "
+"շրջանակներում"
+
+#: tppcenter/templates/index.html:213
+msgid "right now"
+msgstr "Հենց հիմա"
+
+#: tppcenter/templates/index.html:221
+#: tppcenter/templates/registration/registration.html:52
+msgid "Confirm password"
+msgstr "Հաստատել գազտնաբառը"
+
+#: tppcenter/templates/index.html:224
+msgid "I agree to"
+msgstr "Ես համաձայն եմ "
+
+#: tppcenter/templates/index.html:224
+msgid "the term"
+msgstr "Ժամկետը"
+
+#: tppcenter/templates/index.html:280
+msgid "Affiche"
+msgstr "Ցուցադրել"
+
+#: tppcenter/templates/index.html:322
+msgid "All exhibitions and forums"
+msgstr "Բոլոր ցուցահանդեսները եւ ֆորումները"
+
+#: tppcenter/templates/index.html:325
+msgid "Business offers"
+msgstr "Գործարար առաջարկներ"
+
+#: tppcenter/templates/index.html:363
+msgid "All business offers"
+msgstr "Բոլոր բիզնես առաջարկները"
+
+#: tppcenter/templates/index.html:368
+msgid "Introduction to London Markets"
+msgstr "Լոնդոնյան շուկաների ծանոթացում"
+
+#: tppcenter/templates/index.html:375
+msgid "Download Presentation"
+msgstr "Բեռնել շնորհանդեսը"
+
+#: tppcenter/templates/index.html:383
+msgid "Videoreference of V.Migirov"
+msgstr "Վիդեո նյութ Վ.Միգիրովից"
+
+#: tppcenter/templates/index.html:394
+msgid "Download Guide Site"
+msgstr "Բեռնել կայքի ուղեցույցը"
+
+#: tppcenter/templates/login_header.html:27
+msgid "System notifications"
+msgstr "Համակարգի ծանուցումներ"
+
+#: tppcenter/templates/login_header.html:32
+msgid "Notifications"
+msgstr "Ծանուցումներ"
+
+#: tppcenter/templates/login_header.html:38
+msgid "See all"
+msgstr "Տեսնել ամբողջը"
+
+#: tppcenter/templates/login_header.html:42
+msgid "Messages"
+msgstr "Հաղորդագրություններ"
+
+#: tppcenter/templates/login_header.html:46
+msgid "Friend request"
+msgstr "Ընկերության առաջարկ"
+
+#: tppcenter/templates/login_header.html:49
+msgid "Notification in your communities"
+msgstr "Ծանուցումը ձեր տիրույթումում"
+
+#: tppcenter/templates/login_header.html:57
+#: tppcenter/templates/Companies/tabStaff.html:149
+#: tppcenter/templates/Companies/tabStructure.html:77
+#: tppcenter/templates/Companies/tabStructure.html:89
+#: tppcenter/templates/Tpp/tabStaff.html:150
+#: tppcenter/templates/Tpp/tabStructure.html:76
+#: tppcenter/templates/Tpp/tabStructure.html:88
+#: tppcenter/templates/Vacancy/addForm.html:297
+#: tppcenter/templates/Vacancy/addForm.html:309
+msgid "Add"
+msgstr "Ավելացնել"
+
+#: tppcenter/templates/main_page.html:119
+#: tppcenter/templates/main_page.html:142
+#: tppcenter/templates/Messages/index.html:46
+msgid "Organizations"
+msgstr "Կազմակերպություններ"
+
+#: tppcenter/templates/main_page.html:124
+#: tppcenter/templates/main_page.html:147
+msgid "Exhibitions / Forums"
+msgstr "Ցուցահանդեսներ / Ֆորումներ"
+
+#: tppcenter/templates/main_page.html:126
+#: tppcenter/templates/TppTV/index.html:10
+msgid "TPP TV"
+msgstr "TPP հեռուստատեսություն"
+
+#: tppcenter/templates/main_page.html:128
+#: tppcenter/templates/main_page.html:151
+msgid "Job requirements"
+msgstr "Աշխատանքային պահանջները"
+
+#: tppcenter/templates/main_page.html:149
+msgid "Analytic"
+msgstr "Վերլուծական"
+
+#: tppcenter/templates/main_page.html:195
+msgid "Find.."
+msgstr "Գտնել"
+
+#: tppcenter/templates/permissionDen.html:11
+msgid ""
+"Sorry but you cannot manipulate with this item , if you have created company "
+"you need choose it in you  "
+msgstr ""
+"Կներեք, բայց դուք չեք կարող շահարկել այս ապրանքը, եթե դուք ստեղծել եք "
+"ընկերություն դուք պետք է ընտրենք այն ձեր համար"
+
+#: tppcenter/templates/permissionDen.html:12
+msgid " or create "
+msgstr "կամ ստեղծել"
+
+#: tppcenter/templates/permissionDen.html:13
+msgid "new company "
+msgstr "Նոր ընկերություն"
+
+#: tppcenter/templates/AdvBanner/addForm.html:291
+msgid "Image file (Maximum 50KB)"
+msgstr "Նկարի ֆայլ (առավելագույն 50KB)"
+
+#: tppcenter/templates/AdvBanner/addForm.html:302
+msgid "Link URL"
+msgstr "Հղում URL"
+
+#: tppcenter/templates/AdvBanner/addForm.html:309
+#: tppcenter/templates/AdvTop/addForm.html:290
+#: tppcenter/templates/Companies/addForm.html:96
+#: tppcenter/templates/Products/addForm.html:238
+#: tppcenter/templates/Tpp/addForm.html:84
+msgid "Start date"
+msgstr "Ժամկետի սկիզբը"
+
+#: tppcenter/templates/AdvBanner/addForm.html:315
+msgid "Image title"
+msgstr "Նկարի անվանումը"
+
+#: tppcenter/templates/AdvBanner/addForm.html:326
+#: tppcenter/templates/AdvTop/addForm.html:295
+#: tppcenter/templates/Companies/addForm.html:100
+#: tppcenter/templates/Companies/tabExhibitions.html:9
+#: tppcenter/templates/Companies/tabTenders.html:9
+#: tppcenter/templates/Products/addForm.html:247
+#: tppcenter/templates/Tpp/addForm.html:91
+#: tppcenter/templates/Tpp/tabExhibitions.html:9
+#: tppcenter/templates/Tpp/tabTenders.html:9
+msgid "End date"
+msgstr "Ժամկետի ավարտը"
+
+#: tppcenter/templates/AdvBanner/addForm.html:348
+#: tppcenter/templates/AdvTop/addForm.html:318
+msgid "Basket"
+msgstr "Զամբյուղ"
+
+#: tppcenter/templates/AdvBanner/addForm.html:358
+#: tppcenter/templates/AdvTop/addForm.html:328
+msgid "Days Q-ty"
+msgstr "Օրեր Q-ty"
+
+#: tppcenter/templates/AdvBanner/addForm.html:362
+#: tppcenter/templates/AdvTop/addForm.html:332
+msgid "Summary"
+msgstr "Ամփոփում"
+
+#: tppcenter/templates/AdvBanner/addForm.html:367
+#: tppcenter/templates/AdvTop/addForm.html:335
+msgid "Pay"
+msgstr "Վճարել"
+
+#: tppcenter/templates/AdvTop/tops.html:8
+msgid "Paid ads"
+msgstr "Վճարովի գովազդ"
+
+#: tppcenter/templates/Analytic/main.html:57
+msgid "My sections"
+msgstr "Իմ բաժիններ"
+
+#: tppcenter/templates/Analytic/main.html:60
+#: tppcenter/templates/Analytic/main.html:107
+msgid "Section name"
+msgstr "Բաժնի անունը"
+
+#: tppcenter/templates/Analytic/main.html:61
+#: tppcenter/templates/Analytic/main.html:108
+msgid "Views"
+msgstr "Դիտումներ"
+
+#: tppcenter/templates/Analytic/main.html:85
+#: tppcenter/templates/BusinessProposal/popupFilter.html:21
+#: tppcenter/templates/Exhibitions/detailContent.html:219
+#: tppcenter/templates/News/popupFilter.html:21
+#: tppcenter/templates/Resume/addForm.html:177
+#: tppcenter/templates/Resume/addForm.html:210
+#: tppcenter/templates/Resume/addForm.html:243
+#: tppcenter/templates/Resume/detailContent.html:120
+#: tppcenter/templates/Resume/detailContent.html:128
+#: tppcenter/templates/Resume/detailContent.html:136
+#: tppcenter/templates/Tenders/popupFilter.html:21
+#: tppcenter/templates/TppTV/popupFilter.html:21
+#: tppcenter/templates/Vacancy/detailContent.html:39
+msgid "Company"
+msgstr "Ընկերություն"
+
+#: tppcenter/templates/Analytic/main.html:103
+msgid "Chamber events"
+msgstr "Պալատի իրադարձությունները"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:31
+#: tppcenter/templates/Exhibitions/addForm.html:109
+#: tppcenter/templates/Products/addForm.html:189
+#: tppcenter/templates/Tenders/addForm.html:67
+#: tppcenter/templates/Tenders/detailContent.html:90
+msgid "Documents"
+msgstr "Փաստաթուղթեր"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:45
+#: tppcenter/templates/Products/addForm.html:204
+msgid "Doc 1"
+msgstr "Փաստաթուղթ 1"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:53
+#: tppcenter/templates/Products/addForm.html:212
+msgid "Doc 2"
+msgstr "Փաստաթուղթ 2"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:61
+#: tppcenter/templates/Products/addForm.html:220
+msgid "Doc 3"
+msgstr "Փաստաթուղթ 3"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:73
+#: tppcenter/templates/Tenders/addForm.html:106
+msgid "Images"
+msgstr "Նկարներ"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:79
+msgid "image"
+msgstr "Նկար"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:89
+#: tppcenter/templates/Companies/addForm.html:143
+#: tppcenter/templates/Exhibitions/addForm.html:93
+#: tppcenter/templates/Products/addForm.html:229
+#: tppcenter/templates/Tenders/addForm.html:122
+#: tppcenter/templates/Tpp/addForm.html:126
+#: tppcenter/templates/TppTV/addForm.html:85
+#: tppcenter/templates/Vacancy/addForm.html:239
+msgid "Keywords"
+msgstr "Հիմնաբառեր"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:99
+#: tppcenter/templates/Companies/tabExhibitions.html:7
+#: tppcenter/templates/Companies/tabInnov.html:8
+#: tppcenter/templates/Companies/tabProducts.html:9
+#: tppcenter/templates/Companies/tabProposal.html:8
+#: tppcenter/templates/Companies/tabStaff.html:38
+#: tppcenter/templates/Companies/tabTenders.html:7
+#: tppcenter/templates/Exhibitions/addForm.html:170
+#: tppcenter/templates/Exhibitions/detailContent.html:207
+#: tppcenter/templates/Products/addForm.html:260
+#: tppcenter/templates/Profile/addForm.html:39
+#: tppcenter/templates/Resume/addForm.html:55
+#: tppcenter/templates/Resume/detailContent.html:50
+#: tppcenter/templates/Tpp/tabCompanies.html:8
+#: tppcenter/templates/Tpp/tabExhibitions.html:7
+#: tppcenter/templates/Tpp/tabInnov.html:8
+#: tppcenter/templates/Tpp/tabProposal.html:8
+#: tppcenter/templates/Tpp/tabStaff.html:39
+#: tppcenter/templates/Tpp/tabTenders.html:7
+msgid "Name"
+msgstr "Անուն"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:116
+#: tppcenter/templates/BusinessProposal/popupFilter.html:22
+#: tppcenter/templates/Companies/popupFilter.html:21
+#: tppcenter/templates/Exhibitions/popupFilter.html:21
+#: tppcenter/templates/Innov/contentPage.html:67
+#: tppcenter/templates/Innov/popupFilter.html:21
+#: tppcenter/templates/News/popupFilter.html:22
+#: tppcenter/templates/Products/popupFilter.html:21
+#: tppcenter/templates/Tenders/popupFilter.html:22
+#: tppcenter/templates/TppTV/popupFilter.html:22
+#: tppcenter/templates/Wall/contentPage.html:56
+msgid "Branch"
+msgstr "Մասնաճյուղ"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:128
+#: tppcenter/templates/Companies/addForm.html:242
+#: tppcenter/templates/Exhibitions/addForm.html:200
+#: tppcenter/templates/Innov/addForm.html:173
+#: tppcenter/templates/Products/addForm.html:418
+#: tppcenter/templates/Tenders/addForm.html:149
+msgid "Additional pages"
+msgstr "Լրացուցիչ էջերը"
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:32
+#: tppcenter/templates/Companies/contentPage.html:36
+#: tppcenter/templates/Exhibitions/contentPage.html:36
+#: tppcenter/templates/Innov/contentPage.html:42
+#: tppcenter/templates/News/contentPage.html:32
+#: tppcenter/templates/Products/contentPage.html:28
+#: tppcenter/templates/Resume/contentPage.html:22
+#: tppcenter/templates/Tenders/contentPage.html:32
+#: tppcenter/templates/Tpp/contentPage.html:32
+#: tppcenter/templates/TppTV/contentPage.html:26
+#: tppcenter/templates/UserSites/contentPage.html:24
+#: tppcenter/templates/Vacancy/contentPage.html:34
+msgid "edit"
+msgstr "Խմբագրել"
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:35
+#: tppcenter/templates/Companies/contentPage.html:40
+#: tppcenter/templates/Exhibitions/contentPage.html:39
+#: tppcenter/templates/Innov/contentPage.html:45
+#: tppcenter/templates/Products/contentPage.html:31
+msgid "add top"
+msgstr "Ավելացնել վերեւում"
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:38
+#: tppcenter/templates/Companies/contentPage.html:43
+#: tppcenter/templates/Companies/tabGalleryPhoto.html:10
+#: tppcenter/templates/Exhibitions/contentPage.html:42
+#: tppcenter/templates/Innov/contentPage.html:48
+#: tppcenter/templates/News/contentPage.html:35
+#: tppcenter/templates/Products/contentPage.html:34
+#: tppcenter/templates/Resume/contentPage.html:25
+#: tppcenter/templates/Tenders/contentPage.html:35
+#: tppcenter/templates/TppTV/contentPage.html:27
+#: tppcenter/templates/UserSites/contentPage.html:28
+#: tppcenter/templates/Vacancy/contentPage.html:38
+msgid "remove"
+msgstr "Հեռացնել"
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:55
+#: tppcenter/templates/BusinessProposal/popupFilter.html:20
+#: tppcenter/templates/Companies/popupFilter.html:20
+#: tppcenter/templates/Exhibitions/popupFilter.html:20
+#: tppcenter/templates/Greetings/contentPage.html:26
+#: tppcenter/templates/Greetings/detailContent.html:17
+#: tppcenter/templates/Innov/popupFilter.html:20
+#: tppcenter/templates/News/popupFilter.html:20
+#: tppcenter/templates/Products/popupFilter.html:20
+#: tppcenter/templates/Tenders/popupFilter.html:20
+#: tppcenter/templates/TppTV/popupFilter.html:20
+#: tppcenter/templates/Wall/contentPage.html:168
+msgid "Organization"
+msgstr "Կազմակերպություն"
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:72
+#: tppcenter/templates/Companies/contentPage.html:120
+#: tppcenter/templates/Companies/tabExhibitions.html:44
+#: tppcenter/templates/Companies/tabInnov.html:39
+#: tppcenter/templates/Companies/tabNews.html:33
+#: tppcenter/templates/Companies/tabProducts.html:50
+#: tppcenter/templates/Companies/tabProposal.html:33
+#: tppcenter/templates/Companies/tabTenders.html:44
+#: tppcenter/templates/Exhibitions/contentPage.html:78
+#: tppcenter/templates/Greetings/contentPage.html:41
+#: tppcenter/templates/Innov/contentPage.html:105
+#: tppcenter/templates/News/contentPage.html:85
+#: tppcenter/templates/Products/contentPage.html:74
+#: tppcenter/templates/Resume/contentPage.html:42
+#: tppcenter/templates/Tenders/contentPage.html:67
+#: tppcenter/templates/Tpp/contentPage.html:94
+#: tppcenter/templates/Tpp/tabCompanies.html:44
+#: tppcenter/templates/Tpp/tabExhibitions.html:44
+#: tppcenter/templates/Tpp/tabInnov.html:39
+#: tppcenter/templates/Tpp/tabNews.html:38
+#: tppcenter/templates/Tpp/tabProposal.html:33
+#: tppcenter/templates/Tpp/tabTenders.html:44
+#: tppcenter/templates/TppTV/contentPage.html:58
+#: tppcenter/templates/UserSites/contentPage.html:46
+#: tppcenter/templates/Vacancy/contentPage.html:66
+#: tppcenter/templates/main/notoficationlist.html:17
+msgid "No results found"
+msgstr "Ոչ մի արդյունք չի գտնվել"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:74
+#: tppcenter/templates/Exhibitions/detailContent.html:113
+#: tppcenter/templates/Products/detailContent.html:131
+msgid "Document"
+msgstr "Փաստաթուղթ"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:75
+#: tppcenter/templates/Companies/detailContent.html:573
+#: tppcenter/templates/Exhibitions/detailContent.html:114
+#: tppcenter/templates/Innov/addForm.html:82
+#: tppcenter/templates/Innov/detailContent.html:96
+#: tppcenter/templates/News/addForm.html:59
+#: tppcenter/templates/Products/addForm.html:162
+#: tppcenter/templates/Tenders/detailContent.html:89
+#: tppcenter/templates/Tpp/detailContent.html:519
+msgid "Gallery"
+msgstr "Ցուցասրահ"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:90
+#: tppcenter/templates/BusinessProposal/detailContent.html:93
+#: tppcenter/templates/BusinessProposal/detailContent.html:96
+#: tppcenter/templates/Exhibitions/detailContent.html:129
+#: tppcenter/templates/Exhibitions/detailContent.html:132
+#: tppcenter/templates/Exhibitions/detailContent.html:135
+msgid "Link to the File"
+msgstr "Հղում դեպի ֆայլը"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:112
+#: tppcenter/templates/Companies/tabGalleryPhoto.html:14
+#: tppcenter/templates/Exhibitions/detailContent.html:151
+#: tppcenter/templates/Innov/detailContent.html:145
+#: tppcenter/templates/Tenders/detailContent.html:109
+msgid "zoom"
+msgstr "Խոշորացում"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:134
+#: tppcenter/templates/Companies/addForm.html:124
+#: tppcenter/templates/Companies/detailContent.html:674
+#: tppcenter/templates/Exhibitions/detailContent.html:174
+#: tppcenter/templates/Innov/detailContent.html:167
+#: tppcenter/templates/Tpp/addForm.html:105
+#: tppcenter/templates/Tpp/detailContent.html:594
+msgid "Fax"
+msgstr "Ֆաքս"
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:142
+#: tppcenter/templates/Companies/addForm.html:136
+#: tppcenter/templates/Companies/detailContent.html:682
+#: tppcenter/templates/Exhibitions/detailContent.html:182
+#: tppcenter/templates/Innov/detailContent.html:175
+#: tppcenter/templates/Profile/addForm.html:54
+#: tppcenter/templates/Tpp/addForm.html:119
+#: tppcenter/templates/Tpp/detailContent.html:602
+#: tppcenter/templates/main/user_profile.html:56
+msgid "WWW"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:58
+#: tppcenter/templates/Companies/tabProducts.html:8
+#: tppcenter/templates/Exhibitions/addForm.html:153
+#: tppcenter/templates/News/addForm.html:31
+#: tppcenter/templates/Products/addForm.html:129
+#: tppcenter/templates/Tpp/addForm.html:57
+#: tppcenter/templates/TppTV/addForm.html:23
+msgid "Image"
+msgstr "Նկար"
+
+#: tppcenter/templates/Companies/addForm.html:89
+msgid "Vatin"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:110
+#: tppcenter/templates/Tpp/addForm.html:77
+msgid "Director name"
+msgstr "Տնօրենի անունը"
+
+#: tppcenter/templates/Companies/addForm.html:117
+msgid "Slogan"
+msgstr "Լոզունգ"
+
+#: tppcenter/templates/Companies/addForm.html:152
+msgid "Company name"
+msgstr "Ընկերության անվանումը"
+
+#: tppcenter/templates/Companies/addForm.html:159
+msgid "Preview text"
+msgstr "Նախադիտում"
+
+#: tppcenter/templates/Companies/addForm.html:164
+#: tppcenter/templates/Products/addForm.html:289
+msgid "Detail text"
+msgstr "Տեքստի մանրամասները"
+
+#: tppcenter/templates/Companies/addForm.html:184
+#: tppcenter/templates/Exhibitions/addForm.html:65
+#: tppcenter/templates/Innov/addForm.html:139
+#: tppcenter/templates/Innov/detailContent.html:111
+msgid "Industry"
+msgstr "Արդյունաբերություն"
+
+#: tppcenter/templates/Companies/addForm.html:194
+msgid "CCI"
+msgstr "ԱԱՊ"
+
+#: tppcenter/templates/Companies/addForm.html:196
+msgid "Choose CCI"
+msgstr "Ընտրեք ԱԱՊ"
+
+#: tppcenter/templates/Companies/addForm.html:209
+#: tppcenter/templates/Tpp/addForm.html:189
+msgid "Place on the map"
+msgstr "Տեղանքը քարտեզի վրա"
+
+#: tppcenter/templates/Companies/addForm.html:213
+msgid "Details"
+msgstr "Մանրամասներ"
+
+#: tppcenter/templates/Companies/addForm.html:216
+#: tppcenter/templates/Tpp/addForm.html:196
+msgid "RRC"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:219
+#: tppcenter/templates/Tpp/addForm.html:199
+msgid "RCEO"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:222
+#: tppcenter/templates/Tpp/addForm.html:202
+msgid "RCOSD"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:225
+#: tppcenter/templates/Tpp/addForm.html:205
+msgid "ARCEA"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:228
+#: tppcenter/templates/Tpp/addForm.html:208
+msgid "Accountant name"
+msgstr "Հաշվի անվանումը"
+
+#: tppcenter/templates/Companies/addForm.html:233
+#: tppcenter/templates/Tpp/addForm.html:213
+msgid "Account number"
+msgstr "Հաշվի համարը"
+
+#: tppcenter/templates/Companies/addForm.html:236
+#: tppcenter/templates/Tpp/addForm.html:216
+msgid "Bank details"
+msgstr "Բանկային տվյալներ"
+
+#: tppcenter/templates/Companies/contentPage.html:37
+#: tppcenter/templates/Tpp/contentPage.html:33
+msgid "set current"
+msgstr "Ընթացիկ նյութը"
+
+#: tppcenter/templates/Companies/detailContent.html:50
+msgid "Uploading"
+msgstr "Բեռնվում է"
+
+#: tppcenter/templates/Companies/detailContent.html:51
+msgid "Uploaded"
+msgstr "Բերնված է"
+
+#: tppcenter/templates/Companies/detailContent.html:52
+msgid "Fail"
+msgstr "ձախողում"
+
+#: tppcenter/templates/Companies/detailContent.html:53
+msgid "The following files was not uploaded"
+msgstr "Հետեւյալ ֆայլերը վերբեռնված չեն"
+
+#: tppcenter/templates/Companies/detailContent.html:133
+#: tppcenter/templates/Tpp/detailContent.html:57
+msgid "Do you want to delete this record?"
+msgstr "Դուք ցանկանում եք ջնջե՞լ այս գրառումը."
+
+#: tppcenter/templates/Companies/detailContent.html:405
+#: tppcenter/templates/Tpp/detailContent.html:329
+msgid "Do you want to delete this Vacancy?"
+msgstr "Դուք ցանկանում եք ջնջե՞լ այս հաստիքը"
+
+#: tppcenter/templates/Companies/detailContent.html:416
+#: tppcenter/templates/Tpp/detailContent.html:340
+msgid "Do you want to delete this Department?"
+msgstr "Դուք ցանկանու՞մ եք ջնջել այս բաժինը"
+
+#: tppcenter/templates/Companies/detailContent.html:556
+#: tppcenter/templates/Tpp/detailContent.html:502
+msgid "Recvisits"
+msgstr "Տվյալներ"
+
+#: tppcenter/templates/Companies/detailContent.html:603
+#: tppcenter/templates/Tpp/detailContent.html:544
+#: usersites/CompanyStructure/views.py:15
+#: usersites/CompanyStructure/views.py:16
+msgid "Structure"
+msgstr "Կառուցվածք"
+
+#: tppcenter/templates/Companies/detailContent.html:608
+#: tppcenter/templates/Tpp/detailContent.html:549
+msgid "Staff"
+msgstr "Հաստիք"
+
+#: tppcenter/templates/Companies/tabExhibitions.html:8
+#: tppcenter/templates/Companies/tabTenders.html:8
+#: tppcenter/templates/Tpp/tabExhibitions.html:8
+#: tppcenter/templates/Tpp/tabTenders.html:8
+msgid "Start Event"
+msgstr "Իրադարձություն սկիզբ "
+
+#: tppcenter/templates/Companies/tabInnov.html:9
+#: tppcenter/templates/Innov/addForm.html:66
+#: tppcenter/templates/Innov/contentPage.html:64
+#: tppcenter/templates/Tpp/tabInnov.html:9
+#: tppcenter/templates/Wall/contentPage.html:53
+msgid "Cost of project"
+msgstr "Նախագծի արժեքը "
+
+#: tppcenter/templates/Companies/tabStaff.html:39
+#: tppcenter/templates/Companies/tabStaff.html:117
+#: tppcenter/templates/Tpp/tabStaff.html:40
+#: tppcenter/templates/Tpp/tabStaff.html:118
+msgid "Department"
+msgstr "Բաժնի"
+
+#: tppcenter/templates/Companies/tabStaff.html:40
+#: tppcenter/templates/Exhibitions/detailContent.html:223
+#: tppcenter/templates/Greetings/contentPage.html:27
+#: tppcenter/templates/Greetings/detailContent.html:18
+#: tppcenter/templates/Resume/addForm.html:184
+#: tppcenter/templates/Resume/addForm.html:217
+#: tppcenter/templates/Resume/addForm.html:250
+#: tppcenter/templates/Resume/detailContent.html:122
+#: tppcenter/templates/Resume/detailContent.html:130
+#: tppcenter/templates/Resume/detailContent.html:138
+#: tppcenter/templates/Tpp/tabStaff.html:41
+#: usersites/templates/CompanyStructure/contentPage.html:20
+msgid "Position"
+msgstr "Դիրքորոշում"
+
+#: tppcenter/templates/Companies/tabStaff.html:42
+#: tppcenter/templates/Tpp/tabStaff.html:43
+msgid "Status"
+msgstr "Կարգավիճակ"
+
+#: tppcenter/templates/Companies/tabStaff.html:70
+#: tppcenter/templates/Tpp/tabStaff.html:71
+msgid "User with empty profile. Cabinet ID:"
+msgstr "Օգտվողի դատարկ պրոֆիլ: Գրասենյակ ID:"
+
+#: tppcenter/templates/Companies/tabStaff.html:97
+#: tppcenter/templates/Tpp/tabStaff.html:98
+msgid "No Staff found."
+msgstr "Ոչ  մի հաստիք չի գտնվել."
+
+#: tppcenter/templates/Companies/tabStaff.html:119
+#: tppcenter/templates/Tpp/tabStaff.html:120
+#: tppcenter/templates/Vacancy/addForm.html:171
+msgid "Select Department..."
+msgstr "Ընտրել բաժնիը"
+
+#: tppcenter/templates/Companies/tabStaff.html:125
+#: tppcenter/templates/Companies/tabStaff.html:138
+#: tppcenter/templates/Tpp/tabStaff.html:126
+#: tppcenter/templates/Tpp/tabStaff.html:139
+#: tppcenter/templates/Vacancy/addForm.html:177
+#: tppcenter/templates/Vacancy/addForm.html:200
+msgid "Empty"
+msgstr "Դատարկ"
+
+#: tppcenter/templates/Companies/tabStaff.html:128
+#: tppcenter/templates/Tpp/tabStaff.html:129
+msgid "/Vacancy"
+msgstr "Թափուր աշխատատեղ"
+
+#: tppcenter/templates/Companies/tabStaff.html:141
+#: tppcenter/templates/Tpp/tabStaff.html:142
+msgid "Administrator"
+msgstr "Ադմինիստրատոր"
+
+#: tppcenter/templates/Companies/tabStructure.html:54
+#: tppcenter/templates/Tpp/tabStructure.html:53
+msgid "No Departments found."
+msgstr "Ոչ մի բաժին չի գտնվել"
+
+#: tppcenter/templates/Companies/tabStructure.html:73
+#: tppcenter/templates/Tpp/tabStructure.html:72
+#: tppcenter/templates/Vacancy/addForm.html:292
+msgid "Department name"
+msgstr "Բաժնի անունը"
+
+#: tppcenter/templates/Companies/tabStructure.html:85
+#: tppcenter/templates/Tpp/tabStructure.html:84
+#: tppcenter/templates/Vacancy/addForm.html:304
+msgid "Vacancy title"
+msgstr "Թափուր աշխատատեղերի անվանումը"
+
+#: tppcenter/templates/Exhibitions/addForm.html:76
+msgid "Start event date"
+msgstr " Միջոցառում ամսաթվի սկիզբը"
+
+#: tppcenter/templates/Exhibitions/addForm.html:85
+msgid "End event date"
+msgstr " Միջոցառում ամսաթվի ավարտը"
+
+#: tppcenter/templates/Exhibitions/addForm.html:101
+msgid "Route description"
+msgstr "երթուղու նկարագրությունը"
+
+#: tppcenter/templates/Exhibitions/addForm.html:190
+msgid "Map"
+msgstr "Քարտեզ"
+
+#: tppcenter/templates/Exhibitions/contentPage.html:59
+#: tppcenter/templates/Innov/contentPage.html:69
+#: tppcenter/templates/Tenders/contentPage.html:50
+#: tppcenter/templates/Wall/contentPage.html:58
+#: tppcenter/templates/Wall/contentPage.html:124
+msgid "Organizer"
+msgstr "Կազմակերպիչ"
+
+#: tppcenter/templates/Exhibitions/detailContent.html:112
+msgid "Route Description"
+msgstr "Երթուղու նկարագրությունը"
+
+#: tppcenter/templates/Exhibitions/detailContent.html:202
+msgid "Name and Email are required"
+msgstr "Անունը եւ էլեկտրոնային հասցեն գրանցվել են"
+
+#: tppcenter/templates/Exhibitions/detailContent.html:203
+msgid "You have successfully registered."
+msgstr "Դուք հաջողությամբ գրանցվել եք"
+
+#: tppcenter/templates/Exhibitions/detailContent.html:230
+msgid "Register"
+msgstr "Գրանցում"
+
+#: tppcenter/templates/Greetings/contentPage.html:30
+#: tppcenter/templates/News/contentPage.html:69
+#: tppcenter/templates/Wall/contentPage.html:225
+msgid "Read more"
+msgstr "Կարդալ ավելին"
+
+#: tppcenter/templates/Innov/addForm.html:37
+msgid "Target audience"
+msgstr "Թիրախային լսարան"
+
+#: tppcenter/templates/Innov/addForm.html:44
+#: tppcenter/templates/News/addForm.html:135
+msgid "Keyword"
+msgstr "Հիմնաբառը"
+
+#: tppcenter/templates/Innov/addForm.html:51
+#: tppcenter/templates/Innov/detailContent.html:119
+msgid "Realese date"
+msgstr "Թողարկման ամսաթիվը"
+
+#: tppcenter/templates/Innov/addForm.html:58
+msgid "Project site"
+msgstr "նախագծի կայքը"
+
+#: tppcenter/templates/Innov/addForm.html:71
+#: tppcenter/templates/Products/addForm.html:357
+#: tppcenter/templates/Tenders/addForm.html:56
+msgid "Currency"
+msgstr "Արտարժույթ"
+
+#: tppcenter/templates/Innov/addForm.html:112
+msgid "Project name"
+msgstr "Ծրագրի անվանումը"
+
+#: tppcenter/templates/Innov/addForm.html:119
+msgid "Product name"
+msgstr "Ապրանքի անվանումը"
+
+#: tppcenter/templates/Innov/addForm.html:147
+#: tppcenter/templates/Innov/detailContent.html:95
+msgid "Business plan"
+msgstr "Բիզնես պլան"
+
+#: tppcenter/templates/Innov/addForm.html:161
+msgid "Business plan file"
+msgstr "Բիզնես պլանի ֆայլ"
+
+#: tppcenter/templates/Innov/contentPage.html:61
+#: tppcenter/templates/Tenders/addForm.html:34
+#: tppcenter/templates/Tenders/detailContent.html:59
+#: tppcenter/templates/Wall/contentPage.html:50
+msgid "Publication date"
+msgstr "Հրապարակման ամսաթիվ"
+
+#: tppcenter/templates/Innov/detailContent.html:107
+msgid "Product"
+msgstr "Ապրանք"
+
+#: tppcenter/templates/Innov/detailContent.html:115
+#: tppcenter/templates/Products/addForm.html:334
+msgid "Cost"
+msgstr "Արժեք"
+
+#: tppcenter/templates/Innov/detailContent.html:128
+msgid "Link to Business Plan File"
+msgstr "Հղում դեպի բիզնես պլան "
+
+#: tppcenter/templates/Innov/index.html:10
+msgid "Innovation project"
+msgstr "Ինովացիոն ծրագիր"
+
+#: tppcenter/templates/Messages/contentBox.html:9
+msgid "Send private message"
+msgstr "ՈՒղարկել անձնական հաղորդագրություն"
+
+#: tppcenter/templates/Messages/index.html:49
+msgid "Users"
+msgstr "Օգտագործող"
+
+#: tppcenter/templates/News/addForm.html:87
+#: tppcenter/templates/Products/addForm.html:380
+#: tppcenter/templates/TppTV/addForm.html:44
+msgid "Category"
+msgstr "Բաժիններ"
+
+#: tppcenter/templates/News/addForm.html:101
+#: tppcenter/templates/TppTV/addForm.html:78
+msgid "Youtube code"
+msgstr "Youtube ծածկագիրը"
+
+#: tppcenter/templates/News/addForm.html:112
+#: tppcenter/templates/TppTV/addForm.html:60
+msgid "Choose Country"
+msgstr "Ընտրեք պետությունը"
+
+#: tppcenter/templates/News/addForm.html:153
+#: tppcenter/templates/Products/addForm.html:282
+msgid "Preview description"
+msgstr "Ծանոթանալ նկարագրությանը"
+
+#: tppcenter/templates/News/detailContent.html:142
+#: tppcenter/templates/TppTV/detailContent.html:45
+msgid "Similar news"
+msgstr "Նմանատիպ նորություններ"
+
+#: tppcenter/templates/News/last.html:9
+msgid "Last News"
+msgstr "Նորություններ"
+
+#: tppcenter/templates/Products/addForm.html:141
+#: tppcenter/templates/Products/addForm.html:206
+#: tppcenter/templates/Products/addForm.html:214
+#: tppcenter/templates/Products/addForm.html:222
+#: tppcenter/templates/Tenders/addForm.html:82
+#: tppcenter/templates/Tenders/addForm.html:89
+#: tppcenter/templates/Tenders/addForm.html:96
+#: tppcenter/templates/Tenders/addForm.html:114
+#: tppcenter/templates/Tpp/addForm.html:65
+#: tppcenter/templates/TppTV/addForm.html:32
+msgid "delete"
+msgstr "Ջնջել"
+
+#: tppcenter/templates/Products/addForm.html:272
+msgid "Part number"
+msgstr "Մասի համարը"
+
+#: tppcenter/templates/Products/addForm.html:301
+msgid "Temporary discount"
+msgstr "Ժամանակավոր զեղչ"
+
+#: tppcenter/templates/Products/addForm.html:312
+msgid "From(date)"
+msgstr "-ից (ամսաթիվը)"
+
+#: tppcenter/templates/Products/addForm.html:321
+msgid "To(date)"
+msgstr "Մինչեւ (ամսաթիվը)"
+
+#: tppcenter/templates/Products/addForm.html:368
+msgid "Measerument unit"
+msgstr "Չափման միավոր"
+
+#: tppcenter/templates/Products/addForm.html:414
+msgid "Post on b2c portal"
+msgstr "Հաղորդագրությունը փակցնել B2C պորտալի  պատին"
+
+#: tppcenter/templates/Products/contentPage.html:59
+#: tppcenter/templates/Products/detailContent.html:78
+#: tppcenter/templates/Wall/contentPage.html:277
+msgid "Contact to price"
+msgstr "ՈՒղարկել հաղորդագրություն գնի մասին"
+
+#: tppcenter/templates/Products/detailContent.html:83
+msgid "Unit"
+msgstr "Միավոր"
+
+#: tppcenter/templates/Products/detailContent.html:87
+msgid "Amount"
+msgstr "Գումարի չափը"
+
+#: tppcenter/templates/Products/detailContent.html:91
+msgid "Deleviry method"
+msgstr "Առաքման եղանակը"
+
+#: tppcenter/templates/Products/detailContent.html:98
+msgid "Countact us"
+msgstr "Կապ մեզ հետ"
+
+#: tppcenter/templates/Products/detailContent.html:144
+#: tppcenter/templates/Products/detailContent.html:147
+#: tppcenter/templates/Products/detailContent.html:150
+#: tppcenter/templates/Tenders/detailContent.html:120
+#: tppcenter/templates/Tenders/detailContent.html:123
+#: tppcenter/templates/Tenders/detailContent.html:126
+msgid "Link to the document"
+msgstr "Հղում դեպի փաստաթուղթը"
+
+#: tppcenter/templates/Profile/addForm.html:5
+msgid "Your profile was updated"
+msgstr "Ձեր պրոֆիլը թարմացվել է"
+
+#: tppcenter/templates/Profile/addForm.html:25
+msgid "Change avatar"
+msgstr "Փոխել ավատարը"
+
+#: tppcenter/templates/Profile/addForm.html:75
+msgid "Your organization"
+msgstr "Ձեր կազմակերպությունը"
+
+#: tppcenter/templates/Profile/addForm.html:83
+#: tppcenter/templates/main/user_profile.html:70
+msgid "Sex"
+msgstr "Սեռ"
+
+#: tppcenter/templates/Profile/addForm.html:97
+msgid "Telephone Number"
+msgstr "Հեռախոսահամար"
+
+#: tppcenter/templates/Profile/addForm.html:107
+#: tppcenter/templates/Resume/detailContent.html:103
+#: tppcenter/templates/main/user_profile.html:90
+msgid "Profession"
+msgstr "Մասնագիտություն"
+
+#: tppcenter/templates/Resume/addForm.html:53
+msgid ""
+"Filling resume does not obligate company that publishes job on the site TPP-"
+"Center, enter into a contract of employment."
+msgstr ""
+"Ինքնակենսագրականի տեղադրումը չի կատարվել ընկերության պարտադրանքով, որը "
+"հրապարակում է թափուր հաստիքների հայտարարություններ TPP- center կայքում. "
+
+#: tppcenter/templates/Resume/addForm.html:70
+msgid "Marital Status"
+msgstr "Ընտանեկան կարգավիճակը"
+
+#: tppcenter/templates/Resume/addForm.html:85
+msgid "Citizenship"
+msgstr "Քաղաքացիությունը"
+
+#: tppcenter/templates/Resume/addForm.html:107
+#: tppcenter/templates/Resume/detailContent.html:81
+msgid "Education"
+msgstr "Կրթությունը"
+
+#: tppcenter/templates/Resume/addForm.html:110
+#: tppcenter/templates/Resume/detailContent.html:91
+msgid "Institution"
+msgstr "Ուսումնական հաստատությունը"
+
+#: tppcenter/templates/Resume/addForm.html:118
+#: tppcenter/templates/Resume/detailContent.html:95
+msgid "Faculty"
+msgstr "Ֆակուլտետ"
+
+#: tppcenter/templates/Resume/addForm.html:125
+#: tppcenter/templates/Resume/detailContent.html:99
+msgid "Study period"
+msgstr "Ուսումնառության ժամանակահատվածը"
+
+#: tppcenter/templates/Resume/addForm.html:133
+#: tppcenter/templates/Resume/addForm.html:199
+#: tppcenter/templates/Resume/addForm.html:232
+#: tppcenter/templates/Resume/addForm.html:265
+msgid "from"
+msgstr "- ից"
+
+#: tppcenter/templates/Resume/addForm.html:137
+#: tppcenter/templates/Resume/addForm.html:203
+#: tppcenter/templates/Resume/addForm.html:236
+#: tppcenter/templates/Resume/addForm.html:269
+msgid "to"
+msgstr "Մինչեւ"
+
+#: tppcenter/templates/Resume/addForm.html:144
+msgid "Specialty"
+msgstr "Մասնագիտությունը"
+
+#: tppcenter/templates/Resume/addForm.html:151
+msgid "Form of study"
+msgstr "Ուսումնական հաստատությունը"
+
+#: tppcenter/templates/Resume/addForm.html:165
+#: tppcenter/templates/Resume/addForm.html:292
+#: tppcenter/templates/Resume/addForm.html:299
+msgid "Additionally"
+msgstr "Բացի այդ"
+
+#: tppcenter/templates/Resume/addForm.html:172
+#: tppcenter/templates/Resume/detailContent.html:82
+msgid "Experience"
+msgstr "Աշխատանքային փորձ"
+
+#: tppcenter/templates/Resume/addForm.html:174
+msgid "Specify the last 3 jobs"
+msgstr "Նշել վերջին 3 աշխատատեղերը"
+
+#: tppcenter/templates/Resume/addForm.html:191
+msgid "Worrk period"
+msgstr "Աշխատանքային ժամկետը"
+
+#: tppcenter/templates/Resume/addForm.html:224
+#: tppcenter/templates/Resume/addForm.html:257
+msgid "Work period"
+msgstr "Աշխատանքային ժամկետը"
+
+#: tppcenter/templates/Resume/addForm.html:275
+#: tppcenter/templates/Resume/detailContent.html:83
+msgid "Skills"
+msgstr "Հմտություններ"
+
+#: tppcenter/templates/Resume/addForm.html:278
+msgid "Languages skills"
+msgstr "Լեզուների իմացություն"
+
+#: tppcenter/templates/Resume/addForm.html:285
+#: tppcenter/templates/Resume/detailContent.html:157
+msgid "Computer skills"
+msgstr "Համակարգչային հմտություններ"
+
+#: tppcenter/templates/Resume/addForm.html:302
+msgid "Your salary expectations"
+msgstr "Որքա՞ն աշխատավարձ եք ակնկալում"
+
+#: tppcenter/templates/Resume/addForm.html:309
+msgid "Information about which you wish to inform"
+msgstr "Ինֆորմացիա որի մասին կցանկանայիք տեղեկացնել"
+
+#: tppcenter/templates/Resume/addForm.html:316
+msgid ""
+"I confirm that all information provided by me in this form on the site TPP-"
+"Center, are true and complete"
+msgstr ""
+"Հավաստիացնում եմ՝  ամբողջ տեղեկատվությունը, որ տրամադրվել է իմ կողմից, այս "
+"ձեւով TPP-center կայքում, ճշմարիտ է եւ ամբողջական"
+
+#: tppcenter/templates/Resume/addForm.html:317
+msgid "I don't mind for checking the information reported by me"
+msgstr "Ես դեմ չեմ, որ ստուգվի իմ ներկայացրած տեղեկատվությունը"
+
+#: tppcenter/templates/Resume/contentPage.html:32
+#: tppcenter/templates/Tenders/contentPage.html:46
+#: tppcenter/templates/UserSites/contentPage.html:36
+msgid "Date of publication"
+msgstr "Հրապարակման ամսաթիվը"
+
+#: tppcenter/templates/Resume/detailContent.html:58
+msgid "Marital status"
+msgstr "Ընտանեկան կարգավիճակը"
+
+#: tppcenter/templates/Resume/detailContent.html:62
+msgid "Citezenship"
+msgstr "Քաղաքացիություն"
+
+#: tppcenter/templates/Resume/detailContent.html:74
+msgid "Salary"
+msgstr "Աշխատավարձ"
+
+#: tppcenter/templates/Resume/detailContent.html:84
+#: tppcenter/templates/Resume/detailContent.html:107
+msgid "Additional"
+msgstr "Լրացուցիչ"
+
+#: tppcenter/templates/Resume/detailContent.html:124
+#: tppcenter/templates/Resume/detailContent.html:132
+#: tppcenter/templates/Resume/detailContent.html:140
+msgid "Work  period"
+msgstr "Աշխատանքային ժամկետը"
+
+#: tppcenter/templates/Resume/detailContent.html:153
+msgid "Language skills"
+msgstr "Լեզուների իմացություն"
+
+#: tppcenter/templates/Resume/detailContent.html:161
+msgid "Additional skills"
+msgstr "Լրացուցիչ հմտություններ"
+
+#: tppcenter/templates/Tenders/addForm.html:41
+#: tppcenter/templates/Tenders/detailContent.html:63
+msgid "Deadline for receiving bids"
+msgstr "Հայտերի ընդունման վերջնաժամկետ"
+
+#: tppcenter/templates/Tenders/addForm.html:49
+#: tppcenter/templates/Tenders/contentPage.html:49
+#: tppcenter/templates/Tenders/detailContent.html:67
+msgid "Starting price"
+msgstr "Մեկնարկային գին"
+
+#: tppcenter/templates/Tenders/addForm.html:132
+msgid "Tender name"
+msgstr "Տենդերի անվանումը"
+
+#: tppcenter/templates/Tpp/addForm.html:136
+msgid "VATIN"
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:153
+msgid "Organization name"
+msgstr "Կազմակերպության անվանումը"
+
+#: tppcenter/templates/Tpp/addForm.html:161
+msgid "Preview description "
+msgstr "Նախադիտման նկարագրությունը"
+
+#: tppcenter/templates/Tpp/addForm.html:168
+#: tppcenter/templates/TppTV/addForm.html:101
+msgid "Detail description"
+msgstr "Մանրամասն նկարագրություն"
+
+#: tppcenter/templates/Tpp/addForm.html:193
+msgid "Detail"
+msgstr "Մանրամասն"
+
+#: tppcenter/templates/Tpp/tabCompanies.html:7
+msgid "Logo"
+msgstr "Մուտք"
+
+#: tppcenter/templates/UserSites/index.html:10
+msgid "Sites"
+msgstr "Կայքեր"
+
+#: tppcenter/templates/Vacancy/addForm.html:169
+msgid "Departament"
+msgstr "Բաժին"
+
+#: tppcenter/templates/Vacancy/addForm.html:191
+msgid "Select Department to select vacancy..."
+msgstr "Ընտրեք բաժինը թափուր հաստիք ընտրելու համար "
+
+#: tppcenter/templates/Vacancy/addForm.html:209
+msgid "Name of vacancy"
+msgstr "Թափուր հաստիքի անվանումը"
+
+#: tppcenter/templates/Vacancy/addForm.html:218
+msgid "City of vacancy"
+msgstr "Ո՞ր քաղաքում փնտրել թափուր հաստիք"
+
+#: tppcenter/templates/Vacancy/addForm.html:225
+msgid "Type of employment"
+msgstr "Զբաղվածության տեսակը"
+
+#: tppcenter/templates/Vacancy/addForm.html:235
+msgid "make vacancy anonymous"
+msgstr "Թափուր աշխատատեղերը դարձնել անանուն"
+
+#: tppcenter/templates/Vacancy/addForm.html:236
+msgid "name of company will be hidden"
+msgstr "Կազմակերպության անվանումը հնարավոր է թաքցնել"
+
+#: tppcenter/templates/Vacancy/addForm.html:254
+#: tppcenter/templates/Vacancy/detailContent.html:76
+msgid "Requirements"
+msgstr "Ներկայացվող պահանջները"
+
+#: tppcenter/templates/Vacancy/addForm.html:261
+#: tppcenter/templates/Vacancy/detailContent.html:80
+msgid "Terms"
+msgstr "Պայմաններ."
+
+#: tppcenter/templates/Vacancy/addForm.html:293
+#: tppcenter/templates/Vacancy/addForm.html:305
+msgid "Please wait to response..."
+msgstr "Խնդրում ենք սպասել պատասխանին ..."
+
+#: tppcenter/templates/Vacancy/detailContent.html:32
+msgid "Send Resume"
+msgstr "Ուղարկել ինքնակենսագրական"
+
+#: tppcenter/templates/Vacancy/detailContent.html:42
+msgid "Anonymous company"
+msgstr "Աանուն ընկերություն"
+
+#: tppcenter/templates/Vacancy/detailContent.html:67
+msgid "Type of employments"
+msgstr " Հաստիքի տեսակը"
+
+#: tppcenter/templates/Vacancy/index.html:47
+msgid "You send resume on position:"
+msgstr "Դուք ուղարկել եք ինքնակենսագրական հետևյալ հաստիքով"
+
+#: tppcenter/templates/Vacancy/index.html:53
+msgid "Add new resume to profile"
+msgstr "Ավելացնել նոր ինքնակենսագրական պրոֆիլում"
+
+#: tppcenter/templates/Vacancy/index.html:54
+msgid "New resume"
+msgstr "Նոր ինքնակենսագրական"
+
+#: tppcenter/templates/Vacancy/index.html:58
+msgid "Send existing resume"
+msgstr "Ուղարկել ինքնակենսագրականներ"
+
+#: tppcenter/templates/Vacancy/index.html:63
+msgid "No existing resumes"
+msgstr "Չկան գործող ինքնակենսագրականներ"
+
+#: tppcenter/templates/Wall/contentPage.html:8
+msgid "Latest updates"
+msgstr "Վերջին թարմացումները"
+
+#: tppcenter/templates/Wall/contentPage.html:146
+msgid "Bussiness Proposals"
+msgstr "Բիզնես առաջարկներ"
+
+#: tppcenter/templates/main/currentCompany.html:5
+msgid "Current organization"
+msgstr "Ներկայիս կազմակերպություն"
+
+#: tppcenter/templates/main/denied.html:10
+msgid "Permission denied"
+msgstr "Մուտքն արգելված է"
+
+#: tppcenter/templates/main/user_profile.html:24
+msgid "User profile"
+msgstr "Օգտվողի պրոֆիլը"
+
+#: tppcenter/templates/main/user_profile.html:52
+#: tppcenter/templates/registration/login.html:6
+msgid "Login"
+msgstr "Մուտք"
+
+#: tppcenter/templates/registration/activation_complete.html:6
+#: tppcenter/templates/registration/activation_complete.html:28
+msgid "Activation complete"
+msgstr "Ակտիվացումն իրականացվել է"
+
+#: tppcenter/templates/registration/base.html:8
+msgid "Tpp-center"
+msgstr "Tpp-center"
+
+#: tppcenter/templates/registration/login.html:26
+msgid "Authorization"
+msgstr "Թույլտվության"
+
+#: tppcenter/templates/registration/login.html:47
+msgid "Forgot password"
+msgstr "Մոռացել եք գաղտնաբառը"
+
+#: tppcenter/templates/registration/password_reset_complete.html:6
+#: tppcenter/templates/registration/password_reset_complete.html:28
+#: tppcenter/templates/registration/password_reset_confirm.html:6
+#: tppcenter/templates/registration/password_reset_confirm.html:28
+#: tppcenter/templates/registration/password_reset_done.html:6
+#: tppcenter/templates/registration/password_reset_done.html:28
+#: tppcenter/templates/registration/password_reset_form.html:6
+#: tppcenter/templates/registration/password_reset_form.html:28
+msgid "Password reset"
+msgstr "Վերականգնել գաղտնաբառը"
+
+#: tppcenter/templates/registration/registration.html:58
+msgid "I have read and accept"
+msgstr "Ես ընթերցել եւ ընդունում եմ պայմանները"
+
+#: tppcenter/templates/registration/registration.html:58
+msgid "the terms of use"
+msgstr "Օգտագործման պայմաններ"
+
+#: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
+#: usersites/templates/contentPage.html:7
+#: usersites/templates/site_sidebar.html:19
+msgid "Business proposals"
+msgstr "Բիզնես առաջարկներ"
+
+#: usersites/templates/site_sidebar.html:17
+msgid "Company news"
+msgstr "Ընկերության նորություններ"
+
+#: usersites/templates/site_sidebar.html:22
+msgid "Company structure"
+msgstr "Ընկերության կառուցվածքը"
+
+#: usersites/templates/CompanyStructure/contentPage.html:16
+msgid "Department staff"
+msgstr "Վարչության անդամներ "
+
+#: usersites/templates/CompanyStructure/contentPage.html:19
+msgid "Employee"
+msgstr "Աշխատող"
+
+#: usersites/templates/Contact/contentPage.html:52
+msgid "You email"
+msgstr "Ձեր էլեկտրոնային հասցեն"

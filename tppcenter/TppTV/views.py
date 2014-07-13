@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm
 
@@ -85,11 +85,9 @@ def tvForm(request, action, item_id=None):
 
     if action == 'delete':
         newsPage = deleteTppTv(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addNews(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -130,7 +128,7 @@ def addNews(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=settings.LANGUAGE_CODE)
+            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
             return HttpResponseRedirect(reverse('tv:main'))
 
     template = loader.get_template('TppTV/addForm.html')
@@ -182,7 +180,7 @@ def updateNew(request, item_id):
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                  lang_code=settings.LANGUAGE_CODE)
+                                  lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
 
@@ -208,7 +206,8 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 

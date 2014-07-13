@@ -43,8 +43,10 @@
                     {{ fname }} {{ lname }}
 
                 {% endif %}
-
-                {{ date|date:"H:i" }}
+                {% comment %}
+                    Date output here was made so, because standard output and filters draw UTC time, not local
+                {% endcomment %}
+                {{ date.hour }}:{{ date.minute|stringformat:"02d" }}
             </label>
 
             <div class="clumnleft">

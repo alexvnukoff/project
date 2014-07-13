@@ -1,13 +1,16 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+<script type="text/javascript">
+
+</script>
 <div class="container">
      <div class="companies">
                {% include "Companies/popupFilter.html" %}
                {% include "main/paginator.html" %}
               {% include "main/local_menu_script.html" %}
                  <ul class="company-list">
-                    {% for id , attr in companyList.items %}
+                    {% for id , attr in proposalList.items %}
                         {% with attr.NAME.0 as name %}
                         {% with attr.ANONS.0 as anons %}
                         {% with attr.SLUG.0 as slug %}
@@ -22,6 +25,9 @@
                         {% with attr.FLAG_CLASS|first as flag_class %}
                         {% with attr.COUNTRY_FLAG|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
+                        {% with attr.ORGANIZATION_NAME.0 as org_name %}
+                        {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
+                        {% with attr.ORGANIZATION_URL as org_url %}
                          <li>
                            {% resolve items_perms id|slugify as permlist %}
 
@@ -29,22 +35,22 @@
                                <div class="blockbox">
                                     <a href="#"><i class="btn-afisha imgnews"></i></a>
                                     <div class="localmenu">
-                                        {% if 'delete_company' in  permlist %}
-                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                        {% endif %}
                                         {% if 'change_company' in permlist %}
                                              <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                              <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
+                                              <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
                                        {% endif %}
                                        {% if 'add_advtop' in permlist %}
-                                           <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                           <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
                                        {% endif %}
+                                       {% if 'delete_company' in  permlist %}
+                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                        {% endif %}
                                     </div>
                                 </div>
                            {% endif %}
                             <div class="title">
                                {% if flag_class %}
-                                    <i class="sprite {{ flag_class }}"></i>
+                                    <i class="flag sprite {{ flag_class }}"></i>
                                     {% else %}
                                      <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}"/>
                                     {% endif %}
@@ -61,10 +67,13 @@
                                  <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
                                 {% endif %}
                                 <div class="desc">
+                                {% if org_name %}
+                                    <p  class="link"><b>{% trans 'Member of' %}</b> <a href="{% url org_url org_slug %}">{{ org_name|truncatechars:30 }}</a></p>
+                                {% endif %}
                                     {% if anons %}
-                                         {{ anons|cleanHtml|safe }}
+                                         {{ anons|cleanHtml|safe|truncatechars:200 }}
                                     {% else %}
-                                         {{ about_company|cleanHtml|safe|truncatewords_html:30 }}
+                                         {{ about_company|cleanHtml|safe|truncatewords_html:200 }}
                                     {% endif %}
 
 
@@ -90,11 +99,18 @@
                                    </div>
                                    <div class="line">
                                         <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
-                                        <div class="nameinfo"><a href="#">{% trans 'Contact us' %}</a></div>
+                                        <div class="nameinfo">
+                                            <a class="contact-us" data-name="{{ name }}" data-id="{{ id }}" href="#" >
+                                                {% trans 'Contact us' %}
+                                            </a>
+                                        </div>
                                    </div>
                                 </div>
                             </div>
                         </li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}

@@ -1,19 +1,19 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.query import QuerySet
-from core.models import Item, State, Relationship, User
-from django.contrib.auth.models import Group, Permission
-from random import randint
+from core.models import Item, State, Relationship
 from core.hierarchy import hierarchyManager
 from core.models import User, ItemManager
-from django.db import IntegrityError, transaction
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 import datetime
-from django.db.models import Count, F, ObjectDoesNotExist
-from django.db.models.signals import pre_save
+from time import mktime, strptime
+from django.db.models import Count, ObjectDoesNotExist
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
-from itertools import chain
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+import urllib.error
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Model Functions
@@ -76,6 +76,7 @@ class Tpp(Organization):
         return self.getName()
 
 class Company(Organization):
+    paid_till_date = models.DateField(null=True)
 
     class Meta:
         permissions = (
@@ -114,7 +115,7 @@ class Company(Organization):
     def reindexItem(self):
         super(Company, self).reindexItem()
 
-        classes = [Product, News, Tender, InnovationProject, BusinessProposal, Exhibition]
+        classes = [Product, News, Tender, InnovationProject, BusinessProposal, Exhibition, Department]
 
         for klass in classes:
             objects = klass.objects.filter(c2p__parent_id=self.pk)
@@ -170,8 +171,25 @@ class Branch(Item):
     def __str__(self):
         return self.getName()
 
+class AdvOrder(Item):
+
+    def __str__(self):
+        return ''
+
+class Requirement(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+
+    def __str__(self):
+        return self.getName()
+
 
 class AdvBannerType(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
 
     enableBranch = models.BooleanField(default=False)
     enableTpp = models.BooleanField(default=False)
@@ -180,8 +198,16 @@ class AdvBannerType(Item):
     def __str__(self):
         return self.getName()
 
-class AdvTop(Item):
 
+class AdvertisementItem(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
+class AdvTop(AdvertisementItem):
 
     active = ItemManager()
     objects = models.Manager()
@@ -189,13 +215,20 @@ class AdvTop(Item):
     def __str__(self):
         return self.getName()
 
-class AdvBanner(Item):
+class AdvBanner(AdvertisementItem):
 
     active = ItemManager()
     objects = models.Manager()
 
     def __str__(self):
         return self.getName()
+
+class BpCategories(Item):
+
+
+    def __str__(self):
+        return self.getName()
+
 
 
 class NewsCategories(Item):
@@ -206,6 +239,14 @@ class NewsCategories(Item):
 
     def __str__(self):
         return self.getName()
+
+class UserSites(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    organization = models.ForeignKey(Organization, null=True, blank=True)
+
 
 class TppTV(Item):
 
@@ -280,6 +321,12 @@ class SystemMessages(Item):
      def __str__(self):
         return self.getName()
 
+class ExternalSiteTemplate(Item):
+    objects = models.Manager()
+    active = ItemManager()
+
+    def __str__(self):
+        return self.getName()
 
 
 class Notification(Item):
@@ -298,7 +345,7 @@ class Category(Item):
 
 
     def __str__(self):
-        return self.title
+         return self.getName()
 
 class Product(Item):
 
@@ -427,6 +474,14 @@ class News(Item):
     def __str__(self):
         return self.getName()
 
+class Resume(Item):
+
+    active = ItemManager()
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.getName()
+
 
 class Article(Item):
 
@@ -463,6 +518,221 @@ class Payment(Item):
     def __str__(self):
         return ''
 
+class PayPalPayment(Payment):
+    """
+    Defines entity for PayPal payments
+    """
+    address_city = models.CharField(blank=True, null=True, max_length=1024)
+    address_country = models.CharField(blank=True, null=True, max_length=1024)
+    address_country_code = models.CharField(blank=True, null=True, max_length=1024)
+    address_name = models.CharField(blank=True, null=True, max_length=1024)
+    address_state = models.CharField(blank=True, null=True, max_length=1024)
+    address_status = models.CharField(blank=True, null=True, max_length=1024)
+    address_street = models.CharField(blank=True, null=True, max_length=1024)
+    address_zip = models.CharField(blank=True, null=True, max_length=32)
+    business = models.CharField(blank=True, null=True, max_length=255)          # receiver's business account e-mail
+    charset = models.CharField(blank=True, null=True, max_length=32)            # receiver's charset
+    custom = models.CharField(blank=True, null=True, max_length=1024)           # custom field for our purpose
+    first_name = models.CharField(blank=True, null=True, max_length=128)        # first name of payer
+    last_name = models.CharField(blank=True, null=True, max_length=128)         # last name of payer
+    handling_amount = models.CharField(blank=True, null=True, max_length=32)    # payer's account amount
+    ipn_track_id = models.CharField(blank=True, null=True, max_length=64)       # instant payment notification id
+    item_name = models.CharField(blank=True, null=True, max_length=1024)        # payment purpose
+    item_number = models.CharField(blank=True, null=True, max_length=1024)      # payment subject
+    mc_currency = models.CharField(blank=True, null=True, max_length=4)         # payment currency
+    mc_fee = models.CharField(blank=True, null=True, max_length=16)             # payment fee
+    mc_gross = models.CharField(blank=True, null=True, max_length=32)           # payment sum
+    notify_version = models.CharField(blank=True, null=True, max_length=16)
+    payer_business_name = models.CharField(blank=True, null=True, max_length=1024)
+    payer_email = models.CharField(blank=True, null=True, max_length=255)
+    payer_id = models.CharField(blank=True, null=True, max_length=255)
+    payer_status = models.CharField(blank=True, null=True, max_length=32)
+    payment_date = models.DateTimeField(blank=True, null=True)                  # payment date in PDT (Pacific Daylight Time)
+    payment_fee = models.CharField(blank=True, null=True, max_length=16)        # payment transaction fee
+    payment_gross = models.CharField(blank=True, null=True, max_length=32)      # payment sum
+    payment_status = models.CharField(blank=True, null=True, max_length=32)
+    payment_type = models.CharField(blank=True, null=True, max_length=32)
+    pending_reason = models.CharField(blank=True, null=True, max_length=255)
+    protection_eligibility = models.CharField(blank=True, null=True, max_length=32)
+    quantity = models.CharField(blank=True, null=True, max_length=16)           # purchase q-ty
+    receiver_email = models.CharField(blank=True, null=True, max_length=255)
+    receiver_id = models.CharField(blank=True, null=True, max_length=255)
+    residence_country = models.CharField(blank=True, null=True, max_length=1024)
+    shipping = models.CharField(blank=True, null=True, max_length=32)           # cost of shipping
+    tax = models.CharField(blank=True, null=True, max_length=32)                # tax for shipping
+    test_ipn = models.CharField(blank=True, null=True, max_length=4)            # ipn from sandbox
+    transaction_subject = models.CharField(blank=True, null=True, max_length=1024)
+    txn_id = models.CharField(unique=True, max_length=128)
+    txn_type = models.CharField(blank=True, null=True, max_length=255)
+    verify_sign = models.CharField(blank=True, null=True, max_length=1024)
+
+
+    class Meta:
+        permissions = (
+            ("read_paypalpayment", "Can read paypalpayment"),
+        )
+
+
+    def __str__(self):
+        return 'tx-id: ' + self.txn_id
+
+
+    def verifyAndSave(self, request, pay_env=0):
+        """
+        Verify notification from PayPal and save all attributes.
+        Pay_env = 0 if this is a test environment
+        """
+        if request.method == 'POST':
+            # SEND POSTBACK FOR PAYMENT VALIDATION
+            # prepares provided data set to inform PayPal we wish to validate the response
+            params = urlencode('').encode('utf-8')
+            if pay_env != 0:
+                req = Request('https://www.paypal.com/cgi-bin/webscr/', params)
+            else:
+                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr/', params)
+            # send empty POST 200 response to PayPal
+            response = urlopen(req)
+#
+            # sends the data and request to the PayPal
+            data = request.POST.copy()
+            data['cmd'] = "_notify-validate"
+            params = urlencode(data).encode('utf-8')
+            if pay_env != 0:
+                req = Request('https://www.paypal.com/cgi-bin/webscr/', params)
+            else:
+                req = Request('https://www.sandbox.paypal.com/cgi-bin/webscr/', params)
+
+            #reads the response back from PayPal
+            response = urlopen(req)
+            status = response.read()
+            # If not verified
+            if not status == b"VERIFIED":
+                return False
+#            else:
+#                self.payment_status = 'VERIFIED'
+
+            if not PayPalPayment.objects.filter(txn_id=request.POST.get('txn_id', '')).exists():
+                self.txn_id = request.POST.get('txn_id', '')
+                self.address_city = request.POST.get('address_city', '')
+                self.address_country = request.POST.get('address_country', '')
+                self.address_country_code = request.POST.get('address_country_code', '')
+                self.address_name = request.POST.get('address_name', '')
+                self.address_state = request.POST.get('address_state', '')
+                self.address_status = request.POST.get('address_status', '')
+                self.address_street = request.POST.get('address_street', '')
+                self.address_zip = request.POST.get('address_zip', '')
+                self.business = request.POST.get('business', '')
+                self.charset = request.POST.get('charset', '')
+                self.custom = request.POST.get('custom', '')
+                self.first_name = request.POST.get('first_name', '')
+                self.last_name = request.POST.get('last_name', '')
+                self.handling_amount = request.POST.get('handling_amount', '')
+                self.ipn_track_id = request.POST.get('ipn_track_id', '')
+                self.item_name = request.POST.get('item_name', '')
+                self.item_number = request.POST.get('item_number', '')
+                self.mc_currency = request.POST.get('mc_currency', '')
+                self.mc_fee = request.POST.get('mc_fee', '')
+                self.mc_gross = request.POST.get('mc_gross', '')
+                self.notify_version = request.POST.get('notify_version', '')
+                self.payer_business_name = request.POST.get('payer_business_name', '')
+                self.payer_email = request.POST.get('payer_email', '')
+                self.payer_id = request.POST.get('payer_id', '')
+                self.payer_status = request.POST.get('payer_status', '')
+
+                # receive date in PDT bound
+                from pytz import timezone
+                ts = strptime(request.POST.get('payment_date', '00:00:00 1 Jan, 2014')[:-4], "%H:%M:%S %b %d, %Y")
+                pd = datetime.datetime.fromtimestamp(mktime(ts))
+                self.payment_date = pd.replace(tzinfo=timezone('US/Pacific'))
+
+                self.payment_fee = request.POST.get('payment_fee', '')
+                self.payment_gross = request.POST.get('payment_gross', '')
+                self.payment_status = request.POST.get('payment_status', '')
+                self.payment_type = request.POST.get('payment_type', '')
+                self.pending_reason = request.POST.get('pending_reason', '')
+                self.protection_eligibility = request.POST.get('protection_eligibility', '')
+                self.quantity = request.POST.get('quantity', '')
+                self.receiver_email = request.POST.get('receiver_email', '')
+                self.receiver_id = request.POST.get('receiver_id', '')
+                self.residence_country = request.POST.get('residence_country', '')
+                self.shipping = request.POST.get('shipping', '')
+                self.tax = request.POST.get('tax', '')
+                self.test_ipn = request.POST.get('test_ipn', '')
+                self.transaction_subject = request.POST.get('transaction_subject', '')
+                self.txn_type = request.POST.get('txn_type', '')
+                self.verify_sign = request.POST.get('verify_sign', '')
+                self.create_user = User.objects.get(email='special@tppcenter.com')
+                try:
+                    self.save()
+                except Exception as e:
+                    pass
+            else:
+                pp_rec = PayPalPayment.objects.get(txn_id=request.POST.get('txn_id', ''))
+                if pp_rec.payment_status != request.POST.get('payment_status', ''):
+                    pp_rec.payment_status = request.POST.get('payment_status', '')
+                    pp_rec.save()
+
+            return True
+        else:
+            return False
+
+
+    def getPaymentStatus(self):
+        """
+        Returns payment status
+        """
+        return self.payment_status
+
+
+    def getPaymentDatePDT(self):
+        """
+        Returns payment date for PDT bound (original)
+        """
+        return self.payment_date
+
+
+    def getPaymentDateUTC(self):
+        """
+        Returns payment date for UTC bound. Receive date in PDT format (UTC = PDT + 7 hours)
+        """
+        return self.payment_date + datetime.timedelta(hours=7)
+
+
+    def getAllAttributes(self):
+        """
+        Returns all payment attributes as dictionary
+        """
+        return {}
+
+
+    def getSender(self):
+        """
+        Return payment sender instance
+        """
+        return ''
+
+
+    def getPaymentReceiver_s(self):
+        """
+        Return list of payment receiver(s)
+        """
+        return self.receiver_email
+
+
+    def getPaymentAmount(self):
+        """
+        Return payment sum and currency
+        """
+        return self.mc_gross
+
+    def getPaymentCurrency(self):
+        return self.mc_currency
+
+    def getItemNumber(self):
+        return self.item_number
+
+    def getItemQty(self):
+        return self.quantity
 
 class Shipment(Item):
 
@@ -490,16 +760,12 @@ class Rate(Item):
     def __str__(self):
         return ''
 
-class AdvOrder(Item):
-
-    def __str__(self):
-        return ''
-
 class Order(Item):
-
     active = ItemManager()
     objects = models.Manager()
 
+    payed = models.BooleanField(default=False)
+    payDate = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return ''
@@ -508,6 +774,7 @@ class Order(Item):
 class Basket(Item):
     active = ItemManager()
     objects = models.Manager()
+
     class Meta:
         permissions = (
             ("read_basket", "Can read basket"),
@@ -533,14 +800,13 @@ class Document(Item):
     def __str__(self):
         return ''
 
+
 class BusinessProposal(Item):
     active = ItemManager()
     objects = models.Manager()
 
     def __str__(self):
         return self.getName()
-
-
 
 
 class Gallery(Item):
@@ -550,7 +816,6 @@ class Gallery(Item):
 
       def __str__(self):
           return str(self.photo)
-
 
 
 class AdditionalPages(Item):
@@ -583,35 +848,183 @@ class Exhibition(Item):
     def __str__(self):
         return self.getName()
 
+# do not move this import from here
+from core.amazonMethods import addFile as uploadFile
 class Messages(Item):
+    text = models.CharField(max_length=1024, null=False, default='EMPTY')
+    file = models.FileField(upload_to=uploadFile, null=True, max_length=255)
+    was_read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
 
+class Vacancy(Item):
+    active = ItemManager()
+    objects = models.Manager()
+
+    class Meta:
+        permissions = (
+            ("read_vacancy", "Can read vacancy"),
+        )
+
+    def __str__(self):
+        return self.getName()
+
+class staticPages(Item):
+
+    PAGE_TYPES = (
+        ('about', 'About'),
+        ('advices', 'Advices'),
+        ('contacts', 'Contacts'),
+    )
+
+    onTop = models.BooleanField(default=False)
+    pageType = models.CharField(max_length=200, choices=PAGE_TYPES)
+
+    def __str__(self):
+        return self.getName()
+
+class topTypes(Item):
+    modelType = models.OneToOneField(ContentType, related_name="top")
+
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers
 #----------------------------------------------------------------------------------------------------------
-@receiver(pre_save, sender=Company)
+@receiver(pre_save)
+def itemInstanceType(instance, **kwargs):
+
+    if not issubclass(instance.__class__, Item):
+        return
+
+    if not getattr(instance, "contentType", None) or instance.contentType == '':
+        object = ContentType.objects.get(model=str(instance.__class__.__name__).lower())
+        instance.contentType = object
+
+
+#----------------debug site deletion--------------------------------------------------------------------
+from django.contrib.sites.models import Site
+from tpp.SiteUrlMiddleWare import get_request
+from django.core.mail import EmailMessage
+
+@receiver(pre_delete, sender=Site)
+def delSiteMonitor(instance, **kwargs):
+    '''
+       Create default Department if Company hasn't it.
+    '''
+    request = get_request()
+    subject = str(instance.name) + ' ' + str(request.user) + ' ' + str(datetime.datetime.now())
+    mail = EmailMessage(subject, '', 'noreply@tppcenter.com', ['afend69@gmail.com', 'jenyapri@tppcenter.com'])
+    mail.send()
+#-------------------------------------------------------------------------------------------------------
+
+
+@receiver(post_save, sender=Company)
 def companyCommunity(instance, **kwargs):
     '''
-       Create community Group for given Company instance
-    '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+       Create default Department if Company hasn't it.
 
-@receiver(pre_save, sender=Tpp)
+    if not Department.objects.filter(c2p__parent=instance.pk).exists():
+        request = get_request()
+        if request:
+            usr = request.user
+        else:
+            usr = User.objects.get(pk=1)
+
+        try:
+            dep = Department.objects.create(title='DEPARTMENT_FOR_COMPANY_ID:'+str(instance.pk), create_user=usr)
+            trans_real.activate('ru') #activate russian locale
+            res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
+            trans_real.deactivate() #deactivate russian locale
+
+            if not res:
+                dep.delete()
+                return False
+            try:
+                Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+                dep.reindexItem()
+            except:
+                print('Can not create Relationship between Department ID' + dep.pk + ' and Company ID' + instance.pk)
+                dep.delete()
+        except Exception as e:
+            print('Can not create Department for Company ID', instance.pk)
+            pass
+
+        if not Vacancy.objects.filter(c2p__parent=dep.pk).exists():
+            try:
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=usr)
+                    vac.reindexItem()
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                          str(dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
+            except Exception as e:
+                print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
+                pass
+    '''
+
+@receiver(post_save, sender=Tpp)
 def tppCommunity(instance, **kwargs):
     '''
-       Create community Group for given TPP instance
-    '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))
+       Create default Department if Tpp hasn't it.
 
-@receiver(pre_save, sender=Department)
-def departmentCommunity(instance, **kwargs):
+    if not Department.objects.filter(c2p__parent=instance.pk).exists():
+        request = get_request()
+        if request:
+            usr = request.user
+        else:
+            usr = User.objects.get(pk=1)
+
+        try:
+            dep = Department.objects.create(title='DEPARTMENT_FOR_TPP_ID:'+str(instance.pk), create_user=usr)
+            trans_real.activate('ru') #activate russian locale
+            res = dep.setAttributeValue({'NAME':'Администрация'}, usr)
+            trans_real.deactivate() #deactivate russian locale
+
+            if not res:
+                dep.delete()
+                return False
+            try:
+                Relationship.objects.create(parent=instance, child=dep, type='hierarchy', create_user=usr)
+                dep.reindexItem()
+            except:
+                dep.delete()
+                print('Can not create Relationship between Department ID'+dep.pk+' and TPP ID'+instance.pk)
+                raise Exception('Can not create Relationship between Department ID' +str(dep.pk)+ ' and TPP ID'+ instance.pk)
+
+        except Exception as e:
+            print('Can not create Department for TPP ID', instance.pk)
+            raise Exception('Can not create Department for TPP ID: %s' % instance.pk)
+            pass
+
+        if not Vacancy.objects.filter(c2p__parent=dep.pk).exists():
+            try:
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(dep.pk), create_user=usr)
+                trans_real.activate('ru') #activate russian locale
+                res = vac.setAttributeValue({'NAME':'Работник(ца)'}, usr)
+                trans_real.deactivate() #deactivate russian locale
+
+                if not res:
+                    vac.delete()
+                    return False
+                try:
+                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=usr)
+                    vac.reindexItem()
+                    #add current user to default Vacancy
+                except Exception as e:
+                    print('Can not create Relationship between Vacancy ID:' + str(vac.pk) + 'and Department ID:'+
+                          str(dep.pk) + '. The reason is:' + str(e))
+                    vac.delete()
+            except Exception as e:
+                print('Can not create Vacancy for Department ID:' + str(dep.pk) + '. The reason is:' + str(e))
     '''
-       Create community Group for given Department instance
-    '''
-    if not instance.community:
-        instance.community = Group.objects.create(name='ORG-' + str(randint(1000000, 9999999)))

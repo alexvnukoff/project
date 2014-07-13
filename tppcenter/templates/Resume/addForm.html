@@ -1,0 +1,372 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load set_var %}
+
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+<script type="text/javascript">
+        $(function() {
+
+            $( ".date" ).datepicker({
+                  changeMonth: true,
+                  changeYear: true,
+                  yearRange: "1900:"
+                });
+        });
+</script>
+
+{% block keywords %}{% endblock %}
+
+<div class="newsform">
+
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        {% with form.fields.NAME.initial as name %}
+        {% with form.fields.BIRTHDAY.initial as birthday %}
+        {% with form.fields.MARITAL_STATUS.initial as marital_status %}
+        {% with form.fields.NATIONALITY.initial as nationality %}
+        {% with form.fields.TELEPHONE_NUMBER.initial as telephone_number %}
+        {% with form.fields.ADDRESS.initial as address %}
+        {% with form.fields.INSTITUTION.initial as institution %}
+        {% with form.fields.FACULTY.initial as faculty %}
+        {% with form.fields.PROFESSION.initial as profession %}
+        {% with form.fields.STUDY_START_DATE.initial as study_start %}
+        {% with form.fields.STUDY_END_DATE.initial as study_end %}
+        {% with form.fields.STUDY_FORM.initial as study_form %}
+        {% with form.fields.COMPANY_EXP_1.initial as company_exp_1 %}
+        {% with form.fields.COMPANY_EXP_2.initial as company_exp_2 %}
+        {% with form.fields.COMPANY_EXP_3.initial as company_exp_3 %}
+        {% with form.fields.POSITION_EXP_1.initial as position_exp_1 %}
+        {% with form.fields.POSITION_EXP_2.initial as position_exp_2 %}
+        {% with form.fields.POSITION_EXP_3.initial as position_exp_3 %}
+        {% with form.fields.START_DATE_EXP_1.initial as start_date_exp_1 %}
+        {% with form.fields.START_DATE_EXP_2.initial as start_date_exp_2 %}
+        {% with form.fields.START_DATE_EXP_3.initial as start_date_exp_3 %}
+        {% with form.fields.END_DATE_EXP_1.initial as end_date_exp_1 %}
+        {% with form.fields.END_DATE_EXP_2.initial as end_date_exp_2 %}
+        {% with form.fields.END_DATE_EXP_3.initial as end_date_exp_3 %}
+        {% with form.fields.ADDITIONAL_STUDY.initial as additional_study %}
+        {% with form.fields.LANGUAGE_SKILL.initial as language_skill %}
+        {% with form.fields.COMPUTER_SKILL.initial as computer_skill %}
+        {% with form.fields.ADDITIONAL_SKILL.initial as additional_skill %}
+        {% with form.fields.SALARY.initial as salary %}
+        {% with form.fields.ADDITIONAL_INFORMATION.initial as additional_informatiom %}
+
+				<ul class="tenderline">
+                	<li>{% trans 'Filling resume does not obligate company that publishes job on the site TPP-Center, enter into a contract of employment.' %}</li>
+                    <li>
+                        <label>{% trans 'Vacancy name' %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.NAME %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.NAME }}</div></div>
+                       {% endif %}
+                        <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>{% trans 'Birthday' %} <font color="#FF0000">*</font></label>
+                            {% if form.errors.BIRTHDAY %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.BIRTHDAY }}</div></div>
+                            {% endif %}
+                            <input type="text" name="BIRTHDAY" value="{{ birthday }}" placeholder="" class="date" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Marital Status' %}</label>
+                            {% if form.errors.MARITAL_STATUS %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.MARITAL_STATUS }}</div></div>
+                            {% endif %}
+                            <select  name="MARITAL_STATUS" style="width: 94%;">
+                            {% for marital in marital_slots %}
+                                <option value="{{ marital.id }}" {% if marital.id == marital_status %} selected="selected" {% endif %}>
+                                    {{ marital.title }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>{% trans 'Citizenship' %}</label>
+                            {% if form.errors.NATIONALITY %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.NATIONALITY }}</div></div>
+                            {% endif %}
+                            <input type="text" name="NATIONALITY" value="{{ nationality }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                            {% if form.errors.TELEPHONE_NUMBER %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.TELEPHONE_NUMBER }}</div></div>
+                            {% endif %}
+                            <input type="text" name="TELEPHONE_NUMBER" value="{{ telephone_number }}" placeholder="" class="text" style="width:91%;" />
+                        </div>
+                    </li>
+                    <li>
+                        <label>{% trans 'Address' %}  <font color="#FF0000">*</font></label>
+                        {% if form.errors.ADDRESS %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.ADDRESS }}</div></div>
+                        {% endif %}
+                        <input type="text" name="ADDRESS" value="{{ address }}" placeholder="" class="text" />
+                    </li>
+                </ul>
+                <div class="addpage-title">{% trans 'Education' %}</div>
+                <ul class="tenderline">
+                    <li>
+                        <label>{% trans 'Institution' %}</label>
+                        {% if form.errors.INSTITUTION %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.INSTITUTION }}</div></div>
+                        {% endif %}
+                        <input type="text" name="INSTITUTION" value="{{ institution }}" placeholder="" class="text" />
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>{% trans 'Faculty' %}</label>
+                            {% if form.errors.FACULTY %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.FACULTY }}</div></div>
+                            {% endif %}
+                            <input type="text" name="FACULTY" value="{{ faculty }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Study period' %}</label>
+                            {% if form.errors.STUDY_START_DATE %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.STUDY_START_DATE }}</div></div>
+                            {% endif %}
+                           {% if form.errors.STUDY_END_DATE %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.STUDY_END_DATE }}</div></div>
+                            {% endif %}
+                        	<div class="clumn3">
+                            	<span>{% trans 'from' %}:</span>
+                            	<input type="text" name="STUDY_START_DATE" value="{{ study_start }}" placeholder="" class="date" style=" width:68%;" />
+                            </div>
+                            <div class="clumn4">
+                            	<span>{% trans 'to' %}:</span>
+                            	<input type="text" name="STUDY_END_DATE" value="{{ study_end }}" placeholder="" class="date" style=" width:68%;" />
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn1">
+                        	<label>{% trans 'Specialty' %}</label>
+                            {% if form.errors.PROFESSION %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.PROFESSION }}</div></div>
+                            {% endif %}
+                            <input type="text" name="PROFESSION" value="{{ profession }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn2">
+                        	<label>{% trans 'Form of study' %}</label>
+                            {% if form.errors.STUDY_FORM %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.STUDY_FORM }}</div></div>
+                            {% endif %}
+                           <select  name="STUDY_FORM" style="width: 95%;">
+                            {% for study in study_slots %}
+                                <option value="{{ study.id }}" {% if study.id == study_form %} selected="selected" {% endif %}>
+                                    {{ study.title }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <label>{% trans 'Additionally' %}</label>
+                        {% if form.errors.ADDITIONAL_STUDY %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.ADDITIONAL_STUDY }}</div></div>
+                        {% endif %}
+                        <div class=""><textarea name="ADDITIONAL_STUDY" style="width: 810px;height: 135px;" >{{ additional_study }}</textarea></div>
+                    </li>
+                </ul>
+                <div class="addpage-title">{% trans 'Experience' %}</div>
+                <ul class="tenderline">
+                	<li><b>{% trans 'Specify the last 3 jobs' %}</b></li>
+                    <li>
+                    	<div class="clumn5">
+                            <label>{% trans 'Company' %}</label>
+                            {% if form.errors.COMPANY_EXP_1 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.COMPANY_EXP_1 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="COMPANY_EXP_1" value="{{ company_exp_1 }}" placeholder="" class="text" style="width:85%;" />
+                        </div>
+                        <div class="clumn5">
+                            <label>{% trans 'Position' %}</label>
+                            {% if form.errors.POSITION_EXP_1 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.POSITION_EXP_1 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="POSITION_EXP_1" value="{{ position_exp_1 }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn6">
+                            <label>{% trans 'Work period' %}</label>
+                            {% if form.errors.START_DATE_EXP_1 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.START_DATE_EXP_1 }}</div></div>
+                            {% endif %}
+                           {% if form.errors.END_DATE_EXP_1 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.END_DATE_EXP_1 }}</div></div>
+                            {% endif %}
+                            <div class="clumn3">
+                            	<span>{% trans 'from' %}:</span>
+                            	<input type="text" name="START_DATE_EXP_1"  value="{{ start_date_exp_1 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                            <div class="clumn4">
+                            	<span>{% trans "to" %}:</span>
+                            	<input type="text" name="END_DATE_EXP_1" value="{{ end_date_exp_1 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn5">
+                            <label>{% trans 'Company' %}</label>
+                            {% if form.errors.COMPANY_EXP_2 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.COMPANY_EXP_2 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="COMPANY_EXP_2" value="{{ company_exp_2 }}" placeholder="" class="text" style="width:85%;" />
+                        </div>
+                        <div class="clumn5">
+                            <label>{% trans 'Position' %}</label>
+                            {% if form.errors.POSITION_EXP_2 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.POSITION_EXP_2 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="POSITION_EXP_2" value="{{ position_exp_2 }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn6">
+                            <label>{% trans 'Work period' %}</label>
+                            {% if form.errors.START_DATE_EXP_2 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.START_DATE_EXP_2 }}</div></div>
+                            {% endif %}
+                            {% if form.errors.END_DATE_EXP_2 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.END_DATE_EXP_2 }}</div></div>
+                            {% endif %}
+                            <div class="clumn3">
+                            	<span>{% trans 'from' %}:</span>
+                            	<input type="text" name="START_DATE_EXP_2" value="{{ start_date_exp_2 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                            <div class="clumn4">
+                            	<span>{% trans 'to' %}:</span>
+                            	<input type="text" name="END_DATE_EXP_2" value="{{ end_date_exp_2 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<div class="clumn5">
+                            <label>{% trans 'Company' %}</label>
+                            {% if form.errors.COMPANY_EXP_3 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.COMPANY_EXP_3 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="COMPANY_EXP_3" value="{{ company_exp_3 }}" placeholder="" class="text" style="width:85%;" />
+                        </div>
+                        <div class="clumn5">
+                            <label>{% trans 'Position' %}</label>
+                            {% if form.errors.POSITION_EXP_3 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.POSITION_EXP_3 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="POSITION_EXP_3" value="{{ position_exp_3 }}" placeholder="" class="text" />
+                        </div>
+                        <div class="clumn6">
+                            <label>{% trans 'Work period' %}</label>
+                            {% if form.errors.START_DATE_EXP_3 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.START_DATE_EXP_3 }}</div></div>
+                            {% endif %}
+                            {% if form.errors.END_DATE_EXP_3 %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.END_DATE_EXP_3 }}</div></div>
+                            {% endif %}
+                            <div class="clumn3">
+                            	<span>{% trans 'from' %}:</span>
+                            	<input type="text" name="START_DATE_EXP_3" value="{{ start_date_exp_3 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                            <div class="clumn4">
+                            	<span>{% trans 'to' %}:</span>
+                            	<input type="text" name="END_DATE_EXP_3" value="{{ end_date_exp_3 }}" placeholder="" class="date" style=" width:60%;" />
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="addpage-title">{% trans 'Skills' %}</div>
+                <ul class="tenderline">
+                    <li>
+                        <label>{% trans 'Language skills' %}</label>
+                        {% if form.errors.LANGUAGE_SKILL %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.LANGUAGE_SKILL }}</div></div>
+                        {% endif %}
+                        <input type="text" name="LANGUAGE_SKILL" value="{{ language_skill }}" placeholder="" class="text" />
+                    </li>
+                    <li>
+                        <label>{% trans 'Computer skills' %}</label>
+                        {% if form.errors.COMPUTER_SKILL %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.COMPUTER_SKILL }}</div></div>
+                        {% endif %}
+                        <input type="text" name="COMPUTER_SKILL" value="{{ computer_skill }}" placeholder="" class="text" />
+                    </li>
+                    <li>
+                        <label>{% trans 'Additionally' %}</label>
+                        {% if form.errors.ADDITIONAL_SKILL %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.ADDITIONAL_SKILL }}</div></div>
+                        {% endif %}
+                        <div class=""><textarea name="ADDITIONAL_SKILL" style="width: 810px;height: 135px;">{{ additional_skill }}</textarea></div>
+                    </li>
+                </ul>
+                <div class="addpage-title">{% trans 'Additionally' %}</div>
+                <ul class="tenderline">
+                    <li>
+                        <label>{% trans 'Your salary expectations' %}</label>
+                        {% if form.errors.SALARY %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.SALARY }}</div></div>
+                        {% endif %}
+                        <input type="text" name="SALARY" value="{{ salary }}" placeholder="" class="text" />
+                    </li>
+                    <li>
+                        <label>{% trans 'Information about which you wish to inform' %}</label>
+                        {% if form.errors.ADDITIONAL_INFORMATION %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.ADDITIONAL_INFORMATION }}</div></div>
+                        {% endif %}
+                        <div class=""><textarea name="ADDITIONAL_INFORMATION" style="width: 810px;height: 135px;" >{{ additional_informatiom }}</textarea></div>
+                    </li>
+                    <li>
+                    	{% trans 'I confirm that all information provided by me in this form on the site TPP-Center, are true and complete' %}.<br />
+						{% trans "I don't mind for checking the information reported by me" %} .
+                    </li>
+                </ul>
+                  <div class="newform-button">
+                    <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+                    <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+                  </div>
+
+
+
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+    </form>
+</div>
+
+
+
+
+
+
+

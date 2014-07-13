@@ -3,11 +3,11 @@
 	margin: 0 auto;
 	padding: 0;
 	*zoom: 1;
+	 font-family: 'Roboto', sans-serif;
 }
 
 .bx-wrapper img {
 	max-width: 100%;
-	display: block;
 }
 
 /** THEME
@@ -178,10 +178,10 @@
 .slide3{ width:770px; height:260px; background-image:url(../img/slide3.jpg);}
 .slide4{ width:770px; height:260px; background-image:url(../img/slide4.jpg);}
 .homeslider .bx-wrapper .bx-viewport{ width:100%!important; left:0!important;}
-.homeslide .note{ position:absolute; width:340px; left:26px; bottom:30px; font-weight:300; font-size:10px; line-height:16px;}
 .desc{ position:relative; float:left; width:290px; padding-left:35px; font-family: 'Roboto', sans-serif; color:#4a4a4a;}
 .desc h2{ text-align:center; font-size:26px; font-weight:bold; line-height:28px; padding:42px 0 25px 0; text-transform:uppercase;}
 .desc .text{ display:inline-block; padding-left:30px; font-weight:300; font-size:20px; line-height:24px;}
+.homeslide .note{ position:absolute; width:340px; left:26px; bottom:30px; font-weight:300; font-size:10px; line-height:16px;}
 .slide2 .desc{ width:320px;}
 .slide2 .desc h2, .slide3 .desc h2, .slide4 .desc h2{ padding-bottom:0; text-align:left;}
 .slide2 .desc h3, .slide3 .desc h3, .slide4 .desc h3{ font-size:22px; font-weight:300; text-align:right; padding-bottom:12px;}
@@ -221,7 +221,7 @@
 }
 .people-slide .greetings li .items{ position:relative; float:left; display:inline; width:132px; height:240px; background-color:#FFF; border:1px #dfdede solid; border-radius:3px; margin:0 14px 0 8px;
  border-bottom:1px #b4b3b3 solid;}
-.people-slide .greetings li .items .avatar{ float:left; width:120px; margin:50px 0 0 6px; display:inline;height: 126px;}
+.people-slide .greetings li .items .avatar{ float:left; width:120px; margin:50px 0 0 6px; max-height:120px;display:inline;}
 .people-slide .greetings li .items .name{ float:left; width:120px; margin:10px 0 0 6px; display:inline; color:#9b9b9b;}
 .people-slide .greetings li .items .name a{ display:block; padding-bottom:5px;}
 .people-slide .greetings li .items .bgtitle{ position:absolute; width:150px; height:40px; background-color:#2b90c1; top:5px; left:-9px; text-align:center; border-radius:3px; display:table;}
@@ -231,3 +231,34 @@ border-style:solid; border-width: 0 7px 7px 0px; border-color: transparent #0062
 .people-slide .greetings li .items .bgtitle:after{ position:absolute; content:""; width:0; height:0; bottom:-7px; right:2px;
 border-style:solid; border-width: 7px 7px 0px 0px; border-color: #006286 transparent transparent transparent;}
 
+/*-----------External site----------------*/
+.external-slide .bx-wrapper .bx-viewport{ left:10px!important; width:100%!important;}
+.external-slide .bx-wrapper .bx-prev {
+	left: -18px;
+	background: url(../img/icons.png) no-repeat 0 -60px;
+}
+
+.external-slide .bx-wrapper .bx-next {
+
+	background: url(../img/icons.png) no-repeat 0px -113px;
+}
+
+.external-slide .bx-wrapper .bx-prev:hover {
+	background-position: 0 -219px;
+}
+
+.external-slide .bx-wrapper .bx-next:hover {
+	background-position: 0 -166px;
+}
+
+.external-slide .bx-wrapper .bx-controls-direction a {
+	position: absolute;
+	top: 50%;
+	margin-top:-26px;
+	outline: 0;
+	width: 30px;
+	height: 53px;
+	text-indent: -9999px;
+	z-index: 9999;
+}
+.external-slide .themesb2b li .items{ position:relative; float:left; display:inline; width:130px; height:198px; margin:0 8px; box-shadow:0px 0px 5px #ebebeb;}

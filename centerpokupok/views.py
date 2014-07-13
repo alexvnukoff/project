@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -13,7 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.utils.timezone import now
+
 
 
 
@@ -67,13 +68,11 @@ def home(request, country=None):
     #---------COUPONS----------#
     if not country:
          couponsObj =  func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID,
-                                                                  coupon_start__gt=now(),
-                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
+                                                                  coupon_start__lte=datetime.now(),
+                                                                  coupon_end__gte=datetime.now()).order_by("coupon_end")[:3]
 
     else:
-        couponsObj = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID, country=country,
-                                                                  coupon_start__gt=now(),
-                                                                  coupon_end__lt=now()).order_by("coupon_end")[:3]
+        couponsObj = func.getActiveSQS().models(Product).order_by("coupon_end")[:3]
     coupons_ids = [cat.id for cat in couponsObj]
 
     if len(coupons_ids) > 0:

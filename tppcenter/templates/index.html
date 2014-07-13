@@ -52,7 +52,7 @@
 {% block body %}
 <div class="header">
 <div class="wrapper">
-	<a href="#"><i class="imgmain" id="logo"></i></a>
+	<a href="#"><i class="logo-main" id="logo"></i></a>
     <ul class="header-r">
 
 
@@ -81,6 +81,71 @@
 <div class="wrapper">
     <div class="main">
     	<div class="sideleft">
+          <select id="lang_select" style="height: 24px;width: 200px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
+                        <option>{% trans 'Mother tongue' %}</option>
+
+                        <option value="am">Armenian</option>
+                        <option value="ar"> Arabic </option>
+                        <option value="en">English</option>
+                        <option value="he">עברית</option>
+                        <option value="ru">Русский</option>
+                        <option value="zh">Chinese</option>
+
+
+                    </select>
+
+                  <script>
+                       $(document).ready(function() {
+                          var path = (window.location.host).split('.');
+                          path = path[0];
+                         $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === path )
+                                $(opt).attr('selected', 'selected');
+                        });
+                    });
+                    $( "#lang_select" ).change(function(e) {
+                        if (!$( this ).val())
+                        return;
+
+                        path = (window.location.host).split('.');
+                        if (path[0] == 'www'){
+                            delete path[0]
+                        }
+
+                        if (path.length > 2){
+                            host = path[1] + '.' + path[2]
+                        }
+                        else{
+                            host = window.location.host
+                        }
+
+
+                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
+                                window.location.pathname + window.location.search + window.location.hash;
+
+                    });
+
+                </script>
+
+
+            <!-- Google Translate injection -->
+            <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
+                 <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'en',
+                        multilanguagePage: true}, 'google_translate_element_main');
+                    }
+            </script>
+                 <style type="text/css">
+                .goog-te-combo {
+                  width: 200px;
+                }
+          </style>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </div>
+            <!-- /Google Translate injection -->
+
         	<div class="community">
             	<span class="title">{% trans 'Community' %}</span>
                 <div class="slide-comm">
@@ -94,7 +159,7 @@
                                     <li>
                                  {% endif %}
                                  <a title="{{ title }}" href="{% url 'tpp:detail' slug %}" class="items">
-                                     <img src="{{ MEDIA_URL }}small/{{flag }}" alt="{% trans 'Work with' %}{{ name }}" />
+                                     <img src="{{ MEDIA_URL }}small/{{flag }}" alt="{% trans 'Work with' %}{{ name }}" title="{{ name }}" />
                                  </a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
@@ -107,6 +172,9 @@
                     </ul>
                 </div>
             </div>
+
+
+
             <ul class="services">
             	<li>
                     <div class="imgmain imgservice sv1"></div>
@@ -128,10 +196,10 @@
                     <div class="imgmain imgservice sv5"></div>
                     <div class="nameservice"><a href="{% url 'innov:main' %}">{% trans 'Innovative projects' %}</a></div>
                 </li>
-                <!--<li>
+                <li>
                     <div class="imgmain imgservice sv6"></div>
-                    <div class="nameservice"><a href="#">{% trans 'Jobs' %}</a></div>
-                </li>-->
+                    <div class="nameservice"><a href="{% url 'resume:main' %}">{% trans 'Jobs' %}</a></div>
+                </li>
                 <li>
                     <div class="imgmain imgservice sv7"></div>
                     <div class="nameservice"><a href="{% url 'news:main' %}">{% trans "News" %}</a></div>
@@ -225,22 +293,26 @@
                          {% with attr.ORGANIZATION_NAME.0 as org_name %}
                          {% with attr.ORGANIZATION_ID.0 as org_id %}
                          {% with attr.COUNTRY_NAME|first as country_name %}
-                         {% with attr.COUNTRY_FLAG|first as flag %}
+                         {% with attr.FLAG_CLASS|first as flag %}
                          {% with attr.COUNTRY_ID as country_id %}
                     <li>
                     	<a href="{% url 'products:detail' slug %}">
                             <div class="thumb">
                                 {% if picture %}
-                                     <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                                     <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" title="{{ name }}" />
                                 {% else %}
-                                     <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name }}" />
+                                     <img src="{% static 'tppcenter/img/item.jpg' %}"  />
                                 {% endif %}
                             </div>
                         </a>
                         <div class="location">
+                         {% if org_flag %}
+                        	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
+                         {% else %}
+                             <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
 
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
-                            <a href="{% url 'products:detail' slug %}">{{ name }}</a>
+                         {% endif %}
+                            <a style="width: 75%;" href="{% url 'products:detail' slug %}">{{ name }}</a>
                         </div>
                     </li>
                         {% endwith %}
@@ -269,11 +341,15 @@
                         {% with attr.ORGANIZATION_NAME.0 as org_name %}
                         {% with attr.ORGANIZATION_ID.0 as org_id %}
                         {% with attr.COUNTRY_NAME|first as country_name %}
-                        {% with attr.COUNTRY_FLAG|first as flag %}
+                        {% with attr.FLAG_CLASS|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
                         	<li>
                             	<div class="topcm">
-                                	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
+                                  {% if org_flag %}
+                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
+                                  {% else %}
+                                      <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                                  {% endif %}
                                     <div class="date">
                                         <p><b>{{ date_event|makeDate|date:"d M Y"}}</b></p>
                                         <p>{{ country }}  {{ city }}</p>
@@ -307,12 +383,16 @@
                         {% with attr.ORGANIZATION_NAME.0 as org_name %}
                         {% with attr.ORGANIZATION_ID.0 as org_id %}
                         {% with attr.COUNTRY_NAME|first as country_name %}
-                        {% with attr.COUNTRY_FLAG|first as flag %}
+                        {% with attr.FLAG_CLASS|first as flag %}
                         {% with attr.COUNTRY_ID as country_id %}
 
                         	<li>
                             	<div class="topcm">
-                                	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" width="18" height="12" class="flag" />
+                                  {% if org_flag %}
+                                	<img src="{{ MEDIA_URL }}small/{{ org_flag }}" width="18" height="12" class="flag" alt="{{ org_name }}" title="{{ org_name }}"/>
+                                  {% else %}
+                                     <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                                  {% endif %}
                                         <p><b>{{ country_name }}</b></p>
                                     <div class="date">
 
@@ -337,20 +417,29 @@
                 </div>
             </div>
             <div class="content-r">
-            	<span class="titlevideo">{% trans 'Site guide of Tppcenter' %}</span>
-                <div class="media">
-                    <a class="various fancybox.iframe" href="http://www.youtube.com/embed/akWSS74wIA4?autoplay=1">
-                 <img width="220" height="160" src="http://img.youtube.com/vi/akWSS74wIA4/0.jpg" /></a>
-                </div>
-                <div class="testimonials">
-                	<i class="icons i-bullet"></i>
-                	 {% trans 'You get your own web site,opportunity to presentation of its of business proposals,products, services, without restrictions.' %}
-                </div>
+                 <span class="titlevideo">{% trans 'Introduction to London Markets' %}</span>
+                 <div class="media">
+
+                         <img width="220px" height="80px" src="{% static 'tppcenter/img/london_logo.png' %}" />
+                          <div class="pdfdownload">
+                	        <img src="{% static "tppcenter/img/pdf.png" %}" alt="" />
+                              <span class="fileinfo">
+                            	<a href="{% static "tppcenter/img/LSEG_2014.pdf"%}">{% trans 'Download Presentation' %} </a>
+                              </span>
+                          </div>
+
+
+                 </div>
+
+
                 <span class="titlevideo">{% trans 'Videoreference of V.Migirov' %}</span>
-                <div class="media">
+                 <div class="media">
                           <a class="various fancybox.iframe" href="http://www.youtube.com/embed/q9a0bDMf2qM?autoplay=1">
                          <img width="220" height="160" src="http://img.youtube.com/vi/q9a0bDMf2qM/0.jpg" /></a>
                  </div>
+
+
+
                 <div class="pdfdownload">
                 	<img src="{% static "tppcenter/img/pdf.png" %}" alt="" />
                     <span class="fileinfo">
@@ -384,7 +473,7 @@
                         	<div class="textin">{{ tpp }}</div>
                         </div>
                     	<a href="{% url "greetings:detail" slug %}">
-                            <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" class="avatar" />
+                            <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" class="avatar" title="{{ name }}" />
                         </a>
                         <div class="name">
                         	<a href="{% url "greetings:detail" slug %}">{{ name }}</a>

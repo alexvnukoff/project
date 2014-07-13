@@ -2,8 +2,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
-from tppcenter.sitemaps import all_sitemaps as sitemaps
-
+#from tppcenter.sitemaps import all_sitemaps as sitemaps
+from django.conf import settings
+from tpp.SiteUrlMiddleWare import get_request
+from appl.func import show_toolbar
 
 import tppcenter.views
 import tppcenter.News.urls
@@ -29,6 +31,20 @@ import tppcenter.Analytic
 import tppcenter.Analytic.urls
 import tppcenter.Greetings
 import tppcenter.Greetings.urls
+import tppcenter.Resume.urls
+import tppcenter.Vacancy.urls
+import tppcenter.Users.urls
+import tppcenter.Payments.urls
+
+
+import tppcenter.UserSites.urls
+
+import tppcenter.AdminTpp
+import tppcenter.AdminTpp.urls
+
+import tppcenter.Adv
+import tppcenter.Adv.urls
+
 from tppcenter.News.views import NewsFeed
 
 
@@ -37,9 +53,10 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', tppcenter.views.home),
+    url(r'^$', tppcenter.views.home, name="main"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
     url(r'^addcon/', tppcenter.views.buildCountries),
+    url(r'^addTemp/', tppcenter.views.builTemplate),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
     url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
@@ -48,24 +65,38 @@ urlpatterns = patterns('',
     url(r'^proposal/', include(tppcenter.BusinessProposal.urls, namespace='proposal')),
     url(r'^exhibitions/', include(tppcenter.Exhibitions.urls, namespace='exhibitions')),
     url(r'^tenders/', include(tppcenter.Tenders.urls, namespace='tenders')),
+    url(r'^vacancy/', include(tppcenter.Vacancy.urls, namespace='vacancy')),
     url(r'^tv/', include(tppcenter.TppTV.urls, namespace='tv')),
     url(r'^profile/', include(tppcenter.Profile.urls, namespace='profile')),
     url(r'^wall/', include(tppcenter.Wall.urls, namespace='wall')),
     url(r'^greetings/', include(tppcenter.Greetings.urls, namespace='greetings')),
     url(r'^analytic/', include(tppcenter.Analytic.urls, namespace='analytic')),
+    url(r'^resume/', include(tppcenter.Resume.urls, namespace='resume')),
+    url(r'^site/', include(tppcenter.UserSites.urls, namespace='site')),
+    url(r'^users/', include(tppcenter.Users.urls, namespace='users')),
+    url(r'^payments/', include(tppcenter.Payments.urls, namespace='payments')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
+
+
+    url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
+
+
+    url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
 
     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
     url(r'^messages/', include(tppcenter.Messages.urls, namespace='messages')),
     url(r'^advbanner/', include(tppcenter.AdvBanner.urls, namespace='adv_banners')),
     url(r'^advtop/', include(tppcenter.AdvTop.urls, namespace='adv_top')),
+    url(r'^adv/', include(tppcenter.Adv.urls, namespace='Adv')),
+
+
 
 
     # url(r'^blog/', include('blog.urls')),
-    url(r'^login/', tppcenter.views.user_login, name='login' ),
-    url(r'^logout/', tppcenter.views.user_logout, name='logout' ),
-    url(r'^registartion/', tppcenter.views.registration, name='register' ),
+    url(r'^login/', tppcenter.views.user_login, name='login'),
+    url(r'^logout/', tppcenter.views.user_logout, name='logout'),
+    url(r'^registration/', tppcenter.views.registration, name='register'),
 
     url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
 
@@ -74,6 +105,8 @@ urlpatterns = patterns('',
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
     url(r'^admin/tpp/', include(admin.site.urls)),
+
+    #url(r'^adv/paypal/', include('paypal.standard.ipn.urls')),
 
 
 
@@ -104,13 +137,19 @@ urlpatterns = patterns('',
     url(r'^filter/', tppcenter.views.jsonFilter),
     url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.setCurrent, name="setCurrent"),
 
-    url(r'^(upload/.+)$', tppcenter.views.redirectTo),
-    url(r'^(globus/.+)$', tppcenter.views.redirectTo)
+
 
 )
 
-urlpatterns += patterns('',
-        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
-        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-)
+#request = get_request()
+
+#if show_toolbar(request):
+#    import debug_toolbar
+#    urlpatterns += patterns('',
+#        url(r'^__debug__/', include(debug_toolbar.urls)),
+#    )
+#urlpatterns += patterns('',
+#        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
+#        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+#)
 

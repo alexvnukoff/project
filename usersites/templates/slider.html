@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+
+
+            <div class="slidehome">
+            	<ul class="slide">
+                    {% if file_count == 0 %}
+                          <li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
+                          <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
+                          <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
+                       {% else %}
+                            {% if custom_slider %}
+                                     {% for photo in photos %}
+                                          <li style="width: 700px;height: 183px;"><img src="{{ media_url }}original/{{ photo.photo }}" alt="" /></li>
+                                     {% endfor %}
+                            {% else %}
+                                     {% mkrange file_count as some_range %}
+                                     {{ mkrange }}
+                                     {% for file in some_range %}
+                                         <li><img src="{% static "" %}tppcenter/img/templates/{{ user_site_slider }}/{{ file|add:'1' }}.jpg" alt="" /></li>
+                                     {% endfor %}
+                            {% endif %}
+                    {% endif %}
+                </ul>
+                <div class="register">
+                    <div class="title">
+                        <p><b>Зарегистрируйтесь</b></p>
+                    </div>
+                   <form method='post' action='http://tppcenter.com/'>
+                     {% csrf_token %}
+                     <ul class="formregister">
+                    	<li><input id="id_email"  class="text"  name="email" type="email" placeholder="E-mail"/></li>
+                        <li> <input id="id_password1" type="password"  class="text "  name="password1" placeholder="{% trans 'Password' %}"/></li>
+                        <li><input id="id_password2" type="password"  class="text"  name="password2" placeholder="{% trans 'Confirm password' %}"/></li>
+                        <li>
+                        	<input type="checkbox" name="tos" />
+                            {% trans 'I agree to' %} <a href="#">{% trans 'the term' %}</a>
+                        </li>
+
+                        <li class="end"><input type="submit" name="Register" class="btnreg" value="{% trans "Sign up" %}"></li>
+                    </ul>
+                   </form>
+                </div>
+            </div>

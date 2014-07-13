@@ -1,11 +1,17 @@
 {% load i18n %}
 <script>
+        $('.showFilter').show();
+</script>
+<script>
     LANG['live-filter'] = {
         noResults: '{% trans "No result found" %}',
         minLen: '{% trans "Minimum length of search term is 3 characters" %}',
         selectOrg: '{% trans "Select organizations"  %}',
         selectBranch: '{% trans "Select branch"  %}',
-        selectCountry: '{% trans "Select country"  %}'
+        selectCompany: '{% trans "Select company"  %}',
+        selectCountry: '{% trans "Select country"  %}',
+        selectCategory: '{% trans "Select category"  %}'
+
     };
 
     baseOptions = {
@@ -44,11 +50,15 @@
     options = {
         tpp: baseOptions,
         branch: baseOptions,
-        country: baseOptions
+        bp_category: baseOptions,
+        country: baseOptions,
+        company: baseOptions
     };
 
     options['tpp']['placeholder'] = LANG['live-filter']['selectOrg'];
     options['branch']['placeholder'] = LANG['live-filter']['selectBranch'];
+    options['company']['placeholder'] = LANG['live-filter']['selectCompany'];
+    options['bp_category']['placeholder'] = LANG['live-filter']['selectCategory'];
     options['country']['placeholder'] = LANG['live-filter']['selectCountry'];
 </script>
 

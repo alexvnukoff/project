@@ -1,6 +1,8 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
+
 <div class="container">
             {% include "News/popupFilter.html" %}
            {% include "main/paginator.html" %}
@@ -26,11 +28,11 @@
                             <div class="blockbox">
                                 <a href="#"><i class="btn-afisha imgnews"></i></a>
                                 <div class="localmenu">
-                                    {% if 'delete_news' in  permlist or redactor %}
-                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'news:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                    {% endif %}
                                     {% if 'change_news' in permlist or redactor %}
                                          <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'news:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                    {% endif %}
+                                    {% if 'delete_news' in  permlist or redactor %}
+                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'news:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                     {% endif %}
                                 </div>
                             </div>

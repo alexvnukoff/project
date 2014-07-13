@@ -24,14 +24,14 @@
                             <div class="blockbox">
                                 <a href="#"><i class="btn-afisha imgnews"></i></a>
                                 <div class="localmenu">
-                                    {% if 'delete_product' in  permlist %}
-                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                    {% endif %}
                                     {% if 'change_product' in permlist %}
                                          <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'products:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                     {% endif %}
                                     {% if 'add_advtop' in permlist %}
-                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                         <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                    {% endif %}
+                                    {% if 'delete_product' in  permlist %}
+                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                     {% endif %}
                                 </div>
                             </div>
@@ -41,16 +41,16 @@
                               {% if image %}
                                   <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
                               {% else %}
-                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatewords:7 }}" />
+                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatechars:40 }}" />
                               {% endif %}
                           </a>
                       </div>
                         <div class="link">
 
                             {% if flag_class %}
-                                 <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
+                                 <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% endif %}
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name }}</a>
+                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:45 }}</a>
                        </div>
                         <div class="price">
                             {% if price %}

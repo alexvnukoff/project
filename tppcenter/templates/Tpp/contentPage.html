@@ -30,14 +30,14 @@
                                 <div class="localmenu">
                                     {% if 'change_tpp' in permlist %}
                                          <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tpp:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
+                                         <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
                                     {% endif %}
                                 </div>
                             </div>
                          {% endif %}
                         <div class="title">
                             {% if country_flag %}
-                                <i class="sprite {{ country_flag }}" title="{{ country_name }}" ></i>
+                                <i class="flag sprite {{ country_flag }}" title="{{ country_name }}" ></i>
                             {% else %}
                                <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" title="{{ country_name }}"/>
                             {% endif %}

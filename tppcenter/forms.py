@@ -241,7 +241,7 @@ class ItemForm(forms.Form):
             return True
 
     @transaction.atomic
-    def save(self, user, site_id, dates=None, disableNotify=False, sizes=None):
+    def save(self, user, site_id, dates=None, disableNotify=False, sizes=None, **kwargs):
         """
         Method create new item and set values of attributes
         if object exist its update his attribute
@@ -258,7 +258,7 @@ class ItemForm(forms.Form):
         try:
             if not self.id:
                 site = site_id
-                self.obj = globals()[self.item](create_user=user)
+                self.obj = globals()[self.item](create_user=user, **kwargs)
                 self.obj.save()
                 self.obj.sites.add(site_id)
             else:
@@ -266,6 +266,7 @@ class ItemForm(forms.Form):
                # self.obj.name = self.fields['NAME'].initial
                 #self.obj.title = self.fields['NAME'].initial
                 self.obj.save()
+
             attrValues = {}
             attrValues_to_delte = []
 
@@ -411,6 +412,19 @@ class BasePhotoGallery(BaseModelFormSet):
         self.user = parent_id
 
         self.queryset = Gallery.objects.filter(c2p__parent_id=parent_id)
+
+    def isValid(self):
+        errors = self._errors
+        if errors:
+            for error in errors:
+                error = error.get('photo', False)
+                if error:
+                    return False
+        return True
+
+
+
+
     @transaction.atomic
     def save(self, parent=None, user=None,  commit=False):
         """
@@ -422,11 +436,13 @@ class BasePhotoGallery(BaseModelFormSet):
             items = Gallery.objects.filter(pk__in=self.toDelete).distinct()
             self.toDelete = [item.photo.name for item in items]
             items.delete()
+
         self.user = user
         sid = transaction.savepoint()
 
         try:
             instances = super(BasePhotoGallery, self).save(commit)
+
             for instance in instances:
                 instance.create_user = self.user
                 instance.save()
@@ -435,29 +451,32 @@ class BasePhotoGallery(BaseModelFormSet):
                 name = instance.photo.file.name
                 instance.photo.close()
                 file = add(imageFile=name)
+
                 self.files_to_delete.append(file)
                 instance.photo = file
                 instance.save()
 
-
-            instances_pk = [instance.pk for instance in instances]
-            bulkInsert = []
             item = Item.objects.get(pk=parent)
+
             for instance in instances:
-                bulkInsert.append(Relationship(parent=item, child=instance, create_user=user, type='dependence'))
-            if bulkInsert:
-                Relationship.objects.bulk_create(bulkInsert)
+                Relationship.setRelRelationship(parent=item, child=instance, user=user, type='dependence')
+
         except Exception:
             logger.exception("Error in gallery ",  exc_info=True)
+
             transaction.savepoint_rollback(sid)
+
             func.notify("error_creating", 'notification', user=user)
+
             if len(self.files_to_delete) > 0:
                delete(self.files_to_delete)
 
         else:
             transaction.savepoint_commit(sid)
+
             if self.toDelete:
                 delete(self.toDelete)
+
 
 
 
@@ -483,6 +502,7 @@ class BasePages(BaseModelFormSet):
         self.toDelete = []
         self.files_to_delete = []
         super(BasePages, self).__init__(*args, **kwargs)
+
         post = args[0] if args else False
         files = args[1] if args and len(args) > 0 else False
 
@@ -497,6 +517,7 @@ class BasePages(BaseModelFormSet):
             super(BasePages, self).save(False)
         else:
             self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
+
 
 
     @transaction.atomic
@@ -543,6 +564,11 @@ class BasePages(BaseModelFormSet):
 
 
 
+def custom_field_callback(field):
+        if field.name == 'content':
+            return field.formfield(required=False)
+        elif field.name == 'title':
+            return field.formfield(required=True)
 
 
 

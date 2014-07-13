@@ -3,22 +3,26 @@ from django.conf import settings
 from threading import current_thread
 import os
 from django.http import HttpResponseBadRequest
-
-
+from django.utils import translation
 
 class SiteUrlMiddleWare:
 
     def process_request(self, request):
+
+        domains = {'centerpokupok.com': 'centerpokupok.ru'}
 
         current_domain = request.META.get('HTTP_HOST', False)
 
         if current_domain is False:
             return HttpResponseBadRequest()
         
-        if current_domain[:4] == "www":
+        if current_domain[:3] == "www":
             current_domain = current_domain[4:]
         try:
-            site = Site.objects.get(domain=current_domain)
+            if domains.get(current_domain, False):
+                site = Site.objects.get(domain=domains.get(current_domain))
+            else:
+                site = Site.objects.get(domain=current_domain)
 
             settings.SITE_ID = site.pk
             settings.ROOT_URLCONF = str(site.name)+".urls"
@@ -28,12 +32,59 @@ class SiteUrlMiddleWare:
 
 
         except Site.DoesNotExist:
-            settings.SITE_ID = 1
+
+
+
+            settings.SITE_ID = 143
             request.urlconf = "tppcenter.urls"
             settings.ROOT_URLCONF = "tppcenter.urls"
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
 
+
+
+
+
+
+
+
+class LocaleMiddleware(object):
+    """
+    This is a very simple middleware that parses a request
+    and decides what translation object to install in the current
+    thread context. This allows pages to be dynamically
+    translated to the language the user desires (if the language
+    is available, of course).
+    """
+
+    def process_request(self, request):
+
+       settings.LANGUAGE_CODE = 'ru'
+       url = request.META.get('HTTP_HOST', False)
+       lang = url.split('.')[0] if url else None
+       path = request.path.split('/')
+       languages = [lan[0] for lan in settings.LANGUAGES]
+
+
+
+       if lang:
+            if lang in languages:
+                 settings.LANGUAGE_CODE = lang
+       if len(path) > 0:
+            if path[1] in languages:
+                settings.LANGUAGE_CODE = path[1]
+
+
+
+
+
+
+       translation.activate(settings.LANGUAGE_CODE)
+
+    def process_response(self, request, response):
+        translation.deactivate()
+
+        return response
 
 
 

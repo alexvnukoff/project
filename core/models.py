@@ -19,6 +19,7 @@ from random import randint
 from tpp.SiteUrlMiddleWare import get_request
 from unidecode import unidecode
 from django.core.cache import cache
+from django.utils.translation import trans_real
 
 import warnings
 import datetime
@@ -37,6 +38,13 @@ class UserManager(BaseUserManager):
         request = get_request()
 
         if request:
+            try:
+                real_ip = request.META['HTTP_X_FORWARDED_FOR']
+                real_ip = real_ip.split(",")[0]
+                request.META['REMOTE_ADDR'] = real_ip
+            except:
+                pass
+
             ip = request.META['REMOTE_ADDR']
         else: # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
             ip = '0.'+str(randint(0, 255))+'.'+str(randint(0, 255))+'.'+str(randint(0, 255))
@@ -101,80 +109,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         return True
 
-    def has_perms(self, perm_list, obj=None):
+    def has_perms(self, perm_list, obj):
         """
-        Returns True if the user has each of the specified permissions. If
-        object is passed, it checks if the user has all required perms for this
-        object.
+        Returns True if the User has all specified permissions perm_list for this object obj.
         """
-        #if obj is None:
-            #return PermissionsMixin.has_perms(self, perm_list)
 
         if self.is_superuser or self.is_commando:
             return True
         else:
-            group_list = []
-            #obj_type = obj.__class__.__name__ # get current object's type
-            #obj_type = obj_type.lower()
-
             if obj:
-                obj_type = obj.__class__.__name__ # get current object's type
-                obj_type = obj_type.lower()
+                p_list = obj.getItemInstPermList(self)
+                for i in perm_list:
+                    if i not in p_list:
+                        return False
 
-                if self == obj.create_user: # is user object's owner?
-                    group_list.append('Owner')
-                    group_list.append('Admin')
-                    
-                    if obj.status.perm: # is there permissions group for current object's state?
-                        group_list.append(obj.status.perm.name)
-                    else: # no permissions group for current state, attach Staff group
-                        group_list.append('Staff')
-                else:
-                    if self == obj.update_user or self.groups.filter(name=obj.community.name).exists(): # is user community member?
-                        if self.is_manager: # has user content manager flag?
-                            group_list.append('Admin')
-                          
-                            if obj.status.perm: # is there permissions group for current object's state?
-                                group_list.append(obj.status.perm.name)
-                            else: # no permissions group for current state, attach Staff group
-                                group_list.append('Staff')
-                        else:
-                            
-                            if obj.status.perm: # is there permissions group for current object's state?
-                                group_list.append(obj.status.perm.name)
-                            else: # no permissions group for current state, attach Staff group
-                                group_list.append('Staff')
-                    else:
-                        if obj_type == 'company':
-                            #try to receive TPP for this company using Item class and Relationship and check is the user in Community
-                            communityName = self.parentTppCommunityName()
+                return True
 
-                            if self.groups.filter(name=communityName).exists() and self.is_manager:
-                                group_list.append('Owner')
-                                group_list.append('Admin')
-                                group_list.append('Staff')
             else:
-                obj_type = '_'
-                group_list.append('Owner')
-                group_list.append('Admin')
-                group_list.append('Staff')
-
-            # get all permissions from all related groups for current type of item
-            p_list = Group.objects.filter(name__in=group_list, permissions__codename__contains=obj_type)\
-                .values_list('permissions__codename', flat=True)
-
-            p_list = list(p_list)
-            # attach user's private permissions
-            p_list += list(self.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
-
-            p_list = list(set(p_list)) #remove duplicated keys in permissions list
-            #print(p_list)
-
-            for i in perm_list:
-                if i not in p_list:
-                    return False
-                
-            return True
+                return False
 
     def has_module_perms(self, app_label):
         return True
@@ -252,6 +204,7 @@ class Dictionary(models.Model):
 
     def getSlotID(self, title):
         slot = Slot.objects.get(dict=self.id, title=title)
+
         return slot.id
 
     def deleteSlot(self, slotTitle):
@@ -391,8 +344,9 @@ class Item(models.Model):
     member = models.ManyToManyField('self', through='Relationship', symmetrical=False, null=True, blank=True)
     status = models.ForeignKey(State, null=True, blank=True)
     proc = models.ForeignKey(Process, null=True, blank=True)
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField(Site, related_name='item')
     community = models.ForeignKey(Group, null=True, blank=True)
+    contentType = models.ForeignKey(ContentType, null=True, blank=True)
 
     objects = models.Manager()
     hierarchy = hierarchyManager()
@@ -534,64 +488,64 @@ class Item(models.Model):
                 list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
         group_list = []
-        obj_type = self.__class__.__name__ # get current object's type
-        obj_type = obj_type.lower()
+        is_commando = getattr(user, 'is_commando', False) #Anonymous User has not attribute 'is_commando'
 
-        if obj_type == 'item':
-            raise ValueError('Should be instance of Item')
-
-        if user.is_superuser or user.is_commando:
+        if user.is_superuser or is_commando or self.create_user == user:
             group_list.append('Owner')
             group_list.append('Admin')
             group_list.append('Staff')
         else:
-            # is user community member?
-            selfCommunity = getattr(self.community, 'name', False)
+            #whether there is a User Cabinet
+            cabinet = getattr(user, 'cabinet', False) #Anonymous User has not attribute 'cabinet'
+            if cabinet:
+                #get Cabinet ID
+                cab_pk = user.cabinet.filter(user=user).values('pk')
+                #check is Cabinet belongs to any Organization
+                if Item.objects.filter(c2p__parent__c2p__parent__organization__isnull=False, pk=cab_pk).exists():
+                    #get Organization ID
+                    org_lst = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab_pk).values('pk')
 
-            if selfCommunity is not False and user.groups.filter(name=selfCommunity).exists():
-                if user.is_manager: # has user content manager flag?
-                    group_list.append('Admin')
+                    for org_pk in org_lst:
+                        # if object SELF belongs to the same Company or it is Company itself or belongs to User's TPP or to TPP's parent TPP...
+                        if org_pk['pk'] == self.pk or \
+                          Item.objects.filter(c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                          Item.objects.filter(c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                          Item.objects.filter(c2p__parent__c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists():
 
-                if self.status.perm: # is there permissions group for current object's state?
-                    group_list.append(self.status.perm.name)
-                else: # no permissions group for current state, attach Staff group
-                    group_list.append('Staff')
-            else: #user is not a member of community of current object
+                            rs = Relationship.objects.filter(parent__c2p__parent__c2p__parent=org_pk['pk'], \
+                                                                child=cab_pk, type='relation')
+                            for r in rs:
+                                if r.is_admin:
+                                    group_list.append('Admin')
+                                    group_list.append('Staff')
+                                else:
+                                    if self.status:
+                                        if self.status.perm: # is there permissions group for current object's state?
+                                            group_list.append(self.status.perm.name)
+                                        else: # no permissions group for current state, attach Staff group
+                                            group_list.append('Staff')
 
+                        else: #User and SELF belongs to different Organization without any correlation
+                            pass
 
-                #try to receive community of parent organization of the object
-                communityName = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk).\
-                                    values('c2p__parent__organization__community__name')
-
-                if user.is_manager and user.groups.filter(name=communityName).exists():
-                    group_list.append('Owner')
-                    group_list.append('Admin')
-                    group_list.append('Staff')
-                else:
-                    #try to get all parent organizations of current object
-                    prnt_lst = Item.objects.filter(c2p__parent__organization__isnull=False, pk=self.pk)\
-                        .values_list('c2p__parent', flat=True)
-
-                    tppCommunity = Item.objects.filter(c2p__parent__organization__isnull=False,\
-                            pk__in=prnt_lst).values_list('c2p__parent__organization__community__name', flat=True)
-
-                    #chech if user is a member of tpp
-                    if user.groups.filter(name__in=tppCommunity).exists() and user.is_manager:
-                        group_list.append('Owner')
-                        group_list.append('Admin')
-                        group_list.append('Staff')
-
+                else: # Cabinet still do not attach to any Organization
+                    pass
+            else: # if User without Cabinet (before first login or unregistered)
+                pass
 
         # get all permissions from all related groups for current type of item
+        group_list = list(set(group_list)) # remove duplicated keys in groups list
         perm_list = Group.objects.filter(name__in=group_list).values_list('permissions__codename', flat=True)
 
         perm_list = list(perm_list)
 
         # attach user's private permissions
-        perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+        #perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+        perm_list += list(user.user_permissions.all().values_list('codename', flat=True))
         perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
 
         return perm_list
+
 
     @staticmethod
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
@@ -631,10 +585,7 @@ class Item(models.Model):
                                          attr__title__in=attr, item__in=items)\
             .select_related('attr__title', 'item__create_date', 'item__title')
 
-
-
         valuesAttribute = {}
-
 
         for key in range(0, len(items)):
             if items[key] in valuesAttribute:
@@ -646,9 +597,9 @@ class Item(models.Model):
             except ValueError:
                 continue
 
-        valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
+        if len(valuesObj) > 0:
+            valuesAttribute = OrderedDict(sorted(((k, v) for k, v in valuesAttribute.items()), key=lambda i: i[1]))
 
-        #TODO: Artur fix bug, when just one attribute and it's not exists, will return integer not dict
         for valuesObj in valuesObj:
 
             itemPk = valuesObj.item.pk
@@ -673,7 +624,6 @@ class Item(models.Model):
             if valuesObj.attr.title not in valuesAttribute[itemPk]:
                 valuesAttribute[itemPk][valuesObj.attr.title] = []
 
-
             if fullAttrVal:
                 attrValDict = {
                     'start_date': valuesObj.start_date,
@@ -683,6 +633,10 @@ class Item(models.Model):
                 valuesAttribute[itemPk][valuesObj.attr.title].append(attrValDict)
             else:
                 valuesAttribute[itemPk][valuesObj.attr.title].append(valuesObj.title)
+
+        for id, item in valuesAttribute.items():
+            if isinstance(item, int):
+                valuesAttribute[id] = {}
 
         return valuesAttribute
 
@@ -839,18 +793,14 @@ class Item(models.Model):
                 Example:
                     attr = {
                                 'NAME': 'bla',
-                                'DISCOUNT': [95,
-                                    {
-                                        'end_date': now(),
-                                        'title': 50,
-                                        'create_user': request.user #not required
-                                    }
-                                ]
+                                'POSSIBLE_CURRENCY': {'0':'USD',    '1':'RUB'}      # example for insert
+                                'POSSIBLE_CURRENCY': {'34':'USD',   '48':'RUB'}     # example for udpate
+                                # attribute name     value_id:value1 value_id:value2
                             }
                     Company(pk=1).setAttributeValue(attr, request.user)
         '''
         item_id = self.pk
-        cache_name = "detail_%s" % item_id
+        cache_name = "%s_detail_%s" % (get_language(), item_id)
         description_cache_name = "description_%s" % item_id
 
         cache.delete(cache_name)
@@ -874,7 +824,6 @@ class Item(models.Model):
             elif isinstance(attrWithValues['NAME'], str):
                 attrWithValues['SLUG'] = Item.createItemSlug(attrWithValues['NAME'], self.pk)
 
-
         queries = []
         bulkInsert = []
         notBulk = []
@@ -883,85 +832,150 @@ class Item(models.Model):
 
         #get all passed attributes
         existsAttributes = Attribute.objects.filter(title__in=attributes)
-
         if len(existsAttributes) != len(attrWithValues):
             raise ValueError("Attribute does not exists")
 
-        for attr in attributes:
-            attributeObj = existsAttributes.get(title=attr)
-            dictID = attributeObj.dict_id
-            values = attrWithValues[attr]
+        if not Value.objects.filter(item=self).exists():
+            for attr in attributes: # keys from passed attribute dictionary {dict_keys} ['KEY1', 'KEY2',...]
+                attributeObj = existsAttributes.get(title=attr) # instance of Attribute class with title=attr
+                dictID = attributeObj.dict_id
+                values = attrWithValues[attr] # get value for attr key
 
-            #value should be a list of values
-            if not isinstance(values, list):
-                values = [values]
+                #value should be a list of values
+                if not isinstance(values, list):
+                    values = [values]
 
-            for value in values:
+                for value in values:
 
-                if isinstance(value, dict) and "title" not in value:
-                    raise ValueError('Value is missing')
+                    if isinstance(value, dict) and "title" not in value:
+                        raise ValueError('Value is missing')
 
-                if dictID is None:
+                    if dictID is None:
 
-                    if attr in attrWithValues:
-                        del attrWithValues[attr]
+                        if attr in attrWithValues:
+                            del attrWithValues[attr]
 
-                    if isinstance(value, dict):
-                        if 'create_user' not in value:
-                            value['create_user'] = user
+                        if isinstance(value, dict):
+                            if 'create_user' not in value:
+                                value['create_user'] = user
 
-                        value['sha1_code'] = createHash(value['title'])
+                            value['sha1_code'] = createHash(value['title'])
 
-                        if attributeObj.type == 'Str':
-                            notBulk.append(Value(item=self, attr=attributeObj, **value))
+                            if attributeObj.type == 'Str':
+                                notBulk.append(Value(item=self, attr=attributeObj, **value))
+                            else:
+                                bulkInsert.append(Value(item=self, attr=attributeObj, **value))
                         else:
-                            bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                            if attributeObj.type == 'Str':
+                                notBulk.append(Value(title=value, item=self, attr=attributeObj,
+                                                    create_user=user, sha1_code=createHash(value)))
+                            else:
+                                bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
+                                                    create_user=user, sha1_code=createHash(value)))
+                    #Dictionary value
                     else:
-                        if attributeObj.type == 'Str':
-                            notBulk.append(Value(title=value, item=self, attr=attributeObj,
-                                                create_user=user, sha1_code=createHash(value)))
+                        #security
+                        dictID = int(dictID)
+
+                        if isinstance(value, dict):
+                            valueID = int(value['title'])
                         else:
-                            bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
-                                                create_user=user, sha1_code=createHash(value)))
-                #Dictionary value
-                else:
-                    #security
-                    dictID = int(dictID)
+                            valueID = int(value)
 
-                    if isinstance(value, dict):
-                        valueID = int(value['title'])
+                        if dictID not in uniqDict:
+                            uniqDict[dictID] = {}
+
+                        if valueID in uniqDict[dictID]:
+                            continue
+                        else:
+                            uniqDict[dictID][str(valueID)] = ''
+
+                            #check if dictionary slot exists for this dictionary - creating conditions
+                            queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
+
+                # end of cycle for for values of current 'KEY n'
+
+            if len(queries) > 0:
+                bulkInsert += self._setAttrDictValues(attrWithValues, existsAttributes, queries, uniqDict, user)
+
+            try:
+                with transaction.atomic():
+                    #Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+                    Value.objects.bulk_create(bulkInsert)
+
+                    #TODO: Artur fix it
+                    #workaround of some bug with oracle + bulk_insert
+                    # django ticket #22144
+                    for instanceToSave in notBulk:
+                        instanceToSave.save()
+
+            except IntegrityError as e:
+                raise e
+        else:
+            # here UPDATE attributes' values
+            session_lang = trans_real.get_language()
+            fact_attr_in_value = Value.objects.filter(item=self).all()
+            fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
+            attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
+
+            # if passed argument is a new for this item (was not saved before) then...
+            for a in attrWithValues.items():
+                if not fact_attr_in_value.filter(attr__title=a[0]).exists():
+                    lookup_a = Attribute.objects.get(title=a[0])
+                    if not isinstance(a[1], dict):
+                        v = Value.objects.create(attr=lookup_a, item=Item.objects.get(id=item_id),
+                                                     sha1_code=createHash(a[1]), create_user=user, title=a[1])
+                        v.__dict__['title_' + session_lang] = str(a[1])
+                        v.save()
                     else:
-                        valueID = int(value)
+                        # if passed argument itself is Dictionary which was not saved before, then...
+                        # go around local dictionary
+                        for arg in a[1].items():
+                            v = Value.objects.create(attr=lookup_a, item=Item.objects.get(id=item_id),
+                                                     sha1_code=createHash(arg[1]), create_user=user, title=arg[1])
 
-                    if dictID not in uniqDict:
-                        uniqDict[dictID] = {}
+                            if lookup_a.dict == None:
+                                v.__dict__['title_' + session_lang] = str(arg[1])
+                                v.__dict__['sha1_code'] = createHash(arg[1])
+                            else:
+                                slot = Slot.objects.get(id=arg[0], dict=lookup_a.dict)
+                                v.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                v.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
-                    if valueID in uniqDict[dictID]:
+                            v.save()
+
+            # for attributes which were already saved before...
+            for a in attr_from_db:
+                # if attribute from db not in arguments list then continue
+                if not a.title in attrWithValues:
+                    continue
+                for val in fact_attr_in_value:
+                    if a.title != val.attr.title:
                         continue
                     else:
-                        uniqDict[dictID][str(valueID)] = ''
+                        # if passed argument itself is NOT a Dictionary, then...
+                        if not isinstance(attrWithValues[val.attr.title], dict):
+                            if a.dict == None:
+                                val.__dict__['title_' + session_lang] = str(attrWithValues[val.attr.title])
+                                val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
+                            else:
+                                slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
+                                val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
+                        else:
+                            # if passed argument itself is Dictionary, then...
+                            for arg_key, arg_val in attrWithValues[val.attr.title].items():
+                                if int(arg_key) == val.id:
+                                    if a.dict == None:
+                                        val.__dict__['title_' + session_lang] = str(arg_val)
+                                        val.__dict__['sha1_code'] = createHash(arg_val)
+                                    else:
+                                        slot = Slot.objects.get(id=arg_key, dict=a.dict)
+                                        val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
+                                        val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
 
-                        #check if dictionary slot exists for this dictionary - creating conditions
-                        queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
-
-        if len(queries) > 0:
-            bulkInsert += self._setAttrDictValues(attrWithValues, existsAttributes, queries, uniqDict, user)
-
-        try:
-            with transaction.atomic():
-                Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
-                Value.objects.bulk_create(bulkInsert)
-
-                #TODO: Artur fix it
-                #workaround of some bug with oracle + bulk_insert
-                # django ticket #22144
-                for instanceToSave in notBulk:
-                    instanceToSave.save()
-
-        except IntegrityError as e:
-            raise e
-
-
+                        val.save()
+                        continue
         return True
 
     def getSiblings(self, includeSelf=True):
@@ -996,11 +1010,13 @@ class Relationship(models.Model):
     TYPE_OF_RELATIONSHIP = (
         ('relation', 'Relation'),
         ('hierarchy', 'Hierarchy'),
-        ('dependence', 'Depended relation' )
+        ('dependence', 'Depended relation'),
+        ('friend', 'Friend relation'),
     )
 
     type = models.CharField(max_length=10, choices=TYPE_OF_RELATIONSHIP, null=False, blank=False)
 
+    is_admin = models.BooleanField(default=False)
     qty = models.FloatField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User)
@@ -1114,9 +1130,17 @@ class Value(models.Model):
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
 
-    Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence").delete()
+    Item.hierarchy.deleteTree(instance.pk)
+
+    dependedChilds = Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence")
+
+    for inst in dependedChilds:
+        inst.delete()
+
+
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
+
 
 
 @receiver(post_delete, sender=Item)

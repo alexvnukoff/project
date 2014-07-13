@@ -1,0 +1,72 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+
+<div class="container">
+{% include "Vacancy/popupFilter.html" %}
+ {% include "main/local_menu_script.html" %}
+    <div class="companies">
+    {% include "main/paginator.html" %}
+
+
+
+                <ul class="vacancy-list">
+                {% for id , attr in vacancyList.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.SLUG.0 as slug %}
+                    {% with attr.DETAIL_TEXT.0 as detail_text %}
+                    {% with attr.CITY.0 as city %}
+                    {% with attr.CREATE_DATE.0 as date %}
+                    {% with attr.COUNTRY_ID.0 as country_id %}
+                    {% with attr.COUNTRY_NAME.0 as country_name %}
+                    {% with attr.FLAG_CLASS.0 as country_flag %}
+
+                    <li>
+                    {% resolve items_perms id|slugify as permlist %}
+                    {% if 'delete_requirement' in  permlist or 'change_requirement' in permlist %}
+
+                        <div class="blockbox">
+                            <a href="#"><i class="btn-afisha imgnews"></i></a>
+                            <div class="localmenu">
+                                {% if  'change_requirement' in permlist %}
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'vacancy:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                {% endif %}
+                                {% if 'delete_requirement' in permlist %}
+
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'vacancy:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+               <h2><a href="{% url 'vacancy:detail' slug %}">{{ name }}</a></h2>
+
+                        <div class="vacancy-desc">
+                             {% if country_flag %}
+                                <i class="flag sprite {{ country_flag }}" title="{{ country_name }}" ></i>
+                        	{% endif %}
+                            <font class="date">{{ city }}, {% trans 'Date' %}: {{ date|date:'d M Y' }}</font>
+
+                           <p>{{ detail_text|truncatewords:30 }} </p>
+                           <a href="{% url 'vacancy:detail' slug %}" class="more">{% trans "More" %}...</a>
+                        </div>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% empty %}
+                    <div class="no-results">{% trans "No results found" %}</div>
+                {% endfor %}
+
+            </ul>
+
+    </div>
+{% include "main/paginator.html" %}
+</div>

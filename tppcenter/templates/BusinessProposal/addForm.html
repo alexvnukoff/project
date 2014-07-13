@@ -71,6 +71,9 @@ $(function() {
                 <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
 
                 <label  class="sapce">{% trans 'Images' %}</label>
+                 {% if not gallery.isValid  %}
+                    <div class="error-handler"> <div class="formserror">{% trans 'Load correct image' %}</div></div>
+                {% endif %}
 
                 {% for i in '012'|make_list %}
                     {% resolve photos i as img %}
@@ -119,6 +122,17 @@ $(function() {
                     {% for id, branch in branches.items %}
                         <option value="{{ id }}" {% if currentBranch.id == id %}selected="selected"{% endif %} >
                             {{ branch.NAME|first }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label>{% trans 'Category' %} <font color="#FF0000">*</font></label>
+
+                <select id="id_CATEGORY" name="CATEGORY">
+                    {% for id, category in categories.items %}
+                        <option value="{{ id }}" {% if currentCategory.id == id %}selected="selected"{% endif %} >
+                            {{ category.NAME|first }}
                         </option>
                     {% endfor %}
                 </select>

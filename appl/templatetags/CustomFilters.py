@@ -1,5 +1,9 @@
 from collections import OrderedDict
 from copy import copy
+import urllib
+from urllib.request import FancyURLopener
+from django.contrib.sites.models import Site
+from django.utils.translation import trans_real
 from appl.func import currencySymbol
 from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
@@ -13,9 +17,17 @@ from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+import tppcenter.urls
 
 register = template.Library()
 
+
+@register.filter(name='getSide')
+def getSide(value):
+
+    is_right = trans_real.get_language() == 'he' or trans_real.get_language() == 'ar'
+
+    return is_right
 
 @register.filter(name='sort')
 def sort(value):
@@ -59,6 +71,10 @@ def formatPrice(value):
 def getSymbol(value):
 
     return currencySymbol(value)
+
+
+
+
 
 @register.filter(name='split')
 def split(str, splitter):
@@ -131,7 +147,7 @@ class DynUrlNode(template.Node):
         request = get_request()
         query_set = None
         if len(request.GET) > 0:
-            query_set = urlencode(request.GET)
+            query_set = request.GET.urlencode()
 
 
         url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)
@@ -222,9 +238,10 @@ def modelCount(model, owner=None):
 
     klass = (globals()[model])
 
-    sqs = func.getActiveSQS().models(klass)
+    sqs = klass.active.get_active().all()
 
     if isinstance(owner, int):
+        sqs = func.getActiveSQS().models(klass)
         sqs.filter(SQ(tpp=owner) | SQ(company=owner))
 
     return sqs.count()
@@ -235,7 +252,13 @@ def getOwner(item):
     if not item:
         return None
 
-    obj = func.getActiveSQS().filter(django_id=item)[0]
+    obj = func.getActiveSQS().filter(id=item)
+
+    if len(obj) == 0:
+        return None
+    else:
+        obj = obj[0]
+
 
     if not obj:
         return None
@@ -255,11 +278,16 @@ def setUserName(context):
     user = request.user
 
     if user.is_authenticated():
+        cabinet = Cabinet.objects.filter(user=request.user)
+        if cabinet.exists():
+            cabinet = cabinet[0]
+            name = cabinet.getAttributeValues('USER_FIRST_NAME','USER_LAST_NAME')
 
-        if not user.first_name and not user.last_name:
-            user_name = user.email
-        else:
-            user_name = user.first_name + ' ' + user.last_name
+            if isinstance(name, dict) and  name.get('USER_FIRST_NAME', False) and  name.get('USER_LAST_NAME', False):
+                user_name = name.get('USER_FIRST_NAME', [''])[0] + ' ' + name.get('USER_LAST_NAME', [''])[0]
+            else:
+                user_name = user.email
+
     else:
         user_name = None
 
@@ -274,6 +302,19 @@ def setNotification(context):
     else:
         notification = None
     return notification
+
+
+@register.simple_tag(name='mail', takes_context=True)
+def setMessage(context):
+    request = context.get('request')
+    user = request.user
+    if user.is_authenticated():
+        cab_pk = Cabinet.objects.get(user=request.user)
+        message = Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+    else:
+        message = None
+    return message
+
 
 @register.simple_tag(name='flags', takes_context=True)
 def setFlags(context, country, url_country, url_country_parametr):
@@ -299,6 +340,25 @@ def setFlags(context, country, url_country, url_country_parametr):
   return flags
 
 
+@register.simple_tag(name='logo', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  user_logo = user_site.getAttributeValues('SITE_LOGO')
+  if len(user_logo) > 0:
+      return user_logo[0]
+
+
+  return ""
+
+@register.simple_tag(name='footer_text', takes_context=True)
+def setLogo(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  site_footer = user_site.getAttributeValues('DETAIL_TEXT')
+  if len(site_footer) > 0:
+      return site_footer[0]
+
+
+  return ""
 
 
 
@@ -338,22 +398,38 @@ def setCountries(context):
 def rightTv(context):
 
   request = context.get('request')
-
-  sqs = func.getActiveSQS().models(TppTV)
-
-  if sqs.count() > 0:
-    sqs = sqs.order_by('-id')[0]
-    tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
-    template = loader.get_template('main/tv.html')
-    context = RequestContext(request, {'tvValues': tvValues[sqs.id]})
-    tv = template.render(context)
-
-    return tv
-
+  if request.resolver_match.namespace == 'innov':
+      is_innov = True
+      tvValues  = ""
   else:
-      return ''
+      sqs = func.getActiveSQS().models(TppTV)
+      if sqs.count() == 0:
+          return ''
+      else:
+          sqs = sqs.order_by('-id')[0]
+          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
+          tvValues = tvValues[sqs.id]
+          is_innov = False
+  template = loader.get_template('main/tv.html')
+  context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov })
+  tv = template.render(context)
+  return tv
+
 
 @register.simple_tag(takes_context=True)
 def searchQuery(context):
     request = context.get('request')
     return escape(request.GET.get('q', ''))
+
+
+@register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
+def detail_page_to_tppcenter(context, url, slug=None):
+
+    prefix =  Site.objects.get(name='tppcenter').domain + '/'
+    if slug:
+        url = (reverse(viewname=url, urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
+    else:
+        url = (reverse(viewname=url, urlconf=tppcenter.urls,   prefix=prefix))
+
+    return 'http://' + url
+

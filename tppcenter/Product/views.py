@@ -11,7 +11,7 @@ from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
@@ -75,7 +75,9 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
 
 
 def _getDetailContent(request, item_id):
-    cache_name = "detail_%s" % item_id
+
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     query = request.GET.urlencode()
     cached = cache.get(cache_name)
@@ -135,8 +137,8 @@ def _getDetailContent(request, item_id):
     else:
         rendered = cache.get(cache_name)
         result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        description = result[0] if isinstance(result, list) else ""
+        title = result[1] if isinstance(result, list) else ""
 
 
     return rendered, description, title
@@ -156,11 +158,9 @@ def productForm(request, action, item_id=None):
 
     if action == 'delete':
         productsPage = deleteProduct(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         productsPage = addProducts(request)
-
-    if action == 'update':
+    elif action == 'update':
         productsPage = updateProduct(request, item_id)
 
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
@@ -234,7 +234,7 @@ def addProducts(request):
             func.notify("item_creating", 'notification', user=request.user)
 
             addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
-                                      current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+                                      current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
 
@@ -329,7 +329,9 @@ def updateProduct(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, lang_code=settings.LANGUAGE_CODE)
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+                                      lang_code=trans_real.get_language())
+
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
 
@@ -345,7 +347,8 @@ def updateProduct(request, item_id):
         'pages': pages,
         'product': product,
         'choosen_category': choosen_category,
-        'categotySelect': categotySelect
+        'categotySelect': categotySelect,
+        'b2c_product':  Item.objects.get(pk=item_id).sites.filter(name='centerpokupok').exists()
     }
 
     context = RequestContext(request, templateParams)

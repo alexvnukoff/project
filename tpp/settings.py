@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEFAULT_FROM_EMAIL = 'noreply@tppcenter.com'
@@ -23,7 +25,10 @@ EMAIL_USE_TLS = True
 ADMINS = (
     ('Artur', 'artur@tppcenter.com'),
     ('Jenya', 'jenyapri@tppcenter.com'),
+    ('Iliya', 'afend@tppcenter.com'),
 )
+
+
 
 MANAGERS = ADMINS
 
@@ -41,8 +46,8 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = [
     '.tppcenter.com', # Allow domain and subdomains
     '.centerpokupok.ru', # Also allow FQDN and subdomains
-    '.BC-CIS.COM', # Also allow FQDN and subdomains
-    '.B24ONLINE.COM', # Also allow FQDN and subdomains
+    '.bc-cis.com', # Also allow FQDN and subdomains
+    '.b24online.com', # Also allow FQDN and subdomains
     '.centerpokupok.com'
 ]
 
@@ -53,7 +58,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
+            'include_html': False,
         }
     },
     'loggers': {
@@ -78,7 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'django.contrib.sitemaps',
+    #'django.contrib.sitemaps',
     'registration',
     'modeltranslation',
     'south',
@@ -86,18 +91,29 @@ INSTALLED_APPS = (
     'appl',
     'legacy_data',
     'djcelery',
-    'loginas',
-
+    'loginas'
+    #'paypal.standard.ipn'
+    #'debug_toolbar'
 )
 
-CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin
+# For installations on which you want to use the sandbox,
+# set PAYPAL_TEST to True.  Ensure PAYPAL_RECEIVER_EMAIL is set to
+# your sandbox account email too.
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
+
+CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
+
+
+    'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'tpp.SiteUrlMiddleWare.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -105,7 +121,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
+}
+
 
 
 ROOT_URLCONF = 'tpp.urls'
@@ -117,7 +139,7 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 
-#TODO Artur change LOCATION to elastic cash ip and port
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -155,10 +177,12 @@ SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
+USE_X_FORWARDED_HOST = True
 
-LANGUAGE_CODE = 'ru'
+
 
 TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
@@ -183,6 +207,10 @@ TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').repl
 
 
 #Were added by Expert Center -----------------------------------------------------
+#Free of charge period in days
+FREE_PERIOD = 60
+#User notification starts before till the end_date (in days)
+NOTIFICATION_BEFORE_END_DATE = 60
 
 #AUTH_PROFILE_MODULE = 'core.Client'
 AUTH_USER_MODEL = 'core.User'
@@ -194,10 +222,12 @@ AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
 
+
+
 gettext = lambda s: s
 LANGUAGES = (
     ('ru', gettext('Russia')),
-    #('am', gettext('Armenia')),
+    ('am', gettext('Armenia')),
     #('az', gettext('Azerbaijan')),
     #('be', gettext('Belarus')),
     ('en', gettext('England')),
@@ -213,6 +243,8 @@ LANGUAGES = (
     #('uk', gettext('Ukrainian')),
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
+    ('ar', gettext('Arabic')),
+    ('zh', gettext('Chinese')),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
@@ -223,7 +255,9 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'en': ('ru',),
     'ru': ('en',),
     'he': ('en',),
-    #'am': ('ru',),
+    'am': ('ru',),
+    'ar': ('en',),
+    'zh': ('en',),
     #'az': ('ru',),
     #'be': ('ru',),
     #'et': ('ru',),
@@ -259,7 +293,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'ec2-54-72-168-236.eu-west-1.compute.amazonaws.com:9200',
+        'URL': 'ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
@@ -275,7 +309,7 @@ for lang in LANGUAGES:
         'INDEX_NAME': 'lang-' + lang[0],
     }
 
-
+USE_X_FORWARDED_HOST = True
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 

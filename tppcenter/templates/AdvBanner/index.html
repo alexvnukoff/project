@@ -16,7 +16,13 @@
 
                         {% for id, attr in types.items %}
                             {% with attr.NAME|first as name %}
-                                <li><a href="{% url "adv_banners:banner_form" id %}" class="btn-size">{{ name }}</a></li>
+                            {% with attr.WIDTH|first as width %}
+                            {% with attr.HEIGHT|first as height %}
+                                <li><a href="{% url "adv_banners:banner_form" id %}" class="btn-size">
+                                    {{ name }} | {{ width }} X {{ height }}
+                                </a></li>
+                            {% endwith %}
+                            {% endwith %}
                             {% endwith %}
                         {% endfor %}
 

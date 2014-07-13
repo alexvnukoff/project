@@ -1,0 +1,83 @@
+  {% extends 'main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'Vacancy' %}
+       {% endif %}
+   {% endblock %}
+
+
+
+
+
+    {% block header %}
+        {% include "login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}"/>
+    {% endblock %}
+
+
+
+
+
+     {% block content %} {{ vacancyPage }}{% endblock %}
+
+{% block vacancy %}
+<div style="display: none;" class="white_content" id="light-vacancy">
+    <div class="contact-table">
+        <div class="contact-tablein" style="height: 280px;">
+        	<a onclick="document.getElementById('light-vacancy').style.display='none';document.getElementById('fade-vacancy').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+
+
+            <ul class="contactform">
+                <li style="text-align: center;">
+                    <label id="send_resume_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+                </li>
+
+                <li>
+                	<label>{% trans 'You send resume on position:' %} <font color="#FF0000">*</font></label>
+                   <div>{{ title }}</div>
+                    <input id="vacancy-id" value="{{ item_id }}" hidden="hidden">
+                </li>
+
+                <li>
+                	<label>{% trans 'Add new resume to profile' %} <font color="#FF0000">*</font></label>
+                   <a href="{% url 'resume:main'  %}">{% trans 'New resume' %}</a>
+                </li>
+
+            	<li>
+                	<label>{% trans 'Send existing resume' %}:</label>
+                    <select id="resume-id">
+                        {% for id, resume in resumesValues.items %}
+                        <option value="{{ id }}"> {{ resume.NAME|first }}</option>
+                         {% empty %}
+                           <option disabled> {% trans 'No existing resumes' %}</option>
+                        {% endfor %}
+
+                    </select>
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-vacancy" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel-vacancy" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-vacancy"></div>
+{% endblock %}
+

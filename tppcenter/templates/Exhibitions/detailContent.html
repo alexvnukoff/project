@@ -85,7 +85,7 @@
                		   {% if org_flag %}
                             <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
                             {% elif flag_class %}
-                            <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
+                            <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
                             {% else %}
                              <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" title="{{ country_name }}"/>
                             {% endif %}
@@ -95,7 +95,7 @@
                     </font>
                </div>
                <div class="tender-info">
-               <div class="tender-button"><a class="bigbuy" href="#" id="afisha">{% trans 'Registration' %}</a></div>
+               <div class="tender-button"><a class="bigbuy" href="#" id="afisha">{% trans 'Sign Up' %}</a></div>
 					<span class="title">{{ name }}</span>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
@@ -200,7 +200,7 @@
                         <ul>
                             <li>
                             	<label id="registration_error_ex" style="margin-left:110px;color: red;" hidden="hidden">{% trans 'Name and Email are required' %}</label>
-                                <label id="registration_succsefuly_ex" style="margin-left:110px;color: #008000;" hidden="hidden">{% trans 'You have successfully registered.' %}</label>
+                                <label id="registration_succsefuly_ex" style="margin-left:110px;color: #008000;" hidden="hidden">{% trans 'You are registered successfully.' %}</label>
 
                             </li>
                         	<li>
@@ -225,7 +225,9 @@
                             </li>
 
                             <li class="end">
-                            	<a class="btntype2 reg_to_exhebition" href="#">{% trans 'Register' %}</a>
+                                <input type="hidden" name="email_company_register" placeholder="" value="{{ org_email }}"  />
+                                <input type="hidden" name="ex_name_register" placeholder="" value="{{ name }}"  />
+                            	<a class="btntype2 reg_to_exhebition" href="#">{% trans 'Sign Up' %}</a>
                                 <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
                             </li>
                         </ul>

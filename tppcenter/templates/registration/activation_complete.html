@@ -25,10 +25,10 @@
 
             {% block content %}
             <div class="blogin">
-				<h3>{% trans 'Activation complete' %}</h3>
+				<h3>{% trans 'Activation is completed' %}</h3>
            <div style="margin-top: 20px;">
-           <span style="font-size: 15px;"> {% trans 'Thank you that you have completed the registration! Now you can  ' %}
-              <a href='{% url 'login' %}'>{% trans 'sign in' %}</a>, {% trans 'using the email and password you provided during registration.' %}</span>
+           <span style="font-size: 15px;"> {% trans 'Thank you for registration! Now you can  ' %}
+              <a href='{% url 'login' %}'>{% trans 'sign in' %}</a>, {% trans 'using email and password that you provided during sign up.' %}</span>
            </div>
             </div>
           {% endblock %}

@@ -33,7 +33,7 @@ body{ margin: 0; padding: 0; font-family: 'Roboto', sans-serif; font-size: 12px;
 .bginput{ position: relative; float: left; width: 860px; height: 38px; margin:8px 0 0 8px; display: inline; background-color: #FFF}
 .icon-search{ position: absolute; width: 24px; height: 25px; background-position: -288px -48px; left: 7px; top: 6px;}
 .bginput input.text{ float: left; font-size: 14px; color: #999999; height: 34px; line-height: 34px; width: 55%; border: 0; margin-left: 45px; display: inline;}
-.btns{ position: relative; float: left; background-color: #383838; color: #FFF; font-size: 16px; padding: 8px 25px 9px 25px; margin: 8px 0 0 10px; display: inline; border-radius: 0px; border: 0px;}
+.btns{ position: relative; float: left;width: 48px; background-color: #383838; color: #FFF; font-size: 16px; padding: 8px 25px 9px 25px; margin: 8px 0 0 10px; display: inline; border-radius: 0px; border: 0px;}
 .btns:hover{ background-color: #000; transition-duration:1s; color: #FFF; text-decoration: none;}
 #flag{ position: relative; float: left; width: 100%; height: 32px; background-color: #EEE;}
 #flag ul li{ position: relative; float: left; padding: 5px 5px; cursor: pointer; border-top: 1px #FFF solid;}
@@ -248,13 +248,13 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .bottom-cp{ position: absolute; width: 100%; height: 75px; bottom: 0px; background-color: #383838;}
 .bottom-cp .price-cp{ position: relative; float: right; width: 360px;}
 .bottom-cp .price-cp span{ float: left; width: 145px; font-size: 11px; color: #c9c9c9; padding-top: 12px;}
-.bottom-cp .price-cp span .price1{ font-size: 30px; color: #FFF; line-height: 30px; font-weight:bold;}
+.bottom-cp .price-cp span .price1{ font-size: 24px; color: #FFF; line-height: 30px; font-weight:bold;}
 .bottom-cp .price-cp span .price1 sub{ line-height: 18px;}
 .bottom-cp .price-cp span .price2{ font-size: 22px; line-height: 25px;}
 .bottom-cp .price-cp span.small{padding-top: 15px;}
-.btnbuy{ position: absolute; right: 10px; top: 12px; background-color: #e85c41; border-radius: 3px 0px 0px 3px; font-size: 20px; color: #FFF; line-height: 45px; padding: 0 10px 0 20px;}
+.btnbuy{ position: absolute; right: 1px; top: 38px; background-color: #e85c41; border-radius: 3px; font-size: 16px; color: #FFF; line-height: 36px; padding: 0 14px 0 20px;}
 .btnbuy:hover{ color: #FFF; text-decoration: none; transition-duration: 1s; opacity: 0.9;}
-.btnbuy:after{content:''; position: absolute; right: -22px; top: 0;border-top: 23px solid transparent; border-bottom: 22px solid transparent; border-left: 22px solid #e85c41;}
+
 .sortprice{ position: absolute; width: 120px; padding: 10px; background-color: #FFF; border:3px #EEE solid; top: 20px; z-index: 9999; display: none;}
 .sortprice ul li{ position: relative; float: left; width: 100%; padding: 5px 0; border-bottom: 1px #DDD dotted;}
 span.lesssort a.pricefilter{ background: url(../images/arrowc.png) no-repeat right center;}
@@ -699,7 +699,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
 .var-main{ position:relative; float:left; width:100%; border-bottom:#d7d7d7 1px solid; padding-bottom:40px;}
 .prd-new{ position:relative; float:left; width:360px; margin:0 20px 0 0; display:inline;}
 .listnew li{ position:relative; float:left; width:150px; margin:30px 15px 0 0; display:inline;}
-.listnew li p{ padding-top:8px; color:#999;}
+.listnew li p{ padding-top:30px; color:#999;height: 5px;}
 .listnew li font.number{ font-size:16px; font-weight:bold; color:#ca4228;}
 .listnew li .viewall{ color:#9a9a9a;}
 .items-coupon h2{ font-size: 30px; font-weight: 300; padding-top:5px;}

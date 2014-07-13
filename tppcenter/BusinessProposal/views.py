@@ -1,5 +1,5 @@
 from appl import func
-from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch
+from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch, BpCategories
 from core.models import Item
 from core.tasks import addBusinessPRoposal
 from django.conf import settings
@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+from django.utils.translation import trans_real
 import json
 
 def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
@@ -80,7 +81,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
 def _proposalDetailContent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
@@ -132,11 +134,9 @@ def proposalForm(request, action, item_id=None):
 
     if action == 'delete':
         proposalsPage = deleteProposal(request,item_id)
-
-    if action == 'add':
+    elif action == 'add':
         proposalsPage = addBusinessProposal(request)
-
-    if action =='update':
+    elif action =='update':
         proposalsPage = updateBusinessProposal(request, item_id)
 
     if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
@@ -169,6 +169,11 @@ def addBusinessProposal(request):
     branches = Branch.objects.all()
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
+
+    categories = BpCategories.objects.all()
+    categories_id = [categorory.id for categorory in categories]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
     pages = None
     if request.POST:
 
@@ -195,13 +200,13 @@ def addBusinessProposal(request):
             func.notify("item_creating", 'notification', user=request.user)
 
             addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+                                current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('proposal:main'))
 
     template = loader.get_template('BusinessProposal/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages})
+    context = RequestContext(request, {'form': form, 'branches': branches, 'pages': pages, 'categories': categories})
 
     proposalsPage = template.render(context)
 
@@ -210,6 +215,13 @@ def addBusinessProposal(request):
 
 def updateBusinessProposal(request, item_id):
     item = Organization.objects.get(p2c__child_id=item_id)
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+         photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -220,10 +232,19 @@ def updateBusinessProposal(request, item_id):
     branches_ids = [branch.id for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
+    categories = BpCategories.objects.all()
+    categories_id = [categorory.id for categorory in categories]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
     try:
         currentBranch = Branch.objects.get(p2c__child=item_id)
     except Exception:
         currentBranch = ""
+
+    try:
+        currentCategory = BpCategories.objects.get(p2c__child=item_id)
+    except Exception:
+        currentCategory = ""
 
     if request.method != 'POST':
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
@@ -234,21 +255,19 @@ def updateBusinessProposal(request, item_id):
         else:
              pages = pages.queryset
 
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(parent_id=item_id)
-        photos = ""
 
-        if gallery.queryset:
-            photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
         form = ItemForm('BusinessProposal', id=item_id)
 
     if request.POST:
 
+        pages = ""
+
         user = request.user
 
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
+        gallery.clean()
 
 
 
@@ -262,12 +281,13 @@ def updateBusinessProposal(request, item_id):
         form = ItemForm('BusinessProposal', values=values, id=item_id)
         form.clean()
 
+
         if gallery.is_valid() and form.is_valid():
 
             func.notify("item_creating", 'notification', user=request.user)
 
             addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
-                                lang_code=settings.LANGUAGE_CODE)
+                                lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
@@ -281,7 +301,9 @@ def updateBusinessProposal(request, item_id):
         'form': form,
         'pages': pages,
         'currentBranch': currentBranch,
-        'branches': branches
+        'branches': branches,
+        'currentCategory': currentCategory,
+        'categories': categories,
     }
 
     context = RequestContext(request, templateParams)

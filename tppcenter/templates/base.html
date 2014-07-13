@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load CustomFilters %}
 
+{% load inclusionTags %}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10,6 +12,7 @@
         {% block  meta%}
 
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta name='yandex-verification' content='7036efbb8c82d0da' />
 
             {% block description %}
              <meta name="description" content="Программа развития и продвижения предпринимательства,
@@ -31,17 +34,25 @@
             <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/main.css"%}" />
             <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/reset.css"%}" />
                <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/flags.css"%}" />
-            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" >
+            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+
         {% endblock %}
+
+
+
 
         {% block js %}
             <script type="application/javascript">
-                statciPath = '{% static "tppcenter/" %}'
+                var statciPath = '{% static "tppcenter/" %}';
+                var LANG = {};
             </script>
 		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
             <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
             <script  type="text/javascript" src="{% static "tppcenter/js/base.js"%}"></script>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+            <script  type="text/javascript" src="{% static "tppcenter/js/paypal-button.min.js"%}"></script>
+
 
 
             <!-- Yandex.Metrika counter -->
@@ -90,42 +101,36 @@
 
     <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/ie.css" %}" /><![endif]-->
 
+    <!-- Google Translate-->
+    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
+
 </head>
 
 <body>
     {% block header %}
 
     {% endblock %}
+    {% block rtl %}
+         {% if site|getSide %}
+              <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/rtl.css"%}" />
+          {% endif %}
+    {% endblock %}
 
     {% block body %}
+
+
+
+
+
     {% endblock %}
 
 
 {% block footer %}
+
+
     <div class="wrapper">
         <div class="linkbottom">
-            <ul class="clumn">
-                <li>{% trans 'About' %}</li>
-                <li><a href="{% url "project:about" %}">{% trans 'About' %}</a></li>
-                <li><a href="{% url "project:adv" %}">{% trans 'Advertise with us' %}</a></li>
-                <li><a href="{% url "project:terms" %}">{% trans 'Terms of use' %}</a></li>
-                <li><a href="{% url "project:offer" %}">{% trans 'Public offer' %}</a></li>
-                <li><a href="{% url "greetings:main" %}">{% trans 'Greetings' %}</a></li>
-                <li><a href="{% url "project:pay" %}">{% trans 'Payment System' %}</a></li>
-            </ul>
-            <ul class="clumn">
-                <li>{% trans 'Advices' %}</li>
-                <li><a href="{% url "project:shop" %}">{% trans 'Create online shop' %}</a></li>
-                <li><a href="{% url "project:event" %}">{% trans 'Post announcement event' %}</a></li>
-                <li><a href="{% url "project:proposal" %}">{% trans 'Add a business proposal' %}</a></li>
-                <li><a href="{% url "project:partner" %}">{% trans 'Find a Business Partner' %}</a></li>
-                <li><a href="{% url "project:site" %}">{% trans 'Your own site' %}</a></li>
-            </ul>
-            <ul class="clumn">
-                <li>{% trans 'Contacts' %}</li>
-                <li><a href="{% url "project:contact" %}">{% trans 'Contact' %}</a></li>
-                <li><a href="{% url "project:faq" %}">{% trans 'FAQ' %}</a></li>
-            </ul>
+            {% showStaticPages %}
             <ul class="clumn">
                 <li>
                     <a href="https://vk.com/tppcentr"><i class="imgmain iconsocial i-blog"></i></a>
@@ -156,5 +161,48 @@
      }
      ga('send', 'pageview');
     </script>
+<div style="display: none;" class="white_content" id="light-contact">
+    <div class="contact-table">
+        <div class="contact-tablein">
+        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+          <form id="messageToCompany"  enctype="multipart/form-data">
+
+            <ul class="contactform">
+                <li style="text-align: center;">
+                    <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+                </li>
+
+
+            	<li>
+                	<label>{% trans 'Send message to' %}:</label>
+                    <label id="send_to" ></label>
+                </li>
+                <li>
+                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                </li>
+                <li>
+                	<label id="file-title">{% trans 'File' %}</label>
+                    <input name="file" id="file-input" type="file" />
+                    <input name="company" id="toCompany" type="hidden" />
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+            </ul>
+          </form>
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-contact"></div>
+
+
+{% block vacancy %}
+
+
+{% endblock %}
 </body>
 </html>

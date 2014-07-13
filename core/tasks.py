@@ -1,13 +1,14 @@
-
+from django.db import transaction
 from appl.models import *
 from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
-
-from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages
-
+from django.contrib.sites.models import Site
+from tppcenter.forms import ItemForm, Test, BasePhotoGallery, BasePages, custom_field_callback
+from django.contrib.sites.models import Site
 from celery import shared_task, task
 import json
 from appl import func
+from django.conf import settings
 
 
 @shared_task
@@ -72,7 +73,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -84,10 +85,12 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
     category = post.get('CATEGORY', None)
+    #is_b2c_product = post.get('B2C_PRODUCT', None)
 
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
-       dates = {'COUPON_DISCOUNT': [post.get('COUPON_DISCOUNT-START', now()), date]}
+       edate = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-START', None), "%m/%d/%Y") if post.get('COUPON_DISCOUNT-START', False) else now()
+       dates = {'COUPON_DISCOUNT': [edate, date]}
     else:
         dates = None
 
@@ -118,6 +121,17 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             parent = Organization.objects.get(pk=int(current_company))
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
 
+        #site = Site.objects.get(name='centerpokupok')
+
+        #if is_b2c_product:
+         #   product.sites.all().delete()
+          #  product.sites.add(site.pk)
+        #else:
+         #   product.sites.remove(site.pk)
+          #  product.sites.add(Site.objects.get(name='tppcenter').pk)
+
+
+
 
 
         gallery.save(parent=product.id, user=user)
@@ -138,13 +152,15 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
     values = {}
     values.update(post)
     values.update(files)
+
+    category = post.get('CATEGORY', None)
 
 
     form = ItemForm('BusinessProposal', values=values, id=item_id, addAttr=addAttr)
@@ -161,6 +177,13 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
             Relationship.objects.filter(parent__in=Branch.objects.all(), child=proposal.id).delete()
             Relationship.setRelRelationship(parent=branch, child=proposal, user=user)
 
+        if category:
+            category = BpCategories.objects.get(pk=category)
+            rel = Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id)
+            Relationship.objects.filter(parent__in=BpCategories.objects.all(), child=proposal.id).delete()
+            Relationship.setRelRelationship(parent=category, child=proposal, user=user)
+
+
         if current_company:
             Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
 
@@ -176,6 +199,10 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
 @shared_task
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
 
 
     values = {}
@@ -198,7 +225,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
     sizes = {
             'big': {'box': (150, 140), 'fit': False},
             'small': {'box': (70, 70), 'fit': False},
-            'th': {'box':(30, 30), 'fit': True}
+            'th': {'box': (30, 30), 'fit': True}
             }
 
     company = form.save(user, site_id, sizes=sizes)
@@ -221,12 +248,15 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
             Relationship.objects.filter(parent__in=Tpp.objects.all(), child=company.id).delete()
             Relationship.setRelRelationship(parent=tpp, child=company, user=user)
         else:
-            time = now() + datetime.timedelta(days=60)
+            time = now() + datetime.timedelta(days=settings.FREE_PERIOD)
             company.end_date = time
+            company.paid_till_date = time
             company.save()
 
-        g = Group.objects.get(name=company.community)
-        g.user_set.add(user)
+        #this logic was moved into appl.models signal post_save from Department creation
+        #g = Group.objects.get(name=company.community)
+        #g.user_set.add(user)
+        pages.save(parent=company.id, user=user)
         company.reindexItem()
 
 
@@ -296,6 +326,10 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(post, files, prefix="pages")
+    pages.clean()
+
 
     values = {}
     values.update(post)
@@ -333,6 +367,8 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
             Relationship.objects.filter(parent__in=Country.objects.all(), child=tpp.id).delete()
             Relationship.setRelRelationship(parent=country, child=tpp, user=user, type='dependence')
 
+        pages.save(parent=tpp.id, user=user)
+
         tpp.reindexItem()
 
 
@@ -348,7 +384,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -381,6 +417,32 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
     return True
 
 
+@shared_task
+def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+    form = ItemForm('Resume', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+    resume = form.save(user, site_id)
+    if resume:
+        relationship = Relationship.objects.filter(child=resume)
+        if not relationship.exists():
+            Relationship.setRelRelationship(parent=Cabinet.objects.get(user=user), child=resume, type='dependence', user=user)
+
+
+        resume.reindexItem()
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True
+
+
 
 @shared_task
 def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
@@ -388,7 +450,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -437,6 +499,49 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     return True
 
 
+@shared_task
+def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+    vacancy = post.get('VACANCY', False)
+
+
+
+
+
+    form = ItemForm('Requirement', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+
+
+    requirement = form.save(user, site_id)
+    if requirement:
+
+        if vacancy:
+            Relationship.objects.filter(child=requirement, type='dependence').delete()
+            Relationship.setRelRelationship(parent=Vacancy.objects.get(pk=int(vacancy)), child=requirement, type='dependence', user=user)
+
+
+
+
+
+            requirement.reindexItem()
+
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True
+
+
+
 
 @shared_task
 def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
@@ -444,7 +549,7 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
     gallery = Photo(post, files)
 
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, formfield_callback=custom_field_callback)
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
@@ -479,20 +584,12 @@ def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch
     return True
 
 @transaction.atomic
-def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
+def addBannerAttr(post, files, user, site_id, ids, bType, current_company, factor):
     values = {}
 
     values['NAME'] = post.get('NAME', "")
     values['SITE_NAME'] = post.get('SITE_NAME', "")
     values['IMAGE'] = files.get('IMAGE', "")
-
-    form = ItemForm('AdvBanner', values=values)
-    form.clean()
-
-    item = form.save(user, site_id, disableNotify=True)
-
-    if not item:
-        raise Exception('Error occurred while saving form')
 
     stDate = post.get('st_date')
     edDate = post.get('ed_date')
@@ -500,8 +597,8 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
     edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
 
-    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
-    Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
+    values['START_EVENT_DATE'] = stDate
+    values['END_EVENT_DATE'] = edDate
 
     delta = edDate - stDate
     delta = delta.days
@@ -515,7 +612,21 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
 
         cost = costs[id].get('COST', [0])[0]
         costs[id] = cost
-        total += float(cost) * delta
+        total += float(cost) * delta * factor
+
+    values['COST'] = total
+
+    form = ItemForm('AdvBanner', values=values)
+    form.clean()
+
+    item = form.save(user, site_id, disableNotify=True)
+
+    if not item:
+        raise Exception('Error occurred while saving form')
+
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
+    Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
+
 
     if current_company:
         dep = Item.objects.get(pk=current_company)
@@ -564,29 +675,17 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company):
     Relationship.setRelRelationship(dep, item, user=user, type="dependence")
     Relationship.setRelRelationship(dep, ord, user=user, type="relation")
 
+    return ord.pk
+
 
 @transaction.atomic
-def addTopAttr(post, object, user, site_id, ids, org):
-
-    form = ItemForm('AdvTop', values={})
-    form.clean()
-
-    item = AdvTop(create_user=user)
-    item.save()
-
-    if not item:
-        raise Exception('Error occurred while saving form')
-
-    item.sites.add(site_id)
+def addTopAttr(post, object, user, site_id, ids, org, factor):
 
     stDate = post.get('st_date')
     edDate = post.get('ed_date')
 
     stDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
     edDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
-
-    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=edDate)
-    Relationship.setRelRelationship(object, item, user=user, type="dependence")
 
     delta = edDate - stDate
     delta = delta.days
@@ -602,6 +701,24 @@ def addTopAttr(post, object, user, site_id, ids, org):
         costs[id] = cost
         total += float(cost) * delta
 
+    values = {
+        'COST': total,
+        'START_EVENT_DATE': stDate,
+        'END_EVENT_DATE': edDate
+    }
+
+    form = ItemForm('AdvTop', values=values)
+    form.clean()
+
+    item = form.save(user, site_id, disableNotify=True)
+
+    if not item:
+        raise Exception('Error occurred while saving form')
+
+    item.sites.add(site_id)
+
+    Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
+    Relationship.setRelRelationship(object, item, user=user, type="dependence")
 
     history = {
         'costs': costs,
@@ -635,3 +752,42 @@ def addTopAttr(post, object, user, site_id, ids, org):
 
     Relationship.setRelRelationship(item, ord, user=user, type="relation")
     Relationship.setRelRelationship(org, ord, user=user, type="relation")
+
+    return ord.pk
+
+
+@shared_task
+def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang_code=None):
+    trans_real.activate(lang_code)
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(post, files)
+
+    values = {}
+    values.update(post)
+    values.update(files)
+
+
+    form = ItemForm('UserSites', values=values, id=item_id, addAttr=addAttr)
+    form.clean()
+
+    if form.is_valid():
+        site, created = Site.objects.get_or_create(domain=values['NAME'][0] +'.tppcenter.com', name='usersites')
+        user_site = form.save(user, site.pk)
+        if user_site:
+            user_site.organization = Organization.objects.get(pk=company_id)
+            user_site.save()
+            user_site.sites.add(site.pk)
+            user_site.sites.all().exclude(pk=site.pk).delete()
+
+            gallery.save(parent=user_site.id, user=user)
+        else:
+            if created:
+                site.delete()
+
+
+
+        func.notify("item_created", 'notification', user=user)
+
+    trans_real.deactivate()
+    return True

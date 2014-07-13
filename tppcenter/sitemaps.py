@@ -1,6 +1,6 @@
 from django.contrib.sitemaps import Sitemap, FlatPageSitemap
 from django.core.urlresolvers import reverse
-from appl.models import News, Product
+from appl.models import News, Product, Company, InnovationProject, Tpp, BusinessProposal, Exhibition, Tender, TppTV
 from appl.func import getItemsList
 
 
@@ -45,6 +45,50 @@ site_maps = {
         'priority': 0.6,
         'attrValues': getItemsList('Product', 'SLUG')
     },
+    'Company': {
+        'model': Company.active.get_active(),
+        'urls': 'companies:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('Company', 'SLUG')
+    },
+    'InnovationProject': {
+        'model': InnovationProject.active.get_active(),
+        'urls': 'innov:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('InnovationProject', 'SLUG')
+    },
+    'Tpp': {
+        'model': Tpp.active.get_active(),
+        'urls': 'tpp:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('Tpp', 'SLUG')
+    },
+    'BusinessProposal': {
+        'model': BusinessProposal.active.get_active(),
+        'urls': 'proposal:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('BusinessProposal', 'SLUG')
+    },
+    'Exhibition': {
+        'model': Exhibition.active.get_active(),
+        'urls': 'exhibitions:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('Exhibition', 'SLUG')
+    },
+    'Tender': {
+        'model': Tender.active.get_active(),
+        'urls': 'tenders:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('Tender', 'SLUG')
+    },
+    'TppTV': {
+        'model': TppTV.active.get_active(),
+        'urls': 'tv:detail',
+        'priority': 0.6,
+        'attrValues': getItemsList('TppTV', 'SLUG')
+    },
+
+
 }
 
 for model_map, dict_map in site_maps.items():

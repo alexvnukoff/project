@@ -2,17 +2,56 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 
+<script type="text/javascript">
+    $(function(){
+        // save Vacancy list content for swapping and init vacancies for first department
+        savedItems = $('#vacancy-list').html();
+        //remove file attachment from message window through which send message to Staff
+        $('#file-title').remove();
+        $('#file-input').remove();
+
+        // pull Vacancies related to selected Department in popup combobox
+        $(document).on('change','#dep-list', function() {
+			depID = $('#dep-list').find(':selected').data('department');
+			$('#vacancy-list').html(savedItems);
+			$('#vacancy-list option:not([class = ' + depID + '])').remove();
+		});
+
+        // pull Department related to selected Vacancy in popup combobox
+        $(document).on('change','#vacancy-list', function() {
+			depID = $('#vacancy-list').find(':selected').data('department');
+			$('#dep-list option[data-department=' + depID + ']').prop('selected', true);
+            return false;
+		});
+    });
+</script>
+<script>
+    // hide error message on click
+    $(function() {
+        $(document).on('click', '.error-msg p', function() {
+            $(this).fadeOut(800);
+        });
+    });
+</script>
+
+
 <div id="staff-tabs" class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
+            <div class="error-msg">
+                {% if errorMessage %}
+                    <p>{{ errorMessage }}</p>
+                {% endif %}
+            </div>
             <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table-staff">
                 <tr class="top">
                     <td width="24">&nbsp;</td>
                     <td>{% trans "Name" %}</td>
                     <td>{% trans "Department" %}</td>
-                    <td>{% trans "E-mail" %}</td>
-                    <td>{% trans "Join Date" %}</td>
-                    <td class="status">{% trans "Status" %}</td>
+                    <td>{% trans "Position" %}</td>
+                    <td>{% trans "Contact" %}</td>
+                    <td>{% trans "Status" %}</td>
+                    <td class="status"></td>
                 </tr>
 
                 {% for id, attr in workersList.items %}
@@ -22,7 +61,7 @@
                     {% with attr.USER_LAST_NAME|first as l_name %}
                     {% with attr.EMAIL|first as email %}
                     {% with attr.DEPARTMENT|first as department %}
-                    {% with attr.JOINED_DATE|first|date:"d-M-y" as joined_date %}
+                    {% with attr.VACANCY|first as vacancy %}
                     {% with attr.STATUS|first as status %}
 
 
@@ -32,15 +71,28 @@
                                 {% if avatar %}
                                      <img src="{{ MEDIA_URL }}th/{{ avatar }}" alt="{{ l_name }}" />
                                 {% else %}
-                                     <img src="{% static "tppcenter/img/profile_24x24.jpg"  %}" alt="{{ l_name }}" />
+                                     <img style="width: 24px;height: 24px;" src="{% static "tppcenter/img/profile.jpg"  %}" alt="{{ l_name }}" />
                                 {% endif %}
                             </div>
                         </td>
-                        <td><a href="#" title="{{ f_name }} {{ m_name }} {{ l_name }}">{{ f_name }} {{ m_name }} {{ l_name }}</a></td>
+                        {% if attr %}
+                            <td><a href="#" title="{{ f_name }} {{ m_name }} {{ l_name }}">{{ f_name }} {{ m_name }} {{ l_name }}</a></td>
+                        {% else %}
+                            <td><a href="#" title="">{% trans "User with empty profile. Cabinet ID:" %} {{ id }}</a></td>
+                        {% endif %}
                         <td>{{ department }}</td>
-                        <td><a href="#">{{ email }}</a></td>
-                        <td>{{ joined_date }}</td>
-                        <td>{{ status }} <i class="btnremove-small imgnews"></i></td>
+                        <td>{{ vacancy }}</td>
+                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ f_name }} {{ m_name }} {{ l_name }}" data-id="{{ id }}"></i></td>
+                        {% if status == 'Active' %}
+                            <td><i class="staff-status-active img-status"></i></td>
+                        {% else %}
+                            <td><i class="staff-status-passive img-status"></i></td>
+                        {% endif %}
+                        <td>
+                            {% if 'delete_cabinet' in permissionsList %}
+                                <i class="btnremove-small imgnews"></i>
+                            {% endif %}
+                        </td>
                     </tr>
 
                     {% endwith %}
@@ -57,46 +109,57 @@
                 {% endfor %}
 
             </table>
-            <div class="btn-clumn">
-                <i class="btnadd btnaction imgnews addform" id="user-add-button"></i>
-                <!-- <i class="btnremove btnaction imgnews"></i> -->
-            </div>
+            {% if 'add_cabinet' in permissionsList %}
+                <div class="btn-clumn">
+                    <i class="btnadd btnaction imgnews addform" id="user-add-button"></i>
+                    <!-- <i class="btnremove btnaction imgnews"></i> -->
+                </div>
+            {% endif %}
         </div>
     </div>
     {% include "main/paginator.html" %}
 
     <!-- Person add popup window -->
-    <div class="staffadd">
+    <div class="staffadd" id="add-user-popup">
         <i class="close-formadd imgnews"></i>
         <div class="title">Add user</div>
-        <div class="staffaddin">
-            <label>{% trans "Department" %}</label>
-            <select id="dep-list" style="width:62%;">
-                {% for id, attr in departmentsList.items %}
-                {% with attr.NAME|first as department %}
-
-                    <option value="{{ id }}">{{ department }}</option>
-
-                {% endwith %}
-                {% empty %}
-                    <div class="no-results">{% trans "Empty" %}</div>
-                {% endfor %}
-
-            </select>
-            <div class="inputadd">
-                <input type="text" name="" id="user-name" value="" class="text" />
-    <!--       	<span class="button-add" id="btn-sel-user">+</span>
-    -->     </div>
-    <!--    <div class="keyword-formadd">
-                <ul class="list-key">
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                    <li>Анна Николаева<a href="#"><i class="i-close imgnews"></i></a></li>
-                </ul>
-            </div>
-    -->        <div class="formadd-button">
-                <a class="btntype2" id="btn-add-user" href="#">{% trans "Add" %}</a>
-                <a class="btntype1" href="#">{% trans "Cancel" %}</a>
+        <div id="popup-context">
+            <div class="staffaddin">
+                <label>{% trans "Department" %}</label>
+                <select id="dep-list" style="width:62%;">
+                    <option disabled selected>{% trans "Select Department..." %}</option>
+                    {% for id, attr in departmentsList.items %}
+                    {% with attr.NAME|first as department %}
+                        <option data-department="{{ id }}">{{ department }}</option>
+                    {% endwith %}
+                    {% empty %}
+                        <div class="no-results">{% trans "Empty" %}</div>
+                    {% endfor %}
+                </select>
+                <label>{% trans "/Vacancy" %}</label>
+                <select id="vacancy-list" style="width:62%;">
+                    <option disabled selected>{% trans "Select Vacancy..." %}</option>
+                    {% for id, attr in vacanciesList.items %}
+                    {% with attr.NAME|first as vacancy %}
+                    {% with attr.DEPARTMENT_ID|first as dep_id %}
+                        <option data-vacancy="{{ id }}" data-department="{{ dep_id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                    {% endwith %}
+                    {% endwith %}
+                    {% empty %}
+                        <div class="no-results">{% trans "Empty" %}</div>
+                    {% endfor %}
+                </select>
+                <input type="checkbox" name="AdminFlag" value="isAdmin" id="is-admin">{% trans "Administrator" %}
+                <div class="inputadd">
+                    {% if errorMessage %}
+                        <div class="error-handler"> <div class="formserror">{{ errorMessage }}</div></div>
+                    {% endif %}
+                    <input type="text" name="" id="user-name" value="" class="text" />
+                </div>
+                <div class="formadd-button">
+                    <a class="btntype2" id="btn-add-user" href="#">{% trans "Add" %}</a>
+                    <a class="btntype1" href="#">{% trans "Cancel" %}</a>
+                </div>
             </div>
         </div>
     </div>

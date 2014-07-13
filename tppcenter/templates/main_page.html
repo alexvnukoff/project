@@ -4,10 +4,7 @@
 {% load inclusionTags %}
 {% load CustomFilters %}
 
-   {% block title %}{% endblock %}
-
-
-
+    {% block title %}{% endblock %}
 
     {% block header %}
         {% include "login_header.html" %}
@@ -32,8 +29,6 @@
             <script  type="text/javascript" src="{% static "tppcenter/js/async.js"%}"></script>
         {% endif %}
 
-
-
         <script type="text/javascript">
 		$(document).ready(function() {
 			$(".fancybox").fancybox({
@@ -41,13 +36,12 @@
 				closeEffect	: 'none'
 			});
 		});
-        var LANG = {}
+        var LANG = {};
 
             $(document).ready(function(e) {
                 $('#thumbs').delegate('img','click', function(){
                     $('#largeImage').attr('src',$(this).attr('src').replace('thumb','large'));
                 });
-
             });
         </script>
         <script>
@@ -57,19 +51,17 @@
                 uiEvents.init();
             });
         </script>
-            <script type="text/javascript">
+        <script type="text/javascript">
                 $(function() {
                     var cname = 'tab';
                     var ca = document.cookie.split(';');
                     var name = cname + "=";
                     var tab = 0;
 
-                    for(var i=0; i < ca.length; i++)
-                     {
+                    for(var i=0; i < ca.length; i++) {
                          var c = ca[i].trim();
 
-                         if (c.indexOf(name)==0)
-                         {
+                         if (c.indexOf(name)==0) {
                             tab = c.substring(name.length, c.length);
                             break;
                          }
@@ -84,15 +76,32 @@
                         }
                     });
                     $( ".tabfilter" ).tabs();
-
-
                 });
+        </script>
+        <script>
+            // current active menu selection
+            var elem;
+            var orig_bg_color;
+            var orig_font_color = '#0089C1';
+            var sel_bg_color = '#D7D7D9';
+            var sel_font_color = '#FFFFFF'; //white
 
+            $(document).ready(function(){
+                var pathname = window.location.pathname.split('/')[1];
+                elem = $('.tab1-cate > li > a[href*='+pathname+']');
+                orig_bg_color = $(elem).parent('li').css('background-color');
+                $(elem).parent('li').css('background-color', sel_bg_color);
+                $(elem).css('color', sel_font_color);
+            });
 
-
-
-
-            </script>
+            $(document).on('click', '.tab1-cate > li > a', function() {
+                $(elem).parent('li').css('background-color', orig_bg_color);
+                $(elem).css('color', orig_font_color);
+                $(this).parent('li').css('background-color', sel_bg_color);
+                $(this).css('color', sel_font_color);
+                elem = $(this);
+            });
+       </script>
     {% endblock %}
 
 {% block body %}
@@ -115,7 +124,6 @@
 
                     	<li><a class="single-page" href="{% url 'news:main' %}">{% trans 'News' %}</a></li>
                         <li><a class="single-page" href="{% url 'products:main' %}">{% trans 'Products' %}</a></li>
-                      <!---  <li><a class="single-page" href="#">Услуги</a></li>-->
                         <li><a class="single-page" href="{% url 'tpp:main' %}">{%  trans 'Organizations' %}</a></li>
                         <li><a class="single-page" href="{% url 'companies:main' %}">{% trans 'Companies' %}</a></li>
                         <li><a class="single-page" href="{% url 'innov:main' %}">{% trans 'Innovation Projects' %}</a></li>
@@ -123,48 +131,70 @@
                         <li><a class="single-page" href="{% url 'tenders:main' %}">{% trans 'Tenders' %}</a></li>
                         <li><a class="single-page" href="{% url 'exhibitions:main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
-                        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
-                        <!--<li><a class="single-page" href="#">Вакансии</a></li>-->
-                        <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+{% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
+                        <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
+{% endcomment %}        <li><a class="single-page" href="{% url 'tv:main' %}">{% trans 'TPP TV' %} </a></li>
+                        <li><a class="single-page" href="{% url 'vacancy:main' %}">{% trans 'Job requirements' %} </a></li>
+                        <li><a class="single-page" href="{% url 'resume:main' %}">{% trans 'Resume' %}</a></li>
+                        <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
+                        <li><a class="single-page" href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
 
                     </ul>
                 </div>
-            {% if user.email %}
-                <div id="tabs-2">
-                    <ul class="tab1-cate">
-                    	<li><a href="{%url 'news:my_main' %}">{% trans 'News' %}</a></li>
-                        <li><a href="{% url 'products:my_main' %}">{% trans 'Products' %}</a></li>
-                       <!-- <li><a href="#">Услуги</a></li>-->
-                        <li><a href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
-                        <li><a href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
-                        <li><a href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
-                        <li><a href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
-                        <li><a href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
-                        <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
-                        <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
-                        <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
+                {% if user.email %}
+                    <div id="tabs-2">
+                        <ul class="tab1-cate">
+                            {% if user.is_commando or user.is_superuser %}
+                                <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}">{% trans 'Admin Panel' %}</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'news:my_main' %}">{% trans 'News' %}</a></li>
+                            <li><a href="{% url 'products:my_main' %}">{% trans 'Products' %}</a></li>
+                            <li><a href="{% url "tpp:my_main" %}">{% trans 'Organizations' %}</a></li>
+                            <li><a href="{% url "companies:my_main" %}">{% trans 'Companies' %}</a></li>
+                            <li><a href="{% url "innov:my_main" %}">{% trans 'Innovation Projects' %}</a></li>
+                            <li><a href="{% url 'proposal:my_main' %}">{% trans 'Business Proposals'  %}</a></li>
+                            <li><a href="{% url 'tenders:my_main' %}">{% trans 'Tenders' %}</a></li>
+                            <li><a href="{% url 'exhibitions:my_main' %}">{% trans 'Exhibitions / Forums' %}</a></li>
 
-                        <!--<li><a href="#">ТПП ТВ </a></li>-->
-                       <!-- <li><a href="#">Вакансии</a></li>-->
-                        <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
-                        <!-- <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>-->
-                    </ul>
-                </div>
-            {% endif %}
-
+    {% comment %}           <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'Leasing' %}</a></li>
+                            <li><a style="color: #a9a9a9;" title="Coming soon..." href="">{% trans 'v-Storage' %}</a></li>
+    {% endcomment %}
+                            <li><a href="{% url 'adv_banners:main' %}">{% trans 'Banners' %}</a></li>
+                            <li><a href="{% url 'Adv:main' %}">{% trans 'Advertisement' %}</a></li>
+                            <li><a href="{% url 'analytic:main' %}">{% trans 'Analytic' %}</a></li>
+                            <li><a href="{% url 'site:main' %}">{% trans 'Site' %}</a></li>
+                            <li><a href="{% url 'vacancy:my_main' %}">{% trans 'Job requirements' %}</a></li>
+                            <li><a href="{% url 'resume:my_main' %}">{% trans 'Resume' %}</a></li>
+                            <li><a href="{% url "profile:main" %}">{% trans 'Profile' %}</a></li>
+                            <li><a href="{% url "messages:main" %}">{% trans 'Messages' %}</a></li>
+                            <li><a class="single-page" href="{% url "users:main" %}">{% trans 'Users' %}</a></li>
+    {% comment %}           <li><a href="{% url "wall:main" %}">{% trans 'Wall' %}</a></li>
+    {% endcomment %}    </ul>
+                    </div>
+                {% endif %}
             </div>
-            <script>
+            <div class="banner-wrapper-left">
 
-            </script>
-             <div class="banner-wrapper-left">
-            {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
-             </div>
+                {% block addv_news_left %}
+
+                {% endblock %}
+                <!-- Booking.com injection -->
+                <div class="bannerleft">
+                    <iframe src="https://www.booking.com/general.html?aid=388214&tmpl=searchbox&label=booking&width=200&bgcolor=FFF09C&lang=en"
+                            height="237" width="100%" frameborder="0" scrolling="no" name="sbox_iframe"
+                            style="padding: 0 0 0 0;">
+                    </iframe>
+                </div>
+                <!-- /Booking.com injection -->
+                {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
+            </div>
         </div>
     {% endblock %}
         {% block center %}
             <div class="news-center">
                 <div  class="keyword">
                     {% block keywords %}
+                        <div class="showFilter">
                         <i class="icon-key imgnews" id="filter-link"></i>
                         <ul class="list-key">
                         </ul>
@@ -173,6 +203,7 @@
                             <input type="text" name="q" value="{% searchQuery %}" placeholder="{% trans "Find.." %}" class="text" />
                             <input type="submit" name="" value="" class="i-search imgnews" />
                         </form>
+                        </div>
                         </div>
                     {% endblock %}
                 </div>
@@ -188,14 +219,18 @@
                 <div class="bannerleft nomargin">
                    {% right_tv %}
                 </div>
+
+                {% block addv_news %}
+                {% endblock %}
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
                  </div>
             </div>
+
         {% endblock %}
 
-    </div>
+</div>
 
 {% endblock %}
 

@@ -11,7 +11,7 @@ from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import trans_real, ugettext as _
 from django.utils.timezone import now
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
@@ -78,7 +78,8 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
 
 def _exhibitionsDetailContent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
@@ -121,8 +122,8 @@ def _exhibitionsDetailContent(request, item_id):
     else:
         rendered = cache.get(cache_name)
         result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        description = result[0] if isinstance(result, list) else ""
+        title = result[1] if isinstance(result, list) else ""
 
     return rendered, description, title
 
@@ -139,11 +140,9 @@ def exhibitionForm(request, action, item_id=None):
 
     if action == 'delete':
         exhibitionPage = deleteExhibition(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         exhibitionPage = addExhibition(request)
-
-    if action == 'update':
+    elif action == 'update':
         exhibitionPage = updateExhibition(request, item_id)
 
     if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):
@@ -201,7 +200,7 @@ def addExhibition(request):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                   current_company=current_company, lang_code=settings.LANGUAGE_CODE)
+                                   current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
@@ -265,7 +264,7 @@ def updateExhibition(request, item_id):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                   branch=branch, lang_code=settings.LANGUAGE_CODE)
+                                   branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 

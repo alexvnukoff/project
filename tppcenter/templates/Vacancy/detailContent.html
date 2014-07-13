@@ -1,0 +1,109 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+
+
+
+  <div class="vacancy-dt">
+
+            {% with requirementValues.NAME.0 as name %}
+            {% with requirementValues.DETAIL_TEXT.0 as detail_text %}
+            {% with requirementValues.CITY.0 as city %}
+            {% with requirementValues.TYPE_OF_EMPLOYMENT.0 as type_of_employements %}
+            {% with requirementValues.REQUIREMENTS.0 as requirements %}
+            {% with requirementValues.TERMS.0 as terms %}
+            {% with requirementValues.IS_ANONYMOUS_VACANCY.0 as is_anonymous %}
+            {% with requirementValues.CREATE_DATE.0 as create_date %}
+
+            {% with organizationValues.NAME.0 as org_name %}
+             {% with organizationValues.SLUG.0 as org_slug %}
+
+
+
+
+
+               <div class="tender-info">
+					<span class="title">{{ name }}</span>
+                    <div class="vacancy-button"><a href="#" id="send-resume" class="bigbuy">{% trans 'Send Resume' %}</a></div>
+                    <ul class="inforesume">
+                    	<li>
+                        	<label>{% trans 'Date' %}:</label>
+                            <span class="right">{{ create_date|date:'d M Y' }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Company' %}:</label>
+                            <span class="right">
+                                {% if is_anonymous %}
+                                    {% trans 'Anonymous company' %}
+                                {% else %}
+                                <a href="{% url 'companies:detail' org_slug %}">{{ org_name }}</a>
+                                {% endif %}
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="social">
+                        <!-- Share for social networks -->
+                        <a href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-1"></i></a>
+                        <a href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-2"></i></a>
+                        <!--<a href="http://connect.mail.ru/share?url=URL&title=TITLE&description=DESC&imageurl=IMG_PATH" target="_blank" onclick="return Share.me(this);">{шарь меня правильно}</a>-->
+                        <a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-3"></i></a>
+                        <a href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)"><i class="imgnews share-4"></i></a>
+                        <!-- /Share for social networks -->
+                    </div>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
+
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                            	<ul class="innov-tab-content">
+
+                                    <li>
+                                    	<label>{% trans 'Type of employments' %}</label>
+                                        <p>{{ type_of_employements }}</p>
+                                    </li>
+
+                                    <li>
+                                    	<label>{% trans 'Description' %}</label>
+                                       <p>{{ detail_text }}</p>
+                                    </li>
+                                    <li>
+                                    	<label>{% trans 'Requirements' %}</label>
+                                        <p>{{ requirements }}</p>
+                                    </li>
+                                    <li>
+                                    	<label>{% trans 'Terms' %}</label>
+                                        <p>{{ terms }}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                   </div>
+               </div>
+
+
+
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+
+
+
+     </div>
+
+

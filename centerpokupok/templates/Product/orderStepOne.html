@@ -27,12 +27,12 @@
         {% csrf_token %}
 			<div class="listitemcart">
 				<span class="title">{%  trans "Ordering"%}</span>
-                {% with address.ZIP|first as zip %}
+                {% with address.ADDRESS_ZIP|first as zip %}
                 {% with address.SHIPPING_NAME|first as name %}
                 {% with address.ADDRESS|first as addr %}
-                {% with address.COUNTRY|first as country %}
+                {% with address.ADDRESS_COUNTRY|first as country %}
                 {% with address.TELEPHONE_NUMBER|first as telephone %}
-                {% with address.CITY|first as city %}
+                {% with address.ADDRESS_CITY|first as city %}
                 <div class="listitemcart">
 			       <ul id="itemcart">
 					<li>

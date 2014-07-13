@@ -1,0 +1,57 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="container">
+    <div class="companies">
+    {% include "Wall/popupFilter.html" %}
+{% include "main/local_menu_script.html" %}
+
+{% include "main/paginator.html" %}
+            <ul class="tender-list">
+                {% for id , attr in resumeValues.items %}
+                    {% with attr.NAME.0 as name %}
+                    {% with attr.SLUG.0 as slug %}
+                    {% with attr.CREATE_DATE.0 as date %}
+                    {% with attr.CABINET as cabinet %}
+
+                    <li>
+
+                    {% resolve items_perms id|slugify as permlist %}
+
+                    {% if 'delete_resume' in  permlist or 'change_resume' in permlist %}
+                    <div class="blockbox">
+                            <a href="#"><i class="btn-afisha imgnews"></i></a>
+                            <div class="localmenu">
+
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'resume:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+
+
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'resume:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="title">
+
+                            <font class="name">{% trans 'Publication date' %}: {{ date|date:"d M Y" }}</font>
+                        </div>
+                        <h2><a href="{% url "resume:detail" slug %}" >{{ name }}</a></h2>
+
+                        <a href="{% url "resume:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <div class="line">{% trans 'User name' %}:{% if cabinet %}<a href="#"> {{ cabinet }}</a>{% endif %}</div>
+                    </li>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                {% empty %}
+                    <div class="no-results">{% trans "No results found" %}</div>
+                {% endfor %}
+
+            </ul>
+    {% include "main/paginator.html" %}
+
+    </div>
+</div>

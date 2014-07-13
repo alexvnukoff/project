@@ -20,6 +20,7 @@ urlpatterns = patterns('',
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "update"}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "delete"}, name="delete"),
      url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Companies.views.get_companies_list, name="detail"),
+     url(r'^send/$', tppcenter.Companies.views.sendMessage),
 
 
 
@@ -39,4 +40,9 @@ urlpatterns = patterns('',
      url(r'^tabs/proposal/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsProposals, name="tab_proposal_paged"),
      url(r'^tabs/innov/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov"),
      url(r'^tabs/innov/(?P<company>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsInnovs, name="tab_innov_paged"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/$', tppcenter.Companies.views._tabsGallery, name="tabs_gallery"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views._tabsGallery, name="tabs_gallery_paged"),
+     url(r'^tabs/gallery_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Companies.views.galleryStructure, name="gallery_structure"),
+     url(r'^tabs/gallery/remove/(?P<item>[0-9]+)/$', tppcenter.Companies.views.galleryRemoveItem, name="gallery_remove_item"),
+
 )

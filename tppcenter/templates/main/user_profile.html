@@ -1,93 +1,94 @@
 {% load CustomFilters %}
 {% load i18n %}
 {% load staticfiles %}
-        {% with cabinetValues.EMAIL|first as email %}
-        {% with cabinetValues.COUNTRY|first as country %}
-        {% with cabinetValues.LOGIN|first as login %}
-        {% with cabinetValues.SKYPE|first as skype %}
-        {% with cabinetValues.PROFESSION|first as profession %}
-        {% with cabinetValues.MOBILE_NUMBER|first as mobile_number %}
-        {% with cabinetValues.BIRTHDAY|first as birthday %}
-        {% with cabinetValues.PERSONAL_STATUS|first as personal_status %}
-        {% with cabinetValues.SEX|first as sex %}
-        {% with cabinetValues.SITE_NAME|first as site_name %}
-        {% with cabinetValues.ICQ|first as icq %}
-        {% with cabinetValues.USER_MIDDLE_NAME|first as user_middle_name %}
-        {% with cabinetValues.USER_FIRST_NAME|first as user_first_name %}
-        {% with cabinetValues.USER_LAST_NAME|first as user_last_name %}
-        {% with cabinetValues.IMAGE|first as image %}
-        {% with cabinetValues.TELEPHONE_NUMBER|first as telephone_number %}
 
-     <div class="white_content" id="light-profile">
+{% with cabinetValues.EMAIL|first as email %}
+{% with cabinetValues.COUNTRY|first as country %}
+{% with cabinetValues.LOGIN|first as login %}
+{% with cabinetValues.SKYPE|first as skype %}
+{% with cabinetValues.PROFESSION|first as profession %}
+{% with cabinetValues.MOBILE_NUMBER|first as mobile_number %}
+{% with cabinetValues.BIRTHDAY|first as birthday %}
+{% with cabinetValues.PERSONAL_STATUS|first as personal_status %}
+{% with cabinetValues.SEX|first as sex %}
+{% with cabinetValues.SITE_NAME|first as site_name %}
+{% with cabinetValues.ICQ|first as icq %}
+{% with cabinetValues.USER_MIDDLE_NAME|first as user_middle_name %}
+{% with cabinetValues.USER_FIRST_NAME|first as user_first_name %}
+{% with cabinetValues.USER_LAST_NAME|first as user_last_name %}
+{% with cabinetValues.IMAGE|first as image %}
+{% with cabinetValues.TELEPHONE_NUMBER|first as telephone_number %}
+
+<div class="white_content" id="light-profile">
     <div class="profile-table">
         <div class="profile-tablein">
-            <div class="profile-title">{% trans 'User profile' %}</div>
-            <div class="profile-main">
-            	<div class="avatar">
-                    {% if image %}
-                	    <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" />
-                    {% else %}
-                        <img src="{% static "tppcenter/img/profile.jpg" %}" alt="{{ user_last_name }}" />
-                    {% endif %}
-                    <p class="name">{{ personal_status }}</p>
-                </div>
-                <ul class="profile-info">
-                	<li>
-                    	<span class="left">{% trans 'Last name' %} </span>
-                        <span class="right">{{ user_last_name }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">{% trans 'First name' %}</span>
-                        <span class="right">{{ user_first_name }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">{% trans 'Middle name' %}</span>
-                        <span class="right">{{ user_middle_name }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">{% trans 'Email' %}</span>
-                        <span class="right">{{ email }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">{% trans 'Login' %}</span>
-                        <span class="right">{{ login }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">{% trans 'WWW' %}</span>
-                        <span class="right">{{ site_name }}</span>
-                    </li>
-                    <li>
-                    	<span class="left">ICQ</span>
-                        <span class="right">{{ icq }}</span>
-                    </li>
+        <div class="profile-title">{% trans 'User profile' %}</div>
+        <div class="profile-main">
+            <div class="avatar">
+                {% if image %}
+                    <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ user_last_name }}" title="{{ user_last_name }}" />
+                {% else %}
+                    <img src="{% static "tppcenter/img/profile.jpg" %}"  />
+                {% endif %}
+                <p class="name">{{ personal_status }}</p>
+            </div>
+            <ul class="profile-info">
+                <li>
+                    <span class="left">{% trans 'Last name' %} </span>
+                    <span class="right">{{ user_last_name }}</span>
+                </li>
+                <li>
+                    <span class="left">{% trans 'First name' %}</span>
+                    <span class="right">{{ user_first_name }}</span>
+                </li>
+                <li>
+                    <span class="left">{% trans 'Middle name' %}</span>
+                    <span class="right">{{ user_middle_name }}</span>
+                </li>
+                <li>
+                    <span class="left">{% trans 'Email' %}</span>
+                    <span class="right">{{ email }}</span>
+                </li>
+                <li>
+                    <span class="left">{% trans 'Login' %}</span>
+                    <span class="right">{{ login }}</span>
+                </li>
+                <li>
+                    <span class="left">{% trans 'WWW' %}</span>
+                    <span class="right">{{ site_name }}</span>
+                </li>
+                <li>
+                    <span class="left">ICQ</span>
+                    <span class="right">{{ icq }}</span>
+                </li>
                 </ul>
                 <ul class="profile-info prf-clumn">
-                	<li>
-                    	<span class="left">{% trans 'Country' %}</span>
+                    <li>
+                        <span class="left">{% trans 'Country' %}</span>
                         <span class="right">{{ country  }}</span>
                     </li>
                     <li>
-                    	<span class="left">{% trans 'Sex' %}</span>
+                        <span class="left">{% trans 'Sex' %}</span>
                         <span class="right">{{ sex }}</span>
                     </li>
                     <li>
-                    	<span class="left">{% trans 'Birthday' %}</span>
+                        <span class="left">{% trans 'Birthday' %}</span>
                         <span class="right">{{ birthday|makeDate|date:'d M Y' }}</span>
                     </li>
                     <li>
-                    	<span class="left">{% trans 'Telephone number' %}</span>
+                        <span class="left">{% trans 'Telephone number' %}</span>
                         <span class="right">{{ telephone_number }}</span>
                     </li>
                     <li>
-                    	<span class="left">{% trans 'Mobile number' %}</span>
+                        <span class="left">{% trans 'Mobile number' %}</span>
                         <span class="right">{{ mobile_number }}</span>
                     </li>
                     <li>
-                    	<span class="left">Skype</span>
+                        <span class="left">Skype</span>
                         <span class="right">{{ skype }}</span>
                     </li>
                     <li>
-                    	<span class="left">{% trans 'Profession' %}</span>
+                        <span class="left">{% trans 'Profession' %}</span>
                         <span class="right">{{ profession }}</span>
                     </li>
                 </ul>
@@ -95,19 +96,19 @@
         </div>
     </div>
 </div>
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
-       {% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}

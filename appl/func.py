@@ -1,3 +1,5 @@
+import urllib
+from django.http import QueryDict
 from core.models import *
 from appl.models import *
 from django.db.models import Count, F
@@ -10,6 +12,7 @@ from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
 from django.core.cache import cache
+
 def getPaginatorRange(page):
     '''
     Method that get page object and return paginatorRange ,
@@ -105,7 +108,7 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
 
     return attributeValues, page  #Return List Item and Page object of current page
 
-#TODO: Jenya change func name
+
 def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     '''
     Method  return List of Item of specific class including Pagination
@@ -113,6 +116,7 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     attr = (list of item's attributes)
     page = number of current page
     '''
+
     clsObj = (globals()[cls])
 
     if not issubclass(clsObj, Item):
@@ -271,7 +275,7 @@ def setStructureForHiearhy(dictinory, items):
     '''
     level = 0
     dictStructured = {}
-    #TODO: Parent not always be first because of sorting
+
     for node in dictinory:
         if node['LEVEL'] == 1:
             nameOfList = items[node['ID']]['NAME'][0].strip()
@@ -438,6 +442,9 @@ def findKeywords(tosearch):
 
 
 def notify(message_type, notificationtype, **params):
+    '''
+
+    '''
     user = params['user']
     params['user'] = user.pk
     message = SystemMessages.objects.get(type=message_type)
@@ -572,22 +579,48 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 
 
 
-def addDictinoryWithCountryToCompany(ids, itemList):
+def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
 
         countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
         countries_id = [country['pk'] for country in countries]
         countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
-
         for country in countries:
             country_dict[country['p2c__child']] = country['pk']
+
+        organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='relation').values('p2c__child', 'pk')
+        organizations_ids = [organization['pk'] for organization in organizations]
+        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
+        organizations_dict = {}
+        for organization in organizations:
+            organizations_dict[organization['p2c__child']] = organization['pk']
+
 
         for id, company in itemList.items():
             toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
                         'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
                         'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
                         'COUNTRY_ID':  country_dict.get(id, 0)}
-            company.update(toUpdate)
+            try:
+                company.update(toUpdate)
+            except Exception as e:
+                print('Passed Company ID:'+id+'has not attribute list. The reason is:'+e+'Please, rebuild index.')
+                pass
+            if add_organization:
+                if organizations_dict.get(id, False):
+                    if organizationIsCompany(id):
+                        url = 'companies:detail'
+                    else:
+                        url = 'tpp:detail'
+
+                    toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                                'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                                'ORGANIZATION_URL': url}
+                    company.update(toUpdate)
+
+
 
 
 
@@ -648,7 +681,7 @@ def organizationIsCompany(item_id):
         return True
     return False
 
-def filterLive(request):
+def filterLive(request, model_name=None):
     '''
         Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
 
@@ -656,6 +689,27 @@ def filterLive(request):
 
 
     '''
+    if model_name:
+        if request.GET and not request.session.get(model_name, False):
+            request.session[model_name] = request.GET.urlencode()
+            getParameters = QueryDict(request.session.get(model_name, False))
+        elif len(request.GET) > 1 and request.GET.urlencode() != request.session.get(model_name, ""):
+            if 'filter' in request.GET.urlencode():
+                 request.session[model_name] = request.GET.urlencode()
+                 getParameters = QueryDict(request.session.get(model_name, ""))
+            else:
+                del request.session[model_name]
+                getParameters = QueryDict(request.session.get(model_name, ""))
+
+
+        elif request.session.get(model_name, False):
+            getParameters = QueryDict(request.session.get(model_name, False))
+        else:
+            getParameters = request.GET
+    else:
+        getParameters = request.GET
+
+
 
     searchFilter = []
     filtersIDs = {}
@@ -663,14 +717,15 @@ def filterLive(request):
     ids = []
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'branch']
+    filterList = ['tpp', 'country', 'company', 'branch', 'bp_category']
 
     #get all filter parameters from request GET
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
 
-        for pk in request.GET.getlist('filter[' + name + '][]', []):
+
+        for pk in getParameters.getlist('filter[' + name + '][]', []):
             try:
                 filtersIDs[name].append(int(pk))
             except ValueError:
@@ -775,27 +830,27 @@ def getTops(request, filterAdv=None):
     '''
 
     models = {
-        Product: {
+        Product.__name__: {
             'count': 5, #Limit of this type to fetch
             'text': _('Products'), #Title
             'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
         },
-        InnovationProject: {
+        InnovationProject.__name__: {
             'count': 5,
             'text': _('Innovation Projects'),
             'detailUrl': 'innov:detail'
         },
-        Company: {
+        Company.__name__: {
             'count': 5,
             'text': _('Companies'),
             'detailUrl': 'companies:detail'
         },
-        BusinessProposal: {
+        BusinessProposal.__name__: {
             'count': 5,
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
-        Exhibition: {
+        Exhibition.__name__: {
             'count': 5,
             'text': _('Exhibitions'),
             'detailUrl': 'exhibitions:detail'
@@ -807,9 +862,9 @@ def getTops(request, filterAdv=None):
 
     for model, modelDict in models.items():
 
-        sub = model.objects.all()
         #Get all active context advertisement of some specific type
-        top = AdvTop.active.get_active().filter(c2p__parent=sub, c2p__type="dependence").values_list('c2p__parent', flat=True)
+        top = AdvTop.active.get_active().filter(c2p__parent__contentType__model=model.lower(), c2p__type="dependence")\
+            .values_list('c2p__parent', flat=True)
 
 
         if filterAdv is not None and len(filterAdv) > 0: #Do we have some filters depended on current page ?
@@ -819,11 +874,9 @@ def getTops(request, filterAdv=None):
 
         tops = list(top)
 
-        sModel = model.__name__
-
         if len(tops) > 0:
             topList += tops
-            modelTop[sModel] = tops
+            modelTop[model] = tops
 
 
     topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
@@ -837,23 +890,20 @@ def getTops(request, filterAdv=None):
 
         for model in models:
 
-
-            sModel = model.__name__
-
-            if sModel not in modelTop:
+            if model not in modelTop:
                 continue
 
 
-            if sModel not in tops:
-                tops[sModel] = {}
-                tops[sModel]['MODEL'] = models[model] #Some template helper
-                tops[sModel]['elements'] = {} #Items with attributes are stored here
-                tops[sModel]['ids'] = [] #List of items to get their flags
+            if model not in tops:
+                tops[model] = {}
+                tops[model]['MODEL'] = models[model] #Some template helper
+                tops[model]['elements'] = {} #Items with attributes are stored here
+                tops[model]['ids'] = [] #List of items to get their flags
 
-            if id in modelTop[sModel]:
+            if id in modelTop[model]:
                 attrs['DETAIL_TEXT'] = cleanFromHtml(attrs.get('DETAIL_TEXT', [''])[0])
-                tops[sModel]['elements'][id] = attrs
-                tops[sModel]['ids'].append(id)
+                tops[model]['elements'][id] = attrs
+                tops[model]['ids'].append(id)
 
                 break
 
@@ -910,12 +960,9 @@ def getListAdv(request):
 
         if name != 'tpp': #Add filter items to advertisement filter
             filtersAdv += ids
-        else:
-            sqs = getActiveSQS().models(Tpp)
 
-            if len(ids) > 0:
-                sqs = sqs.filter(django_id__in=ids)
-
+        elif len(ids) > 0:
+            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
 
             for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
@@ -937,17 +984,29 @@ def emptyCompany():
      page = template.render(context)
      return page
 
-def permissionDenied():
+def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      template = loader.get_template('permissionDenied.html')
      request = get_request()
-     context = RequestContext(request, {})
+     context = RequestContext(request, {'message': message})
      page = template.render(context)
      return page
 
-def setContent(request, model, attr, url, template_page, page_num, page=1, my=None):
+def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
+    if 'category' in kwargs:
+        category = kwargs['category']
+    else:
+        category = None
 
     cached = False
-    cache_name = "%s_list_result_page_%s" % (model.__name__, page)
+    lang = settings.LANGUAGE_CODE
+    url_parameter = []
+
+    if category:
+         cache_name = "category_%s_list_result_page_%s" % (model.__name__, page)
+         url_parameter = category
+    else:
+         cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
+
     query = request.GET.urlencode()
 
     q = request.GET.get('q', '')
@@ -958,11 +1017,14 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     if not cached:
 
         if not my:
-            filters, searchFilter = filterLive(request)
+            filters, searchFilter = filterLive(request, model_name=model.__name__)
 
-            sqs = getActiveSQS().models(model)
+            sqs = getActiveSQS().models(model).order_by('-obj_create_date')
             if model is News:
-               sqs = sqs.filter(categories__gt=0)
+               if category:
+                   sqs = sqs.filter(categories=category)
+               else:
+                   sqs = sqs.filter(categories__gt=0)
 
             if len(searchFilter) > 0: #Got filter values
                 sqs = sqs.filter(searchFilter)
@@ -997,7 +1059,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                     order.append(sortFields[sortField2])
 
             proposal = sqs.order_by(*order)
-            url_paginator = "%s:paginator" % (url)
+
+            if category:
+                url_paginator = "news:news_categories_paginator"
+            else:
+                url_paginator = "%s:paginator" % (url)
 
             params = {
                 'filters': filters,
@@ -1011,7 +1077,13 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             current_organization = request.session.get('current_company', False)
 
             if current_organization:
-                if model != Tpp:
+                if model == Company:
+                    cab = Cabinet.objects.get(user=request.user.pk)
+
+                    #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+                    proposal = Company.active.get_active().filter(Q(create_user=request.user) |
+                                                            Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+                elif model != Tpp:
                     proposal = getActiveSQS().models(model).\
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
@@ -1045,8 +1117,11 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
 
 
+        if model == Company:
+            addDictinoryWithCountryToCompany(proposal_ids, proposalList, add_organization=True)
+        else:
+            addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
-        addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
         page = result[1]
         paginator_range = getPaginatorRange(page)
@@ -1060,6 +1135,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'proposalList': proposalList,
             'page': page,
             'paginator_range': paginator_range,
+            'url_parameter' : url_parameter,
             'url_paginator': url_paginator,
             'items_perms': items_perms,
             'current_path': request.get_full_path(),
@@ -1129,5 +1205,14 @@ def cachePisibility(request):
                     query.find('filter') == -1 and q == '':
 
             return True
+
+    return False
+
+def show_toolbar(request):
+
+    if request.user.is_authenticated():
+        if request.user.is_superuser:
+            return True
+
 
     return False

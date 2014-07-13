@@ -1,3 +1,4 @@
+
 from appl import func
 from appl.models import News, Organization, NewsCategories, Gallery, Country
 from core.models import Item, Group
@@ -12,9 +13,9 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.feedgenerator import Rss201rev2Feed
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
-from tppcenter.forms import ItemForm,BasePhotoGallery
+from tppcenter.forms import ItemForm ,BasePhotoGallery
 from pytz import timezone
 import pytz
 import json
@@ -22,7 +23,7 @@ import json
 from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None):
+def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=None):
 
 
     if item_id:
@@ -30,6 +31,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
          return HttpResponseNotFound()
 
     description = ""
+    add_news = False
     title = ""
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -41,13 +43,14 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
     try:
         if not item_id:
             attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
-            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my)
+            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my, category=category)
 
         else:
             result = _getdetailcontent(request, item_id)
             newsPage = result[0]
             description = result[1]
             title = result[2]
+            add_news = True
 
     except ObjectDoesNotExist:
         newsPage = func.emptyCompany()
@@ -68,7 +71,9 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'addNew': reverse('news:add'),
             'description': description,
-            'title': title
+            'title': title,
+            'add_news': add_news
+
         }
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
@@ -77,7 +82,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None):
         serialize = {
             'styles': styles,
             'scripts': scripts,
-            'content': newsPage
+            'content': newsPage,
+
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -95,11 +101,9 @@ def newsForm(request, action, item_id=None):
 
     if action == 'delete':
        newsPage = deleteNews(request, item_id)
-
-    if action == 'add':
+    elif action == 'add':
         newsPage = addNews(request)
-
-    if action == 'update':
+    elif action == 'update':
         newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
@@ -155,7 +159,7 @@ def addNews(request):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
-                                   lang_code=settings.LANGUAGE_CODE)
+                                   lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('news:main'))
 
@@ -230,7 +234,7 @@ def updateNew(request, item_id):
             func.notify("item_creating", 'notification', user=request.user)
 
             addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                   lang_code=settings.LANGUAGE_CODE)
+                                   lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('news:main'))
 
@@ -262,7 +266,8 @@ def updateNew(request, item_id):
 
 def _getdetailcontent(request, item_id):
 
-    cache_name = "detail_%s" % item_id
+    lang = settings.LANGUAGE_CODE
+    cache_name = "%s_detail_%s" % (lang, item_id)
     description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
@@ -279,7 +284,7 @@ def _getdetailcontent(request, item_id):
             newsCategory = NewsCategories.objects.get(p2c__child=item_id)
             category_value = newsCategory.getAttributeValues('NAME')
             newValues.update({'CATEGORY_NAME': category_value})
-            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
+            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id, ).exclude(id=new.id)[:3]
             similar_news_ids = [sim_news.pk for sim_news in similar_news]
             similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
         except ObjectDoesNotExist:
@@ -294,7 +299,8 @@ def _getdetailcontent(request, item_id):
             'newValues': newValues,
             'photos': photos,
             'similarValues': similarValues,
-            'item_id': item_id
+            'item_id': item_id,
+
         }
 
         context = RequestContext(request, templateParams)
@@ -421,7 +427,7 @@ class NewsFeed(Feed):
 
     def item_extra_kwargs(self, item):
         video_url = reverse('news:detail', args=[item.getAttributeValues('SLUG')[0]]) if item.getAttributeValues('YOUTUBE_CODE') else False
-        image = (settings.MEDIA_URL + 'big/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues('IMAGE') else False
+        image = (settings.MEDIA_URL + 'original/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues('IMAGE') else False
 
         return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
 
