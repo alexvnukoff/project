@@ -9,8 +9,8 @@ body{ margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:1
 box-shadow:0 6px 6px -4px #e5e5e5; font-family: 'robotothin',Arial,sans-serif;}
 .header-r li .icon-l{ display:table-cell; width:55px; height:70px; border-right:1px #efeff0 solid; text-align:center; vertical-align:middle;}
 .header-r li a{ color:#888;}
-.header-r li .text-r{  display:table-cell; width:120px; padding-left:10px; font-size:16px; font-weight:normal; text-shadow:0px 2px 3px #eaeaea; vertical-align:middle;}
-.header-r li .iconsv1{ display:inline-block; width:30px; height:45px; background-position:0px -226px; vertical-align:middle;}
+.header-r li .text-r{  display:table-cell; width:120px; padding-left:10px; font-size:16px; font-weight:normal; text-shadow:0 2px 3px #eaeaea; vertical-align:middle;}
+.header-r li .iconsv1{ display:inline-block; width:30px; height:45px; background-position:0 -226px; vertical-align:middle;}
 .header-r li .iconsv2{ display:inline-block; width:45px; height:32px; background-position:-32px -226px;}
 .header-r li .iconsv3{ display:inline-block; width:36px; height:50px; background-position:-80px -226px;}
 .tophead{ display:inline-block; width:100%; height:34px; background-color:#f5f5f5;
@@ -20,9 +20,9 @@ background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#f
 .tophead-l a:hover{ color:#0089bc; text-decoration:none;}
 .tophead-r{ float:right; line-height:34px; color:#9b9b9b; padding-right:20px;}
 .tophead-r a{ color:#0089bc; padding:0 5px;}
-.i-lock{ display:inline-block; width:16px; height:18px; background-position:0px 1px; margin:0 5px 0 0; vertical-align:middle;}
+.i-lock{ display:inline-block; width:16px; height:18px; background-position:0 1px; margin:0 5px 0 0; vertical-align:middle;}
 .tophead-r a:hover{ text-decoration:underline;}
-#logo{ position:relative; float:left; width:286px; height:98px; margin:22px 0 0 0; background-position:0px 0px;}
+#logo{ position:relative; float:left; width:286px; height:98px; margin:22px 0 0 0; background-position:0 0;}
 #search{ position:relative; float:right; width:612px; padding:10px 6px 10px 10px; background-color:#4a4a4a; border-radius:3px; margin:30px 20px 0 0; display:inline;}
 .styled-select, .styled-select2{ position:relative; float: left; width: 200px; height: 30px; background: url(../img/arrowselect.png) no-repeat right #e6e6e6; margin: 0 4px 0 0;}
 .styled-select .textfilter, .styled-select .texttype, .styled-select .textpart{ position:relative; float:left; width:100%; height:100%; line-height:30px; color:#9b9b9b; text-indent:12px;}
@@ -123,7 +123,7 @@ border-style:solid; border-width: 20px 0 0 16px; border-color: transparent trans
 .pr-best-price li .thumb img{max-width: 150px;max-height: 150px;position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;}
 .pr-best-price li .location{ float:left; width:100%; margin:8px 0 0 0;}
 .pr-best-price li .location .flag{ float:left; width:18px; height:12px; margin:3px 0 0 0;}
-.pr-best-price li .location a{ float:left; color:#0089bc; padding-left:6px; width:84%;}
+.pr-best-price li .location a{ float:left; color:#0089bc; padding-left:6px; width:84%; word-wrap: break-word;}
 .review{ position:relative; float:left; width:100%; margin:30px 0 0 0;}
 .review-l{ float:left; width:240px;}
 .review-l h3{ display:inline-block; font-size:24px; font-weight:300; font-family: 'Roboto', sans-serif; color:#444; padding-bottom:5px;}
