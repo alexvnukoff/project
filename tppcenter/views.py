@@ -401,7 +401,7 @@ def jsonFilter(request):
             if not q:
                 sqs = SearchQuerySet().models(model).order_by('title_sort')
             else:
-                sqs = SearchQuerySet().models(model).autocomplete(title_auto=q).order_by('title_sort')
+                sqs = SearchQuerySet().models(model).filter(title_auto=request.GET.get('q', '')).order_by('title_sort')
 
             paginator = Paginator(sqs, 10)
             total = paginator.count
