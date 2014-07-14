@@ -2,7 +2,7 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from threading import current_thread
 import os
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.utils import translation
 
 class SiteUrlMiddleWare:
@@ -54,14 +54,14 @@ class UserSitesMiddleWare:
             if current_domain is False:
                 return HttpResponseBadRequest()
 
-            if current_domain[:3] == "www":
+            if current_domain[:4] == "www.":
                 current_domain = current_domain[4:]
 
             try:
                 site = Site.objects.get(domain=current_domain)
                 settings.SITE_ID = site.pk
             except Site.DoesNotExist:
-                return HttpResponseBadRequest()
+                return HttpResponseNotFound()
 
 class LocaleMiddleware(object):
     """
