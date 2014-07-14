@@ -45,6 +45,7 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [
     '.b24online.com', # Also allow FQDN and subdomains
+    '.tppcenter.com', # Also allow FQDN and subdomains
 ]
 
 LOGGING = {
