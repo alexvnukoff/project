@@ -9,7 +9,6 @@ from django.conf import settings
 
 class ChangeCsrfCookieDomainMiddleware:
 
-
      def process_request(self, request):
           host = request.get_host().split(':')[0]
 
@@ -25,10 +24,3 @@ class ChangeCsrfCookieDomainMiddleware:
           if host in allowed:
              settings.CSRF_COOKIE_DOMAIN = host
              settings.SESSION_COOKIE_DOMAIN = host
-
-
-
-
-
-
-

@@ -7,6 +7,7 @@ from django.utils import translation
 
 class SiteUrlMiddleWare:
 
+
     def process_request(self, request):
 
         domains = {'centerpokupok.com': 'centerpokupok.ru'}
@@ -42,11 +43,25 @@ class SiteUrlMiddleWare:
                      os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
 
 
+class UserSitesMiddleWare:
 
+    def process_request(self, request):
 
+        if settings.SITE_ID is None:
 
+            current_domain = request.META.get('HTTP_HOST', False)
 
+            if current_domain is False:
+                return HttpResponseBadRequest()
 
+            if current_domain[:3] == "www":
+                current_domain = current_domain[4:]
+
+            try:
+                site = Site.objects.get(domain=current_domain)
+                settings.SITE_ID = site.pk
+            except Site.DoesNotExist:
+                return HttpResponseBadRequest()
 
 class LocaleMiddleware(object):
     """
@@ -73,11 +88,6 @@ class LocaleMiddleware(object):
        if len(path) > 0:
             if path[1] in languages:
                 settings.LANGUAGE_CODE = path[1]
-
-
-
-
-
 
        translation.activate(settings.LANGUAGE_CODE)
 
