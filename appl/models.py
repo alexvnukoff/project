@@ -787,7 +787,7 @@ class Basket(Item):
 class Cabinet(Item):
     active = ItemManager()
     objects = models.Manager()
-    user = models.ForeignKey(User, related_name="cabinet")
+    user = models.OneToOneField(User, related_name="cabinet")
 
     def __str__(self):
         return self.title + '-' + self.user.username

@@ -44,11 +44,7 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [
-    '.tppcenter.com', # Allow domain and subdomains
-    '.centerpokupok.ru', # Also allow FQDN and subdomains
-    '.bc-cis.com', # Also allow FQDN and subdomains
     '.b24online.com', # Also allow FQDN and subdomains
-    '.centerpokupok.com'
 ]
 
 LOGGING = {
@@ -109,8 +105,6 @@ ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 
 MIDDLEWARE_CLASSES = (
-
-
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'tpp.SiteUrlMiddleWare.LocaleMiddleware',
@@ -119,7 +113,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
+#    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
+    'tpp.SiteUrlMiddleWare.UserSitesMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
 #    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -130,7 +125,6 @@ DEBUG_TOOLBAR_CONFIG = {
 
 
 
-ROOT_URLCONF = 'tpp.urls'
 
 WSGI_APPLICATION = 'tpp.wsgi.application'
 
@@ -203,7 +197,9 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'))
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'tppcenter','templates').replace('\\', '/'))
+ROOT_URLCONF = 'tppcenter.urls'
+SITE_ID = 143
 
 
 #Were added by Expert Center -----------------------------------------------------
