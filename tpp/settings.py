@@ -48,6 +48,8 @@ ALLOWED_HOSTS = [
     '.tppcenter.com', # Also allow FQDN and subdomains
 ]
 
+USER_SITES_DOMAIN = "b24online.com"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

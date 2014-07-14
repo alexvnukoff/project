@@ -720,7 +720,7 @@ def addCompany(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addNewCompany(request.POST, request.FILES, user, settings.SITE_ID,
+            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID,
                                 branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('companies:main'))

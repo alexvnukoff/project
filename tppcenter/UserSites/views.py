@@ -169,7 +169,7 @@ def addSite(request):
 
 
         if gallery.is_valid() and form.is_valid():
-            site = Site.objects.filter(domain=values['NAME'][0] + '.tppcenter.com')
+            site = Site.objects.filter(domain=values['NAME'][0] + '.' + settings.USER_SITES_DOMAIN)
             if not site.exists():
 
                 func.notify("item_creating", 'notification', user=request.user)
@@ -229,7 +229,7 @@ def updateSite(request, item_id):
         form.clean()
 
         if gallery.is_valid() and  form.is_valid():
-            site = Site.objects.filter(domain=values['NAME'][0] + '.tppcenter.com')
+            site = Site.objects.filter(domain=values['NAME'][0] + '.' + settings.USER_SITES_DOMAIN)
 
             if not site.exists() or UserSites.objects.filter(sites__id__in=site, organization=current_organization).exists():
                 func.notify("item_creating", 'notification', user=request.user)

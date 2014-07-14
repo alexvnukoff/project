@@ -772,7 +772,7 @@ def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang
     form.clean()
 
     if form.is_valid():
-        site, created = Site.objects.get_or_create(domain=values['NAME'][0] +'.tppcenter.com', name='usersites')
+        site, created = Site.objects.get_or_create(domain=values['NAME'][0] +'.' + settings.USER_SITES_DOMAIN, name='usersites')
         user_site = form.save(user, site.pk)
         if user_site:
             user_site.organization = Organization.objects.get(pk=company_id)
