@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sasha\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-30 09:25+0000\n"
-"PO-Revision-Date: 2014-06-30 15:18+0200\n"
+"PO-Revision-Date: 2014-07-15 15:21+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
@@ -3454,7 +3454,7 @@ msgstr "שם משרד"
 #: tppcenter/templates/Vacancy/addForm.html:209
 #: tppcenter/templates/Vacancy/addForm.html:312
 msgid "Vacancy title"
-msgstr "שם פנוי"
+msgstr "כותרת המשרה"
 
 #: tppcenter/templates/Exhibitions/addForm.html:76
 msgid "Start event date"
@@ -3478,7 +3478,7 @@ msgstr "מפה"
 #: tppcenter/templates/Wall/contentPage.html:58
 #: tppcenter/templates/Wall/contentPage.html:127
 msgid "Organizer"
-msgstr "כלי ארגון"
+msgstr "מארגן"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:98
 #: tppcenter/templates/Exhibitions/detailContent.html:230
@@ -3583,7 +3583,7 @@ msgstr "שלח הודעה אישית"
 #: tppcenter/templates/News/addForm.html:101
 #: tppcenter/templates/TppTV/addForm.html:78
 msgid "Youtube code"
-msgstr "יוטיוב קוד"
+msgstr "קישור YouTube"
 
 #: tppcenter/templates/News/addForm.html:112
 #: tppcenter/templates/TppTV/addForm.html:60
@@ -3658,7 +3658,7 @@ msgstr "יחידה"
 #: tppcenter/templates/Products/detailContent.html:89
 #: usersites/templates/Products/detailContent.html:106
 msgid "Amount"
-msgstr "הסכום"
+msgstr "כמות"
 
 #: tppcenter/templates/Products/detailContent.html:101
 #: usersites/templates/Products/detailContent.html:144
@@ -3679,11 +3679,11 @@ msgstr "קישור למסמכים"
 
 #: tppcenter/templates/Profile/addForm.html:5
 msgid "Your profile was updated"
-msgstr "הפרופיל שלך נערך מחדש"
+msgstr "הפרופיל שלך עודכן"
 
 #: tppcenter/templates/Profile/addForm.html:25
 msgid "Change avatar"
-msgstr "שינוי פרטים"
+msgstr "שנה את התמונה"
 
 #: tppcenter/templates/Profile/addForm.html:76
 #: tppcenter/templates/main/user_profile.html:71
@@ -3782,7 +3782,7 @@ msgstr "ניסיון מקצועי"
 
 #: tppcenter/templates/Resume/addForm.html:177
 msgid "Specify the last 3 jobs"
-msgstr "פרט את שלוש עמקומות בהם עבדת"
+msgstr "3 מקומות תעסוקה אחרונים"
 
 #: tppcenter/templates/Resume/addForm.html:194
 #: tppcenter/templates/Resume/addForm.html:227
@@ -3798,7 +3798,7 @@ msgstr "כישורים אישיים"
 #: tppcenter/templates/Resume/addForm.html:281
 #: tppcenter/templates/Resume/detailContent.html:158
 msgid "Language skills"
-msgstr "שפות נדרשות"
+msgstr "שפות"
 
 #: tppcenter/templates/Resume/addForm.html:288
 #: tppcenter/templates/Resume/detailContent.html:162
@@ -3853,7 +3853,7 @@ msgstr "תקופת עבודה"
 
 #: tppcenter/templates/Resume/detailContent.html:166
 msgid "Additional skills"
-msgstr "כישורים נדרשים"
+msgstr "כישורים נוספים"
 
 #: tppcenter/templates/Tenders/addForm.html:41
 #: tppcenter/templates/Tenders/detailContent.html:63
@@ -3925,7 +3925,7 @@ msgstr ""
 
 #: tppcenter/templates/Vacancy/addForm.html:218
 msgid "City of vacancy"
-msgstr "משרות פנויות"
+msgstr "מושב"
 
 #: tppcenter/templates/Vacancy/addForm.html:225
 msgid "Type of employment"
@@ -3933,16 +3933,16 @@ msgstr "סוג מקצוע"
 
 #: tppcenter/templates/Vacancy/addForm.html:243
 msgid "make vacancy anonymous"
-msgstr "להעלים את השם בשטח הפנוי"
+msgstr "הפוך לקו''ח אנונימי"
 
 #: tppcenter/templates/Vacancy/addForm.html:244
 msgid "company title will be hidden"
-msgstr "נא להסתיר את שם החברה"
+msgstr "שם החברה יוסתר"
 
 #: tppcenter/templates/Vacancy/addForm.html:262
 #: tppcenter/templates/Vacancy/detailContent.html:79
 msgid "Requirements"
-msgstr "דרישות התפקיד"
+msgstr "דרישות"
 
 #: tppcenter/templates/Vacancy/addForm.html:269
 #: tppcenter/templates/Vacancy/detailContent.html:83
@@ -3952,7 +3952,7 @@ msgstr "תנאים"
 #: tppcenter/templates/Vacancy/addForm.html:301
 #: tppcenter/templates/Vacancy/addForm.html:313
 msgid "Please wait to response..."
-msgstr "נא המתן לתקגובה"
+msgstr "נא המתן לתגובה"
 
 #: tppcenter/templates/Vacancy/detailContent.html:32
 msgid "Send Resume"
@@ -3968,7 +3968,7 @@ msgstr "סוג משרה"
 
 #: tppcenter/templates/Vacancy/index.html:47
 msgid "You send resume on position:"
-msgstr "שלח קורות חיים ממוקדים "
+msgstr "הינך שולח/ת קו''ח למשרה:"
 
 #: tppcenter/templates/Vacancy/index.html:53
 msgid "Add new resume to profile"
@@ -3984,11 +3984,11 @@ msgstr "שלח קורות חיים"
 
 #: tppcenter/templates/Vacancy/index.html:63
 msgid "No existing resumes"
-msgstr "הנתון לא נמצא"
+msgstr "הפריט לא נמצא"
 
 #: tppcenter/templates/Wall/contentPage.html:8
 msgid "Latest updates"
-msgstr "חדשות חמות"
+msgstr "עדכונים אחרונים"
 
 #: tppcenter/templates/Wall/contentPage.html:151
 msgid "Bussiness Proposals"
@@ -4012,11 +4012,11 @@ msgstr "דפים נוספים"
 
 #: tppcenter/templates/main/paginator.html:7
 msgid "Back"
-msgstr ""
+msgstr "אחורה"
 
 #: tppcenter/templates/main/paginator.html:21
 msgid "Forward"
-msgstr ""
+msgstr "קדימה"
 
 #: tppcenter/templates/main/staticPages.html:4
 msgid "Project news"
@@ -4066,11 +4066,11 @@ msgstr "השתמש בכתובת המייל והסיסמא שסיפקת בעת ה
 
 #: tppcenter/templates/registration/base.html:8
 msgid "Tpp-center"
-msgstr "מרכז מומחים"
+msgstr "TPP Center"
 
 #: tppcenter/templates/registration/login.html:26
 msgid "Authorization"
-msgstr "הרשאה"
+msgstr "כניסה"
 
 #: tppcenter/templates/registration/login.html:47
 msgid "Forgot password"

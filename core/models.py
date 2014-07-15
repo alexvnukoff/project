@@ -711,7 +711,7 @@ class Item(models.Model):
 
         return slugify(string) + '-' + str(pk)
 
-    def _setAttrDictValues(self, attrWithValues, existsAttributes, queries, uniqDict, user):
+    def _setAttrDictValues(self, attrWithValues, existsAttributes, queries, uniqDict, itemExistsAttribute, user):
         '''
             set attribute values from dictionary,
 
@@ -726,58 +726,81 @@ class Item(models.Model):
 
         bulkInsert = []
 
-        #check if dictionary slot exists for this dictionary - using conditions
+        # Check if slot pk exists in this dictionary - using conditions
         filter_or = ' | '.join(queries)
 
         valueFileds = ['title']
 
-        #get slot value for all languages
+
+        # Prepare fields for slot query to get all lang values
         for lang in settings.LANGUAGES:
             valueFileds.append(valueFileds[0] + '_' + lang[0])
 
         params = valueFileds + ['dict__pk', 'pk']
 
-        #apply filter to get values
+        # Get all needed slots
         attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
 
         if len(attributesValue) < len(queries):
             raise ValueError('Dict slot does not exists')
 
         for value in attributesValue:
-
+            # Prepare values dict
             uniqDict[value['dict__pk']][value['pk']] = {
-                'title': value['title']
+                'title': value['title'],
+                'sha1_code': createHash(value['title']),
+                'create_user': user
             }
 
+            # Prepare values dict for all language fields
             for langDict in valueFileds: #set value for all languages
                 uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
 
         #Insert dict slot
-        for attribute in attrWithValues.keys():
-            values = attrWithValues[attribute]
-            attributeObj = existsAttributes.get(title=attribute)
-            dictID = attributeObj.dict_id
+        for attr in existsAttributes:
+            values = attrWithValues[attr.title]
+            dictID = attr.dict_id
 
             if not isinstance(values, list):
                 values = [values]
 
             for value in values:
+
                 if isinstance(value, dict):
-                    value.update(uniqDict[dictID][int(value['title'])])
 
-                    if 'create_user' not in value:
-                        value['create_user'] = user
+                    for key, val in value.items():
 
-                    value['sha1_code'] = createHash(value['title'])
+                        try:
+                            pk = int(key)
 
+                            # Update exists multi values
+                            if attr.title in itemExistsAttribute and pk in itemExistsAttribute[attr.title]:
+                                Value.objects.filter(pk=pk).update(**uniqDict[dictID][int(value)])
 
+                            # Create new multi values
+                            else:
+                                bulkInsert.append(Value(item=self, attr=attr, **uniqDict[dictID][int(value)]))
 
-                    bulkInsert.append(Value(item=self, attr=attributeObj, **value))
+                        except ValueError:
+
+                            # Single old algorithm
+                            if 'title' in value:
+
+                                if attr.title in itemExistsAttribute:
+                                    key = list(itemExistsAttribute[attr.title].keys())[0]
+                                    Value.objects.filter(pk=key).update(**uniqDict[dictID][int(value['title'])])
+                                else:
+                                    bulkInsert.append(Value(item=self, attr=attr, **uniqDict[dictID][int(value['title'])]))
+
+                                break
                 else:
-                    value = uniqDict[dictID][int(value)]
-
-                    bulkInsert.append(Value(item=self, attr=attributeObj, create_user=user,
-                                                sha1_code=createHash(value), **value))
+                    # Update single value
+                    if attr.title in itemExistsAttribute:
+                        key = list(itemExistsAttribute[attr.title].keys())[0]
+                        Value.objects.filter(pk=key).update(**uniqDict[dictID][int(value)])
+                    else:
+                        # Single new value
+                        bulkInsert.append(Value(item=self, attr=attr, **uniqDict[dictID][int(value)]))
 
         return bulkInsert
 
@@ -806,11 +829,11 @@ class Item(models.Model):
         cache.delete(cache_name)
         cache.delete(description_cache_name)
 
-        #check if valid dictionary given
+        # Check if valid dictionary given
         if not isinstance(attrWithValues, dict) or not attrWithValues:
             raise ValueError
 
-        #generate slug
+        # Generate slug from NAME attribute
         if 'NAME' in attrWithValues:
 
             if isinstance(attrWithValues['NAME'], dict) and len(attrWithValues['NAME']) > 0:
@@ -827,156 +850,146 @@ class Item(models.Model):
         queries = []
         bulkInsert = []
         notBulk = []
-        attributes = copy(attrWithValues).keys()
         uniqDict = {}
 
-        #get all passed attributes
-        existsAttributes = Attribute.objects.filter(title__in=attributes)
+        # Get all passed attributes
+        existsAttributes = Attribute.objects.filter(title__in=attrWithValues.keys())
+
         if len(existsAttributes) != len(attrWithValues):
             raise ValueError("Attribute does not exists")
 
-        if not Value.objects.filter(item=self).exists():
-            for attr in attributes: # keys from passed attribute dictionary {dict_keys} ['KEY1', 'KEY2',...]
-                attributeObj = existsAttributes.get(title=attr) # instance of Attribute class with title=attr
-                dictID = attributeObj.dict_id
-                values = attrWithValues[attr] # get value for attr key
 
-                #value should be a list of values
-                if not isinstance(values, list):
-                    values = [values]
+        itemExistsAttribute = {}
 
-                for value in values:
+        for value in Value.objects.filter(item=self).select_related('attr'):
+            itemExistsAttribute[value.attr.title] = {
+                value.pk: value
+            }
 
-                    if isinstance(value, dict) and "title" not in value:
-                        raise ValueError('Value is missing')
+        for attr in existsAttributes:  # keys from passed attribute dictionary {dict_keys} ['KEY1', 'KEY2',...]
+            dictID = attr.dict_id
+            values = attrWithValues[attr.title]  # get value for attr key
 
-                    if dictID is None:
+            # Value should be a list of values
+            if not isinstance(values, list):
+                values = [values]
 
-                        if attr in attrWithValues:
-                            del attrWithValues[attr]
+            for value in values:
 
-                        if isinstance(value, dict):
-                            if 'create_user' not in value:
-                                value['create_user'] = user
+                if dictID is None:
 
-                            value['sha1_code'] = createHash(value['title'])
+                    if attr in attrWithValues:
+                        del attrWithValues[attr.title]
 
-                            if attributeObj.type == 'Str':
-                                notBulk.append(Value(item=self, attr=attributeObj, **value))
-                            else:
-                                bulkInsert.append(Value(item=self, attr=attributeObj, **value))
-                        else:
-                            if attributeObj.type == 'Str':
-                                notBulk.append(Value(title=value, item=self, attr=attributeObj,
-                                                    create_user=user, sha1_code=createHash(value)))
-                            else:
-                                bulkInsert.append(Value(title=value, item=self, attr=attributeObj,
-                                                    create_user=user, sha1_code=createHash(value)))
-                    #Dictionary value
-                    else:
-                        #security
-                        dictID = int(dictID)
+                    if isinstance(value, dict):
 
-                        if isinstance(value, dict):
-                            valueID = int(value['title'])
-                        else:
-                            valueID = int(value)
+                        for key, val in value.items():
 
-                        if dictID not in uniqDict:
-                            uniqDict[dictID] = {}
+                            sha1 = createHash(val)
 
-                        if valueID in uniqDict[dictID]:
-                            continue
-                        else:
-                            uniqDict[dictID][str(valueID)] = ''
+                            try:
+                                pk = int(key)
 
-                            #check if dictionary slot exists for this dictionary - creating conditions
-                            queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
+                                # Update multi values
+                                if attr.title in itemExistsAttribute and pk in itemExistsAttribute[attr.title]:
+                                    Value.objects.filter(pk=pk).update(title=val, sha1_code=sha1)
 
-                # end of cycle for for values of current 'KEY n'
+                                # New multi values
+                                else:
+                                    newVal = Value(item=self, sha1_code=sha1, attr=attr, title=val, create_user=user)
 
-            if len(queries) > 0:
-                bulkInsert += self._setAttrDictValues(attrWithValues, existsAttributes, queries, uniqDict, user)
-
-            try:
-                with transaction.atomic():
-                    #Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
-                    Value.objects.bulk_create(bulkInsert)
-
-                    #TODO: Artur fix it
-                    #workaround of some bug with oracle + bulk_insert
-                    # django ticket #22144
-                    for instanceToSave in notBulk:
-                        instanceToSave.save()
-
-            except IntegrityError as e:
-                raise e
-        else:
-            # here UPDATE attributes' values
-            session_lang = trans_real.get_language()
-            fact_attr_in_value = Value.objects.filter(item=self).all()
-            fact_attr_ids = Value.objects.filter(item=self).values_list('attr__title')
-            attr_from_db = Attribute.objects.filter(title__in=fact_attr_ids)
-
-            # if passed argument is a new for this item (was not saved before) then...
-            for a in attrWithValues.items():
-                if not fact_attr_in_value.filter(attr__title=a[0]).exists():
-                    lookup_a = Attribute.objects.get(title=a[0])
-                    if not isinstance(a[1], dict):
-                        v = Value.objects.create(attr=lookup_a, item=Item.objects.get(id=item_id),
-                                                     sha1_code=createHash(a[1]), create_user=user, title=a[1])
-                        v.__dict__['title_' + session_lang] = str(a[1])
-                        v.save()
-                    else:
-                        # if passed argument itself is Dictionary which was not saved before, then...
-                        # go around local dictionary
-                        for arg in a[1].items():
-                            v = Value.objects.create(attr=lookup_a, item=Item.objects.get(id=item_id),
-                                                     sha1_code=createHash(arg[1]), create_user=user, title=arg[1])
-
-                            if lookup_a.dict == None:
-                                v.__dict__['title_' + session_lang] = str(arg[1])
-                                v.__dict__['sha1_code'] = createHash(arg[1])
-                            else:
-                                slot = Slot.objects.get(id=arg[0], dict=lookup_a.dict)
-                                v.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
-                                v.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
-
-                            v.save()
-
-            # for attributes which were already saved before...
-            for a in attr_from_db:
-                # if attribute from db not in arguments list then continue
-                if not a.title in attrWithValues:
-                    continue
-                for val in fact_attr_in_value:
-                    if a.title != val.attr.title:
-                        continue
-                    else:
-                        # if passed argument itself is NOT a Dictionary, then...
-                        if not isinstance(attrWithValues[val.attr.title], dict):
-                            if a.dict == None:
-                                val.__dict__['title_' + session_lang] = str(attrWithValues[val.attr.title])
-                                val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
-                            else:
-                                slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
-                                val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
-                                val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
-                        else:
-                            # if passed argument itself is Dictionary, then...
-                            for arg_key, arg_val in attrWithValues[val.attr.title].items():
-                                if int(arg_key) == val.id:
-                                    if a.dict == None:
-                                        val.__dict__['title_' + session_lang] = str(arg_val)
-                                        val.__dict__['sha1_code'] = createHash(arg_val)
+                                    if attr.type == 'Str':
+                                        notBulk.append(newVal)
                                     else:
-                                        slot = Slot.objects.get(id=arg_key, dict=a.dict)
-                                        val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
-                                        val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
+                                        bulkInsert.append(newVal)
 
-                        val.save()
+                            except ValueError:
+                                # Single value for old version
+                                if 'title' in value:
+
+                                    sha1 = createHash(value['title'])
+
+                                    if attr.title in itemExistsAttribute:
+                                        key = list(itemExistsAttribute[attr.title].keys())[0]
+                                        Value.objects.filter(pk=key).update(**value)
+                                    else:
+                                        newVal = Value(item=self, sha1_code=sha1, attr=attr, create_user=user, **value)
+
+                                        if attr.type == 'Str':
+                                            notBulk.append(newVal)
+                                        else:
+                                            bulkInsert.append(newVal)
+
+                                    break
+                    else:
+                        sha1 = createHash(value)
+
+                        # Update single value
+                        if attr.title in itemExistsAttribute:
+                            key = list(itemExistsAttribute[attr.title].keys())[0]
+                            Value.objects.filter(pk=key).update(title=value, sha1_code=sha1)
+                        else:
+                            # New single value
+                            newVal = Value(item=self, sha1_code=sha1, attr=attr, title=value, create_user=user)
+
+                            if attr.type == 'Str':
+                                notBulk.append(newVal)
+                            else:
+                                bulkInsert.append(newVal)
+
+                #Dictionary value
+                else:
+
+                    #security
+                    dictID = int(dictID)
+
+                    if isinstance(value, dict):
+                        for key, val in value.items():
+
+                                try:
+                                    # Check if new algorithm used
+                                    int(key)
+
+                                    try:
+                                        valueID = int(val)
+                                    except ValueError:
+                                        continue
+
+                                except ValueError:
+                                    # for old deprecated version: {'title': 'blah', 'end_date': now()}
+                                    if 'title' in value:
+                                        valueID = int(value['title'])
+
+                                        break
+
+                    else:
+                        valueID = int(value)
+
+                    if dictID not in uniqDict:
+                        uniqDict[dictID] = {}
+
+                    if valueID in uniqDict[dictID]:
                         continue
-        return True
+                    else:
+                        uniqDict[dictID][str(valueID)] = ''
+
+                        #check if dictionary slot exists for this dictionary - creating conditions
+                        queries.append('Q(dict=' + str(dictID) + ', pk=' + str(valueID) + ')')
+
+        # end of cycle for for values of current 'KEY n'
+
+        if len(queries) > 0:
+            bulkInsert += self._setAttrDictValues(attrWithValues, existsAttributes, queries, uniqDict,
+                                                  itemExistsAttribute, user)
+
+        #Value.objects.filter(attr__title__in=attributes, item=self.id).delete()
+        Value.objects.bulk_create(bulkInsert)
+
+        #TODO: Artur fix it
+        #workaround of some bug with oracle + bulk_insert
+        # django ticket #22144
+        for instanceToSave in notBulk:
+            instanceToSave.save()
 
     def getSiblings(self, includeSelf=True):
         '''
