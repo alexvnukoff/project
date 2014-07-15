@@ -50,7 +50,7 @@ class UserSitesMiddleWare:
         if settings.SITE_ID is None:
 
             current_domain = request.META.get('HTTP_HOST', False)
-
+            
             if current_domain is False:
                 return HttpResponseBadRequest()
 
