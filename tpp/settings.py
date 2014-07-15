@@ -90,9 +90,9 @@ INSTALLED_APPS = (
     'appl',
     'legacy_data',
     'djcelery',
-    'loginas'
+    'loginas',
     #'paypal.standard.ipn'
-    #'debug_toolbar'
+    'debug_toolbar'
 )
 
 # For installations on which you want to use the sandbox,
@@ -119,7 +119,7 @@ MIDDLEWARE_CLASSES = (
 #    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.UserSitesMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 DEBUG_TOOLBAR_CONFIG = {

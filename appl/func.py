@@ -724,7 +724,6 @@ def filterLive(request, model_name=None):
         filtersIDs[name] = []
         filters[name] = []
 
-
         for pk in getParameters.getlist('filter[' + name + '][]', []):
             try:
                 filtersIDs[name].append(int(pk))
@@ -1207,6 +1206,7 @@ def cachePisibility(request):
             return True
 
     return False
+
 
 def show_toolbar(request):
 
