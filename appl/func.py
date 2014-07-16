@@ -917,7 +917,7 @@ def getTops(request, filterAdv=None):
         if name == InnovationProject.__name__:
             addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
 
-        elif name == Company.__name__:
+        elif name == Company.__name__ :
             addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
 
         else:
