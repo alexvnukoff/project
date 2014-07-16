@@ -493,11 +493,35 @@ def getAnalytic(params = None):
 
     return get_results(**params)
 
+def addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList):
 
+    countries = Country.objects.filter(p2c__child__p2c__child__p2c__child__p2c__child__in=vacancy_ids).distinct()\
+            .values('pk', 'p2c__child__p2c__child__p2c__child__p2c__child')
+
+    countries_id = [country['pk'] for country in countries]
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
+    country_dict = {}
+
+    for country in countries:
+        country_dict[country['p2c__child__p2c__child__p2c__child__p2c__child']] = country['pk']
+
+    for id, vacancy in vacancyList.items():
+        toUpdate = {
+            'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+            'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+            'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
+            'COUNTRY_ID':  country_dict.get(id, 0)
+        }
+
+        vacancy.update(toUpdate)
+
+    return vacancyList
 
 def addDictinoryWithCountryAndOrganization(ids, itemList):
 
-    countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__child__in=ids,
+    org_models = [Tpp.__name__.lower(), Company.__name__.lower()]
+
+    countries = Country.objects.filter(p2c__child__contentType__model__in=org_models, p2c__child__p2c__child__in=ids,
                                        p2c__child__p2c__type='dependence').values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
@@ -540,7 +564,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
 def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 
-        cabinets = Cabinet.objects.filter(p2c__child__in=ids,).values('p2c__child', 'pk')
+        cabinets = Cabinet.objects.filter(p2c__child__in=ids).values('p2c__child', 'pk')
 
         cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
         countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
@@ -581,16 +605,20 @@ def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
 
         countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
+
         countries_id = [country['pk'] for country in countries]
         countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
         country_dict = {}
+
         for country in countries:
             country_dict[country['p2c__child']] = country['pk']
 
         organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='relation').values('p2c__child', 'pk')
+
         organizations_ids = [organization['pk'] for organization in organizations]
         organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
         organizations_dict = {}
+
         for organization in organizations:
             organizations_dict[organization['p2c__child']] = organization['pk']
 
@@ -603,8 +631,9 @@ def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
             try:
                 company.update(toUpdate)
             except Exception as e:
-                print('Passed Company ID:'+id+'has not attribute list. The reason is:'+e+'Please, rebuild index.')
+                print('Passed Company ID:' + id + 'has not attribute list. The reason is:' + str(e) + 'Please, rebuild index.')
                 pass
+
             if add_organization:
                 if organizations_dict.get(id, False):
                     if organizationIsCompany(id):
@@ -612,11 +641,14 @@ def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
                     else:
                         url = 'tpp:detail'
 
-                    toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
-                                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-                                'ORGANIZATION_ID': organizations_dict.get(id, 0),
-                                'ORGANIZATION_URL': url}
+                    toUpdate = {
+                        'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                        'ORGANIZATION_URL': url
+                    }
+
                     company.update(toUpdate)
 
 
@@ -627,7 +659,10 @@ def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
 
 def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=False):
 
-    countries = Country.objects.filter(p2c__child__in=Organization.objects.all(), p2c__child__p2c__type='dependence',
+    org_models = [Tpp.__name__.lower(), Company.__name__.lower()]
+
+    countries = Country.objects.filter(p2c__child__contentType__model__in=org_models,
+                                       p2c__child__p2c__type='dependence',
                                        p2c__child__p2c__child=id).values('p2c__child__p2c__child', 'pk')
 
     countries_id = [country['pk'] for country in countries]
@@ -635,49 +670,63 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
 
     organizations = Organization.objects.filter(p2c__child=id, p2c__type='dependence').values('p2c__child', 'pk')
     organizations_ids = [organization['pk'] for organization in organizations]
+
     attr = ("NAME", 'FLAG', 'IMAGE', 'SLUG')
 
     if withContacts:
         attr = attr + ('EMAIL', 'SITE_NAME', 'ADDRESS', 'TELEPHONE_NUMBER', 'FAX')
+
     organizationsList = Item.getItemsAttributesValues(attr, organizations_ids)
     organizations_dict = {}
+
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
 
 
     country_dict = {}
+
     for country in countries:
         country_dict[country['p2c__child__p2c__child']] = country['pk']
 
-
     if country_dict.get(id, False):
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
-            itemList.update(toUpdate)
+        toUpdate = {
+            'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+            'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+            'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
+            'COUNTRY_ID':  country_dict.get(id, 0)
+        }
+
+        itemList.update(toUpdate)
+
     if organizations_dict.get(id, False):
-            if organizationIsCompany(id):
-                url = 'companies:detail'
-            else:
-                url = 'tpp:detail'
-            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(id, 0) else [0],
-                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS', [""]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
-                        'ORGANIZATION_URL': url}
-            itemList.update(toUpdate)
+
+        if organizationIsCompany(id):
+            url = 'companies:detail'
+        else:
+            url = 'tpp:detail'
+
+        toUpdate = {
+            'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, 0) else [0],
+            'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, 0) else [0],
+            'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(id, 0) else [0],
+            'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_ID': organizations_dict.get(id, 0),
+            'ORGANIZATION_URL': url
+        }
+
+        itemList.update(toUpdate)
 
 
 def organizationIsCompany(item_id):
+
     if Company.objects.filter(p2c__child=item_id, p2c__type='dependence').exists():
         return True
+
     return False
 
 def filterLive(request, model_name=None):
@@ -685,9 +734,8 @@ def filterLive(request, model_name=None):
         Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
 
         obj request - request context
-
-
     '''
+
     if model_name:
         if request.GET and not request.session.get(model_name, False):
             request.session[model_name] = request.GET.urlencode()
@@ -849,7 +897,7 @@ def getTops(request, filterAdv=None):
             'detailUrl': 'proposal:detail'
         },
         Requirement.__name__: {
-            'count': 3,
+            'count': 5,
             'text': _('Job requirements'),
             'detailUrl': 'vacancy:detail'
         },
@@ -917,8 +965,11 @@ def getTops(request, filterAdv=None):
         if name == InnovationProject.__name__:
             addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
 
-        elif name == Company.__name__:
+        elif name == Company.__name__ :
             addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
+
+        elif name == Requirement.__name__:
+            addDictinoryWithCountryToVacancy(attr['ids'], attr['elements'])
 
         else:
             addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])

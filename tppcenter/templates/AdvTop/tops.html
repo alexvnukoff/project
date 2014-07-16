@@ -41,7 +41,9 @@
                                         <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}<" class="thumb" />
                                     {% endif %}
                                 </a>
-                                {{ text|cleanHtml|safe|truncatewords_html:7 }}
+                                {% if model != 'Requirement'%}
+                                    {{ text|cleanHtml|safe|truncatewords_html:7 }}
+                                {% endif %}
                                 </div>
                             </li>
                         {% endwith %}

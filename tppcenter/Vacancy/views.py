@@ -185,20 +185,7 @@ def _vacancyContent(request, page=1, my=None):
         else:
             items_perms = ""
 
-        countries = Country.objects.filter(p2c__child__p2c__child__p2c__child__p2c__child__in=vacancy_ids).distinct().values('pk', 'p2c__child__p2c__child__p2c__child__p2c__child')
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
-        country_dict = {}
-
-        for country in countries:
-            country_dict[country['p2c__child__p2c__child__p2c__child__p2c__child']] = country['pk']
-
-        for id, vacancy in vacancyList.items():
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
-            vacancy.update(toUpdate)
+        vacancyList = func.addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList)
 
 
         page = result[1]
