@@ -12,7 +12,7 @@ from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-import urllib.error
+from core.amazonMethods import addFile as uploadFile
 
 
 #----------------------------------------------------------------------------------------------------------
@@ -848,8 +848,6 @@ class Exhibition(Item):
     def __str__(self):
         return self.getName()
 
-# do not move this import from here
-from core.amazonMethods import addFile as uploadFile
 class Messages(Item):
     text = models.CharField(max_length=1024, null=False, default='EMPTY')
     file = models.FileField(upload_to=uploadFile, null=True, max_length=255)
