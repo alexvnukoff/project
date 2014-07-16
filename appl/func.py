@@ -1,7 +1,6 @@
 import urllib
 from django.http import QueryDict
 from core.models import *
-from appl.models import Vacancy
 from appl.models import *
 from django.db.models import Count, F
 from django.core.paginator import Paginator
