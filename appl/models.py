@@ -848,17 +848,6 @@ class Exhibition(Item):
     def __str__(self):
         return self.getName()
 
-# do not move this import from here
-from core.amazonMethods import addFile as uploadFile
-class Messages(Item):
-    text = models.CharField(max_length=1024, null=False, default='EMPTY')
-    file = models.FileField(upload_to=uploadFile, null=True, max_length=255)
-    was_read = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.title
-
-
 class Vacancy(Item):
     active = ItemManager()
     objects = models.Manager()
@@ -887,6 +876,18 @@ class staticPages(Item):
 
 class topTypes(Item):
     modelType = models.OneToOneField(ContentType, related_name="top")
+
+# do not move this import from here
+from core.amazonMethods import addFile as uploadFile
+
+class Messages(Item):
+    text = models.CharField(max_length=1024, null=False, default='EMPTY')
+    file = models.FileField(upload_to=uploadFile, null=True, max_length=255)
+    was_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
 
 #----------------------------------------------------------------------------------------------------------
 #             Signal receivers

@@ -1,6 +1,7 @@
 import urllib
 from django.http import QueryDict
 from core.models import *
+from appl.models import Vacancy
 from appl.models import *
 from django.db.models import Count, F
 from django.core.paginator import Paginator
@@ -829,35 +830,36 @@ def getTops(request, filterAdv=None):
 
     models = {
         Product.__name__: {
-            'count': 5, #Limit of this type to fetch
+            'count': 3, #Limit of this type to fetch
             'text': _('Products'), #Title
             'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
         },
         InnovationProject.__name__: {
-            'count': 5,
+            'count': 3,
             'text': _('Innovation Projects'),
             'detailUrl': 'innov:detail'
         },
         Company.__name__: {
-            'count': 5,
+            'count': 3,
             'text': _('Companies'),
             'detailUrl': 'companies:detail'
         },
         BusinessProposal.__name__: {
-            'count': 5,
+            'count': 3,
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
-        Exhibition.__name__: {
-            'count': 5,
-            'text': _('Exhibitions'),
-            'detailUrl': 'exhibitions:detail'
-        },
         Vacancy.__name__: {
-            'count': 5,
+            'count': 3,
             'text': _('Job requirements'),
             'detailUrl': 'vacancy:detail'
         },
+        Exhibition.__name__: {
+            'count': 3,
+            'text': _('Exhibitions'),
+            'detailUrl': 'exhibitions:detail'
+        }
+
     }
 
     topList = []
@@ -911,15 +913,16 @@ def getTops(request, filterAdv=None):
                 break
 
     for name, attr in tops.items():
-       #Special method to fetch a flag for each item type
-       if name == BusinessProposal.__name__ or Product.__name__ == name or name == Exhibition.__name__:
-           addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
+        #Special method to fetch a flag for each item type
 
-       if name == InnovationProject.__name__:
-           addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
+        if name == InnovationProject.__name__:
+            addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
 
-       if name == Company.__name__:
-           addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
+        elif name == Company.__name__:
+            addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
+
+        else:
+            addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
 
     return tops
 
