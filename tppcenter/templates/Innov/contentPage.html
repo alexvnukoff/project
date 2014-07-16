@@ -42,11 +42,11 @@
                                      <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'innov:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                                 {% if 'add_advtop' in permlist %}
-                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
-                                 {% endif %}
-                                 {% if 'delete_innovationproject' in  permlist %}
+                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
+                                {% endif %}
+                                {% if 'delete_innovationproject' in  permlist %}
                                      <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'innov:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                 {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                    {% endif %}

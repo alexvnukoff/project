@@ -853,6 +853,11 @@ def getTops(request, filterAdv=None):
             'text': _('Exhibitions'),
             'detailUrl': 'exhibitions:detail'
         },
+        Vacancy.__name__: {
+            'count': 5,
+            'text': _('Job requirements'),
+            'detailUrl': 'vacancy:detail'
+        },
     }
 
     topList = []

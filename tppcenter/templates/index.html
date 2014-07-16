@@ -84,66 +84,73 @@
           <select id="lang_select" style="height: 24px;width: 200px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
                         <option>{% trans 'Mother tongue' %}</option>
 
-                        <option value="am">Armenian</option>
-                        <option value="ar"> Arabic </option>
-                        <option value="en">English</option>
-                        <option value="he">עברית</option>
-                        <option value="ru">Русский</option>
-                        <option value="zh">Chinese</option>
+                        <option value="am">{% trans "Armenian" %}</option>
+                        <option value="ar">{% trans "Arabic" %}</option>
+                        <option value="en">{% trans "English" %}</option>
+                        <option value="he">{% trans "Hebrew" %}</option>
+                        <option value="ru">{% trans "Russian" %}</option>
+                        <option value="zh">{% trans "Chinese" %}</option>
+                        <option value="ua">{% trans "Ukrainian" %}</option>
 
 
                     </select>
 
-                  <script>
-                       $(document).ready(function() {
-                          var path = (window.location.host).split('.');
-                          path = path[0];
-                         $("#lang_select").find('option').each(function( i, opt ) {
-                            if( opt.value === path )
+                    <script>
+                        var path = (window.location.host).split('.');
+                        var lang = path[0];
+
+                        if (lang.length != 2) {
+                            lang = 'ru';
+                        }
+
+
+
+                        $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === lang )
                                 $(opt).attr('selected', 'selected');
                         });
-                    });
-                    $( "#lang_select" ).change(function(e) {
-                        if (!$( this ).val())
-                        return;
 
-                        path = (window.location.host).split('.');
-                        if (path[0] == 'www'){
-                            delete path[0]
-                        }
+                        $( "#lang_select" ).change(function(e) {
 
-                        if (path.length > 2){
-                            host = path[1] + '.' + path[2]
-                        }
-                        else{
-                            host = window.location.host
-                        }
+                            if (!$( this ).val())
+                                return;
 
+                            path = (window.location.host).split('.');
 
-                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
+                            if (path[0] == 'www'){
+                                delete path[0]
+                            }
+
+                            if (path.length > 2){
+                                host = path[1] + '.' + path[2]
+                            } else {
+                                host = window.location.host
+                            }
+
+                            var lang = $( this ).val() == 'ru' ? '' : $( this ).val() + '.';
+
+                            window.location.href = window.location.protocol + "//" + lang + host  +
                                 window.location.pathname + window.location.search + window.location.hash;
 
-                    });
-
+                        });
                 </script>
 
-
-            <!-- Google Translate injection -->
-            <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
-                 <script type="text/javascript">
-                function googleTranslateElementInit() {
-                    new google.translate.TranslateElement({
-                        pageLanguage: 'en',
-                        multilanguagePage: true}, 'google_translate_element_main');
+                <!-- Google Translate injection -->
+                <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
+                    <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'en',
+                                multilanguagePage: true}, 'google_translate_element_main');
+                        }
+                    </script>
+                    <style type="text/css">
+                    .goog-te-combo {
+                      width: 200px;
                     }
-            </script>
-                 <style type="text/css">
-                .goog-te-combo {
-                  width: 200px;
-                }
-          </style>
-                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-            </div>
+                    </style>
+                    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                </div>
             <!-- /Google Translate injection -->
 
         	<div class="community">
