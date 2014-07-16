@@ -473,7 +473,7 @@ def adv_settings(request):
                 branch = 1 if type.enableBranch else 0
                 country = 1 if type.enableCountry else 0
                 tpp = 1 if type.enableTpp else 0
-                site = type.sites.all()[0].name
+                site = type.sites.all()[0].name if type.sites.all().count() > 0 else ''
 
                 #Creating list of result data
                 resultNode = [name, site, factor, branch, country, tpp, width, height, type.title, type.pk]
