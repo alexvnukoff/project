@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from appl import func
+import appl.func
 from PIL import Image
 from django.conf import settings
 from django.utils.timezone import now
@@ -63,7 +63,7 @@ def add(imageFile=None, sizes=None):
             del im
 
             if x > 1000 or y > 1000:
-                func.resize(imageFile, (1000, 1000), False, imageFile)
+                appl.func.resize(imageFile, (1000, 1000), False, imageFile)
 
             # Creating a pool connection
             pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
@@ -74,7 +74,7 @@ def add(imageFile=None, sizes=None):
                 path = '/' + sizeType + '/'+ folder + '/' + name + '.png'
                 out = '%s-%s.%s' % (sizeType, name, 'png')
                 out = os.path.join(settings.MEDIA_ROOT, 'upload', out).replace('\\', '/')
-                func.resize(imageFile, out=out, box=size['box'], fit=size['fit'])
+                appl.func.resize(imageFile, out=out, box=size['box'], fit=size['fit'])
 
                 f[sizeType] = open(out, 'rb')
 
