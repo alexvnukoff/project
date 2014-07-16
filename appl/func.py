@@ -123,7 +123,6 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
         raise ValueError("Wrong object type")
 
     if site:
-
         items = clsObj.active.get_active().filter(sites__id=settings.SITE_ID)[:qty]
     else:
         items = clsObj.active.get_active().all()[:qty]
