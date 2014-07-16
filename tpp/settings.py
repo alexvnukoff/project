@@ -116,8 +116,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
-    'tpp.SiteUrlMiddleWare.UserSitesMiddleWare',
+    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
+    #'tpp.SiteUrlMiddleWare.UserSitesMiddleWare',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -202,7 +202,7 @@ STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'tppcenter','templates').replace('\\', '/'))
 ROOT_URLCONF = 'tppcenter.urls'
-SITE_ID = 143
+#SITE_ID = 143
 
 
 #Were added by Expert Center -----------------------------------------------------
