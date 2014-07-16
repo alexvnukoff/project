@@ -28,7 +28,7 @@
                                          <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'products:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                     {% endif %}
                                     {% if 'add_advtop' in permlist %}
-                                         <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'add top' %}</span></a></div>
+                                       <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
                                     {% endif %}
                                     {% if 'delete_product' in  permlist %}
                                          <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
