@@ -848,7 +848,7 @@ def getTops(request, filterAdv=None):
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
-        Vacancy.__name__: {
+        Requirement.__name__: {
             'count': 3,
             'text': _('Job requirements'),
             'detailUrl': 'vacancy:detail'
