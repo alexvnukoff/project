@@ -3,7 +3,7 @@ from appl.func import getActiveSQS
 from appl.models import Product,  UserSites, News, BusinessProposal, AdditionalPages, Organization
 from core.models import Item
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
@@ -11,7 +11,8 @@ from django.conf import settings
 def get_wall(request, page_id=None, language=None, about=None):
 
     if page_id is not None:
-        contentPage = getAdditionalPage(request, page_id)
+        page = get_object_or_404(AdditionalPages, pk=page_id)
+        contentPage = getAdditionalPage(request, page)
         current_section = ""
         title = ""
     else:
@@ -110,18 +111,17 @@ def _get_content(request, language):
 
 
 
-def getAdditionalPage(request, page_id=None):
-    if page_id:
+def getAdditionalPage(request, page):
 
-         pageValues = AdditionalPages.objects.get(pk=page_id).getAttributeValues('NAME', 'DETAIL_TEXT')
+    pageValues = page.getAttributeValues('NAME', 'DETAIL_TEXT')
 
-         templateParams = {'pageValues': pageValues, }
+    templateParams = {'pageValues': pageValues, }
 
-         template = loader.get_template('additional_page.html')
-         context = RequestContext(request, templateParams)
-         rendered = template.render(context)
+    template = loader.get_template('additional_page.html')
+    context = RequestContext(request, templateParams)
+    rendered = template.render(context)
 
-         return rendered
+    return rendered
 
 
 def getAboutUsPage(request):

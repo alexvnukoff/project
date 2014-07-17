@@ -1,4 +1,5 @@
-from django.utils.timezone import now
+from django.utils.timezone import now, get_current_timezone, is_naive, make_aware
+from appl import func
 
 __author__ = 'Art'
 from haystack import indexes
@@ -6,7 +7,6 @@ from appl.models import Company, Country, Tpp, News, Product, Category, Branch, 
     BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV, Department, Vacancy, Resume, Requirement, Organization, \
     BpCategories
 from core.models import Relationship
-from django.conf import Settings
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 
@@ -76,14 +76,21 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
 
+        timezoneInfo = get_current_timezone()
+
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
             
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -215,11 +222,16 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -489,11 +501,17 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -599,11 +617,16 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -712,11 +735,16 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -888,11 +916,16 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -1045,11 +1078,16 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -1174,11 +1212,16 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -1322,11 +1365,16 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -1419,11 +1467,16 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:
@@ -1536,6 +1589,8 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
         emailIndex = self.fields['email'].index_fieldname
         self.prepared_data[emailIndex] = obj.user.email
 
+        obj = func.make_object_dates_aware(obj)
+
         #END DATE
         if not obj.end_date:
             self.prepared_data[endDateIndex] = obj.end_date
@@ -1600,6 +1655,8 @@ class ResumeIndex(indexes.SearchIndex, indexes.Indexable):
 
         #Get parent active date
         parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if obj.end_date:
@@ -1682,6 +1739,8 @@ class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         parendStart = None
 
+        obj = func.make_object_dates_aware(obj)
+
         #END DATE
         if obj.end_date:
             self.prepared_data[endDateIndex] = obj.end_date
@@ -1749,11 +1808,16 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
         #Get parent active date
         try:
             parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
         except ObjectDoesNotExist:
             parentRelEnd = None
             parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
 
         #END DATE
         if not obj.end_date and parentRelEnd:

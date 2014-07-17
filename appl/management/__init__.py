@@ -141,6 +141,8 @@ def databaseInitialization(sender, **kwargs):
                     'OKATO': 'Chr',
                     'OKVED': 'Chr',
                     'OKPO': 'Chr',
+                    'ORDER_DAYS': 'Int',
+                    'ORDER_HISTORY': 'Str',
                     'PERSONAL_FAX': 'Chr',
                     'PERSONAL_PHONE': 'Chr',
                     'PERSONAL_STATUS': {'type': 'Chr', 'slots': ['Individual', 'Businessman']},
@@ -196,73 +198,251 @@ def databaseInitialization(sender, **kwargs):
 
     #Create dictionary of countries
 
+    content_type = {
+        'News': {
+            'NAME': True,
+            'IMAGE': True,
+            'DETAIL_TEXT': True,
+            'YOUTUBE_CODE': False,
+            'ANONS': False
+        },
 
+        'BusinessProposal': {
+            'NAME': True,
+            'DETAIL_TEXT': True,
+            'KEYWORD': False,
+            'DOCUMENT_1': False,
+            'DOCUMENT_2': False,
+            'DOCUMENT_3': False
+        },
 
+        'Comment': {
+            'DETAIL_TEXT': True
+        },
 
+        'Company': {
+            'NAME': True,
+            'IMAGE': False,
+            'ADDRESS': False,
+            'SITE_NAME': False,
+            'TELEPHONE_NUMBER': True,
+            'FAX': False,
+            'INN': True,
+            'DETAIL_TEXT': True,
+            'SLOGAN': False,
+            'EMAIL': True,
+            'KEYWORD': False,
+            'DIRECTOR': False,
+            'KPP': False,
+            'OKPO': False,
+            'OKATO': False,
+            'OKVED': False,
+            'ACCOUNTANT': False,
+            'ACCOUNT_NUMBER': False,
+            'BANK_DETAILS': False,
+            'ANONS': True,
+            'POSITION': False
+        },
 
+        'Tpp': {
+            'NAME': True,
+            'IMAGE': False,
+            'ADDRESS': False,
+            'SITE_NAME': False,
+            'TELEPHONE_NUMBER': True,
+            'FAX': False,
+            'INN': True,
+            'DETAIL_TEXT': True,
+            'FLAG': False,
+            'EMAIL': True,
+            'KEYWORD': False,
+            'DIRECTOR': False,
+            'KPP': False,
+            'OKPO': False,
+            'OKATO': False,
+            'OKVED': False,
+            'ACCOUNTANT': False,
+            'ACCOUNT_NUMBER': False,
+            'BANK_DETAILS': False,
+            'ANONS': True,
+            'POSITION': False,
+            'SLOGAN': False
+        },
 
+        'Country': {
+            'NAME': True,
+            'FLAG': False,
+            'COUNTRY_FLAG': False
+        },
 
+        'Exhibition': {
+            'NAME': True,
+            'CITY': True,
+            'START_EVENT_DATE': True,
+            'END_EVENT_DATE': True,
+            'KEYWORD': False,
+            'DOCUMENT_1': False,
+            'DOCUMENT_2': False,
+            'DOCUMENT_3': False,
+            'ROUTE_DESCRIPTION': False,
+            'POSITION': False
+        },
 
+        'InnovationProject': {
+            'NAME': True,
+            'PRODUCT_NAME': True,
+            'COST': True,
+            'TARGET_AUDIENCE': False,
+            'RELEASE_DATE': True,
+            'SITE_NAME': False,
+            'KEYWORD': False,
+            'DETAIL_TEXT': False,
+            'BUSINESS_PLAN': False,
+            'DOCUMENT_1': False,
+            'CURRENCY': True
+        },
 
+        'Product': {
+            'NAME': True,
+            'IMAGE': True,
+            'COST': True,
+            'CURRENCY': True,
+            'DETAIL_TEXT': False,
+            'COUPON_DISCOUNT': False,
+            'DISCOUNT': False,
+            'MEASUREMENT_UNIT': True,
+            'ANONS': False,
+            'DOCUMENT_1': False,
+            'DOCUMENT_2': False,
+            'DOCUMENT_3': False,
+            'KEYWORD': False,
+            'SMALL_IMAGE': False,
+            'SKU': False
+        },
 
+        'Tender': {
+            'NAME': True,
+            'COST': True,
+            'CURRENCY': True,
+            'START_EVENT_DATE': True,
+            'END_EVENT_DATE': True,
+            'DETAIL_TEXT': False,
+            'DOCUMENT_1': False,
+            'DOCUMENT_2': False,
+            'DOCUMENT_3': False,
+            'KEYWORD': False
+        },
 
-    content_type = {'News': {'NAME': True, 'IMAGE': True, 'DETAIL_TEXT': True, 'YOUTUBE_CODE': False, 'ANONS': False},
+        'TppTV': {
+            'NAME': True,
+            'DETAIL_TEXT': False,
+            'IMAGE': False,
+            'YOUTUBE_CODE': True
+        },
 
-                    'BusinessProposal': {'NAME': True, 'DETAIL_TEXT': True, 'KEYWORD': False, 'DOCUMENT_1': False,
-                                         'DOCUMENT_2': False, 'DOCUMENT_3': False},
+        'Resume': {
+            'NAME': True,
+            'BIRTHDAY': True,
+            'MARITAL_STATUS': False,
+            'NATIONALITY':False,
+            'TELEPHONE_NUMBER': True,
+            'ADDRESS': True,
+            'FACULTY': False,
+            'PROFESSION': False,
+            'STUDY_START_DATE': False,
+            'STUDY_END_DATE': False,
+            'STUDY_FORM': False,
+            'COMPANY_EXP_1': False,
+            'COMPANY_EXP_2': False,
+            'COMPANY_EXP_3': False,
+            'POSITION_EXP_1': False,
+            'POSITION_EXP_2': False,
+            'POSITION_EXP_3': False,
+            'START_DATE_EXP_1': False,
+            'START_DATE_EXP_2': False,
+            'START_DATE_EXP_3': False,
+            'END_DATE_EXP_1': False,
+            'END_DATE_EXP_2': False,
+            'END_DATE_EXP_3': False,
+            'ADDITIONAL_STUDY': False,
+            'LANGUAGE_SKILL': False,
+            'COMPUTER_SKILL': False,
+            'ADDITIONAL_SKILL': False,
+            'SALARY': True,
+            'ADDITIONAL_INFORMATION': False,
+            'INSTITUTION': False
+        },
 
-                    'Comment': {'DETAIL_TEXT': True},
+        'Requirement': {
+            'NAME': True,
+            'CITY': True,
+            'TYPE_OF_EMPLOYMENT': True,
+            'KEYWORD': False,
+            'DETAIL_TEXT': True,
+            'REQUIREMENTS': True,
+            'TERMS': True,
+            'IS_ANONYMOUS_VACANCY': False
+        },
 
-                    'Company': {'NAME': True, 'IMAGE': False, 'ADDRESS': False, 'SITE_NAME': False,
-                                'TELEPHONE_NUMBER': True, 'FAX': False, 'INN': True, 'DETAIL_TEXT': True,
-                                'SLOGAN': False, 'EMAIL': True, 'KEYWORD': False, 'DIRECTOR': False, 'KPP': False,
-                                'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
-                                'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
+        'Messages': {
+            'DETAIL_TEXT': True,
+            'ATTACHMENT': False
+        },
 
-                    'Tpp': {'NAME': True, 'IMAGE': False, 'ADDRESS': False, 'SITE_NAME': False,
-                            'TELEPHONE_NUMBER': True, 'FAX': False, 'INN': True, 'DETAIL_TEXT': True,
-                            'FAG': False, 'EMAIL': True, 'KEYWORD': False, 'DIRECTOR': False, 'KPP': False,
-                            'OKPO': False, 'OKATO': False, 'OKVED': False, 'ACCOUNTANT': False,
-                            'ACCOUNT_NUMBER': False, 'BANK_DETAILS': False, 'ANONS': True, 'POSITION': False},
+        'UserSites': {
+            'NAME': True,
+            'SITE_SLOGAN': False,
+            'SITE_LOGO': True,
+            'DETAIL_TEXT': True,
+            'TEMPLATE': False
+        },
 
-                    'Country': {'NAME': True, 'FLAG': False, 'COUNTRY_FLAG': False},
+        'staticPages': {
+            'NAME': True,
+            'DETAIL_TEXT': True
+        },
 
-                    'Exhibition': {'NAME': True, 'CITY': True, 'START_EVENT_DATE': True, 'END_EVENT_DATE': True,
-                                   'KEYWORD': False, 'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False,
-                                   'ROUTE_DESCRIPTION': False, 'POSITION': False},
+        'AdvOrder': {
+            'COST': False,
+            'IMAGE': False,
+            'SITE_NAME': False,
+            'START_EVENT_DATE': False,
+            'END_EVENT_DATE': False,
+            'NAME': False,
+            'ORDER_HISTORY': False,
+            'ORDER_DAYS': False
+        },
 
-                    'InnovationProject': {'NAME': True, 'PRODUCT_NAME': True, 'COST': True, 'TARGET_AUDIENCE': False,
-                                          'RELEASE_DATE': True, 'SITE_NAME': False, 'KEYWORD': False,
-                                          'DETAIL_TEXT': False, 'BUSINESS_PLAN': False, 'DOCUMENT_1': False,
-                                          'CURRENCY': True},
+        'AdvTop': {
+            'COST': True,
+            'START_EVENT_DATE': True,
+            'END_EVENT_DATE': True,
 
-                    'Product': {'NAME': True, 'IMAGE': True, 'COST': True, 'CURRENCY': True, 'DETAIL_TEXT': False,
-                                'COUPON_DISCOUNT': False, 'DISCOUNT': False, 'MEASUREMENT_UNIT': True, 'ANONS': False,
-                                'DOCUMENT_1': False, 'DOCUMENT_2': False, 'DOCUMENT_3': False, 'KEYWORD': False,
-                                'SMALL_IMAGE': False, 'SKU': False},
+        },
 
-                    'Tender': {'NAME': True, 'COST': True, 'CURRENCY': True, 'START_EVENT_DATE': True,
-                               'END_EVENT_DATE': True, 'DETAIL_TEXT': False,  'DOCUMENT_1': False, 'DOCUMENT_2': False,
-                               'DOCUMENT_3': False, 'KEYWORD': False},
+        'AdvBanner': {
+            'COST': True,
+            'START_EVENT_DATE': True,
+            'END_EVENT_DATE': True,
+            'NAME': False,
+            'SITE_NAME': True,
+            'IMAGE': True
+        },
 
-                    'TppTV': {'NAME': True, 'DETAIL_TEXT': True, 'IMAGE': False, 'YOUTUBE_CODE': True},
+        'AdvBannerType': {
+            'NAME': True,
+            'WIDTH': True,
+            'HEIGHT': True
+        },
 
-                    'Resume': {'NAME': True, 'BIRTHDAY': True, 'MARITAL_STATUS': False, 'NATIONALITY':False,
-                               'TELEPHONE_NUMBER': True, 'ADDRESS': True, 'FACULTY': False, 'PROFESSION': False,
-                               'STUDY_START_DATE': False, 'STUDY_END_DATE': False, 'STUDY_FORM': False,
-                               'COMPANY_EXP_1': False, 'COMPANY_EXP_2': False,'COMPANY_EXP_3': False,
-                               'POSITION_EXP_1': False, 'POSITION_EXP_2': False, 'POSITION_EXP_3': False,
-                               'START_DATE_EXP_1': False, 'START_DATE_EXP_2': False, 'START_DATE_EXP_3': False,
-                               'END_DATE_EXP_1': False, 'END_DATE_EXP_2': False, 'END_DATE_EXP_3': False,
-                               'ADDITIONAL_STUDY': False, 'LANGUAGE_SKILL': False, 'COMPUTER_SKILL': False,
-                               'ADDITIONAL_SKILL': False, 'SALARY': True, 'ADDITIONAL_INFORMATION': False,
-                               'INSTITUTION': False },
-
-                    'Requirement': {'NAME': True, 'CITY': True, 'TYPE_OF_EMPLOYMENT': True, 'KEYWORD': False,
-                                    'DETAIL_TEXT': True, 'REQUIREMENTS': True, 'TERMS': True,
-                                    'IS_ANONYMOUS_VACANCY': False},
-
-                    'Messages': {'DETAIL_TEXT': True, 'ATTACHMENT': False}
+        'Greeting': {
+            'IMAGE': True,
+            'TPP': True,
+            'AUTHOR_NAME': True,
+            'POSITION': True,
+            'NAME': True,
+            'DETAIL_TEXT': True
+        }
     }
 
     for type, attributes in content_type.items():

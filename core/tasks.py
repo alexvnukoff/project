@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.timezone import make_aware, get_current_timezone
 from appl.models import *
 from django.utils.translation import trans_real
 from django.forms.models import modelformset_factory
@@ -16,6 +17,8 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
     gallery = Photo(post, files)
+
+    timezoneInfo = get_current_timezone()
 
     values = {}
     values.update(post)
@@ -40,7 +43,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     if new:
         if date:
             try:
-                date = datetime.datetime.strptime(date, "%m/%d/%Y")
+                date = make_aware(datetime.datetime.strptime(date, "%m/%d/%Y"), timezoneInfo)
                 new.create_date = date
                 new.save()
             except Exception as e:
@@ -87,9 +90,17 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     category = post.get('CATEGORY', None)
     #is_b2c_product = post.get('B2C_PRODUCT', None)
 
+    timezoneInfo = get_current_timezone()
+
     if post.get('COUPON_DISCOUNT-END', None):
        date = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-END', None), "%m/%d/%Y")
+
+       date = make_aware(date, timezoneInfo)
+
        edate = datetime.datetime.strptime(post.get('COUPON_DISCOUNT-START', None), "%m/%d/%Y") if post.get('COUPON_DISCOUNT-START', False) else now()
+
+       edate = make_aware(edate, timezoneInfo)
+
        dates = {'COUPON_DISCOUNT': [edate, date]}
     else:
         dates = None
@@ -105,11 +116,14 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             'th': {'box':(50, 40), 'fit': True}
             }
 
+
+
     product = form.save(user, site_id, dates=dates, sizes=sizes)
+
     if product:
         if end_date:
-            product.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
-            product.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            product.start_date = make_aware(datetime.datetime.strptime(start_date, "%m/%d/%Y"), timezoneInfo)
+            product.end_date = make_aware(datetime.datetime.strptime(end_date, "%m/%d/%Y"), timezoneInfo)
             product.save()
 
         if category:
@@ -298,7 +312,10 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
     if new:
         if date:
             try:
-                date = datetime.datetime.strptime(date, "%m/%d/%Y")
+
+                timezoneInfo = get_current_timezone()
+                date = make_aware(datetime.datetime.strptime(date, "%m/%d/%Y"), timezoneInfo)
+
                 new.create_date = date
                 new.save()
             except Exception as e:
@@ -325,6 +342,7 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 @shared_task
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
+    timezoneInfo = get_current_timezone()
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(post, files, prefix="pages")
@@ -353,10 +371,11 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
             }
 
     tpp = form.save(user, site_id, sizes=sizes)
+
     if tpp:
         if end_date:
-            tpp.start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
-            tpp.end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            tpp.start_date = make_aware(datetime.datetime.strptime(start_date, "%m/%d/%Y"), timezoneInfo)
+            tpp.end_date = make_aware(datetime.datetime.strptime(end_date, "%m/%d/%Y"), timezoneInfo)
             tpp.save()
 
 
@@ -624,6 +643,9 @@ def addBannerAttr(post, files, user, site_id, ids, bType, current_company, facto
     if not item:
         raise Exception('Error occurred while saving form')
 
+    timezoneInfo = get_current_timezone()
+    stDate = make_aware(stDate, timezoneInfo)
+
     Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
     Relationship.setRelRelationship(parent=bType, child=item, type="relation", user=user)
 
@@ -716,6 +738,10 @@ def addTopAttr(post, object, user, site_id, ids, org, factor):
         raise Exception('Error occurred while saving form')
 
     item.sites.add(site_id)
+
+    timezoneInfo = get_current_timezone()
+
+    stDate = make_aware(stDate, timezoneInfo)
 
     Item.objects.filter(pk=item.pk).update(start_date=stDate, end_date=now())
     Relationship.setRelRelationship(object, item, user=user, type="dependence")

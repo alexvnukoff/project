@@ -1,5 +1,6 @@
 import urllib
 from django.http import QueryDict
+from django.utils.timezone import make_aware, is_naive, get_current_timezone
 from core.models import *
 from appl.models import *
 from django.db.models import Count, F
@@ -1273,3 +1274,18 @@ def show_toolbar(request):
 
 
     return False
+
+
+def make_object_dates_aware(obj):
+
+    timezoneInfo = get_current_timezone()
+
+    if obj.end_date and is_naive(obj.end_date):
+        obj.end_date = make_aware(obj.end_date, timezoneInfo)
+        obj.save()
+
+    if obj.start_date and is_naive(obj.start_date):
+        obj.start_date = make_aware(obj.start_date, timezoneInfo)
+        obj.save()
+
+    return obj
