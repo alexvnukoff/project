@@ -991,6 +991,9 @@ class Item(models.Model):
         for instanceToSave in notBulk:
             instanceToSave.save()
 
+        # For compatibility do not use it, should be surrounded with try-except
+        return True
+
     def getSiblings(self, includeSelf=True):
         '''
             Get siblings in hierarchy

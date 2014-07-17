@@ -42,3 +42,8 @@ urlpatterns = patterns('',
     url(r'^page-(?P<page_id>[0-9]+)/$', usersites.views.get_wall, name='additionalPage'),
     url(r'^(?P<language>[a-zA-Z]{2})/page-(?P<page_id>[0-9]+)/', usersites.views.get_wall, name='additionalPage_lang'),
 )
+
+import debug_toolbar
+urlpatterns += patterns('',
+    url(r'^__debug__/', include(debug_toolbar.urls)),
+)

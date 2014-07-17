@@ -535,7 +535,15 @@ def addVacancyAjax(request):
                     usr = request.user
                     vacancyName = request.POST.get('VACANCY', False)
                     vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
-                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+
+                    res = True
+
+                    try:
+                        vac.setAttributeValue({'NAME': vacancyName}, usr)
+                    except Exception as e:
+                        logger.exception("Can not set attributes for Vacancy",  exc_info=True)
+                        res = False
+
                     if not res:
                         vac.delete()
                         response = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}

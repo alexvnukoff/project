@@ -141,8 +141,6 @@ urlpatterns = patterns('',
 
 )
 
-request = get_request()
-
 import debug_toolbar
 urlpatterns += patterns('',
     url(r'^__debug__/', include(debug_toolbar.urls)),
