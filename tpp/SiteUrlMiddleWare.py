@@ -3,6 +3,7 @@ from django.conf import settings
 from threading import current_thread
 import os
 from django.http import HttpResponseBadRequest, HttpResponseNotFound
+from django.http.response import HttpResponseRedirectBase
 from django.utils import translation
 
 class SiteUrlMiddleWare:
@@ -31,17 +32,9 @@ class SiteUrlMiddleWare:
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
 
-
         except Site.DoesNotExist:
-
-
-
-            settings.SITE_ID = 143
-            request.urlconf = "tppcenter.urls"
-            settings.ROOT_URLCONF = "tppcenter.urls"
-            settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
-                     os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
-
+            site = Site.objects.get(pk=143)
+            return HttpResponseRedirectBase('http://' + site)
 
 class UserSitesMiddleWare:
 
