@@ -32,9 +32,22 @@ class SiteUrlMiddleWare:
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
 
+
         except Site.DoesNotExist:
-            site = Site.objects.get(pk=143)
-            return HttpResponseRedirectBase('http://' + site)
+
+            lang = current_domain.split('.')[0] if current_domain else None
+            languages = [lan[0] for lan in settings.LANGUAGES]
+
+            if lang and lang in languages:
+                settings.SITE_ID = 143
+                request.urlconf = "tppcenter.urls"
+                settings.ROOT_URLCONF = "tppcenter.urls"
+                settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
+                         os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
+            else:
+                site = Site.objects.get(pk=143)
+                return HttpResponseRedirectBase('http://' + site.domain)
+
 
 class UserSitesMiddleWare:
 
