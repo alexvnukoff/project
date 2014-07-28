@@ -27,7 +27,8 @@ import json
 @csrf_protect
 def home(request):
 
-    if request.user.is_authenticated():
+    #if request.user.is_authenticated()
+    if request.user.id is not None:
         return HttpResponseRedirect(reverse('wall:main'))
 
     if request.POST.get('Register', None):

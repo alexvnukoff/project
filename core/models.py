@@ -729,14 +729,14 @@ class Item(models.Model):
         # Check if slot pk exists in this dictionary - using conditions
         filter_or = ' | '.join(queries)
 
-        valueFileds = ['title']
+        valueFields = ['title']
 
 
         # Prepare fields for slot query to get all lang values
         for lang in settings.LANGUAGES:
-            valueFileds.append(valueFileds[0] + '_' + lang[0])
+            valueFields.append(valueFields[0] + '_' + lang[0])
 
-        params = valueFileds + ['dict__pk', 'pk']
+        params = valueFields + ['dict__pk', 'pk']
 
         # Get all needed slots
         attributesValue = Slot.objects.filter(eval(filter_or)).values(*params)
@@ -753,7 +753,7 @@ class Item(models.Model):
             }
 
             # Prepare values dict for all language fields
-            for langDict in valueFileds: #set value for all languages
+            for langDict in valueFields: #set value for all languages
                 uniqDict[value['dict__pk']][value['pk']].update({langDict: value[langDict]})
 
         #Insert dict slot
