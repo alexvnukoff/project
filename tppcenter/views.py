@@ -71,9 +71,6 @@ def home(request):
         'greetingsList': greetingsList,
         'exhibitionsList': exhibitionsList,
     }
-
-
-
         #cache.set(cache_name, templateParams)
     #else:
     #    templateParams = cache.get(cache_name)
