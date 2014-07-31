@@ -2,16 +2,60 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="container">
-  {% include "Wall/popupFilter.html" %}
-
-
-          	<div class="wall-title">{% trans 'Latest updates' %}</div>
-
-             {% if innovValues  %}
-             <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
-
-               <ul class="tender-list" id="afisha-list">
-                {% for id , attr in innovValues.items %}
+    {% include "Wall/popupFilter.html" %}
+    <div class="wall-title">{% trans 'Latest updates' %}</div>
+    {% if productsValues %}
+        <div class="wall-title-bg">{% trans 'Products' %}</div>
+        <ul class="listprd">
+            {% for id , attr in productsValues.items %}
+                {% with attr.NAME.0 as name %}
+                {% with attr.IMAGE.0 as image %}
+                {% with attr.CREATE_DATE.0 as date%}
+                {% with attr.COUNTRY_NAME|first as country_name %}
+                {% with attr.SLUG|first as slug %}
+                {% with attr.FLAG_CLASS|first as flag %}
+                {% with attr.COST|first as price %}
+                {% with attr.CURRENCY|first as currency %}
+                {% with attr.COUNTRY_ID as country_id %}
+                <li>
+                    <div class="thumb">
+                        <a href="{% url "products:detail" slug %}">
+                            {% if image %}
+                                <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                            {% else %}
+                                <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="link">
+                        <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:40 }}</a>
+                    </div>
+                    <div class="price">
+                        {% if price %}
+                            {{ currency|getSymbol }} {{ price }}
+                        {% else %}
+                            {% trans 'Get the price' %}
+                        {% endif %}
+                    </div>
+                    <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
+                </li>
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if innovValues  %}
+        <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
+        <ul class="tender-list" id="afisha-list">
+            {% for id , attr in innovValues.items %}
                     {% with attr.NAME.0 as name %}
                     {% with attr.SLUG.0 as slug %}
                     {% with attr.COST.0 as cost %}
@@ -246,63 +290,6 @@
 
             </ul>
             {% endif %}
-           {% if productsValues %}
-          <div class="wall-title-bg">{% trans 'Products' %}</div>
-            <ul class="listprd">
-                {% for id , attr in productsValues.items %}
-                    {% with attr.NAME.0 as name %}
-                    {% with attr.IMAGE.0 as image %}
-                    {% with attr.CREATE_DATE.0 as date%}
-                    {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.SLUG|first as slug %}
-                    {% with attr.FLAG_CLASS|first as flag %}
-                    {% with attr.COST|first as price %}
-                    {% with attr.CURRENCY|first as currency %}
-                    {% with attr.COUNTRY_ID as country_id %}
-                    <li>
-                      <div class="thumb">
-                      <a href="{% url "products:detail" slug %}">
-                          {% if image %}
-                             <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
-                          {% else %}
-                               <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
-                          {% endif %}
-                      </a>
-                      </div>
-                        <div class="link">
-
-                           <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
-
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:40 }}</a>
-                       </div>
-                        <div class="price">
-                             {% if price %}
-                                {{ currency|getSymbol }} {{ price }}
-                            {% else %}
-                                {% trans 'Get the price' %}
-                            {% endif %}
-                        </div>
-                        <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
-                    </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                {% endfor %}
-            </ul>
- {% endif %}
-
-
-
-
-
-
-
 
 
 </div>
