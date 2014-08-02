@@ -761,6 +761,9 @@ class Item(models.Model):
             values = attrWithValues[attr.title]
             dictID = attr.dict_id
 
+            if dictID is None:
+                continue
+
             if not isinstance(values, list):
                 values = [values]
 
