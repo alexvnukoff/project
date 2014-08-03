@@ -27,59 +27,53 @@ import json
 @csrf_protect
 def home(request):
 
-    #if request.user.is_authenticated()
-    if request.user.id is not None:
+    if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('wall:main'))
 
     if request.POST.get('Register', None):
         return registration(request)
 
-    cache_name = 'home_page'
-    cached = cache.get(cache_name)
+    #cache_name = 'home_page'
+    #cached = cache.get(cache_name)
 
-    if not cached:
+    #if not cached:
 
-        organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
-        organizations_id = [organization.pk for organization in organizations]
+    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+    organizations_id = [organization.pk for organization in organizations]
 
-        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG', 'TITLE_DESCRIPTION'), organizations_id)
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG', 'TITLE_DESCRIPTION'), organizations_id)
 
-        products = Product.active.get_active().order_by('-pk')[:3]
+    products = Product.active.get_active().order_by('-pk')[:3]
 
-        products_id = [product.pk for product in products]
-        productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-        func.addDictinoryWithCountryAndOrganization(products_id, productsList)
+    products_id = [product.pk for product in products]
+    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
+    func.addDictinoryWithCountryAndOrganization(products_id, productsList)
 
-        services = BusinessProposal.active.get_active().order_by('-pk')[:3]
+    services = BusinessProposal.active.get_active().order_by('-pk')[:3]
 
-        services_id = [service.id for service in services]
-        serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
-        func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
+    services_id = [service.id for service in services]
+    serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
+    func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
+    greetings = Greeting.active.get_active().all()
+    greetings_id = [greeting.id for greeting in greetings]
+    greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
 
+    exhibitions = Exhibition.active.get_active().order_by("-pk")[:3]
+    exhibitions_id = [exhibition.pk for exhibition in exhibitions]
+    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
+    func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
 
-        greetings = Greeting.active.get_active().all()
-        greetings_id = [greeting.id for greeting in greetings]
-        greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
-
-        exhibitions = Exhibition.active.get_active().order_by("-pk")[:3]
-        exhibitions_id = [exhibition.pk for exhibition in exhibitions]
-        exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
-        func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
-
-        templateParams = {
-            'organizationsList': organizationsList,
-            'productsList': productsList,
-            'serviceList': serviceList,
-            'greetingsList': greetingsList,
-            'exhibitionsList': exhibitionsList,
-        }
-
-
-
-        cache.set(cache_name, templateParams)
-    else:
-        templateParams = cache.get(cache_name)
+    templateParams = {
+        'organizationsList': organizationsList,
+        'productsList': productsList,
+        'serviceList': serviceList,
+        'greetingsList': greetingsList,
+        'exhibitionsList': exhibitionsList,
+    }
+        #cache.set(cache_name, templateParams)
+    #else:
+    #    templateParams = cache.get(cache_name)
 
     template = loader.get_template('index.html')
     context = RequestContext(request, templateParams)

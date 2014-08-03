@@ -200,7 +200,7 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'tppcenter','templates').replace('\\', '/'))
+TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'tppcenter', 'templates').replace('\\', '/'))
 ROOT_URLCONF = 'tppcenter.urls'
 #SITE_ID = 143
 
@@ -268,7 +268,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     #'mo': ('ru',),
     #'tg': ('ru',),
     #'tm': ('ru',),
-    #'uk': ('ru',),
+    'uk': ('en',),
     #'uz': ('ru',),
 }
 
@@ -307,8 +307,6 @@ for lang in LANGUAGES:
         'URL': HAYSTACK_CONNECTIONS['default']['URL'],
         'INDEX_NAME': 'lang-' + lang[0],
     }
-
-USE_X_FORWARDED_HOST = True
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 
