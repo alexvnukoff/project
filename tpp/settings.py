@@ -239,7 +239,7 @@ LANGUAGES = (
     #('mo', gettext('Moldova')),
     #('tg', gettext('Tajikistan')),
     #('tm', gettext('Turkmenistan')),
-    #('uk', gettext('Ukrainian')),
+    ('uk', gettext('Ukrainian')),
     #('uz', gettext('Uzbekistan')),
     ('he', gettext('Israel')),
     ('ar', gettext('Arabic')),
