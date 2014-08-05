@@ -39,7 +39,11 @@ class SiteUrlMiddleWare:
             languages = [lan[0] for lan in settings.LANGUAGES]
 
             if lang and lang in languages:
-                settings.SITE_ID = 143
+#TODO this string was commented for debugging of categories. Check indirect impact.
+                #settings.SITE_ID = 143
+                site = Site.objects.get(domain=current_domain[3:])
+                settings.SITE_ID = site.pk
+
                 request.urlconf = "tppcenter.urls"
                 settings.ROOT_URLCONF = "tppcenter.urls"
                 settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
