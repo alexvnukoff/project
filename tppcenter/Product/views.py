@@ -258,7 +258,7 @@ def addProducts(request):
 def updateProduct(request, item_id):
 
     try:
-        item = Company.objects.get(p2c__child_id=item_id)
+        item = Company.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         return func.emptyCompany()
 

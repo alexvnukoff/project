@@ -1,6 +1,8 @@
 import json
 from dateutil.parser import parse
 from django.contrib.sites.models import Site
+from django.core.exceptions import ObjectDoesNotExist
+from appl import func
 from appl.models import Organization, Branch, Tpp, Country, AdvOrder
 from core.models import Item
 from core.tasks import addTopAttr
@@ -23,39 +25,19 @@ def advJsonFilter(request):
     import json
 
     filter = request.GET.get('type', None)
-    q = request.GET.get('q', '')
-    page = request.GET.get('page', None)
+    q = request.GET.get('q', '').strip()
 
+    try:
+        page = int(request.GET.get('page', None))
+    except ValueError:
+        return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
-        from haystack.query import SearchQuerySet
-        from django.core.paginator import Paginator
+    if request.is_ajax() and type:
 
-        model = None
+        result = func.autocompleteFilter(filter, q, page)
 
-
-        if filter == 'tpp':
-            model = Tpp
-        elif filter == "branch":
-            model = Branch
-        elif filter == 'country':
-            model = Country
-
-        if model:
-
-            if not q:
-                sqs = SearchQuerySet().models(model).order_by('title')
-            else:
-                sqs = SearchQuerySet().models(model).autocomplete(title_auto=q).order_by('title_sort')
-
-            paginator = Paginator(sqs, 10)
-
-            try:
-                onPage = paginator.page(page)
-            except Exception:
-                onPage = paginator.page(1)
-
-            total = paginator.count
+        if result:
+            onPage, total = result
 
             obj_list = [item.id for item in onPage.object_list]
 
@@ -80,6 +62,8 @@ def advJsonFilter(request):
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
 
+
+
 @login_required(login_url='/login/')
 def addTop(request, item):
     '''
@@ -89,12 +73,19 @@ def addTop(request, item):
     object = get_object_or_404(Item, pk=item)
     factor = float(object.contentType.top.getAttributeValues('COST')[0])
 
-    current_organization = request.session.get('current_company', False)
+    try:
+        org = Organization.objects.get(p2c__child=item)
+    except ObjectDoesNotExist:
+        try:
+            org = Organization.objects.get(pk=item)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
 
-    if current_organization is False:
+    perm_list = org.getItemInstPermList(request.user)
+
+    if 'add_advtop' not in perm_list:
         return HttpResponseRedirect(reverse('denied'))
 
-    org = Organization.objects.get(pk=current_organization)
     #org = Organization.objects.get(pk=114)
     '''
     perm_list = org.getItemInstPermList(request.user)

@@ -64,46 +64,23 @@ def advJsonFilter(request):
     '''
         Getting filters for advertisement
     '''
+
     import json
 
     filter = request.GET.get('type', None)
-    q = request.GET.get('q', '')
-    page = request.GET.get('page', None)
+    q = request.GET.get('q', '').strip()
 
+    try:
+        page = int(request.GET.get('page', None))
+    except ValueError:
+        return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
-        from haystack.query import SearchQuerySet
-        from django.core.paginator import Paginator
+    if request.is_ajax() and type:
 
-        model = None
+        result = func.autocompleteFilter(filter, q, page)
 
-
-        if filter == 'tpp':
-            model = Tpp
-        elif filter == "companies":
-            model = Company
-        elif filter == "category":
-            model = Category
-        elif filter == "branch":
-            model = Branch
-        elif filter == 'country':
-            model = Country
-
-        if model:
-
-            if not q:
-                sqs = SearchQuerySet().models(model).order_by('title_sort')
-            else:
-                sqs = SearchQuerySet().models(model).autocomplete(title_auto=q).order_by('title_sort')
-
-            paginator = Paginator(sqs, 10)
-
-            try:
-                onPage = paginator.page(page)
-            except Exception:
-                onPage = paginator.page(1)
-
-            total = paginator.count
+        if result:
+            onPage, total = result
 
             obj_list = [item.id for item in onPage.object_list]
 
@@ -126,7 +103,6 @@ def advJsonFilter(request):
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
-
 
 @login_required(login_url='/login/')
 def addBanner(request, bannerType):

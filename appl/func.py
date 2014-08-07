@@ -1288,3 +1288,43 @@ def make_object_dates_aware(obj):
         obj.save()
 
     return obj
+
+
+def autocompleteFilter(filter, q, page):
+
+    if (len(q) == 0 or len(q) > 2) and page > 0:
+
+        model = None
+
+
+        if filter == 'tpp':
+            model = Tpp
+        elif filter == "company":
+            model = Company
+        elif filter == "category":
+            model = Category
+        elif filter == "branch":
+            model = Branch
+        elif filter == 'country':
+            model = Country
+        elif filter == 'bp_category':
+            model = BpCategories
+
+        if model:
+
+            if not q:
+                sqs = SearchQuerySet().models(model).order_by('title_sort')
+            else:
+                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title_sort')
+
+            paginator = Paginator(sqs, 10)
+            total = paginator.count
+
+            try:
+                onPage = paginator.page(page)
+            except Exception:
+                onPage = paginator.page(1)
+
+            return (onPage, total)
+
+    return False

@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.utils.timezone import now
-from appl.models import Cabinet, AdvertisementItem, AdvOrder, AdvBannerType, topTypes, staticPages, Greeting
+from appl.models import Cabinet, AdvertisementItem, AdvOrder, AdvBannerType, topTypes, staticPages, Greeting, Company
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from haystack.query import SearchQuerySet
@@ -35,7 +35,7 @@ def users(request):
     if not request.user.is_commando and not request.user.is_superuser:
         return HttpResponseBadRequest()
 
-    cols = ['name', 'email', 'date_joined', 'last_login', 'date_joined', 'ip']
+    cols = [False, False, 'last_login', 'date_joined', False, False]
 
     if request.is_ajax():
         orderby = []
@@ -55,7 +55,7 @@ def users(request):
             for x in range(0, sortingCols):
                 colIndex = request.GET.get('iSortCol_' + str(x), False)
 
-                if colIndex is not False:
+                if colIndex is not False and cols[colIndex]:
                     colIndex = int(colIndex)
 
                     dir = request.GET.get('sSortDir_' + str(x), 'desc')
@@ -70,7 +70,7 @@ def users(request):
 
 
         if search != "":
-            sqs = SearchQuerySet().models(Cabinet).filter(text=search)
+            sqs = SearchQuerySet().models(Cabinet).filter(email=search)
         else:
             sqs = SearchQuerySet().models(Cabinet)
 
@@ -84,7 +84,8 @@ def users(request):
         cabinets = [itm.id for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues(('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'), cabinets)
-        users = User.objects.filter(cabinet__pk__in=cabinets).values('email', 'last_login', 'date_joined', 'ip', 'cabinet', "pk").order_by('pk')
+        users = User.objects.filter(cabinet__pk__in=cabinets).values('email', 'last_login', 'date_joined', 'ip',
+                                                                     'cabinet', "pk").order_by(*orderby)
 
 
 
@@ -121,7 +122,83 @@ def users(request):
             "sEcho": int(request.GET.get('sEcho', 1)),
             "iTotalRecords": paginator.count,
             "iTotalDisplayRecords": paginator.count,
-            "aaData" : resultData
+            "aaData": resultData
+        }))
+    else:
+        templateParams = {}
+        return render_to_response("AdminTpp/users.html", templateParams, context_instance=RequestContext(request))
+
+@login_required(login_url="/login/")
+def companies(request):
+
+    if not request.user.is_commando and not request.user.is_superuser:
+        return HttpResponseBadRequest()
+
+    if request.is_ajax():
+
+        displayStart = int(request.GET.get('iDisplayStart', 1))
+        displayLen = int(request.GET.get('iDisplayLength', 10))
+
+        if displayStart == 1:
+            page = 1
+        else:
+            page = int(displayStart / displayLen + 1)
+
+        search = request.GET.get('sSearch', "").strip()
+
+        if search != "":
+            sqs = SearchQuerySet().models(Company).filter(title_auto=search)
+        else:
+            sqs = SearchQuerySet().models(Company)
+
+        paginator = Paginator(sqs, 10)
+
+        try:
+            onPage = paginator.page(page)
+        except Exception:
+            onPage = paginator.page(1)
+
+        companies = [itm.id for itm in onPage.object_list]
+
+        ItemsWithValues = Item.getItemsAttributesValues('NAME', companies)
+        companies = Company.objects.filter(pk__in=companies).values('create_date',  'create_user__cabinet',"pk").order_by('-create_date')
+
+
+
+        for values in users:
+
+            cabinet = int(values['cabinet'])
+
+            if cabinet not in ItemsWithValues or not isinstance(ItemsWithValues[cabinet], dict):
+                ItemsWithValues[cabinet] = {}
+
+            ItemsWithValues[cabinet].update(values)
+
+        resultData = []
+
+        for pk, cabinet in ItemsWithValues.items():
+            resultNode = []
+            #Full name
+            name = [cabinet.get('LAST_NAME', [""])[0],
+                    cabinet.get('MIDDLE_NAME', [""])[0],
+                    cabinet.get('FIRST_NAME', [""])[0]]
+
+            #Creating list of result data
+            resultNode.append(" ".join(name))
+            resultNode.append(cabinet.get('email', ""))
+            resultNode.append(cabinet.get('last_login', "").strftime('%Y-%m-%dT%H:%M:%S'))
+            resultNode.append(cabinet.get('date_joined', "").strftime('%Y-%m-%dT%H:%M:%S'))
+            resultNode.append(cabinet.get('ip', ""))
+            resultNode.append(cabinet.get('pk', "0"))
+
+            resultData.append(resultNode)
+
+
+        return HttpResponse(json.dumps({
+            "sEcho": int(request.GET.get('sEcho', 1)),
+            "iTotalRecords": paginator.count,
+            "iTotalDisplayRecords": paginator.count,
+            "aaData": resultData
         }))
     else:
         templateParams = {}

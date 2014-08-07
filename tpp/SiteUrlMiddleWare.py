@@ -2,7 +2,7 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from threading import current_thread
 import os
-from django.http import HttpResponseBadRequest, HttpResponseNotFound
+from django.http import HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.http.response import HttpResponseRedirectBase
 from django.utils import translation
 
@@ -50,7 +50,7 @@ class SiteUrlMiddleWare:
                          os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
             else:
                 site = Site.objects.get(pk=143)
-                return HttpResponseRedirectBase('http://' + site.domain)
+                return HttpResponseRedirect('http://' + site.domain)
 
 
 class UserSitesMiddleWare:

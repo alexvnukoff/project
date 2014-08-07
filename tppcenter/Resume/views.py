@@ -117,7 +117,7 @@ def _resumeList(request, my=None, page=1):
                     order.append(sortFields[sortField2])
 
             proposal = sqs.order_by(*order)
-            cabinet_ids =[resume.cabinet for resume in sqs]
+            cabinet_ids = [resume.cabinet for resume in sqs]
             resume_cabinet_dict = {resume.id: resume.cabinet for resume in sqs}
 
             cabinetValues = Item.getItemsAttributesValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'), cabinet_ids)
