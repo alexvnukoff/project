@@ -15,8 +15,8 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
-from appl.models import Country, Organization, Branch, Category, Company, Tpp, Gallery, Cabinet, Notification, \
-    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate, BpCategories
+from appl.models import Country, Organization, Tpp, Gallery, Cabinet, Notification, \
+    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from core.models import Item, User
@@ -367,44 +367,18 @@ def jsonFilter(request):
     import json
 
     filter = request.GET.get('type', None)
-    q = request.GET.get('q', None)
-    page = request.GET.get('page', None)
+    q = request.GET.get('q', '').strip()
 
+    try:
+        page = int(request.GET.get('page', None))
+    except ValueError:
+        return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
-        from haystack.query import SearchQuerySet
-        from django.core.paginator import Paginator
+    if request.is_ajax() and type:
+        result = func.autocompleteFilter(filter, q, page)
 
-        model = None
-
-
-        if filter == 'tpp':
-            model = Tpp
-        elif filter == "company":
-            model = Company
-        elif filter == "category":
-            model = Category
-        elif filter == "branch":
-            model = Branch
-        elif filter == 'country':
-            model = Country
-        elif filter == 'bp_category':
-            model = BpCategories
-
-        if model:
-
-            if not q:
-                sqs = SearchQuerySet().models(model).order_by('title_sort')
-            else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=request.GET.get('q', '')).order_by('title_sort')
-
-            paginator = Paginator(sqs, 10)
-            total = paginator.count
-
-            try:
-                onPage = paginator.page(page)
-            except Exception:
-                onPage = paginator.page(1)
+        if result:
+            onPage, total = result
 
             items = [{'title': item.title_auto, 'id': item.id} for item in onPage.object_list]
 
