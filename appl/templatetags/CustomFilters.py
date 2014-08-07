@@ -425,7 +425,7 @@ def searchQuery(context):
 @register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
 def detail_page_to_tppcenter(context, url, slug=None):
 
-    prefix =  Site.objects.get(name='tppcenter').domain + '/'
+    prefix = Site.objects.get(name='tppcenter').domain + '/'
     if slug:
         url = (reverse(viewname=url, urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
     else:

@@ -225,13 +225,14 @@
                             return '{% trans "No result found" %}';
                         },
                     ajax: {
-                        url: "/advbanner/filter/",
+                        url: "{% url 'adv_top:filter' %}",
                         dataType: 'json',
                         quietMillis: 100,
                         data: function (term, page) { // page is the one-based page number tracked by Select2
                         return {
                             page: page, // page number
-                            type: $(this).attr('name')
+                            type: $(this).attr('name'),
+                            q: term //search term
                             };
                         },
                         results: function (data, page) {
@@ -314,8 +315,9 @@
                     <input {% if filterDict.init %}value="{{ filterDict.init }}"{% endif %}  name="{{ name }}" placeholder="{{ filterDict.placeholder }}" type="hidden" />
                 {% endfor %}
             </div>
-
+            <div class="screen"><img src="{% static 'tppcenter/img/demo.gif'%}"></div>
         </div>
+
         <div class="ads-details-right">
 
             <div class="title">{% trans "Basket" %}</div>

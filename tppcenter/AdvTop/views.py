@@ -1,6 +1,7 @@
 import json
 from dateutil.parser import parse
 from django.contrib.sites.models import Site
+from appl import func
 from appl.models import Organization, Branch, Tpp, Country, AdvOrder
 from core.models import Item
 from core.tasks import addTopAttr
@@ -23,39 +24,19 @@ def advJsonFilter(request):
     import json
 
     filter = request.GET.get('type', None)
-    q = request.GET.get('q', '')
-    page = request.GET.get('page', None)
+    q = request.GET.get('q', '').strip()
 
+    try:
+        page = int(request.GET.get('page', None))
+    except ValueError:
+        return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type and page and (len(q) == 0 or len(q) > 2):
-        from haystack.query import SearchQuerySet
-        from django.core.paginator import Paginator
+    if request.is_ajax() and type:
 
-        model = None
+        result = func.autocompleteFilter(filter, q, page)
 
-
-        if filter == 'tpp':
-            model = Tpp
-        elif filter == "branch":
-            model = Branch
-        elif filter == 'country':
-            model = Country
-
-        if model:
-
-            if not q:
-                sqs = SearchQuerySet().models(model).order_by('title')
-            else:
-                sqs = SearchQuerySet().models(model).autocomplete(title_auto=q).order_by('title_sort')
-
-            paginator = Paginator(sqs, 10)
-
-            try:
-                onPage = paginator.page(page)
-            except Exception:
-                onPage = paginator.page(1)
-
-            total = paginator.count
+        if result:
+            onPage, total = result
 
             obj_list = [item.id for item in onPage.object_list]
 
