@@ -1,6 +1,7 @@
 import json
 from dateutil.parser import parse
 from django.contrib.sites.models import Site
+from django.core.exceptions import ObjectDoesNotExist
 from appl import func
 from appl.models import Organization, Branch, Tpp, Country, AdvOrder
 from core.models import Item
@@ -61,6 +62,8 @@ def advJsonFilter(request):
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
 
+
+
 @login_required(login_url='/login/')
 def addTop(request, item):
     '''
@@ -70,12 +73,19 @@ def addTop(request, item):
     object = get_object_or_404(Item, pk=item)
     factor = float(object.contentType.top.getAttributeValues('COST')[0])
 
-    current_organization = request.session.get('current_company', False)
+    try:
+        org = Organization.objects.get(p2c__child=item)
+    except ObjectDoesNotExist:
+        try:
+            org = Organization.objects.get(pk=item)
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('denied'))
 
-    if current_organization is False:
+    perm_list = org.getItemInstPermList(request.user)
+
+    if 'add_advtop' not in perm_list:
         return HttpResponseRedirect(reverse('denied'))
 
-    org = Organization.objects.get(pk=current_organization)
     #org = Organization.objects.get(pk=114)
     '''
     perm_list = org.getItemInstPermList(request.user)

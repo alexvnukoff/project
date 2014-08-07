@@ -7,11 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _, trans_real
+from django.utils.translation import ugettext as _
+from django.utils import translation
 from tppcenter.Profile.profileForms import ProfileForm
 from tppcenter.views import user_logout
 import uuid
-from django.utils.translation import trans_real
 
 @login_required(login_url='/login/')
 def getProfileForm(request):
@@ -34,8 +34,8 @@ def getProfileForm(request):
 
 def _profileContent(request):
 
-    lang_code = trans_real.get_language()
-    trans_real.activate(lang_code)
+    lang_code = translation.get_language()
+    translation.activate(lang_code)
 
     user_groups = request.user.groups.values_list('pk', flat=True)
 
@@ -153,6 +153,8 @@ def _profileContent(request):
 
     current_company = request.session.get('current_company', False)
 
+    translation.deactivate()
+
     template = loader.get_template('Profile/addForm.html')
 
     templateParams = {
@@ -164,7 +166,6 @@ def _profileContent(request):
     }
 
     context = RequestContext(request, templateParams)
-    trans_real.deactivate()
 
     return template.render(context)
 

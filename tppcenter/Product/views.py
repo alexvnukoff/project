@@ -149,8 +149,8 @@ def _getDetailContent(request, item_id):
 @login_required(login_url='/login/')
 def productForm(request, action, item_id=None):
     if item_id:
-       if not Product.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+        if not Product.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
 
     current_section = _("Products")
@@ -258,7 +258,7 @@ def addProducts(request):
 def updateProduct(request, item_id):
 
     try:
-        item = Company.objects.get(p2c__child_id=item_id)
+        item = Company.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         return func.emptyCompany()
 
