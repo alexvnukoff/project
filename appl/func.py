@@ -1147,9 +1147,9 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                     proposal = getActiveSQS().models(model).\
                         filter(SQ(id=current_organization) | SQ(company=current_organization))
 
-
-                if q != '': #Search for content
-                    proposal = proposal.filter(SQ(title=q) | SQ(text=q))
+                #TODO: Fix search
+                #if q != '': #Search for content
+                #    proposal = proposal.filter(SQ(title=q) | SQ(text=q))
 
                 proposal.order_by('-obj_create_date')
 

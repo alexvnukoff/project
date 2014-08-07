@@ -273,7 +273,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 }
 
 
-
+MODELTRANSLATION_AUTO_POPULATE = 'required'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
