@@ -370,7 +370,7 @@ def jsonFilter(request):
     q = request.GET.get('q', '').strip()
 
     try:
-        page = int(request.GET.get('page', None))
+        page = int(request.GET.get('page', 1))
     except ValueError:
         return HttpResponse(json.dumps({'content': [], 'total': 0}))
 

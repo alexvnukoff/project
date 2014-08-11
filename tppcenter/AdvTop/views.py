@@ -223,21 +223,12 @@ def addTop(request, item):
 @login_required(login_url='/login/')
 def resultOrder(request, orderID):
 
+    order = get_object_or_404(AdvOrder, pk=orderID)
 
-    current_company = request.session.get('current_company', False)
-    '''
-    if not request.session.get('current_company', False):
-         return func.emptyCompany()
+    perm_list = order.getItemInstPermList(request.user)
 
-    item = Organization.objects.get(pk=current_company)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'add_adv_banner' not in perm_list:
+    if 'add_advtop' not in perm_list:
         return HttpResponseRedirect(reverse('denied'))
-    '''
-
-    order = get_object_or_404(AdvOrder, pk=orderID, c2p__parent=current_company)
 
     ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE', 'END_EVENT_DATE', 'IMAGE')
 

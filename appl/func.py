@@ -878,32 +878,32 @@ def getTops(request, filterAdv=None):
 
     models = {
         Product.__name__: {
-            'count': 3, #Limit of this type to fetch
+            'count': 1, #Limit of this type to fetch
             'text': _('Products'), #Title
             'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
         },
         InnovationProject.__name__: {
-            'count': 3,
+            'count': 1,
             'text': _('Innovation Projects'),
             'detailUrl': 'innov:detail'
         },
         Company.__name__: {
-            'count': 3,
+            'count': 1,
             'text': _('Companies'),
             'detailUrl': 'companies:detail'
         },
         BusinessProposal.__name__: {
-            'count': 3,
+            'count': 1,
             'text': _('Business Proposals'),
             'detailUrl': 'proposal:detail'
         },
         Requirement.__name__: {
-            'count': 5,
+            'count': 3,
             'text': _('Job requirements'),
             'detailUrl': 'vacancy:detail'
         },
         Exhibition.__name__: {
-            'count': 3,
+            'count': 1,
             'text': _('Exhibitions'),
             'detailUrl': 'exhibitions:detail'
         }
