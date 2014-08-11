@@ -1,4 +1,5 @@
 import json
+from appl import func
 from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country, Order, Organization, AdvOrder
 from core.models import Item
 from core.tasks import addBannerAttr

@@ -531,6 +531,7 @@ class BasePages(BaseModelFormSet):
         try:
             AdditionalPages.objects.filter(c2p__parent=parent).delete()
             instances = super(BasePages, self).save(commit)
+
             for instance in instances:
                 instance.create_user = user
                 instTitle = instance.title
@@ -552,6 +553,7 @@ class BasePages(BaseModelFormSet):
 
             transaction.savepoint_rollback(sid)
             func.notify("error_creating", 'notification', user=user)
+
             if len(self.files_to_delete) > 0:
                delete(self.files_to_delete)
 
