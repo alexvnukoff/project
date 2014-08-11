@@ -339,8 +339,9 @@
                     </div>
                 {% endif %}
 
-                {% for name, placeholder in enable.items %}
-                    <input value="60" name="{{ name }}" placeholder="{{ placeholder }}" type="hidden" />
+               {% for name, filterDict in enable.items %}
+
+                    <input {% if filterDict.init %}value="{{ filterDict.init }}"{% endif %}  name="{{ name }}" placeholder="{{ filterDict.placeholder }}" type="hidden" />
                 {% endfor %}
             </div>
         <div class="screen"><img src="{% static 'tppcenter/img/demo.gif'%}"></div>
