@@ -34,16 +34,12 @@ def getProfileForm(request):
 
 def _profileContent(request):
 
-    lang_code = translation.get_language()
-    translation.activate(lang_code)
-
     user_groups = request.user.groups.values_list('pk', flat=True)
 
     companies_ids = Organization.objects.filter(community__in=user_groups).values_list('pk', flat=True)
 
     companies = Item.getItemsAttributesValues('NAME', companies_ids)
     saved = 0
-
 
     if request.method == 'POST':
 
@@ -66,7 +62,6 @@ def _profileContent(request):
                 file = save_image(form.files['image'], path_to_images)
             else:
                 file = image[0] if len(image) > 0 else ""
-
 
             cabinet.setAttributeValue({
                 'PROFESSION': form.cleaned_data['profession'],
@@ -150,8 +145,6 @@ def _profileContent(request):
         })
 
     current_company = request.session.get('current_company', False)
-
-    translation.deactivate()
 
     template = loader.get_template('Profile/addForm.html')
 
