@@ -339,7 +339,7 @@
                     </div>
                 {% endif %}
 
-                {% for name, filterDict in enable.items %}
+               {% for name, filterDict in enable.items %}
 
                     <input {% if filterDict.init %}value="{{ filterDict.init }}"{% endif %}  name="{{ name }}" placeholder="{{ filterDict.placeholder }}" type="hidden" />
                 {% endfor %}

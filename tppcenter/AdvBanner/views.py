@@ -252,17 +252,16 @@ def addBanner(request, bannerType):
                 return HttpResponseRedirect(reverse('adv_banners:resultOrder', args=(order, )))
 
 
-
     enable = {}
 
     if btype.enableBranch:
-        enable['branch'] = _('Select branch')
+        enable['branch'] = {'placeholder': _('Select branch'), 'init': len(filter.get('branch', []))}
 
     if btype.enableCountry:
-        enable['country'] = _('Select country')
+        enable['country'] = {'placeholder': _('Select country'), 'init': len(filter.get('country', []))}
 
     if btype.enableTpp:
-        enable['tpp'] = _('Select organization')
+        enable['tpp'] = {'placeholder': _('Select organization'), 'init': len(filter.get('tpp', []))}
 
     current_section = _('Banners')
 
