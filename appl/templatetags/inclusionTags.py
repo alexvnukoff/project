@@ -287,3 +287,11 @@ def showTopStaticPages():
 
     return {'pagesDict': pageWithAttr}
 
+@register.inclusion_tag('main/socialShare.html', takes_context=True)
+def b2bSocialButtons(context, image, title, text):
+
+    request = context.get('request')
+    MEDIA_URL = context.get('MEDIA_URL', '')
+
+
+    return {'MEDIA_URL': MEDIA_URL, 'image': image, 'title': title, 'text': text}

@@ -143,7 +143,7 @@ def registerToExebition(request):
 
     if request.is_ajax() and request.POST.get('NAME', False) and request.POST.get('EMAIL', False):
 
-        adminEmail = 'admin@tppcenter.com'
+        adminEmail = 'migirov@tppcenter.com'
         companyEmail = request.POST.get('SEND_EMAIL', None)
 
         message_name = _('%(name)s , was registered to your event %(event)s ,') % {"name": request.POST.get('NAME'), "event" : request.POST.get('EXEBITION', "")}
