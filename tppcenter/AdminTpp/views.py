@@ -53,10 +53,10 @@ def users(request):
 
         if sortCol_0 > 0:
             for x in range(0, sortingCols):
-                colIndex = request.GET.get('iSortCol_' + str(x), False)
+                colIndex = request.GET.get('iSortCol_' + str(x), -1)
+                colIndex = int(colIndex)
 
-                if colIndex is not False and cols[colIndex]:
-                    colIndex = int(colIndex)
+                if colIndex != -1 and colIndex in cols:
 
                     dir = request.GET.get('sSortDir_' + str(x), 'desc')
 
@@ -571,16 +571,11 @@ def adv_settings(request):
         if request.POST:
             result = _add_update_banner_type(request)
 
-        sites = {}
-
-        for site in Site.objects.all():
-            sites.update({site.pk: site.name})
-
         tops = [top.pk for top in topTypes.objects.all()]
 
         topAttr = Item.getItemsAttributesValues(('COST', 'NAME'), tops)
 
-        templateParams = {'sites': sites, 'result': None, 'tops': topAttr}
+        templateParams = {'sites': AdvBannerType.sites, 'selectedSite': '', 'result': None, 'tops': topAttr}
 
         if not isinstance(result, bool):
             templateParams['result'] = result
@@ -604,6 +599,8 @@ def _add_update_banner_type(request):
                 type = AdvBannerType.objects.get(pk=pk)
             except ObjectDoesNotExist:
                 return form
+
+
 
         values = {
             'NAME': request.POST.get('name', ""),

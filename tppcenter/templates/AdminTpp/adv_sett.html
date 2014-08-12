@@ -75,6 +75,7 @@
                                                     <th>Width</th>
                                                     <th>Height</th>
                                                     <th>Code</th>
+                                                    <th>Image</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -88,16 +89,18 @@
                                                     <td>
                                                         <div class="form-group">
                                                             <select name="site" class="form-control">
-                                                                {% for pk, name in sites.items %}
-                                                                <option value="{{ pk }}">{{ name }}</option>
-                                                                {% endfor %}
+                                                            {% for site, name in types %}
+                                                                <option {% if site == selectedType %}selected="selected" {% endif %} value="{{ site }}">
+                                                                    {{ name }}
+                                                                </option>
+                                                            {% endfor %}
                                                             </select>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group"><span class="input-group-addon">
                                                             <i class="fa fa-dollar"></i></span>
-                                                            <input  type="text" class="form-control">
+                                                            <input  type="text" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td>
@@ -128,6 +131,11 @@
                                                     <td>
                                                         <div class="form-group">
                                                             <input name="code" type="text" class="form-control"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input name="image" type="file" />
                                                         </div>
                                                     </td>
                                                     <td>

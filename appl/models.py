@@ -190,6 +190,14 @@ class AdvBannerType(Item):
     active = ItemManager()
     objects = models.Manager()
 
+    SITES = (
+        ('usersites', 'User Sites'),
+        ('b2c', 'B2C'),
+        ('b2b', 'B2B'),
+    )
+
+    site_type = models.CharField(max_length=200, choices=SITES)
+
     enableBranch = models.BooleanField(default=False)
     enableTpp = models.BooleanField(default=False)
     enableCountry = models.BooleanField(default=True)
