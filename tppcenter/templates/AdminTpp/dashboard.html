@@ -152,7 +152,7 @@
     <script type="text/javascript">
         $(function() {
             $(document).on("click", ".savePrice", function() {
-                var name = parseFloat($(this).parents('tr').find('input').val());
+                var name = $(this).parents('tr').find('input').val();
                 var id = $(this).data('pk');
                 var button = $(this);
                 $(this).addClass("disabled");

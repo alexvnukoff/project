@@ -39,7 +39,7 @@ def dashboard(request, model=None):
         else:
             page = int(displayStart / displayLen + 1)
 
-        sqs = SearchQuerySet().models(model)
+        sqs = SearchQuerySet().models(model).order_by('-id')
 
         paginator = Paginator(sqs, 10)
 
@@ -73,9 +73,20 @@ def dashboard(request, model=None):
         }))
 
     elif name and obj_id:
-        i = Item.objects.get(pk=obj_id)
-        i.setAttributeValue({'NAME': name}, request.user)
-        i.reindexItem()
+        model = Item.objects.get(pk=obj_id).contentType.model
+
+        models = {
+            Country.__name__.lower(): Country,
+            Tpp.__name__.lower(): Tpp,
+            Branch.__name__.lower(): Branch,
+            Category.__name__.lower(): Category
+        }
+
+        if model in models:
+            i = models[model].objects.get(pk=obj_id)
+            i.setAttributeValue({'NAME': name}, request.user)
+            i.reindexItem()
+            return HttpResponse('')
 
     else:
         templateParams = {}
