@@ -13,13 +13,11 @@ class SiteUrlMiddleWare:
 
         domains = {'centerpokupok.com': 'centerpokupok.ru'}
 
-        current_domain = request.META.get('HTTP_HOST', False)
+        current_domain = request.get_host()
 
-        if current_domain is False:
+        if not current_domain:
             return HttpResponseBadRequest()
-        
-        if current_domain[:3] == "www":
-            current_domain = current_domain[4:]
+
         try:
             if domains.get(current_domain, False):
                 site = Site.objects.get(domain=domains.get(current_domain))
@@ -35,11 +33,11 @@ class SiteUrlMiddleWare:
 
         except Site.DoesNotExist:
 
-            lang = current_domain.split('.')[0] if current_domain else None
+            lang = current_domain.split('.')[0]
             languages = [lan[0] for lan in settings.LANGUAGES]
 
             if lang and lang in languages:
-#TODO this string was commented for debugging of categories. Check indirect impact.
+                #TODO this string was commented for debugging of categories. Check indirect impact.
                 #settings.SITE_ID = 143
                 site = Site.objects.get(domain=current_domain[3:])
                 settings.SITE_ID = site.pk
@@ -48,6 +46,9 @@ class SiteUrlMiddleWare:
                 settings.ROOT_URLCONF = "tppcenter.urls"
                 settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                          os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
+            elif request.LANGUAGE_CODE and request.LANGUAGE_CODE in languages:
+                site = Site.objects.get(pk=143)
+                return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + site.domain)
             else:
                 site = Site.objects.get(pk=143)
                 return HttpResponseRedirect('http://' + site.domain)
@@ -72,6 +73,22 @@ class UserSitesMiddleWare:
                 settings.SITE_ID = site.pk
             except Site.DoesNotExist:
                 return HttpResponseNotFound()
+
+class SubdomainLanguageMiddleware(object):
+    """
+    Set the language for the site based on the subdomain the request
+    is being served on. For example, serving on 'fr.domain.com' would
+    make the language French (fr).
+    """
+    LANGUAGES = [lan[0] for lan in settings.LANGUAGES]
+
+    def process_request(self, request):
+        host = request.get_host().split('.')
+
+        if host and host[0] in self.LANGUAGES:
+            lang = host[0]
+            translation.activate(lang)
+            request.LANGUAGE_CODE = lang
 
 class LocaleMiddleware(object):
     """

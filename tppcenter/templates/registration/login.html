@@ -34,12 +34,12 @@
                          {% endfor %}
                      </div>
                 	<li>
-                    	<label>E-mail</label>
+                    	<label>{% trans "E-mail" %}</label>
                         <input id="id_email" name="username" class="text   {% if form.username.errors   %}error{% endif %}" type="email" >
                         {% if form.username.errors   %}<div class="formerror">{{ form.username.errors.as_text }}</div>{% endif %}
                     </li>
                     <li>
-                    	<label>Пароль</label>
+                    	<label>{% trans "Password" %}</label>
                         <input id="id_password1" type="password"  class="text {% if form.password.errors   %}error{% endif %}"  name="password">
                        {% if form.password.errors   %}<div class="formerror">{{ form.password.errors.as_text }}</div>{% endif %}
                     </li>

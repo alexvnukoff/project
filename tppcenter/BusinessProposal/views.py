@@ -21,12 +21,10 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
     #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
      #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
       #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+
     if item_id:
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
-
-    description = ""
-    title = ""
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -45,12 +43,8 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
             proposalsPage = func.emptyCompany()
     else:
-        result = _proposalDetailContent(request, item_id)
+        result, meta = _proposalDetailContent(request, item_id)
         proposalsPage = result[0]
-
-        description = result[1]
-        title = result[2]
-
 
     if not request.is_ajax():
 
@@ -62,10 +56,11 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
             'scripts': scripts,
             'styles': styles,
             'addNew': reverse('proposal:add'),
-            'item_id': item_id,
-            'description': description,
-            'title': title
+            'item_id': item_id
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
     else:
@@ -83,16 +78,12 @@ def _proposalDetailContent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
     if not cached:
 
         proposal = get_object_or_404(BusinessProposal, pk=item_id)
         proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
-        description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = proposalValues.get('NAME', False)[0] if proposalValues.get('NAME', False) else ""
 
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -111,16 +102,16 @@ def _proposalDetailContent(request, item_id):
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+        meta = func.getItemMeta(request, proposalValues)
+
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+
+    return rendered, meta
 
 
 @login_required(login_url='/login/')

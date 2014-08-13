@@ -3,23 +3,6 @@
 {% load i18n %}
 
 
-   {% block title %}
-       {% if title %}
-            {{ title }}
-       {% else %}
-       {% trans 'Companies' %}
-            {% endif %}
-   {% endblock %}
-
-   {% block description %}
-        {% if description %}
-             <meta name="description" content="{{ description|truncatewords:30 }}"/>
-        {% else %}
-            {{ block.super }}
-         {% endif %}
-   {% endblock %}
-
-
     {% block header %}
         {% include "login_header.html" %}
     {% endblock %}

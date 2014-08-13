@@ -30,9 +30,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=No
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    description = ""
     add_news = False
-    title = ""
+
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -46,10 +45,8 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=No
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my, category=category)
 
         else:
-            result = _getdetailcontent(request, item_id)
+            result, meta = _getdetailcontent(request, item_id)
             newsPage = result[0]
-            description = result[1]
-            title = result[2]
             add_news = True
 
     except ObjectDoesNotExist:
@@ -65,16 +62,15 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=No
         templateParams = {
 
             'current_section': current_section,
-
             'newsPage': newsPage,
             'scripts': scripts,
             'styles': styles,
             'addNew': reverse('news:add'),
-            'description': description,
-            'title': title,
             'add_news': add_news
-
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
     else:
@@ -83,7 +79,6 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=No
             'styles': styles,
             'scripts': scripts,
             'content': newsPage,
-
         }
 
         return HttpResponse(json.dumps(serialize))
@@ -260,31 +255,23 @@ def updateNew(request, item_id):
     return newsPage
 
 
-
-
-
-
 def _getdetailcontent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
 
     cached = cache.get(cache_name)
 
     if not cached:
         new = get_object_or_404(News, pk=item_id)
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
-        description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = newValues.get('NAME', False)[0] if newValues.get('NAME', False) else ""
         photos = Gallery.objects.filter(c2p__parent=new)
 
         try:
             newsCategory = NewsCategories.objects.get(p2c__child=item_id)
             category_value = newsCategory.getAttributeValues('NAME')
             newValues.update({'CATEGORY_NAME': category_value})
-            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id, ).exclude(id=new.id)[:3]
+            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
             similar_news_ids = [sim_news.pk for sim_news in similar_news]
             similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
         except ObjectDoesNotExist:
@@ -300,21 +287,18 @@ def _getdetailcontent(request, item_id):
             'photos': photos,
             'similarValues': similarValues,
             'item_id': item_id,
-
         }
+
+        meta = func.getItemMeta(request, newValues)
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 

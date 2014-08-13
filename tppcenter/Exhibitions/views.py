@@ -24,10 +24,6 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-
-    description = ""
-    title = ""
-
     scripts = []
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -43,10 +39,8 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             exhibitionPage = func.emptyCompany()
     else:
-        result = _exhibitionsDetailContent(request, item_id)
+        result, meta = _exhibitionsDetailContent(request, item_id)
         exhibitionPage = result[0]
-        description = result[1]
-        title = result[2]
 
     if not request.is_ajax():
 
@@ -58,10 +52,11 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'scripts': scripts,
             'addNew': reverse('exhibitions:add'),
-            'item_id': item_id,
-            'description': description,
-            'title': title
+            'item_id': item_id
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
 
@@ -80,7 +75,6 @@ def _exhibitionsDetailContent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
     if not cached:
@@ -94,9 +88,6 @@ def _exhibitionsDetailContent(request, item_id):
          )
 
          exhibitionlValues = exhibition.getAttributeValues(*attr)
-         description = exhibitionlValues.get('DETAIL_TEXT', False)[0] if exhibitionlValues.get('DETAIL_TEXT', False) else ""
-         description = func.cleanFromHtml(description)
-         title = exhibitionlValues.get('NAME', False)[0] if exhibitionlValues.get('NAME', False) else ""
 
          photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -116,16 +107,15 @@ def _exhibitionsDetailContent(request, item_id):
 
          context = RequestContext(request, templateParams)
          rendered = template.render(context)
-         cache.set(cache_name, rendered, 60*60*24*7)
-         cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+         meta = func.getItemMeta(request, exhibitionlValues)
+
+         cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0] if isinstance(result, list) else ""
-        title = result[1] if isinstance(result, list) else ""
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 @login_required(login_url='/login/')

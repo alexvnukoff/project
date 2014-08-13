@@ -13,21 +13,45 @@
 
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <meta name='yandex-verification' content='7036efbb8c82d0da' />
+            <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
 
-            {% block description %}
-             <meta name="description" content="Программа развития и продвижения предпринимательства,
-             Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
-             проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
-             Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
-             Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
-             Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
-             Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
-             международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом"/>
-           {% endblock %}
+            {% if meta %}
+                <meta property="og:title" content="{{ meta.title|truncatechars: 80}}" />
+                <meta property="og:url" content="{{ meta.url }}" />
+                {% autoescape off %}
+                    <meta property="og:description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
+                {% endautoescape %}
+
+                {% if meta.image %}
+                    <meta property="og:image" content="{{ meta.image }}" />
+                {% endif %}
+
+                <title>{% block title %}{{ meta.title|truncatechars: 80}}{% endblock %}</title>
+                {% autoescape off %}
+                    <meta name="description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
+                {% endautoescape %}
+
+            {% else %}
+                <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
+                {% block description %}
+                 <meta name="description" content="Программа развития и продвижения предпринимательства,
+                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
+                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
+                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
+                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
+                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
+                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
+                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом"/>
+                {% endblock %}
+
+            {% endif %}
+
+
+           <meta property="og:site_name" content="B24 Online"/>
 
         {% endblock %}
 
-        <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
+
 
         {% block styles %}
             <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
