@@ -43,8 +43,7 @@ def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             tendersPage = func.emptyCompany()
     else:
-        result, meta = _tenderDetailContent(request, item_id)
-        tendersPage = result[0]
+        tendersPage, meta = _tenderDetailContent(request, item_id)
 
     if not request.is_ajax():
         current_section = _("Tenders")

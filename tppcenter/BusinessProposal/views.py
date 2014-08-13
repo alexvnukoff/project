@@ -43,8 +43,7 @@ def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
 
             proposalsPage = func.emptyCompany()
     else:
-        result, meta = _proposalDetailContent(request, item_id)
-        proposalsPage = result[0]
+        proposalsPage, meta = _proposalDetailContent(request, item_id)
 
     if not request.is_ajax():
 

@@ -39,8 +39,7 @@ def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             exhibitionPage = func.emptyCompany()
     else:
-        result, meta = _exhibitionsDetailContent(request, item_id)
-        exhibitionPage = result[0]
+        exhibitionPage, meta = _exhibitionsDetailContent(request, item_id)
 
     if not request.is_ajax():
 

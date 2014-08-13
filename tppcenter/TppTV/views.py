@@ -33,8 +33,7 @@ def get_news_list(request, page=1, item_id=None, slug=None):
         newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
 
     else:
-        result, meta = _getdetailcontent(request, item_id)
-        newsPage = result[0]
+        newsPage, meta = _getdetailcontent(request, item_id)
 
 
     if not request.is_ajax():
