@@ -3,7 +3,8 @@ from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.utils.timezone import now
-from appl.models import Cabinet, AdvertisementItem, AdvOrder, AdvBannerType, topTypes, staticPages, Greeting, Company
+from appl.models import Cabinet, AdvertisementItem, AdvOrder, AdvBannerType, topTypes, staticPages, Greeting, Company, \
+    Country, Tpp, Branch, Category
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from haystack.query import SearchQuerySet
@@ -21,13 +22,64 @@ from django.core.cache import cache
 
 
 @login_required(login_url="/login/")
-def dashboard(request):
+def dashboard(request, model=None):
 
     if not request.user.is_commando and not request.user.is_superuser:
         return HttpResponseBadRequest()
 
-    templateParams = {}
-    return render_to_response("AdminTpp/index.html", templateParams, context_instance=RequestContext(request))
+    name = request.POST.get('name', None)
+    obj_id = request.POST.get('id', None)
+
+    if model:
+        displayStart = int(request.GET.get('iDisplayStart', 1))
+        displayLen = int(request.GET.get('iDisplayLength', 10))
+
+        if displayStart == 1:
+            page = 1
+        else:
+            page = int(displayStart / displayLen + 1)
+
+        sqs = SearchQuerySet().models(model)
+
+        paginator = Paginator(sqs, 10)
+
+        try:
+            onPage = paginator.page(page)
+        except Exception:
+            onPage = paginator.page(1)
+
+        ids = [itm.id for itm in onPage.object_list]
+
+        ItemsWithValues = Item.getItemsAttributesValues('NAME', ids)
+
+        resultData = []
+
+        for pk, country in ItemsWithValues.items():
+
+            #Full name
+            name = country.get('NAME', [""])[0]
+
+            #Creating list of result data
+            resultNode = [name, pk]
+
+            resultData.append(resultNode)
+
+
+        return HttpResponse(json.dumps({
+            "sEcho": int(request.GET.get('sEcho', 1)),
+            "iTotalRecords": paginator.count,
+            "iTotalDisplayRecords": paginator.count,
+            "aaData" : resultData
+        }))
+
+    elif name and obj_id:
+        i = Item.objects.get(pk=obj_id)
+        i.setAttributeValue({'NAME': name}, request.user)
+        i.reindexItem()
+
+    else:
+        templateParams = {}
+        return render_to_response("AdminTpp/dashboard.html", templateParams, context_instance=RequestContext(request))
 
 @login_required(login_url="/login/")
 def users(request):
