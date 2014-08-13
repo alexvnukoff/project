@@ -118,6 +118,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
     'tpp.SiteUrlMiddleWare.SiteLangRedirect',
+    'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
