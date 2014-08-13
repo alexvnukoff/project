@@ -1053,6 +1053,7 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      return page
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
+
     if 'category' in kwargs:
         category = kwargs['category']
     else:
@@ -1068,8 +1069,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     else:
          cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
 
-    query = request.GET.urlencode()
-
     q = request.GET.get('q', '')
 
     if not my and cachePisibility(request):
@@ -1081,6 +1080,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             filters, searchFilter = filterLive(request, model_name=model.__name__)
 
             sqs = getActiveSQS().models(model).order_by('-obj_create_date')
+
             if model is News:
                if category:
                    sqs = sqs.filter(categories=category)
@@ -1168,10 +1168,12 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
         redactor = False
+
         if request.user.is_authenticated():
             items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
         else:
             items_perms = ""
+
         if model is News or model is TppTV:
             if 'Redactor' in request.user.groups.values_list('name', flat=True):
                  redactor = True
