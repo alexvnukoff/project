@@ -21,8 +21,7 @@ def get_greetings_list(request, page=1, item_id=None, slug=None):
             greetingPage = _getContent(request, page)
 
         else:
-            result, meta = _getdetailcontent(request, item_id)
-            greetingPage = result[0]\
+            greetingPage, meta = _getdetailcontent(request, item_id)
 
     except ObjectDoesNotExist:
         greetingPage = func.emptyCompany()

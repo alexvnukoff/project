@@ -40,8 +40,7 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             tppPage = func.emptyCompany()
     else:
-        result, meta = _tppDetailContent(request, item_id)
-        tppPage = result[0]
+        tppPage, meta = _tppDetailContent(request, item_id)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',

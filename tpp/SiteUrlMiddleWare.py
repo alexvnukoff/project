@@ -8,71 +8,48 @@ from django.utils import translation
 
 class SiteUrlMiddleWare:
 
-
     def process_request(self, request):
 
-        domains = {'centerpokupok.com': 'centerpokupok.ru'}
-
         current_domain = request.get_host()
+        languages = [lan[0] for lan in settings.LANGUAGES]
 
         if not current_domain:
             return HttpResponseBadRequest()
 
+        current_domain = current_domain.split('.')
+
+        lang = current_domain[0]
+
+        if lang in languages:
+            current_domain.pop(0)
+
+        current_domain = '.'.join(current_domain)
+
         try:
-            if domains.get(current_domain, False):
-                site = Site.objects.get(domain=domains.get(current_domain))
-            else:
-                site = Site.objects.get(domain=current_domain)
+            site = Site.objects.get(domain=current_domain)
 
             settings.SITE_ID = site.pk
             settings.ROOT_URLCONF = str(site.name)+".urls"
             request.urlconf = str(site.name)+".urls"
+
             settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
                      os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
 
-
         except Site.DoesNotExist:
-
-            lang = current_domain.split('.')[0]
-            languages = [lan[0] for lan in settings.LANGUAGES]
-
-            if lang and lang in languages:
-                #TODO this string was commented for debugging of categories. Check indirect impact.
-                #settings.SITE_ID = 143
-                site = Site.objects.get(domain=current_domain[3:])
-                settings.SITE_ID = site.pk
-
-                request.urlconf = "tppcenter.urls"
-                settings.ROOT_URLCONF = "tppcenter.urls"
-                settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
-                         os.path.join(os.path.dirname(__file__), '..', 'tppcenter/templates').replace('\\', '/'), )
-            elif request.LANGUAGE_CODE and request.LANGUAGE_CODE in languages:
-                site = Site.objects.get(pk=143)
-                return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + site.domain)
-            else:
-                site = Site.objects.get(pk=143)
-                return HttpResponseRedirect('http://' + site.domain)
+            return HttpResponseBadRequest()
 
 
-class UserSitesMiddleWare:
+class SiteLangRedirect:
 
     def process_request(self, request):
+        lang = request.get_host().split('.')[0]
+        languages = [lan[0] for lan in settings.LANGUAGES]
+        userLang = getattr(request, 'LANGUAGE_CODE', None)
 
-        if settings.SITE_ID is None:
+        if lang not in languages and userLang and userLang in languages:
+            site = Site.objects.get(pk=settings.SITE_ID)
+            return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + site.domain + request.get_full_path())
 
-            current_domain = request.META.get('HTTP_HOST', False)
-            
-            if current_domain is False:
-                return HttpResponseBadRequest()
-
-            if current_domain[:4] == "www.":
-                current_domain = current_domain[4:]
-
-            try:
-                site = Site.objects.get(domain=current_domain)
-                settings.SITE_ID = site.pk
-            except Site.DoesNotExist:
-                return HttpResponseNotFound()
 
 class SubdomainLanguageMiddleware(object):
     """
@@ -89,6 +66,7 @@ class SubdomainLanguageMiddleware(object):
             lang = host[0]
             translation.activate(lang)
             request.LANGUAGE_CODE = lang
+            settings.LANGUAGE_CODE = lang
 
 class LocaleMiddleware(object):
     """

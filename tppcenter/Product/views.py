@@ -36,8 +36,7 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             productsPage = func.emptyCompany()
     else:
-        result, meta = _getDetailContent(request, item_id)
-        productsPage = result[0]
+        productsPage, meta = _getDetailContent(request, item_id)
 
     styles = []
     scripts = []

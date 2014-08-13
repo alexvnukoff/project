@@ -45,8 +45,7 @@ def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=No
             newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my, category=category)
 
         else:
-            result, meta = _getdetailcontent(request, item_id)
-            newsPage = result[0]
+            newsPage, meta = _getdetailcontent(request, item_id)
             add_news = True
 
     except ObjectDoesNotExist:

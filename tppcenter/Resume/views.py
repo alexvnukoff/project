@@ -45,8 +45,7 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
     if item_id is None:
         resumepage = _resumeList(request, my=my, page=page)
     else:
-        result, meta = _resumeDetailContent(request, item_id)
-        resumepage = result[0]
+        resumepage, meta = _resumeDetailContent(request, item_id)
 
     if not request.is_ajax():
         templateParams = {

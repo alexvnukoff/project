@@ -54,8 +54,7 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:
-        result, meta = _companiesDetailContent(request, item_id)
-        newsPage = result[0]
+        newsPage, meta = _companiesDetailContent(request, item_id)
 
     if not request.is_ajax():
 

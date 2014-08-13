@@ -46,14 +46,12 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             vacancyPage = func.emptyCompany()
     else:
-        result , meta= _vacancyDetailContent(request, item_id)
+        vacancyPage , meta= _vacancyDetailContent(request, item_id)
 
         if request.user.is_authenticated():
             resumes =  Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
             resumes_ids = [resume.pk for resume in resumes]
             resumesValues = Item.getItemsAttributesValues(('NAME',),resumes_ids)
-
-        vacancyPage = result[0]
 
     current_section = _("Vacancy")
 
@@ -82,7 +80,6 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
          }
 
          return HttpResponse(json.dumps(serialize))
-
 
 
 
