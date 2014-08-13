@@ -9,14 +9,11 @@
     	<div class="tophead-l">
         	<a href="/"><i class="logo news-logo"></i></a>
         	{% showTopStaticPages %}
-
         </div>
 
         <div class="tophead-center">
             <!-- in User is not login show Google translate box here -->
             {% if not user.email %}
-
-
                 <!-- Google Translate injection -->
                 <div id="google_translate_element"></div>
                 <script type="text/javascript">
@@ -138,7 +135,7 @@
                     {% if addNew %}
                         <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% else %}
-                          <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
+                        <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
                     {% endif %}
 
                 </div>
