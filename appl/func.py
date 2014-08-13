@@ -1,5 +1,7 @@
 import urllib
+from urllib.parse import urlparse
 from django.http import QueryDict
+from django.utils.text import Truncator
 from django.utils.timezone import make_aware, is_naive, get_current_timezone
 from core.models import *
 from appl.models import *
@@ -13,6 +15,8 @@ from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
 from django.core.cache import cache
+from tpp.settings import MEDIA_URL
+
 
 def getPaginatorRange(page):
     '''
@@ -1328,3 +1332,20 @@ def autocompleteFilter(filter, q, page):
             return (onPage, total)
 
     return False
+
+
+def getItemMeta(request, itemAttributes):
+
+    image = ''
+
+    if itemAttributes.get('IMAGE', [''])[0]:
+        image = MEDIA_URL + 'original/' + itemAttributes.get('IMAGE', [''])[0]
+
+    url = urlparse(request.build_absolute_uri())
+
+    return {
+        'title': Truncator(itemAttributes.get('NAME', [''])[0]).chars("80", truncate='...'),
+        'image': image,
+        'url': url.scheme + "://" + url.netloc + url.path,
+        'text': itemAttributes.get('DETAIL_TEXT', [''])[0]
+    }

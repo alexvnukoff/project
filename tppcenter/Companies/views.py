@@ -37,9 +37,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    description = ""
-    title = ""
-
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
@@ -57,10 +54,9 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:
-        result = _companiesDetailContent(request, item_id)
+        result, meta = _companiesDetailContent(request, item_id)
         newsPage = result[0]
-        description = result[1]
-        title = result[2]
+
     if not request.is_ajax():
 
         current_section = _("Companies")
@@ -72,9 +68,10 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
             'styles': styles,
             'addNew': reverse('companies:add'),
             'item_id': item_id,
-            'description': description,
-            'title': title
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Companies/index.html", templateParams, context_instance=RequestContext(request))
 
@@ -93,7 +90,6 @@ def get_companies_list(request, page=1, item_id=None, my=None, slug=None):
 def _companiesDetailContent(request, item_id):
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
     if not cached:
@@ -104,11 +100,13 @@ def _companiesDetailContent(request, item_id):
         #check free membership period
         if company.paid_till_date != None:
             user = request.user
+
             if user.id != None:
                 if Relationship.objects.filter(child=user, parent__c2p__parent__c2p__parent=item_id,
                                                 is_admin=True).exists() or \
                     user.is_superuser or user.is_commando:
                     days_till_end = (company.paid_till_date - datetime.datetime.now().date()).days
+
                     if days_till_end <= settings.NOTIFICATION_BEFORE_END_DATE and days_till_end > 0:
                         companyValues['SHOW_PAYMENT_BUTTON'] = [True]
                         companyValues['DAYS_BEFORE_END'] = [days_till_end]
@@ -125,17 +123,15 @@ def _companiesDetailContent(request, item_id):
                 companyValues['SHOW_PAYMENT_BUTTON'] = [False]
         else:
             companyValues['SHOW_PAYMENT_BUTTON'] = [False]
+
         #/check free membership period
         companyValues['ID'] = [item_id]
-
-        description = companyValues.get('DETAIL_TEXT', False)[0] if companyValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = companyValues.get('NAME', False)[0] if companyValues.get('NAME', False) else ""
 
         country = Country.objects.get(p2c__child=company, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME', 'COUNTRY_FLAG'))
         organization = Organization.objects.filter(p2c__child=company, p2c__type='relation')
 
         organizationValues = ""
+
         if organization.exists():
             organizationValues = organization[0].getAttributeValues(*("NAME", 'SLUG'))
 
@@ -146,16 +142,15 @@ def _companiesDetailContent(request, item_id):
         context = RequestContext(request, {'companyValues': companyValues, 'country': country, 'item_id': item_id, 'additionalPages': additionalPages,
                                            'organizationValues': organizationValues})
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+        meta = func.getItemMeta(request, companyValues)
+
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0] if isinstance(result, list) else ""
-        title = result[1] if isinstance(result, list) else ""
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 def _tabsNews(request, company, page=1):

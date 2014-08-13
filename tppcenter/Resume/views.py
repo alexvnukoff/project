@@ -33,9 +33,6 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-
-    title = ''
-
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -48,18 +45,19 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
     if item_id is None:
         resumepage = _resumeList(request, my=my, page=page)
     else:
-        result = _resumeDetailContent(request, item_id)
+        result, meta = _resumeDetailContent(request, item_id)
         resumepage = result[0]
-        title = result[1]
 
     if not request.is_ajax():
-        templateParams =  {
-                'current_section': 'Resume',
-                'resumepage': resumepage,
-                'addNew': reverse('resume:add'),
-                'item_id': item_id,
-                 'title': title
-            }
+        templateParams = {
+            'current_section': 'Resume',
+            'resumepage': resumepage,
+            'addNew': reverse('resume:add'),
+            'item_id': item_id,
+        }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Resume/index.html", templateParams, context_instance=RequestContext(request))
     else:
@@ -202,11 +200,12 @@ def _resumeDetailContent(request, item_id):
     resume = get_object_or_404(Resume, pk=item_id)
     cabinet = Cabinet.objects.get(p2c__child=item_id)
 
-    attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
-    cabinetValues =  cabinet.getAttributeValues('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
+    cabinetValues = cabinet.getAttributeValues('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
+
+
     if not isinstance(cabinetValues, list):
         user_name = (cabinetValues.get('USER_LAST_NAME', [" "])[0] + " " +
-               cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
+               cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " + cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
     else:
         user_name = _("Name not found")
 
@@ -221,23 +220,19 @@ def _resumeDetailContent(request, item_id):
     resumeValues = resume.getAttributeValues(*attr)
     resumeValues.update({'CABINET': user_name})
 
-    title = resumeValues.get('NAME', False)[0] if resumeValues.get('NAME', False) else ""
-
-
     template = loader.get_template('Resume/detailContent.html')
 
     templateParams = {
        'resumeValues': resumeValues,
        'item_id': item_id
-        }
+    }
 
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
 
+    meta = func.getItemMeta(request, resumeValues)
 
-
-    return rendered, title
-
+    return rendered, meta
 
 
 @login_required(login_url='/login/')

@@ -2,7 +2,7 @@
                     <script>
 
                         {% autoescape off %}
-                            var ptext = '{{ text|linebreaks|cleanHtml|striptags }}';
+                            var ptext = '{{ text|linebreaks|cleanHtml|striptags|truncatechars:200 }}';
                         {% endautoescape %}
                         var purl = window.location.origin + window.location.pathname;
                         var ptitle = '{{ title }}';

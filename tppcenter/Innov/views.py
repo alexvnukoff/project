@@ -29,10 +29,6 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    description = ''
-    title = ''
-
-
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -46,10 +42,9 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             newsPage = func.emptyCompany()
     else:
-       result  = _innovDetailContent(request, item_id)
+       result, meta = _innovDetailContent(request, item_id)
        newsPage = result[0]
-       description = result[1]
-       title = result[2]
+
     if not request.is_ajax():
 
         current_section = _("Innovation Project")
@@ -60,10 +55,11 @@ def get_innov_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'styles': styles,
             'addNew': reverse('innov:add'),
-            'item_id': item_id,
-            'description': description,
-            'title': title
+            'item_id': item_id
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Innov/index.html", templateParams, context_instance=RequestContext(request))
 
@@ -220,10 +216,8 @@ def _innovContent(request, page=1, my=None):
 
 def _innovDetailContent(request, item_id):
 
-
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
     if not cached:
@@ -233,9 +227,6 @@ def _innovDetailContent(request, item_id):
         attr = ('NAME', 'PRODUCT_NAME', 'COST', 'REALESE_DATE', 'BUSINESS_PLAN', 'CURRENCY', 'DOCUMENT_1', 'DETAIL_TEXT')
 
         innovValues = innov.getAttributeValues(*attr)
-        description = innovValues.get('DETAIL_TEXT', False)[0] if innovValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = innovValues.get('NAME', False)[0] if innovValues.get('NAME', False) else ""
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
@@ -290,18 +281,18 @@ def _innovDetailContent(request, item_id):
             'item_id': item_id
         }
 
+        meta = func.getItemMeta(request, innovValues)
+
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
+
+
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 
