@@ -16,7 +16,7 @@
             <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
 
             {% if meta %}
-                <meta property="og:title" content="{{ meta.title|truncatechars: 80}}" />
+                <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
                 <meta property="og:url" content="{{ meta.url }}" />
                 {% autoescape off %}
                     <meta property="og:description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
@@ -26,7 +26,7 @@
                     <meta property="og:image" content="{{ meta.image }}" />
                 {% endif %}
 
-                <title>{% block title %}{{ meta.title|truncatechars: 80}}{% endblock %}</title>
+                <title>{{ meta.title|truncatechars:80}}</title>
                 {% autoescape off %}
                     <meta name="description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
                 {% endautoescape %}
