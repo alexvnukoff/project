@@ -12,9 +12,20 @@ class ItemsList(HybridListView):
     paginate_by = 10
     template_name = 'list.html'
     context_object_name = 'items'
+    allow_empty = True
+
+    #sorting fields
+    sortField1 = 'date'
+    sortField2 = None
+    order1 = 'desc'
+    order2 = None
+
+    #current page
+    page = 1
 
     #pagination url
-    url_paginator = "%s:paginator"
+    url_paginator = None
+    url_parameter = None
 
     #fields to sort by
     sortFields = {
@@ -30,6 +41,31 @@ class ItemsList(HybridListView):
 
     #allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch', 'bp_category']
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemsList, self).get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated():
+            item_ids = [obj.id for obj in context['object_list']]
+            items_perms = func.getUserPermsForObjectsList(self.request.user, item_ids, self.model.__name__)
+        else:
+            items_perms = ""
+
+        context.update({
+            'filters': self.filters,
+            'sortField1': self.sortField1,
+            'sortField2': self.sortField2,
+            'order1': self.order1,
+            'order2': self.order2,
+            'page': self.page,
+            'paginator_range': func.getPaginatorRange(context['paginator']),
+            'url_parameter': self.url_parameter,
+            'url_paginator': self.url_paginator,
+            'items_perms': items_perms,
+            'current_path': self.request.get_full_path(),
+        })
+
+        return context
 
     def is_my(self):
         return self.my
@@ -124,24 +160,24 @@ class ItemsList(HybridListView):
     def _get_order(self):
         order = []
 
-        sortField1 = self.request.GET.get('sortField1', 'date')
-        sortField2 = self.request.GET.get('sortField2', None)
-        order1 = self.request.GET.get('order1', 'desc')
-        order2 = self.request.GET.get('order2', None)
+        self.sortField1 = self.request.GET.get('sortField1', 'date')
+        self.sortField2 = self.request.GET.get('sortField2', None)
+        self.order1 = self.request.GET.get('order1', 'desc')
+        self.order2 = self.request.GET.get('order2', None)
 
-        if sortField1 and sortField1 in self.sortFields:
-            if order1 == 'desc':
-                order.append('-' + self.sortFields[sortField1])
+        if self.sortField1 and self.sortField1 in self.sortFields:
+            if self.order1 == 'desc':
+                order.append('-' + self.sortFields[self.sortField1])
             else:
-                order.append(self.sortFields[sortField1])
+                order.append(self.sortFields[self.sortField1])
         else:
             order.append('-id')
 
-        if sortField2 and sortField2 in self.sortFields:
-            if order2 == 'desc':
-                order.append('-' + self.sortFields[sortField2])
+        if self.sortField2 and self.sortField2 in self.sortFields:
+            if self.order2 == 'desc':
+                order.append('-' + self.sortFields[self.sortField2])
             else:
-                order.append(self.sortFields[sortField2])
+                order.append(self.sortFields[self.sortField2])
 
         return order
 

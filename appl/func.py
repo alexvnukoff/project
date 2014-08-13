@@ -1203,7 +1203,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'items_perms': items_perms,
             'current_path': request.get_full_path(),
             'redactor': redactor
-
         }
         templateParams.update(params)
 
@@ -1216,9 +1215,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     else:
         rendered = cache.get(cache_name)
     return rendered
-
-
-
 
 
 def cleanFromHtml(value):

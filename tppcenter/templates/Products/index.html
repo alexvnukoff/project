@@ -40,4 +40,4 @@
          {% endfor %}
     {% endblock %}
 
-     {% block content %} {{ productsPage }}{% endblock %}
+     {% block content %} {% include "Products/contentPage.html" %} {% endblock %}

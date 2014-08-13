@@ -13,8 +13,16 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
+from tppcenter.cbv import ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 import json
+
+class get_prod_lst(ItemsList):
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/contentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/index.html'
 
 
 def get_product_list(request, page=1, item_id=None, my=None, slug=None):
