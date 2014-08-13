@@ -110,7 +110,7 @@ REGISTRATION_OPEN = True    #Registration now is open
 MIDDLEWARE_CLASSES = (
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'tpp.SiteUrlMiddleWare.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
