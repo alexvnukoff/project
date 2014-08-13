@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', tppcenter.AdminTpp.views.dashboard, name='dashboard'),
     url(r'^load/country/$', tppcenter.AdminTpp.views.dashboard, {'model': Country}, name='load_country'),
-    url(r'^load/tpp/$', tppcenter.AdminTpp.views.dashboard, {'model': Tpp}, name='load_t[['),
+    url(r'^load/tpp/$', tppcenter.AdminTpp.views.dashboard, {'model': Tpp}, name='load_tpp'),
     url(r'^load/branch/$', tppcenter.AdminTpp.views.dashboard, {'model': Branch}, name='load_branch'),
     url(r'^load/category/$', tppcenter.AdminTpp.views.dashboard, {'model': Category}, name='load_category'),
     url(r'^users/$', tppcenter.AdminTpp.views.users, name='users'),
