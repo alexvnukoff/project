@@ -27,9 +27,6 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    description = ''
-    title = ''
-
     if item_id is None:
         try:
             attr  = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
@@ -39,10 +36,9 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             productsPage = func.emptyCompany()
     else:
-        result = _getDetailContent(request, item_id)
+        result, meta = _getDetailContent(request, item_id)
         productsPage = result[0]
-        description = result[1]
-        title = result[2]
+
     styles = []
     scripts = []
 
@@ -56,10 +52,11 @@ def get_product_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'styles': styles,
             'addNew': reverse('products:add'),
-            'item_id': item_id,
-            'description': description,
-            'title': title
+            'item_id': item_id
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
 
@@ -78,9 +75,8 @@ def _getDetailContent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
-    query = request.GET.urlencode()
     cached = cache.get(cache_name)
+
     if not cached:
 
         product = get_object_or_404(Product, pk=item_id)
@@ -92,10 +88,6 @@ def _getDetailContent(request, item_id):
         )
 
         productValues = product.getAttributeValues(*attr)
-
-        description = productValues.get('DETAIL_TEXT', False)[0] if productValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = productValues.get('NAME', False)[0] if productValues.get('NAME', False) else ""
 
         photos = Gallery.objects.filter(c2p__parent=item_id)
 
@@ -131,19 +123,16 @@ def _getDetailContent(request, item_id):
 
         context = RequestContext(request, templateParams)
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+        meta = func.getItemMeta(request, productValues)
+
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0] if isinstance(result, list) else ""
-        title = result[1] if isinstance(result, list) else ""
+        rendered, meta = cache.get(cache_name)
 
 
-    return rendered, description, title
-
-
+    return rendered, meta
 
 
 @login_required(login_url='/login/')

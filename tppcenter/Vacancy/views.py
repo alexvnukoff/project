@@ -1,29 +1,26 @@
-from django.db.models import Q
+import json
+import logging
+
 from django.utils.timezone import now
-from appl import func
-from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy, Requirement, Resume
-from core.models import Item, Relationship, Group, User, Dictionary
-from core.tasks import addNewTpp, addNewRequirement
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import ugettext as _, trans_real
-from haystack.query import SQ, SearchQuerySet
-from tppcenter.forms import ItemForm
-import json
-from core.tasks import addNewTpp
+from django.utils.translation import ugettext as _
+from haystack.query import SQ
 from django.conf import settings
-from django.utils import timezone
-from datetime import datetime
 from django.core.cache import cache
 from django.utils.translation import trans_real
-import logging
+
+from appl import func
+from appl.models import Tpp, Organization, Company, Department, \
+                        Cabinet, Vacancy, Requirement, Resume
+from core.models import Item, Relationship, Dictionary
+from core.tasks import addNewRequirement
+from tppcenter.forms import ItemForm
+
 logger = logging.getLogger('django.request')
 
 def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
@@ -34,8 +31,6 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
         if not Item.active.get_active().filter(pk=item_id).exists():
             return HttpResponseNotFound()
 
-    description = ''
-    title = ''
     resumesValues = ''
 
     styles = [
@@ -51,19 +46,14 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
         except ObjectDoesNotExist:
             vacancyPage = func.emptyCompany()
     else:
-        result = _vacancyDetailContent(request, item_id)
+        result , meta= _vacancyDetailContent(request, item_id)
+
         if request.user.is_authenticated():
             resumes =  Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
             resumes_ids = [resume.pk for resume in resumes]
             resumesValues = Item.getItemsAttributesValues(('NAME',),resumes_ids)
+
         vacancyPage = result[0]
-        description = result[1]
-        title = result[2]
-
-
-
-
-
 
     current_section = _("Vacancy")
 
@@ -75,10 +65,11 @@ def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'addNew': reverse('vacancy:add'),
             'item_id': item_id,
-            'description': description,
-            'title': title,
             'resumesValues': resumesValues
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
     else:
@@ -222,17 +213,13 @@ def _vacancyDetailContent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
+
     if not cached:
 
         requirement = get_object_or_404(Requirement, pk=item_id)
         requirementValues = requirement.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'CITY', 'TYPE_OF_EMPLOYMENT', 'REQUIREMENTS', 'TERMS',
                                                      'IS_ANONYMOUS_VACANCY'))
-        description = requirementValues.get('DETAIL_TEXT', False)[0] if requirementValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = requirementValues.get('NAME', False)[0] if requirementValues.get('NAME', False) else ""
-
 
         organizatation = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
 
@@ -242,21 +229,16 @@ def _vacancyDetailContent(request, item_id):
         template = loader.get_template('Vacancy/detailContent.html')
         context = RequestContext(request, {'requirementValues': requirementValues, 'organizationValues': organizationValues})
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+        meta = func.getItemMeta(request, requirementValues)
+
+        cache.set(cache_name, [rendered ,meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        if result is not None :
-            description = result[0]
-            title = result[1]
-        else:
-            description = ""
-            title = ""
+        rendered, meta = cache.get(cache_name)
 
 
-    return rendered, description, title
+    return rendered, meta
 
 
 

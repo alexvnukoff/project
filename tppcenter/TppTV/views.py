@@ -25,23 +25,16 @@ def get_news_list(request, page=1, item_id=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-    description = ''
-    title = ''
-
     styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
     scripts = []
-
-
 
     if not item_id:
         attr = ('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG')
         newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
 
     else:
-        result = _getdetailcontent(request, item_id)
+        result, meta = _getdetailcontent(request, item_id)
         newsPage = result[0]
-        description = result[1]
-        title = result[2]
 
 
     if not request.is_ajax():
@@ -53,10 +46,11 @@ def get_news_list(request, page=1, item_id=None, slug=None):
             'newsPage': newsPage,
             'scripts': scripts,
             'styles': styles,
-            'addNew': reverse('tv:add'),
-            'description': description,
-            'title': title
+            'addNew': reverse('tv:add')
         }
+
+        if item_id:
+            templatePramrams['meta'] = meta
 
         return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
 
@@ -69,9 +63,6 @@ def get_news_list(request, page=1, item_id=None, slug=None):
         }
 
         return HttpResponse(json.dumps(serialize))
-
-
-
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
@@ -208,16 +199,12 @@ def _getdetailcontent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
 
     if not cached:
 
         new = get_object_or_404(TppTV, pk=item_id)
         newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
-        description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = newValues.get('NAME', False)[0] if newValues.get('NAME', False) else ""
 
         organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
 
@@ -256,16 +243,15 @@ def _getdetailcontent(request, item_id):
 
         context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+
+        meta = func.getItemMeta(request, newValues)
+
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        description = result[0]
-        title = result[1]
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 

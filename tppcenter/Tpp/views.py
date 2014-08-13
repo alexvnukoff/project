@@ -1,33 +1,27 @@
+import json
+import logging
+
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
-from appl import func
-from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
-from core import translation
-from core.models import Item, Relationship, Group, User
-from core.tasks import addNewTpp
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
-from haystack.query import SQ, SearchQuerySet
-from tppcenter.forms import ItemForm, BasePages
-import json
-from core.tasks import addNewTpp
 from django.conf import settings
-from django.utils import timezone
-from datetime import datetime
 from django.core.cache import cache
 from django.utils.translation import trans_real
-from core.amazonMethods import add
 
-import logging
+from appl import func
+from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
+                        Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
+from core.models import Item, Relationship, Group, User
+from tppcenter.forms import ItemForm, BasePages
+from core.tasks import addNewTpp
+from core.amazonMethods import add
 
 
 logger = logging.getLogger('django.request')
@@ -40,19 +34,14 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
         if not Item.active.get_active().filter(pk=item_id).exists():
             return HttpResponseNotFound()
 
-    description = ''
-    title = ''
-
     if item_id is None:
         try:
             tppPage = _tppContent(request, page, my)
         except ObjectDoesNotExist:
             tppPage = func.emptyCompany()
     else:
-        result = _tppDetailContent(request, item_id)
+        result, meta = _tppDetailContent(request, item_id)
         tppPage = result[0]
-        description = result[1]
-        title = result[2]
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -72,10 +61,11 @@ def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
             'scripts': scripts,
             'styles': styles,
             'addNew': reverse('tpp:add'),
-            'item_id': item_id,
-            'description': description,
-            'title': title
+            'item_id': item_id
         }
+
+        if item_id:
+            templateParams['meta'] = meta
 
         return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
     else:
@@ -228,17 +218,13 @@ def _tppDetailContent(request, item_id):
 
     lang = settings.LANGUAGE_CODE
     cache_name = "%s_detail_%s" % (lang, item_id)
-    description_cache_name = "description_%s" % item_id
     cached = cache.get(cache_name)
+
     if not cached:
 
         tpp = get_object_or_404(Tpp, pk=item_id)
         tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE', 'POSITION', 'ADDRESS',
                                                      'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
-        description = tppValues.get('DETAIL_TEXT', False)[0] if tppValues.get('DETAIL_TEXT', False) else ""
-        description = func.cleanFromHtml(description)
-        title = tppValues.get('NAME', False)[0] if tppValues.get('NAME', False) else ""
-
 
         if not tppValues.get('FLAG', False):
            try:
@@ -251,20 +237,14 @@ def _tppDetailContent(request, item_id):
         template = loader.get_template('Tpp/detailContent.html')
         context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
         rendered = template.render(context)
-        cache.set(cache_name, rendered, 60*60*24*7)
-        cache.set(description_cache_name, (description, title), 60*60*24*7)
+        meta = func.getItemMeta(request, tppValues)
+
+        cache.set(cache_name, [rendered, meta], 60*60*24*7)
 
     else:
-        rendered = cache.get(cache_name)
-        result = cache.get(description_cache_name)
-        if result and len(result)> 0:
-            description = result[0]
-            title = result[1]
-        else:
-            description = ""
-            title = ""
+        rendered, meta = cache.get(cache_name)
 
-    return rendered, description, title
+    return rendered, meta
 
 
 
