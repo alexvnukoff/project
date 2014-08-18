@@ -362,6 +362,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
     country = post.get('COUNTRY', False)
     country = Country.objects.get(pk=country) if country else False
 
+
     form = ItemForm('Tpp', values=values, id=item_id, addAttr=addAttr)
     form.clean()
     sizes = {
@@ -481,6 +482,10 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
     if post.get('Lat', ''):
         values['POSITION'] = post.get('Lat', '') + ',' + post.get('Lng')
 
+    country = post.get('COUNTRY', False)
+    country = Country.objects.get(pk=country) if country else False
+
+
 
 
 
@@ -502,6 +507,11 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
         if current_company:
             Relationship.setRelRelationship(parent=Organization.objects.get(pk=int(current_company)), child=proposal, type='dependence', user=user)
+
+
+        if country:
+            Relationship.objects.filter(parent__in=Country.objects.all(), child=proposal.id).delete()
+            Relationship.setRelRelationship(parent=country, child=proposal, user=user, type='relation')
 
 
 

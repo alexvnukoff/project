@@ -62,6 +62,18 @@
                 <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
             </div>
             <div>
+                <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                <select name="COUNTRY">
+                    {% for id , atrr in countries.items %}
+                        {% with atrr.NAME|first as country  %}
+                        <option value="{{ id }}"{% if choosen_country == id %} selected="selected" {% endif %}>
+                            {{ country }}
+                        </option>
+                        {% endwith %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
                 <label class="sapce">{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
                 <select id="id_BRANCH" name="BRANCH">
                     {% for id, branch in branches.items %}
