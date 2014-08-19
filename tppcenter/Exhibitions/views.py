@@ -110,6 +110,9 @@ def addExhibition(request):
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
     pages = None
 
+    countries = func.getItemsList("Country", 'NAME')
+    choosen_country = int(request.POST.get('COUNTRY', 0))
+
     if request.POST:
 
         user = request.user
@@ -139,7 +142,7 @@ def addExhibition(request):
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
     template = loader.get_template('Exhibitions/addForm.html')
-    context = RequestContext(request,  {'form': form, 'branches': branches, 'pages': pages})
+    context = RequestContext(request,  {'form': form, 'branches': branches, 'pages': pages, 'countries': countries, 'choosen_country': choosen_country})
     exhibitionPage = template.render(context)
 
     return exhibitionPage
@@ -177,6 +180,12 @@ def updateExhibition(request, item_id):
     if gallery.queryset:
         photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
+    countries = func.getItemsList("Country", 'NAME')
+    try:
+        choosen_country = Country.objects.get(p2c__child__id=item_id).pk
+    except ObjectDoesNotExist:
+        choosen_country = ""
+
 
     form = ItemForm('Exhibition', id=item_id)
 
@@ -211,7 +220,9 @@ def updateExhibition(request, item_id):
         'form': form,
         'pages': pages,
         'currentBranch': currentBranch,
-        'branches': branches
+        'branches': branches,
+        'countries': countries,
+        'choosen_country': choosen_country
     }
 
     context = RequestContext(request, templateParams)

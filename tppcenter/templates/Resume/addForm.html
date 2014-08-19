@@ -302,7 +302,7 @@
                 <div class="addpage-title">{% trans 'Additionally' %}</div>
                 <ul class="tenderline">
                     <li>
-                        <label>{% trans 'Your salary expectations' %}</label>
+                        <label>{% trans 'Your salary expectations' %}<font color="#FF0000">*</font></label>
                         {% if form.errors.SALARY %}
                                 <div class="error-handler"><div class="formserror">{{ form.errors.SALARY }}</div></div>
                         {% endif %}
