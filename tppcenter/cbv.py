@@ -79,6 +79,13 @@ class ItemsList(HybridListView):
             if country is False:
                 break
 
+            if isinstance(country, list):
+                if len(country) == 0 or len(country) > 1:
+                    new_object_list.append(obj)
+                    continue
+                else:
+                    country = country[0]
+
             if country not in countryDict:
                 new_object_list.append(obj)
                 continue
