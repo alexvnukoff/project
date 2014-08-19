@@ -1485,7 +1485,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
 
 
         elif cabinet.exists():
-            cabinet = cabinet.all()
+            cabinet = cabinet[0]
 
             self.prepared_data[cabinetIndex] = cabinet.pk
 
@@ -1493,7 +1493,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
                 country = Country.objects.filter(p2c__child_id=cabinet.pk, p2c__type='relation')
             
                 if country.exists():
-                    country = country.all()
+                    country = country[0]
                     self.prepared_data[countryIndex] = country.pk
             except:
                 self.prepared_data[countryIndex] = None
