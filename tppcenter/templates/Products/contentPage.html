@@ -7,69 +7,51 @@
             {% include "Products/popupFilter.html" %}
              {% include "main/local_menu_script.html" %}
              <ul class="listprd">
-                {% for id , attr in proposalList.items %}
-                    {% with attr.NAME.0 as name %}
-                    {% with attr.IMAGE.0 as image %}
-                    {% with attr.CREATE_DATE.0 as date%}
-                    {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.SLUG|first as slug %}
-                    {% with attr.FLAG_CLASS|first as flag_class %}
-                    {% with attr.COST|first as price %}
-                    {% with attr.CURRENCY|first as currency %}
-                    {% with attr.COUNTRY_ID as country_id %}
+                {% for product in object_list %}
                     <li>
-                     {% resolve items_perms id|slugify as permlist %}
+                     {% resolve items_perms product.pk|slugify as permlist %}
 
                      {% if 'delete_product' in  permlist or 'change_product' in permlist%}
                             <div class="blockbox">
                                 <a href="#"><i class="btn-afisha imgnews"></i></a>
                                 <div class="localmenu">
                                     {% if 'change_product' in permlist %}
-                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'products:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'products:update' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                     {% endif %}
                                     {% if 'add_advtop' in permlist %}
-                                       <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
+                                       <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
                                     {% endif %}
                                     {% if 'delete_product' in  permlist %}
-                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                     {% endif %}
                                 </div>
                             </div>
                    {% endif %}
                       <div class="thumb">
-                          <a href="{% url "products:detail" slug %}">
-                              {% if image %}
-                                  <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                          <a href="{% url "products:detail" product.slug %}">
+                              {% if product.image %}
+                                  <img src="{{ MEDIA_URL }}big/{{ product.image }}" alt="{{ product.title }}" title="{{ product.title }}" />
                               {% else %}
-                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ name|truncatechars:40 }}" />
+                                  <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ product.title|truncatechars:40 }}" />
                               {% endif %}
                           </a>
                       </div>
                         <div class="link">
 
-                            {% if flag_class %}
-                                 <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
+                            {% if product.country.flag %}
+                                 <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.text }}"></i>
                             {% endif %}
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:45 }}</a>
+                        <a href="{% url "products:detail" product.slug %}" class="name">{{ product.title|truncatechars:45 }}</a>
                        </div>
                         <div class="price">
-                            {% if price %}
-                                {{ currency|getSymbol }} {{ price }}
+                            {% if product.price %}
+                                {{ product.currency|getSymbol }} {{ product.price|formatPrice }}
                             {% else %}
                                 {% trans 'Contact to price' %}
                             {% endif %}
                         </div>
-                        <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
+                        <a href="{% url "products:detail" product.slug %}" class="btnbuy">{% trans 'Buy' %}</a>
                     </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>
                 {% endfor %}

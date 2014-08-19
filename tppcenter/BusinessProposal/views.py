@@ -13,105 +13,55 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
+from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 from django.utils.translation import trans_real
 import json
 
-def get_proposals_list(request, page=1, item_id=None,  my=None, slug=None):
-    #if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-     #    slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-      #   return HttpResponseRedirect(reverse('proposal:detail',  args=[slug]))
+class get_proposal_list(ItemsList):
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+    #pagination url
+    url_paginator = "proposal:paginator"
+    url_my_paginator = "proposal:my_main_paginator"
 
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    scripts = []
+    current_section = _("Business Proposal")
+    addUrl = 'proposal:add'
 
-    if not item_id:
-        try:
-              proposalsPage = func.setContent(request, BusinessProposal, ('NAME', 'SLUG'), 'proposal',
-                                              'BusinessProposal/contentPage.html', 5, page=page, my=my)
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
 
+    model = BusinessProposal
 
-        except ObjectDoesNotExist:
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'BusinessProposal/contentPage.html'
 
-            proposalsPage = func.emptyCompany()
-    else:
-        proposalsPage, meta = _proposalDetailContent(request, item_id)
-
-    if not request.is_ajax():
-
-        current_section = _("Business Proposal")
-
-        templateParams = {
-            'current_section': current_section,
-            'proposalsPage': proposalsPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('proposal:add'),
-            'item_id': item_id
-        }
-
-        if item_id:
-            templateParams['meta'] = meta
-
-        return render_to_response("BusinessProposal/index.html", templateParams, context_instance=RequestContext(request))
-    else:
-
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': proposalsPage
-        }
-
-        return HttpResponse(json.dumps(serialize))
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'BusinessProposal/index.html'
 
 
-def _proposalDetailContent(request, item_id):
+class get_proposal_detail(ItemDetail):
 
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
+    model = BusinessProposal
+    template_name = 'BusinessProposal/detailContent.html'
 
-    if not cached:
+    current_section = _("Business Proposal")
+    addUrl = 'proposal:add'
 
-        proposal = get_object_or_404(BusinessProposal, pk=item_id)
-        proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
+    def get_context_data(self, **kwargs):
+        context = super(get_proposal_detail, self).get_context_data(**kwargs)
 
-        photos = Gallery.objects.filter(c2p__parent=item_id)
+        context.update({
+            'photos': self._get_gallery(),
+            'additionalPages': self._get_additional_pages(),
+        })
 
-        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
-        func.addToItemDictinoryWithCountryAndOrganization(proposal.id, proposalValues, withContacts=True)
-
-        template = loader.get_template('BusinessProposal/detailContent.html')
-
-        templateParams = {
-            'proposalValues': proposalValues,
-            'photos': photos,
-            'additionalPages': additionalPages,
-            'item_id': item_id
-        }
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        meta = func.getItemMeta(request, proposalValues)
-
-        cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-
-    return rendered, meta
-
+        return context
 
 @login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):
@@ -157,11 +107,11 @@ def addBusinessProposal(request):
     form = None
 
     branches = Branch.objects.all()
-    branches_ids = [branch.id for branch in branches]
+    branches_ids = [branch.pk for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     categories = BpCategories.objects.all()
-    categories_id = [categorory.id for categorory in categories]
+    categories_id = [categorory.pk for categorory in categories]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
     pages = None
@@ -204,10 +154,10 @@ def addBusinessProposal(request):
 
 
 def updateBusinessProposal(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-    gallery = Photo(parent_id=item_id)
+    gallery = Photo(parent=item_id)
     photos = ""
 
     if gallery.queryset:
@@ -219,11 +169,11 @@ def updateBusinessProposal(request, item_id):
         return func.permissionDenied()
 
     branches = Branch.objects.all()
-    branches_ids = [branch.id for branch in branches]
+    branches_ids = [branch.pk for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     categories = BpCategories.objects.all()
-    categories_id = [categorory.id for categorory in categories]
+    categories_id = [categorory.pk for categorory in categories]
     categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
     try:
@@ -305,7 +255,7 @@ def updateBusinessProposal(request, item_id):
 
 
 def deleteProposal(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 

@@ -12,57 +12,40 @@
 
 
                 <ul class="vacancy-list">
-                {% for id , attr in vacancyList.items %}
-                    {% with attr.NAME.0 as name %}
-                    {% with attr.SLUG.0 as slug %}
-                    {% with attr.DETAIL_TEXT.0 as detail_text %}
-                    {% with attr.CITY.0 as city %}
-                    {% with attr.CREATE_DATE.0 as date %}
-                    {% with attr.COUNTRY_ID.0 as country_id %}
-                    {% with attr.COUNTRY_NAME.0 as country_name %}
-                    {% with attr.FLAG_CLASS.0 as country_flag %}
-
+                {% for vacancy in object_list %}
                     <li>
-                    {% resolve items_perms id|slugify as permlist %}
+                    {% resolve items_perms vacancy.pk|slugify as permlist %}
                     {% if 'delete_requirement' in  permlist or 'change_requirement' in permlist %}
 
                         <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
                                 {% if  'change_requirement' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'vacancy:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'vacancy:update' vacancy.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                                 {% if 'add_advtop' in permlist %}
-                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' vacancy.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
                                 {% endif %}
                                 {% if 'delete_requirement' in permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'vacancy:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'vacancy:delete' vacancy.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                 {% endif %}
                             </div>
                         </div>
                     {% endif %}
 
 
-               <h2><a href="{% url 'vacancy:detail' slug %}">{{ name }}</a></h2>
+               <h2><a href="{% url 'vacancy:detail' vacancy.slug %}">{{ vacancy.title }}</a></h2>
 
                         <div class="vacancy-desc">
-                             {% if country_flag %}
-                                <i class="flag sprite {{ country_flag }}" title="{{ country_name }}" ></i>
+                             {% if vacancy.country.flag %}
+                                <i class="flag sprite {{ vacancy.country.flag }}" title="{{ vacancy.country.title }}" ></i>
                         	{% endif %}
-                            <font class="date">{{ city }}, {% trans 'Date' %}: {{ date|date:'d M Y' }}</font>
+                            <font class="date">{{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.obj_create_date|date:'d M Y' }}</font>
 
-                           <p>{{ detail_text|truncatewords:30 }} </p>
+                           <p>{{ vacancy.text|truncatewords:30 }} </p>
                            <a href="{% url 'vacancy:detail' slug %}" class="more">{% trans "More" %}...</a>
                         </div>
                     </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>
                 {% endfor %}

@@ -39,20 +39,20 @@ def advJsonFilter(request):
         if result:
             onPage, total = result
 
-            obj_list = [item.id for item in onPage.object_list]
+            obj_list = [item.pk for item in onPage.object_list]
 
             itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
             items = []
 
             for item in onPage.object_list:
 
-                if not isinstance(itemsAttr[item.id], dict) :
-                    itemsAttr[item.id] = {}
+                if not isinstance(itemsAttr[item.pk], dict):
+                    itemsAttr[item.pk] = {}
 
                 resultDict = {
                     'title': item.title_auto,
-                    'id': item.id,
-                    'cost': itemsAttr[item.id].get('COST', [0])[0],
+                    'id': item.pk,
+                    'cost': itemsAttr[item.pk].get('COST', [0])[0],
                 }
 
                 items.append(resultDict)

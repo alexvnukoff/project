@@ -1,27 +1,23 @@
+{% extends 'main_page.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
-<script>
-    $('.keyword').html('');
-</script>
 
 <script>
-    {% getOwner item_id as owner %}
+    {% getOwner item.pk as owner %}
 
 
-    ga('set', 'dimension1', {{ item_id }});
+    ga('set', 'dimension1', {{ item.pk }});
 
     {% if owner %}
-        ga('set', 'dimension3', {{ owner.id }});
+        ga('set', 'dimension3', {{ owner.pk }});
     {% endif %}
 
     ga('set', 'dimension2', 'company');
 </script>
 
-{% with companyValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
@@ -37,9 +33,9 @@
             var href = tabs.find('a[href="#cpn-tabs-contacts"]');
             (href).on('click',function(){
 
-                {% if position %}
+                {% if item.position %}
                   marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ position }})
+                    position: new google.maps.LatLng({{ item.position }})
                 });
                 {% endif %}
 
@@ -97,7 +93,7 @@
                 var contentHolder = $('#staff-tab .tpp-dt-content');
                 contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-                $.post("{% url "companies:tab_staff" item_id %}", {cabinetID: cabinetID}, function(data){
+                $.post("{% url "companies:tab_staff" item.pk %}", {cabinetID: cabinetID}, function(data){
                         contentHolder.replaceWith(data);
                         }, 'html');
             }
@@ -109,7 +105,7 @@
         <!-- add Staff (popup window) -->
         $(document).on('click','#user-add-button', function() {
             $('#fade-profile').show();
-            $('#popup-context').load("{% url "companies:tab_staff" item_id %} .staffaddin");
+            $('#popup-context').load("{% url "companies:tab_staff" item.pk %} .staffaddin");
             $('#add-user-popup').show();
 
             return false;
@@ -135,7 +131,7 @@
             var contentHolder = $('#staff-tab .tpp-dt-content');
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "companies:tab_staff" item_id %}",
+            $.post("{% url "companies:tab_staff" item.pk %}",
                     {departmentName: departmentName, userEmail: userEmail, vacancyName: vacancyName, isAdmin: isAdmin},
                     function(data){
                         contentHolder.replaceWith(data);
@@ -367,7 +363,7 @@
             if(vacancyID != 0) {
                 if(confirm('{% trans "Do you want to delete this Vacancy?" %}')) {
                     contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
-                    $.post('{% url "companies:tab_structure" item_id %}', {vacancyID: vacancyID}, function(data){
+                    $.post('{% url "companies:tab_structure" item.pk %}', {vacancyID: vacancyID}, function(data){
                                 contentHolder.replaceWith(data);
                             }, 'html');
                 }
@@ -378,7 +374,7 @@
                 if(departmentID !=0) {
                     if(confirm('{% trans "Do you want to delete this Department?" %}')) {
                         contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
-                        $.post('{% url "companies:tab_structure" item_id %}', {departmentDelID: departmentID}, function(data){
+                        $.post('{% url "companies:tab_structure" item.pk %}', {departmentDelID: departmentID}, function(data){
                                     contentHolder.replaceWith(data);
                                 }, 'html');
                     }
@@ -403,7 +399,7 @@
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "companies:tab_structure" item_id %}",
+            $.post("{% url "companies:tab_structure" item.pk %}",
                     {departmentName: departmentName, prevDepName: prevDepName},
                     function(data){
                         contentHolder.replaceWith(data);
@@ -437,7 +433,7 @@
 
             contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
 
-            $.post("{% url "companies:tab_structure" item_id %}",
+            $.post("{% url "companies:tab_structure" item.pk %}",
                     {vacancyName: vacancyName, departmentID: departmentID, prevVacName: prevVacName},
                     function(data){
                         contentHolder.replaceWith(data);
@@ -459,52 +455,33 @@
 	});
 </script>
 
-<div class="companies">
-            {% with companyValues.ID.0 as id %}
-            {% with companyValues.SLUG.0 as slug %}
-            {% with companyValues.NAME.0 as name %}
-            {% with companyValues.DETAIL_TEXT.0 as content %}
-            {% with companyValues.IMAGE.0 as image %}
-            {% with companyValues.ADDRESS.0 as address %}
-            {% with companyValues.TELEPHONE_NUMBER.0 as telephone_number %}
-            {% with companyValues.EMAIL.0 as email %}
-            {% with companyValues.FAX.0 as fax %}
-            {% with companyValues.ANONS.0 as anons %}
-            {% with companyValues.SITE_NAME.0 as site_name %}
-            {% with companyValues.SHOW_PAYMENT_BUTTON.0 as show_button %}
-            {% with companyValues.DAYS_BEFORE_END.0 as days_till_end %}
+    {% block styles %}
+         {{ block.super }}
+            <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
+            <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+            <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/tpp.reset.css' %}" />
+    {% endblock %}
 
-            {% with country.FLAG.0 as country_flag %}
-            {% with country.COUNTRY_FLAG.0 as flag_class %}
-            {% with country.NAME.0 as country_name %}
+{% block keywords %}{% endblock %}
 
-
-            {% with organizationValues.NAME.0 as org_name %}
-            {% with organizationValues.SLUG.0 as org_slug %}
-
-
-
-                <div class="deal-details">
-                    <h3>
-                     {% if flag_class %}
-                            <i class="flag sprite {{ flag_class }}"></i>
-                            {% else %}
-                             <img src="{{ MEDIA_URL }}small/{{ country_flag }}" class="flag" alt="{{ country_name }}" title="{{ country_name }}" />
-                     {% endif %}
-                     {{ name }}
+{% block content %}
+    <div class="companies">
+        <div class="deal-details">
+            <h3> <i class="flag sprite {{ item.country.flag }}"></i>
+                     {{ item.title }}
                     </h3>
                     {% if image %}
-                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}" />
+                        <img src="{{ MEDIA_URL }}big/{{ item.image }}" class="thumb-deal" alt="{{ item.title }}" title="{{ item.title }}" />
                     {% else %}
                         <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
                     {% comment %} Pay membership button {% endcomment %}
-                    {% if show_button %}
+                    {% if SHOW_PAYMENT_BUTTON %}
                         <div class="payjoin">
-                            {% if days_till_end == 0 %}
+                            {% if DAYS_BEFORE_END == 0 %}
                                 <span>{% trans "Free period is expired." %}</span>
                             {% else %}
-                                <span>{% trans "Free period will expire in " %}{{ days_till_end }}{% trans " days." %}</span>
+                                <span>{% trans "Free period will expire in " %}{{ DAYS_BEFORE_END }}{% trans " days." %}</span>
                             {% endif %}
                             <!-- Script for PayPal payment button -->
                             {% comment %}<a href="#" class="btnpay" id="paypal-membership">{% trans "Pay membership" %}</a>{% endcomment %}
@@ -513,7 +490,7 @@
                                 {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=slomberg@ymail.com"{% endcomment %}
                                 {% comment %}<script src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=afend-developer@tppcenter.com"{% endcomment %}
                                     data-name="{% trans '1-year www.b24online.com membership' %}"
-                                    data-number="Company ID: {{ id }} ({{ name }})" {% comment %} Company's database ID{% endcomment %}
+                                    data-number="Company ID: {{ item.pk }} ({{ item.title }})" {% comment %} Company's database ID{% endcomment %}
                                     data-quantity="1"
                                     data-button="paynow"
                                     data-amount="100"
@@ -536,16 +513,16 @@
                         </div>
                     {% endif %}
                     {% comment %} /Pay membership button {% endcomment %}
-                    {% if anons %}
-                        <p>{{ anons|cleanHtml|safe }}</p>
+                    {% if item.anons %}
+                        <p>{{ item.anons|cleanHtml|safe }}</p>
                     {% else %}
-                        <p>{{ content|cleanHtml|safe }}</p>
+                        <p>{{ item.text|cleanHtml|safe }}</p>
                     {% endif %}
-                {% if org_name %}
-                     <p><b>{% trans 'Member of' %}</b> <a href="{% url 'tpp:detail' org_slug %}">{{ org_name }}</a></p>
+                {% if item.organization.title %}
+                     <p><b>{% trans 'Member of' %}</b> <a href="{% url 'tpp:detail' item.organization.slug %}">{{ item.organization.title }}</a></p>
                 {% endif %}
                 </div>
-                {% b2bSocialButtons  image name content %}
+                {% b2bSocialButtons  item.image item.title item.text %}
 
                 <div class="cpn-details-tab" id="tpp-details-tab">
                     <div class="tab-cate">
@@ -555,16 +532,16 @@
                                     {% trans "About" %}
                                 </a>
                             </li>
-                             {% for page in additionalPages %}
+                            {% for page in additionalPages %}
                                  <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
-                                {% endfor %}
+                            {% endfor %}
                             <li>
                                 <a href="#cpn-tabs-recvisits">
                                     {% trans "Recvisits" %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="news-tab" href="{% url "companies:tab_news" item_id %}">
+                                <a data-id="news-tab" href="{% url "companies:tab_news" item.pk %}">
                                     {% trans "News" %}
                                 </a>
                             </li>
@@ -576,42 +553,42 @@
                             </li>
                             -->
                             <li>
-                                <a data-id="gallery-tabs" href="{% url "companies:tabs_gallery" item_id %}">
+                                <a data-id="gallery-tabs" href="{% url "companies:tabs_gallery" item.pk %}">
                                     {% trans "Gallery" %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="tenders-tenders" href="{% url "companies:tab_tenders" item_id %}">
+                                <a data-id="tenders-tenders" href="{% url "companies:tab_tenders" item.pk %}">
                                     {% trans "Tenders" %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="exhibitions-tab" href="{% url "companies:tab_exhibitions" item_id %}">
+                                <a data-id="exhibitions-tab" href="{% url "companies:tab_exhibitions" item.pk %}">
                                     {% trans "Exhibitions" %}
                                 </a>
                             </li>
                              <li>
-                                <a data-id="news-tab" href="{% url "companies:tab_products" item_id %}">
+                                <a data-id="news-tab" href="{% url "companies:tab_products" item.pk %}">
                                     {% trans "Products" %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="innov-tab" href="{% url "companies:tab_innov" item_id %}">
+                                <a data-id="innov-tab" href="{% url "companies:tab_innov" item.pk %}">
                                     {% trans 'Innovation Projects' %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="proposal-tab" href="{% url "companies:tab_proposal" item_id %}">
+                                <a data-id="proposal-tab" href="{% url "companies:tab_proposal" item.pk %}">
                                     {% trans 'Business Proposals'  %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="structure-tab" href="{% url "companies:tab_structure" item_id %}">
+                                <a data-id="structure-tab" href="{% url "companies:tab_structure" item.pk %}">
                                     {% trans "Structure" %}
                                 </a>
                             </li>
                             <li>
-                                <a data-id="staff-tab" href="{% url "companies:tab_staff" item_id %}">
+                                <a data-id="staff-tab" href="{% url "companies:tab_staff" item.pk %}">
                                     {% trans "Staff" %}
                                 </a>
                             </li>
@@ -626,7 +603,7 @@
                     </div>
                     <div id="cpn-tabs-about">
                         <div class="tpp-dt-content">
-                        	{{ content|cleanHtml|safe }}
+                        	{{ item.text|cleanHtml|safe }}
                         </div>
                     </div>
                     {% for page in additionalPages %}
@@ -642,57 +619,47 @@
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
                     </div>
                     -->
-                    <div id="cpn-tabs-contacts">
-                        <div class="tpp-dt-content">
+            <div id="cpn-tabs-contacts">
+                <div class="tpp-dt-content">
 
-                             <div class="org-contacts">
-                               <ul>
-                                	<li>
-                                    	<span class="left">{% trans 'Address' %} </span>:
-                                        <span class="right">{{ address }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Telephone number' %} </span>:
-                                        <span class="right">{{ telephone_number }} </span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Fax' %} </span>:
-                                        <span class="right">{{ fax }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Email' %} </span>:
-                                        <span class="right">{{ email }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'WWW' %} </span>:
-                                        <span class="right">{{ site_name }}</span>
-                                    </li>
-                                </ul>
-                             </div>
-
-                              <div class="org-map"> <div   id="map-canvas"></div></div>
-
-                        </div>
+                    <div class="org-contacts">
+                        <ul class="innov-tab-content">
+                            {% if item.address %}
+                                <li>
+                                    <span class="left">{% trans 'Address' %}: </span>
+                                    <span class="right">{{ item.address }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.phone %}
+                                <li>
+                                    <span class="left">{% trans 'Telephone number' %}: </span>
+                                    <span class="right">{{ item.phone }} </span>
+                                </li>
+                            {% endif %}
+                            {% if item.fax %}
+                                <li>
+                                    <span class="left">{% trans 'Fax' %}: </span>
+                                    <span class="right">{{ itemn.fax }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.email %}
+                                <li>
+                                    	<span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ item.email }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.site_name %}
+                                <li>
+                                    <span class="left">{% trans 'WWW' %}: </span>
+                                    <span class="right">{{ item.site_name }}</span>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                </div>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-  </div>
+                    <div class="org-map"> <div   id="map-canvas"></div></div>
 
-{% endwith %}
+                </div>
+            </div>
+        </div>
+  </div>
+{% endblock %}

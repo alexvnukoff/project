@@ -252,7 +252,7 @@ def getOwner(item):
     if not item:
         return None
 
-    obj = func.getActiveSQS().filter(id=item)
+    obj = func.getActiveSQS().filter(pk=item)
 
     if len(obj) == 0:
         return None
@@ -384,7 +384,7 @@ def setCountries(context):
   request = context.get('request')
 
   contrySorted = func.sortByAttr("Country", "NAME")
-  sorted_id = [coun.id for coun in contrySorted]
+  sorted_id = [coun.pk for coun in contrySorted]
   countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
   template = loader.get_template('main/Country.html')
@@ -406,9 +406,9 @@ def rightTv(context):
       if sqs.count() == 0:
           return ''
       else:
-          sqs = sqs.order_by('-id')[0]
-          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
-          tvValues = tvValues[sqs.id]
+          sqs = sqs.order_by('-pk')[0]
+          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
+          tvValues = tvValues[sqs.pk]
           is_innov = False
   template = loader.get_template('main/tv.html')
   context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov })

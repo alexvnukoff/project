@@ -51,12 +51,12 @@ def home(request):
 
     services = BusinessProposal.active.get_active().order_by('-pk')[:3]
 
-    services_id = [service.id for service in services]
+    services_id = [service.pk for service in services]
     serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
     func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
 
     greetings = Greeting.active.get_active().all()
-    greetings_id = [greeting.id for greeting in greetings]
+    greetings_id = [greeting.pk for greeting in greetings]
     greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
 
     exhibitions = Exhibition.active.get_active().order_by("-pk")[:3]
@@ -359,7 +359,7 @@ def meth(request):
         itemform.clean()
         if form.is_valid():
             ob = itemform.save()
-            form.save(parent=ob.id, user=request.user)
+            form.save(parent=ob.pk, user=request.user)
     return False
 
 

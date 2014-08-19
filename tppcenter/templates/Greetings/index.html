@@ -2,25 +2,6 @@
 {% load static from staticfiles %}
 {% load i18n %}
 
-
-   {% block title %}
-       {% if title %}
-            {{ title }}
-       {% else %}
-            {% trans 'Greetings' %}
-       {% endif %}
-   {% endblock %}
-
-   {% block description %}
-        {% if description %}
-             <meta name="description" content="{{ description|truncatewords:30 }}"/>
-        {% else %}
-            {{ block.super }}
-         {% endif %}
-   {% endblock %}
-
-
-
     {% block header %}
         {% include "login_header.html" %}
     {% endblock %}
@@ -41,4 +22,4 @@
 
     {% block keywords %}{% endblock %}
 
-     {% block content %} {{ greetingPage }}{% endblock %}
+     {% block content %} {% include "Greetings/contentPage.html" %} {% endblock %}

@@ -229,7 +229,7 @@
 
                              <select  name="TYPE_OF_EMPLOYMENT" style="width: 94%;">
                             {% for type in type_slots %}
-                                <option value="{{ type.id }}" {% if type.id == type_og_employment %} selected="selected" {% endif %}>
+                                <option value="{{ type.pk }}" {% if type.pk == type_og_employment %} selected="selected" {% endif %}>
                                     {{ type.title }}
                                 </option>
                             {% endfor %}

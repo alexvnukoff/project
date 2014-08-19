@@ -56,7 +56,7 @@
                         <label class="sapce">{% trans 'Currency' %}<font color="#FF0000">*</font></label>
                         <select id="id_CURRENCY" name="CURRENCY">
                         {% for curr in currency_slots %}
-                            <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected="selected" {% endif %}>
+                            <option value="{{ curr.pk}}"{% if currnecy == curr.pk %} selected="selected" {% endif %}>
                                 {{ curr.title }}
                             </option>
                         {% endfor %}

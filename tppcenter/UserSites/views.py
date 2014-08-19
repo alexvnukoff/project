@@ -31,13 +31,6 @@ def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
        if not Item.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
-
-
-
-
-
-
-
     if item_id is None:
         sitePage = _siteList(request)
     else:
@@ -85,15 +78,6 @@ def _siteList(request):
     rendered = template.render(context)
 
     return rendered
-
-
-
-
-
-
-
-
-
 
 @login_required(login_url='/login/')
 def resumeForm(request, action, item_id=None):

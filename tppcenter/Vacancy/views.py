@@ -1,243 +1,107 @@
-import json
 import logging
 
 from django.utils.timezone import now
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from haystack.query import SQ
 from django.conf import settings
-from django.core.cache import cache
 from django.utils.translation import trans_real
+from haystack.query import SearchQuerySet
 
 from appl import func
 from appl.models import Tpp, Organization, Company, Department, \
-                        Cabinet, Vacancy, Requirement, Resume
+    Vacancy, Requirement, Resume, Cabinet
 from core.models import Item, Relationship, Dictionary
 from core.tasks import addNewRequirement
+from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm
 
 logger = logging.getLogger('django.request')
 
-def get_vacancy_list(request, page=1, item_id=None, my=None, slug=None):
-    #   if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #   slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-    #   return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
-    if item_id:
-        if not Item.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
 
-    resumesValues = ''
+class get_vacancy_list(ItemsList):
 
+    #pagination url
+    url_paginator = "vacancy:paginator"
+    url_my_paginator = "vacancy:my_main_paginator"
+
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    scripts = []
+    current_section = _("Vacancy")
+    addUrl = 'vacancy:add'
 
-    if item_id is None:
-        try:
-            vacancyPage = _vacancyContent(request, page, my)
-        except ObjectDoesNotExist:
-            vacancyPage = func.emptyCompany()
-    else:
-        vacancyPage , meta= _vacancyDetailContent(request, item_id)
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
 
-        if request.user.is_authenticated():
-            resumes =  Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
-            resumes_ids = [resume.pk for resume in resumes]
-            resumesValues = Item.getItemsAttributesValues(('NAME',),resumes_ids)
+    model = Requirement
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Vacancy/contentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Vacancy/index.html'
+
+    def _get_organization_for_objects(self, object_list):
+
+        new_object_list = []
+
+        for obj in object_list:
+
+            organization = SearchQuerySet().models(Company, Tpp).filter(django_id=obj.organization)
+
+            if organization:
+                if organization.model == Company:
+                    organization.__setattr__('url', 'companies:detail')
+                else:
+                    organization.tpp.__setattr__('url', 'tpp:detail')
+
+            obj.__setattr__('organization', organization)
+
+            new_object_list.append(obj)
+
+        return new_object_list
+
+
+class get_vacancy_detail(ItemDetail):
+
+    model = Requirement
+    template_name = 'Vacancy/detailContent.html'
 
     current_section = _("Vacancy")
+    addUrl = 'vacancy:add'
 
-    if not request.is_ajax():
+    def _get_organization_for_object(self):
 
-        templateParams = {
-            'current_section': current_section,
-            'vacancyPage': vacancyPage,
-            'scripts': scripts,
-            'addNew': reverse('vacancy:add'),
-            'item_id': item_id,
-            'resumesValues': resumesValues
-        }
+        organization = SearchQuerySet().models(Tpp, Company).filter(django_id=self.object.organization)
 
-        if item_id:
-            templateParams['meta'] = meta
+        if not organization:
+            return organization
 
-        return render_to_response("Vacancy/index.html", templateParams, context_instance=RequestContext(request))
-    else:
-         serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': vacancyPage,
-            'item_id': item_id,
-            'resumesValues': resumesValues
-         }
-
-         return HttpResponse(json.dumps(serialize))
-
-
-
-def _vacancyContent(request, page=1, my=None):
-
-    #tpp = Tpp.active.get_active().order_by('-pk')
-    cached = False
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_vacancy_list_result_page_%s" % (lang, page)
-
-    q = request.GET.get('q', '')
-
-    if not my and func.cachePisibility(request):
-        cached = cache.get(cache_name)
-
-    if not cached:
-
-        if not my:
-
-           url_paginator = "vacancy:paginator"
-           params = {}
-
-           filters, searchFilter = func.filterLive(request, model_name=Requirement.__name__)
-
-           sqs = func.getActiveSQS().models(Requirement)
-
-           if len(searchFilter) > 0:
-              sqs = sqs.filter(searchFilter)
-
-           if q != '':
-               sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-           sortFields = {
-              'date': 'id',
-              'name': 'title_sort'
-           }
-
-           order = []
-
-           sortField1 = request.GET.get('sortField1', 'date')
-           sortField2 = request.GET.get('sortField2', None)
-           order1 = request.GET.get('order1', 'desc')
-           order2 = request.GET.get('order2', None)
-
-           if sortField1 and sortField1 in sortFields:
-              if order1 == 'desc':
-                   order.append('-' + sortFields[sortField1])
-              else:
-                   order.append(sortFields[sortField1])
-           else:
-               order.append('-id')
-
-           if sortField2 and sortField2 in sortFields:
-               if order2 == 'desc':
-                  order.append('-' + sortFields[sortField2])
-               else:
-                  order.append(sortFields[sortField2])
-
-
-           vacancies = sqs.order_by(*order)
-
-
-           params = {
-               'filters': filters,
-               'sortField1': sortField1,
-               'sortField2': sortField2,
-               'order1': order1,
-               'order2': order2
-           }
+        if organization.modle == Company:
+            organization.__setattr__('url', 'companies:detail')
         else:
-            current_organization = request.session.get('current_company', False)
+            organization.__setattr__('url', 'tpp:detail')
 
+        return organization
 
+    def _get_user_resume_list(self):
+        cabinet = Cabinet.objects.get(user=self.request.user.pk).pk
+        return SearchQuerySet().models(Resume).filter(cabinet=cabinet)
 
-            vacancies = func.getActiveSQS().models(Requirement).filter(organization=current_organization)
+    def get_context_data(self, **kwargs):
+        context = super(get_vacancy_detail, self).get_context_data(**kwargs)
 
-            url_paginator = "vacancy:my_main_paginator"
-            params = {}
+        if self.request.user.is_authenticated():
+            context['resumes'] = self._get_user_resume_list()
 
-
-        attr = ('NAME', 'DETAIL_TEXT', 'CITY', 'SLUG')
-
-
-        result = func.setPaginationForSearchWithValues(vacancies, *attr,  page_num=5, page=page)
-
-        vacancyList = result[0]
-        vacancy_ids = [id for id in vacancyList.keys()]
-
-        if request.user.is_authenticated():
-            items_perms = func.getUserPermsForObjectsList(request.user, vacancy_ids, Requirement.__name__)
-        else:
-            items_perms = ""
-
-        vacancyList = func.addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList)
-
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-
-        template = loader.get_template('Vacancy/contentPage.html')
-
-        templateParams = {
-            'vacancyList': vacancyList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'items_perms': items_perms,
-            'current_path': request.get_full_path()
-        }
-
-        templateParams.update(params)
-
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        if not my and func.cachePisibility(request):
-            cache.set(cache_name, rendered)
-
-    else:
-        rendered = cache.get(cache_name)
-
-    return rendered
-
-
-def _vacancyDetailContent(request, item_id):
-
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
-
-    if not cached:
-
-        requirement = get_object_or_404(Requirement, pk=item_id)
-        requirementValues = requirement.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'CITY', 'TYPE_OF_EMPLOYMENT', 'REQUIREMENTS', 'TERMS',
-                                                     'IS_ANONYMOUS_VACANCY'))
-
-        organizatation = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
-
-        organizationValues = organizatation.getAttributeValues('NAME', 'SLUG')
-
-
-        template = loader.get_template('Vacancy/detailContent.html')
-        context = RequestContext(request, {'requirementValues': requirementValues, 'organizationValues': organizationValues})
-        rendered = template.render(context)
-
-        meta = func.getItemMeta(request, requirementValues)
-
-        cache.set(cache_name, [rendered ,meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-
-    return rendered, meta
-
-
+        return context
 
 @login_required(login_url='/login/')
 def vacancyForm(request, action, item_id=None):
@@ -323,7 +187,7 @@ def addVacancy(request):
 
 def updateVacancy(request, item_id):
 
-    item = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child__p2c__child__p2c__child=item_id)
     organization = item.pk
     perm_list = item.getItemInstPermList(request.user)
 
@@ -397,7 +261,7 @@ def updateVacancy(request, item_id):
 def getDepartamentsAndVacancies(company):
     departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
 
-    dep_lst = [dep.id for dep in departments]
+    dep_lst = [dep.pk for dep in departments]
 
     if len(dep_lst) == 0:
         departmentsList = []
@@ -407,7 +271,7 @@ def getDepartamentsAndVacancies(company):
     #create list of Company's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
 
-    vac_lst = [vac.id for vac in vacancies]
+    vac_lst = [vac.pk for vac in vacancies]
 
     if len(vac_lst) == 0:
         vacanciesList = []
@@ -429,7 +293,7 @@ def getDepartamentsAndVacancies(company):
 
 
 def deleteVacancy(request, item_id):
-    item = Organization.objects.get(p2c__child__p2c__child__p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child__p2c__child__p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 

@@ -2,62 +2,42 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="container">
-            {% include "TppTV/popupFilter.html" %}
-           {% include "main/paginator.html" %}
-           {% include "main/local_menu_script.html" %}
-             <ul id="tv-list">
-                {% for id , attr in proposalList.items %}
-                    {% with attr.NAME.0 as name %}
-                    {% with attr.SLUG.0 as slug %}
-                    {% with attr.CREATE_DATE.0 as date %}
-                    {% with attr.YOUTUBE_CODE.0 as youtube_code %}
-                    {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.COUNTRY_FLAG|first as flag %}
-                    {% with attr.COUNTRY_ID as country_id %}
-                    {% with attr.IMAGE|first as image %}
-                <li>
-                  {% resolve items_perms id|slugify as permlist %}
+    {% include "TppTV/popupFilter.html" %}
+    {% include "main/paginator.html" %}
+    {% include "main/local_menu_script.html" %}
+    <ul id="tv-list">
+        {% for news in object_list %}
+            <li>
+                {% resolve items_perms news.pk|slugify as permlist %}
 
-                     {% if  redactor %}
+                {% if  redactor %}
                        <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
-                                {% if 'redactor'  %}
-                                    <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tv:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
+                                    <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' news.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tv:delete' news.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                             </div>
                         </div>
-                   {% endif %}
-                	<div class="title-tv">
-                        {% if flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" alt="{{ country_name }}" />
+                {% endif %}
+                <div class="title-tv">
+                        {% if news.country.flag %}
+                            <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.text }}" />
                         {% endif %}
-                        {{ date|date:'d M Y' }}</div>
+                        {{ news.obj_create_date|date:'d M Y' }}</div>
                 	<div class="video">
-                        {% if image %}
-                            <img width="165" height="125" src="{{ MEDIA_URL }}small/{{ image }}" title="{{ name }}" alt="{{ name }}"/>
+                        {% if news.image %}
+                            <img width="165" height="125" src="{{ MEDIA_URL }}small/{{ news.image }}" title="{{ news.title }}" alt="{{ news.title }}"/>
                         {% else %}
-                            <img width="165" height="125" src="http://img.youtube.com/vi/{{ youtube_code }}/0.jpg" />
+                            <img width="165" height="125" src="http://img.youtube.com/vi/{{ news.youtube_code }}/0.jpg" />
                         {% endif %}
                 	</div>
                     <div class="link">
-                        <a href="{%  url 'tv:detail' slug %}" class="name">{{ name|truncatechars:50 }} </a>
+                        <a href="{%  url 'tv:detail' news.slug %}" class="name">{{ news.title|truncatechars:50 }} </a>
                     </div>
                 </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}
-
-            </ul>
-           {% include "main/paginator.html" %}
+        {% endfor %}
+    </ul>
+    {% include "main/paginator.html" %}
 </div>

@@ -1,3 +1,4 @@
+{% extends 'main_page.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
@@ -7,86 +8,70 @@ $(function() {
 	 $(".goods-details-tab").tabs();});
 </script>
 
-<script>
-    $('.keyword').html('');
-</script>
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
 
-<script>
-    {% getOwner item_id as owner %}
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+{% endblock %}
 
-    {% if owner %}
-        {% if owner.type == 'tpp' %}
-            ga('set', 'dimension1', {{ owner.id }});
-        {% else %}
-            ga('set', 'dimension3', {{ owner.id }});
+{% block js %}
+    {{ block.super }}
+    <script>
+        {% getOwner item.pk as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
         {% endif %}
-    {% endif %}
-    ga('set', 'dimension2', 'innov');
-</script>
+        ga('set', 'dimension2', 'exhibition');
+    </script>
+{% endblock %}
 
+{% block keywords %}{% endblock %}
+
+{% block content %}
   <div class="tender">
-            {% with innovValues.NAME.0 as name %}
-            {% with innovValues.COST.0 as cost %}
-            {% with innovValues.BRANCH_NAME.0 as branch_name %}
-            {% with innovValues.BRANCH_ID.0 as branch_id %}
-            {% with innovValues.CURRENCY.0 as currency %}
-            {% with innovValues.DETAIL_TEXT.0 as content %}
-            {% with innovValues.DOCUMENT_1.0 as doc_1 %}
-            {% with innovValues.PRODUCT_NAME.0 as product_name %}
-            {% with innovValues.REALESE_DATE.0 as realese_date %}
-            {% with innovValues.BUSINESS_PLAN.0 as bussines_plan %}
-            {% with innovValues.ORGANIZATION_FLAG.0 as org_flag %}
-            {% with innovValues.ORGANIZATION_NAME.0 as org_name %}
-            {% with innovValues.ORGANIZATION_SLUG.0 as org_slug %}
-            {% with innovValues.ORGANIZATION_URL as org_url %}
-            {% with innovValues.ORGANIZATION_IMAGE.0 as org_image %}
-            {% with innovValues.ORGANIZATION_ID.0 as org_id %}
-            {% with innovValues.COUNTRY_NAME|first as country_name %}
-            {% with innovValues.COUNTRY_FLAG|first as flag %}
-            {% with innovValues.CABINET_FLAG_CLASS|first as cabinet_flag_class %}
-            {% with innovValues.FLAG_CLASS|first as flag_class %}
-            {% with innovValues.COUNTRY_ID as country_id %}
-            {% with innovValues.ORGANIZATION_EMAIL|first as org_email %}
-            {% with innovValues.ORGANIZATION_SITE_NAME|first as org_site %}
-            {% with innovValues.ORGANIZATION_ADDRESS|first as org_address %}
-            {% with innovValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}
-            {% with innovValues.ORGANIZATION_FAX|first as org_fax %}
-
                <div class="tender-details-title">
-               {% if countryUpdate %}
-               		<i class="flag sprite {{ countryUpdate.CABINET_FLAG_CLASS.0 }}"></i>
-               {% elif flag_class %}
-                   <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
-               {% elif cabinet_flag_class %}
-                   <i class="flag sprite {{ cabinet_flag_class }}" ></i>
-               {% else %}
-                   <img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ flag }}{% endif %}" class="flag" />
+               {% if item.country.flag %}
+               		<i class="flag sprite {{ item.country.flag }}"></i>
+               {% elif item.organization.flag %}
+                   <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" />
                {% endif %}
-                    <font class="name">
-                        {% if country_name %}
-                            {{ country_name }}
-                        {% elif org_name %}
-                            {{ org_name }}
-                         {% else %}
-                            {{ countryUpdate.CABINET_COUNTRY_NAME|first  }}
+               <font class="name">
+                        {% if  item.country.text %}
+                            {{ item.country.text }}
+                        {% elif item.organization.title %}
+                            {{ item.organization.title }}
                         {% endif %}
                     </font>
                </div>
                <div class="tender-info">
-					<span class="title">{{ name }}</span>
+					<span class="title">{{ item.title }}</span>
                     <div class="tender-bottom">
                     	<div class="tender-bottom-left">
 
-                        {% if org_flag or org_image %}
-                        	<img src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" title="{{ org_name }}" alt="{{ org_name }}" class="thumb" />
-                        {% else %}
-                            <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
-                        {% endif %}
-                            {% if org_name %}<a href="{% url org_url  org_slug %} "> {{ org_name }}</a>{% else %} {{ cabinetUpdate.CABINET_FIRST_NAME.0 }} {{cabinetUpdate.CABINET_LAST_NAME.0  }}{% endif %}
-                            </div>
+                            {% if item.organization.flag or item.organization.image %}
+                                <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.image }}{% endif %}" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" class="thumb" />
+                            {% else %}
+                                <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
+                            {% endif %}
+
+                            {% if item.organization.title %}
+                                <a href="{% url item.organization.url  item.organization.slug %} "> {{ item.organization.title }}</a>
+                            {% else %}
+                                {{ item.cabinet.text  }}
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="innov-details">
-                    	<p>{{ content|cleanHtml|safe }}</p>
+                    	<p>{{ item.text|cleanHtml|safe }}</p>
                     </div>
                     <div class="goods-details-tab">
                         <div class="tab-cate">
@@ -105,29 +90,33 @@ $(function() {
                             	<ul class="innov-tab-content">
                                 	<li>
                                     	<span class="left">{% trans 'Product' %}: </span>
-                                        <span class="right">{{ product_name }}</span>
+                                        <span class="right">{{ item.product_name }}</span>
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Industry' %}: </span>
-                                        <span class="right">{% if branch_name != 0 %}{{ branch_name }}{% endif %} </span>
+                                        <span class="right">
+                                            {% if item.branch.count != 0 %}
+                                                {% for branch in item.branch %}{{ branch.text }} {% endfor %}
+                                            {% endif %}
+                                        </span>
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Cost' %}: </span>
-                                        <span class="right">{{ currency|getSymbol }} {{ cost }}</span>
+                                        <span class="right">{{ item.currency|getSymbol }} {{ item.price|formatPrice }}</span>
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Realese date' %}: </span>
-                                        <span class="right">{{ realese_date }}</span>
+                                        <span class="right">{{ item.realese_date }}</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div id="goods-tabs-2">
                             <div class="content-goods-tab">
-                                {% if doc_1 %}
-                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to Business Plan File' %}</a> </p>
+                                {% if item.doc_1 %}
+                                   <p><a href="{{ MEDIA_URL }}document/{{ item.doc_1 }}">{% trans 'Link to Business Plan File' %}</a> </p>
                                 {% endif %}
-                                     <p>{{ bussines_plan|cleanHtml|safe }}</p>
+                                     <p>{{ item.bussines_plan|cleanHtml|safe }}</p>
 
                             </div>
                         </div>
@@ -155,26 +144,36 @@ $(function() {
                         <div id="goods-tabs-4">
                             <div class="content-goods-tab">
                                 <ul class="innov-tab-content">
-                                	<li>
-                                    	<span class="left">{% trans 'Address' %}: </span>
-                                        <span class="right">{{ org_address }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Telephone number' %}: </span>
-                                        <span class="right">{{ org_telephone }} </span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Fax' %}: </span>
-                                        <span class="right">{{ org_fax }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Email' %}: </span>
-                                        <span class="right">{{ org_email }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'WWW' %}: </span>
-                                        <span class="right">{{ org_site }}</span>
-                                    </li>
+                                    {% if item.organization.address %}
+                                        <li>
+                                            <span class="left">{% trans 'Address' %}: </span>
+                                            <span class="right">{{ item.organization.address }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.phone %}
+                                        <li>
+                                            <span class="left">{% trans 'Telephone number' %}: </span>
+                                            <span class="right">{{ item.organization.phone }} </span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.fax %}
+                                        <li>
+                                            <span class="left">{% trans 'Fax' %}: </span>
+                                            <span class="right">{{ item.organization.fax }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.email %}
+                                        <li>
+                                                <span class="left">{% trans 'Email' %}: </span>
+                                                <span class="right">{{ item.organization.email }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.site_name %}
+                                        <li>
+                                            <span class="left">{% trans 'WWW' %}: </span>
+                                            <span class="right">{{ item.organization.site_name }}</span>
+                                        </li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
@@ -185,37 +184,7 @@ $(function() {
                         {% endfor %}
                     </div>
                </div>
-
-
-
-
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-
      </div>
 
 
+{% endblock %}

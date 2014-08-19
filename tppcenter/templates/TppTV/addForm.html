@@ -46,7 +46,7 @@ $(function() {
                 <option value="">{% trans "Choose category" %}</option>
                 {% for id , atrr in categories.items %}
                     {% with atrr.NAME|first as category  %}
-                        <option value="{{ id }}"{% if choosen_category.id == id %} selected="selected" {% endif %}>
+                        <option value="{{ id }}"{% if choosen_category.pk == id %} selected="selected" {% endif %}>
                             {{ category }}
                         </option>
                     {% endwith %}
@@ -60,7 +60,7 @@ $(function() {
                     <option value="">{% trans "Choose Country" %}</option>
                     {% for id , atrr in countries.items %}
                         {% with atrr.NAME|first as country  %}
-                            <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>
+                            <option value="{{ id }}"{% if choosen_country.pk == id %} selected {% endif %}>
                                 {{ country }}
                             </option>
                         {% endwith %}

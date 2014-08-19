@@ -32,5 +32,3 @@ class HybridListView(JSONResponseMixin, MultipleObjectTemplateResponseMixin, Bas
             return self.render_to_json_response(context)
         else:
             return super(HybridListView, self).render_to_response(context)
-
-

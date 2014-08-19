@@ -46,7 +46,7 @@ class ItemForm(forms.Form):
 
         super(ItemForm, self).__init__()
         # Get id of ContentType of specific Item
-        object_id = ContentType.objects.get(model=str(item).lower()).id
+        object_id = ContentType.objects.get(model=str(item).lower()).pk
         # Get default attributes of Item
 
         attributess = AttrTemplate.objects.filter(classId=object_id).select_related("attrId", "attrId__dict")
@@ -59,7 +59,7 @@ class ItemForm(forms.Form):
 
          #IF id parameter isn't null , and we want update form ,need to populate field with initial values
         if self.id:
-            self.obj = globals()[item].objects.get(id=self.id)
+            self.obj = globals()[item].objects.get(pk=self.id)
         if self.id and not values:
             attrs = [str(attr.title) for attr in attributes]
             values = self.obj.getAttributeValues(*attrs)
@@ -262,7 +262,7 @@ class ItemForm(forms.Form):
                 self.obj.save()
                 self.obj.sites.add(site_id)
             else:
-                self.obj = globals()[self.item].objects.get(id=self.id)
+                self.obj = globals()[self.item].objects.get(pk=self.id)
                # self.obj.name = self.fields['NAME'].initial
                 #self.obj.title = self.fields['NAME'].initial
                 self.obj.save()
@@ -516,7 +516,7 @@ class BasePages(BaseModelFormSet):
         if post.get('pages-0-content', False):
             super(BasePages, self).save(False)
         else:
-            self.queryset = AdditionalPages.objects.filter(c2p__parent_id=parent_id)
+            self.queryset = AdditionalPages.objects.filter(c2p__parent=parent_id)
 
 
 

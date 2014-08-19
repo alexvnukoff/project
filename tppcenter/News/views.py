@@ -1,87 +1,106 @@
-
-from appl import func
-from appl.models import News, Organization, NewsCategories, Gallery, Country
-from core.models import Item, Group
 from datetime import datetime
+
+from haystack.query import SearchQuerySet
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
-from tppcenter.forms import ItemForm ,BasePhotoGallery
 from pytz import timezone
 import pytz
-import json
-
-from core.tasks import addNewsAttrubute
 from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None, category=None):
+from appl import func
+from appl.models import News, Organization, NewsCategories, Gallery, Country
+from core.models import Group
+from tppcenter.cbv import ItemDetail, ItemsList
+from tppcenter.forms import ItemForm ,BasePhotoGallery
+from core.tasks import addNewsAttrubute
 
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+class get_news_list(ItemsList):
 
-    add_news = False
+    #pagination url
+    url_paginator = "news:paginator"
+    url_my_paginator = "news:my_main_paginator"
+    addUrl = 'news:add'
 
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    scripts = []
+    current_section = _("News")
 
-    try:
-        if not item_id:
-            attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
-            newsPage = func.setContent(request, News, attr, 'news', 'News/contentPage.html', 5, page=page, my=my, category=category)
 
-        else:
-            newsPage, meta = _getdetailcontent(request, item_id)
-            add_news = True
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company']
 
-    except ObjectDoesNotExist:
-        newsPage = func.emptyCompany()
+    model = News
 
-    styles = []
-    scripts = []
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'News/contentPage.html'
 
-    if not request.is_ajax():
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'News/index.html'
 
-        current_section = _("News")
+    def _is_redactor(self):
+        if 'Redactor' in self.request.user.groups.values_list('name', flat=True):
+            return True
 
-        templateParams = {
+        return False
 
-            'current_section': current_section,
-            'newsPage': newsPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('news:add'),
-            'add_news': add_news
-        }
+    def get_context_data(self, **kwargs):
+        context = super(get_news_list, self).get_context_data(**kwargs)
 
-        if item_id:
-            templateParams['meta'] = meta
+        context['redactor'] = False
 
-        return render_to_response("News/index.html", templateParams, context_instance=RequestContext(request))
-    else:
+        if self.request.user.is_authenticated():
+            context['redactor'] = self._is_redactor()
 
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': newsPage,
-        }
+        return context
 
-        return HttpResponse(json.dumps(serialize))
+    def get_queryset(self):
+        sqs = super(get_news_list, self).get_queryset()
 
+        category = self.kwargs.get('category', None)
+
+        if category:
+            sqs.filter(categories=category)
+
+        return sqs
+
+class get_news_detail(ItemDetail):
+
+    model = News
+    template_name = 'News/detailContent.html'
+
+    current_section = _("News")
+    addUrl = 'news:add'
+
+    def _get_similar_news(self):
+        return SearchQuerySet().models(News).filter(categories__in=self.object.categories)
+
+    def _get_categories_for_object(self):
+        return SearchQuerySet().filter(django_id__in=self.object.categories)
+
+    def get_context_data(self, **kwargs):
+        context = super(get_news_detail, self).get_context_data(**kwargs)
+        context[self.context_object_name].__setattr__('categories', self._get_categories_for_object())
+
+        context.update({
+            'photos': self._get_gallery(),
+            'similarNews': self._get_similar_news()
+        })
+
+        return context
 
 
 @login_required(login_url='/login/')
@@ -176,7 +195,7 @@ def updateNew(request, item_id):
         redactor = False
 
     try:
-        item = Organization.objects.get(p2c__child_id=item_id)
+        item = Organization.objects.get(p2c__child=item_id)
         perm_list = item.getItemInstPermList(request.user)
 
         if 'change_news' not in perm_list:
@@ -191,11 +210,11 @@ def updateNew(request, item_id):
     create_date = News.objects.get(pk=item_id).create_date
 
     try:
-        choosen_category = NewsCategories.objects.get(p2c__child__id=item_id)
+        choosen_category = NewsCategories.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
     try:
-        choosen_country = Country.objects.get(p2c__child__id=item_id)
+        choosen_country = Country.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_country = ""
 
@@ -253,60 +272,10 @@ def updateNew(request, item_id):
 
     return newsPage
 
-
-def _getdetailcontent(request, item_id):
-
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-
-    cached = cache.get(cache_name)
-
-    if not cached:
-        new = get_object_or_404(News, pk=item_id)
-        newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
-        photos = Gallery.objects.filter(c2p__parent=new)
-
-        try:
-            newsCategory = NewsCategories.objects.get(p2c__child=item_id)
-            category_value = newsCategory.getAttributeValues('NAME')
-            newValues.update({'CATEGORY_NAME': category_value})
-            similar_news = News.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
-            similar_news_ids = [sim_news.pk for sim_news in similar_news]
-            similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
-        except ObjectDoesNotExist:
-            similarValues = None
-
-
-        func.addToItemDictinoryWithCountryAndOrganization(item_id, newValues)
-
-        template = loader.get_template('News/detailContent.html')
-
-        templateParams = {
-            'newValues': newValues,
-            'photos': photos,
-            'similarValues': similarValues,
-            'item_id': item_id,
-        }
-
-        meta = func.getItemMeta(request, newValues)
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-        cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-    return rendered, meta
-
-
-
-
-
 def deleteNews(request, item_id):
     if not 'Redactor' in request.user.groups.values_list('name', flat=True):
 
-        item = Organization.objects.get(p2c__child_id=item_id)
+        item = Organization.objects.get(p2c__child=item_id)
 
         perm_list = item.getItemInstPermList(request.user)
 

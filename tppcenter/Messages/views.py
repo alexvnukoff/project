@@ -176,7 +176,7 @@ def _getMessageList(request, recipient, sender,  date=None, lid=None):
         buff['DETAIL_TEXT'] = [m.text]
         buff['CREATE_DATE'] = [m.create_date]
         buff['FILE'] = [m.file]
-        messagesList[m.id] = buff
+        messagesList[m.pk] = buff
         buff = {}
 
     messagesList = OrderedDict(sorted(((k, v) for k, v in messagesList.items()), key=lambda msg: msg[1]['CREATE_DATE'], reverse=True))

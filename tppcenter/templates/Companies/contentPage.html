@@ -6,130 +6,100 @@
 </script>
 <div class="container">
      <div class="companies">
-               {% include "Companies/popupFilter.html" %}
-               {% include "main/paginator.html" %}
-              {% include "main/local_menu_script.html" %}
-                 <ul class="company-list">
-                    {% for id , attr in proposalList.items %}
-                        {% with attr.NAME.0 as name %}
-                        {% with attr.ANONS.0 as anons %}
-                        {% with attr.SLUG.0 as slug %}
-                        {% with attr.IMAGE.0 as image %}
-                        {% with attr.DETAIL_TEXT.0 as about_company %}
-                        {% with attr.ADDRESS.0 as address %}
-                        {% with attr.SITE_NAME.0 as site%}
-                        {% with attr.TELEPHONE_NUMBER.0 as telephone%}
-                        {% with attr.FAX.0 as fax%}
-                        {% with attr.INN.0 as inn%}
-                        {% with attr.COUNTRY_NAME|first as country_name %}
-                        {% with attr.FLAG_CLASS|first as flag_class %}
-                        {% with attr.COUNTRY_FLAG|first as flag %}
-                        {% with attr.COUNTRY_ID as country_id %}
-                        {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                        {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
-                        {% with attr.ORGANIZATION_URL as org_url %}
-                         <li>
-                           {% resolve items_perms id|slugify as permlist %}
+        {% include "Companies/popupFilter.html" %}
+        {% include "main/paginator.html" %}
+        {% include "main/local_menu_script.html" %}
+        <ul class="company-list">
+            {% for company in object_list %}
 
-                             {% if 'delete_company' in  permlist or 'change_company' in permlist%}
-                               <div class="blockbox">
+                {% resolve items_perms company.pk|slugify as permlist %}
+                <li>
+                    {% if 'delete_company' in  permlist or 'change_company' in permlist%}
+                        <div class="blockbox">
                                     <a href="#"><i class="btn-afisha imgnews"></i></a>
                                     <div class="localmenu">
                                         {% if 'change_company' in permlist %}
-                                             <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                              <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
+                                             <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                              <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
                                        {% endif %}
                                        {% if 'add_advtop' in permlist %}
-                                           <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
+                                           <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
                                        {% endif %}
                                        {% if 'delete_company' in  permlist %}
-                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                         {% endif %}
                                     </div>
                                 </div>
-                           {% endif %}
-                            <div class="title">
-                               {% if flag_class %}
-                                    <i class="flag sprite {{ flag_class }}"></i>
-                                    {% else %}
-                                     <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}"/>
-                                    {% endif %}
-                                <a href="{% url 'companies:detail' slug %}">
-                                    {{ name }}
+                    {% endif %}
+                    <div class="title">
+                        {% if company.country.flag %}
+                            <i class="flag sprite {{ company.country.flag }}"></i>
+                        {% endif %}
+                        <a href="{% url 'companies:detail' company.slug %}">{{ company.title }}</a>
+                    </div>
+                    <div class="company-infor">
+                        {% if company.image %}
+                            <img src="{{ MEDIA_URL }}small/{{ company.image }}" class="logocompany" alt="{{ company.title }}" title="{{ company.title }}"/>
+                        {% else %}
+                           <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
+                        {% endif %}
+                        <div class="desc">
+                            {% if company.organization.title %}
+                                <p class="link">
+                                    <b>{% trans 'Member of' %}</b>
+                                    <a href="{% url company.organization.url company.organization.slug %}">{{ company.organization.title|truncatechars:30 }}</a>
+                                </p>
+                            {% endif %}
 
+                            {% if company.anons %}
+                                {{ company.anons|cleanHtml|safe|truncatechars:200 }}
+                            {% else %}
+                                {{ company.text|cleanHtml|safe|truncatewords_html:200 }}
+                            {% endif %}
+                            <a href="{% url 'companies:detail' company.slug %}">{% trans "More" %}...</a>
 
-                                </a>
-                            </div>
-                            <div class="company-infor">
-                                {% if image %}
-                                <img src="{{MEDIA_URL}}small/{{ image }}" class="logocompany" alt="{{ name }}" title="{{ name }}"/>
-                                {% else %}
-                                 <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
-                                {% endif %}
-                                <div class="desc">
-                                {% if org_name %}
-                                    <p  class="link"><b>{% trans 'Member of' %}</b> <a href="{% url org_url org_slug %}">{{ org_name|truncatechars:30 }}</a></p>
-                                {% endif %}
-                                    {% if anons %}
-                                         {{ anons|cleanHtml|safe|truncatechars:200 }}
-                                    {% else %}
-                                         {{ about_company|cleanHtml|safe|truncatewords_html:200 }}
-                                    {% endif %}
-
-
-                                    <a href="{% url 'companies:detail' slug %}">{% trans "More" %}...</a>
-
+                        </div>
+                        <div class="companycontact">
+                            {% if company.address %}
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                                    <div class="nameinfo">{{ company.address }}</div>
                                 </div>
-                                <div class="companycontact">
-                                    <div class="line">
-                                        <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
-                                        <div class="nameinfo">{{ address }}</div>
-                                   </div>
-                                   <div class="line">
-                                        <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
-                                        <div class="nameinfo">{{ telephone }}</div>
-                                   </div>
-                                   <div class="line">
-                                        <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
-                                        <div class="nameinfo">{{ fax }}</div>
-                                   </div>
-                                   <div class="line">
-                                        <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
-                                        <div class="nameinfo"><a href="http://{{ site }}">{{ site }}</a></div>
-                                   </div>
-                                   <div class="line">
-                                        <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
-                                        <div class="nameinfo">
-                                            <a class="contact-us" data-name="{{ name }}" data-id="{{ id }}" href="#" >
-                                                {% trans 'Contact us' %}
-                                            </a>
-                                        </div>
-                                   </div>
+                            {% endif %}
+                            {% if company.phone %}
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                                    <div class="nameinfo">{{ company.phone }}</div>
+                                </div>
+                            {% endif %}
+                            {% if company.fax %}
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                                    <div class="nameinfo">{{ company.fax }}</div>
+                                </div>
+                            {% endif %}
+                            {% if company.site_name %}
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                                    <div class="nameinfo"><a href="http://{{ company.site_name }}">{{ company.site_name }}</a></div>
+                                </div>
+                            {% endif %}
+                            <div class="line">
+                                <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+                                <div class="nameinfo">
+                                    <a class="contact-us" data-name="{{ company.title }}" data-id="{{ company.pk }}" href="#" >
+                                        {% trans 'Contact us' %}
+                                    </a>
                                 </div>
                             </div>
-                        </li>
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                {% empty %}
-                    <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}
+                        </div>
+                    </div>
+                </li>
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
 
-                </ul>
-               {% include "main/paginator.html" %}
+        </ul>
+        {% include "main/paginator.html" %}
     </div>
 </div>

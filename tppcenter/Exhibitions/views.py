@@ -1,11 +1,6 @@
-from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch
-from appl import func
-from core.models import Item
-from core.tasks import addNewExhibition
 from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
@@ -13,109 +8,59 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import trans_real, ugettext as _
 from django.utils.timezone import now
+
+from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch
+from appl import func
+from core.models import Item
+from core.tasks import addNewExhibition
+from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-import json
 
-def get_exhibitions_list(request, page=1, item_id=None, my=None, slug=None):
-    #if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-     #  slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-      # return HttpResponseRedirect(reverse('exhibitions:detail',  args=[slug]))
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
 
-    scripts = []
+class get_exhibitions_list(ItemsList):
+
+    #pagination url
+    url_paginator = "exhibitions:paginator"
+    url_my_paginator = "exhibitions:my_main_paginator"
+
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    if not item_id:
-        try:
-            attr = ('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE', 'END_EVENT_DATE', 'SLUG')
-            exhibitionPage = func.setContent(request, Exhibition, attr, 'exhibitions', 'Exhibitions/contentPage.html',
-                                             5, page=page, my=my)
+    current_section = _("Exhibitions")
+    addUrl = 'exhibitions:add'
 
-        except ObjectDoesNotExist:
-            exhibitionPage = func.emptyCompany()
-    else:
-        exhibitionPage, meta = _exhibitionsDetailContent(request, item_id)
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
 
-    if not request.is_ajax():
+    model = Exhibition
 
-        current_section = _("Exhibitions")
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Exhibitions/contentPage.html'
 
-        templateParams = {
-            'current_section': current_section,
-            'exhibitionPage': exhibitionPage,
-            'styles': styles,
-            'scripts': scripts,
-            'addNew': reverse('exhibitions:add'),
-            'item_id': item_id
-        }
-
-        if item_id:
-            templateParams['meta'] = meta
-
-        return render_to_response("Exhibitions/index.html", templateParams, context_instance=RequestContext(request))
-
-    else:
-
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': exhibitionPage
-        }
-
-        return HttpResponse(json.dumps(serialize))
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Exhibitions/index.html'
 
 
-def _exhibitionsDetailContent(request, item_id):
+class get_exhibition_detail(ItemDetail):
 
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
+    model = Exhibition
+    template_name = 'Exhibitions/detailContent.html'
 
-    if not cached:
+    current_section = _("Exhibitions")
+    addUrl = 'exhibitions:add'
 
-         exhibition = get_object_or_404(Exhibition, pk=item_id)
+    def get_context_data(self, **kwargs):
+        context = super(get_exhibition_detail, self).get_context_data(**kwargs)
 
-         attr = (
-             'NAME', 'DETAIL_TEXT', 'START_EVENT_DATE',
-             'END_EVENT_DATE', 'DOCUMENT_1', 'DOCUMENT_2',
-             'DOCUMENT_3', 'CITY','ROUTE_DESCRIPTION', 'POSITION'
-         )
+        context.update({
+            'photos': self._get_gallery(),
+            'additionalPages': self._get_additional_pages(),
+        })
 
-         exhibitionlValues = exhibition.getAttributeValues(*attr)
-
-         photos = Gallery.objects.filter(c2p__parent=item_id)
-
-         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
-
-         func.addToItemDictinoryWithCountryAndOrganization(exhibition.id, exhibitionlValues, withContacts=True)
-
-         template = loader.get_template('Exhibitions/detailContent.html')
-
-         templateParams = {
-            'exhibitionlValues': exhibitionlValues,
-            'photos': photos,
-            'additionalPages': additionalPages,
-            'item_id': item_id
-         }
-
-         context = RequestContext(request, templateParams)
-         rendered = template.render(context)
-
-         meta = func.getItemMeta(request, exhibitionlValues)
-
-         cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-    return rendered, meta
-
+        return context
 
 @login_required(login_url='/login/')
 def exhibitionForm(request, action, item_id=None):
@@ -161,7 +106,7 @@ def addExhibition(request):
          return func.permissionDenied()
 
     branches = Branch.objects.all()
-    branches_ids = [branch.id for branch in branches]
+    branches_ids = [branch.pk for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
     pages = None
 
@@ -201,7 +146,7 @@ def addExhibition(request):
 
 
 def updateExhibition(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -209,7 +154,7 @@ def updateExhibition(request, item_id):
         return func.permissionDenied()
 
     branches = Branch.objects.all()
-    branches_ids = [branch.id for branch in branches]
+    branches_ids = [branch.pk for branch in branches]
     branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
 
     try:
@@ -276,7 +221,7 @@ def updateExhibition(request, item_id):
 
 
 def deleteExhibition(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 

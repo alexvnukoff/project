@@ -324,7 +324,7 @@ rgb(33,136,187) 100%);}
 .goods-details-tab{ position:relative; float:left; width:100%; background-color:#f5f5f5; border-radius:3px; border:1px solid; border-color:#CCC #FFF #FFF #CCC; box-sizing:border-box; margin: 20px 0 0 0;
 box-shadow:inset 0 0 3px #CCC;}
 .goods-details-tab .tab-cate{ position:relative; float:left; width:100%; height:30px; background-color:#e6e6e6; border-bottom:1px #d0d0d0 solid;}
-.content-goods-tab{ position: relative; float: left; padding:18px; min-height: 260px; color: #595959;}
+.content-goods-tab{ word-wrap: break-word; word-break: break-all; position: relative; float: left; padding:18px; min-height: 260px; color: #595959;}
 .content-goods-tab p{ padding-top: 14px;}
 .keyword.disable .icon-key{ background-position: -35px -25px;}
 .keyword.disable .list-key li{ background-color: #414141; color: #959595;}

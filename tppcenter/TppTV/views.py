@@ -1,67 +1,89 @@
-from appl import func
-from appl.models import TppTV, NewsCategories, Country, Organization
-from core.models import Item
-from core.tasks import addTppAttrubute
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
+from haystack.query import SearchQuerySet
+
+from appl import func
+from appl.models import TppTV, NewsCategories, Country
+from core.tasks import addTppAttrubute
+from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm
 
-import json
 
-def get_news_list(request, page=1, item_id=None, slug=None):
+class get_news_list(ItemsList):
 
- #   if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-  #       slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-   #      return HttpResponseRedirect(reverse('tv:detail',  args=[slug]))
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+    #pagination url
+    url_paginator = "tv:paginator"
 
-    styles = [settings.STATIC_URL + 'tppcenter/css/news.css']
-    scripts = []
+    #Lists of required scripts and styles for ajax request
+    styles = [
+        settings.STATIC_URL + 'tppcenter/css/news.css'
+    ]
 
-    if not item_id:
-        attr = ('NAME', 'IMAGE', 'YOUTUBE_CODE', 'SLUG')
-        newsPage = func.setContent(request, TppTV, attr, 'tv', 'TppTV/contentPage.html', 9, page=page)
+    current_section = _("TPP-TV")
+    addUrl = 'tv:add'
 
-    else:
-        newsPage, meta = _getdetailcontent(request, item_id)
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company']
+
+    model = TppTV
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'TppTV/contentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'TppTV/index.html'
+
+    def _is_redactor(self):
+        if 'Redactor' in self.request.user.groups.values_list('name', flat=True):
+            return True
+
+        return False
+
+    def get_context_data(self, **kwargs):
+        context = super(get_news_list, self).get_context_data(**kwargs)
+
+        context['redactor'] = False
+
+        if self.request.user.is_authenticated():
+            context['redactor'] = self._is_redactor()
+
+        return context
 
 
-    if not request.is_ajax():
 
-        current_section = "TPP-TV"
+class get_news_detail(ItemDetail):
 
-        templatePramrams = {
-            'current_section': current_section,
-            'newsPage': newsPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('tv:add')
-        }
+    model = TppTV
+    template_name = 'Exhibitions/detailContent.html'
 
-        if item_id:
-            templatePramrams['meta'] = meta
+    current_section = _("TPP-TV")
+    addUrl = 'tv:add'
 
-        return render_to_response("TppTV/index.html", templatePramrams, context_instance=RequestContext(request))
+    def _get_similar_news(self):
+        return SearchQuerySet().models(TppTV).filter(categories__in=self.object.categories)
 
-    else:
+    def _get_categories_for_object(self):
+        return SearchQuerySet().filter(django_id__in=self.object.categories)
 
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': newsPage,
-        }
+    def get_context_data(self, **kwargs):
+        context = super(get_news_detail, self).get_context_data(**kwargs)
+        context[self.context_object_name].__setattr__('categories', self._get_categories_for_object())
 
-        return HttpResponse(json.dumps(serialize))
+        context.update({
+            'photos': self._get_gallery(),
+            'similarNews': self._get_similar_news()
+        })
+
+        return context
+
+
 
 @login_required(login_url='/login/')
 def tvForm(request, action, item_id=None):
@@ -90,6 +112,7 @@ def tvForm(request, action, item_id=None):
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def addNews(request):
 
     perm = request.user.get_all_permissions()
@@ -128,7 +151,7 @@ def addNews(request):
     return newsPage
 
 
-
+@login_required(login_url='/login/')
 def updateNew(request, item_id):
 
     perm = request.user.get_all_permissions()
@@ -139,11 +162,11 @@ def updateNew(request, item_id):
     create_date = TppTV.objects.get(pk=item_id).create_date
 
     try:
-        choosen_category = NewsCategories.objects.get(p2c__child__id=item_id)
+        choosen_category = NewsCategories.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
     try:
-        choosen_country = Country.objects.get(p2c__child__id=item_id)
+        choosen_country = Country.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_country = ""
 
@@ -192,69 +215,7 @@ def updateNew(request, item_id):
     return newsPage
 
 
-
-
-def _getdetailcontent(request, item_id):
-
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
-
-    if not cached:
-
-        new = get_object_or_404(TppTV, pk=item_id)
-        newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE'))
-
-        organizations = dict(Organization.objects.filter(p2c__child=new.pk).values('c2p__parent__country', 'pk'))
-
-        try:
-            newsCategory = NewsCategories.objects.get(p2c__child=item_id)
-            category_value = newsCategory.getAttributeValues('NAME')
-            newValues.update({'CATEGORY_NAME': category_value})
-            similar_news = TppTV.objects.filter(c2p__parent__id=newsCategory.id).exclude(id=new.id)[:3]
-            similar_news_ids = [sim_news.pk for sim_news in similar_news]
-            similarValues = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), similar_news_ids)
-        except ObjectDoesNotExist:
-            similarValues = None
-
-
-
-        if organizations.get('c2p__parent__country', False):
-            countriesList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['c2p__parent__country'])
-            toUpdate = {'COUNTRY_NAME': countriesList[organizations['c2p__parent__country']].get('NAME', [""]),
-                        'COUNTRY_FLAG': countriesList[organizations['c2p__parent__country']].get('FLAG', [""]),
-                        'COUNTRY_ID': organizations['c2p__parent__country']}
-
-            newValues.update(toUpdate)
-
-
-        if organizations.get('pk', False):
-            organizationsList = Item.getItemsAttributesValues(('NAME', 'FLAG'), organizations['pk'])
-            toUpdate = {'ORG_NAME': organizationsList[organizations['pk']].get('NAME', [""]),
-                        'ORG_FLAG': organizationsList[organizations['pk']].get('FLAG', [""]),
-                        'ORG_ID': organizations['pk']}
-
-            newValues.update(toUpdate)
-
-
-
-        template = loader.get_template('TppTV/detailContent.html')
-
-        context = RequestContext(request, {'newValues': newValues, 'similarValues': similarValues})
-        rendered = template.render(context)
-
-        meta = func.getItemMeta(request, newValues)
-
-        cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-    return rendered, meta
-
-
-
-
+@login_required(login_url='/login/')
 def deleteTppTv(request, item_id):
 
     if not 'Redactor' in request.user.groups.values_list('name', flat=True):

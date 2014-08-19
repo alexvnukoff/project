@@ -1,126 +1,65 @@
-from appl.models import Tender, Gallery, AdditionalPages, Organization
-from appl import func
-from core.tasks import addNewTender
-from core.models import Dictionary, Item
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.forms.models import modelformset_factory
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _, trans_real
+
+from appl.models import Tender, Gallery, AdditionalPages, Organization
+from appl import func
+from core.tasks import addNewTender
+from core.models import Dictionary
+from tppcenter.cbv import ItemsList, ItemDetail
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-import json
-
-def get_tenders_list(request, page=1, item_id=None, my=None, slug=None):
 
 
-   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+class get_tenders_list(ItemsList):
 
+    #pagination url
+    url_paginator = "tenders:paginator"
+    url_my_paginator = "tenders:my_main_paginator"
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    scripts = []
+    current_section = _("Tenders")
+    addUrl = 'tenders:add'
 
-    if item_id is None:
-        try:
-            attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
-            tendersPage = func.setContent(request, Tender, attr, 'tenders', 'Tenders/contentPage.html', 5, page=page,
-                                          my=my)
-        except ObjectDoesNotExist:
-            tendersPage = func.emptyCompany()
-    else:
-        tendersPage, meta = _tenderDetailContent(request, item_id)
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
 
-    if not request.is_ajax():
-        current_section = _("Tenders")
+    model = Tender
 
-        templateParams =  {
-            'current_section': current_section,
-            'tendersPage': tendersPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('tenders:add'),
-            'item_id': item_id
-        }
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Tenders/contentPage.html'
 
-        if item_id:
-            templateParams['meta'] = meta
-
-        return render_to_response("Tenders/index.html", templateParams, context_instance=RequestContext(request))
-    else:
-
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': tendersPage,
-        }
-
-        return HttpResponse(json.dumps(serialize))
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Tenders/index.html'
 
 
+class get_tender_detail(ItemDetail):
 
+    model = Tender
+    template_name = 'Tenders/detailContent.html'
 
+    current_section = _("Tenders")
+    addUrl = 'tenders:add'
 
-def _tenderDetailContent(request, item_id):
+    def get_context_data(self, **kwargs):
+        context = super(get_tender_detail, self).get_context_data(**kwargs)
 
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
+        context.update({
+            'photos': self._get_gallery(),
+            'additionalPages': self._get_additional_pages(),
+        })
 
-    cached = cache.get(cache_name)
-
-    if not cached:
-
-         tender = get_object_or_404(Tender, pk=item_id)
-
-         attr = (
-             'NAME', 'COST', 'CURRENCY', 'START_EVENT_DATE', 'END_EVENT_DATE',
-            'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'DETAIL_TEXT'
-         )
-
-         tenderValues = tender.getAttributeValues(*attr)
-
-         photos = Gallery.objects.filter(c2p__parent=item_id)
-
-         additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
-         func.addToItemDictinoryWithCountryAndOrganization(tender.id, tenderValues)
-
-         template = loader.get_template('Tenders/detailContent.html')
-
-         templateParams = {
-            'tenderValues': tenderValues,
-            'photos': photos,
-            'additionalPages': additionalPages,
-            'item_id': item_id
-         }
-
-         context = RequestContext(request, templateParams)
-         rendered = template.render(context)
-
-         meta = func.getItemMeta(request, tenderValues)
-
-         cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-    return rendered, meta
-
-
+        return context
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):
@@ -203,7 +142,7 @@ def addTender(request):
 
 def updateTender(request, item_id):
 
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
     if 'change_tender' not in perm_list:
@@ -266,7 +205,7 @@ def updateTender(request, item_id):
 
 
 def deleteTender(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 

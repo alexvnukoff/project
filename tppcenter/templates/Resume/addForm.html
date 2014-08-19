@@ -76,7 +76,7 @@
                             {% endif %}
                             <select  name="MARITAL_STATUS" style="width: 94%;">
                             {% for marital in marital_slots %}
-                                <option value="{{ marital.id }}" {% if marital.id == marital_status %} selected="selected" {% endif %}>
+                                <option value="{{ marital.pk }}" {% if marital.pk == marital_status %} selected="selected" {% endif %}>
                                     {{ marital.title }}
                                 </option>
                             {% endfor %}
@@ -157,7 +157,7 @@
                             {% endif %}
                            <select  name="STUDY_FORM" style="width: 95%;">
                             {% for study in study_slots %}
-                                <option value="{{ study.id }}" {% if study.id == study_form %} selected="selected" {% endif %}>
+                                <option value="{{ study.pk }}" {% if study.pk == study_form %} selected="selected" {% endif %}>
                                     {{ study.title }}
                                 </option>
                             {% endfor %}

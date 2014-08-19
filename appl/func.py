@@ -56,7 +56,7 @@ def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttr
     except Exception:
         page = items = paginator.page(1)
     if not isinstance(items, list):
-        items = tuple([item.id for item in page.object_list])
+        items = tuple([item.pk for item in page.object_list])
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
     return attributeValues, page #Return List Item and Page object of current page
@@ -318,7 +318,7 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterChild, c2p__type="relation")\
+    return Item.objects.filter(c2p__parent_id__in=list, c2p__child=filterChild, c2p__type="relation")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
@@ -536,6 +536,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
     organizations_ids = [organization['pk'] for organization in organizations]
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
     organizations_dict = {}
+
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
 
@@ -546,26 +547,30 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
     for id, item in itemList.items():
         if country_dict.get(id, False):
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            toUpdate = {
+                'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
+                'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                'COUNTRY_ID':  country_dict.get(id, 0)
+            }
+
             item.update(toUpdate)
+
         if organizations_dict.get(id, False):
             if organizationIsCompany(id):
                 url = 'companies:detail'
             else:
                 url = 'tpp:detail'
 
-            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
-                        'ORGANIZATION_URL': url}
+            toUpdate = {
+                'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                'ORGANIZATION_URL': url
+            }
+
             item.update(toUpdate)
-
-
-
 
 def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 
@@ -989,7 +994,7 @@ def getDeatailAdv(item_id):
     '''
     filterAdv = []
 
-    sqs = getActiveSQS().filter(id=item_id)
+    sqs = getActiveSQS().filter(pk=item_id)
 
     filterAdv += getattr(sqs, 'branch', [])
     filterAdv += getattr(sqs, 'tpp', [])
@@ -1149,7 +1154,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
                     proposal = getActiveSQS().models(model).\
-                        filter(SQ(id=current_organization) | SQ(company=current_organization))
+                        filter(SQ(pk=current_organization) | SQ(company=current_organization))
 
                 #TODO: Fix search
                 #if q != '': #Search for content
@@ -1244,7 +1249,11 @@ def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
         return {}
 
     perms_dict = {}
-    items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+
+    if isinstance(obj_lst[0], (int, str)):
+        items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+    else:
+        items = obj_lst
 
     for itm in items:
         perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)

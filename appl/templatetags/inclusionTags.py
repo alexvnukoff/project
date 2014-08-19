@@ -95,7 +95,7 @@ def getMyCompaniesList(context):
 
     sqs = SearchQuerySet().filter(id__in=companies_ids).order_by('title')
 
-    companies_ids = [company.id for company in sqs]
+    companies_ids = [company.pk for company in sqs]
 
     if len(companies_ids) > 0:
         companies = Item.getItemsAttributesValues('NAME', companies_ids)

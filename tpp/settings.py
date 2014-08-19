@@ -310,7 +310,7 @@ for lang in LANGUAGES:
     }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
-HAYSTACK_ID_FIELD = 'hay_id'
+HAYSTACK_ID_FIELD = 'id'
 
 ############################# AWS settings ################################
 

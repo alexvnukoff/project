@@ -9,50 +9,35 @@
         $('#file-input').remove();
     });
 </script>
-           {% include "main/paginator.html" %}
+            {% include "main/paginator.html" %}
             {% include "Users/popupFilter.html" %}
 
              <ul class="listprd">
-                {% for id , attr in userList.items %}
-                    {% with attr.USER_FIRST_NAME|first as name %}
-                    {% with attr.IMAGE|first as image %}
-
-                    {% with attr.USER_LAST_NAME|first as last_name %}
-
-                    {% with attr.COUNTRY_FLAG|first as flag_class %}
-                    {% with attr.COUNTRY_NAME|first as country_name %}
+                {% for user in object_list %}
 
                     <li>
-                     {% resolve items_perms id|slugify as permlist %}
 
 
                       <div class="thumb">
                           <a href="#">
-                              {% if image %}
-                                  <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                              {% if user.image %}
+                                  <img src="{{ MEDIA_URL }}big/{{ user.image }}" alt="{{ user.text }}" title="{{ user.text }}" />
                               {% else %}
-                                  <img src="{% static 'tppcenter/img/profile.jpg' %}" alt="{{ name|truncatechars:40 }}" />
+                                  <img src="{% static 'tppcenter/img/profile.jpg' %}" alt="{{ user.text|truncatechars:40 }}" />
                               {% endif %}
                           </a>
                       </div>
                         <div class="link">
 
-                            {% if flag_class %}
-                                 <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
+                            {% if user.country.flag %}
+                                 <i class="flag sprite {{ user.country.flag }}" title="{{ user.country.text }}"></i>
                             {% endif %}
-                        <a href="#" class="name">{{ last_name }} {{ name }}</a>
+                        <a href="#" class="name">{{ user.text }}</a>
                        </div>
 
-                        <a href="#" style="height: 20px;" class="btnbuy staff-contact-msg img-status contact-us" data-name="{{ last_name }} {{ name }}" data-id="{{ id }}">{% trans 'Send message' %}</a>
+                        <a href="#" style="height: 20px;" class="btnbuy staff-contact-msg img-status contact-us" data-name="{{ user.text }}" data-id="{{ user.pk }}">{% trans 'Send message' %}</a>
 
                     </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-
-
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>
                 {% endfor %}

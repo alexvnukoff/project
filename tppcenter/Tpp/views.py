@@ -1,24 +1,23 @@
-import json
 import logging
+from django.contrib.auth.decorators import login_required
 
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.core.cache import cache
 from django.utils.translation import trans_real
+from haystack.backends import SQ
 
 from appl import func
 from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
                         Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
 from core.models import Item, Relationship, Group, User
+from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePages
 from core.tasks import addNewTpp
 from core.amazonMethods import add
@@ -26,225 +25,64 @@ from core.amazonMethods import add
 
 logger = logging.getLogger('django.request')
 
-def get_tpp_list(request, page=1, item_id=None, my=None, slug=None):
-    #   if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #   slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-    #   return HttpResponseRedirect(reverse('tpp:detail',  args=[slug]))
-    if item_id:
-        if not Item.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
+class get_tpp_list(ItemsList):
 
-    if item_id is None:
-        try:
-            tppPage = _tppContent(request, page, my)
-        except ObjectDoesNotExist:
-            tppPage = func.emptyCompany()
-    else:
-        tppPage, meta = _tppDetailContent(request, item_id)
+    #pagination url
+    url_paginator = "tpp:paginator"
+    url_my_paginator = "tpp:my_main_paginator"
 
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
         settings.STATIC_URL + 'tppcenter/css/tpp.reset.css'
     ]
 
-    scripts = []
+    current_section = _("Tpp")
+    addUrl = 'tpp:add'
 
-    if not request.is_ajax():
+    #allowed filter list
+    filterList = ['country']
 
-        current_section = _("Tpp")
+    model = Tpp
 
-        templateParams = {
-            'current_section': current_section,
-            'tppPage': tppPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('tpp:add'),
-            'item_id': item_id
-        }
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Tpp/contentPage.html'
 
-        if item_id:
-            templateParams['meta'] = meta
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Tpp/index.html'
 
-        return render_to_response("Tpp/index.html", templateParams, context_instance=RequestContext(request))
-    else:
+    def _get_my(self):
+        current_organization = self.request.session.get('current_company', False)
 
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': tppPage,
-        }
-
-        return HttpResponse(json.dumps(serialize))
-
-
-def _tppContent(request, page=1, my=None):
-
-    #tpp = Tpp.active.get_active().order_by('-pk')
-    cached = False
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_tpp_list_result_page_%s" % (lang, page)
-
-    q = request.GET.get('q', '')
-
-    if not my and func.cachePisibility(request):
-        cached = cache.get(cache_name)
-
-    if not cached:
-
-        if not my:
-            filters, searchFilter = func.filterLive(request, model_name=Tpp.__name__)
-
-            sqs = func.getActiveSQS().models(Tpp)
-
-            if len(searchFilter) > 0:
-                sqs = sqs.filter(searchFilter)
-
-            if q != '':
-                sqs = sqs.filter(title=q)
-
-            sortFields = {
-                'date': 'id',
-                'name': 'title_sort'
-            }
-
-            order = []
-
-            sortField1 = request.GET.get('sortField1', 'date')
-            sortField2 = request.GET.get('sortField2', None)
-            order1 = request.GET.get('order1', 'desc')
-            order2 = request.GET.get('order2', None)
-
-            if sortField1 and sortField1 in sortFields:
-                if order1 == 'desc':
-                    order.append('-' + sortFields[sortField1])
-                else:
-                    order.append(sortFields[sortField1])
+        if current_organization is False:
+            if self.request.is_ajax():
+                self.template_name = 'permissionDen.html'
             else:
-                order.append('-id')
+                self.template_name = 'main/denied.html'
 
-            if sortField2 and sortField2 in sortFields:
-                if order2 == 'desc':
-                    order.append('-' + sortFields[sortField2])
-                else:
-                    order.append(sortFields[sortField2])
+            return SQ(pk=0)
+
+        return SQ(pk=current_organization) | SQ(company=current_organization)
 
 
-            tpp = sqs.order_by(*order)
-            url_paginator = "tpp:paginator"
+class get_tpp_detail(ItemDetail):
 
-            params = {
-                'filters': filters,
-                'sortField1': sortField1,
-                'sortField2': sortField2,
-                'order1': order1,
-                'order2': order2
-            }
-        else:
-            current_organization = request.session.get('current_company', False)
+    model = Tpp
+    template_name = 'Tpp/detailContent.html'
 
-            cab = Cabinet.objects.get(user=request.user)
-            #read all Organizations which hasn't foreign key from Department and current User is create user or worker
-            tpp = Tpp.active.get_active().filter(Q(create_user=request.user) |
-                                                    Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+    current_section = _("Tpp")
+    addUrl = 'tpp:add'
 
-            url_paginator = "tpp:my_main_paginator"
-            params = {}
+    def get_context_data(self, **kwargs):
+        context = super(get_tpp_detail, self).get_context_data(**kwargs)
 
+        context.update({
+            'photos': self._get_gallery(),
+            'additionalPages': self._get_additional_pages(),
+        })
 
-        attr = ('NAME', 'IMAGE', 'ADDRESS', 'SITE_NAME', 'TELEPHONE_NUMBER', 'FAX', 'INN', 'DETAIL_TEXT', 'FLAG', 'SLUG')
-
-        if not my:
-             result = func.setPaginationForSearchWithValues(tpp, *attr,  page_num=5, page=page)
-        else:
-            result = func.setPaginationForItemsWithValues(tpp, *attr,  page_num=5, page=page)
-
-        tppList = result[0]
-        tpp_ids = [id for id in tppList.keys()]
-
-        if request.user.is_authenticated():
-            items_perms = func.getUserPermsForObjectsList(request.user, tpp_ids, Tpp.__name__)
-        else:
-            items_perms = ""
-
-        countries = Country.objects.filter(p2c__child__in=tpp_ids).values('p2c__child', 'pk')
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
-        country_dict = {}
-
-        for country in countries:
-            country_dict[country['p2c__child']] = country['pk']
-
-        for id, tpp in tppList.items():
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
-            tpp.update(toUpdate)
-
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-
-        template = loader.get_template('Tpp/contentPage.html')
-
-        templateParams = {
-            'tppList': tppList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'items_perms': items_perms,
-            'current_path': request.get_full_path()
-        }
-
-        templateParams.update(params)
-
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        if not my and func.cachePisibility(request):
-            cache.set(cache_name, rendered)
-
-    else:
-        rendered = cache.get(cache_name)
-
-    return rendered
-
-
-def _tppDetailContent(request, item_id):
-
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
-
-    if not cached:
-
-        tpp = get_object_or_404(Tpp, pk=item_id)
-        tppValues = tpp.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'FLAG', 'IMAGE', 'POSITION', 'ADDRESS',
-                                                     'TELEPHONE_NUMBER', 'FAX', 'EMAIL', 'SITE_NAME', 'ANONS'))
-
-        if not tppValues.get('FLAG', False):
-           try:
-               country = Country.objects.get(p2c__child=tpp, p2c__type='dependence').getAttributeValues(*('FLAG', 'NAME','COUNTRY_FLAG'))
-           except:
-               country = ""
-        else:
-           country = ""
-
-        template = loader.get_template('Tpp/detailContent.html')
-        context = RequestContext(request, {'tppValues': tppValues, 'country': country, 'item_id': item_id})
-        rendered = template.render(context)
-        meta = func.getItemMeta(request, tppValues)
-
-        cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-    return rendered, meta
-
+        return context
 
 
 @login_required(login_url='/login/')
@@ -270,6 +108,7 @@ def tppForm(request, action, item_id=None):
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
+
 
 def addTpp(request):
 
@@ -325,7 +164,7 @@ def updateTpp(request, item_id):
         return func.permissionDenied()
 
     try:
-        choosen_country = Country.objects.get(p2c__child__id=item_id)
+        choosen_country = Country.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_country = ""
 
@@ -663,7 +502,7 @@ def _tabsStructure(request, tpp, page=1):
     #create list of TPP's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text')
 
-    vac_lst = [vac.id for vac in vacancies]
+    vac_lst = [vac.pk for vac in vacancies]
 
     if len(vac_lst) == 0:
         vacanciesList = []
@@ -739,7 +578,7 @@ def _tabsStaff(request, tpp, page=1):
                 usr = User.objects.get(email=userEmail)
                 #if User already works in the Organization, don't allow to connect him to the TPP
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=tpp).exists():
-                    if not Cabinet.objects.filter(c2p__parent=vac.id).exists():
+                    if not Cabinet.objects.filter(c2p__parent=vac.pk).exists():
                         # if no attached Cabinets to this Vacancy then ...
                         cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
                         if res:
@@ -806,7 +645,7 @@ def _tabsStaff(request, tpp, page=1):
     #create full list of TPP's Departments
     departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
 
-    dep_lst = [dep.id for dep in departments]
+    dep_lst = [dep.pk for dep in departments]
 
     if len(dep_lst) == 0:
         departmentsList = []
@@ -816,7 +655,7 @@ def _tabsStaff(request, tpp, page=1):
     #create list of TPP's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text')
 
-    vac_lst = [vac.id for vac in vacancies]
+    vac_lst = [vac.pk for vac in vacancies]
 
     if len(vac_lst) == 0:
         vacanciesList = []
