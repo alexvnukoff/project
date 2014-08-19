@@ -1641,10 +1641,10 @@ class NewsCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
 
         attr = obj.getAttributeValues('NAME')
 
-        if len(attr) == 0 or attr.get('NAME', [''])[0] == '':
+        if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
         else:
-            name = attr.get('NAME', [''])[0]
+            name = attr[0]
 
 
         sortIndex = self.fields['title_sort'].index_fieldname
