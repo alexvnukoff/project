@@ -9,7 +9,7 @@ from haystack.backends import SQ
 from haystack.query import SearchQuerySet
 
 from appl import func
-from appl.models import Country, AdditionalPages, Gallery
+from appl.models import Country, AdditionalPages, Gallery, Company, Tpp
 from core.cbv import HybridListView
 from tpp import settings
 
@@ -65,13 +65,6 @@ class ItemsList(HybridListView):
 
         new_object_list = []
 
-        countryDict = {}
-
-        countryList = [obj.country for obj in object_list]
-
-        for country in SearchQuerySet().models(Country).filter(django_id__in=countryList):
-            countryDict[country.pk] = country
-
         for obj in object_list:
 
             country = getattr(obj, 'country', False)
@@ -86,13 +79,10 @@ class ItemsList(HybridListView):
                 else:
                     country = country[0]
 
-            if country not in countryDict:
-                new_object_list.append(obj)
-                continue
+            country = SearchQuerySet().models(Country).filter(django_id=country)
 
-            country = countryDict[country]
-
-            obj.__setattr__('country', country)
+            if country.count() == 1:
+                obj.__setattr__('country', country[0])
 
             new_object_list.append(obj)
 
@@ -105,43 +95,25 @@ class ItemsList(HybridListView):
 
         new_object_list = []
 
-        orgDict = {}
-        orgList = []
-
         for obj in object_list:
 
             company = getattr(obj, 'company', False)
             tpp = getattr(obj, 'tpp', False)
 
-            if company is False and tpp is False:
-                break
+            organization = None
 
-            if company:
-                orgList.append(company)
-            elif tpp:
-                orgList.append(tpp)
+            try:
+                if company:
+                    organization = SearchQuerySet().models(Company).filter(django_id=company)[0]
+                    organization.__setattr__('url', 'companies:detail')
+                elif obj.tpp and obj.tpp != 0 and obj.tpp in orgDict:
+                    organization = SearchQuerySet().models(Tpp).filter(django_id=tpp)[0]
+                    organization.tpp.__setattr__('url', 'tpp:detail')
+            except IndexError:
+                pass
 
-        organizations = SearchQuerySet().filter(django_id__in=orgList)
-
-        if organizations.count() == 0:
-            return object_list
-
-        for org in organizations:
-            orgDict[org.pk] = org
-
-        for obj in object_list:
-
-            if obj.company and obj.company != 0 and obj.company in orgDict:
-                organization = orgDict[obj.company]
-                organization.__setattr__('url', 'companies:detail')
-            elif obj.tpp and obj.tpp != 0 and obj.tpp in orgDict:
-                organization = orgDict[obj.tpp]
-                organization.tpp.__setattr__('url', 'tpp:detail')
-            else:
-                new_object_list.append(obj)
-                continue
-
-            obj.__setattr__('organization', organization)
+            if organization:
+                obj.__setattr__('organization', organization)
 
             new_object_list.append(obj)
 

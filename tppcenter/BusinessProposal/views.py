@@ -1,22 +1,21 @@
-from appl import func
-from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch, BpCategories
-from core.models import Item
-from core.tasks import addBusinessPRoposal
 from django.conf import settings
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.shortcuts import render_to_response, HttpResponse
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
+from django.utils.translation import trans_real
+
+from appl import func
+from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch, BpCategories
+from core.models import Item
+from core.tasks import addBusinessPRoposal
 from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-from django.utils.translation import trans_real
-import json
+
 
 class get_proposal_list(ItemsList):
 

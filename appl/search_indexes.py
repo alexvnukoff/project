@@ -265,7 +265,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     doc_2 = indexes.CharField(null=True, indexed=False)
     doc_3 = indexes.CharField(null=True, indexed=False)
 
-    def prepate_obj_create_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def get_model(self):
