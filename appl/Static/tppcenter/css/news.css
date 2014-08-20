@@ -150,7 +150,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .listnews{ float:left; width:100%;}
 .listnews li{ position:relative; float:left; width:100%; margin:10px 0 0 0; padding:10px 0; background-color:#fafafa; color:#595959; line-height:16px;}
 .listnews li .thumb{ position:relative; float:left; display:block; max-width:150px; max-height:130px; background:url(../img/shadow.png) no-repeat left bottom; margin:0 10px; display:inline; padding-bottom:8px;}
-.listnews li .infoprd{ float:left; width:530px;}
+.listnews li .infoprd{ float:left; width:500px;}
 .listnews li .infoprd a.name{ font-size: 14px; font-weight:bold; display:block; padding-bottom:3px;}
 .listnews li .infoprd .date{ color:#9b9b9b;}
 .listnews li .infoprd .date img{ width:18px; height:12px;}

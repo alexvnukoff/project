@@ -179,7 +179,7 @@ def databaseInitialization(sender, **kwargs):
                     "TEMPLATE": 'Chr',
                     'TERMS': 'Str',
                     'TPP': 'Chr',
-                    'TYPE_OF_EMPLOYMENT': 'Chr',
+                    'TYPE_OF_EMPLOYMENT': {'type': 'Chr', 'slots': ['Full-time', 'Partial', 'Shifts', 'For students']},
                     'YOUTUBE_CODE': 'Chr',
                     'USER_MIDDLE_NAME': 'Chr',
                     'USER_LAST_NAME': 'Chr',
@@ -285,7 +285,8 @@ def databaseInitialization(sender, **kwargs):
             'DOCUMENT_2': False,
             'DOCUMENT_3': False,
             'ROUTE_DESCRIPTION': False,
-            'POSITION': False
+            'POSITION': False,
+            'DETAIL_TEXT': False
         },
 
         'InnovationProject': {

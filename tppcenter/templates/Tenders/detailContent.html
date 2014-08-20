@@ -8,10 +8,6 @@
     {% include "login_header.html" %}
 {% endblock %}
 
-<script>
-$(function() {
-	 $(".goods-details-tab").tabs();});
-</script>
 
 {% block styles %}
     {{ block.super }}
@@ -33,6 +29,11 @@ $(function() {
         {% endif %}
         ga('set', 'dimension2', 'exhibition');
     </script>
+
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
 {% endblock %}
 
 {% block keywords %}{% endblock %}

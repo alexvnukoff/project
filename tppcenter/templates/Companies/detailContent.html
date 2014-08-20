@@ -639,7 +639,7 @@
                             {% if item.fax %}
                                 <li>
                                     <span class="left">{% trans 'Fax' %}: </span>
-                                    <span class="right">{{ itemn.fax }}</span>
+                                    <span class="right">{{ item.fax }}</span>
                                 </li>
                             {% endif %}
                             {% if item.email %}
@@ -648,10 +648,10 @@
                                         <span class="right">{{ item.email }}</span>
                                 </li>
                             {% endif %}
-                            {% if item.site_name %}
+                            {% if item.site %}
                                 <li>
                                     <span class="left">{% trans 'WWW' %}: </span>
-                                    <span class="right">{{ item.site_name }}</span>
+                                    <span class="right">{{ item.site }}</span>
                                 </li>
                             {% endif %}
                         </ul>

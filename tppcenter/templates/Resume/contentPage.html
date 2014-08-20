@@ -27,7 +27,7 @@
                         <h2><a href="{% url "resume:detail" resume.slug %}" >{{ resume.text }}</a></h2>
 
                         <a href="{% url "resume:detail" resume.slug %}" class="linkmore">{% trans 'More' %}...</a>
-                    <div class="line">{% trans 'User name' %}:{% if resume.cabinet.text %}<a href="#"> {{ resume.cabinet.text }}</a>{% endif %}</div>
+                    <div class="line">{% if resume.cabinet.text %}{% trans 'User name' %}:<a href="#"> {{ resume.cabinet.text }}</a>{% endif %}</div>
                     </li>
                 {% empty %}
                     <div class="no-results">{% trans "No results found" %}</div>

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
@@ -9,7 +10,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import trans_real, ugettext as _
 from django.utils.timezone import now
 
-from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch
+from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch, Country
 from appl import func
 from core.models import Item
 from core.tasks import addNewExhibition

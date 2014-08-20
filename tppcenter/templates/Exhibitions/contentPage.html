@@ -31,11 +31,11 @@
                     {% endif %}
                     <div class="title">
                         {% if exhibition.country.flag %}
-                            <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.text }}" />
+                            <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.text }}" ></i>
                         {% elif exhibition.organization.flag %}
                             <img src="{{ MEDIA_URL }}small/{{ exhibition.organization.flag }}" class="flag" alt="{{ exhibition.organization.name }}" title="{{ exhibition.organization.name }}" />
                         {% endif %}
-                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|makeDate|date:"d M Y" }} - {{ exhibition.end_event_date|makeDate|date:"d M Y"  }}</font>
+                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|date:"d M Y" }} - {{ exhibition.end_event_date|date:"d M Y"  }}</font>
                     </div>
                     <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
                         <div class="line">{% trans 'Organizer' %}: <a href="{% url exhibition.organization.url exhibition.organization.slug %}">{{ exhibition.organization.title }}</a></div>

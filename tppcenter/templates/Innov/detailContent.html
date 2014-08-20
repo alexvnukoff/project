@@ -3,11 +3,6 @@
 {% load i18n %}
 {% load CustomFilters %}
 
-<script>
-$(function() {
-	 $(".goods-details-tab").tabs();});
-</script>
-
 {% block header %}
     {% include "login_header.html" %}
 {% endblock %}
@@ -32,6 +27,12 @@ $(function() {
         {% endif %}
         ga('set', 'dimension2', 'exhibition');
     </script>
+
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+
 {% endblock %}
 
 {% block keywords %}{% endblock %}
@@ -106,7 +107,7 @@ $(function() {
                                     </li>
                                     <li>
                                     	<span class="left">{% trans 'Realese date' %}: </span>
-                                        <span class="right">{{ item.realese_date }}</span>
+                                        <span class="right">{{ item.release_date }}</span>
                                     </li>
                                 </ul>
                             </div>

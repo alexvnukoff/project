@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.utils.translation import trans_real
+from haystack.backends import SQ
 from haystack.query import SearchQuerySet
 
 from appl import func
@@ -56,11 +57,13 @@ class get_vacancy_list(ItemsList):
 
             organization = SearchQuerySet().models(Company, Tpp).filter(django_id=obj.organization)
 
-            if organization:
+            if organization.count() == 1:
+                organization = organization[0]
+
                 if organization.model == Company:
                     organization.__setattr__('url', 'companies:detail')
                 else:
-                    organization.tpp.__setattr__('url', 'tpp:detail')
+                    organization.__setattr__('url', 'tpp:detail')
 
             obj.__setattr__('organization', organization)
 
@@ -81,10 +84,12 @@ class get_vacancy_detail(ItemDetail):
 
         organization = SearchQuerySet().models(Tpp, Company).filter(django_id=self.object.organization)
 
-        if not organization:
+        if organization.count() != 1:
             return organization
 
-        if organization.modle == Company:
+        organization = organization[0]
+
+        if organization.model == Company:
             organization.__setattr__('url', 'companies:detail')
         else:
             organization.__setattr__('url', 'tpp:detail')
@@ -258,8 +263,8 @@ def updateVacancy(request, item_id):
 
 
 
-def getDepartamentsAndVacancies(company):
-    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+def getDepartamentsAndVacancies(org):
+    departments = func.getActiveSQS().models(Department).filter(SQ(company=org) | SQ(tpp=org)).order_by('text')
 
     dep_lst = [dep.pk for dep in departments]
 
@@ -269,7 +274,7 @@ def getDepartamentsAndVacancies(company):
         departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
 
     #create list of Company's Vacancies
-    vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
+    vacancies = func.getActiveSQS().models(Vacancy).filter(SQ(company=org) | SQ(tpp=org)).order_by('text')
 
     vac_lst = [vac.pk for vac in vacancies]
 
@@ -278,7 +283,7 @@ def getDepartamentsAndVacancies(company):
     else:
         vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
         # correlation between Departments and Vacancies
-        correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child'))
+        correlation = list(Department.objects.filter(c2p__parent=org).values_list('pk', 'p2c__child'))
 
         # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
         for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance

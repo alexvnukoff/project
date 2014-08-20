@@ -54,8 +54,8 @@ class get_resume_list(ItemsList):
         for obj in object_list:
             cabinet = SearchQuerySet().filter(django_id=obj.cabinet)
 
-            if cabinet.count() > 0:
-                obj.__setattr__('cabinet', cabinet)
+            if cabinet.count() == 1:
+                obj.__setattr__('cabinet', cabinet[0])
 
             new_object_list.append(obj)
 
@@ -89,7 +89,10 @@ class get_resume_detail(ItemDetail):
 
 
     def _get_cabinet_for_object(self):
-        return SearchQuerySet().models(Cabinet).filter(django_id=self.object.cabinet)
+        try:
+            return SearchQuerySet().models(Cabinet).filter(django_id=self.object.cabinet)[0]
+        except IndexError:
+            return self.object.cabinet
 
     def get_context_data(self, **kwargs):
         context = super(get_resume_detail, self).get_context_data(**kwargs)

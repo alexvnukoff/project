@@ -63,6 +63,8 @@ class get_innov_list(ItemsList):
         context['object_list'] = self._get_branches_data_for_objects(context['object_list'])
         context['object_list'] = self._get_cabinet_data_for_objects(context['object_list'])
 
+        return context
+
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Innov/contentPage.html'
@@ -188,8 +190,6 @@ def addProject(request):
 
 
     return newsPage
-
-
 
 def updateProject(request, item_id):
     try:

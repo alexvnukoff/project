@@ -43,7 +43,7 @@
                             <font class="date">{{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.obj_create_date|date:'d M Y' }}</font>
 
                            <p>{{ vacancy.text|truncatewords:30 }} </p>
-                           <a href="{% url 'vacancy:detail' slug %}" class="more">{% trans "More" %}...</a>
+                           <a href="{% url 'vacancy:detail' vacancy.slug %}" class="more">{% trans "More" %}...</a>
                         </div>
                     </li>
                 {% empty %}

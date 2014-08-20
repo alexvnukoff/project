@@ -106,9 +106,9 @@ class ItemsList(HybridListView):
                 if company:
                     organization = SearchQuerySet().models(Company).filter(django_id=company)[0]
                     organization.__setattr__('url', 'companies:detail')
-                elif obj.tpp and obj.tpp != 0 and obj.tpp in orgDict:
+                elif tpp:
                     organization = SearchQuerySet().models(Tpp).filter(django_id=tpp)[0]
-                    organization.tpp.__setattr__('url', 'tpp:detail')
+                    organization.__setattr__('url', 'tpp:detail')
             except IndexError:
                 pass
 
@@ -362,7 +362,19 @@ class ItemDetail(DetailView):
         if not country:
             return country
 
-        return SearchQuerySet().filter(django_id=country)[0]
+        if isinstance(country, list):
+            if len(country) != 1:
+                return country
+            else:
+                country = country[0]
+
+
+        country = SearchQuerySet().models(Country).filter(django_id=country)
+
+        if country.count() != 1:
+            return None
+
+        return country[0]
 
     def _get_organization_for_object(self):
 
@@ -388,16 +400,18 @@ class ItemDetail(DetailView):
 
         image = ''
 
-        if self.object.image:
+        if getattr(self.object, 'image', False):
             image = settings.MEDIA_URL + 'original/' + self.object.image
 
         url = urlparse(self.request.build_absolute_uri())
 
+        title = self.object.title if getattr(self.object, 'title', False) else getattr(self.object, 'text', "")
+
         return {
-            'title': Truncator(self.object.title).chars("80", truncate='...'),
+            'title': Truncator(title).chars("80", truncate='...'),
             'image': image,
             'url': url.scheme + "://" + url.netloc + url.path,
-            'text': self.object.text
+            'text': getattr(self.object, 'text', "")
         }
 
     def get_context_data(self, **kwargs):

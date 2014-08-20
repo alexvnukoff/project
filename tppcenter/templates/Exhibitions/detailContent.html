@@ -28,6 +28,10 @@
         {% endif %}
         ga('set', 'dimension2', 'exhibition');
     </script>
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
 {% endblock %}
 
  <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
@@ -76,7 +80,7 @@
             {% endif %}
             <font class="name">
                 {% if item.country.text %}{{ item.country.text }}{% else %}{{ item.organization.title  }}{% endif %} {{ item.city }}
-                {{ exhibition.start_event_date|makeDate|date:"d M Y" }} - {{ exhibition.end_event_date|makeDate|date:"d M Y"  }}
+                {{ item.start_event_date|date:"d M Y" }} - {{ item.end_event_date|date:"d M Y"  }}
             </font>
         </div>
         <div class="tender-info">
@@ -105,7 +109,7 @@
                     </div>
                     <div id="goods-tabs-1">
                         <div class="content-goods-tab">
-                            {{ route_description }}
+                            {{ item.route_description }}
                         </div>
                     </div>
                     <div id="goods-tabs-2">

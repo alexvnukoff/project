@@ -9,7 +9,7 @@ from appl.models import Company, Country, Tpp, News, Product, Category, Branch, 
     BusinessProposal, Exhibition, Tender, InnovationProject, Cabinet, TppTV, Department, Vacancy, Resume, Requirement, Organization, \
     BpCategories, Greeting
 from core.models import Relationship
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime
 
 class SearchIndexActive(indexes.SearchIndex):
@@ -490,7 +490,6 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     
     title_auto = indexes.NgramField()
-    slug = indexes.CharField(indexed=False)
 
     def get_model(self):
         return Branch
@@ -498,27 +497,20 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare(self, obj):
         self.prepared_data = super(BranchIndex, self).prepare(obj)
 
-        attr = obj.getAttributeValues('NAME', 'SLUG')
+        attr = obj.getAttributeValues('NAME')
 
-        if len(attr) == 0 or attr.get('NAME', [''])[0] == '':
+        if len(attr) == 0 or attr[0].strip() == '':
             return self.prepared_data
         else:
-            name = attr.get('NAME', [''])[0]
-
-        if len(attr) == 0 or attr.get('SLUG', [''])[0] == '':
-            return self.prepared_data
-        else:
-            slug = attr.get('SLUG', [''])[0]
+            name = attr[0].strip()
 
         sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
         titleAutoIndex = self.fields['title_auto'].index_fieldname
-        slugIndex = self.fields['slug'].index_fieldname
 
-        self.prepared_data[sortIndex] = name.lower().strip().replace(' ','_')
-        self.prepared_data[textIndex] = name.strip()
-        self.prepared_data[titleAutoIndex] = name.strip()
-        self.prepared_data[slugIndex] = slug.strip()
+        self.prepared_data[sortIndex] = name.lower().replace(' ','_')
+        self.prepared_data[textIndex] = name
+        self.prepared_data[titleAutoIndex] = name
 
         return self.prepared_data
 
@@ -810,7 +802,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_country(self, obj):
         try:
-            return list(Country.objects.filter(p2c__child_id=obj.pk, p2c__type='dependence').values_list('pk', flat=True))
+            return list(Country.objects.filter(p2c__child_id=obj.pk).values_list('pk', flat=True))
         except ObjectDoesNotExist:
             return None
 
@@ -1198,6 +1190,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
     obj_end_date = indexes.DateTimeField(null=True)
     obj_create_date = indexes.DateTimeField()
     price = indexes.FloatField(null=True)
+    currency = indexes.CharField(null=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     slug = indexes.CharField(indexed=False)
@@ -1223,6 +1216,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
             'doc_1': 'DOCUMENT_1',
             'doc_2': 'DOCUMENT_2',
             'doc_3': 'DOCUMENT_3',
+            'currency': 'CURRENCY'
         }
 
         attributes = obj.getAttributeValues(*set(field_to_attr.values()))
@@ -1350,7 +1344,8 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
     product_name = indexes.CharField(null=True)
-    bussines_plan = indexes.CharField(null=True)
+    bussines_plan = indexes.CharField(null=True, indexed=False)
+    release_date = indexes.CharField(null=True, indexed=False)
 
 
     slug = indexes.CharField(indexed=False)
@@ -1371,7 +1366,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
             'price': 'COST',
             'currency': 'CURRENCY',
             'product_name': 'PRODUCT_NAME',
-            'realese_date': 'REALESE_DATE',
+            'release_date': 'RELEASE_DATE',
             'doc_1': 'DOCUMENT_1',
             'doc_2': 'DOCUMENT_2',
             'doc_3': 'DOCUMENT_3',
@@ -1394,7 +1389,8 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
 
                 if attr == 'NAME':
                     self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
-                elif attr is "COST":
+
+                if attr is "COST":
                     self.prepared_data[field.index_fieldname] = float(attributes[attr][0])
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
@@ -1745,8 +1741,8 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
         companyIndex = self.fields['company'].index_fieldname
         tppIndexfield = self.fields['tpp'].index_fieldname
 
-        comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="hierarchy")
-        tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="hierarchy")
+        comp = Company.objects.filter(p2c__child=obj.pk, p2c__type="hierarchy")
+        tpp = Tpp.objects.filter(p2c__child=obj.pk, p2c__type="hierarchy")
 
         if comp.exists():
             comp = comp[0]
@@ -2009,15 +2005,19 @@ class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
     organization = indexes.IntegerField(null=True)
+    obj_create_date = indexes.DateTimeField()
 
 
     slug = indexes.CharField(indexed=False)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     city = indexes.CharField(null=True)
     type = indexes.CharField(null=True)
-    is_anonymous = indexes.BooleanField(default=True)
+    is_anonymous = indexes.BooleanField(default=False)
     requirements = indexes.CharField(null=True)
     terms = indexes.CharField(null=True)
+
+    def prepare_obj_create_date(self, obj):
+        return obj.create_date
 
     def prepare(self, obj):
 
@@ -2052,7 +2052,10 @@ class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
                 if attr == 'NAME':
                     self.prepared_data[sortIndex] = attributes[attr][0].lower().strip()
 
-                self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
+                if attr == 'IS_ANONYMOUS_VACANCY':
+                    self.prepared_data[field.index_fieldname] = True
+                else:
+                    self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
 
 
@@ -2078,12 +2081,13 @@ class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
 
         try:
             self.prepared_data[countryIndex] = Country.objects.get(p2c__child__p2c__child__p2c__child__p2c__child=obj.pk).pk
-        except ObjectDoesNotExist:
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
             self.prepared_data[countryIndex] = None
 
 
         #organization
         organizationIndex = self.fields['organization'].index_fieldname
+
 
         try:
             self.prepared_data[organizationIndex] = Organization.objects.get(p2c__child__p2c__child__p2c__child=obj.pk).pk

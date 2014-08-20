@@ -92,6 +92,9 @@ class get_company_detail(ItemDetail):
         except ObjectDoesNotExist:
             return result
 
+        if not company.paid_till_date:
+            return result
+
         days_till_end = (company.paid_till_date - datetime.datetime.now().date()).days
 
         if days_till_end <= settings.NOTIFICATION_BEFORE_END_DATE and days_till_end > 0:
@@ -647,19 +650,19 @@ def addCompany(request):
 
     pages = None
 
-
-    currentBranch = int(request.POST.get('BRANCH', 0))
-    choosen_country = int(request.POST.get('COUNTRY', 0))
-    try:
-        choosen_tpp = int(request.POST.get('TPP', 0))
-    except:
-        choosen_tpp = 0
-
-
-
+    choosen_country = 0
+    choosen_tpp = 0
+    currentBranch = 0
 
 
     if request.POST:
+
+        currentBranch = int(request.POST.get('BRANCH', 0))
+
+        try:
+            choosen_tpp = int(request.POST.get('TPP', 0))
+        except ValueError:
+            choosen_tpp = 0
 
 
         values = {}
@@ -667,6 +670,18 @@ def addCompany(request):
         values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
+        choosen_country = request.POST.get('COUNTRY', "")
+
+        form = ItemForm('Company', values=values)
+        form.clean()
+        try:
+            choosen_country = int(choosen_country)
+        except ValueError:
+            form.errors.update({"COUNTRY": _("Please select a country")})
+
+
+        if choosen_country not in countries:
+            form.errors.update({"COUNTRY": _("Invalid Country")})
 
 
 
@@ -677,8 +692,6 @@ def addCompany(request):
         else:
             pages = ""
 
-        form = ItemForm('Company', values=values)
-        form.clean()
 
         if form.is_valid():
 
@@ -753,9 +766,21 @@ def updateCompany(request, item_id):
         values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
         values.update(request.FILES)
         branch = request.POST.get('BRANCH', "")
+        country = request.POST.get('COUNTRY', "")
 
         form = ItemForm('Company', values=values, id=item_id)
         form.clean()
+
+        try:
+            country = int(country)
+        except ValueError:
+            form.errors.update({"COUNTRY": _("Please select a country")})
+
+
+        if country not in countries:
+            form.errors.update({"COUNTRY": _("Invalid Country")})
+
+
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
