@@ -856,7 +856,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             'price': 'COST',
             'currency': 'CURRENCY',
             'slug': 'SLUG',
-            'image': 'IMGE',
+            'image': 'IMAGE',
             'sku': 'SKU',
             'meas_unit': 'MEASUREMENT_UNIT',
             'doc_1': 'DOCUMENT_1',
