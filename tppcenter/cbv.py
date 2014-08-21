@@ -296,12 +296,12 @@ class ItemsList(HybridListView):
         sqs = func.getActiveSQS().models(self.model)
 
         if self.is_my():
-            sqs.filter(self._get_my())
+            sqs = sqs.filter(self._get_my())
         else:
             searchFilter = self.filterLive()
 
             if searchFilter:
-                sqs.filter(searchFilter)
+                sqs = sqs.filter(searchFilter)
 
 
         q = self.request.GET.get('q', '')
@@ -309,9 +309,7 @@ class ItemsList(HybridListView):
         if q != '': #Search for content
             sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-        sqs.order_by(self._get_sorting_params())
-
-        return sqs
+        return sqs.order_by(self._get_sorting_params())
 
 
 class ItemDetail(DetailView):

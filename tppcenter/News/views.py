@@ -26,8 +26,6 @@ from core.tasks import addNewsAttrubute
 
 class get_news_list(ItemsList):
 
-
-
     #pagination url
     url_paginator = "news:paginator"
     url_my_paginator = "news:my_main_paginator"
@@ -75,7 +73,7 @@ class get_news_list(ItemsList):
         category = self.kwargs.get('category', None)
 
         if category:
-            sqs.filter(categories=category)
+            sqs = sqs.filter(categories=category)
 
         return sqs
 

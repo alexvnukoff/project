@@ -1,19 +1,13 @@
-import json
-
-from haystack.backends import SQ
 from haystack.query import SearchQuerySet
-from django.http import HttpResponse
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 
-from appl.func import filterLive, setPaginationForSearchWithValues, getPaginatorRange
-from appl.models import Country, Cabinet
-from core.models import Item
+from appl.models import Cabinet
 from tppcenter.cbv import ItemsList
 
 
 class get_users_list(ItemsList):
+
+    paginate_by = 12
 
     #pagination url
     url_paginator = "users:paginator"
@@ -38,13 +32,11 @@ class get_users_list(ItemsList):
         searchFilter = self.filterLive()
 
         if searchFilter:
-            sqs.filter(searchFilter)
+            sqs = sqs.filter(searchFilter)
 
         q = self.request.GET.get('q', '')
 
         if q != '': #Search for content
             sqs = sqs.filter(text=q)
 
-        sqs.order_by('text')
-
-        return sqs
+        return sqs.order_by('text')
