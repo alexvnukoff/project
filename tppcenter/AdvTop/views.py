@@ -1,18 +1,20 @@
 import json
+
 from dateutil.parser import parse
-from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
-from appl import func
-from appl.models import Organization, Branch, Tpp, Country, AdvOrder
-from core.models import Item
-from core.tasks import addTopAttr
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
+
+from appl import func
+from appl.models import Organization, Branch, Tpp, Country, AdvOrder
+from core.models import Item
+from core.tasks import addTopAttr
 from tppcenter.forms import ItemForm
+
 #from paypal.standard.forms import PayPalPaymentsForm
 import datetime
 

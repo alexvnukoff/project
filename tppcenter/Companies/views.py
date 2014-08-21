@@ -293,6 +293,7 @@ def _tabsStructure(request, company, page=1):
 
     # check Department for deletion
     departmentForDeletion = request.POST.get('departmentDelID', 0)
+
     try:
         departmentForDeletion = int(departmentForDeletion)
     except ValueError:
@@ -301,14 +302,16 @@ def _tabsStructure(request, company, page=1):
     if departmentForDeletion > 0:
         # delete all Department's Vacancies
         itm_lst = Item.objects.filter(pk=departmentForDeletion)
+
         for itm in itm_lst:
             try:
                 Item.hierarchy.deleteTree(itm.pk)
             except Exception as e:
-                errorMessage = _('Can not delete Department hierarchy. The reason is: %(reason)s') % {"reason": str(e)}
+                errorMessage = _('Can not delete Department hierarchy. ')
 
         # delete Department itself
         dep_lst = Department.objects.filter(pk=departmentForDeletion)
+
         for d in dep_lst:
             try:
                 d.delete()
@@ -338,13 +341,16 @@ def _tabsStructure(request, company, page=1):
 
     # add (edit) Vacancy to Department
     vacancyName = request.POST.get('vacancyName', '')
+
     if len(vacancyName):
         #update vacancy if we received previous name
         prevVacName = request.POST.get('prevVacName', '')
+
         if len(prevVacName):
             # edit Vacancy
             dep_id = request.POST.get('departmentID', 0)
             dep_id = int(dep_id)
+
             try:
                 #check is there vacancy with 'old' name
                 vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, c2p__parent=dep_id,
@@ -358,15 +364,19 @@ def _tabsStructure(request, company, page=1):
             # add a new vacancy to Department
             dep_id = request.POST.get('departmentID', 0)
             dep_id = int(dep_id)
+
             if dep_id > 0:
+
                 try:
                     obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
                     vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
                     res = vac.setAttributeValue({'NAME': vacancyName}, usr)
+
                     if not res:
                         vac.delete()
                         errorMessage = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}
                     else:
+
                         try:
                             Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
                             obj_dep.reindexItem()
@@ -462,10 +472,12 @@ def _tabsStaff(request, company, page=1):
 
     # add a new user to department
     userEmail = request.POST.get('userEmail', '')
+
     if len(userEmail):
         departmentName = request.POST.get('departmentName', '')
         vacancyName = request.POST.get('vacancyName', '')
         isAdmin = int(request.POST.get('isAdmin', 0))
+
         if len(departmentName):
             try:
                 dep = Department.objects.get(c2p__parent=company, item2value__attr__title='NAME',
@@ -481,11 +493,14 @@ def _tabsStaff(request, company, page=1):
                     Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=request.user)
 
                 usr = User.objects.get(email=userEmail)
+
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
+
                     if not Cabinet.objects.filter(c2p__parent=vac.pk).exists():
                         # if no attached Cabinets to this Vacancy then ...
                         cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+
                         if res:
                             try:
                                 cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',

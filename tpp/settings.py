@@ -41,6 +41,8 @@ SECRET_KEY = '%(eobc-xo+rmyen-ni0cv6+q@&dgbdsos+*3fzz8fopl=ga!%i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+INTERNAL_IPS = ['80.179.7.34']
+
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [

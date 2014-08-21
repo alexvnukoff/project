@@ -19,7 +19,6 @@ class get_users_list(ItemsList):
     url_paginator = "users:paginator"
 
     current_section = _("Users")
-    addUrl = 'users:add'
 
     #allowed filter list
     filterList = ['country']
