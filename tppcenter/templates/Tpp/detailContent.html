@@ -16,11 +16,11 @@
         <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/tpp.reset.css' %}" />
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-{% endblock %}
 
 {% block keywords %}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
 
 <script>
     ga('set', 'dimension3', {{ item_id }});
@@ -41,24 +41,6 @@
 			}
             return false;
         });
-	});
-</script>
-
-<!-- script for Company-Staff delete content button -->
-<script type="text/javascript">
-    $(function(){
-        $(document).on('mouseenter','#write-msg-to-staff', function(){
-            $(this).css('cursor', 'pointer');
-        });
-
-	    $(document).on('mouseenter','.table-staff tr', function(){
-
-		    $(this).children().find(".btnremove-small").show();
-		});
-
-        $(document).on('mouseleave', '.table-staff tr', function(){
-		    $(this).children().find(".btnremove-small").hide();
-		});
 	});
 </script>
 
@@ -459,6 +441,7 @@
 
             })});
 </script>
+{% endblock %}
 
 {% block content %}
     <div class="companies">
