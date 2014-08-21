@@ -309,7 +309,7 @@ class ItemsList(HybridListView):
         if q != '': #Search for content
             sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-        return sqs.order_by(self._get_sorting_params())
+        return sqs.order_by(*self._get_sorting_params())
 
 
 class ItemDetail(DetailView):
