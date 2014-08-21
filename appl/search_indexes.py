@@ -833,6 +833,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     sites = indexes.MultiValueField(null=True)
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
+    obj_creae_date = indexes.DateTimeField()
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
 
@@ -846,6 +847,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Product
+
+    def prepare_obj_creae_date(self, obj):
+        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(ProductIndex, self).prepare(obj)

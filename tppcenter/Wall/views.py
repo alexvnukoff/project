@@ -66,7 +66,7 @@ def _wallContent(request):
         exhibitions = exhibitions.filter(title=q)
 
     sortFields = {
-          'date': 'id',
+          'date': 'obj_create_date',
           'name': 'title_sort'
     }
 
@@ -84,7 +84,7 @@ def _wallContent(request):
         else:
             order.append(sortFields[sortField1])
     else:
-        order.append('-pk')
+        order.append('-obj_create_date')
 
 
 
