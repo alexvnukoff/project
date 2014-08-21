@@ -380,7 +380,7 @@ def jsonFilter(request):
         if result:
             onPage, total = result
 
-            items = [{'title': item.title_auto, 'id': item.id} for item in onPage.object_list]
+            items = [{'title': item.title_auto, 'id': item.pk} for item in onPage.object_list]
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 

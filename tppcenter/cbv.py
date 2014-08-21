@@ -188,7 +188,7 @@ class ItemsList(HybridListView):
             obj request - request context
         '''
 
-        session_key_model_name = 'filter_' + self.model.__name__
+        session_key_model_name = 'filter_' + self.model.__name__.lower()
 
         filtersIDs = {}
         ids = []
@@ -208,15 +208,15 @@ class ItemsList(HybridListView):
 
         #Do we have any valid filter ?
         if len(ids) > 0:
-            items = func.getActiveSQS().filter(django_id__in=ids)
+            items = SearchQuerySet().filter(django_id__in=ids)
 
             for item in items:
                 #Creating a list of filter parameters
 
                 for name, id in filtersIDs.items():
 
-                    if item.pk in id:
-                        self.filters[name].append({'django_id': item.pk, 'text': item.text})
+                    if int(item.pk) in id:
+                        self.filters[name].append({'id': item.pk, 'text': item.text})
 
 
         searchFilter = self._create_sqs_filter()
@@ -225,13 +225,13 @@ class ItemsList(HybridListView):
 
             self.request.session[session_key_model_name] = self.filters
             return eval(' | '.join(searchFilter))
-
+        '''
         elif len(self.request.session.get(session_key_model_name, {})) > 0:
             self.filters = self.request.session.get(session_key_model_name, {})
             searchFilter = self._create_sqs_filter()
 
             return eval(' | '.join(searchFilter))
-
+        '''
         return None
 
     def _create_sqs_filter(self):
@@ -244,7 +244,7 @@ class ItemsList(HybridListView):
             for filter in filterList:
                 try:
                     #Security
-                    newIDs.append(str(int(filter['pk'])))
+                    newIDs.append(str(int(filter['id'])))
                 except ValueError:
                     continue
 
