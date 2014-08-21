@@ -26,6 +26,8 @@ from core.tasks import addNewsAttrubute
 
 class get_news_list(ItemsList):
 
+
+
     #pagination url
     url_paginator = "news:paginator"
     url_my_paginator = "news:my_main_paginator"
@@ -86,7 +88,7 @@ class get_news_detail(ItemDetail):
     addUrl = 'news:add'
 
     def _get_similar_news(self):
-        return SearchQuerySet().models(News).filter(categories__in=self.object.categories)
+        return func.getActiveSQS().models(News).filter(categories__in=self.object.categories)[:4]
 
     def _get_categories_for_object(self):
         return SearchQuerySet().filter(django_id__in=self.object.categories)

@@ -26,6 +26,8 @@ class get_products_list(ItemsList):
     scripts = []
     styles = []
 
+    paginate_by = 12
+
     current_section = _("Products")
     addUrl = 'products:add'
 

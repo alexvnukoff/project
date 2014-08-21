@@ -48,7 +48,7 @@ class ItemsList(HybridListView):
 
     #Fields to sort by
     sortFields = {
-        'date': 'pk',
+        'date': 'obj_create_date',
         'name': 'title_sort'
     }
 
@@ -149,7 +149,7 @@ class ItemsList(HybridListView):
             'sortField2': self.sortField2,
             'order1': self.order1,
             'order2': self.order2,
-            'page': self.page,
+            'page': context['page_obj'],
             'paginator_range': func.getPaginatorRange(context['page_obj']),
             'url_parameter': self.url_parameter,
             'url_paginator': self.url_my_paginator if self.is_my() else self.url_paginator,
@@ -256,7 +256,7 @@ class ItemsList(HybridListView):
     def _get_sorting_params(self):
         order = []
 
-        self.sortField1 = self.request.GET.get('sortField1', 'date')
+        self.sortField1 = self.request.GET.get('sortField1', 'obj_create_date')
         self.sortField2 = self.request.GET.get('sortField2', None)
         self.order1 = self.request.GET.get('order1', 'desc')
         self.order2 = self.request.GET.get('order2', None)
@@ -267,7 +267,7 @@ class ItemsList(HybridListView):
             else:
                 order.append(self.sortFields[self.sortField1])
         else:
-            order.append('-pk')
+            order.append('-obj_create_date')
 
         if self.sortField2 and self.sortField2 in self.sortFields:
             if self.order2 == 'desc':
@@ -286,7 +286,7 @@ class ItemsList(HybridListView):
             else:
                 self.template_name = 'main/denied.html'
 
-            return SQ(pk=0)
+            return SQ(django_id=0)
 
         return SQ(tpp=current_organization) | SQ(company=current_organization)
 
