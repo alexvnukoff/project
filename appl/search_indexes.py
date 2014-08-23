@@ -19,7 +19,7 @@ class SearchIndexActive(indexes.SearchIndex):
 class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
-    tpp = indexes.CharField(null=True)
+    tpp_name = indexes.CharField(null=True)
     image = indexes.CharField(null=True, indexed=False)
     
     obj_end_date = indexes.DateTimeField(null=True)
@@ -823,7 +823,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     country = indexes.IntegerField(null=True)
-    obj_create_date = indexes.DateTimeField(null=True)
+
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
@@ -833,7 +833,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     sites = indexes.MultiValueField(null=True)
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
-    obj_creae_date = indexes.DateTimeField()
+    obj_create_date = indexes.DateTimeField(null=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
 
@@ -848,7 +848,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Product
 
-    def prepare_obj_creae_date(self, obj):
+    def prepare_obj_create_date(self, obj):
         return obj.create_date
 
     def prepare(self, obj):

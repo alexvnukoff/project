@@ -994,7 +994,7 @@ def getDeatailAdv(item_id):
     '''
     filterAdv = []
 
-    sqs = getActiveSQS().filter(pk=item_id)
+    sqs = getActiveSQS().filter(django_id=item_id)
 
     filterAdv += getattr(sqs, 'branch', [])
     filterAdv += getattr(sqs, 'tpp', [])
@@ -1154,7 +1154,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
                     proposal = getActiveSQS().models(model).\
-                        filter(SQ(pk=current_organization) | SQ(company=current_organization))
+                        filter(SQ(django_id=current_organization) | SQ(company=current_organization))
 
                 #TODO: Fix search
                 #if q != '': #Search for content

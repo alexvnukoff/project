@@ -61,9 +61,9 @@ class get_tpp_list(ItemsList):
             else:
                 self.template_name = 'main/denied.html'
 
-            return SQ(pk=0)
+            return SQ(django_id=0)
 
-        return SQ(pk=current_organization) | SQ(company=current_organization)
+        return SQ(django_id=current_organization) | SQ(company=current_organization)
 
 
 class get_tpp_detail(ItemDetail):
