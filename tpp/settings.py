@@ -295,7 +295,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/sorl-en'
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/sorl-en'
     },
 }
 
