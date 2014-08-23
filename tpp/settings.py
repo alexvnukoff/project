@@ -295,7 +295,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/sorl-en'
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/en'
     },
 }
 
@@ -306,7 +306,7 @@ for lang in LANGUAGES:
 
     HAYSTACK_CONNECTIONS['default' + '_' + lang[0]] = {
         'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
-        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/sorl-' + lang[0],
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/' + lang[0],
     }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
