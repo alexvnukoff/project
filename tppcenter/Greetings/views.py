@@ -17,7 +17,6 @@ class get_greetings_list(ItemsList):
     ]
 
     current_section = _("Greetings")
-    addUrl = 'greetings:add'
 
     #allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch']
@@ -33,4 +32,3 @@ class get_greeting_detail(ItemDetail):
     template_name = 'Greetings/detailContent.html'
 
     current_section = _("Greetings")
-    addUrl = 'greetings:add'

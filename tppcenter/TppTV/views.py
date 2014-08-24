@@ -27,7 +27,6 @@ class get_news_list(ItemsList):
     ]
 
     current_section = _("TPP-TV")
-    addUrl = 'tv:add'
 
     #allowed filter list
     filterList = ['tpp', 'country', 'company']
@@ -61,13 +60,13 @@ class get_news_list(ItemsList):
 class get_news_detail(ItemDetail):
 
     model = TppTV
-    template_name = 'Exhibitions/detailContent.html'
+    template_name = 'TppTV/detailContent.html'
 
     current_section = _("TPP-TV")
-    addUrl = 'tv:add'
 
     def _get_similar_news(self):
-        return SearchQuerySet().models(TppTV).filter(categories__in=self.object.categories)
+        categories = [category.pk for category in self.object.categories][:4]
+        return SearchQuerySet().models(TppTV).filter(categories__in=categories)
 
     def _get_categories_for_object(self):
         return SearchQuerySet().filter(django_id__in=self.object.categories)

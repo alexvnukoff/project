@@ -16,7 +16,7 @@
                     <a href="{% url "greetings:detail" greeting.slug %}" class="name">{{ greeting.title }}</a>
                     {{ greeting.text|truncatewords_html:"30"|cleanHtml|safe }}
                 <br />
-                <p><strong>{% trans "Organization" %}:</strong> {{ greeting.tpp }}</p>
+                <p><strong>{% trans "Organization" %}:</strong> {{ greeting.tpp_name }}</p>
                 <p><strong>{% trans "Position" %}:</strong> {{ greeting.position }}</p>
 
                     <!--noindex-->
