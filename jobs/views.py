@@ -25,7 +25,7 @@ def home(request):
         resumeCountryDict = {}
 
         for resume in resumes:
-            resumeCountryDict[resume.id] = resume.country
+            resumeCountryDict[resume.pk] = resume.country
 
         ids = list(resumeCountryDict.keys()) + list(resumeCountryDict.values())
 

@@ -7,9 +7,9 @@
 
     {% if owner %}
         {% if owner.type == 'tpp' %}
-            ga('set', 'dimension1', {{ owner.id }});
+            ga('set', 'dimension1', {{ owner.pk }});
         {% else %}
-            ga('set', 'dimension3', {{ owner.id }});
+            ga('set', 'dimension3', {{ owner.pk }});
         {% endif %}
     {% endif %}
     ga('set', 'dimension2', 'news');
