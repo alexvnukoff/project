@@ -30,18 +30,12 @@
 
             {% endif %}
         </div>
-        <div class="tophead-r" style="width: 220px;">
-        <select id="lang_select" style="margin-top: 3px; height: 24px; width: 70%; padding: 0px; border-left-color: #E8E8E8; border-bottom-color: #E8E8E8" >
-                        <option disabled selected>{% trans 'Mother tongue' %}</option>
-                        <option value="am">Armenian</option>
-                        <option value="ar">Arabic</option>
-                        <option value="en">English</option>
-                        <option value="he">עברית</option>
-                        <option value="ru">Русский</option>
-                        <option value="zh">Chinese</option>
-                        <option value="uk">Український</option>
+        <div class="tophead-r">
+        {% if user.email %}
+            {% trans 'Profile' %}:
+             <a href="#" class="barca">{% userName %}</a>
+        {% endif %}
 
-                    </select>
 
 
         	{% if user.email %}
@@ -52,38 +46,7 @@
 
 
 
-                <script>
-                    $(document).ready(function() {
-                          var path = (window.location.host).split('.');
-                          path = path[0];
-                         $("#lang_select").find('option').each(function( i, opt ) {
-                            if( opt.value === path )
-                                $(opt).attr('selected', 'selected');
-                        });
-                    });
-                    $( "#lang_select" ).change(function(e) {
-                        if (!$( this ).val())
-                        return;
 
-                        path = (window.location.host).split('.');
-                        if (path[0] == 'www'){
-                            delete path[0]
-                        }
-
-                        if (path.length > 2){
-                            host = path[1] + '.' + path[2]
-                        }
-                        else{
-                            host = window.location.host
-                        }
-
-
-                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
-                                window.location.pathname + window.location.search + window.location.hash;
-
-                    });
-
-                </script>
 
 
 
@@ -91,74 +54,7 @@
     </div>
 </div>
 <div class="news">
-{% if user.email %}
-    <div class="profile">
-        <div class="community">
-            <div class="newstitle">
-                <label>
-                    {% trans "Profile" %}: {% userName %} + </label><label class="cur-page">{{ current_section }}
-                 </label>
-
-                <div class="notify">
-                    <div class="event-holder" title="{% trans 'System notifications' %}">
-                        <i class="imgnews i-note showevent" id="showevent"></i>
-                        <a href="#" class="showevent num" >{% notif %}</a>
-                        <div class="formevent">
-                        	<i class="close-event imgnews" ></i>
-                            <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
-                            <div class="list-holder">
-                                <ul>
-
-                                </ul>
-                            </div>
-                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
-                        </div>
-                    </div>
-
-                    <div class="event-holder" title="{% trans 'Messages' %}">
-                          <a href="{% url 'messages:main' %}" ><i class="imgnews i-mail " id="showevent"></i></a>
-                        <a href="{% url 'messages:main' %}" class=" num" id="mailcounter" >{% mail %}</a>
 
 
-                    </div>
-
-                    <div class="event-holder" title="{% trans 'Friend request' %}">
-                        <i class="imgnews i-user" id="showevent"></i> <a href="#" class="num">0</a>
-                    </div>
-                    <div class="event-holder" title="{% trans 'Notification in your communities' %}">
-                        <i class="imgnews i-book" ></i> <a href="#" class="num">0</a>
-                    </div>
-                </div>
-            </div>
-            <div class="newslink">
-                <div class="left">
-                    {% if addNew %}
-                        <a class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
-                    {% else %}
-                        <a hidden="hidden" class="add-new" href="{{ addNew }}">{% trans 'Add' %}</a>
-                    {% endif %}
-
-                </div>
 
 
-                <!-- Google Translate injection -->
-                <div style="padding-left: 270px;" id="google_translate_element"></div>
-                <script type="text/javascript">
-                    function googleTranslateElementInit() {
-                        new google.translate.TranslateElement({
-                            pageLanguage: 'en',
-                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                            multilanguagePage: true}, 'google_translate_element');
-                    }
-                </script>
-                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-                <!-- /Google Translate injection -->
-
-
-                <a href="#" class="btnprofile"><i class="imgnews bullet"></i> {% trans 'Profile' %}</a>
-            </div>
-        </div>
-    </div>
-	{% userProfile %}
-{% endif %}

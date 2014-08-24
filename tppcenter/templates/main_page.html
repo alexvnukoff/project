@@ -108,10 +108,87 @@
 <div class="news-main">
     {% block left %}
          <div class="news-left">
+         <div class="b-filter">
+            	<div class="b-filter-left">
+                	<select id="lang_select">
+                    	<option disabled selected>{% trans 'Mother tongue' %}</option>
+                        <option value="am">Armenian</option>
+                        <option value="ar">Arabic</option>
+                        <option value="en">English</option>
+                        <option value="he">עברית</option>
+                        <option value="ru">Русский</option>
+                        <option value="zh">Chinese</option>
+                        <option value="uk">Український</option>
+                    </select>
+                     <!-- Google Translate injection -->
+                    <div id="google_translate_element_main" style="margin-top: 2px; margin-bottom: 2px;">
+                        <script type="text/javascript">
+                            function googleTranslateElementInit() {
+                                new google.translate.TranslateElement({
+                                    pageLanguage: 'en',
+                                    multilanguagePage: true,
+                                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element_main');
+                            }
+                        </script>
+                        <style type="text/css">
+                        .goog-te-combo {
+                          width: 200px;
+                        }
+                       .goog-te-gadget-simple{background-color:#fff;
+                                              border-left:1px solid #d5d5d5;border-top:1px solid #9b9b9b;border-bottom:1px solid #e8e8e8;border-right:1px solid #d5d5d5;
+                                              font-size: 6pt;display:inline-block;padding-top:1px;cursor:pointer;zoom:1;*display:inline;float: left;width: 107px;}
+                        </style>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                </div>
+            <!-- /Google Translate injection -->
+                </div>
+              {% if addNew %}
+                  <a class="add-new" href="{{ addNew }}">
+                  <i class="imgnews btn-fil"></i>
+              {% else %}
+                   <a  class="add-new" href="{{ addNew }}">
+                   <i class="imgnews btn-fil disable"></i>
 
-            {% if user.email %}
-                {% getMyCompaniesList %}
-            {% endif %}
+              {% endif %}
+
+                </a>
+
+
+            </div>
+          <script>
+                    $(document).ready(function() {
+                          var path = (window.location.host).split('.');
+                          path = path[0];
+                         $("#lang_select").find('option').each(function( i, opt ) {
+                            if( opt.value === path )
+                                $(opt).attr('selected', 'selected');
+                        });
+                    });
+                    $( "#lang_select" ).change(function(e) {
+                        if (!$( this ).val())
+                        return;
+
+                        path = (window.location.host).split('.');
+                        if (path[0] == 'www'){
+                            delete path[0]
+                        }
+
+                        if (path.length > 2){
+                            host = path[1] + '.' + path[2]
+                        }
+                        else{
+                            host = window.location.host
+                        }
+
+
+                        window.location.href =window.location.protocol + "//" +   $( this ).val() + "." + host  +
+                                window.location.pathname + window.location.search + window.location.hash;
+
+                    });
+
+                </script>
+
+
             <div class="categories-news" id="tabs">
                 <div class="tab-cate">
                     <ul>
@@ -119,6 +196,9 @@
                         {% if user.email %}<li><a href="#tabs-2" class="tab2">{% trans "My" %}</a></li>{% endif %}
                     </ul>
                 </div>
+                {% if user.email %}
+                   {% getMyCompaniesList %}
+                {% endif %}
                 <div id="tabs-1">
                     <ul class="tab1-cate">
 
@@ -215,7 +295,28 @@
         {% endblock %}
 
         {% block right %}
+         {% if user.email %}
             <div class="newsright">
+            <div class="b-notyfi event-holder">
+            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent"></i><a href="#" class="showevent num">{% notif %}</a>
+
+                    <div class="formevent">
+                        	<i class="close-event imgnews" ></i>
+                            <div class="notify-header"><h4>{% trans 'Notifications'  %}</h4></div>
+                            <div class="list-holder">
+                                <ul>
+
+                                </ul>
+                            </div>
+                            <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
+                        </div>
+
+                <i class="imgnews icon-notyfi icon-nt2"></i><a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% mail %} </a>
+
+                <a href="#"><i class="imgnews icon-notyfi icon-nt3"></i>2</a>
+                <a href="#"><i class="imgnews icon-notyfi icon-nt4"></i>2</a>
+            </div>
+         {% endif %}
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}

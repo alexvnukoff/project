@@ -240,11 +240,12 @@ var ui =
         ui.curPage.text(text);
 
         if (url == '/wall/')
-              $('.newslink .left .add-new').hide();
-        else
-              $('.newslink .left .add-new').show();
+              $('.imgnews.btn-fil').addClass("disable");
 
-        $('.newslink .left .add-new').attr('href', url + 'add/');
+        else
+             $('.imgnews.btn-fil').removeClass("disable");
+
+        $('.b-filter  .add-new').attr('href', url + 'add/');
 
         ui.loading = ui.requester(url);
 
