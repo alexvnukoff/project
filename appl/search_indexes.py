@@ -1169,7 +1169,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_categories(self, obj):
         try:
-            categories = NewsCategories.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
+            categories = NewsCategories.objects.filter(p2c__child=obj.pk, p2c__type='relation')
             return [category.pk for category in categories]
         except ObjectDoesNotExist:
             return None

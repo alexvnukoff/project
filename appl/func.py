@@ -318,7 +318,7 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child=filterChild, c2p__type="relation")\
+    return Item.objects.filter(c2p__parent__in=list, c2p__child=filterChild, c2p__type="relation")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 def _categoryStructure(categories,  listCount, catWithAttr, needed=None):

@@ -9,7 +9,7 @@ class get_greetings_list(ItemsList):
 
     #pagination url
     url_paginator = "greetings:paginator"
-
+ 
     #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -35,6 +35,7 @@ class get_greetings_list(ItemsList):
             sqs = sqs.filter(SQ(title=q) | SQ(text=q))
             
         return sqs
+
 
 class get_greeting_detail(ItemDetail):
 
