@@ -1,15 +1,8 @@
 from collections import OrderedDict
 from copy import copy
-import urllib
-from urllib.request import FancyURLopener
-from django.contrib.sites.models import Site
+
 from django.utils.translation import trans_real
-from appl.func import currencySymbol
-from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
-from appl import func
-from appl.models import *
-from urllib.parse import urlencode
 from haystack.query import SQ
 from django.template import RequestContext, loader
 from django.conf import settings
@@ -17,7 +10,12 @@ from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+
+from appl.func import currencySymbol
+from appl import func
+from appl.models import *
 import tppcenter.urls
+
 
 register = template.Library()
 
