@@ -1028,7 +1028,7 @@ def getListAdv(request):
             filtersAdv += ids
 
         elif len(ids) > 0:
-            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+            sqs = getActiveSQS().models(Tpp).filter(django_id__in=ids)
 
             for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
@@ -1279,9 +1279,9 @@ def cachePisibility(request):
 
 def show_toolbar(request):
 
-#    if request.user.is_authenticated():
-#        if request.user.is_superuser:
-#            return True
+    if request.user.is_authenticated():
+        if request.user.is_superuser:
+            return True
 
     return False
 
