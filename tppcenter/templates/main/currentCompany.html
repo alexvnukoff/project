@@ -1,31 +1,32 @@
 {% load CustomFilters %}
 {% load i18n %}
-
-    <div class="current-company">
-        {% trans "Current organization" %}:
-        {% if current %}
-            {% with current.NAME|first as name %}
-                <a href="#" class="cpn-current">{{ name }}</a>
-            {% endwith %}
-        {% else %}
-            <a href="#" class="cpn-current">{{ user }}</a>
-        {% endif %}
-        <ul class="list-cpn" style="display: none;">
-
+   	<div class="cabinet-form">
+        <div class="current-company">
+            {% trans "Current organization" %}:
             {% if current %}
-                <li><a href="{% url 'setCurrent' 0 %}?next={{ current_path }}">{{ user }}</a></li>
+                {% with current.NAME|first as name %}
+                    <a href="#" class="cpn-current">{{ name }}</a>
+                {% endwith %}
+            {% else %}
+                <a href="#" class="cpn-current">{{ user }}</a>
             {% endif %}
+            <ul class="list-cpn" style="display: none;">
 
-            {% for id, org in companies.items %}
-
-                {% if id != currentId %}
-
-                    {% with org.NAME|first as name %}
-                        <li><a href="{% url 'setCurrent' id %}?next={{ current_path }}">{{ name }}</a></li>
-                    {% endwith %}
-
+                {% if current %}
+                    <li><a href="{% url 'setCurrent' 0 %}?next={{ current_path }}">{{ user }}</a></li>
                 {% endif %}
-            {% endfor %}
 
-        </ul>
+                {% for id, org in companies.items %}
+
+                    {% if id != currentId %}
+
+                        {% with org.NAME|first as name %}
+                            <li><a href="{% url 'setCurrent' id %}?next={{ current_path }}">{{ name }}</a></li>
+                        {% endwith %}
+
+                    {% endif %}
+                {% endfor %}
+
+            </ul>
+        </div>
     </div>
