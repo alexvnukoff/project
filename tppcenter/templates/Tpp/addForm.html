@@ -144,7 +144,7 @@
 
                                          {% for id , atrr in countries.items %}
                                          {% with atrr.NAME|first as country  %}
-                                              <option value="{{ id }}"{% if choosen_country.id == id %} selected {% endif %}>{{ country }}</option>
+                                              <option value="{{ id }}"{% if choosen_country.pk == id %} selected {% endif %}>{{ country }}</option>
                                          {% endwith %}
                                         {% endfor %}
                                    </select>

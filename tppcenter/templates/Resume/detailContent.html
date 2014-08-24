@@ -1,83 +1,72 @@
+{% extends 'main_page.html' %}
+
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 
-<script>
-$(function() {
-	 $(".goods-details-tab").tabs();});
-</script>
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
 
 
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}" />
+{% endblock %}
 
+{% block js %}
+    {{ block.super }}
+
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
   <div class="tender">
-
-            {% with resumeValues.NAME.0 as name %}
-            {% with resumeValues.BIRTHDAY.0 as birthday %}
-            {% with resumeValues.MARITAL_STATUS.0 as marital_status %}
-            {% with resumeValues.NATIONALITY.0 as nationality %}
-            {% with resumeValues.TELEPHONE_NUMBER.0 as telephone_number %}
-            {% with resumeValues.ADDRESS.0 as address %}
-            {% with resumeValues.INSTITUTION.0 as institution %}
-            {% with resumeValues.FACULTY.0 as faculty %}
-            {% with resumeValues.PROFESSION.0 as profession %}
-            {% with resumeValues.STUDY_START_DATE.0 as study_start_date %}
-            {% with resumeValues.STUDY_END_DATE.0 as study_end_date %}
-            {% with resumeValues.STUDY_FORM.0 as study_form %}
-            {% with resumeValues.COMPANY_EXP_1.0 as company_exp_1 %}
-            {% with resumeValues.COMPANY_EXP_2.0 as company_exp_2 %}
-            {% with resumeValues.COMPANY_EXP_3.0 as company_exp_3 %}
-            {% with resumeValues.POSITION_EXP_1.0 as position_exp_1 %}
-            {% with resumeValues.POSITION_EXP_2.0 as position_exp_2 %}
-            {% with resumeValues.POSITION_EXP_3.0 as position_exp_3 %}
-            {% with resumeValues.START_DATE_EXP_1.0 as start_date_exp_1 %}
-            {% with resumeValues.START_DATE_EXP_2.0 as start_date_exp_2 %}
-            {% with resumeValues.START_DATE_EXP_3.0 as start_date_exp_3 %}
-            {% with resumeValues.END_DATE_EXP_1.0 as end_date_exp_1 %}
-            {% with resumeValues.END_DATE_EXP_2.0 as end_date_exp_2 %}
-            {% with resumeValues.END_DATE_EXP_3.0 as end_date_exp_3 %}
-            {% with resumeValues.ADDITIONAL_STUDY.0 as additional_study %}
-            {% with resumeValues.LANGUAGE_SKILL.0 as language_skill %}
-            {% with resumeValues.COMPUTER_SKILL.0 as computer_skill %}
-            {% with resumeValues.ADDITIONAL_SKILL.0 as additional_skill %}
-            {% with resumeValues.SALARY.0 as salary %}
-            {% with resumeValues.ADDITIONAL_INFORMATION.0 as additional_information %}
-            {% with resumeValues.CABINET as cabinet %}
-
-
-
                <div class="tender-info" id="resume-dt">
 					<ul class="inforesume">
                     	<li>
                         	<label>{% trans 'Vacancy title' %}:</label>
-                            <span class="right">{{ name }}</span>
+                            <span class="right">{{ item.text }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'User name' %}:</label>
-                            <span class="right">{{ cabinet }}</span>
+                            <span class="right">
+                                {% if item.cabinet.text %}
+                                    {{ item.cabinet.text }}
+                                {% else %}
+                                    {% trans "Name not found" %}
+                                {% endif %}
+                            </span>
                         </li>
                         <li>
                         	<label>{% trans 'Birthday' %}:</label>
-                            <span class="right">{{ birthday|makeDate|date:'d M Y' }}</span>
+                            <span class="right">{{ item.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Marital status' %}:</label>
-                            <span class="right">{{ marital_status }}</span>
+                            <span class="right">{{ item.marital_status|default_if_none:"" }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Citezenship' %}:</label>
-                            <span class="right">{{ nationality }}</span>
+                            <span class="right">{{ item.nationality|default_if_none:"" }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Telephone number' %}:</label>
-                            <span class="right"> {{ telephone_number }}</span>
+                            <span class="right"> {{ item.telephone_number|default_if_none:"" }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Address' %}:</label>
-                            <span class="right">{{ address }}</span>
+                            <span class="right">{{ item.address|default_if_none:"" }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Salary' %}:</label>
-                            <span class="right">{{ salary }}</span>
+                            <span class="right">{{ item.salary|default_if_none:"" }}</span>
                         </li>
                     </ul>
                     <div class="goods-details-tab">
@@ -94,23 +83,23 @@ $(function() {
                                 <ul class="inforesume">
                                     <li>
                                         <label>{% trans 'Institution' %}:</label>
-                                        <span class="right">{{ institution }}</span>
+                                        <span class="right">{{ item.institution|default_if_none:"" }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Faculty' %}:</label>
-                                        <span class="right">{{ faculty }}</span>
+                                        <span class="right">{{ item.faculty|default_if_none:"" }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Study period' %}:</label>
-                                        <span class="right">{{ study_start_date|makeDate|date:"d M Y" }} - {{ study_end_date|makeDate|date:'d M Y' }}</span>
+                                        <span class="right">{{ item.study_start_date|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.study_end_date|default_if_none:""|makeDate|date:'d M Y' }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Profession' %}:</label>
-                                        <span class="right">{{ profession }}</span>
+                                        <span class="right">{{ item.profession|default_if_none:"" }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Additional' %}:</label>
-                                        <span class="right"> {{ additional_study }}</span>
+                                        <span class="right"> {{ item.additional_study|default_if_none:"" }}</span>
                                     </li>
 
                                 </ul>
@@ -123,27 +112,27 @@ $(function() {
                                 <ul class="inforesume">
                                     <li>
                                         <label>{% trans 'Company' %}:</label>
-                                        <span  class="resume">{{ company_exp_1 }}</span>
+                                        <span  class="resume">{{ item.company_exp_1|default_if_none:"" }}</span>
                                         <label>{% trans 'Position' %}:</label>
-                                        <span class="resume">{{ position_exp_1 }}</span>
+                                        <span class="resume">{{ item.position_exp_1|default_if_none:"" }}</span>
                                         <label>{% trans 'Work  period' %}:</label>
-                                        <span class="resume">{{ start_date_exp_1|makeDate|date:"d M Y" }} - {{ end_date_exp_1|makeDate|date:'d M Y' }}</span>
+                                        <span class="resume">{{ item.start_date_exp_1|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_1|default_if_none:""|makeDate|date:'d M Y' }}</span>
                                     </li>
                                      <li>
                                         <label>{% trans 'Company' %}:</label>
-                                        <span  class="resume">{{ company_exp_2 }}</span>
+                                        <span  class="resume">{{ item.company_exp_2|default_if_none:"" }}</span>
                                         <label>{% trans 'Position' %}:</label>
-                                        <span class="resume">{{ position_exp_2 }}</span>
+                                        <span class="resume">{{ item.position_exp_2|default_if_none:"" }}</span>
                                         <label>{% trans 'Work  period' %}:</label>
-                                        <span class="resume">{{ start_date_exp_2|makeDate|date:"d M Y" }} - {{ end_date_exp_2|makeDate|date:'d M Y' }}</span>
+                                        <span class="resume">{{ item.start_date_exp_2|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_2|default_if_none:""|makeDate|date:'d M Y' }}</span>
                                     </li>
                                      <li>
                                         <label>{% trans 'Company' %}:</label>
-                                        <span  class="resume">{{ company_exp_3 }}</span>
+                                        <span  class="resume">{{ item.company_exp_3|default_if_none:"" }}</span>
                                         <label>{% trans 'Position' %}:</label>
-                                        <span class="resume">{{ position_exp_3 }}</span>
+                                        <span class="resume">{{ item.position_exp_3|default_if_none:"" }}</span>
                                         <label>{% trans 'Work  period' %}:</label>
-                                        <span class="resume">{{ start_date_exp_3|makeDate|date:"d M Y" }} - {{ end_date_exp_3|makeDate|date:'d M Y' }}</span>
+                                        <span class="resume">{{ item.start_date_exp_3|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_3|default_if_none:""|makeDate|date:'d M Y' }}</span>
                                     </li>
                                 </ul>
 
@@ -156,15 +145,15 @@ $(function() {
                                 <ul class="inforesume">
                                     <li>
                                         <label>{% trans 'Language skills' %}:</label>
-                                        <span class="right">{{ language_skill }}</span>
+                                        <span class="right">{{ item.language_skill|default_if_none:"" }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Computer skills' %}:</label>
-                                        <span class="right">{{ computer_skill }}</span>
+                                        <span class="right">{{ item.computer_skill|default_if_none:"" }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Additional skills' %}:</label>
-                                        <span class="right">{{ additional_skill }}</span>
+                                        <span class="right">{{ item.additional_skill|default_if_none:"" }}</span>
                                     </li>
 
 
@@ -173,47 +162,10 @@ $(function() {
                         </div>
                         <div id="goods-tabs-4">
                             <div class="content-goods-tab">
-                                {{ additional_information }}
+                                {{ item.additional_information|default_if_none:"" }}
                             </div>
                         </div>
                     </div>
                </div>
-
-
-
-
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-
      </div>
-
-
+{% endblock %}

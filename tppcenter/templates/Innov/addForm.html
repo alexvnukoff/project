@@ -49,8 +49,8 @@ $(function() {
         </div>
         <div>
             <label class="sapce">{% trans 'Release date' %}</label>
-            {% if form.errors.REALESE_DATE %}
-                <div class="error-handler"> <div class="formserror">{{ form.errors.REALESE_DATE }}</div></div>
+            {% if form.errors.RELEASE_DATE %}
+                <div class="error-handler"> <div class="formserror">{{ form.errors.RELEASE_DATE }}</div></div>
             {% endif %}
             <input type="text" name="RELEASE_DATE" value="{{realese_date }}" placeholder="" class="date" style=" width:97%;" />
         </div>
@@ -71,7 +71,7 @@ $(function() {
                 <label  class="sapce">{% trans 'Currency' %} <font color="#FF0000">*</font></label>
                     <select id="id_CURRENCY" name="CURRENCY">
                         {% for curr in currency_slots %}
-                            <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected="selected" {% endif %}>
+                            <option value="{{ curr.pk }}"{% if currnecy == curr.pk %} selected="selected" {% endif %}>
                                 {{ curr.title }}
                             </option>
                         {% endfor %}
@@ -139,7 +139,7 @@ $(function() {
                         	<label>{% trans 'Industry' %}</label>
                              <select id="id_BRANCH" name="BRANCH">
                                  {% for id, branch in branches.items %}
-                                     <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >{{ branch.NAME|first }}</option>
+                                     <option value="{{ id }}" {% if currentBranch.pk == id %}selected{% endif %} >{{ branch.NAME|first }}</option>
                                  {% endfor %}
                              </select>
                     </li>

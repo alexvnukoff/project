@@ -39,7 +39,7 @@ def dashboard(request, model=None):
         else:
             page = int(displayStart / displayLen + 1)
 
-        sqs = SearchQuerySet().models(model).order_by('-id')
+        sqs = SearchQuerySet().models(model).order_by('-obj_create_date')
 
         paginator = Paginator(sqs, 10)
 
@@ -48,7 +48,7 @@ def dashboard(request, model=None):
         except Exception:
             onPage = paginator.page(1)
 
-        ids = [itm.id for itm in onPage.object_list]
+        ids = [itm.pk for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues('NAME', ids)
 
@@ -144,7 +144,7 @@ def users(request):
         except Exception:
             onPage = paginator.page(1)
 
-        cabinets = [itm.id for itm in onPage.object_list]
+        cabinets = [itm.pk for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues(('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'), cabinets)
         users = User.objects.filter(cabinet__pk__in=cabinets).values('email', 'last_login', 'date_joined', 'ip',
@@ -221,7 +221,7 @@ def companies(request):
         except Exception:
             onPage = paginator.page(1)
 
-        companies = [itm.id for itm in onPage.object_list]
+        companies = [itm.pk for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues('NAME', companies)
         companies = Company.objects.filter(pk__in=companies).values('create_date',  'create_user__cabinet',"pk").order_by('-create_date')
@@ -499,7 +499,7 @@ def adv_price(request, ladModel=None):
         except Exception:
             onPage = paginator.page(1)
 
-        country_ids = [itm.id for itm in onPage.object_list]
+        country_ids = [itm.pk for itm in onPage.object_list]
 
         ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'COST'), country_ids)
 
@@ -589,7 +589,7 @@ def adv_settings(request):
             except Exception:
                 onPage = paginator.page(1)
 
-            country_ids = [itm.id for itm in onPage.object_list]
+            country_ids = [itm.pk for itm in onPage.object_list]
 
             ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'COST', 'WIDTH', 'HEIGHT'), country_ids)
 
@@ -798,7 +798,7 @@ def pages(request, editPage=None):
             except Exception:
                 onPage = paginator.page(1)
 
-            pages_ids = [itm.id for itm in onPage.object_list]
+            pages_ids = [itm.pk for itm in onPage.object_list]
 
             ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'DESCRIPTION'), pages_ids)
 
@@ -953,7 +953,7 @@ def greetings(request, editPage=None):
             except Exception:
                 onPage = paginator.page(1)
 
-            pages_ids = [itm.id for itm in onPage.object_list]
+            pages_ids = [itm.pk for itm in onPage.object_list]
 
             ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'POSITION', 'TPP'), pages_ids)
 

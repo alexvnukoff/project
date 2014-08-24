@@ -74,8 +74,13 @@
                 </div>
             </div>
             <div>
+
                 <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                {% if form.errors.COUNTRY %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.COUNTRY }}</div></div>
+                {% endif %}
                 <select name="COUNTRY">
+                    <option value="">{% trans "Country" %}</option>
                     {% for id , atrr in countries.items %}
                         {% with atrr.NAME|first as country  %}
                         <option value="{{ id }}"{% if choosen_country == id %} selected="selected" {% endif %}>

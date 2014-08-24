@@ -131,8 +131,8 @@
     <script src="{% static "admin-tpp/js/plugins/datatables/jquery.dataTables.js" %}" type="text/javascript"></script>
     <script src="{% static "admin-tpp/js/plugins/datatables/dataTables.bootstrap.js" %}" type="text/javascript"></script>
     <script src="{% static "admin-tpp/js/AdminLTE/app.js" %}" type="text/javascript"></script>
-            <script src="{% static "tppcenter/js/tinymce/tinymce.min.js"%}"></script>
-        <script src="{% static "tppcenter/js/tinymce/jquery.tinymce.min.js"%}"></script>
+            <script src="//tinymce.cachefly.net/4/tinymce.min.js"></script>
+        <script src="//tinymce.cachefly.net/4/jquery.tinymce.min.js"></script>
 
     <script type="text/javascript">
         $(function() {
@@ -140,8 +140,8 @@
             $('.tiny').tinymce({
                         mode:"textareas",
                         selector: '.tiny',
-                        plugins : "image wordcount media textcolor hr autolink link lists print preview",
-                        language : 'ru'
+                        plugins : "image wordcount media textcolor hr autolink link lists print preview code",
+                        //language_url : '{% static "tppcenter/js/tinymce/langs/ru.js" %}'
                     });
 
             $(document).on('click', '.savePage', function() {

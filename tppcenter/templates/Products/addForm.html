@@ -358,7 +358,7 @@ $.fn.onChangeSet = function(e) {
 
                         <select id="id_CURRENCY" name="CURRENCY">
                             {% for curr in currency_slots %}
-                                <option value="{{ curr.id }}"{% if currnecy == curr.id %} selected="selected" {% endif %}>
+                                <option value="{{ curr.pk }}"{% if currnecy == curr.pk %} selected="selected" {% endif %}>
                                     {{ curr.title }}
                                 </option>
                             {% endfor %}
@@ -368,7 +368,7 @@ $.fn.onChangeSet = function(e) {
                         <label class="sapce">{% trans 'Measurement unit' %} <font color="#FF0000">*</font></label>
                         <select id="id_MEASUREMENT_UNIT" name="MEASUREMENT_UNIT">
                             {% for meas in measurement_slots %}
-                                <option value="{{ meas.id }}" {% if meas.id == meas_unit %} selected="selected" {% endif %}>
+                                <option value="{{ meas.pk }}" {% if meas.pk == meas_unit %} selected="selected" {% endif %}>
                                     {{ meas.title }}
                                 </option>
                             {% endfor %}
@@ -386,19 +386,19 @@ $.fn.onChangeSet = function(e) {
 
 
                             {% if name == "@Parent" %}
-                                <option value="{{ id }}" {% if choosen_category.id == id %}selected="selected"{% endif %} >
+                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
                                     {{ parent_name }}
                                 </option>
                             {% endif %}
 
                             {% if level == 2 %}
-                                <option value="{{ id }}" {% if choosen_category.id == id %}selected="selected"{% endif %} >
+                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
                                     -{{name}}
                                 </option>
                             {% endif %}
 
                             {% if level == 3 %}
-                                <option value="{{ id }}" {% if choosen_category.id == id %}selected="selected"{% endif %} >
+                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
                                     --{{name}}
                                 </option>
                             {% endif %}

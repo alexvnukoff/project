@@ -1,60 +1,53 @@
+{% extends 'main_page.html' %}
+
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
+
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
+
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
 <script>
 $(function() {
 	 $(".goods-details-tab").tabs();});
 </script>
+{% endblock %}
 
-
-
+{% block keywords %}{% endblock %}
+{% block content %}
   <div class="vacancy-dt">
-
-            {% with requirementValues.NAME.0 as name %}
-            {% with requirementValues.DETAIL_TEXT.0 as detail_text %}
-            {% with requirementValues.CITY.0 as city %}
-            {% with requirementValues.TYPE_OF_EMPLOYMENT.0 as type_of_employements %}
-            {% with requirementValues.REQUIREMENTS.0 as requirements %}
-            {% with requirementValues.TERMS.0 as terms %}
-            {% with requirementValues.IS_ANONYMOUS_VACANCY.0 as is_anonymous %}
-            {% with requirementValues.CREATE_DATE.0 as create_date %}
-
-            {% with organizationValues.NAME.0 as org_name %}
-             {% with organizationValues.SLUG.0 as org_slug %}
-
-
-
-
-
                <div class="tender-info">
-					<span class="title">{{ name }}</span>
+					<span class="title">{{ item.title }}</span>
                     <div class="vacancy-button"><a href="#" id="send-resume" class="bigbuy">{% trans 'Send Resume' %}</a></div>
                     <ul class="inforesume">
                     	<li>
                         	<label>{% trans 'Date' %}:</label>
-                            <span class="right">{{ create_date|date:'d M Y' }}</span>
+                            <span class="right">{{ item.obj_create_date|date:'d M Y' }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Company' %}:</label>
                             <span class="right">
-                                {% if is_anonymous %}
+                                {% if item.is_anonymous %}
                                     {% trans 'Anonymous company' %}
                                 {% else %}
-                                <a href="{% url 'companies:detail' org_slug %}">{{ org_name }}</a>
+                                <a href="{% url 'companies:detail' item.organization.slug %}">{{ item.organization.title }}</a>
                                 {% endif %}
                             </span>
                         </li>
                     </ul>
-                    <div class="social">
-                        <!-- Share for social networks -->
-                        <a href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-1"></i></a>
-                        <a href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-2"></i></a>
-                        <!--<a href="http://connect.mail.ru/share?url=URL&title=TITLE&description=DESC&imageurl=IMG_PATH" target="_blank" onclick="return Share.me(this);">{шарь меня правильно}</a>-->
-                        <a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="imgnews share-3"></i></a>
-                        <a href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)"><i class="imgnews share-4"></i></a>
-                        <!-- /Share for social networks -->
-                    </div>
+                    {% b2bSocialButtons "" item.title item.text %}
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
@@ -68,42 +61,76 @@ $(function() {
 
                                     <li>
                                     	<label>{% trans 'Type of employments' %}</label>
-                                        <p>{{ type_of_employements }}</p>
+                                        <p>{{ item.type|default_if_none:"" }}</p>
                                     </li>
 
                                     <li>
                                     	<label>{% trans 'Description' %}</label>
-                                       <p>{{ detail_text }}</p>
+                                       <p>{{ item.text|default_if_none:"" }}</p>
                                     </li>
                                     <li>
                                     	<label>{% trans 'Requirements' %}</label>
-                                        <p>{{ requirements }}</p>
+                                        <p>{{ item.requirements|default_if_none:"" }}</p>
                                     </li>
                                     <li>
                                     	<label>{% trans 'Terms' %}</label>
-                                        <p>{{ terms }}</p>
+                                        <p>{{ item.terms|default_if_none:"" }}</p>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                    </div>
                </div>
-
-
-
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-
-
-
      </div>
+{% endblock %}
 
+{% block vacancy %}
+<div style="display: none;" class="white_content" id="light-vacancy">
+    <div class="contact-table">
+        <div class="contact-tablein" style="height: 280px;">
+        	<a onclick="document.getElementById('light-vacancy').style.display='none';document.getElementById('fade-vacancy').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+
+
+            <ul class="contactform">
+                <li style="text-align: center;">
+                    <label id="send_resume_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+                </li>
+
+                <li>
+                	<label>{% trans 'You send resume on position:' %} <font color="#FF0000">*</font></label>
+                   <div>{{ item.title }}</div>
+                    <input id="vacancy-id" value="{{ item.pk }}" hidden="hidden">
+                </li>
+
+                <li>
+                	<label>{% trans 'Add new resume to profile' %} <font color="#FF0000">*</font></label>
+                   <a href="{% url 'resume:main'  %}">{% trans 'New resume' %}</a>
+                </li>
+
+            	<li>
+                	<label>{% trans 'Send existing resume' %}:</label>
+                    <select id="resume-id">
+                        {% for resume in resumes %}
+                        <option value="{{ resume.pk }}"> {{ resume.text }}</option>
+                         {% empty %}
+                           <option disabled> {% trans 'No existing resumes' %}</option>
+                        {% endfor %}
+
+                    </select>
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-vacancy" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel-vacancy" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-vacancy"></div>
+{% endblock %}
 

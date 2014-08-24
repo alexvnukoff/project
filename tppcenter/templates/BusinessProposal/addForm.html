@@ -120,7 +120,7 @@ $(function() {
 
                 <select id="id_BRANCH" name="BRANCH">
                     {% for id, branch in branches.items %}
-                        <option value="{{ id }}" {% if currentBranch.id == id %}selected="selected"{% endif %} >
+                        <option value="{{ id }}" {% if currentBranch.pk == id %}selected="selected"{% endif %} >
                             {{ branch.NAME|first }}
                         </option>
                     {% endfor %}
@@ -131,7 +131,7 @@ $(function() {
 
                 <select id="id_CATEGORY" name="CATEGORY">
                     {% for id, category in categories.items %}
-                        <option value="{{ id }}" {% if currentCategory.id == id %}selected="selected"{% endif %} >
+                        <option value="{{ id }}" {% if currentCategory.pk == id %}selected="selected"{% endif %} >
                             {{ category.NAME|first }}
                         </option>
                     {% endfor %}

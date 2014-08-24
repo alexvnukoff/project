@@ -1,18 +1,20 @@
 import json
+
 from dateutil.parser import parse
-from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
-from appl import func
-from appl.models import Organization, Branch, Tpp, Country, AdvOrder
-from core.models import Item
-from core.tasks import addTopAttr
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
+
+from appl import func
+from appl.models import Organization, Branch, Tpp, Country, AdvOrder
+from core.models import Item
+from core.tasks import addTopAttr
 from tppcenter.forms import ItemForm
+
 #from paypal.standard.forms import PayPalPaymentsForm
 import datetime
 
@@ -39,20 +41,20 @@ def advJsonFilter(request):
         if result:
             onPage, total = result
 
-            obj_list = [item.id for item in onPage.object_list]
+            obj_list = [item.pk for item in onPage.object_list]
 
             itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
             items = []
 
             for item in onPage.object_list:
 
-                if not isinstance(itemsAttr[item.id], dict) :
-                    itemsAttr[item.id] = {}
+                if not isinstance(itemsAttr[item.pk], dict):
+                    itemsAttr[item.pk] = {}
 
                 resultDict = {
                     'title': item.title_auto,
-                    'id': item.id,
-                    'cost': itemsAttr[item.id].get('COST', [0])[0],
+                    'id': item.pk,
+                    'cost': itemsAttr[item.pk].get('COST', [0])[0],
                 }
 
                 items.append(resultDict)

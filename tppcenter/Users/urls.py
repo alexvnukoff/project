@@ -11,8 +11,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', tppcenter.Users.views.get_users_list, name='main'),
-     url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Users.views.get_users_list, name="paginator"),
+     url(r'^$', tppcenter.Users.views.get_users_list.as_view(), name='main'),
+     url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Users.views.get_users_list.as_view(), name="paginator"),
 
 
 

@@ -1,15 +1,8 @@
 from collections import OrderedDict
 from copy import copy
-import urllib
-from urllib.request import FancyURLopener
-from django.contrib.sites.models import Site
+
 from django.utils.translation import trans_real
-from appl.func import currencySymbol
-from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
-from appl import func
-from appl.models import *
-from urllib.parse import urlencode
 from haystack.query import SQ
 from django.template import RequestContext, loader
 from django.conf import settings
@@ -17,7 +10,12 @@ from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+
+from appl.func import currencySymbol
+from appl import func
+from appl.models import *
 import tppcenter.urls
+
 
 register = template.Library()
 
@@ -86,7 +84,7 @@ def split(str, splitter):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
 
-    if len(value) > 0 and value is not None:
+    if value is not None and len(value) > 0:
         return clean_html(value)
     else:
         return ""
@@ -252,7 +250,7 @@ def getOwner(item):
     if not item:
         return None
 
-    obj = func.getActiveSQS().filter(id=item)
+    obj = func.getActiveSQS().filter(django_id=item)
 
     if len(obj) == 0:
         return None
@@ -384,7 +382,7 @@ def setCountries(context):
   request = context.get('request')
 
   contrySorted = func.sortByAttr("Country", "NAME")
-  sorted_id = [coun.id for coun in contrySorted]
+  sorted_id = [coun.pk for coun in contrySorted]
   countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
 
   template = loader.get_template('main/Country.html')
@@ -406,9 +404,9 @@ def rightTv(context):
       if sqs.count() == 0:
           return ''
       else:
-          sqs = sqs.order_by('-id')[0]
-          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.id])
-          tvValues = tvValues[sqs.id]
+          sqs = sqs.order_by('-obj_create_date')[0]
+          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
+          tvValues = tvValues[sqs.pk]
           is_innov = False
   template = loader.get_template('main/tv.html')
   context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov })

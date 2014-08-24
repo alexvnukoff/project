@@ -10,8 +10,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', tppcenter.Greetings.views.get_greetings_list, name='main'),
-     url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Greetings.views.get_greetings_list, name="paginator"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Greetings.views.get_greetings_list, name="detail"),
+     url(r'^$', tppcenter.Greetings.views.get_greetings_list.as_view(), name='main'),
+     url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Greetings.views.get_greetings_list.as_view(), name="paginator"),
+     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Greetings.views.get_greeting_detail.as_view(), name="detail"),
 
 )

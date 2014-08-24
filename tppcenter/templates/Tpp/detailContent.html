@@ -1,11 +1,27 @@
+{% extends 'main_page.html' %}
+
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-<script>
-    $('.keyword').html('');
-</script>
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/tpp.reset.css' %}" />
+{% endblock %}
+
+
+{% block keywords %}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
 <script>
     ga('set', 'dimension3', {{ item_id }});
     ga('set', 'dimension2', 'tpp');
@@ -25,24 +41,6 @@
 			}
             return false;
         });
-	});
-</script>
-
-<!-- script for Company-Staff delete content button -->
-<script type="text/javascript">
-    $(function(){
-        $(document).on('mouseenter','#write-msg-to-staff', function(){
-            $(this).css('cursor', 'pointer');
-        });
-
-	    $(document).on('mouseenter','.table-staff tr', function(){
-
-		    $(this).children().find(".btnremove-small").show();
-		});
-
-        $(document).on('mouseleave', '.table-staff tr', function(){
-		    $(this).children().find(".btnremove-small").hide();
-		});
 	});
 </script>
 
@@ -421,7 +419,6 @@
 	});
 </script>
 
-{% with tppValues.POSITION.0 as position %}
 <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -436,7 +433,7 @@
 
                 {% if position %}
                   marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ position }})
+                    position: new google.maps.LatLng({{ item.position }})
                 });
                 {% endif %}
 
@@ -444,176 +441,157 @@
 
             })});
 </script>
-{% endwith %}
+{% endblock %}
 
-  <div class="companies">
-
-            {% with tppValues.NAME.0 as name %}
-            {% with tppValues.DETAIL_TEXT.0 as content %}
-            {% with tppValues.IMAGE.0 as image %}
-            {% with tppValues.FLAG.0 as flag %}
-            {% with country.COUNTRY_FLAG.0 as country_flag %}
-            {% with country.NAME.0 as country_name %}
-            {% with tppValues.ADDRESS.0 as address %}
-            {% with tppValues.TELEPHONE_NUMBER.0 as telephone_number %}
-            {% with tppValues.EMAIL.0 as email %}
-            {% with tppValues.FAX.0 as fax %}
-            {% with tppValues.SITE_NAME.0 as site_name %}
-            {% with tppValues.ANONS.0 as anons %}
-
-
-                <div class="deal-details">
-                <h3>
-                {% if country_flag %}
-                     <i class="flag sprite  {{ country_flag }}" title="{{ country_name }}"></i>
-                {% else %}
-                     <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" alt="{{ country_name }}" />
-
+{% block content %}
+    <div class="companies">
+        <div class="deal-details">
+            <h3>
+                {% if item.country.flag %}
+                     <i class="flag sprite  {{ item.country.flag }}" title="{{ item.country.text }}"></i>
+                {% elif item.flag %}
+                     <img src="{{ MEDIA_URL }}small/{{ item.flag }}" class="flag" title="{{ item.title }}" alt="{{ item.title }}" />
                 {% endif %}
-                 {{ name }}
-                </h3>
-                    {% if image %}
-                        <img src="{{ MEDIA_URL }}big/{{ image }}" class="thumb-deal" alt="{{ name }}" title="{{ name }}"  />
-                    {% else %}
-                        <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="thumb-deal" alt="" />
-                    {% endif %}
-                    <p>
-                        {% autoescape off %}
-                            {{ anons|force_escape|linebreaks }}
-                        {% endautoescape %}
-                    </p>
-                </div>
-                {% b2bSocialButtons  image name content %}
+                {{ item.title }}
+            </h3>
+            {% if item.image %}
+                <img src="{{ MEDIA_URL }}big/{{ item.image }}" class="thumb-deal" alt="{{ item.title }}" title="{{ item.title }}"  />
+            {% else %}
+                <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="thumb-deal" alt="" />
+            {% endif %}
+            <p>
+                {% autoescape off %}
+                    {{ item.anons|force_escape|linebreaks }}
+                {% endautoescape %}
+            </p>
+        </div>
+        {% b2bSocialButtons  tpp.image tpp.title tp.text %}
+        <div class="cpn-details-tab" id="tpp-details-tab">
+            <div class="tab-cate">
+            <ul>
+                <li>
+                    <a href="#cpn-tabs-about">
+                        {% trans "About" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#cpn-tabs-recvisits">
+                        {% trans "Recvisits" %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="news-tab" href="{% url "tpp:tab_news" item_id %}">
+                        {% trans "News" %}
+                    </a>
+                </li>
+                {% comment %}
+                    <li>
+                        <a href="#cpn-tabs-services">
+                            {% trans "Services" %}
+                        </a>
+                    </li>
+                {% endcomment %}
+                <li>
+                    <a data-id="tabs-gallery" href="{% url "tpp:tabs_gallery" item_id %}">
+                        {% trans "Gallery" %}
+                    </a>
+                </li>
 
-                <div class="cpn-details-tab" id="tpp-details-tab">
-                    <div class="tab-cate">
-                        <ul>
-                        	<li>
-                                <a href="#cpn-tabs-about">
-                                    {% trans "About" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#cpn-tabs-recvisits">
-                                    {% trans "Recvisits" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="news-tab" href="{% url "tpp:tab_news" item_id %}">
-                                    {% trans "News" %}
-                                </a>
-                            </li>
-                            <!--
-                            <li>
-                                <a href="#cpn-tabs-services">
-                                    {% trans "Services" %}
-                                </a>
-                            </li>
-                            -->
-                            <li>
-                                <a data-id="tabs-gallery" href="{% url "tpp:tabs_gallery" item_id %}">
-                                     {% trans "Gallery" %}
-                                </a>
-                            </li>
-
-                            <li>
-                                <a data-id="tenders-tenders" href="{% url "tpp:tab_tenders" item_id %}">
-                                    {% trans "Tenders" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="exhibitions-tab" href="{% url "tpp:tab_exhibitions" item_id %}">
-                                    {% trans "Exhibitions" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="innov-tab" href="{% url "tpp:tab_innov" item_id %}">
-                                    {% trans 'Innovation Projects' %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="proposal-tab" href="{% url "tpp:tab_proposal" item_id %}">
-                                    {% trans 'Business Proposals'  %}
-                                </a>
-                            </li>                            
-                            <li>
-                                <a data-id="structure-tab" href="{% url "tpp:tab_structure" item_id %}">
-                                    {% trans "Structure" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="staff-tab" href="{% url "tpp:tab_staff" item_id %}">
-                                    {% trans "Staff" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#cpn-tabs-contacts">
-                                    {% trans "Contacts" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a data-id="company-tab" href="{% url "tpp:tab_companies" item_id %}">
-                                    {% trans "Companies" %}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="cpn-tabs-about">
-                        <div class="tpp-dt-content">
-                        	{{ content|cleanHtml|safe }}
-                        </div>
-                    </div>
-                    <div id="cpn-tabs-recvisits">
-                        <div class="tpp-dt-content"></div>
-                    </div>
-                    <!--
-                    <div id="cpn-tabs-services">
+                <li>
+                    <a data-id="tenders-tenders" href="{% url "tpp:tab_tenders" item_id %}">
+                        {% trans "Tenders" %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="exhibitions-tab" href="{% url "tpp:tab_exhibitions" item_id %}">
+                        {% trans "Exhibitions" %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="innov-tab" href="{% url "tpp:tab_innov" item_id %}">
+                        {% trans 'Innovation Projects' %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="proposal-tab" href="{% url "tpp:tab_proposal" item_id %}">
+                        {% trans 'Business Proposals'  %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="structure-tab" href="{% url "tpp:tab_structure" item_id %}">
+                        {% trans "Structure" %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="staff-tab" href="{% url "tpp:tab_staff" item_id %}">
+                        {% trans "Staff" %}
+                    </a>
+                </li>
+                <li>
+                    <a href="#cpn-tabs-contacts">
+                        {% trans "Contacts" %}
+                    </a>
+                </li>
+                <li>
+                    <a data-id="company-tab" href="{% url "tpp:tab_companies" item_id %}">
+                        {% trans "Companies" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="cpn-tabs-about">
+            <div class="tpp-dt-content">
+                {{ item.text|cleanHtml|safe }}
+            </div>
+        </div>
+        <div id="cpn-tabs-recvisits">
+            <div class="tpp-dt-content"></div>
+        </div>
+        <!--
+            <div id="cpn-tabs-services">
                         <div class="tpp-dt-content">Финский инженер и хакер Оона Ряйсянен (Oona Räisänen), которая увлекается обработкой звука, случайно обнаружила на Youtube видеозапись, сделанную с вертолёта во время преследования автомобиля. Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком, Оону не увлекли приключения полиции, но она очень заинтересовалась необычным звуком</div>
-                    </div>
-                    -->
+            </div>
+        -->
                     <div id="cpn-tabs-contacts">
                         <div class="tpp-dt-content">
 
                              <div class="org-contacts">
                                <ul>
-                                	<li>
-                                    	<span class="left">{% trans 'Address' %}: </span>
-                                        <span class="right">{{ address }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Telephone number' %}: </span>
-                                        <span class="right">{{ telephone_number }} </span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Fax' %}: </span>
-                                        <span class="right">{{ fax }}</span>
-                                    </li>
+                                   {% if item.address %}
+                                        <li>
+                                            <span class="left">{% trans 'Address' %}: </span>
+                                            <span class="right">{{ item.address }}</span>
+                                        </li>
+                                   {% endif %}
+                                    {% if item.phone %}
+                                        <li>
+                                            <span class="left">{% trans 'Telephone number' %}: </span>
+                                            <span class="right">{{ item.phone }} </span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.fax %}
+                                        <li>
+                                            <span class="left">{% trans 'Fax' %}: </span>
+                                            <span class="right">{{ item.fax }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.email %}
                                     <li>
                                     	<span class="left">{% trans 'Email' %}: </span>
-                                        <span class="right">{{ email }}</span>
+                                        <span class="right">{{ item.email }}</span>
                                     </li>
+                                    {% endif %}
+                                    {% if item.site %}
                                     <li>
                                     	<span class="left">{% trans 'WWW' %}: </span>
-                                        <span class="right">{{ site_name }}</span>
+                                        <span class="right">{{ item.site }}</span>
                                     </li>
+                                    {% endif %}
                                 </ul>
                              </div>
                               <div class="org-map"> <div   id="map-canvas"></div></div>
                         </div>
                     </div>
                 </div>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-
-  </div>
-
+    </div>
+{% endblock %}

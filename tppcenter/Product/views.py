@@ -1,137 +1,65 @@
-from appl import func
-from appl.models import Product, Gallery, AdditionalPages, Company, Country, Category, Organization
-from core.models import Item, Dictionary
-from core.tasks import addProductAttrubute
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
+from appl import func
+from appl.models import Product, Gallery, AdditionalPages, Company, Category, Organization
+from core.models import Item, Dictionary
+from core.tasks import addProductAttrubute
+from tppcenter.cbv import ItemsList, ItemDetail
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-import json
 
 
-def get_product_list(request, page=1, item_id=None, my=None, slug=None):
+class get_products_list(ItemsList):
 
+    #pagination url
+    url_paginator = "products:paginator"
+    url_my_paginator = "products:my_main_paginator"
 
-   # if slug and not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('products:detail',  args=[slug]))
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
-    if item_id is None:
-        try:
-            attr  = ('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG')
-            productsPage = func.setContent(request, Product, attr, 'products', 'Products/contentPage.html', 12,
-                                           page=page, my=my)
-
-        except ObjectDoesNotExist:
-            productsPage = func.emptyCompany()
-    else:
-        productsPage, meta = _getDetailContent(request, item_id)
-
-    styles = []
+    #Lists of required scripts and styles for ajax request
     scripts = []
+    styles = []
+
+    paginate_by = 12
+
+    current_section = _("Products")
+    addUrl = 'products:add'
+
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
+
+    model = Product
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/contentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/index.html'
 
 
-    if not request.is_ajax() or item_id:
-        current_section = _("Products")
+class get_product_detail(ItemDetail):
 
-        templateParams = {
-            'current_section': current_section,
-            'productsPage': productsPage,
-            'scripts': scripts,
-            'styles': styles,
-            'addNew': reverse('products:add'),
-            'item_id': item_id
-        }
+    model = Product
+    template_name = 'Products/detailContent.html'
 
-        if item_id:
-            templateParams['meta'] = meta
+    current_section = _("Products")
+    addUrl = 'products:add'
 
-        return render_to_response("Products/index.html", templateParams, context_instance=RequestContext(request))
+    def get_context_data(self, **kwargs):
+        context = super(get_product_detail, self).get_context_data(**kwargs)
 
-    else:
+        context.update({
+            'photos': self._get_gallery(),
+            'additionalPages': self._get_additional_pages(),
+        })
 
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': productsPage,
-        }
-
-        return HttpResponse(json.dumps(serialize))
-
-
-def _getDetailContent(request, item_id):
-
-    lang = settings.LANGUAGE_CODE
-    cache_name = "%s_detail_%s" % (lang, item_id)
-    cached = cache.get(cache_name)
-
-    if not cached:
-
-        product = get_object_or_404(Product, pk=item_id)
-
-        attr = (
-            'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
-            'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
-            'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
-        )
-
-        productValues = product.getAttributeValues(*attr)
-
-        photos = Gallery.objects.filter(c2p__parent=item_id)
-
-        additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-
-        country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
-
-        company = Company.objects.get(p2c__child=item_id)
-        companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
-        companyValues.update({'COMPANY_ID': company.id})
-
-
-        countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
-
-        toUpdate = {
-            'COUNTRY_NAME': countriesList.get('NAME', 0),
-            'COUNTRY_FLAG': countriesList.get('FLAG', 0),
-            'FLAG_CLASS': countriesList.get('COUNTRY_FLAG', 0),
-            'COUNTRY_ID':  country.id
-        }
-
-        companyValues.update(toUpdate)
-
-        template = loader.get_template('Products/detailContent.html')
-
-        templateParams = {
-            'productValues': productValues,
-            'photos': photos,
-            'additionalPages': additionalPages,
-            'companyValues': companyValues,
-            'item_id': item_id
-        }
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        meta = func.getItemMeta(request, productValues)
-
-        cache.set(cache_name, [rendered, meta], 60*60*24*7)
-
-    else:
-        rendered, meta = cache.get(cache_name)
-
-
-    return rendered, meta
+        return context
 
 
 @login_required(login_url='/login/')
@@ -257,7 +185,7 @@ def updateProduct(request, item_id):
         return func.permissionDenied()
 
     try:
-        choosen_category = Category.objects.get(p2c__child__id=item_id)
+        choosen_category = Category.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_category = ''
 
@@ -348,7 +276,7 @@ def updateProduct(request, item_id):
 
 
 def deleteProduct(request, item_id):
-    item = Organization.objects.get(p2c__child_id=item_id)
+    item = Organization.objects.get(p2c__child=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
 

@@ -77,7 +77,7 @@
                 <label class="sapce">{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
                 <select id="id_BRANCH" name="BRANCH">
                     {% for id, branch in branches.items %}
-                        <option value="{{ id }}" {% if currentBranch.id == id %}selected{% endif %} >
+                        <option value="{{ id }}" {% if currentBranch.pk == id %}selected{% endif %} >
                             {{ branch.NAME|first }}
                         </option>
                     {% endfor %}

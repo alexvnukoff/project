@@ -2,8 +2,7 @@ __author__ = 'user'
 from django.conf import settings
 from django.utils import translation
 from haystack import connections
-from haystack.backends.elasticsearch_backend import ElasticsearchSearchBackend, ElasticsearchSearchQuery, \
-    ElasticsearchSearchEngine
+from haystack.backends.solr_backend import SolrSearchBackend, SolrSearchQuery, SolrEngine
 from haystack.constants import DEFAULT_ALIAS
 
 def get_using(language, alias=DEFAULT_ALIAS):
@@ -11,7 +10,7 @@ def get_using(language, alias=DEFAULT_ALIAS):
     using = new_using if new_using in settings.HAYSTACK_CONNECTIONS else alias
     return using
 
-class MultilingualElasticSearchBackend(ElasticsearchSearchBackend):
+class MultilingualElasticSearchBackend(SolrSearchBackend):
     def update(self, index, iterable, commit=True, multilingual=True):
         if multilingual:
             initial_language = translation.get_language()[:2]
@@ -32,12 +31,12 @@ class MultilingualElasticSearchBackend(ElasticsearchSearchBackend):
             print("[{0}]".format(self.connection_alias))
             super(MultilingualElasticSearchBackend, self).update(index, iterable, commit)
 
-class MultilingualElasticSearchQuery(ElasticsearchSearchQuery):
+class MultilingualElasticSearchQuery(SolrSearchQuery):
     def __init__(self, using=DEFAULT_ALIAS):
         language = translation.get_language()[:2]
         using = get_using(language)
         super(MultilingualElasticSearchQuery, self).__init__(using)
 
-class MultilingualElasticEngine(ElasticsearchSearchEngine):
+class MultilingualElasticEngine(SolrEngine):
     backend = MultilingualElasticSearchBackend
     query = MultilingualElasticSearchQuery

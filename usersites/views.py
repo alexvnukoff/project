@@ -49,7 +49,7 @@ def _get_content(request, language):
 
      sqs = getActiveSQS().models(News).filter(SQ(tpp=organization) |
                                               SQ(company=organization)).order_by('-obj_create_date')[:3]
-     news_ids = [new.id for new in sqs]
+     news_ids = [new.pk for new in sqs]
 
      attr = ('NAME', 'ANONS', 'DETAIL_TEXT', 'SLUG', 'IMAGE')
 
@@ -59,7 +59,7 @@ def _get_content(request, language):
 
      sqs = getActiveSQS().models(BusinessProposal).filter(SQ(tpp=organization) |
                                               SQ(company=organization)).order_by('-obj_create_date')[:3]
-     proposals_ids = [proposal.id for proposal in sqs]
+     proposals_ids = [proposal.pk for proposal in sqs]
 
      attr = ('NAME', 'ANONS', 'DETAIL_TEXT', 'SLUG')
 
@@ -69,7 +69,7 @@ def _get_content(request, language):
 
      sqs = getActiveSQS().models(Product).filter(SQ(tpp=organization) |
                                               SQ(company=organization)).order_by('-obj_create_date')[:4]
-     product_ids = [product.id for product in sqs]
+     product_ids = [product.pk for product in sqs]
 
      attr = ('NAME', 'COST', 'CURRENCY', 'SLUG', 'IMAGE')
 

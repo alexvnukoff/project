@@ -5,38 +5,25 @@
     {% include "main/paginator.html" %}
 
     <ul class="listnews">
-        {% for id , attr in greetingList.items %}
-            {% with attr.NAME.0 as name %}
-            {% with attr.IMAGE.0 as image %}
-            {% with attr.SLUG.0 as slug %}
-            {% with attr.DETAIL_TEXT.0 as content %}
-            {% with attr.TPP|first as tpp %}
-            {% with attr.POSITION|first as position %}
-
+        {% for greeting in object_list %}
             <li>
                 <div class="thumb shadow">
-                    <a href="{% url "greetings:detail" slug %}">
-                        <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                    <a href="{% url "greetings:detail" greeting.slug %}">
+                        <img src="{{ MEDIA_URL }}big/{{ greeting.image }}" alt="{{ greeting.title }}" title="{{ greeting.title }}" />
                     </a>
                 </div>
                 <div class="infoprd">
-                    <a href="{% url "greetings:detail" slug %}" class="name">{{ name }}</a>
-                    {{ content|truncatewords_html:"30"|cleanHtml|safe }}
+                    <a href="{% url "greetings:detail" greeting.slug %}" class="name">{{ greeting.title }}</a>
+                    {{ greeting.text|truncatewords_html:"30"|cleanHtml|safe }}
                 <br />
-                <p><strong>{% trans "Organization" %}:</strong> {{ tpp }}</p>
-                <p><strong>{% trans "Position" %}:</strong> {{ position }}</p>
+                <p><strong>{% trans "Organization" %}:</strong> {{ greeting.tpp_name }}</p>
+                <p><strong>{% trans "Position" %}:</strong> {{ greeting.position }}</p>
 
                     <!--noindex-->
-                        <a href="{% url "greetings:detail" slug %}" class="more">{% trans 'Read more' %}...</a>
+                        <a href="{% url "greetings:detail" greeting.slug %}" class="more">{% trans 'Read more' %}...</a>
                     <!--/noindex-->
                 </div>
             </li>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

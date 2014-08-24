@@ -1,10 +1,21 @@
-from django.contrib.sites.models import Site
-from django.conf import settings
 from threading import current_thread
 import os
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
-from django.http.response import HttpResponseRedirectBase
+import sys
+
+from django.contrib.sites.models import Site
+
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import translation
+from django.views.debug import technical_500_response
+from django.conf import settings
+from django.core.cache import cache
+
+
+class UserBasedExceptionMiddleware(object):
+    def process_exception(self, request, exception):
+        if request.user.is_superuser or request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS:
+            return technical_500_response(request, *sys.exc_info())
+
 
 class SiteUrlMiddleWare:
 
@@ -25,18 +36,35 @@ class SiteUrlMiddleWare:
 
         current_domain = '.'.join(current_domain)
 
-        try:
-            site = Site.objects.get(domain=current_domain)
+        cache_name = 'site_domain_%s' % current_domain
 
-            settings.SITE_ID = site.pk
-            settings.ROOT_URLCONF = str(site.name)+".urls"
-            request.urlconf = str(site.name)+".urls"
+        cached = cache.get(cache_name)
 
-            settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
-                     os.path.join(os.path.dirname(__file__), '..', str(site.name)+'/templates').replace('\\', '/'), )
+        if not cached:
 
-        except Site.DoesNotExist:
-            return HttpResponseBadRequest()
+            try:
+                site = Site.objects.get(domain=current_domain)
+            except Site.DoesNotExist:
+                return HttpResponseBadRequest()
+
+            cached = {
+                'pk': site.pk,
+                'name': str(site.name)
+            }
+
+            cache.set(cache_name, cached)
+
+        settings.SITE_ID = cached.get('pk', None)
+        settings.ROOT_URLCONF = cached.get('name', 'tpp') + ".urls"
+        request.urlconf = cached.get('name', 'tpp') + ".urls"
+
+        settings.TEMPLATE_DIRS = (
+            os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
+            os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tpp'), 'templates').replace('\\', '/')
+        )
+
+
+
 
 
 class SiteLangRedirect:
@@ -46,9 +74,18 @@ class SiteLangRedirect:
         languages = [lan[0] for lan in settings.LANGUAGES]
         userLang = getattr(request, 'LANGUAGE_CODE', None)
 
-        if lang not in languages and userLang and userLang in languages:
-            site = Site.objects.get(pk=settings.SITE_ID)
-            return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + site.domain + request.get_full_path())
+        if lang not in languages and userLang and userLang in languages and settings.SITE_ID:
+
+            cache_name = 'site_pk_%s' % settings.SITE_ID
+
+            domain = cache.get(cache_name)
+
+            if not domain:
+                site = Site.objects.get(pk=settings.SITE_ID)
+                domain = site.domain
+                cache.set(cache_name, domain)
+
+            return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + domain + request.get_full_path())
 
 
 class SubdomainLanguageMiddleware(object):

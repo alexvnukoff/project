@@ -23,7 +23,7 @@ def getSpecificChildren(cls, parent):
             Example: getSpecificChildren("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(c2p__parent_id=parent, c2p__type="relation")
+    return (globals()[cls]).objects.filter(c2p__parent=parent, c2p__type="relation")
 
 
 def getSpecificParent(cls, child):
@@ -32,7 +32,7 @@ def getSpecificParent(cls, child):
             Example: getSpecificParent("Company", 10)
                 //Returns instances of all Companies related with Item=10 by "relation" type of relationship
     '''
-    return (globals()[cls]).objects.filter(p2c__child_id=child, c2p__type="relation")
+    return (globals()[cls]).objects.filter(p2c__child=child, c2p__type="relation")
 
 
 class Organization (Item):
@@ -117,7 +117,7 @@ class Company(Organization):
         classes = [Product, News, Tender, InnovationProject, BusinessProposal, Exhibition, Department]
 
         for klass in classes:
-            objects = klass.objects.filter(c2p__parent_id=self.pk)
+            objects = klass.objects.filter(c2p__parent=self.pk)
 
             for obj in objects:
                 obj.reindexItem()
@@ -304,7 +304,7 @@ class Comment(Item):
         parent_id = id , of Item element that related to comment(News for example)
         '''
         time = now() - datetime.timedelta(minutes=1)
-        comments = Comment.objects.filter(create_user=user, c2p__parent_id=parent_id, create_date__gt=time)
+        comments = Comment.objects.filter(create_user=user, c2p__parent=parent_id, create_date__gt=time)
         if len(comments) > 0:
             return True
 
@@ -314,7 +314,7 @@ class Comment(Item):
         """
         Return QuerySet of comments that related to item
         """
-        return Comment.objects.filter(c2p__parent_id=parent_id, c2p__type="relation")
+        return Comment.objects.filter(c2p__parent=parent_id, c2p__type="relation")
 
 class SystemMessages(Item):
      MESSAGE_TYPE = (
@@ -380,7 +380,7 @@ class Product(Item):
               products_id = [product.pk for product in productQuerySet]
         else:
               products_id = productQuerySet
-        categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
+        categories = Category.objects.filter(p2c__child__in=products_id).values("id", "p2c__child_id")
         categories_id = [category['id'] for category in categories]
         products = Item.getItemsAttributesValues(attr, products_id)
         category = Item.getItemsAttributesValues(("NAME",), categories_id)

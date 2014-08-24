@@ -1,6 +1,5 @@
-from appl.models import Cabinet, Country, Organization
-from core.amazonMethods import add, delete
-from core.models import Item, Dictionary, Relationship
+import uuid
+
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -8,10 +7,13 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
-from django.utils import translation
+
+from appl.models import Cabinet, Country, Organization
+from core.amazonMethods import add, delete
+from core.models import Item, Dictionary, Relationship
 from tppcenter.Profile.profileForms import ProfileForm
 from tppcenter.views import user_logout
-import uuid
+
 
 @login_required(login_url='/login/')
 def getProfileForm(request):

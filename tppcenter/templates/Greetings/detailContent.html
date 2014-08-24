@@ -1,26 +1,31 @@
+{% extends 'main_page.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 
-<div class="new-details">
-            {% with greetingValues.DETAIL_TEXT.0 as content %}
-            {% with greetingValues.IMAGE.0 as image %}
-            {% with greetingValues.NAME.0 as name %}
-            {% with greetingValues.POSITION.0 as position %}
-            {% with greetingValues.TPP.0 as tpp %}
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
 
-            	<h1>{{ name }}</h1>
-                <div class="content-news">
-                    <img class="tmb" src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
-                    {{ content|cleanHtml|safe }}
-                <p></p>
-                <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ tpp }}</p>
-                <p><strong>{% trans "Position" %}:</strong>  &nbsp;&nbsp;{{ position }}</p>
-                </div>
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+{% endblock %}
 
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-</div>
+{% block keywords %}{% endblock %}
+
+{% block content %}
+
+    <div class="new-details">
+
+                    <h1>{{ item.title }}</h1>
+                    <div class="content-news">
+                        <img class="tmb" src="{{ MEDIA_URL }}big/{{ item.image }}" alt="{{ item.title }}" title="{{ item.title }}" />
+                        {{ item.text|cleanHtml|safe }}
+                    <p></p>
+                    <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ item.tpp_name }}</p>
+                    <p><strong>{% trans "Position" %}:</strong>  &nbsp;&nbsp;{{ item.position }}</p>
+                    </div>
+    </div>
+{% endblock %}

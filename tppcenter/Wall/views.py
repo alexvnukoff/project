@@ -66,7 +66,7 @@ def _wallContent(request):
         exhibitions = exhibitions.filter(title=q)
 
     sortFields = {
-          'date': 'id',
+          'date': 'obj_create_date',
           'name': 'title_sort'
     }
 
@@ -84,7 +84,7 @@ def _wallContent(request):
         else:
             order.append(sortFields[sortField1])
     else:
-        order.append('-id')
+        order.append('-obj_create_date')
 
 
 
@@ -95,7 +95,7 @@ def _wallContent(request):
 
     #------------------Innov--------------------------#
     #innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:1]
-    innov_ids = [project.id for project in innov_projects]
+    innov_ids = [project.pk for project in innov_projects]
     innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
     branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
@@ -121,7 +121,7 @@ def _wallContent(request):
 
     #----------------Product----------------------------#
 
-    products_ids = [product.id for product in products]
+    products_ids = [product.pk for product in products]
     productsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), products_ids)
     func.addDictinoryWithCountryAndOrganization(products_ids, productsValues)
 
@@ -129,21 +129,21 @@ def _wallContent(request):
     #PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
     news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:1]
-    news_ids = [new.id for new in news]
+    news_ids = [new.pk for new in news]
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news_ids)
     func.addDictinoryWithCountryAndOrganization(news_ids, newsValues)
 
 
     #---------------BusinessProposal--------------------#
 
-    proposals_ids = [proposal.id for proposal in proposals]
+    proposals_ids = [proposal.pk for proposal in proposals]
     proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals_ids)
     func.addDictinoryWithCountryAndOrganization(proposals_ids, proposalsValues)
 
 
     #--------------Exhibitions--------------------------#
 
-    exhibitions_ids = [exhibition.id for exhibition in exhibitions]
+    exhibitions_ids = [exhibition.pk for exhibition in exhibitions]
     exhibitionsValues = Item.getItemsAttributesValues(('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
                                                        'END_EVENT_DATE', 'SLUG'), exhibitions_ids)
     func.addDictinoryWithCountryAndOrganization(exhibitions_ids, exhibitionsValues)

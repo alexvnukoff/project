@@ -4,24 +4,6 @@
 {% load inclusionTags %}
 
 
-   {% block title %}
-       {% if title %}
-         {{ title }}
-       {% else %}
-         {% trans 'News' %}
-       {% endif %}
-   {% endblock %}
-
-   {% block description %}
-        {% if description %}
-             <meta name="description" content="{{ description|truncatewords:30 }}"/>
-        {% else %}
-            {{ block.super }}
-         {% endif %}
-   {% endblock %}
-
-
-
     {% block header %}
         {% include "login_header.html" %}
     {% endblock %}
@@ -41,11 +23,11 @@
          {% endfor %}
     {% endblock %}
 
-     {% block content %} {{ newsPage }}{% endblock %}
+     {% block content %} {% include "News/contentPage.html" %} {% endblock %}
          {% block addv_news_left %}
                {% if add_news %}
                     <div class="news-ads">
-                        <div class="title">Реклама</div>
+                        <div class="title">{% trans "Advertisement" %}</div>
                         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                         <!-- tpp -->
                         <ins class="adsbygoogle"
@@ -67,7 +49,7 @@
      {% block addv_news %}
          {% if add_news %}
             <div class="news-ads">
-                <div class="title">Реклама</div>
+                <div class="title">{% trans "Advertisement" %}</div>
                 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                     <!-- tppbok -->
                     <ins class="adsbygoogle"

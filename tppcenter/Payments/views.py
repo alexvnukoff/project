@@ -45,7 +45,7 @@ def membership_payment(request):
                             else:
                                 try:
                                     rel = Relationship.objects.filter(parent__c2p__parent__c2p__parent=comp.pk, type='relation', is_admin=True)[0]
-                                    user = User.objects.get(id=rel.child.id)
+                                    user = User.objects.get(pk=rel.child.pk)
                                 except:
                                     user = User.objects.filter(is_superuser=True)[0]
 

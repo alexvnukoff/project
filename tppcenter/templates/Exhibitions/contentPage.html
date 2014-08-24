@@ -4,81 +4,47 @@
 {% load CustomFilters %}
 
 <div class="container">
-     <div class="companies">
-          {% include "Exhibitions/popupFilter.html" %}
-           {% include "main/paginator.html" %}
-          {% include "main/local_menu_script.html" %}
-            <ul class="tender-list" id="afisha-list">
-                {% for id , attr in proposalList.items %}
-                    {% with attr.NAME.0 as name %}
-                    {% with attr.CITY.0 as city %}
-                    {% with attr.SLUG.0 as slug %}
-                    {% with attr.COUNTRY.0 as country %}
-                    {% with attr.START_EVENT_DATE.0 as start_date%}
-                    {% with attr.END_EVENT_DATE.0 as end_date %}
-                    {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
-                    {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                    {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
-                    {% with attr.ORGANIZATION_URL as org_url %}
-                    {% with attr.ORGANIZATION_ID.0 as org_id %}
-                    {% with attr.COUNTRY_NAME|first as country_name %}
-                    {% with attr.COUNTRY_FLAG|first as flag %}
-                    {% with attr.FLAG_CLASS|first as flag_class %}
-                    {% with attr.COUNTRY_ID as country_id %}
-                    <li>
-                   {% resolve items_perms id|slugify as permlist %}
+    <div class="companies">
+        {% include "Exhibitions/popupFilter.html" %}
+        {% include "main/paginator.html" %}
+        {% include "main/local_menu_script.html" %}
+        <ul class="tender-list" id="afisha-list">
+            {% for exhibition in object_list %}
+                <li>
+                    {% resolve items_perms exhibition.pk|slugify as permlist %}
 
-                     {% if 'delete_exhibition' in  permlist or 'change_exhibition' in permlist%}
-                    <div class="blockbox">
+                    {% if 'delete_exhibition' in  permlist or 'change_exhibition' in permlist%}
+                        <div class="blockbox">
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
                                 {% if 'change_exhibition' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
                                 {% endif %}
                                 {% if 'add_advtop' in permlist %}
-                                    <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
+                                    <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
                                 {% endif %}
                                 {% if 'delete_exhibition' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' id %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
+                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                 {% endif %}
                             </div>
                         </div>
-                   {% endif %}
-                        <div class="title">
-                           {% if org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" alt="{{ org_name }}" title="{{ org_name }}" />
-                            {% elif flag_class %}
-                            <i class="flag sprite {{ flag_class }}" title="{{ country_name }}"></i>
-                            {% else %}
-                             <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" alt="{{ country_name }}" />
-                            {% endif %}
-                            <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
-                        </div>
-
-                        <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
-                        <div class="line">{% trans 'Organizer' %}: <a href="{% url org_url org_slug %}">{{ org_name }}</a></div>
-                        <a href="{% url 'exhibitions:detail' slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    {% endif %}
+                    <div class="title">
+                        {% if exhibition.country.flag %}
+                            <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.text }}" ></i>
+                        {% elif exhibition.organization.flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ exhibition.organization.flag }}" class="flag" alt="{{ exhibition.organization.name }}" title="{{ exhibition.organization.name }}" />
+                        {% endif %}
+                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|date:"d M Y" }} - {{ exhibition.end_event_date|date:"d M Y"  }}</font>
+                    </div>
+                    <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
+                        <div class="line">{% trans 'Organizer' %}: <a href="{% url exhibition.organization.url exhibition.organization.slug %}">{{ exhibition.organization.title }}</a></div>
+                        <a href="{% url 'exhibitions:detail' exhibition.slug %}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
-                {% empty %}
-                    <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}
-
-            </ul>
-           {% include "main/paginator.html" %}
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
+        </ul>
+        {% include "main/paginator.html" %}
     </div>
 </div>

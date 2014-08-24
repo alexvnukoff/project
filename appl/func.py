@@ -56,7 +56,7 @@ def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttr
     except Exception:
         page = items = paginator.page(1)
     if not isinstance(items, list):
-        items = tuple([item.id for item in page.object_list])
+        items = tuple([item.pk for item in page.object_list])
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
     return attributeValues, page #Return List Item and Page object of current page
@@ -187,6 +187,10 @@ def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT:
     return queryset.model.objects.filter(pk__in=queryset, item2value__attr__title=attribute).extra(order_by=[case])
 
 def currencySymbol(currency):
+
+    if not currency:
+        return ""
+
     symbols = {
         'EUR': '€',
         'USD': '$',
@@ -318,7 +322,7 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child_id=filterChild, c2p__type="relation")\
+    return Item.objects.filter(c2p__parent__in=list, c2p__child=filterChild, c2p__type="relation")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
@@ -536,6 +540,7 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
     organizations_ids = [organization['pk'] for organization in organizations]
     organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
     organizations_dict = {}
+
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
 
@@ -546,26 +551,30 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
 
     for id, item in itemList.items():
         if country_dict.get(id, False):
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
+            toUpdate = {
+                'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
+                'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
+                'COUNTRY_ID':  country_dict.get(id, 0)
+            }
+
             item.update(toUpdate)
+
         if organizations_dict.get(id, False):
             if organizationIsCompany(id):
                 url = 'companies:detail'
             else:
                 url = 'tpp:detail'
 
-            toUpdate = {'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
-                        'ORGANIZATION_URL': url}
+            toUpdate = {
+                'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                'ORGANIZATION_URL': url
+            }
+
             item.update(toUpdate)
-
-
-
 
 def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
 
@@ -989,7 +998,7 @@ def getDeatailAdv(item_id):
     '''
     filterAdv = []
 
-    sqs = getActiveSQS().filter(id=item_id)
+    sqs = getActiveSQS().filter(django_id=item_id)
 
     filterAdv += getattr(sqs, 'branch', [])
     filterAdv += getattr(sqs, 'tpp', [])
@@ -1023,7 +1032,7 @@ def getListAdv(request):
             filtersAdv += ids
 
         elif len(ids) > 0:
-            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+            sqs = getActiveSQS().models(Tpp).filter(django_id__in=ids)
 
             for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
@@ -1053,6 +1062,7 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
      return page
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
+
     if 'category' in kwargs:
         category = kwargs['category']
     else:
@@ -1068,8 +1078,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     else:
          cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
 
-    query = request.GET.urlencode()
-
     q = request.GET.get('q', '')
 
     if not my and cachePisibility(request):
@@ -1081,6 +1089,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             filters, searchFilter = filterLive(request, model_name=model.__name__)
 
             sqs = getActiveSQS().models(model).order_by('-obj_create_date')
+
             if model is News:
                if category:
                    sqs = sqs.filter(categories=category)
@@ -1094,7 +1103,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
             sortFields = {
-                'date': 'id',
+                'date': 'obj_create_date',
                 'name': 'title_sort'
             }
 
@@ -1111,7 +1120,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 else:
                     order.append(sortFields[sortField1])
             else:
-                order.append('-id')
+                order.append('-obj_create_date')
 
             if sortField2 and sortField2 in sortFields:
                 if order2 == 'desc':
@@ -1149,7 +1158,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
                     proposal = getActiveSQS().models(model).\
-                        filter(SQ(id=current_organization) | SQ(company=current_organization))
+                        filter(SQ(django_id=current_organization) | SQ(company=current_organization))
 
                 #TODO: Fix search
                 #if q != '': #Search for content
@@ -1168,10 +1177,12 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
         proposalList = result[0]
         proposal_ids = [id for id in proposalList.keys()]
         redactor = False
+
         if request.user.is_authenticated():
             items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
         else:
             items_perms = ""
+
         if model is News or model is TppTV:
             if 'Redactor' in request.user.groups.values_list('name', flat=True):
                  redactor = True
@@ -1201,7 +1212,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'items_perms': items_perms,
             'current_path': request.get_full_path(),
             'redactor': redactor
-
         }
         templateParams.update(params)
 
@@ -1214,9 +1224,6 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     else:
         rendered = cache.get(cache_name)
     return rendered
-
-
-
 
 
 def cleanFromHtml(value):
@@ -1246,7 +1253,11 @@ def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
         return {}
 
     perms_dict = {}
-    items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+
+    if isinstance(obj_lst[0], (int, str)):
+        items = (globals()[obj_model_name]).objects.filter(pk__in=obj_lst)
+    else:
+        items = obj_lst
 
     for itm in items:
         perms_dict[str(itm.pk)] = itm.getItemInstPermList(user)
@@ -1272,9 +1283,9 @@ def cachePisibility(request):
 
 def show_toolbar(request):
 
-#    if request.user.is_authenticated():
-#        if request.user.is_superuser:
-#            return True
+    if request.user.is_authenticated():
+        if request.user.is_superuser:
+            return True
 
     return False
 

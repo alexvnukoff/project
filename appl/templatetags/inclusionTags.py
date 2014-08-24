@@ -1,7 +1,9 @@
 from django import template
+from django.core.exceptions import ObjectDoesNotExist
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
+    Company, Tpp
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -73,46 +75,27 @@ def getMyCompaniesList(context):
 
     request = context.get('request')
 
-
-    if not request.user.first_name and not request.user.last_name:
-        user_name = request.user.email
-    else:
-        user_name = request.user.first_name + ' ' + request.user.last_name
-
     current_company = request.session.get('current_company', False)
 
     cab = Cabinet.objects.get(user=request.user)
 
-    #read all Organizations which hasn't foreign key from Department and current User is create user or worker
-    companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
-                                                Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+    if current_company is not False:
+        if Organization.objects.filter(Q(create_user=request.user, department=None) |
+                                        Q(p2c__child__p2c__child__p2c__child=cab.pk), pk=current_company).exists():
+            current_company = SearchQuerySet().models(Tpp, Company).filter(django_id=current_company)[0].title
+        else:
+            current_company = False
 
-    companies_ids = list(companies.values_list('pk', flat=True))
+    if current_company is False:
+        cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cab.pk)[0]
 
-
-    if current_company is not False and current_company not in companies_ids:
-        companies_ids.append(current_company)
-
-    sqs = SearchQuerySet().filter(id__in=companies_ids).order_by('title')
-
-    companies_ids = [company.id for company in sqs]
-
-    if len(companies_ids) > 0:
-        companies = Item.getItemsAttributesValues('NAME', companies_ids)
-    else:
-        companies = {}
-
-    current = companies.get(current_company, False)
-
-    if user_name == '':
-        user_name = _('Profile')
+        if not cabinet.text:
+            current_company = request.user.email
+        else:
+            current_company = cabinet.text
 
     return {
-        'companies': companies,
-        'current': current,
-        'currentId': current_company,
-        'user': user_name,
-        'current_path': request.get_full_path()
+        'current_company': current_company
     }
 
 @register.inclusion_tag('main/user_profile.html', takes_context=True)

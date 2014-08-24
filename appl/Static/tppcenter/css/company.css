@@ -353,10 +353,12 @@ rgb(33,136,187) 100%);}
 
 .table-staff{ float:left; width:100%; font-size:13px;}
 .table-staff tr td{ padding:3px 0 3px 8px;}
+.table-staff tr .btnremove-small { display: none; }
 .table-staff tr:nth-child(2n+1){ background-color:#fafafa;}
 .table-staff tr.top{ background-color:#e8e8e8;}
 .table-staff tr.top td{ font-size:12px; font-weight:bold; padding:8px 0 8px 8px;}
 .table-staff tr:hover{ background-color:#d2d2d2;}
+.table-staff tr:hover .btnremove-small{ display: inline; }
 .btn-clumn{ position:absolute; width:26px; right:-20px; top:0;}
 .btnaction{display:inline-block; width:26px; height:26px; margin-top:5px; cursor:pointer;}
 .btnadd{ background-position:0px -130px;}

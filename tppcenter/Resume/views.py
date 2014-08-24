@@ -1,238 +1,105 @@
-
-from haystack.backends import SQ
-from appl.func import getActiveSQS, filterLive, setPaginationForSearchWithValues, getUserPermsForObjectsList, \
-    getPaginatorRange
-from appl.models import Tender, Gallery, AdditionalPages, Organization, Resume, Cabinet
-from appl import func
-from core.tasks import addNewResume
-from core.models import Dictionary, Item
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.forms.models import modelformset_factory
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
+from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _, trans_real
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
-import json
+from haystack.backends import SQ
+from haystack.query import SearchQuerySet
 
-@login_required(login_url='/login/')
-def get_resume_list(request, page=1, item_id=None, my=None, slug=None):
+from appl.models import Resume, Cabinet
+from appl import func
+from core.tasks import addNewResume
+from core.models import Dictionary
+from tppcenter.cbv import ItemsList, ItemDetail
+from tppcenter.forms import ItemForm
 
 
-   # if slug and  not Value.objects.filter(item=item_id, attr__title='SLUG', title=slug).exists():
-    #     slug = Value.objects.get(item=item_id, attr__title='SLUG').title
-     #    return HttpResponseRedirect(reverse('tenders:detail',  args=[slug]))
+class get_resume_list(ItemsList):
 
+    @method_decorator(login_required(login_url='/login/'))
+    def dispatch(self, *args, **kwargs):
+        return super(get_resume_list, self).dispatch(*args, **kwargs)
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+    #pagination url
+    url_paginator = "resume:paginator"
+    url_my_paginator = "resume:my_main_paginator"
 
+    #Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
+    current_section = _('Resume')
+    addUrl = 'resume:add'
 
+    #allowed filter list
+    filterList = []
 
-    scripts = []
+    model = Resume
 
-    if item_id is None:
-        resumepage = _resumeList(request, my=my, page=page)
-    else:
-        resumepage, meta = _resumeDetailContent(request, item_id)
+    def _get_my(self):
+        cabinet = Cabinet.objects.get(user=self.request.user.pk).pk
+        return SQ(cabinet=cabinet)
 
-    if not request.is_ajax():
-        templateParams = {
-            'current_section': 'Resume',
-            'resumepage': resumepage,
-            'addNew': reverse('resume:add'),
-            'item_id': item_id,
-        }
+    def _get_cabinet_for_objects(self, object_list):
 
-        if item_id:
-            templateParams['meta'] = meta
+        new_object_list = []
 
-        return render_to_response("Resume/index.html", templateParams, context_instance=RequestContext(request))
-    else:
+        for obj in object_list:
+            cabinet = SearchQuerySet().filter(django_id=obj.cabinet)
 
-        serialize = {
-            'styles': styles,
-            'scripts': scripts,
-            'content': resumepage,
-        }
+            if cabinet.count() == 1:
+                obj.__setattr__('cabinet', cabinet[0])
 
-        return HttpResponse(json.dumps(serialize))
+            new_object_list.append(obj)
 
+        return new_object_list
 
-def _resumeList(request, my=None, page=1):
+    def get_context_data(self, **kwargs):
+        context = super(get_resume_list, self).get_context_data(**kwargs)
 
-    query = request.GET.urlencode()
-    cabinetValues = None
-    q = request.GET.get('q', '')
+        context['object_list'] = self._get_cabinet_for_objects(context['object_list'])
 
-    if not my:
-            filters, searchFilter = filterLive(request, Resume.__name__)
+        return context
 
-            sqs = getActiveSQS().models(Resume).order_by('-obj_create_date')
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Resume/contentPage.html'
 
-            if len(searchFilter) > 0: #Got filter values
-                sqs = sqs.filter(searchFilter)
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Resume/index.html'
 
-            if q != '': #Search for content
-                sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
-            sortFields = {
-                'date': 'id',
-                'name': 'title_sort'
-            }
+class get_resume_detail(ItemDetail):
 
-            order = []
+    model = Resume
+    template_name = 'Resume/detailContent.html'
 
-            sortField1 = request.GET.get('sortField1', 'date')
-            sortField2 = request.GET.get('sortField2', None)
-            order1 = request.GET.get('order1', 'desc')
-            order2 = request.GET.get('order2', None)
+    current_section = _('Resume')
+    addUrl = 'resume:add'
 
-            if sortField1 and sortField1 in sortFields:
-                if order1 == 'desc':
-                    order.append('-' + sortFields[sortField1])
-                else:
-                    order.append(sortFields[sortField1])
-            else:
-                order.append('-id')
+    @method_decorator(login_required(login_url='/login/'))
+    def dispatch(self, *args, **kwargs):
+        return super(get_resume_detail, self).dispatch(*args, **kwargs)
 
-            if sortField2 and sortField2 in sortFields:
-                if order2 == 'desc':
-                    order.append('-' + sortFields[sortField2])
-                else:
-                    order.append(sortFields[sortField2])
 
-            proposal = sqs.order_by(*order)
-            cabinet_ids = [resume.cabinet for resume in sqs]
-            resume_cabinet_dict = {resume.id: resume.cabinet for resume in sqs}
+    def _get_cabinet_for_object(self):
+        try:
+            return SearchQuerySet().models(Cabinet).filter(django_id=self.object.cabinet)[0]
+        except IndexError:
+            return self.object.cabinet
 
-            cabinetValues = Item.getItemsAttributesValues(('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME'), cabinet_ids)
+    def get_context_data(self, **kwargs):
+        context = super(get_resume_detail, self).get_context_data(**kwargs)
 
+        context[self.context_object_name].__setattr__('cabinet', self._get_cabinet_for_object())
 
-            url_paginator = "%s:paginator" % ('resume')
-
-            params = {
-                'filters': filters,
-                'sortField1': sortField1,
-                'sortField2': sortField2,
-                'order1': order1,
-                'order2': order2
-            }
-
-    else:
-            current_organization = request.session.get('current_company', False)
-
-            cabinet = Cabinet.objects.get(user=request.user.pk).pk
-            proposal = getActiveSQS().models(Resume).filter(cabinet=cabinet)
-
-
-            if q != '': #Search for content
-                proposal = proposal.filter(SQ(title=q) | SQ(text=q))
-
-            proposal.order_by('-obj_create_date')
-
-            url_paginator = "%s:my_main_paginator" % 'resume'
-            params = {}
-
-    result = setPaginationForSearchWithValues(proposal, *('NAME', 'SLUG'), page_num=5, page=page)
-
-    proposalList = result[0]
-    proposal_ids = [id for id in proposalList.keys()]
-
-    if cabinetValues:
-       for id, proposal in proposalList.items():
-
-           proposal['CABINET'] = (cabinetValues[resume_cabinet_dict[id]].get('USER_LAST_NAME', [" "])[0] + " " +
-           cabinetValues[resume_cabinet_dict[id]].get('USER_FIRST_NAME', [" "])[0] + " " +cabinetValues[resume_cabinet_dict[id]].get('USER_MIDDLE_NAME', [" "])[0]).strip()
-
-
-    redactor = False
-    if request.user.is_authenticated():
-        items_perms = getUserPermsForObjectsList(request.user, proposal_ids, Resume.__name__)
-    else:
-        items_perms = ""
-
-
-    page = result[1]
-    paginator_range = getPaginatorRange(page)
-
-
-
-
-    template = loader.get_template("Resume/contentPage.html")
-
-    templateParams = {
-       'resumeValues': proposalList,
-       'page': page,
-       'paginator_range': paginator_range,
-       'url_paginator': url_paginator,
-       'items_perms': items_perms,
-       'current_path': request.get_full_path(),
-       'redactor': redactor
-
-    }
-    templateParams.update(params)
-    context = RequestContext(request, templateParams)
-    rendered = template.render(context)
-
-
-    return rendered
-
-
-
-
-
-
-def _resumeDetailContent(request, item_id):
-
-    resume = get_object_or_404(Resume, pk=item_id)
-    cabinet = Cabinet.objects.get(p2c__child=item_id)
-
-    cabinetValues = cabinet.getAttributeValues('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME')
-
-
-    if not isinstance(cabinetValues, list):
-        user_name = (cabinetValues.get('USER_LAST_NAME', [" "])[0] + " " +
-               cabinetValues.get('USER_FIRST_NAME', [" "])[0] + " " + cabinetValues.get('USER_MIDDLE_NAME', [" "])[0]).strip()
-    else:
-        user_name = _("Name not found")
-
-    attr = (
-        'NAME', 'BIRTHDAY', 'MARITAL_STATUS', 'NATIONALITY', 'TELEPHONE_NUMBER','ADDRESS', 'FACULTY', 'PROFESSION',
-        'STUDY_START_DATE', 'STUDY_END_DATE', 'STUDY_FORM', 'COMPANY_EXP_1', 'COMPANY_EXP_2','COMPANY_EXP_3',
-        'POSITION_EXP_1', 'POSITION_EXP_2', 'POSITION_EXP_3', 'START_DATE_EXP_1', 'START_DATE_EXP_2','START_DATE_EXP_3',
-        'END_DATE_EXP_1', 'END_DATE_EXP_2', 'END_DATE_EXP_3', 'ADDITIONAL_STUDY', 'LANGUAGE_SKILL','COMPUTER_SKILL',
-        'ADDITIONAL_SKILL', 'SALARY', 'ADDITIONAL_INFORMATION', 'INSTITUTION'
-    )
-
-    resumeValues = resume.getAttributeValues(*attr)
-    resumeValues.update({'CABINET': user_name})
-
-    template = loader.get_template('Resume/detailContent.html')
-
-    templateParams = {
-       'resumeValues': resumeValues,
-       'item_id': item_id
-    }
-
-    context = RequestContext(request, templateParams)
-    rendered = template.render(context)
-
-    meta = func.getItemMeta(request, resumeValues)
-
-    return rendered, meta
-
+        return context
 
 @login_required(login_url='/login/')
 def resumeForm(request, action, item_id=None):
@@ -379,6 +246,3 @@ def deleteResume(request, item_id):
 
 
     return HttpResponseRedirect(reverse('resume:main'))
-
-
-

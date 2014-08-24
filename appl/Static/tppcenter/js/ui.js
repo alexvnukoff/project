@@ -235,16 +235,6 @@ var ui =
         ui.search_form.find('input[name="q"]').val('');
 
         var url = $(this).attr('href');
-        var text = $(this).text();
-        //Set current page to processing menu (top menu)
-        ui.curPage.text(text);
-
-        if (url == '/wall/')
-              $('.newslink .left .add-new').hide();
-        else
-              $('.newslink .left .add-new').show();
-
-        $('.newslink .left .add-new').attr('href', url + 'add/');
 
         ui.loading = ui.requester(url);
 
@@ -280,6 +270,20 @@ var ui =
         ui.setFilters(data.filters);
 
         $(ui.container).replaceWith( data.content );
+        var addBtn = $('.add-new');
+
+        if ( !addBtn.hasClass('logged-out')) {
+            var imgBtn = addBtn.find('.btn-fil');
+
+            if ( data.addNew != '' ) {
+               imgBtn.removeClass('disable');
+               addBtn.attr('href', data.addNew);
+
+            } else {
+               addBtn.attr('href', '#');
+               imgBtn.addClass('disable');
+            }
+        }
 
         ui.filter_form = $('form[name="filter-form"]');
         ui.initFilters();

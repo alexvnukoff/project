@@ -24,6 +24,7 @@ from django.utils.translation import trans_real
 import warnings
 import datetime
 import hashlib
+from django.core.cache import cache
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
@@ -1179,3 +1180,20 @@ def slotUpdateAttr(instance, **kwargs):
     except Exception:
         return False
 
+
+@receiver(pre_save, sender=Site)
+def removeSiteCacheOnUpdate(instance, **kwargs):
+    cache_name_pk = 'site_pk_%s' % instance.pk
+    cache_name_domain = 'site_domain_%s' % instance.domain
+
+    cache.delete(cache_name_pk)
+    cache.delete(cache_name_domain)
+
+
+@receiver(pre_delete, sender=Site)
+def removeSiteCacheOnRemove(instance, **kwargs):
+    cache_name_pk = 'site_pk_%s' % instance.pk
+    cache_name_domain = 'site_domain_%s' % instance.domain
+
+    cache.delete(cache_name_pk)
+    cache.delete(cache_name_domain)
