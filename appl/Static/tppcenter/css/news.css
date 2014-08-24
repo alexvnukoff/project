@@ -82,7 +82,7 @@ border-style: solid; border-width: 0 5px 4px 5px; border-color: transparent tran
 .formevent:after{ position:absolute; content:""; width:0; height:0; top:-5px; right:69px; z-index:1;
 border-style: solid; border-width: 0 6px 4px 6px; border-color: transparent transparent #399ed0 transparent;}
 .white_content{display: none; position: absolute; top: 96px; left: 5%; z-index:99; width:90%;}
-.formevent{ position:absolute; width:250px; border:1px solid; background-color:#f5f5f5; border-color:#399ed0 #dfdfdf #bababa #dfdfdf; border-radius:5px; top:28px; right:-53px; display:none; z-index:1005;}
+.formevent{ position:absolute; width:250px; border:1px solid; background-color:#f5f5f5; border-color:#399ed0 #dfdfdf #bababa #dfdfdf; border-radius:5px; top:90px; right:360px; display:none; z-index:1005;}
 .formevent .notify-header { border-bottom:1px #d9d9d9 solid; border-top:1px #FFF solid; padding:10px 0; border-top:0; font-size:15px; font-weight:bold; color:#222121; padding-left:12px; line-height:14px; }
 .formevent .notify-footer { border-bottom:0; text-align:center; padding:5px 0;}
 .formevent .list-holder { max-height: 140px; overflow-y: auto; }
@@ -529,3 +529,29 @@ rgb(33,136,187) 100%);}
 
 .black_overlay{ display: none; position: absolute; float:left; top: 0%; left: 0%; width: 100%; height:1400px; background-color: black; z-index:98; -moz-opacity: 0.5; opacity:.50; filter: alpha(opacity=50);}
 .white_content{display: none; position: absolute; top: 96px; left: 5%; z-index:99; width:90%;}
+
+
+.cabinet-form{ position:relative; float:left; margin:7px 0 0 5px; display:inline;}
+.cabinet-form .current-company{ width:170px; padding:6px 10px 6px 5px; margin-bottom:0; color:#777; background-color:#f5f5f5; border-radius:3px; font-size:13px; border:2px #c4c4c4 solid;}
+.current-company .cpn-current{ background:url(../img/arrow-black.png) no-repeat right center; font-size:13px; font-weight:bold; color:#000; margin-top:3px;}
+
+.cabinet-form .list-cpn{position: absolute; width: 172px; padding: 8px; background-color: #c4c4c4; border-radius: 0px 0px 3px 3px; left: -2px; top: 49px; display: none; z-index: 9;}
+.cabinet-form .list-cpn li{ position: relative; float: left; width: 100%; padding: 5px 0; font-size: 12px;}
+.cabinet-form .list-cpn li a{ color: #333;}
+.tophead-r a.barca{ color:#000; background:url(../img/arrow-black.png) no-repeat right center; padding-right:10px;}
+
+.b-filter{ float:left; width:100%; padding:4px 0px; background-color:#4a4a4a; border-radius:3px; box-shadow:0px 0px 3px #000 inset; margin-bottom:15px;}
+.b-filter-left{position:relative; float:left; width:112px; margin:0 0 0 4px; display:inline;}
+.b-filter-left select{ float:left; width:98%; padding:0 2px; height:16px; border:1px #bdbdbd solid; margin:2px 0; font:11px Arial, Helvetica, sans-serif;}
+.btn-fil{ float:right; width:78px; height:32px; background-position:0px -190px; margin:5px 5px 0 0; display:inline;}
+.btn-fil.disable{ background-position:-80px -190px;}
+
+.b-notyfi{ display:inline-block; width:100%; height:48px; background-color:#4a4a4a; border-radius:3px; box-shadow:0px 0px 3px #000 inset; text-align:center; color:#FFF;}
+.b-notyfi a{display:inline-block; margin:17px 8px 0 3px; color:#FFF;}
+.icon-notyfi{ display:inline-block; margin:0 5px 0 0; vertical-align:middle;}
+.icon-nt1{ width:14px; height:14px; background-position:-160px -190px;}
+.icon-nt2{ width:15px; height:11px; background-position:-175px -190px;}
+.icon-nt3{ width:18px; height:13px; background-position:-191px -190px;}
+.icon-nt4{ width:13px; height:16px; background-position:-210px -190px;}
+.icon-notyfi.disable{ opacity:0.4; filter:alpha(opacity=40);}
+
