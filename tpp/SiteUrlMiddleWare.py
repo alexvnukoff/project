@@ -3,6 +3,7 @@ import os
 import sys
 
 from django.contrib.sites.models import Site
+
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils import translation
 from django.views.debug import technical_500_response
@@ -61,6 +62,9 @@ class SiteUrlMiddleWare:
             os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
             os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tpp'), 'templates').replace('\\', '/')
         )
+
+
+
 
 
 class SiteLangRedirect:

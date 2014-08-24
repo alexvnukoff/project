@@ -142,13 +142,12 @@
                 </div>
             <!-- /Google Translate injection -->
                 </div>
-              {% if addNew %}
+              {% if addNew and user.is_authenticated %}
                   <a class="add-new" href="{{ addNew }}">
                   <i class="imgnews btn-fil"></i>
               {% else %}
-                   <a  class="add-new" href="{{ addNew }}">
+                   <a  class="add-new logged-out" href="#">
                    <i class="imgnews btn-fil disable"></i>
-
               {% endif %}
 
                 </a>

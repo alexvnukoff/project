@@ -123,6 +123,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'tpp.SetCurCompanyMiddleware.SetCurCompany'
 )
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -339,3 +340,4 @@ try:
     from local_settings import *
 except ImportError:
     pass
+

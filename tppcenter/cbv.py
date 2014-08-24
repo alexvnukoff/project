@@ -135,6 +135,7 @@ class ItemsList(HybridListView):
             'styles': self.styles,
             'scripts': self.scripts,
             'content': template.render(context),
+            'addNew': '' if not self.addUrl else reverse(self.addUrl),
         }
 
     def get_context_data(self, **kwargs):

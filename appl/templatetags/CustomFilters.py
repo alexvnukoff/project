@@ -84,7 +84,7 @@ def split(str, splitter):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
 
-    if len(value) > 0 and value is not None:
+    if value is not None and len(value) > 0:
         return clean_html(value)
     else:
         return ""
@@ -404,7 +404,7 @@ def rightTv(context):
       if sqs.count() == 0:
           return ''
       else:
-          sqs = sqs.order_by('-pk')[0]
+          sqs = sqs.order_by('-obj_create_date')[0]
           tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
           tvValues = tvValues[sqs.pk]
           is_innov = False

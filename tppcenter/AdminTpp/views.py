@@ -39,7 +39,7 @@ def dashboard(request, model=None):
         else:
             page = int(displayStart / displayLen + 1)
 
-        sqs = SearchQuerySet().models(model).order_by('-pk')
+        sqs = SearchQuerySet().models(model).order_by('-obj_create_date')
 
         paginator = Paginator(sqs, 10)
 

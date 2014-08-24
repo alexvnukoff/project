@@ -187,6 +187,10 @@ def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT:
     return queryset.model.objects.filter(pk__in=queryset, item2value__attr__title=attribute).extra(order_by=[case])
 
 def currencySymbol(currency):
+
+    if not currency:
+        return ""
+
     symbols = {
         'EUR': '€',
         'USD': '$',
@@ -1099,7 +1103,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
             sortFields = {
-                'date': 'id',
+                'date': 'obj_create_date',
                 'name': 'title_sort'
             }
 
@@ -1116,7 +1120,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 else:
                     order.append(sortFields[sortField1])
             else:
-                order.append('-id')
+                order.append('-obj_create_date')
 
             if sortField2 and sortField2 in sortFields:
                 if order2 == 'desc':
