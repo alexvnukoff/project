@@ -96,7 +96,7 @@ class ItemsList(HybridListView):
 
                     if isinstance(country, list):
                         if len(country) == 1:
-                            country = country[0]
+                            country = int(country[0])
                         else:
                             new_object_list.append(obj)
                             continue

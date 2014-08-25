@@ -39,7 +39,6 @@ class get_tpp_list(ItemsList):
     ]
 
     current_section = _("Tpp")
-    addUrl = 'tpp:add'
 
     #allowed filter list
     filterList = ['country']
@@ -72,7 +71,6 @@ class get_tpp_detail(ItemDetail):
     template_name = 'Tpp/detailContent.html'
 
     current_section = _("Tpp")
-    addUrl = 'tpp:add'
 
     def get_context_data(self, **kwargs):
         context = super(get_tpp_detail, self).get_context_data(**kwargs)
