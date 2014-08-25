@@ -253,7 +253,7 @@ class ItemsList(HybridListView):
                 for name, id in filtersIDs.items():
 
                     if int(item.pk) in id:
-                        self.filters[name].append({'id': item.pk, 'text': item.title_sort})
+                        self.filters[name].append({'id': item.pk, 'text': item.title_auto})
 
 
         searchFilter = self._create_sqs_filter()
