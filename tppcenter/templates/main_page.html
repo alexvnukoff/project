@@ -193,10 +193,10 @@
                 <div class="tab-cate">
                     <ul>
                         <li><a href="#tabs-1" class="tab1">{% trans "TPP-Center" %}</a></li>
-                        {% if user.email %}<li><a href="#tabs-2" class="tab2">{% trans "My" %}</a></li>{% endif %}
+                        {% if user.is_authenticated %}<li><a href="#tabs-2" class="tab2">{% trans "My" %}</a></li>{% endif %}
                     </ul>
                 </div>
-                {% if user.email %}
+                {% if user.is_authenticated %}
                    {% getMyCompaniesList %}
                 {% endif %}
                 <div id="tabs-1">
@@ -221,7 +221,7 @@
 
                     </ul>
                 </div>
-                {% if user.email %}
+                {% if user.is_authenticated %}
                     <div id="tabs-2">
                         <ul class="tab1-cate">
                             {% if user.is_commando or user.is_superuser %}
@@ -295,10 +295,10 @@
         {% endblock %}
 
         {% block right %}
-         {% if user.email %}
+
             <div class="newsright">
             <div class="b-notyfi event-holder">
-            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent"></i><a href="#" class="showevent num">{% notif %}</a>
+            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% notif %}</a>
 
                     <div class="formevent">
                         	<i class="close-event imgnews" ></i>
@@ -311,14 +311,14 @@
                             <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
                         </div>
 
-                   <i class="imgnews icon-notyfi icon-nt2  {% if mail < 1 %} disable {% endif %}"></i>
+                   <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
 
                 <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% mail %} </a>
 
-                <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i>0</a>
-                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i>0</a>
+                <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
+                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
             </div>
-         {% endif %}
+        
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
                 {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
