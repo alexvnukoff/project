@@ -3,59 +3,52 @@
 {% load CustomFilters %}
 
 <div class="news-ads-wrapper">
-    {% if modelTop %}
+    {% if modelTop and modelTop|length > 0 %}
         <div class="news-ads">
             <div class="title">{% trans "Paid ads" %}</div>
-            {% for model, tops in modelTop.items %}
-                {% with tops.MODEL as modelAttr %}
-                <span class="titlesub">{{ modelAttr.text }}</span>
+            {% for model, modelDict in models.items %}
+
+                {% resolve modelTop model as topList %}
+
+                {% if topList and topList|length > 0 %}
+
+                <span class="titlesub">{{ modelDict.text }}</span>
                 <ul class="list-ads">
 
-                    {% for id, attrs in tops.elements.items %}
-                        {% with attrs.NAME|first as name %}
-                        {% with attrs.SLUG|first as slug %}
-                        {% with attrs.IMAGE|first as image %}
-                        {% with attrs.DETAIL_TEXT as text %}
-                        {% with attrs.FLAG_CLASS|first as country_flag %}
-                        {% with attrs.ORGANIZATION_FLAG|first as org_flag %}
-                        {% with attrs.CABINET_COUNTRY_FLAG|first as cabinet_flag %}
-                       
-
-
+                    {% for top in topList %}
                             <li>
                                 <div class="top">
 
-                                    {% if cabinet_flag %}
-                                        <img class="flag" src="{{ MEDIA_URL}}th/{{cabinet_flag }} ">
-                                    {% elif country_flag %}
-                                        <i class="sprite {{ country_flag }}"></i>
-                                    {% elif org_flag %}
-                                           <img class="flag" src="{{ MEDIA_URL}}th/{{org_flag }} ">
+                                    {% if top.country.flag %}
+                                        <i class="sprite {{ top.country.flag }}"></i>
+                                    {% elif top.organizaion.flag %}
+                                           <img class="flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} ">
                                     {% endif %}
 
-                                    <a title="{{ name }}" href="{% url modelAttr.detailUrl slug %}" class="linkads">{{ name }}</a>
+                                    {% if top.title %}
+                                        <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.title }}</a>
+                                    {% else %}
+                                        <a title="{{ top.text }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.text }}</a>
+                                    {% endif %}
                                 </div>
                                 <div class="infoads">
-                                <a title="{{ name }}" href="{% url modelAttr.detailUrl slug %}">
-                                    {% if image %}
-                                        <img src="{{ MEDIA_URL }}small/{{ image }}" alt="{{ name }}<" class="thumb" />
+                                <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}">
+                                    {% if top.image %}
+                                        {% if top.title %}
+                                            <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.title }}<" class="thumb" />
+                                        {% else %}
+                                            <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.text }}<" class="thumb" />
+                                        {% endif %}
                                     {% endif %}
                                 </a>
-                                {% if model != 'Requirement'%}
-                                    {{ text|cleanHtml|safe|truncatewords_html:7 }}
+                                {% if top.text and top.title %}
+                                    {{ top.text|cleanHtml|safe|truncatewords_html:7 }}
                                 {% endif %}
                                 </div>
                             </li>
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
                     {% endfor %}
                 </ul>
-                {% endwith %}
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}

@@ -944,7 +944,60 @@ def getTops(request, filterAdv=None):
             topList += tops
             modelTop[model] = tops
 
+    topDict = {}
+    countries = []
+    orgs = []
 
+    for item in SearchQuerySet().filter(django_id__in=topList):
+        topDict[int(item.pk)] = item
+
+        if getattr(item, 'country', None) and item.country not in countries:
+            countries.append(item.country)
+        elif getattr(item, 'company', False):
+            orgs.append(item.company)
+        elif getattr(item, 'tpp', False):
+            orgs.append(item.tpp)
+
+    contryDict = {}
+    orgDict = {}
+
+    if len(countries) > 0:
+        for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
+            contryDict[int(country.pk)] = country
+
+    if len(orgs) > 0:
+        for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
+            orgDict[int(org.pk)] = org
+
+    newModelTop = {}
+
+    for model, topList in modelTop.items():
+
+        if len(topList) == 0:
+            continue
+
+        if model not in newModelTop:
+            newModelTop[model] = []
+
+        for top in topList:
+
+            if top not in topDict:
+                continue
+
+            country = getattr(topDict[top], 'country', None)
+            comapny = getattr(topDict[top], 'company', None)
+            tpp = getattr(topDict[top], 'tpp', None)
+
+            if country and country in contryDict:
+                topDict[top].country = contryDict[country]
+            elif comapny and comapny in orgDict:
+                topDict[top].organization = orgDict[comapny]
+            elif tpp and tpp in orgDict:
+                topDict[top].organization = orgDict[tpp]
+
+            newModelTop[model].append(topDict[top])
+
+    '''
     topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
 
     tops = {}
@@ -987,8 +1040,8 @@ def getTops(request, filterAdv=None):
 
         else:
             addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
-
-    return tops
+    '''
+    return newModelTop, models
 
 def getDeatailAdv(item_id):
     '''

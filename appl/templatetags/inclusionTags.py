@@ -1,16 +1,17 @@
+import os
+
 from django import template
-from django.core.exceptions import ObjectDoesNotExist
-from appl import func
 from django.conf import settings
+from haystack.query import SearchQuerySet
+from django.db.models import Q
+from django.core.cache import cache
+from django.utils.translation import get_language
+
+from appl import func
 from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
     Company, Tpp
 from core.models import Item
-from haystack.query import SearchQuerySet
-from django.utils.translation import gettext as _
-from django.db.models import Q
-import os
-from django.core.cache import cache
-from django.utils.translation import get_language
+
 
 register = template.Library()
 
@@ -33,14 +34,14 @@ def getTopOnPage(context, item_id=None):
         cached = cache.get(cache_name)
 
     if not cached:
-        tops = func.getTops(request, filterAdv)
+        tops, models = func.getTops(request, filterAdv)
 
         if filterAdv is None:
-            cache.set(cache_name, tops, 60 * 10)
+            cache.set(cache_name, (tops, models), 60 * 10)
     else:
-        tops = cache.get(cache_name)
+        tops, models = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops}
+    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops, 'models': models}
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
 def getBanners(context, item_id=None, *places):
