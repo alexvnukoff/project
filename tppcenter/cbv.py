@@ -63,7 +63,21 @@ class ItemsList(HybridListView):
 
     def _get_countrys_for_objects(self, object_list):
 
-        countries = [obj.country for obj in object_list if getattr(obj, 'country', False)]
+        countries = []
+
+        for obj in object_list:
+            country = getattr(obj, 'country', False)
+
+            if not country:
+                continue
+
+            if isinstance(country, list):
+                if len(country) != 1:
+                    continue
+                else:
+                    country = country[0]
+
+            countries.append(country)
 
         if len(countries) > 0:
             countryDict = {}
