@@ -311,10 +311,12 @@
                             <div class="notify-footer"><a href="#" class="viewmore">{% trans 'See all' %}…</a></div>
                         </div>
 
-                <i class="imgnews icon-notyfi icon-nt2"></i><a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% mail %} </a>
+                   <i class="imgnews icon-notyfi icon-nt2  {% if mail < 1 %} disable {% endif %}"></i>
 
-                <a href="#"><i class="imgnews icon-notyfi icon-nt3"></i>2</a>
-                <a href="#"><i class="imgnews icon-notyfi icon-nt4"></i>2</a>
+                <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% mail %} </a>
+
+                <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i>0</a>
+                <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i>0</a>
             </div>
          {% endif %}
                 {% getTopOnPage item_id %}
