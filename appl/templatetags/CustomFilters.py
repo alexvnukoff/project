@@ -252,20 +252,19 @@ def getOwner(item):
 
     obj = func.getActiveSQS().filter(django_id=item)
 
-    if len(obj) == 0:
+    if obj.count() == 0:
         return None
     else:
         obj = obj[0]
 
+    company = getattr(obj, "company", False)
+    tpp = getattr(obj, "tpp", False)
 
-    if not obj:
-        return None
+    if company:
+        return {'type': 'company', 'pk': company}
 
-    if obj.company:
-        return {'type': 'company', 'id': obj.company}
-
-    if obj.tpp:
-        return {'type': 'tpp', 'id': obj.tpp}
+    if tpp:
+        return {'type': 'tpp', 'pk': tpp}
 
     return None
 
