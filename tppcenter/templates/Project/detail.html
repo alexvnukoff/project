@@ -10,13 +10,15 @@
 {% endblock %}
 
 {% block keywords %}{% endblock %}
-{% with page.NAME|first as name %}
-{% with page.DETAIL_TEXT|first as text %}
-    {% block title %}{{ name }} {% endblock %}
+
+    {% block title %} {{ page.NAME|first }} {% endblock %}
+
 
 {% block content %}
-    <div class="companies">
-                <div class="deal-details">
+    {% with page.NAME|first as name %}
+    {% with page.DETAIL_TEXT|first as text %}
+        <div class="companies">
+            <div class="deal-details">
 
                         <h1>{{ name }}</h1>
                         <p></p>
@@ -25,7 +27,6 @@
                 </div>
 
     </div>
-
+    {% endwith %}
+    {% endwith %}
 {% endblock %}
-{% endwith %}
-{% endwith %}
