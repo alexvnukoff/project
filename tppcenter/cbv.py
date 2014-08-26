@@ -13,6 +13,12 @@ from appl.models import Country, AdditionalPages, Gallery, Company, Tpp
 from core.cbv import HybridListView
 from tpp import settings
 
+class TabItemList(HybridListView):
+    paginate_by = 10
+    allow_empty = True
+
+    #pagination url
+    url_paginator = None
 
 class ItemsList(HybridListView):
 

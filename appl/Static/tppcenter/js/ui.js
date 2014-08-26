@@ -217,7 +217,7 @@ var ui =
 
         if (pathname.length == 2 && pathname[1] == 'my')
         {
-            url = pathname;
+            url = pathname.join('/');
         } else {
             url = pathname[0]
         }

@@ -150,7 +150,8 @@
                 </div>
                 {% for page in additionalPages %}
                     <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                    <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                        <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                    </div>
                 {% endfor %}
             </div>
         </div>
