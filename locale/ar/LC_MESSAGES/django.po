@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-27 05:50+0000\n"
-"PO-Revision-Date: 2014-06-08 12:24+0200\n"
+"POT-Creation-Date: 2014-08-12 11:47+0000\n"
+"PO-Revision-Date: 2014-08-14 10:39+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ar\n"
@@ -17,79 +17,84 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 
-#: appl/func.py:789 centerpokupok/templates/Company/header.html:48
+#: appl/func.py:882 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Company/products.html:6
 #: centerpokupok/templates/Product/detail.html:114
 #: centerpokupok/templates/Product/index.html:6
 #: centerpokupok/templates/Product/index.html:63
 #: centerpokupok/templates/Product/index.html:76
 #: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:51
-#: tppcenter/Product/views.py:154 tppcenter/templates/base.html:122
-#: tppcenter/templates/main_page.html:117
-#: tppcenter/templates/main_page.html:143
+#: tppcenter/Product/views.py:156 tppcenter/templates/base.html:140
+#: tppcenter/templates/main_page.html:126
+#: tppcenter/templates/main_page.html:151
 #: tppcenter/templates/Analytic/main.html:64
-#: tppcenter/templates/Companies/detailContent.html:591
+#: tppcenter/templates/Companies/detailContent.html:604
 #: tppcenter/templates/Products/index.html:10
-#: tppcenter/templates/Wall/contentPage.html:245
-#: usersites/Products/views.py:42 usersites/Products/views.py:43
-#: usersites/templates/contentPage.html:86
-#: usersites/templates/site_sidebar.html:20
+#: tppcenter/templates/Wall/contentPage.html:8 usersites/Products/views.py:32
+#: usersites/Products/views.py:33 usersites/templates/contentPage.html:86
+#: usersites/templates/site_sidebar.html:100
 msgid "Products"
 msgstr "المنتوجات"
 
-#: appl/func.py:794 tppcenter/templates/main_page.html:120
-#: tppcenter/templates/main_page.html:146
+#: appl/func.py:887 tppcenter/templates/main_page.html:129
+#: tppcenter/templates/main_page.html:154
 #: tppcenter/templates/Analytic/main.html:72
-#: tppcenter/templates/Companies/detailContent.html:596
-#: tppcenter/templates/Tpp/detailContent.html:537
+#: tppcenter/templates/Companies/detailContent.html:609
+#: tppcenter/templates/Tpp/detailContent.html:531
 msgid "Innovation Projects"
 msgstr "مشاريع مبتكرة"
 
-#: appl/func.py:799 tppcenter/Companies/views.py:62
-#: tppcenter/Companies/views.py:770 tppcenter/templates/base.html:123
-#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:133
-#: tppcenter/templates/main_page.html:119
-#: tppcenter/templates/main_page.html:145
+#: appl/func.py:892 tppcenter/Companies/views.py:66
+#: tppcenter/Companies/views.py:645 tppcenter/templates/base.html:141
+#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:192
+#: tppcenter/templates/job_index.html:188
+#: tppcenter/templates/main_page.html:128
+#: tppcenter/templates/main_page.html:153
 #: tppcenter/templates/Analytic/main.html:95
 #: tppcenter/templates/Companies/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:562
+#: tppcenter/templates/Tpp/detailContent.html:556
 msgid "Companies"
 msgstr "شركات"
 
-#: appl/func.py:804 tppcenter/templates/main_page.html:121
-#: tppcenter/templates/main_page.html:147
+#: appl/func.py:897 tppcenter/templates/main_page.html:130
+#: tppcenter/templates/main_page.html:155
 #: tppcenter/templates/Analytic/main.html:68
 #: tppcenter/templates/Analytic/main.html:111
 #: tppcenter/templates/BusinessProposal/index.html:10
-#: tppcenter/templates/Companies/detailContent.html:601
-#: tppcenter/templates/Tpp/detailContent.html:542
+#: tppcenter/templates/Companies/detailContent.html:614
+#: tppcenter/templates/Tpp/detailContent.html:536
 msgid "Business Proposals"
-msgstr " مقترحات العمل"
+msgstr "عروض تجارية"
 
-#: appl/func.py:809 tppcenter/Exhibitions/views.py:53
-#: tppcenter/Exhibitions/views.py:136
+#: appl/func.py:902 tppcenter/templates/main_page.html:137
+#: tppcenter/templates/main_page.html:168
+msgid "Job requirements"
+msgstr "شواغر"
+
+#: appl/func.py:907 tppcenter/Exhibitions/views.py:53
+#: tppcenter/Exhibitions/views.py:137
 #: tppcenter/templates/Analytic/main.html:80
 #: tppcenter/templates/Analytic/main.html:115
-#: tppcenter/templates/Companies/detailContent.html:586
+#: tppcenter/templates/Companies/detailContent.html:599
 #: tppcenter/templates/Exhibitions/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:532
-#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Tpp/detailContent.html:526
+#: tppcenter/templates/Wall/contentPage.html:134
 msgid "Exhibitions"
 msgstr "معارض"
 
-#: appl/func.py:941
+#: appl/func.py:1044
 msgid "Sorry but you cannot modify this item "
 msgstr "آسف ولكن لا يمكنك تعديل هذا البند"
 
-#: appl/templatetags/inclusionTags.py:107 tppcenter/Profile/views.py:18
-#: tppcenter/templates/login_header.html:44
-#: tppcenter/templates/login_header.html:101
-#: tppcenter/templates/main_page.html:159
+#: appl/templatetags/inclusionTags.py:108 tppcenter/Profile/views.py:19
+#: tppcenter/templates/login_header.html:102
+#: tppcenter/templates/login_header.html:162
+#: tppcenter/templates/main_page.html:170
 #: tppcenter/templates/Profile/index.html:6
 msgid "Profile"
-msgstr " لمحة عن حياة شخص"
+msgstr "الملف الشخصي"
 
 #: centerpokupok/forms.py:6
 msgid "Recipient name"
@@ -115,10 +120,10 @@ msgstr "مدينة"
 #: tppcenter/templates/Products/popupFilter.html:19
 #: tppcenter/templates/Profile/addForm.html:71
 #: tppcenter/templates/Tenders/popupFilter.html:19
-#: tppcenter/templates/Tpp/addForm.html:141
+#: tppcenter/templates/Tpp/addForm.html:142
 #: tppcenter/templates/TppTV/addForm.html:57
 #: tppcenter/templates/TppTV/popupFilter.html:19
-#: tppcenter/templates/main/user_profile.html:66
+#: tppcenter/templates/main/user_profile.html:67
 msgid "Country"
 msgstr "دولة "
 
@@ -130,13 +135,14 @@ msgstr "رقم المنطقة "
 #: centerpokupok/forms.py:10
 #: tppcenter/templates/BusinessProposal/detailContent.html:126
 #: tppcenter/templates/Companies/addForm.html:176
-#: tppcenter/templates/Companies/detailContent.html:669
+#: tppcenter/templates/Companies/detailContent.html:660
 #: tppcenter/templates/Exhibitions/detailContent.html:166
 #: tppcenter/templates/Innov/detailContent.html:159
 #: tppcenter/templates/Resume/addForm.html:103
 #: tppcenter/templates/Resume/detailContent.html:75
-#: tppcenter/templates/Tpp/addForm.html:181
-#: tppcenter/templates/Tpp/detailContent.html:589
+#: tppcenter/templates/Tpp/addForm.html:182
+#: tppcenter/templates/Tpp/detailContent.html:580
+#: usersites/templates/Proposals/detailContent.html:132
 msgid "Address"
 msgstr "عنوان"
 
@@ -150,19 +156,19 @@ msgstr "الاسم الاول "
 
 #: centerpokupok/forms.py:22 tppcenter/Profile/profileForms.py:16
 #: tppcenter/templates/Profile/addForm.html:34
-#: tppcenter/templates/main/user_profile.html:36
+#: tppcenter/templates/main/user_profile.html:37
 msgid "Last name"
 msgstr "الاسم الاخير "
 
 #: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
-#: tppcenter/templates/Profile/addForm.html:92
+#: tppcenter/templates/Profile/addForm.html:85
 #: tppcenter/templates/Resume/addForm.html:66
 #: tppcenter/templates/Resume/detailContent.html:59
-#: tppcenter/templates/main/user_profile.html:74
+#: tppcenter/templates/main/user_profile.html:75
 msgid "Birthday"
 msgstr "تاريخ الميلاد"
 
-#: centerpokupok/views.py:187 tppcenter/views.py:224
+#: centerpokupok/views.py:187 tppcenter/views.py:219
 msgid "Agreement with terms is required"
 msgstr "مطلوب اتفاق مع شروط"
 
@@ -204,7 +210,6 @@ msgid "Announcements and product reviews"
 msgstr "إعلانات وتعليقات على هذا المنتج"
 
 #: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:16
-#: tppcenter/templates/Project/offer.html:16
 msgid "Public offer"
 msgstr "عرض عام"
 
@@ -233,8 +238,8 @@ msgid "Quick reference"
 msgstr "مرجع سريع"
 
 #: centerpokupok/templates/base.html:56
-#: tppcenter/templates/Companies/detailContent.html:570
-#: tppcenter/templates/Tpp/detailContent.html:516
+#: tppcenter/templates/Companies/detailContent.html:583
+#: tppcenter/templates/Tpp/detailContent.html:509
 msgid "Services"
 msgstr "الخدمات"
 
@@ -242,11 +247,11 @@ msgstr "الخدمات"
 #: centerpokupok/templates/Company/contact.html:4
 #: centerpokupok/templates/Company/contact.html:50
 #: tppcenter/Project/urls.py:20
-#: tppcenter/templates/Companies/contentPage.html:98
-#: tppcenter/templates/Products/detailContent.html:126
+#: tppcenter/templates/Companies/contentPage.html:104
+#: tppcenter/templates/Products/detailContent.html:122
 #: tppcenter/templates/Project/contact.html:16
 #: tppcenter/templates/Tpp/contentPage.html:75
-#: usersites/templates/site_sidebar.html:23
+#: usersites/templates/site_sidebar.html:103
 msgid "Contact us"
 msgstr "الاتصال بنا"
 
@@ -257,11 +262,11 @@ msgstr "التعليمات"
 
 #: centerpokupok/templates/base.html:59
 msgid "Ask about community"
-msgstr "يسأل عن المجتمع"
+msgstr "استفسر حول المجتمع"
 
 #: centerpokupok/templates/base.html:60
 msgid "Partner program"
-msgstr "الامتالام"
+msgstr "مشروع مشترك"
 
 #: centerpokupok/templates/base.html:64
 #: centerpokupok/templates/Company/about.html:38
@@ -306,7 +311,7 @@ msgstr "صفحة البيت"
 #: centerpokupok/templates/header_small.html:7
 #: centerpokupok/templates/Company/header.html:8
 #: centerpokupok/templates/main/cabinet_menu.html:29
-#: usersites/templates/Contact/contentPage.html:45
+#: usersites/templates/Contact/contentPage.html:53
 msgid "Ask a question"
 msgstr "طرح سؤال"
 
@@ -323,7 +328,7 @@ msgstr "تسجيل خروج"
 #: centerpokupok/templates/header_small.html:9
 #: centerpokupok/templates/Company/header.html:13
 #: centerpokupok/templates/registration/login.html:3
-#: tppcenter/templates/login_header.html:33
+#: tppcenter/templates/login_header.html:53
 #: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/login.html:46
 msgid "Sign in"
@@ -338,7 +343,7 @@ msgid "Workplace"
 msgstr "مكان العمل "
 
 #: centerpokupok/templates/header_big.html:92
-#: tppcenter/templates/login_header.html:31
+#: tppcenter/templates/login_header.html:51
 msgid "Sign out"
 msgstr "تسجيل خروج"
 
@@ -366,7 +371,7 @@ msgid "Search"
 msgstr "بحث"
 
 #: centerpokupok/templates/header_small.html:6
-#: tppcenter/templates/base.html:29 usersites/templates/base.html:21
+#: tppcenter/templates/base.html:30 usersites/templates/base.html:21
 msgid "Main page"
 msgstr "الصفحة الرئيسية"
 
@@ -413,7 +418,7 @@ msgstr "فئات ذات صلة"
 #: centerpokupok/templates/Cabinet/orderHistory.html:5
 #: centerpokupok/templates/Cabinet/orderHistory.html:21
 msgid "Order history"
-msgstr "تاريخ الاوامر"
+msgstr "تاريخ الطلب"
 
 #: centerpokupok/templates/Cabinet/favorite.html:38
 #: centerpokupok/templates/Cabinet/orderHistory.html:38
@@ -435,7 +440,7 @@ msgstr "لون"
 #: tppcenter/templates/BusinessProposal/addForm.html:46
 #: tppcenter/templates/BusinessProposal/addForm.html:54
 #: tppcenter/templates/BusinessProposal/addForm.html:62
-#: tppcenter/templates/BusinessProposal/addForm.html:80
+#: tppcenter/templates/BusinessProposal/addForm.html:83
 msgid "Delete"
 msgstr "حذف"
 
@@ -445,7 +450,7 @@ msgstr "اهلا وسهلا"
 
 #: centerpokupok/templates/Cabinet/index.html:23
 msgid "Here, you can change your data, shipment address and monitor orders."
-msgstr "هنا، يمكنك تغيير البيانات الخاصة بك، عنوان الشحن ومراقبة الأوامر."
+msgstr "هنا، يمكنك تغيير البيانات الخاصة بك، عنوان الشحن ومراقبة الطلبات."
 
 #: centerpokupok/templates/Cabinet/index.html:26
 msgid "My profile"
@@ -457,15 +462,15 @@ msgstr "تفاصيل المستخدم"
 
 #: centerpokupok/templates/Cabinet/index.html:45
 #: centerpokupok/templates/Cabinet/shippingAddress.html:39
-#: tppcenter/templates/BusinessProposal/addForm.html:145
+#: tppcenter/templates/BusinessProposal/addForm.html:159
 #: tppcenter/templates/Companies/addForm.html:259
 #: tppcenter/templates/Exhibitions/addForm.html:216
 #: tppcenter/templates/Innov/addForm.html:190
 #: tppcenter/templates/Products/addForm.html:435
-#: tppcenter/templates/Profile/addForm.html:115
+#: tppcenter/templates/Profile/addForm.html:108
 #: tppcenter/templates/Resume/addForm.html:324
 #: tppcenter/templates/Tenders/addForm.html:166
-#: tppcenter/templates/Tpp/addForm.html:222
+#: tppcenter/templates/Tpp/addForm.html:240
 #: tppcenter/templates/TppTV/addForm.html:111
 #: tppcenter/templates/Vacancy/addForm.html:277
 msgid "Save"
@@ -505,7 +510,7 @@ msgstr "فئات"
 #: centerpokupok/templates/Product/new.html:96
 #: tppcenter/templates/Analytic/main.html:91
 #: tppcenter/templates/Innov/detailContent.html:94
-#: usersites/templates/site_sidebar.html:15
+#: usersites/templates/site_sidebar.html:95
 msgid "Main"
 msgstr "رئيسي "
 
@@ -517,10 +522,11 @@ msgstr "جميع الفئات"
 #: centerpokupok/templates/Company/about.html:5
 #: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:11
 #: tppcenter/templates/BusinessProposal/detailContent.html:73
-#: tppcenter/templates/Companies/detailContent.html:551
+#: tppcenter/templates/Companies/detailContent.html:564
 #: tppcenter/templates/Project/about.html:16
-#: tppcenter/templates/Tpp/detailContent.html:500
+#: tppcenter/templates/Tpp/detailContent.html:493
 #: tppcenter/templates/main/staticPages.html:3
+#: usersites/templates/Proposals/detailContent.html:79
 msgid "About"
 msgstr "حول"
 
@@ -541,7 +547,7 @@ msgstr "بيع"
 #: centerpokupok/templates/Company/index.html:71
 #: centerpokupok/templates/Product/detail.html:94
 msgid "winter collection"
-msgstr "المجموعة الشتائية"
+msgstr "الموضة الشتائية"
 
 #: centerpokupok/templates/Company/about.html:42
 #: centerpokupok/templates/Company/contact.html:41
@@ -550,7 +556,7 @@ msgid "Subscripe"
 msgstr "الاشتراك"
 
 #: centerpokupok/templates/Company/contact.html:60
-#: usersites/templates/Contact/contentPage.html:48
+#: usersites/templates/Contact/contentPage.html:56
 msgid "Your name"
 msgstr "اسمك"
 
@@ -559,9 +565,9 @@ msgid "Your email"
 msgstr "بريدك الالكتروني"
 
 #: centerpokupok/templates/Company/contact.html:74
-#: tppcenter/templates/base.html:163
+#: tppcenter/templates/base.html:181
 #: usersites/templates/CompanyStructure/contentPage.html:49
-#: usersites/templates/Contact/contentPage.html:57
+#: usersites/templates/Contact/contentPage.html:65
 msgid "Message"
 msgstr "رسالة"
 
@@ -579,14 +585,14 @@ msgstr "كوبونات "
 #: centerpokupok/templates/Company/coupons.html:55
 #: centerpokupok/templates/Company/products.html:36
 msgid "Best buy products"
-msgstr "أفضل شراء المنتجات"
+msgstr "شراء أفضل المنتجات"
 
 #: centerpokupok/templates/Company/coupons.html:105
 #: centerpokupok/templates/Company/index.html:122
 #: centerpokupok/templates/Company/index.html:167
 #: centerpokupok/templates/Coupons/index.html:130
 msgid "Time till the end"
-msgstr "الوقت حتى نهاية"
+msgstr "الوقت حتى النهاية"
 
 #: centerpokupok/templates/Company/coupons.html:119
 #: centerpokupok/templates/Coupons/index.html:144
@@ -599,7 +605,7 @@ msgstr "قمت بحفظ"
 #: centerpokupok/templates/Product/detail.html:211
 #: centerpokupok/templates/main/main_coupons.html:48
 #: tppcenter/templates/Products/contentPage.html:62
-#: tppcenter/templates/Wall/contentPage.html:280
+#: tppcenter/templates/Wall/contentPage.html:41
 #: usersites/templates/contentPage.html:103
 #: usersites/templates/Products/contentPage.html:21
 msgid "Buy"
@@ -638,13 +644,14 @@ msgstr "تخرين الصفحة الرئيسية"
 
 #: centerpokupok/templates/Company/header.html:50
 #: tppcenter/templates/BusinessProposal/detailContent.html:76
-#: tppcenter/templates/Companies/detailContent.html:617
+#: tppcenter/templates/Companies/detailContent.html:630
 #: tppcenter/templates/Exhibitions/detailContent.html:115
 #: tppcenter/templates/Innov/detailContent.html:97
-#: tppcenter/templates/Tpp/detailContent.html:557
+#: tppcenter/templates/Tpp/detailContent.html:551
 #: tppcenter/templates/Tpp/tabCompanies.html:9
-#: tppcenter/templates/main/staticPages.html:16 usersites/Contact/views.py:11
-#: usersites/Contact/views.py:12
+#: tppcenter/templates/main/staticPages.html:18 usersites/Contact/views.py:15
+#: usersites/Contact/views.py:16
+#: usersites/templates/Proposals/detailContent.html:82
 msgid "Contacts"
 msgstr "اتصالات"
 
@@ -670,23 +677,23 @@ msgstr "أعلى المبيعات"
 #: centerpokupok/templates/Company/index.html:248
 #: centerpokupok/templates/main/main_coupons.html:9
 #: tppcenter/templates/BusinessProposal/contentPage.html:56
-#: tppcenter/templates/Companies/contentPage.html:74
+#: tppcenter/templates/Companies/contentPage.html:80
 #: tppcenter/templates/Exhibitions/contentPage.html:60
 #: tppcenter/templates/Innov/contentPage.html:80
-#: tppcenter/templates/News/detailContent.html:165
+#: tppcenter/templates/News/detailContent.html:157
 #: tppcenter/templates/Resume/contentPage.html:42
 #: tppcenter/templates/Tenders/contentPage.html:51
 #: tppcenter/templates/Tpp/contentPage.html:54
 #: tppcenter/templates/UserSites/contentPage.html:40
-#: tppcenter/templates/Vacancy/contentPage.html:53
-#: tppcenter/templates/Wall/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:125
-#: tppcenter/templates/Wall/contentPage.html:169
+#: tppcenter/templates/Vacancy/contentPage.html:55
+#: tppcenter/templates/Wall/contentPage.html:106
+#: tppcenter/templates/Wall/contentPage.html:164
+#: tppcenter/templates/Wall/contentPage.html:209
 msgid "More"
 msgstr "اكثر"
 
 #: centerpokupok/templates/Company/index.html:302
-#: tppcenter/templates/index.html:234
+#: tppcenter/templates/index.html:293
 msgid "Best deals"
 msgstr "افضل العروض"
 
@@ -714,12 +721,12 @@ msgstr "خصم"
 #: centerpokupok/templates/Coupons/index.html:178
 #: tppcenter/templates/Adv/basket.html:21
 msgid "End Date"
-msgstr "تاريخ نهاية"
+msgstr "تاريخ النهاية"
 
 #: centerpokupok/templates/Coupons/index.html:185
 #: centerpokupok/templates/Coupons/index.html:189
 msgid "Create Date"
-msgstr "إنشاء التسجيل"
+msgstr "إنشاء التاريخ"
 
 #: centerpokupok/templates/Coupons/index.html:196
 #: centerpokupok/templates/Coupons/index.html:200
@@ -727,17 +734,18 @@ msgstr "إنشاء التسجيل"
 #: centerpokupok/templates/Product/new.html:136
 #: tppcenter/templates/Companies/tabProducts.html:11
 #: tppcenter/templates/Companies/tabTenders.html:10
-#: tppcenter/templates/Products/detailContent.html:75
+#: tppcenter/templates/Products/detailContent.html:69
 #: tppcenter/templates/Tpp/tabTenders.html:10
+#: usersites/templates/Products/detailContent.html:90
 msgid "Price"
-msgstr "سعر"
+msgstr "السعر"
 
 #: centerpokupok/templates/Coupons/index.html:206
 msgid "All "
 msgstr "كل"
 
 #: centerpokupok/templates/Coupons/index.html:208
-#: tppcenter/templates/baseFilter.html:72
+#: tppcenter/templates/baseFilter.html:79
 msgid "All"
 msgstr "كل"
 
@@ -766,17 +774,18 @@ msgid "View store"
 msgstr "عرض متجر"
 
 #: centerpokupok/templates/News/detail.html:39
-#: tppcenter/templates/Products/detailContent.html:132
+#: tppcenter/templates/Products/detailContent.html:128
+#: usersites/templates/Products/detailContent.html:153
 msgid "About company"
-msgstr "عن الشركة"
+msgstr "حول الشركة"
 
 #: centerpokupok/templates/News/detail.html:40
 msgid "Company products"
 msgstr "منتجات الشركة"
 
 #: centerpokupok/templates/News/detail.html:41
-#: tppcenter/templates/Companies/tabStaff.html:46
-#: tppcenter/templates/Tpp/tabStaff.html:45
+#: tppcenter/templates/Companies/tabStaff.html:52
+#: tppcenter/templates/Tpp/tabStaff.html:52
 msgid "Contact"
 msgstr "الاتصالات"
 
@@ -791,7 +800,7 @@ msgstr "سعر خاص"
 
 #: centerpokupok/templates/News/index.html:101
 msgid "All deals"
-msgstr "جميع عروض"
+msgstr "جميع العروض"
 
 #: centerpokupok/templates/News/index.html:112
 msgid "Popular reviews"
@@ -811,7 +820,7 @@ msgstr "ترتيب حسب"
 #: centerpokupok/templates/Product/index.html:116
 #: centerpokupok/templates/Product/new.html:148
 msgid "Raiting"
-msgstr "تصنيف rating"
+msgstr "تصنيف "
 
 #: centerpokupok/templates/News/index.html:143
 #: tppcenter/templates/BusinessProposal/contentPage.html:52
@@ -821,9 +830,9 @@ msgstr "تصنيف rating"
 #: tppcenter/templates/Tpp/tabInnov.html:10
 #: tppcenter/templates/Tpp/tabProposal.html:9
 #: tppcenter/templates/TppTV/addForm.html:71
-#: tppcenter/templates/Vacancy/contentPage.html:50
+#: tppcenter/templates/Vacancy/contentPage.html:52
 #: tppcenter/templates/Vacancy/detailContent.html:35
-#: tppcenter/templates/Wall/contentPage.html:165
+#: tppcenter/templates/Wall/contentPage.html:203
 #: usersites/templates/contentPage.html:20
 #: usersites/templates/contentPage.html:59
 #: usersites/templates/News/contentPage.html:19
@@ -860,13 +869,13 @@ msgid "Favorite"
 msgstr "مفضل"
 
 #: centerpokupok/templates/Product/detail.html:228
-#: tppcenter/templates/BusinessProposal/addForm.html:107
+#: tppcenter/templates/BusinessProposal/addForm.html:110
 #: tppcenter/templates/Companies/tabProducts.html:10
 #: tppcenter/templates/Exhibitions/addForm.html:179
 #: tppcenter/templates/Innov/addForm.html:126
 #: tppcenter/templates/Innov/addForm.html:153
 #: tppcenter/templates/Tenders/addForm.html:139
-#: tppcenter/templates/Tenders/detailContent.html:91
+#: tppcenter/templates/Tenders/detailContent.html:83
 #: tppcenter/templates/Vacancy/addForm.html:255
 #: tppcenter/templates/Vacancy/detailContent.html:61
 #: tppcenter/templates/Vacancy/detailContent.html:75
@@ -876,6 +885,7 @@ msgstr "وصف"
 #: centerpokupok/templates/Product/detail.html:229
 #: centerpokupok/templates/Product/orderStepOne.html:117
 #: centerpokupok/templates/Product/orderStepTwo.html:53
+#: tppcenter/templates/Products/detailContent.html:87
 msgid "Delivery method"
 msgstr "طريقة التسليم"
 
@@ -893,7 +903,7 @@ msgstr "وصف كامل"
 
 #: centerpokupok/templates/Product/detail.html:256
 msgid "Transaction History & Feedback"
-msgstr "تاريخ الصفقه وملاحظات"
+msgstr "تاريخ الصفقه والملاحظات"
 
 #: centerpokupok/templates/Product/detail.html:312
 msgid "Post"
@@ -915,7 +925,7 @@ msgstr "اعرض فقط"
 #: centerpokupok/templates/Product/index.html:92
 #: centerpokupok/templates/Product/new.html:124
 msgid "High raiting"
-msgstr "تصنبف عالي "
+msgstr "تصنيف عالي "
 
 #: centerpokupok/templates/Product/index.html:97
 #: centerpokupok/templates/Product/new.html:129
@@ -924,12 +934,12 @@ msgstr "الشحن مجانا"
 
 #: centerpokupok/templates/Product/index.html:186
 msgid "positive feedback"
-msgstr "ردود الفعل الإيجابية"
+msgstr "ملاحظات إيجابية"
 
 #: centerpokupok/templates/Product/index.html:187
 #: centerpokupok/templates/Product/new.html:193
 msgid "Write to salesman"
-msgstr "إرسال إلى بائع"
+msgstr "راسل البائع"
 
 #: centerpokupok/templates/Product/index.html:259
 msgid "Sellers"
@@ -937,7 +947,7 @@ msgstr "الباعة"
 
 #: centerpokupok/templates/Product/orderStepOne.html:7
 msgid "Order step one"
-msgstr "امر الخطوة واحد"
+msgstr "طلب الخطوة الاولى"
 
 #: centerpokupok/templates/Product/orderStepOne.html:22
 msgid "Start page"
@@ -945,7 +955,7 @@ msgstr "صفحة البداية"
 
 #: centerpokupok/templates/Product/orderStepOne.html:29
 msgid "Ordering"
-msgstr "تنظيم"
+msgstr "طلبات"
 
 #: centerpokupok/templates/Product/orderStepOne.html:67
 msgid "Shipping Addres"
@@ -962,17 +972,18 @@ msgstr "عنوان"
 #: centerpokupok/templates/Product/orderStepOne.html:109
 #: tppcenter/templates/BusinessProposal/detailContent.html:130
 #: tppcenter/templates/Companies/addForm.html:104
-#: tppcenter/templates/Companies/detailContent.html:673
+#: tppcenter/templates/Companies/detailContent.html:664
 #: tppcenter/templates/Exhibitions/detailContent.html:170
 #: tppcenter/templates/Exhibitions/detailContent.html:215
 #: tppcenter/templates/Innov/detailContent.html:163
 #: tppcenter/templates/Resume/addForm.html:95
 #: tppcenter/templates/Resume/detailContent.html:71
-#: tppcenter/templates/Tpp/addForm.html:98
-#: tppcenter/templates/Tpp/detailContent.html:593
-#: tppcenter/templates/main/user_profile.html:78
+#: tppcenter/templates/Tpp/addForm.html:99
+#: tppcenter/templates/Tpp/detailContent.html:584
+#: tppcenter/templates/main/user_profile.html:79
 #: usersites/templates/CompanyStructure/contentPage.html:22
-#: usersites/templates/Contact/contentPage.html:34
+#: usersites/templates/Contact/contentPage.html:39
+#: usersites/templates/Proposals/detailContent.html:136
 msgid "Telephone number"
 msgstr "رقم الهاتف"
 
@@ -995,7 +1006,7 @@ msgstr "اكمل"
 
 #: centerpokupok/templates/Product/orderStepThree.html:6
 msgid "Order Step three"
-msgstr "امر الخطوة الثالثة"
+msgstr "طلب الخطوة الثالثة"
 
 #: centerpokupok/templates/Product/orderStepThree.html:32
 msgid "Thank you for  shopping on our site,"
@@ -1009,7 +1020,7 @@ msgstr "هنا"
 
 #: centerpokupok/templates/Product/orderStepThree.html:32
 msgid "you can view your order history"
-msgstr "يمكنك عرض التاريخ الاوامر"
+msgstr "يمكنك عرض تاريخ طلبك"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:7
 msgid "Order step two"
@@ -1037,15 +1048,15 @@ msgstr "دفع"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:66
 msgid "The total amount of your order"
-msgstr "المبلغ الإجمالي للطلبك"
+msgstr "المبلغ الإجمالي لطلبك"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:74
 msgid "Make changes to your order"
-msgstr "إجراء تغييرات على النظام الخاص بك"
+msgstr "إجراء تغييرات على الطلب الخاص بك"
 
 #: centerpokupok/templates/Product/orderStepTwo.html:75
 msgid "Confirm order"
-msgstr "تأكيد النظام"
+msgstr "تأكيد الطلب"
 
 # تسجيل
 #: centerpokupok/templates/Registr/registr.html:6
@@ -1057,10 +1068,7 @@ msgstr "تأكيد النظام"
 #: centerpokupok/templates/registration/password_reset_form.html:41
 #: centerpokupok/templates/registration/registration_closed.html:48
 #: centerpokupok/templates/registration/registration_complete.html:49
-#: tppcenter/templates/index.html:173
-#: tppcenter/templates/Exhibitions/detailContent.html:98
-#: tppcenter/templates/registration/registration.html:8
-#: tppcenter/templates/registration/registration.html:30
+#: tppcenter/templates/index.html:232 tppcenter/templates/job_index.html:228
 msgid "Registration"
 msgstr "تسجيل"
 
@@ -1159,11 +1167,11 @@ msgstr "عنوان الشحن"
 
 #: centerpokupok/templates/main/cabinet_menu.html:14
 msgid "Order History"
-msgstr "تاريخ النظام"
+msgstr "تاريخ الطلب"
 
 #: centerpokupok/templates/main/cabinet_menu.html:20
 msgid "Eva"
-msgstr "إيفا"
+msgstr "وقت الوصول المحتمل"
 
 #: centerpokupok/templates/main/cabinet_menu.html:21
 msgid "Virtual Agent"
@@ -1199,7 +1207,6 @@ msgid "Best proposals"
 msgstr "أفضل المقترحات"
 
 #: centerpokupok/templates/registration/activate.html:3
-#: tppcenter/templates/registration/activate.html:3
 msgid "Registration completed"
 msgstr "تسجيل الانتهاء"
 
@@ -1209,7 +1216,6 @@ msgid "Activation problem"
 msgstr "مشكلة التنشيط"
 
 #: centerpokupok/templates/registration/activate.html:6
-#: tppcenter/templates/registration/activate.html:6
 msgid "Your registration complited"
 msgstr "اكتمل تسجيلك"
 
@@ -1219,24 +1225,21 @@ msgid "You can sign in"
 msgstr "يمكنك تسجيل الدخول"
 
 #: centerpokupok/templates/registration/activate.html:6
-#: tppcenter/templates/permissionDen.html:12
+#: tppcenter/templates/permissionDen.html:7
 #: tppcenter/templates/registration/activate.html:6
 msgid "profile"
-msgstr "ملف"
+msgstr "ملف شخصي"
 
 #: centerpokupok/templates/registration/activate.html:8
-#: tppcenter/templates/registration/activate.html:8
 msgid "Sorry but you activation key is invalid"
 msgstr "آسف ولكن مفتاح التنشيط غير صالح"
 
 #: centerpokupok/templates/registration/activation_complete.html:6
 #: tppcenter/templates/registration/registration_complete.html:7
-#: tppcenter/templates/registration/registration_complete.html:29
 msgid "Registration complete"
 msgstr "تسجيل كامل"
 
 #: centerpokupok/templates/registration/activation_complete.html:50
-#: tppcenter/templates/registration/activation_complete.html:30
 msgid "Thank you that you have completed the registration! Now you can  "
 msgstr "شكرا لك أنك قد أكملت التسجيل! يمكنك الآن"
 
@@ -1246,7 +1249,6 @@ msgid "sign in"
 msgstr "تسجيل الدخول"
 
 #: centerpokupok/templates/registration/activation_complete.html:51
-#: tppcenter/templates/registration/activation_complete.html:31
 msgid "using the email and password you provided during registration."
 msgstr "استخدام البريد الإلكتروني وكلمة المرور التي قدمت أثناء التسجيل."
 
@@ -1283,20 +1285,23 @@ msgstr "التسجيل في"
 
 #: centerpokupok/templates/registration/login.html:17
 #: tppcenter/templates/BusinessProposal/detailContent.html:138
-#: tppcenter/templates/Companies/detailContent.html:681
+#: tppcenter/templates/Companies/detailContent.html:672
 #: tppcenter/templates/Exhibitions/detailContent.html:178
 #: tppcenter/templates/Innov/detailContent.html:171
 #: tppcenter/templates/Profile/addForm.html:49
-#: tppcenter/templates/Tpp/detailContent.html:601
-#: tppcenter/templates/main/user_profile.html:48
+#: tppcenter/templates/Tpp/detailContent.html:592
+#: tppcenter/templates/main/user_profile.html:49
+#: usersites/templates/Proposals/detailContent.html:144
 msgid "Email"
 msgstr "بريد الكتروني"
 
 #: centerpokupok/templates/registration/login.html:23
 #: centerpokupok/templates/registration/registration_form.html:31
 #: centerpokupok/templates/registration/registration_form.html:42
-#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:220
+#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:279
+#: tppcenter/templates/job_index.html:275
 #: tppcenter/templates/registration/registration.html:46
+#: usersites/templates/slider.html:34
 msgid "Password"
 msgstr "كلمة السر"
 
@@ -1346,7 +1351,6 @@ msgid "Reset confirm"
 msgstr "إعادة تأكيد"
 
 #: centerpokupok/templates/registration/password_reset_confirm.html:48
-#: tppcenter/templates/registration/password_reset_confirm.html:31
 msgid "Enter your new password below to change the old password:"
 msgstr "أدخل كلمة المرور الجديدة أدناه لتغيير كلمة المرور القديمة:"
 
@@ -1384,15 +1388,14 @@ msgstr "تلقيت هذه الرسالة لأن لديك طلب لتغيير ك�
 msgid ""
 "on centerpokupok If you did not make such a request, please ignore this "
 "message."
-msgstr ""
-"على مركز pokupok إذا كنت لم تتقدم بمثل هذا الطلب، يرجى تجاهل هذه الرسالة."
+msgstr " إذا كنت لم تتقدم بمثل هذا الطلب، يرجى تجاهل هذه الرسالة."
 
 #: centerpokupok/templates/registration/password_reset_email.html:7
 #: tppcenter/templates/registration/password_reset_email.html:7
 msgid ""
 "To change the password, click the following to link or copy it into your "
 "browser:"
-msgstr "لتغيير كلمة المرور، انقر فوق التالي للربط أو نسخها في المتصفح:"
+msgstr "لتغيير كلمة المرور، انقر فوق الرابط التالي أو انسخها في المتصفح:"
 
 #: centerpokupok/templates/registration/password_reset_email.html:11
 #: tppcenter/templates/registration/password_reset_email.html:11
@@ -1433,7 +1436,6 @@ msgid "Registartion complete"
 msgstr "تسجيل كامل"
 
 #: centerpokupok/templates/registration/registration_complete.html:53
-#: tppcenter/templates/registration/registration_complete.html:32
 msgid ""
 "We sent you message. Please check you email and click on the  link to "
 "activate your account. "
@@ -1462,17 +1464,22 @@ msgstr "موافق على "
 
 #: centerpokupok/templates/registration/registration_form.html:55
 msgid "terms"
-msgstr "حيث"
+msgstr "الشروط"
 
 #: centerpokupok/templates/registration/registration_form.html:56
-#: tppcenter/templates/index.html:164 tppcenter/templates/index.html.py:186
-#: tppcenter/templates/index.html:212 tppcenter/templates/index.html.py:227
+#: tppcenter/templates/index.html:223 tppcenter/templates/index.html.py:245
+#: tppcenter/templates/index.html:271 tppcenter/templates/index.html.py:286
+#: tppcenter/templates/job_index.html:219
+#: tppcenter/templates/job_index.html:241
+#: tppcenter/templates/job_index.html:267
+#: tppcenter/templates/job_index.html:282
 #: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/registration.html:61
+#: usersites/templates/slider.html:41
 msgid "Sign up"
 msgstr "الاشتراك"
 
-#: core/models.py:84
+#: core/models.py:92
 msgid "date joined"
 msgstr "تاريخ الانضمام"
 
@@ -1482,7 +1489,7 @@ msgstr "تاريخ الانضمام"
 #, python-format
 msgid "0 of %(count)d selected"
 msgid_plural "of %(count)d selected"
-msgstr[0] ""
+msgstr[0] " اختير 0 %(count)d"
 msgstr[1] "واحد بالمئة"
 msgstr[2] "اثنان بالمئة"
 msgstr[3] ""
@@ -1495,7 +1502,7 @@ msgstr[5] ""
 #, python-format
 msgid "%(total_count)s selected"
 msgid_plural "All %(total_count)s selected"
-msgstr[0] ""
+msgstr[0] "اختير كل %(total_count)s"
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
@@ -1530,7 +1537,7 @@ msgstr "سؤال"
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:6
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:6
 msgid "Backend Alias"
-msgstr "الخلفية الاسم المستعار"
+msgstr "الاسم المستعار للخلفية "
 
 #: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:7
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:7
@@ -1548,7 +1555,7 @@ msgstr "وقت"
 #: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:9
 #: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:9
 msgid "Kwargs"
-msgstr ""
+msgstr "Kwargs"
 
 #: modules-mod/djcelery/admin.py:51 modules-mod/djcelery/admin.py:58
 #: modules-mod/djcelery/models.py:27 modules-mod/djcelery/models.py:317
@@ -1557,7 +1564,7 @@ msgstr "موقع"
 
 #: modules-mod/djcelery/admin.py:65 modules-mod/djcelery/models.py:326
 msgid "ETA"
-msgstr "ايفا"
+msgstr "زمن الوصول المحتمل"
 
 #: modules-mod/djcelery/admin.py:72
 msgid "when"
@@ -1627,7 +1634,7 @@ msgstr "مهمة (مسجلة)"
 
 #: modules-mod/djcelery/admin.py:259
 msgid "Task (custom)"
-msgstr "المهمة (العرف)"
+msgstr "المهمة (حسب الطلب)"
 
 #: modules-mod/djcelery/admin.py:271
 msgid "Need name of task"
@@ -1636,7 +1643,7 @@ msgstr "تحتاج اسم المهمة"
 #: modules-mod/djcelery/admin.py:282
 #, python-format
 msgid "Unable to parse JSON: %s"
-msgstr ""
+msgstr "غير قادر على تحليل JSON: %s"
 
 #: modules-mod/djcelery/humanize.py:8
 msgid "just now"
@@ -1644,7 +1651,7 @@ msgstr "الان"
 
 #: modules-mod/djcelery/humanize.py:9
 msgid "{seconds} second ago"
-msgstr ""
+msgstr "قبل {seconds} ثوان"
 
 #: modules-mod/djcelery/humanize.py:9
 msgid "{seconds} seconds ago"
@@ -1652,23 +1659,23 @@ msgstr "قبل() ثوان"
 
 #: modules-mod/djcelery/humanize.py:10
 msgid "{minutes} minute ago"
-msgstr ""
+msgstr "قبل {minutes} دقيقة"
 
 #: modules-mod/djcelery/humanize.py:10
 msgid "{minutes} minutes ago"
-msgstr ""
+msgstr "قبل {minutes} دقائق"
 
 #: modules-mod/djcelery/humanize.py:11
 msgid "{hours} hour ago"
-msgstr ""
+msgstr "قبل {hours} ساعات"
 
 #: modules-mod/djcelery/humanize.py:11
 msgid "{hours} hours ago"
-msgstr ""
+msgstr "قبل {hours} ساعات"
 
 #: modules-mod/djcelery/humanize.py:12
 msgid "yesterday at {time}"
-msgstr ""
+msgstr "البارحة في {time}"
 
 #: modules-mod/djcelery/humanize.py:13
 msgid "year"
@@ -1709,7 +1716,7 @@ msgstr "ايام"
 
 #: modules-mod/djcelery/humanize.py:23
 msgid "{number} {type} ago"
-msgstr ""
+msgstr "قبل {number} {type}"
 
 #: modules-mod/djcelery/models.py:25
 msgid "task id"
@@ -1729,11 +1736,11 @@ msgstr "الفوقية"
 
 #: modules-mod/djcelery/models.py:41
 msgid "task state"
-msgstr "الدولة المهمة"
+msgstr "دولة المهمة"
 
 #: modules-mod/djcelery/models.py:42
 msgid "task states"
-msgstr "الدول المهمة"
+msgstr "دولة المهمة"
 
 #: modules-mod/djcelery/models.py:59
 msgid "group id"
@@ -1789,11 +1796,11 @@ msgstr "فترات"
 
 #: modules-mod/djcelery/models.py:116
 msgid "every {0.period_singular}"
-msgstr ""
+msgstr "كل {0.period_singular}"
 
 #: modules-mod/djcelery/models.py:117
 msgid "every {0.every} {0.period}"
-msgstr ""
+msgstr "كل {0.every} {0.period}"
 
 #: modules-mod/djcelery/models.py:125
 msgid "minute"
@@ -1816,12 +1823,14 @@ msgid "month of year"
 msgstr "شهر في السنة"
 
 #: modules-mod/djcelery/models.py:138 modules-mod/djcelery/models.py:205
+#, fuzzy
 msgid "crontab"
-msgstr ""
+msgstr "crontab"
 
 #: modules-mod/djcelery/models.py:139
+#, fuzzy
 msgid "crontabs"
-msgstr ""
+msgstr "crontabs"
 
 #: modules-mod/djcelery/models.py:197
 msgid "Useful description"
@@ -1893,7 +1902,7 @@ msgstr "المضيف"
 
 #: modules-mod/djcelery/models.py:287
 msgid "last heartbeat"
-msgstr "اخر نبضات"
+msgstr "اخر النبضات"
 
 #: modules-mod/djcelery/models.py:294 modules-mod/djcelery/models.py:336
 msgid "worker"
@@ -1938,7 +1947,7 @@ msgstr "بيت"
 
 #: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:22
 msgid "Rate limit"
-msgstr "حد السعر"
+msgstr "حدد السعر"
 
 #: modules-mod/registration/admin.py:23
 msgid "Activate users"
@@ -1994,172 +2003,191 @@ msgstr "تسجيل البيانات الشخصية"
 
 #: modules-mod/registration/models.py:187
 msgid "registration profiles"
-msgstr "لمحات تسجيل"
+msgstr "تسجيل البيانات الشخصية"
 
-#: tpp/settings.py:218
+#: tpp/settings.py:228
 msgid "Russia"
 msgstr "روسيا"
 
-#: tpp/settings.py:222
+#: tpp/settings.py:229
+msgid "Armenia"
+msgstr "أرمينيا"
+
+#: tpp/settings.py:232
 msgid "England"
 msgstr "انجلترا"
 
-#: tpp/settings.py:234
+#: tpp/settings.py:242 tppcenter/templates/index.html:93
+#: tppcenter/templates/job_index.html:109
+msgid "Ukrainian"
+msgstr "الأوكرانية"
+
+#: tpp/settings.py:244
 msgid "Israel"
 msgstr "اسرائيل"
+
+#: tpp/settings.py:245 tppcenter/templates/index.html:88
+#: tppcenter/templates/job_index.html:104
+msgid "Arabic"
+msgstr "العربية"
+
+#: tpp/settings.py:246 tppcenter/templates/index.html:92
+#: tppcenter/templates/job_index.html:108
+msgid "Chinese"
+msgstr "الصينية"
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
 msgstr "يجب أن يكون حجم الصورة أقل من 2 ميغابايت"
 
-#: tppcenter/views.py:154
+#: tppcenter/views.py:149
 #, python-format
 msgid "%(name)s , was registered to your event %(event)s ,"
 msgstr "%(name)s ، تم تسجيل لهذا الحدث الخاص بك%(event)s ،"
 
-#: tppcenter/views.py:155
+#: tppcenter/views.py:150
 #, python-format
 msgid "working in the %(company)s "
-msgstr "العمل في%(company)s"
+msgstr "العمل في %(company)s "
 
-#: tppcenter/views.py:156
+#: tppcenter/views.py:151
 #, python-format
 msgid "on the position of %(position)s . "
 msgstr "على موقف%(position)s."
 
-#: tppcenter/views.py:157
+#: tppcenter/views.py:152
 #, python-format
 msgid "You can contact him at this email address %(email)s  "
 msgstr "يمكنك الاتصال به في عنوان البريد الإلكتروني هذا%(email)s"
 
-#: tppcenter/views.py:160 tppcenter/views.py:163
+#: tppcenter/views.py:155 tppcenter/views.py:158
 msgid "Registartion to event"
 msgstr "تسجيل لهذا الحدث"
 
-#: tppcenter/AdminTpp/views.py:542 tppcenter/AdminTpp/views.py:544
+#: tppcenter/AdminTpp/views.py:624 tppcenter/AdminTpp/views.py:626
 msgid "Banner type already exists"
 msgstr " شعار موجود بالفعل"
 
-#: tppcenter/AdminTpp/views.py:547
+#: tppcenter/AdminTpp/views.py:629
 msgid "Invalid site"
 msgstr "موقع غير صالح"
 
-#: tppcenter/AdminTpp/views.py:550
+#: tppcenter/AdminTpp/views.py:632
 msgid "Invalid height"
 msgstr "ارتفاع غير صالح"
 
-#: tppcenter/AdminTpp/views.py:553
+#: tppcenter/AdminTpp/views.py:635
 msgid "Invalid width"
 msgstr "عرض غير صالح"
 
-#: tppcenter/AdminTpp/views.py:556
+#: tppcenter/AdminTpp/views.py:638
 msgid "Invalid targeting"
 msgstr "استهداف غير صالح"
 
-#: tppcenter/AdminTpp/views.py:559
+#: tppcenter/AdminTpp/views.py:641
 msgid "Invalid code"
 msgstr "رمز غير صالح"
 
-#: tppcenter/AdminTpp/views.py:707
+#: tppcenter/AdminTpp/views.py:795
 msgid "Invalid type"
 msgstr "نوع غير صالح"
 
-#: tppcenter/Adv/views.py:58
+#: tppcenter/Adv/views.py:61
 msgid "Top"
 msgstr "اعلى"
 
-#: tppcenter/Adv/views.py:60
+#: tppcenter/Adv/views.py:63
 msgid "Banner"
 msgstr "لافتة"
 
-#: tppcenter/AdvBanner/views.py:52 tppcenter/AdvBanner/views.py:290
-#: tppcenter/AdvBanner/views.py:355 tppcenter/AdvTop/views.py:216
-#: tppcenter/templates/main_page.html:154
+#: tppcenter/AdvBanner/views.py:53 tppcenter/AdvBanner/views.py:266
+#: tppcenter/AdvBanner/views.py:331 tppcenter/AdvTop/views.py:207
+#: tppcenter/templates/main_page.html:163
 #: tppcenter/templates/AdvBanner/index.html:7
 msgid "Banners"
 msgstr "لافتات"
 
-#: tppcenter/AdvBanner/views.py:231 tppcenter/AdvTop/views.py:176
+#: tppcenter/AdvBanner/views.py:208 tppcenter/AdvTop/views.py:167
 msgid "You must choose one filter al least"
 msgstr "يجب عليك اختيار مرشح واحد على الأقل"
 
-#: tppcenter/AdvBanner/views.py:237
+#: tppcenter/AdvBanner/views.py:214
 msgid "The image size cannot exceed 50 KB"
 msgstr "حجم الصورة لا يمكن أن يتجاوز 50 KB"
 
-#: tppcenter/AdvBanner/views.py:243
+#: tppcenter/AdvBanner/views.py:220
 msgid "Image dimension should not exceed"
 msgstr "الصورة لا ينبغي أن تتجاوز البعد "
 
-#: tppcenter/AdvBanner/views.py:250 tppcenter/AdvBanner/views.py:262
-#: tppcenter/AdvTop/views.py:184 tppcenter/AdvTop/views.py:195
+#: tppcenter/AdvBanner/views.py:227 tppcenter/AdvBanner/views.py:239
+#: tppcenter/AdvTop/views.py:175 tppcenter/AdvTop/views.py:186
 msgid "You should choose a valid date range"
 msgstr "يجب عليك أن تختار نطاقا وتاريخا صحيحا"
 
-#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:190
+#: tppcenter/AdvBanner/views.py:234 tppcenter/AdvTop/views.py:181
 msgid "You should choose a date range"
 msgstr "يجب عليك أن تختار نطاق تاريخ"
 
-#: tppcenter/AdvBanner/views.py:272 tppcenter/AdvTop/views.py:203
+#: tppcenter/AdvBanner/views.py:249 tppcenter/AdvTop/views.py:194
 msgid "Error occurred while trying to proceed your request"
 msgstr "حدث خطأ أثناء محاولة المضي بطلبك قدما "
 
-#: tppcenter/AdvBanner/views.py:282 tppcenter/AdvTop/views.py:211
+#: tppcenter/AdvBanner/views.py:258 tppcenter/AdvTop/views.py:202
 #: tppcenter/templates/baseFilter.html:10
 msgid "Select branch"
 msgstr "حدد فرع"
 
-#: tppcenter/AdvBanner/views.py:285 tppcenter/AdvTop/views.py:212
-#: tppcenter/templates/baseFilter.html:11
+#: tppcenter/AdvBanner/views.py:261 tppcenter/AdvTop/views.py:203
+#: tppcenter/templates/baseFilter.html:12
 msgid "Select country"
 msgstr "اختر البلد"
 
-#: tppcenter/AdvBanner/views.py:288 tppcenter/AdvTop/views.py:213
+#: tppcenter/AdvBanner/views.py:264 tppcenter/AdvTop/views.py:204
 msgid "Select organization"
 msgstr "حدد المنظمة"
 
-#: tppcenter/AdvTop/views.py:282
+#: tppcenter/AdvTop/views.py:264
 msgid "Tops"
 msgstr "نصائح"
 
-#: tppcenter/BusinessProposal/views.py:56
-#: tppcenter/BusinessProposal/views.py:131
+#: tppcenter/BusinessProposal/views.py:57
+#: tppcenter/BusinessProposal/views.py:133
 msgid "Business Proposal"
 msgstr "اقتراح الأعمال"
 
-#: tppcenter/Companies/views.py:466 tppcenter/Tpp/views.py:585
+#: tppcenter/Companies/views.py:341 tppcenter/Tpp/views.py:586
 #, python-format
 msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
 msgstr "لا يمكن حذف التسلسل الهرمي الإداري . والسبب هو%(reason)s"
 
-#: tppcenter/Companies/views.py:474 tppcenter/Tpp/views.py:593
+#: tppcenter/Companies/views.py:349 tppcenter/Tpp/views.py:594
 #, python-format
 msgid "Can not delete Department. The reason is: %(reason)s"
 msgstr "لا يمكن حذف القسم. والسبب هو: %(reason)s"
 
-#: tppcenter/Companies/views.py:513 tppcenter/Tpp/views.py:632
+#: tppcenter/Companies/views.py:388 tppcenter/Tpp/views.py:633
 #, python-format
 msgid "Could not find in DB Vacancy %(name)s"
 msgstr "لا يمكن أن تجد في DB الشواغر %(name)s"
 
-#: tppcenter/Companies/views.py:526 tppcenter/Tpp/views.py:645
-#: tppcenter/Vacancy/views.py:547
+#: tppcenter/Companies/views.py:401 tppcenter/Tpp/views.py:646
+#: tppcenter/Vacancy/views.py:549
 #, python-format
 msgid "Can not set attributes for Vacancy %(name)s"
 msgstr "لا يمكن تعيين سمات الشواغر %(name)s"
 
-#: tppcenter/Companies/views.py:533 tppcenter/Tpp/views.py:651
-#: tppcenter/Vacancy/views.py:556
+#: tppcenter/Companies/views.py:408 tppcenter/Tpp/views.py:652
+#: tppcenter/Vacancy/views.py:558
 #, python-format
 msgid ""
 "Can not create Relationship between Vacancy %(vac_name)s and Department ID "
 "%(dep_name)s. The reason is: %(reason)s"
 msgstr ""
-"لا يمكن إنشاء علاقة بين الشواغر٪  %(vac_name)s        و وزارة ID    "
+"لا يمكن إنشاء علاقة بين الشواغر٪  %(vac_name)s         الوزارة هوية و   "
 "%(dep_name)s                  والسبب هو           %(reason)s"
 
-#: tppcenter/Companies/views.py:539 tppcenter/Tpp/views.py:657
-#: tppcenter/Vacancy/views.py:562
+#: tppcenter/Companies/views.py:414 tppcenter/Tpp/views.py:658
+#: tppcenter/Vacancy/views.py:564
 #, python-format
 msgid ""
 "Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
@@ -2169,19 +2197,19 @@ msgstr ""
 "%(dep_id)s                                                                    "
 "والسبب هو:%(reason)s                   "
 
-#: tppcenter/Companies/views.py:551 tppcenter/Tpp/views.py:669
+#: tppcenter/Companies/views.py:426 tppcenter/Tpp/views.py:670
 #, python-format
 msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
 msgstr ""
 "لا يمكن حذف معرف الشواغر   %(vac_id)s                                 "
 "%(reason)s  والسبب هو                                                   "
 
-#: tppcenter/Companies/views.py:618 tppcenter/Tpp/views.py:736
+#: tppcenter/Companies/views.py:493 tppcenter/Tpp/views.py:737
 #, python-format
 msgid "User %(user)s has not Cabinet."
 msgstr " المستخدم%(user)s   ليس بمجلس الوزراء."
 
-#: tppcenter/Companies/views.py:656 tppcenter/Tpp/views.py:774
+#: tppcenter/Companies/views.py:531 tppcenter/Tpp/views.py:775
 #, python-format
 msgid ""
 "Can not set attributes for Cabinet ID: "
@@ -2192,69 +2220,72 @@ msgstr ""
 "%(cab_id)s.                                                      والسبب هو : "
 "%(reason)s                                               "
 
-#: tppcenter/Companies/views.py:666 tppcenter/Tpp/views.py:785
+#: tppcenter/Companies/views.py:541 tppcenter/Tpp/views.py:786
 msgid "You can not add user at Vacancy which already busy."
 msgstr "لا يمكنك إضافة مستخدم في الشواغر المشغولة."
 
-#: tppcenter/Companies/views.py:668 tppcenter/Tpp/views.py:787
+#: tppcenter/Companies/views.py:543 tppcenter/Tpp/views.py:788
 #, python-format
 msgid "You can not add user [%(user)s] at the company twice."
 msgstr "لا يمكنك إضافة المستخدم  [%(user)s] في الشركة مرتين."
 
-#: tppcenter/Companies/views.py:992 tppcenter/Companies/views.py:1008
-#: tppcenter/templates/base.html:154 tppcenter/templates/Vacancy/index.html:43
+#: tppcenter/Companies/views.py:958 tppcenter/Companies/views.py:974
+#: tppcenter/templates/base.html:172 tppcenter/templates/Vacancy/index.html:43
 msgid "You have successfully sent the message."
-msgstr "لقد أرسلت بنجاح الرسالة."
+msgstr "لقد أرسلت الرسالة بنجاح ."
 
-#: tppcenter/Companies/views.py:999
+#: tppcenter/Companies/views.py:965
 msgid "This message was sent to company with id:"
 msgstr "تم إرسال هذه الرسالة إلى الشركة مع هوية معرف:"
 
-#: tppcenter/Companies/views.py:1002
+#: tppcenter/Companies/views.py:968
 msgid "New message"
 msgstr "رسالة جديدة"
 
-#: tppcenter/Companies/views.py:1011
+#: tppcenter/Companies/views.py:977
 msgid "Message or file are required"
 msgstr "يطلب رسالة أو ملف"
 
-#: tppcenter/Companies/views.py:1013
+#: tppcenter/Companies/views.py:979
 msgid "Only registered users can send the messages"
 msgstr "يمكن للمستخدمين المسجلين فقط إرسال الرسائل"
 
-#: tppcenter/Greetings/views.py:35 tppcenter/templates/index.html:405
+#: tppcenter/Greetings/views.py:35 tppcenter/templates/index.html:464
+#: tppcenter/templates/job_index.html:417
 #: tppcenter/templates/Greetings/index.html:10
+#: tppcenter/templates/main/staticPages.html:8
 msgid "Greetings"
 msgstr "تحيات"
 
-#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:314
-#: tppcenter/templates/Wall/contentPage.html:11
+#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:316
+#: tppcenter/templates/Wall/contentPage.html:56
 msgid "Innovation Project"
-msgstr "مشروع الابتكار"
+msgstr "مشاريع مبتكرة"
 
 #: tppcenter/Messages/views.py:82
 msgid "Private messages"
 msgstr "رسالة خاصة"
 
-#: tppcenter/News/views.py:62 tppcenter/News/views.py:99
-#: tppcenter/templates/index.html:153 tppcenter/templates/main_page.html:116
-#: tppcenter/templates/main_page.html:142
-#: tppcenter/templates/Companies/detailContent.html:564
+#: tppcenter/News/views.py:63 tppcenter/News/views.py:100
+#: tppcenter/templates/index.html:212 tppcenter/templates/job_index.html:208
+#: tppcenter/templates/main_page.html:125
+#: tppcenter/templates/main_page.html:150
+#: tppcenter/templates/Companies/detailContent.html:577
 #: tppcenter/templates/News/index.html:11
-#: tppcenter/templates/Tpp/detailContent.html:510
-#: tppcenter/templates/Wall/contentPage.html:189 usersites/News/views.py:41
+#: tppcenter/templates/Tpp/detailContent.html:503
+#: tppcenter/templates/Wall/contentPage.html:224 usersites/News/views.py:41
 #: usersites/News/views.py:42 usersites/templates/contentPage.html:43
 msgid "News"
 msgstr "اخبار"
 
 #: tppcenter/Profile/profileForms.py:20
-#: tppcenter/templates/main/user_profile.html:40
+#: tppcenter/templates/main/user_profile.html:41
 msgid "First name"
 msgstr "الاسم الأول"
 
 #: tppcenter/Profile/profileForms.py:23
 #: tppcenter/templates/Profile/addForm.html:44
-#: tppcenter/templates/main/user_profile.html:44
+#: tppcenter/templates/main/user_profile.html:45
 msgid "Middle name"
 msgstr "الاسم الأوسط"
 
@@ -2271,8 +2302,8 @@ msgid "Skype"
 msgstr "سكايب"
 
 #: tppcenter/Profile/profileForms.py:56
-#: tppcenter/templates/Profile/addForm.html:102
-#: tppcenter/templates/main/user_profile.html:82
+#: tppcenter/templates/Profile/addForm.html:95
+#: tppcenter/templates/main/user_profile.html:83
 #: usersites/templates/CompanyStructure/contentPage.html:23
 msgid "Mobile number"
 msgstr "رقم الهاتف النقال"
@@ -2281,7 +2312,7 @@ msgstr "رقم الهاتف النقال"
 msgid "Proffesion"
 msgstr "مهنة"
 
-#: tppcenter/Profile/views.py:101
+#: tppcenter/Profile/views.py:98
 msgid "This email already in use"
 msgstr "هذا البريد الإلكتروني قيد الاستخدام"
 
@@ -2290,6 +2321,7 @@ msgid "Advertise with us"
 msgstr "أعلن معنا"
 
 #: tppcenter/Project/urls.py:13 tppcenter/templates/index.html:75
+#: tppcenter/templates/job_index.html:91
 msgid "Payment System"
 msgstr "نظام الدفع"
 
@@ -2305,118 +2337,131 @@ msgstr "العثور على الشريك التجاري"
 msgid "Create online shop"
 msgstr "إنشاء متجر على الانترنت"
 
-#: tppcenter/Project/urls.py:18 tppcenter/templates/Project/event.html:16
-#: tppcenter/templates/Project/proposal.html:16
+#: tppcenter/Project/urls.py:18
 msgid "Post announcement event"
 msgstr "مشاركة حدث معلن"
 
 #: tppcenter/Project/urls.py:19 tppcenter/templates/Project/partner.html:16
 msgid "Add a business proposal"
-msgstr "إضافة اقتراح الأعمال"
+msgstr "إضافة عرض تجاري"
 
 #: tppcenter/Project/urls.py:22 tppcenter/templates/Project/site.html:16
 msgid "Your own site"
 msgstr "موقعك الخاص"
 
-#: tppcenter/Resume/views.py:246 tppcenter/templates/main_page.html:130
-#: tppcenter/templates/main_page.html:158
+#: tppcenter/Resume/views.py:211
+msgid "Name not found"
+msgstr "الاسم غير موجود"
+
+#: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:138
+#: tppcenter/templates/main_page.html:169
 #: tppcenter/templates/Resume/index.html:10
 msgid "Resume"
 msgstr "استئناف"
 
-#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:141
-#: tppcenter/templates/index.html:141 tppcenter/templates/main_page.html:122
-#: tppcenter/templates/main_page.html:148
+#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:142
+#: tppcenter/templates/index.html:200 tppcenter/templates/job_index.html:196
+#: tppcenter/templates/main_page.html:131
+#: tppcenter/templates/main_page.html:156
 #: tppcenter/templates/Analytic/main.html:76
 #: tppcenter/templates/Analytic/main.html:119
-#: tppcenter/templates/Companies/detailContent.html:581
+#: tppcenter/templates/Companies/detailContent.html:594
 #: tppcenter/templates/Tenders/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:527
+#: tppcenter/templates/Tpp/detailContent.html:521
 msgid "Tenders"
 msgstr "المناقصات"
 
-#: tppcenter/Tpp/views.py:60 tppcenter/Tpp/views.py:265
-#: tppcenter/templates/Tpp/index.html:10
+#: tppcenter/Tpp/views.py:67 tppcenter/Tpp/views.py:278
 msgid "Tpp"
-msgstr "برنامج النقاط التجارية"
+msgstr "غرفة التجارة الدولية"
+
+#: tppcenter/Tpp/views.py:790
+msgid ""
+"Could not add User ID: %(user_id).                                  The "
+"reason is: %(reason)s"
+msgstr ""
+"لا يمكن تعيين سمات لمجلس الوزراء رقم:"
+"%(cab_id)s.                                                      والسبب هو : "
+"%(reason)s                                               "
 
 #: tppcenter/TppTV/views.py:83
 msgid "TppTv"
-msgstr "محطة برنامج النقاط التجارية"
+msgstr "قناة التلفاز"
 
-#: tppcenter/UserSites/views.py:103 tppcenter/templates/main_page.html:156
+#: tppcenter/UserSites/views.py:105 tppcenter/templates/main_page.html:167
 #: tppcenter/templates/Tpp/tabCompanies.html:10
 msgid "Site"
 msgstr "موقع"
 
-#: tppcenter/UserSites/views.py:153
+#: tppcenter/UserSites/views.py:152
 msgid "You cannot add more than one site for your organization"
 msgstr "لا يمكنك إضافة أكثر من موقع لمؤسستك"
 
-#: tppcenter/UserSites/views.py:178 tppcenter/UserSites/views.py:231
+#: tppcenter/UserSites/views.py:179 tppcenter/UserSites/views.py:241
 msgid "This domain is used, please try something else"
 msgstr " هذا النطاق مستخدم ، يرجى محاولة شيء آخر"
 
-#: tppcenter/Users/views.py:41 tppcenter/templates/main_page.html:161
+#: tppcenter/Users/views.py:41 tppcenter/templates/main_page.html:139
+#: tppcenter/templates/main_page.html:172
 #: tppcenter/templates/Messages/index.html:49
 #: tppcenter/templates/Users/index.html:10
 msgid "Users"
 msgstr "المستخدمين"
 
-#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:276
+#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:270
 #: tppcenter/templates/Vacancy/index.html:10
 msgid "Vacancy"
 msgstr "الشواغر"
 
-#: tppcenter/Vacancy/views.py:341 tppcenter/Vacancy/views.py:399
+#: tppcenter/Vacancy/views.py:335 tppcenter/Vacancy/views.py:393
 msgid "You have to choose vacancy"
 msgstr "عليك ان تختار الشواغر"
 
-#: tppcenter/Vacancy/views.py:483
+#: tppcenter/Vacancy/views.py:477
 msgid "You cannot send more than one resume at the same job position."
 msgstr "لا يمكنك إرسال سيرتك الذاتية أكثر من مرة واحدة في نفس موضع وظيفة."
 
-#: tppcenter/Vacancy/views.py:486
+#: tppcenter/Vacancy/views.py:480
 msgid "You have successfully sent the resume."
 msgstr "كنت قد أرسلت  الذاتية بنجاح."
 
-#: tppcenter/Vacancy/views.py:489
+#: tppcenter/Vacancy/views.py:483
 msgid "Resume  are required"
 msgstr "يطلب استئناف"
 
-#: tppcenter/Vacancy/views.py:491
+#: tppcenter/Vacancy/views.py:485
 msgid "Only registred users can send resume"
-msgstr "يمكن للمستخدمين المسجلين فقط ترسل السيرة الذاتية"
+msgstr "يمكن للمستخدمين المسجلين فقط ارسال السيرة الذاتية"
 
-#: tppcenter/Vacancy/views.py:517
+#: tppcenter/Vacancy/views.py:511
 msgid "The error occurred"
 msgstr "حدث الخطأ"
 
-#: tppcenter/Vacancy/views.py:522
+#: tppcenter/Vacancy/views.py:516
 msgid "Department name  is required"
 msgstr "مطلوب اسم القسم"
 
-#: tppcenter/Vacancy/views.py:524
+#: tppcenter/Vacancy/views.py:518
 msgid "Only registred users can add department"
 msgstr "يمكن للمستخدمين المسجلين فقط إضافة قسم"
 
-#: tppcenter/Vacancy/views.py:567
+#: tppcenter/Vacancy/views.py:569
 msgid "Vacancy name  is required"
 msgstr "مطلوب اسم الشواغر"
 
-#: tppcenter/Vacancy/views.py:569
+#: tppcenter/Vacancy/views.py:571
 msgid "Only registred users can add vacancy"
 msgstr "يمكن للمستخدمين المسجلين فقط إضافة الشواغر"
 
-#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:132
-#: tppcenter/templates/Wall/index.html:6 usersites/views.py:18
-#: usersites/views.py:19
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:140
+#: tppcenter/templates/Wall/index.html:4 usersites/views.py:20
+#: usersites/views.py:21
 msgid "Wall"
 msgstr "صفحة"
 
 #: tppcenter/templates/additionalPage.html:4
-#: tppcenter/templates/baseFilter.html:90
-#: tppcenter/templates/baseFilter.html:116
+#: tppcenter/templates/baseFilter.html:97
+#: tppcenter/templates/baseFilter.html:123
 #: tppcenter/templates/News/addForm.html:145
 #: tppcenter/templates/TppTV/addForm.html:94
 msgid "Title"
@@ -2427,8 +2472,9 @@ msgstr "عنوان"
 #: tppcenter/templates/News/addForm.html:41
 #: tppcenter/templates/News/addForm.html:69
 #: tppcenter/templates/Products/addForm.html:172
+#: tppcenter/templates/UserSites/addForm.html:107
 msgid "Remove"
-msgstr "امحو"
+msgstr "حذف"
 
 #: tppcenter/templates/additionalPage.html:10
 msgid "Add page"
@@ -2441,47 +2487,47 @@ msgstr "اضف صفحة"
 msgid "Content"
 msgstr "فحوى"
 
-#: tppcenter/templates/base.html:124
+#: tppcenter/templates/base.html:142
 msgid "Partners"
 msgstr "شركاء"
 
-#: tppcenter/templates/base.html:132 tppcenter/templates/main_page.html:109
+#: tppcenter/templates/base.html:150 tppcenter/templates/main_page.html:118
 msgid "TPP-Center"
-msgstr "TPP-Center"
+msgstr "عام"
 
-#: tppcenter/templates/base.html:132
+#: tppcenter/templates/base.html:150
 msgid "Center of chambers of commerce, associations, unions and guilds "
 msgstr "مركز الغرف التجارية والجمعيات والاتحادات والنقابات"
 
-#: tppcenter/templates/base.html:159
+#: tppcenter/templates/base.html:177
 msgid "Send message to"
 msgstr "ارسل الى"
 
-#: tppcenter/templates/base.html:167
+#: tppcenter/templates/base.html:185
 msgid "File"
 msgstr "ملف"
 
-#: tppcenter/templates/base.html:173
+#: tppcenter/templates/base.html:191
 #: tppcenter/templates/Messages/contentBox.html:15
 #: tppcenter/templates/Vacancy/index.html:70
-#: usersites/templates/Contact/contentPage.html:66
+#: usersites/templates/Contact/contentPage.html:88
 msgid "Send"
 msgstr "ارسل"
 
-#: tppcenter/templates/base.html:174
-#: tppcenter/templates/BusinessProposal/addForm.html:146
+#: tppcenter/templates/base.html:192
+#: tppcenter/templates/BusinessProposal/addForm.html:160
 #: tppcenter/templates/Companies/addForm.html:260
-#: tppcenter/templates/Companies/tabStaff.html:155
-#: tppcenter/templates/Companies/tabStructure.html:78
-#: tppcenter/templates/Companies/tabStructure.html:90
+#: tppcenter/templates/Companies/tabStaff.html:161
+#: tppcenter/templates/Companies/tabStructure.html:80
+#: tppcenter/templates/Companies/tabStructure.html:92
 #: tppcenter/templates/Exhibitions/addForm.html:217
 #: tppcenter/templates/Exhibitions/detailContent.html:231
 #: tppcenter/templates/Products/addForm.html:436
-#: tppcenter/templates/Profile/addForm.html:116
+#: tppcenter/templates/Profile/addForm.html:109
 #: tppcenter/templates/Resume/addForm.html:325
 #: tppcenter/templates/Tenders/addForm.html:167
-#: tppcenter/templates/Tpp/addForm.html:223
-#: tppcenter/templates/Tpp/tabStaff.html:153
+#: tppcenter/templates/Tpp/addForm.html:241
+#: tppcenter/templates/Tpp/tabStaff.html:160
 #: tppcenter/templates/Tpp/tabStructure.html:77
 #: tppcenter/templates/Tpp/tabStructure.html:89
 #: tppcenter/templates/TppTV/addForm.html:112
@@ -2512,225 +2558,258 @@ msgstr "الحد الأدنى لطول  البحث هو 3 أحرف"
 msgid "Select organizations"
 msgstr "حدد المنظمات"
 
-#: tppcenter/templates/baseFilter.html:61
-#: tppcenter/templates/AdvBanner/addForm.html:334
-#: tppcenter/templates/AdvTop/addForm.html:305
+#: tppcenter/templates/baseFilter.html:11
+msgid "Select company"
+msgstr "اختر الشركة"
+
+#: tppcenter/templates/baseFilter.html:13
+msgid "Select category"
+msgstr "اختر فئة"
+
+#: tppcenter/templates/baseFilter.html:68
+#: tppcenter/templates/AdvBanner/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:306
 msgid "Filter"
 msgstr "مرشح"
 
-#: tppcenter/templates/baseFilter.html:73
-#: tppcenter/templates/main_page.html:110
+#: tppcenter/templates/baseFilter.html:80
+#: tppcenter/templates/main_page.html:119
 msgid "My"
-msgstr "خاصتي"
+msgstr "خاص"
 
-#: tppcenter/templates/baseFilter.html:76
+#: tppcenter/templates/baseFilter.html:83
 msgid "Sorting"
 msgstr "فرز"
 
-#: tppcenter/templates/baseFilter.html:82
-#: tppcenter/templates/baseFilter.html:110
+#: tppcenter/templates/baseFilter.html:89
+#: tppcenter/templates/baseFilter.html:117
 msgid "Field"
 msgstr "حقل"
 
-#: tppcenter/templates/baseFilter.html:87
-#: tppcenter/templates/baseFilter.html:115
+#: tppcenter/templates/baseFilter.html:94
+#: tppcenter/templates/baseFilter.html:122
 msgid "Creation date"
 msgstr "تاريخ الإنشاء"
 
-#: tppcenter/templates/baseFilter.html:99
-#: tppcenter/templates/baseFilter.html:125
+#: tppcenter/templates/baseFilter.html:106
+#: tppcenter/templates/baseFilter.html:132
 msgid "Descending"
 msgstr "تنازلي"
 
-#: tppcenter/templates/baseFilter.html:102
-#: tppcenter/templates/baseFilter.html:128
+#: tppcenter/templates/baseFilter.html:109
+#: tppcenter/templates/baseFilter.html:135
 msgid "Ascending"
 msgstr "تصاعدي"
 
-#: tppcenter/templates/baseFilter.html:134
+#: tppcenter/templates/baseFilter.html:141
 msgid "Apply"
 msgstr "تطبق"
 
-#: tppcenter/templates/index.html:7
+#: tppcenter/templates/index.html:7 tppcenter/templates/job_index.html:7
 msgid "Tppcenter"
-msgstr "Tppcenter"
+msgstr "عام"
 
-#: tppcenter/templates/index.html:63
+#: tppcenter/templates/index.html:63 tppcenter/templates/job_index.html:79
 msgid "B2C center"
 msgstr "مركز من التاجر الى الزبون"
 
-#: tppcenter/templates/index.html:69
+#: tppcenter/templates/index.html:69 tppcenter/templates/job_index.html:85
 msgid "Innovation projects"
-msgstr "مشاريع الابتكار"
+msgstr "مشاريع مبتكرة"
 
-#: tppcenter/templates/index.html:98
+#: tppcenter/templates/index.html:85 tppcenter/templates/job_index.html:101
+#: tppcenter/templates/login_header.html:38
+#: usersites/templates/site_sidebar.html:11
+msgid "Mother tongue"
+msgstr "لغة الام"
+
+#: tppcenter/templates/index.html:87 tppcenter/templates/job_index.html:103
+msgid "Armenian"
+msgstr "الارامية"
+
+#: tppcenter/templates/index.html:89 tppcenter/templates/job_index.html:105
+msgid "English"
+msgstr "الانجليزية"
+
+#: tppcenter/templates/index.html:90 tppcenter/templates/job_index.html:106
+msgid "Hebrew"
+msgstr "العبرية"
+
+#: tppcenter/templates/index.html:91 tppcenter/templates/job_index.html:107
+msgid "Russian"
+msgstr "روسيا"
+
+#: tppcenter/templates/index.html:157 tppcenter/templates/job_index.html:173
 msgid "Community"
 msgstr "مجتمع"
 
-#: tppcenter/templates/index.html:110
+#: tppcenter/templates/index.html:169
 msgid "Work with"
 msgstr "العمل مع"
 
-#: tppcenter/templates/index.html:129
+#: tppcenter/templates/index.html:188 tppcenter/templates/job_index.html:184
 msgid "Producst and services"
 msgstr "المنتجات والخدمات"
 
-#: tppcenter/templates/index.html:137
+#: tppcenter/templates/index.html:196 tppcenter/templates/job_index.html:192
 msgid "Business community"
 msgstr "مجتمع الأعمال"
 
-#: tppcenter/templates/index.html:145
+#: tppcenter/templates/index.html:204 tppcenter/templates/job_index.html:200
 msgid "Innovative projects"
 msgstr "المشاريع المبتكرة"
 
-#: tppcenter/templates/index.html:149
+#: tppcenter/templates/index.html:208 tppcenter/templates/job_index.html:204
 msgid "Jobs"
 msgstr "عمل"
 
-#: tppcenter/templates/index.html:165
+#: tppcenter/templates/index.html:224 tppcenter/templates/job_index.html:220
 msgid "and get tools for business"
 msgstr "والحصول على الأدوات اللازمة لرجال الأعمال"
 
-#: tppcenter/templates/index.html:167
+#: tppcenter/templates/index.html:226 tppcenter/templates/job_index.html:222
 msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
 msgstr ""
-"في عام 2014 مركز بوابة برنامج النقاط التجارية تميزت بعلامة مكافأة \"قادة "
+"في عام 2014 مركز بوابة غرفة التجارة الدولية تميزت بعلامة مكافأة \"قادة "
 "الأعمال في رابطة الدول المستقلة \" لمساهمته في تطوير التكامل الاقتصادي"
 
-#: tppcenter/templates/index.html:174
+#: tppcenter/templates/index.html:233 tppcenter/templates/job_index.html:229
 msgid "on the portal will allow you to"
 msgstr " البوابة سوف تسمح لك ل"
 
-#: tppcenter/templates/index.html:176
+#: tppcenter/templates/index.html:235 tppcenter/templates/job_index.html:231
 msgid "run a business behalf of the company"
 msgstr "تشغيل نيابة الأعمال التجارية للشركة"
 
-#: tppcenter/templates/index.html:177
+#: tppcenter/templates/index.html:236 tppcenter/templates/job_index.html:232
 msgid "to buy goods as a private person"
 msgstr "لشراء السلع كشخص خاص"
 
-#: tppcenter/templates/index.html:178
+#: tppcenter/templates/index.html:237 tppcenter/templates/job_index.html:233
 msgid "draw attention toward your projects"
 msgstr "لفت الانتباه حول المشاريع الخاصة بك"
 
-#: tppcenter/templates/index.html:187
+#: tppcenter/templates/index.html:246 tppcenter/templates/job_index.html:242
 msgid "and you will be able"
 msgstr "وسوف تكون قادر"
 
-#: tppcenter/templates/index.html:189
+#: tppcenter/templates/index.html:248 tppcenter/templates/job_index.html:244
 msgid "create your own online shop"
 msgstr "إنشاء متجر الخاصة بك على الانترنت"
 
-#: tppcenter/templates/index.html:190
+#: tppcenter/templates/index.html:249 tppcenter/templates/job_index.html:245
 msgid "to represent your products and services"
 msgstr "تمثيل لمنتجات والخدمات الخاصة بك"
 
-#: tppcenter/templates/index.html:191
+#: tppcenter/templates/index.html:250 tppcenter/templates/job_index.html:246
 msgid "communicate with potential customers"
 msgstr "التواصل مع الزبائن المحتملين"
 
-#: tppcenter/templates/index.html:199
+#: tppcenter/templates/index.html:258 tppcenter/templates/job_index.html:254
 msgid "Registred"
 msgstr "مسجل"
 
-#: tppcenter/templates/index.html:200
+#: tppcenter/templates/index.html:259 tppcenter/templates/job_index.html:255
 msgid "users can"
 msgstr "يمكن للمستخدمين"
 
-#: tppcenter/templates/index.html:202
+#: tppcenter/templates/index.html:261 tppcenter/templates/job_index.html:257
 msgid "create their own websites"
 msgstr "إنشاء مواقع خاصة بهم"
 
-#: tppcenter/templates/index.html:203
+#: tppcenter/templates/index.html:262 tppcenter/templates/job_index.html:258
 msgid "puts advertising on the portal"
 msgstr "يضع الإعلان على البوابة"
 
-#: tppcenter/templates/index.html:204
+#: tppcenter/templates/index.html:263 tppcenter/templates/job_index.html:259
 msgid "create their own communities of interest"
 msgstr "خلق اهتمام خاص بمجتمعاتهم"
 
-#: tppcenter/templates/index.html:213
+#: tppcenter/templates/index.html:272 tppcenter/templates/job_index.html:268
 msgid "right now"
 msgstr "الآن"
 
-#: tppcenter/templates/index.html:221
+#: tppcenter/templates/index.html:280 tppcenter/templates/job_index.html:276
 #: tppcenter/templates/registration/registration.html:52
+#: usersites/templates/slider.html:35
 msgid "Confirm password"
 msgstr "تأكيد كلمة المرور"
 
-#: tppcenter/templates/index.html:224
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "I agree to"
 msgstr "موافق على"
 
-#: tppcenter/templates/index.html:224
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "the term"
 msgstr "الفصل"
 
-#: tppcenter/templates/index.html:280
+#: tppcenter/templates/index.html:339 tppcenter/templates/job_index.html:292
 msgid "Affiche"
 msgstr "الملصق"
 
-#: tppcenter/templates/index.html:322
+#: tppcenter/templates/index.html:381 tppcenter/templates/job_index.html:334
 msgid "All exhibitions and forums"
 msgstr "جميع المعارض والمنتديات"
 
-#: tppcenter/templates/index.html:325
+#: tppcenter/templates/index.html:384 tppcenter/templates/job_index.html:337
 msgid "Business offers"
 msgstr "العروض التجارية"
 
-#: tppcenter/templates/index.html:363
+#: tppcenter/templates/index.html:422 tppcenter/templates/job_index.html:375
 msgid "All business offers"
 msgstr "جميع العروض التجارية"
 
-#: tppcenter/templates/index.html:368
+#: tppcenter/templates/index.html:427 tppcenter/templates/job_index.html:380
 msgid "Introduction to London Markets"
 msgstr "مقدمة لأسواق لندن"
 
-#: tppcenter/templates/index.html:375
+#: tppcenter/templates/index.html:434 tppcenter/templates/job_index.html:387
 msgid "Download Presentation"
 msgstr "تحميل العرض التقديمي"
 
-#: tppcenter/templates/index.html:383
+#: tppcenter/templates/index.html:442 tppcenter/templates/job_index.html:395
 msgid "Videoreference of V.Migirov"
 msgstr "الفيديو المرجعي ل V.Migirov"
 
-#: tppcenter/templates/index.html:394
+#: tppcenter/templates/index.html:453 tppcenter/templates/job_index.html:406
 msgid "Download Guide Site"
 msgstr "تحميل دليل الموقع"
 
-#: tppcenter/templates/login_header.html:48
+#: tppcenter/templates/login_header.html:106
 msgid "System notifications"
 msgstr "إعلامات النظام"
 
-#: tppcenter/templates/login_header.html:53
+#: tppcenter/templates/login_header.html:111
 msgid "Notifications"
 msgstr "إعلام"
 
-#: tppcenter/templates/login_header.html:59
+#: tppcenter/templates/login_header.html:117
 msgid "See all"
-msgstr "انظر جميع"
+msgstr "انظر الكل"
 
-#: tppcenter/templates/login_header.html:63
-#: tppcenter/templates/main_page.html:160
+#: tppcenter/templates/login_header.html:121
+#: tppcenter/templates/main_page.html:171
 msgid "Messages"
 msgstr "رسالة"
 
-#: tppcenter/templates/login_header.html:70
+#: tppcenter/templates/login_header.html:128
 msgid "Friend request"
 msgstr "طلب صداقة"
 
-#: tppcenter/templates/login_header.html:73
+#: tppcenter/templates/login_header.html:131
 msgid "Notification in your communities"
 msgstr "الإعلام في مجتمعاتكم"
 
-#: tppcenter/templates/login_header.html:81
-#: tppcenter/templates/login_header.html:83
-#: tppcenter/templates/Companies/tabStaff.html:154
-#: tppcenter/templates/Companies/tabStructure.html:77
-#: tppcenter/templates/Companies/tabStructure.html:89
-#: tppcenter/templates/Tpp/tabStaff.html:152
+#: tppcenter/templates/login_header.html:139
+#: tppcenter/templates/login_header.html:141
+#: tppcenter/templates/Companies/tabStaff.html:160
+#: tppcenter/templates/Companies/tabStructure.html:79
+#: tppcenter/templates/Companies/tabStructure.html:91
+#: tppcenter/templates/Tpp/tabStaff.html:159
 #: tppcenter/templates/Tpp/tabStructure.html:76
 #: tppcenter/templates/Tpp/tabStructure.html:88
 #: tppcenter/templates/Vacancy/addForm.html:305
@@ -2738,62 +2817,47 @@ msgstr "الإعلام في مجتمعاتكم"
 msgid "Add"
 msgstr "اعلان"
 
-#: tppcenter/templates/main_page.html:118
-#: tppcenter/templates/main_page.html:144
+#: tppcenter/templates/main_page.html:127
+#: tppcenter/templates/main_page.html:152
 #: tppcenter/templates/Messages/index.html:46
 msgid "Organizations"
 msgstr "المنظمات"
 
-#: tppcenter/templates/main_page.html:123
-#: tppcenter/templates/main_page.html:149
+#: tppcenter/templates/main_page.html:132
+#: tppcenter/templates/main_page.html:157
 msgid "Exhibitions / Forums"
 msgstr "المعارض / منتديات"
 
-#: tppcenter/templates/main_page.html:124
-#: tppcenter/templates/main_page.html:150
-msgid "Insurance"
-msgstr "تأمين"
-
-#: tppcenter/templates/main_page.html:125
-#: tppcenter/templates/main_page.html:151
-msgid "Crediting"
-msgstr "الإعتمادات"
-
-#: tppcenter/templates/main_page.html:128
+#: tppcenter/templates/main_page.html:136
 #: tppcenter/templates/TppTV/index.html:10
 msgid "TPP TV"
-msgstr "TPP TV"
+msgstr "قناة التلفاز"
 
-#: tppcenter/templates/main_page.html:129
-#: tppcenter/templates/main_page.html:157
-msgid "Job requirements"
-msgstr "متطلبات الوظيفة"
-
-#: tppcenter/templates/main_page.html:140
+#: tppcenter/templates/main_page.html:148
 msgid "Admin Panel"
 msgstr "لوحة المشرف"
 
-#: tppcenter/templates/main_page.html:155
+#: tppcenter/templates/main_page.html:166
 msgid "Analytic"
 msgstr "تحليلي"
 
-#: tppcenter/templates/main_page.html:201
+#: tppcenter/templates/main_page.html:206
 msgid "Find.."
 msgstr "تجد .."
 
-#: tppcenter/templates/permissionDen.html:11
+#: tppcenter/templates/permissionDen.html:6
 msgid ""
-"Sorry but you cannot manipulate with this item , if you have created company "
-"you need choose it in you  "
+"Sorry, but you cannot manage this item. If you have created company you need "
+"choose it in your  "
 msgstr ""
 "آسف ولكن لا يمكنك التلاعب مع هذا البند، إذا كنت قد أنشأت شركة انت بحاجة"
 
-#: tppcenter/templates/permissionDen.html:12
+#: tppcenter/templates/permissionDen.html:7
 msgid " or create "
 msgstr "أو إنشاء"
 
-#: tppcenter/templates/permissionDen.html:13
-msgid "new company "
+#: tppcenter/templates/permissionDen.html:8
+msgid "a new company "
 msgstr "شركة جديدة"
 
 #: tppcenter/templates/AdminTpp/targetsList.html:7
@@ -2801,21 +2865,21 @@ msgid "Targets List"
 msgstr "قائمة الأهداف"
 
 #: tppcenter/templates/AdminTpp/targetsList.html:92
-#: tppcenter/templates/AdvBanner/addForm.html:359
+#: tppcenter/templates/AdvBanner/addForm.html:361
 #: tppcenter/templates/AdvBanner/order.html:298
-#: tppcenter/templates/AdvTop/addForm.html:331
+#: tppcenter/templates/AdvTop/addForm.html:333
 #: tppcenter/templates/AdvTop/order.html:298
 msgid "Days Q-ty"
-msgstr ""
+msgstr "Q-ty ايام"
 
 #: tppcenter/templates/AdminTpp/targetsList.html:96
 #: tppcenter/templates/Adv/basket.html:22
-#: tppcenter/templates/AdvBanner/addForm.html:363
+#: tppcenter/templates/AdvBanner/addForm.html:365
 #: tppcenter/templates/AdvBanner/order.html:302
-#: tppcenter/templates/AdvTop/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:337
 #: tppcenter/templates/AdvTop/order.html:302
 msgid "Summary"
-msgstr "ملخص"
+msgstr "تلخيص"
 
 #: tppcenter/templates/Adv/basket.html:7
 msgid "Advertisement basket"
@@ -2826,56 +2890,58 @@ msgid "Type"
 msgstr "نوع"
 
 #: tppcenter/templates/Adv/basket.html:20
-#: tppcenter/templates/AdvBanner/addForm.html:310
+#: tppcenter/templates/AdvBanner/addForm.html:311
 #: tppcenter/templates/AdvBanner/order.html:290
-#: tppcenter/templates/AdvTop/addForm.html:293
+#: tppcenter/templates/AdvTop/addForm.html:294
 #: tppcenter/templates/AdvTop/order.html:290
 #: tppcenter/templates/Companies/addForm.html:96
+#: tppcenter/templates/Companies/tabTenders.html:8
 #: tppcenter/templates/Products/addForm.html:238
-#: tppcenter/templates/Tpp/addForm.html:84
+#: tppcenter/templates/Tpp/addForm.html:85
+#: tppcenter/templates/Tpp/tabExhibitions.html:8
+#: tppcenter/templates/Tpp/tabTenders.html:8
 msgid "Start date"
-msgstr "تاريخ بدء"
+msgstr "تاريخ البدء"
 
 #: tppcenter/templates/Adv/basket.html:23
-#: tppcenter/templates/Companies/tabStaff.html:47
-#: tppcenter/templates/Tpp/tabStaff.html:46
+#: tppcenter/templates/Companies/tabStaff.html:53
+#: tppcenter/templates/Tpp/tabStaff.html:53
 msgid "Status"
 msgstr "حالة"
 
-#: tppcenter/templates/AdvBanner/addForm.html:292
+#: tppcenter/templates/AdvBanner/addForm.html:293
 msgid "Image file (Maximum 50KB)"
 msgstr "ملف الصورة (الحد الأقصى 50KB)"
 
-#: tppcenter/templates/AdvBanner/addForm.html:303
+#: tppcenter/templates/AdvBanner/addForm.html:304
 msgid "Link URL"
-msgstr "رابط الموقع"
+msgstr "موقع الرابط"
 
-#: tppcenter/templates/AdvBanner/addForm.html:316
+#: tppcenter/templates/AdvBanner/addForm.html:317
 msgid "Image title"
 msgstr "عنوان الصورة"
 
-#: tppcenter/templates/AdvBanner/addForm.html:327
+#: tppcenter/templates/AdvBanner/addForm.html:328
 #: tppcenter/templates/AdvBanner/order.html:294
-#: tppcenter/templates/AdvTop/addForm.html:298
+#: tppcenter/templates/AdvTop/addForm.html:299
 #: tppcenter/templates/AdvTop/order.html:294
 #: tppcenter/templates/Companies/addForm.html:100
 #: tppcenter/templates/Companies/tabExhibitions.html:9
 #: tppcenter/templates/Companies/tabTenders.html:9
 #: tppcenter/templates/Products/addForm.html:247
-#: tppcenter/templates/Tpp/addForm.html:91
+#: tppcenter/templates/Tpp/addForm.html:92
 #: tppcenter/templates/Tpp/tabExhibitions.html:9
 #: tppcenter/templates/Tpp/tabTenders.html:9
 msgid "End date"
-msgstr "انتهائ التاريخ"
+msgstr "تاريخ الانتهاء"
 
-#: tppcenter/templates/AdvBanner/addForm.html:349
-#: tppcenter/templates/AdvTop/addForm.html:321
+#: tppcenter/templates/AdvBanner/addForm.html:351
+#: tppcenter/templates/AdvTop/addForm.html:323
 msgid "Basket"
 msgstr "سلة"
 
-#: tppcenter/templates/AdvBanner/addForm.html:368
-#: tppcenter/templates/AdvTop/addForm.html:338
-#: tppcenter/templates/AdvTop/order.html:316
+#: tppcenter/templates/AdvBanner/addForm.html:370
+#: tppcenter/templates/AdvTop/addForm.html:340
 msgid "Pay"
 msgstr "دفع"
 
@@ -2892,16 +2958,21 @@ msgstr "رقم الطلب"
 #: tppcenter/templates/AdvBanner/order.html:314
 #: tppcenter/templates/AdvTop/order.html:314
 msgid ""
-"Thank you for order, you will be notified when the adveretisement be applied"
-msgstr "أشكركم على النظام، وسيتم إعلامك عندما يتم تطبيق الإعلان"
+"Thank you for order, you will be notified when the advertisement will "
+"published"
+msgstr "نشكركم على طلبكم ، وسيتم إعلامك عندما يتم تطبيق الإعلان"
+
+#: tppcenter/templates/AdvTop/order.html:316
+msgid "Advertisement"
+msgstr "الإعلان"
 
 #: tppcenter/templates/AdvTop/tops.html:8
 msgid "Paid ads"
-msgstr "إعلانات مدفوعة الأجر"
+msgstr "اعلانات بالايجار"
 
 #: tppcenter/templates/Analytic/main.html:57
 msgid "My sections"
-msgstr "أقسام بلدي"
+msgstr "اقسامي"
 
 #: tppcenter/templates/Analytic/main.html:60
 #: tppcenter/templates/Analytic/main.html:107
@@ -2911,10 +2982,9 @@ msgstr "اسم القسم"
 #: tppcenter/templates/Analytic/main.html:61
 #: tppcenter/templates/Analytic/main.html:108
 msgid "Views"
-msgstr "وجهات النظر"
+msgstr "وجهات نظر"
 
 #: tppcenter/templates/Analytic/main.html:85
-#: tppcenter/templates/BusinessProposal/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/detailContent.html:219
 #: tppcenter/templates/News/popupFilter.html:21
 #: tppcenter/templates/Resume/addForm.html:180
@@ -2937,7 +3007,7 @@ msgstr "أحداث الدائرة"
 #: tppcenter/templates/Exhibitions/addForm.html:109
 #: tppcenter/templates/Products/addForm.html:189
 #: tppcenter/templates/Tenders/addForm.html:67
-#: tppcenter/templates/Tenders/detailContent.html:93
+#: tppcenter/templates/Tenders/detailContent.html:85
 msgid "Documents"
 msgstr "ملفات"
 
@@ -2961,27 +3031,31 @@ msgstr "ملف3"
 msgid "Images"
 msgstr "صور"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:79
+#: tppcenter/templates/BusinessProposal/addForm.html:75
+msgid "Load correct image"
+msgstr "تحميل الصورة الصحيحة"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:82
 msgid "image"
 msgstr "صورة"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:89
+#: tppcenter/templates/BusinessProposal/addForm.html:92
 #: tppcenter/templates/Companies/addForm.html:143
 #: tppcenter/templates/Exhibitions/addForm.html:93
 #: tppcenter/templates/Products/addForm.html:229
 #: tppcenter/templates/Tenders/addForm.html:122
-#: tppcenter/templates/Tpp/addForm.html:126
+#: tppcenter/templates/Tpp/addForm.html:127
 #: tppcenter/templates/TppTV/addForm.html:85
 #: tppcenter/templates/Vacancy/addForm.html:247
 msgid "Keywords"
 msgstr "كلمات"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:99
+#: tppcenter/templates/BusinessProposal/addForm.html:102
 #: tppcenter/templates/Companies/tabExhibitions.html:7
 #: tppcenter/templates/Companies/tabInnov.html:8
 #: tppcenter/templates/Companies/tabProducts.html:9
 #: tppcenter/templates/Companies/tabProposal.html:8
-#: tppcenter/templates/Companies/tabStaff.html:43
+#: tppcenter/templates/Companies/tabStaff.html:49
 #: tppcenter/templates/Companies/tabTenders.html:7
 #: tppcenter/templates/Exhibitions/addForm.html:170
 #: tppcenter/templates/Exhibitions/detailContent.html:207
@@ -2991,12 +3065,12 @@ msgstr "كلمات"
 #: tppcenter/templates/Tpp/tabExhibitions.html:7
 #: tppcenter/templates/Tpp/tabInnov.html:8
 #: tppcenter/templates/Tpp/tabProposal.html:8
-#: tppcenter/templates/Tpp/tabStaff.html:42
+#: tppcenter/templates/Tpp/tabStaff.html:49
 #: tppcenter/templates/Tpp/tabTenders.html:7
 msgid "Name"
 msgstr "اسم"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:116
+#: tppcenter/templates/BusinessProposal/addForm.html:119
 #: tppcenter/templates/BusinessProposal/popupFilter.html:22
 #: tppcenter/templates/Companies/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/popupFilter.html:21
@@ -3006,21 +3080,30 @@ msgstr "اسم"
 #: tppcenter/templates/Products/popupFilter.html:21
 #: tppcenter/templates/Tenders/popupFilter.html:22
 #: tppcenter/templates/TppTV/popupFilter.html:22
-#: tppcenter/templates/Wall/contentPage.html:56
+#: tppcenter/templates/Wall/contentPage.html:96
 msgid "Branch"
 msgstr "فرع"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:128
+#: tppcenter/templates/BusinessProposal/addForm.html:130
+#: tppcenter/templates/BusinessProposal/popupFilter.html:21
+#: tppcenter/templates/News/addForm.html:87
+#: tppcenter/templates/Products/addForm.html:380
+#: tppcenter/templates/TppTV/addForm.html:44
+msgid "Category"
+msgstr "فئة"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:142
 #: tppcenter/templates/Companies/addForm.html:242
 #: tppcenter/templates/Exhibitions/addForm.html:200
 #: tppcenter/templates/Innov/addForm.html:173
 #: tppcenter/templates/Products/addForm.html:418
 #: tppcenter/templates/Tenders/addForm.html:149
+#: tppcenter/templates/Tpp/addForm.html:223
 msgid "Additional pages"
 msgstr "صفحات إضافية"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:32
-#: tppcenter/templates/Companies/contentPage.html:36
+#: tppcenter/templates/Companies/contentPage.html:39
 #: tppcenter/templates/Exhibitions/contentPage.html:36
 #: tppcenter/templates/Innov/contentPage.html:42
 #: tppcenter/templates/News/contentPage.html:32
@@ -3035,27 +3118,29 @@ msgid "edit"
 msgstr "تحرير"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:35
-#: tppcenter/templates/Companies/contentPage.html:40
+#: tppcenter/templates/Companies/contentPage.html:43
 #: tppcenter/templates/Exhibitions/contentPage.html:39
 #: tppcenter/templates/Innov/contentPage.html:45
 #: tppcenter/templates/Products/contentPage.html:31
-msgid "add top"
-msgstr "إضافة للأعلى"
+#: tppcenter/templates/Vacancy/contentPage.html:36
+msgid "Advertise"
+msgstr "أعلن معنا"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:38
-#: tppcenter/templates/Companies/contentPage.html:43
-#: tppcenter/templates/Companies/tabGalleryPhoto.html:10
+#: tppcenter/templates/Companies/contentPage.html:46
+#: tppcenter/templates/Companies/tab_gallery_structure.html:11
 #: tppcenter/templates/Exhibitions/contentPage.html:42
 #: tppcenter/templates/Innov/contentPage.html:48
 #: tppcenter/templates/News/contentPage.html:35
 #: tppcenter/templates/Products/contentPage.html:34
 #: tppcenter/templates/Resume/contentPage.html:30
 #: tppcenter/templates/Tenders/contentPage.html:35
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:12
 #: tppcenter/templates/TppTV/contentPage.html:27
 #: tppcenter/templates/UserSites/contentPage.html:28
-#: tppcenter/templates/Vacancy/contentPage.html:37
+#: tppcenter/templates/Vacancy/contentPage.html:39
 msgid "remove"
-msgstr "نزع"
+msgstr "حذف"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:55
 #: tppcenter/templates/BusinessProposal/popupFilter.html:20
@@ -3068,12 +3153,12 @@ msgstr "نزع"
 #: tppcenter/templates/Products/popupFilter.html:20
 #: tppcenter/templates/Tenders/popupFilter.html:20
 #: tppcenter/templates/TppTV/popupFilter.html:20
-#: tppcenter/templates/Wall/contentPage.html:168
+#: tppcenter/templates/Wall/contentPage.html:206
 msgid "Organization"
 msgstr "منظمة"
 
 #: tppcenter/templates/BusinessProposal/contentPage.html:72
-#: tppcenter/templates/Companies/contentPage.html:120
+#: tppcenter/templates/Companies/contentPage.html:129
 #: tppcenter/templates/Companies/tabExhibitions.html:44
 #: tppcenter/templates/Companies/tabInnov.html:39
 #: tppcenter/templates/Companies/tabNews.html:33
@@ -3097,28 +3182,31 @@ msgstr "منظمة"
 #: tppcenter/templates/TppTV/contentPage.html:58
 #: tppcenter/templates/UserSites/contentPage.html:46
 #: tppcenter/templates/Users/contentPage.html:57
-#: tppcenter/templates/Vacancy/contentPage.html:65
+#: tppcenter/templates/Vacancy/contentPage.html:67
 #: tppcenter/templates/main/notoficationlist.html:17
 msgid "No results found"
 msgstr "لا توجد نتائج"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:74
 #: tppcenter/templates/Exhibitions/detailContent.html:113
-#: tppcenter/templates/Products/detailContent.html:133
+#: tppcenter/templates/Products/detailContent.html:129
+#: usersites/templates/Products/detailContent.html:154
+#: usersites/templates/Proposals/detailContent.html:80
 msgid "Document"
 msgstr "وثيقة"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:75
-#: tppcenter/templates/Companies/detailContent.html:576
+#: tppcenter/templates/Companies/detailContent.html:589
 #: tppcenter/templates/Exhibitions/detailContent.html:114
 #: tppcenter/templates/Innov/addForm.html:82
 #: tppcenter/templates/Innov/detailContent.html:96
 #: tppcenter/templates/News/addForm.html:59
 #: tppcenter/templates/Products/addForm.html:162
-#: tppcenter/templates/Tenders/detailContent.html:92
-#: tppcenter/templates/Tpp/detailContent.html:522
+#: tppcenter/templates/Tenders/detailContent.html:84
+#: tppcenter/templates/Tpp/detailContent.html:515
+#: usersites/templates/Proposals/detailContent.html:81
 msgid "Gallery"
-msgstr "رواق"
+msgstr "معرض"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:90
 #: tppcenter/templates/BusinessProposal/detailContent.html:93
@@ -3126,55 +3214,62 @@ msgstr "رواق"
 #: tppcenter/templates/Exhibitions/detailContent.html:129
 #: tppcenter/templates/Exhibitions/detailContent.html:132
 #: tppcenter/templates/Exhibitions/detailContent.html:135
+#: usersites/templates/Proposals/detailContent.html:96
+#: usersites/templates/Proposals/detailContent.html:99
+#: usersites/templates/Proposals/detailContent.html:102
 msgid "Link to the File"
 msgstr "ارتباط إلى ملف"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:112
-#: tppcenter/templates/Companies/tabGalleryPhoto.html:14
+#: tppcenter/templates/Companies/tab_gallery_structure.html:17
 #: tppcenter/templates/Exhibitions/detailContent.html:151
 #: tppcenter/templates/Innov/detailContent.html:145
-#: tppcenter/templates/Tenders/detailContent.html:112
+#: tppcenter/templates/Tenders/detailContent.html:104
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:18
+#: usersites/templates/Proposals/detailContent.html:118
 msgid "zoom"
-msgstr "زوم"
+msgstr "تكبير"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:134
 #: tppcenter/templates/Companies/addForm.html:124
-#: tppcenter/templates/Companies/detailContent.html:677
+#: tppcenter/templates/Companies/detailContent.html:668
 #: tppcenter/templates/Exhibitions/detailContent.html:174
 #: tppcenter/templates/Innov/detailContent.html:167
-#: tppcenter/templates/Tpp/addForm.html:105
-#: tppcenter/templates/Tpp/detailContent.html:597
+#: tppcenter/templates/Tpp/addForm.html:106
+#: tppcenter/templates/Tpp/detailContent.html:588
+#: usersites/templates/Proposals/detailContent.html:140
 msgid "Fax"
 msgstr "فاكس"
 
 #: tppcenter/templates/BusinessProposal/detailContent.html:142
 #: tppcenter/templates/Companies/addForm.html:136
-#: tppcenter/templates/Companies/detailContent.html:685
+#: tppcenter/templates/Companies/detailContent.html:676
 #: tppcenter/templates/Exhibitions/detailContent.html:182
 #: tppcenter/templates/Innov/detailContent.html:175
 #: tppcenter/templates/Profile/addForm.html:54
-#: tppcenter/templates/Tpp/addForm.html:119
-#: tppcenter/templates/Tpp/detailContent.html:605
-#: tppcenter/templates/main/user_profile.html:56
+#: tppcenter/templates/Tpp/addForm.html:120
+#: tppcenter/templates/Tpp/detailContent.html:596
+#: tppcenter/templates/main/user_profile.html:57
+#: usersites/templates/Proposals/detailContent.html:148
 msgid "WWW"
-msgstr "WWW"
+msgstr "الموقع"
 
 #: tppcenter/templates/Companies/addForm.html:58
 #: tppcenter/templates/Companies/tabProducts.html:8
 #: tppcenter/templates/Exhibitions/addForm.html:153
 #: tppcenter/templates/News/addForm.html:31
 #: tppcenter/templates/Products/addForm.html:129
-#: tppcenter/templates/Tpp/addForm.html:57
+#: tppcenter/templates/Tpp/addForm.html:58
 #: tppcenter/templates/TppTV/addForm.html:23
 msgid "Image"
 msgstr "صورة"
 
 #: tppcenter/templates/Companies/addForm.html:89
 msgid "Vatin"
-msgstr "طين"
+msgstr "رقم التسلسل"
 
 #: tppcenter/templates/Companies/addForm.html:110
-#: tppcenter/templates/Tpp/addForm.html:77
+#: tppcenter/templates/Tpp/addForm.html:78
 msgid "Director name"
 msgstr "اسم مدير"
 
@@ -3211,7 +3306,7 @@ msgid "Choose CCI"
 msgstr "اختيار غرفة تجارة وصناعة"
 
 #: tppcenter/templates/Companies/addForm.html:209
-#: tppcenter/templates/Tpp/addForm.html:189
+#: tppcenter/templates/Tpp/addForm.html:190
 msgid "Place on the map"
 msgstr "حدد على الخريطة"
 
@@ -3220,116 +3315,138 @@ msgid "Details"
 msgstr "تفاصيل"
 
 #: tppcenter/templates/Companies/addForm.html:216
-#: tppcenter/templates/Tpp/addForm.html:196
+#: tppcenter/templates/Tpp/addForm.html:197
 msgid "RRC"
 msgstr "RRC"
 
 #: tppcenter/templates/Companies/addForm.html:219
-#: tppcenter/templates/Tpp/addForm.html:199
+#: tppcenter/templates/Tpp/addForm.html:200
 msgid "RCEO"
 msgstr "RCEO"
 
 #: tppcenter/templates/Companies/addForm.html:222
-#: tppcenter/templates/Tpp/addForm.html:202
+#: tppcenter/templates/Tpp/addForm.html:203
 msgid "RCOSD"
 msgstr "RSOD"
 
 #: tppcenter/templates/Companies/addForm.html:225
-#: tppcenter/templates/Tpp/addForm.html:205
+#: tppcenter/templates/Tpp/addForm.html:206
 msgid "ARCEA"
 msgstr "ARCEA"
 
 #: tppcenter/templates/Companies/addForm.html:228
-#: tppcenter/templates/Tpp/addForm.html:208
+#: tppcenter/templates/Tpp/addForm.html:209
 msgid "Accountant name"
 msgstr "اسم المحاسب"
 
 #: tppcenter/templates/Companies/addForm.html:233
-#: tppcenter/templates/Tpp/addForm.html:213
+#: tppcenter/templates/Tpp/addForm.html:214
 msgid "Account number"
 msgstr "رقم الحساب"
 
 #: tppcenter/templates/Companies/addForm.html:236
-#: tppcenter/templates/Tpp/addForm.html:216
+#: tppcenter/templates/Tpp/addForm.html:217
 msgid "Bank details"
 msgstr "التفاصيل المصرفية"
 
-#: tppcenter/templates/Companies/contentPage.html:37
+#: tppcenter/templates/Companies/contentPage.html:40
 #: tppcenter/templates/Tpp/contentPage.html:33
 msgid "set current"
 msgstr "تعيين الحالي"
 
-#: tppcenter/templates/Companies/detailContent.html:50
-msgid "Uploading"
-msgstr "يتم الرفع"
+#: tppcenter/templates/Companies/contentPage.html:71
+#: tppcenter/templates/Companies/detailContent.html:554
+msgid "Member of"
+msgstr "عضو في"
 
-#: tppcenter/templates/Companies/detailContent.html:51
-msgid "Uploaded"
-msgstr "تم الرفع"
-
-#: tppcenter/templates/Companies/detailContent.html:52
-msgid "Fail"
-msgstr "فشل"
-
-#: tppcenter/templates/Companies/detailContent.html:53
-msgid "The following files was not uploaded"
-msgstr "لم يتم تحميل الملفات التالية"
-
-#: tppcenter/templates/Companies/detailContent.html:133
-#: tppcenter/templates/Tpp/detailContent.html:57
+#: tppcenter/templates/Companies/detailContent.html:96
+#: tppcenter/templates/Tpp/detailContent.html:58
 msgid "Do you want to delete this record?"
 msgstr "هل تريد حذف هذا السجل؟"
 
-#: tppcenter/templates/Companies/detailContent.html:405
-#: tppcenter/templates/Tpp/detailContent.html:329
+#: tppcenter/templates/Companies/detailContent.html:368
+#: tppcenter/templates/Tpp/detailContent.html:330
 msgid "Do you want to delete this Vacancy?"
 msgstr "هل تريد حذف هذه الشواغر؟"
 
-#: tppcenter/templates/Companies/detailContent.html:416
-#: tppcenter/templates/Tpp/detailContent.html:340
+#: tppcenter/templates/Companies/detailContent.html:379
+#: tppcenter/templates/Tpp/detailContent.html:341
 msgid "Do you want to delete this Department?"
-msgstr "هل تريد حذف هذه الإدارة؟"
+msgstr "هل تريد حذف هذا القسم؟"
 
-#: tppcenter/templates/Companies/detailContent.html:559
-#: tppcenter/templates/Tpp/detailContent.html:505
+#: tppcenter/templates/Companies/detailContent.html:506
+msgid "Free period is expired."
+msgstr "وانتهت الفترة المجانية."
+
+#: tppcenter/templates/Companies/detailContent.html:508
+msgid "Free period will expire in "
+msgstr "سوف تنتهي الفترة المجانية في "
+
+#: tppcenter/templates/Companies/detailContent.html:508
+msgid " days."
+msgstr "ايام ."
+
+#: tppcenter/templates/Companies/detailContent.html:519
+msgid "1-year www.b24online.com membership"
+msgstr "انت عضو لسنة في www.b24online.com"
+
+#: tppcenter/templates/Companies/detailContent.html:572
+#: tppcenter/templates/Tpp/detailContent.html:498
 msgid "Recvisits"
 msgstr "يعيد النظر"
 
-#: tppcenter/templates/Companies/detailContent.html:606
-#: tppcenter/templates/Tpp/detailContent.html:547
+#: tppcenter/templates/Companies/detailContent.html:619
+#: tppcenter/templates/Tpp/detailContent.html:541
 #: usersites/CompanyStructure/views.py:15
 #: usersites/CompanyStructure/views.py:16
 msgid "Structure"
 msgstr "هيكل"
 
-#: tppcenter/templates/Companies/detailContent.html:611
-#: tppcenter/templates/Tpp/detailContent.html:552
+#: tppcenter/templates/Companies/detailContent.html:624
+#: tppcenter/templates/Tpp/detailContent.html:546
 msgid "Staff"
 msgstr "العاملين"
 
 #: tppcenter/templates/Companies/tabExhibitions.html:8
-#: tppcenter/templates/Companies/tabTenders.html:8
-#: tppcenter/templates/Tpp/tabExhibitions.html:8
-#: tppcenter/templates/Tpp/tabTenders.html:8
 msgid "Start Event"
 msgstr "بدء الحدث"
+
+#: tppcenter/templates/Companies/tabGallery.html:37
+#: tppcenter/templates/Tpp/tabGallery.html:37
+msgid "Uploading"
+msgstr "يتم الرفع"
+
+#: tppcenter/templates/Companies/tabGallery.html:38
+#: tppcenter/templates/Tpp/tabGallery.html:38
+msgid "Uploaded"
+msgstr "تم الرفع"
+
+#: tppcenter/templates/Companies/tabGallery.html:39
+#: tppcenter/templates/Tpp/tabGallery.html:39
+msgid "Fail"
+msgstr "فشل"
+
+#: tppcenter/templates/Companies/tabGallery.html:40
+#: tppcenter/templates/Tpp/tabGallery.html:40
+msgid "The following files were not uploaded"
+msgstr "لم يتم تحميل الملفات التالية"
 
 #: tppcenter/templates/Companies/tabInnov.html:9
 #: tppcenter/templates/Innov/addForm.html:66
 #: tppcenter/templates/Innov/contentPage.html:64
 #: tppcenter/templates/Tpp/tabInnov.html:9
-#: tppcenter/templates/Wall/contentPage.html:53
-msgid "Cost of project"
+#: tppcenter/templates/Wall/contentPage.html:93
+msgid "Project cost"
 msgstr "تكلفة المشروع"
 
-#: tppcenter/templates/Companies/tabStaff.html:44
-#: tppcenter/templates/Companies/tabStaff.html:122
-#: tppcenter/templates/Tpp/tabStaff.html:43
-#: tppcenter/templates/Tpp/tabStaff.html:120
+#: tppcenter/templates/Companies/tabStaff.html:50
+#: tppcenter/templates/Companies/tabStaff.html:128
+#: tppcenter/templates/Tpp/tabStaff.html:50
+#: tppcenter/templates/Tpp/tabStaff.html:127
 msgid "Department"
 msgstr "قسم"
 
-#: tppcenter/templates/Companies/tabStaff.html:45
+#: tppcenter/templates/Companies/tabStaff.html:51
 #: tppcenter/templates/Exhibitions/detailContent.html:223
 #: tppcenter/templates/Greetings/contentPage.html:27
 #: tppcenter/templates/Greetings/detailContent.html:18
@@ -3339,59 +3456,65 @@ msgstr "قسم"
 #: tppcenter/templates/Resume/detailContent.html:127
 #: tppcenter/templates/Resume/detailContent.html:135
 #: tppcenter/templates/Resume/detailContent.html:143
-#: tppcenter/templates/Tpp/tabStaff.html:44
+#: tppcenter/templates/Tpp/tabStaff.html:51
 #: tppcenter/templates/Vacancy/addForm.html:185
 #: usersites/templates/CompanyStructure/contentPage.html:20
 msgid "Position"
 msgstr "موقف"
 
-#: tppcenter/templates/Companies/tabStaff.html:75
-#: tppcenter/templates/Tpp/tabStaff.html:73
+#: tppcenter/templates/Companies/tabStaff.html:81
+#: tppcenter/templates/Tpp/tabStaff.html:80
 msgid "User with empty profile. Cabinet ID:"
 msgstr "المستخدم مع بيانات شخصية فارغة. رقم التعريف مجلس الوزراء:"
 
-#: tppcenter/templates/Companies/tabStaff.html:102
-#: tppcenter/templates/Tpp/tabStaff.html:100
+#: tppcenter/templates/Companies/tabStaff.html:108
+#: tppcenter/templates/Tpp/tabStaff.html:107
 msgid "No Staff found."
 msgstr "لم يتم العثور على الموظفين."
 
-#: tppcenter/templates/Companies/tabStaff.html:124
-#: tppcenter/templates/Tpp/tabStaff.html:122
+#: tppcenter/templates/Companies/tabStaff.html:130
+#: tppcenter/templates/Tpp/tabStaff.html:129
 msgid "Select Department..."
 msgstr "حدد قسم ..."
 
-#: tppcenter/templates/Companies/tabStaff.html:130
-#: tppcenter/templates/Companies/tabStaff.html:143
-#: tppcenter/templates/Tpp/tabStaff.html:128
-#: tppcenter/templates/Tpp/tabStaff.html:141
+#: tppcenter/templates/Companies/tabStaff.html:136
+#: tppcenter/templates/Companies/tabStaff.html:149
+#: tppcenter/templates/Tpp/tabStaff.html:135
+#: tppcenter/templates/Tpp/tabStaff.html:148
 #: tppcenter/templates/Vacancy/addForm.html:177
 #: tppcenter/templates/Vacancy/addForm.html:200
 msgid "Empty"
 msgstr "فارغ"
 
-#: tppcenter/templates/Companies/tabStaff.html:133
-#: tppcenter/templates/Tpp/tabStaff.html:131
+#: tppcenter/templates/Companies/tabStaff.html:139
+#: tppcenter/templates/Tpp/tabStaff.html:138
 msgid "/Vacancy"
 msgstr "الشواغر"
 
-#: tppcenter/templates/Companies/tabStaff.html:146
-#: tppcenter/templates/Tpp/tabStaff.html:144
+#: tppcenter/templates/Companies/tabStaff.html:141
+#: tppcenter/templates/Tpp/tabStaff.html:140
+msgid "Select Vacancy..."
+msgstr "حدد فرع"
+
+#: tppcenter/templates/Companies/tabStaff.html:152
+#: tppcenter/templates/Tpp/tabStaff.html:151
 msgid "Administrator"
 msgstr "مدير"
 
-#: tppcenter/templates/Companies/tabStructure.html:54
+#: tppcenter/templates/Companies/tabStructure.html:56
 #: tppcenter/templates/Tpp/tabStructure.html:53
 msgid "No Departments found."
 msgstr "لا توجد أقسام."
 
-#: tppcenter/templates/Companies/tabStructure.html:73
-#: tppcenter/templates/Tpp/tabStructure.html:72
+#: tppcenter/templates/Companies/tabStructure.html:75
 #: tppcenter/templates/Vacancy/addForm.html:300
 msgid "Department name"
 msgstr "اسم القسم"
 
-#: tppcenter/templates/Companies/tabStructure.html:85
+#: tppcenter/templates/Companies/tabStructure.html:87
+#: tppcenter/templates/Resume/detailContent.html:51
 #: tppcenter/templates/Tpp/tabStructure.html:84
+#: tppcenter/templates/Vacancy/addForm.html:209
 #: tppcenter/templates/Vacancy/addForm.html:312
 msgid "Vacancy title"
 msgstr "عنوان الشغور"
@@ -3406,7 +3529,7 @@ msgstr "نهاية تاريخ الحدث "
 
 #: tppcenter/templates/Exhibitions/addForm.html:101
 msgid "Route description"
-msgstr "وصف الطريق"
+msgstr "وصف الطريقة"
 
 #: tppcenter/templates/Exhibitions/addForm.html:190
 msgid "Map"
@@ -3415,36 +3538,39 @@ msgstr "خريطة"
 #: tppcenter/templates/Exhibitions/contentPage.html:59
 #: tppcenter/templates/Innov/contentPage.html:69
 #: tppcenter/templates/Tenders/contentPage.html:50
-#: tppcenter/templates/Wall/contentPage.html:58
-#: tppcenter/templates/Wall/contentPage.html:124
+#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Wall/contentPage.html:161
 msgid "Organizer"
 msgstr "منظم"
 
+#: tppcenter/templates/Exhibitions/detailContent.html:98
+#: tppcenter/templates/Exhibitions/detailContent.html:230
+#: tppcenter/templates/registration/registration.html:8
+#: tppcenter/templates/registration/registration.html:30
+msgid "Sign Up"
+msgstr "الاشتراك"
+
 #: tppcenter/templates/Exhibitions/detailContent.html:112
 msgid "Route Description"
-msgstr "طريق الوصف"
+msgstr "وصف الطريقة"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:202
 msgid "Name and Email are required"
-msgstr "ويطلب الاسم والبريد الالكتروني"
+msgstr "يطلب الاسم والبريد الالكتروني"
 
 #: tppcenter/templates/Exhibitions/detailContent.html:203
-msgid "You have successfully registered."
+msgid "You are registered successfully."
 msgstr " لقد سجلت بنجاح."
-
-#: tppcenter/templates/Exhibitions/detailContent.html:230
-msgid "Register"
-msgstr "تسجيل"
 
 #: tppcenter/templates/Greetings/contentPage.html:30
 #: tppcenter/templates/News/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:225
+#: tppcenter/templates/Wall/contentPage.html:261
 msgid "Read more"
 msgstr "اقرأ المزيد"
 
 #: tppcenter/templates/Innov/addForm.html:37
-msgid "Target audience"
-msgstr "الجمهور المستهدف"
+msgid "Scope"
+msgstr "نطاق"
 
 #: tppcenter/templates/Innov/addForm.html:44
 #: tppcenter/templates/News/addForm.html:135
@@ -3452,9 +3578,8 @@ msgid "Keyword"
 msgstr "الكلمة"
 
 #: tppcenter/templates/Innov/addForm.html:51
-#: tppcenter/templates/Innov/detailContent.html:119
-msgid "Realese date"
-msgstr "تاريخ الافراج عنه"
+msgid "Release date"
+msgstr "تاريخ الإصدار"
 
 #: tppcenter/templates/Innov/addForm.html:58
 msgid "Project site"
@@ -3472,7 +3597,7 @@ msgstr "اسم المشروع"
 
 #: tppcenter/templates/Innov/addForm.html:119
 msgid "Product name"
-msgstr "اسم المنتج"
+msgstr "اسم المنتوج"
 
 #: tppcenter/templates/Innov/addForm.html:147
 #: tppcenter/templates/Innov/detailContent.html:95
@@ -3484,9 +3609,12 @@ msgid "Business plan file"
 msgstr "ملف خطة العمل"
 
 #: tppcenter/templates/Innov/contentPage.html:61
+#: tppcenter/templates/Resume/contentPage.html:38
 #: tppcenter/templates/Tenders/addForm.html:34
+#: tppcenter/templates/Tenders/contentPage.html:46
 #: tppcenter/templates/Tenders/detailContent.html:59
-#: tppcenter/templates/Wall/contentPage.html:50
+#: tppcenter/templates/UserSites/contentPage.html:36
+#: tppcenter/templates/Wall/contentPage.html:90
 msgid "Publication date"
 msgstr "تاريخ النشر"
 
@@ -3499,28 +3627,26 @@ msgstr "منتج"
 msgid "Cost"
 msgstr "سعر"
 
+#: tppcenter/templates/Innov/detailContent.html:119
+msgid "Realese date"
+msgstr "تاريخ الافراج عنه"
+
 #: tppcenter/templates/Innov/detailContent.html:128
 msgid "Link to Business Plan File"
-msgstr "رابط لملف لخطة العمل "
+msgstr "رابط لملف خطة العمل "
 
 #: tppcenter/templates/Innov/index.html:10
 msgid "Innovation project"
-msgstr "مشروع الابتكار"
+msgstr "مشاريع مبتكرة"
 
 #: tppcenter/templates/Messages/contentBox.html:10
 msgid "Send private message"
 msgstr "إرسال رسالة خاصة"
 
-#: tppcenter/templates/News/addForm.html:87
-#: tppcenter/templates/Products/addForm.html:380
-#: tppcenter/templates/TppTV/addForm.html:44
-msgid "Category"
-msgstr "فئة"
-
 #: tppcenter/templates/News/addForm.html:101
 #: tppcenter/templates/TppTV/addForm.html:78
 msgid "Youtube code"
-msgstr "كود يوتيوب"
+msgstr "رمز يوتيوب"
 
 #: tppcenter/templates/News/addForm.html:112
 #: tppcenter/templates/TppTV/addForm.html:60
@@ -3532,8 +3658,8 @@ msgstr "اختيار البلد"
 msgid "Preview description"
 msgstr "وصف معاينة"
 
-#: tppcenter/templates/News/detailContent.html:145
-#: tppcenter/templates/TppTV/detailContent.html:48
+#: tppcenter/templates/News/detailContent.html:137
+#: tppcenter/templates/TppTV/detailContent.html:41
 msgid "Similar news"
 msgstr "أخبار مماثلة"
 
@@ -3549,7 +3675,7 @@ msgstr "آخر الأخبار"
 #: tppcenter/templates/Tenders/addForm.html:89
 #: tppcenter/templates/Tenders/addForm.html:96
 #: tppcenter/templates/Tenders/addForm.html:114
-#: tppcenter/templates/Tpp/addForm.html:65
+#: tppcenter/templates/Tpp/addForm.html:66
 #: tppcenter/templates/TppTV/addForm.html:32
 msgid "delete"
 msgstr "حذف"
@@ -3564,14 +3690,14 @@ msgstr "خصم مؤقت"
 
 #: tppcenter/templates/Products/addForm.html:312
 msgid "From(date)"
-msgstr "من (التاريخ)"
+msgstr "من (date)"
 
 #: tppcenter/templates/Products/addForm.html:321
 msgid "To(date)"
-msgstr "إلى (التاريخ)"
+msgstr "الى (date)"
 
 #: tppcenter/templates/Products/addForm.html:368
-msgid "Measerument unit"
+msgid "Measurement unit"
 msgstr "وحدة القياس"
 
 #: tppcenter/templates/Products/addForm.html:414
@@ -3579,33 +3705,38 @@ msgid "Post on b2c portal"
 msgstr "أضف على بوابة (من المستورد الى المستهلك("
 
 #: tppcenter/templates/Products/contentPage.html:59
-#: tppcenter/templates/Products/detailContent.html:80
-#: tppcenter/templates/Wall/contentPage.html:277
+#: usersites/templates/Products/detailContent.html:95
 msgid "Contact to price"
 msgstr "الاتصال لتلقي السعر"
 
-#: tppcenter/templates/Products/detailContent.html:85
+#: tppcenter/templates/Products/detailContent.html:74
+msgid "Get price"
+msgstr "السعر"
+
+#: tppcenter/templates/Products/detailContent.html:79
+#: usersites/templates/Products/detailContent.html:100
 msgid "Unit"
 msgstr "وحدة"
 
-#: tppcenter/templates/Products/detailContent.html:89
+#: tppcenter/templates/Products/detailContent.html:83
+#: usersites/templates/Products/detailContent.html:106
 msgid "Amount"
-msgstr "مبلغ"
+msgstr "المبلغ"
 
-#: tppcenter/templates/Products/detailContent.html:93
-msgid "Deleviry method"
-msgstr "طريقة التسليم"
-
-#: tppcenter/templates/Products/detailContent.html:100
+#: tppcenter/templates/Products/detailContent.html:95
+#: usersites/templates/Products/detailContent.html:144
 msgid "Countact us"
-msgstr "الاتصال بنا"
+msgstr "اتصل بنا"
 
-#: tppcenter/templates/Products/detailContent.html:146
-#: tppcenter/templates/Products/detailContent.html:149
-#: tppcenter/templates/Products/detailContent.html:152
-#: tppcenter/templates/Tenders/detailContent.html:123
-#: tppcenter/templates/Tenders/detailContent.html:126
-#: tppcenter/templates/Tenders/detailContent.html:129
+#: tppcenter/templates/Products/detailContent.html:142
+#: tppcenter/templates/Products/detailContent.html:145
+#: tppcenter/templates/Products/detailContent.html:148
+#: tppcenter/templates/Tenders/detailContent.html:115
+#: tppcenter/templates/Tenders/detailContent.html:118
+#: tppcenter/templates/Tenders/detailContent.html:121
+#: usersites/templates/Products/detailContent.html:167
+#: usersites/templates/Products/detailContent.html:170
+#: usersites/templates/Products/detailContent.html:173
 msgid "Link to the document"
 msgstr "ارتباط إلى المستند"
 
@@ -3617,35 +3748,39 @@ msgstr "تم تحديث ملفك الشخصي"
 msgid "Change avatar"
 msgstr "تغيير الصورة الرمزية"
 
-#: tppcenter/templates/Profile/addForm.html:75
-msgid "Your organization"
-msgstr "مؤسستك"
-
-#: tppcenter/templates/Profile/addForm.html:83
-#: tppcenter/templates/main/user_profile.html:70
+#: tppcenter/templates/Profile/addForm.html:76
+#: tppcenter/templates/main/user_profile.html:71
 msgid "Sex"
 msgstr "جنس"
 
-#: tppcenter/templates/Profile/addForm.html:97
+#: tppcenter/templates/Profile/addForm.html:90
 msgid "Telephone Number"
 msgstr "رقم الهاتف"
 
-#: tppcenter/templates/Profile/addForm.html:107
+#: tppcenter/templates/Profile/addForm.html:100
 #: tppcenter/templates/Resume/detailContent.html:108
-#: tppcenter/templates/main/user_profile.html:90
+#: tppcenter/templates/main/user_profile.html:91
 msgid "Profession"
 msgstr "مهنة"
+
+#: tppcenter/templates/Project/event.html:16
+#: tppcenter/templates/Project/proposal.html:16
+msgid "Post announcements"
+msgstr "مشاركة حدث معلن"
+
+#: tppcenter/templates/Project/offer.html:16
+msgid "Offer"
+msgstr "عرض"
 
 #: tppcenter/templates/Resume/addForm.html:56
 msgid ""
 "Filling resume does not obligate company that publishes job on the site TPP-"
 "Center, enter into a contract of employment."
 msgstr ""
-"ملء سيرتك الذاتية لا تلزم الشركة التي تنشر المهمة على الموقع مركز برنامج "
-"النقاط التجارية الموقع، الدخول في عقد العمل."
+"ملء سيرتك الذاتية لا تلزم الشركة التي تنشر المهمة على الموقع ، الدخول لابرام "
+"عقد العمل."
 
 #: tppcenter/templates/Resume/addForm.html:58
-#: tppcenter/templates/Resume/detailContent.html:51
 msgid "Vacancy name"
 msgstr "اسم الشغور"
 
@@ -3715,9 +3850,6 @@ msgid "Specify the last 3 jobs"
 msgstr "تحديد اخر 3 وظائف "
 
 #: tppcenter/templates/Resume/addForm.html:194
-msgid "Worrk period"
-msgstr "فترة العمل"
-
 #: tppcenter/templates/Resume/addForm.html:227
 #: tppcenter/templates/Resume/addForm.html:260
 msgid "Work period"
@@ -3729,8 +3861,9 @@ msgid "Skills"
 msgstr "المهارات"
 
 #: tppcenter/templates/Resume/addForm.html:281
-msgid "Languages skills"
-msgstr "المهارات اللغات "
+#: tppcenter/templates/Resume/detailContent.html:158
+msgid "Language skills"
+msgstr "المهارات اللغوية"
 
 #: tppcenter/templates/Resume/addForm.html:288
 #: tppcenter/templates/Resume/detailContent.html:162
@@ -3750,18 +3883,12 @@ msgid ""
 "I confirm that all information provided by me in this form on the site TPP-"
 "Center, are true and complete"
 msgstr ""
-"وأؤكد أن جميع المعلومات التي تقدمها لي في هذا النموذج على الموقع مركز برنامج "
-"النقاط التجارية، صحيحة وكاملة"
+"وأؤكد أن جميع المعلومات التي تقدمها لي في هذا النموذج على الموقع ، صحيحة "
+"وكاملة"
 
 #: tppcenter/templates/Resume/addForm.html:320
 msgid "I don't mind for checking the information reported by me"
 msgstr "لا مانع للتحقق من المعلومات التي أبلغتها"
-
-#: tppcenter/templates/Resume/contentPage.html:38
-#: tppcenter/templates/Tenders/contentPage.html:46
-#: tppcenter/templates/UserSites/contentPage.html:36
-msgid "Date of publication"
-msgstr "تاريخ النشر"
 
 #: tppcenter/templates/Resume/contentPage.html:43
 #: tppcenter/templates/Resume/detailContent.html:55
@@ -3791,10 +3918,6 @@ msgstr "إضافي"
 msgid "Work  period"
 msgstr "فترة العمل"
 
-#: tppcenter/templates/Resume/detailContent.html:158
-msgid "Language skills"
-msgstr "المهارات اللغوية"
-
 #: tppcenter/templates/Resume/detailContent.html:166
 msgid "Additional skills"
 msgstr "مهارات إضافية"
@@ -3808,44 +3931,52 @@ msgstr "آخر موعد لتلقي العطاءات"
 #: tppcenter/templates/Tenders/contentPage.html:49
 #: tppcenter/templates/Tenders/detailContent.html:67
 msgid "Starting price"
-msgstr "يبدأ سعر"
+msgstr "السعر البدائي"
 
 #: tppcenter/templates/Tenders/addForm.html:132
-msgid "Tender name"
+msgid "Tender title"
 msgstr "اسم المناقصة"
 
-#: tppcenter/templates/Tpp/addForm.html:136
+#: tppcenter/templates/Tpp/addForm.html:137
 msgid "VATIN"
-msgstr "طين"
+msgstr "رقم التسلسل"
 
-#: tppcenter/templates/Tpp/addForm.html:153
-msgid "Organization name"
+#: tppcenter/templates/Tpp/addForm.html:154
+msgid "Organization title"
 msgstr "اسم المؤسسة"
 
-#: tppcenter/templates/Tpp/addForm.html:161
+#: tppcenter/templates/Tpp/addForm.html:162
 msgid "Preview description "
 msgstr "وصف معاينة"
 
-#: tppcenter/templates/Tpp/addForm.html:168
+#: tppcenter/templates/Tpp/addForm.html:169
 #: tppcenter/templates/TppTV/addForm.html:101
 msgid "Detail description"
 msgstr "وصف التفاصيل"
 
-#: tppcenter/templates/Tpp/addForm.html:193
+#: tppcenter/templates/Tpp/addForm.html:194
 msgid "Detail"
 msgstr "فصل"
+
+#: tppcenter/templates/Tpp/index.html:10
+msgid "TPP"
+msgstr "غرفة التجارة الدولية"
 
 #: tppcenter/templates/Tpp/tabCompanies.html:7
 msgid "Logo"
 msgstr "شعار"
+
+#: tppcenter/templates/Tpp/tabStructure.html:72
+msgid "Department title"
+msgstr "اسم القسم"
 
 #: tppcenter/templates/UserSites/index.html:10
 msgid "Sites"
 msgstr "المواقع"
 
 #: tppcenter/templates/Users/contentPage.html:46
-msgid "Send the message"
-msgstr "إرسال رسالة"
+msgid "Send message"
+msgstr "ارسل الى"
 
 #: tppcenter/templates/Vacancy/addForm.html:169
 msgid "Departament"
@@ -3858,10 +3989,6 @@ msgstr "اختيار قسم ..."
 #: tppcenter/templates/Vacancy/addForm.html:191
 msgid "Choose from list..."
 msgstr "اختر من القائمة ..."
-
-#: tppcenter/templates/Vacancy/addForm.html:209
-msgid "Name of vacancy"
-msgstr "اسم الشواغر"
 
 #: tppcenter/templates/Vacancy/addForm.html:218
 msgid "City of vacancy"
@@ -3876,7 +4003,7 @@ msgid "make vacancy anonymous"
 msgstr "جعل الشواغر مجهولة"
 
 #: tppcenter/templates/Vacancy/addForm.html:244
-msgid "name of company will be hidden"
+msgid "company title will be hidden"
 msgstr "اسم الشركة سوف يكون مخفي"
 
 #: tppcenter/templates/Vacancy/addForm.html:262
@@ -3904,7 +4031,7 @@ msgstr "شركة مجهولة"
 
 #: tppcenter/templates/Vacancy/detailContent.html:70
 msgid "Type of employments"
-msgstr "نوع من توظيفات"
+msgstr "نوع التوظيفات"
 
 #: tppcenter/templates/Vacancy/index.html:47
 msgid "You send resume on position:"
@@ -3912,7 +4039,7 @@ msgstr "يمكنك إرسال سيرتك الذاتية على الموضع:"
 
 #: tppcenter/templates/Vacancy/index.html:53
 msgid "Add new resume to profile"
-msgstr "إضافة جديدة لاستئناف ملف"
+msgstr "إضافة سيرة ذاتية جديدة لملف"
 
 #: tppcenter/templates/Vacancy/index.html:54
 msgid "New resume"
@@ -3926,13 +4053,17 @@ msgstr "ارسال السيرة الذاتية القائمة"
 msgid "No existing resumes"
 msgstr "لم يستأنف القائمة"
 
-#: tppcenter/templates/Wall/contentPage.html:8
+#: tppcenter/templates/Wall/contentPage.html:6
 msgid "Latest updates"
 msgstr "آخر التحديثات"
 
-#: tppcenter/templates/Wall/contentPage.html:146
+#: tppcenter/templates/Wall/contentPage.html:38
+msgid "Get the price"
+msgstr "الاتصال لتلقي السعر"
+
+#: tppcenter/templates/Wall/contentPage.html:184
 msgid "Bussiness Proposals"
-msgstr "عروض تجارية (سابقا)"
+msgstr "عروض تجارية"
 
 #: tppcenter/templates/main/currentCompany.html:5
 msgid "Current organization"
@@ -3942,27 +4073,67 @@ msgstr "التنظيم الحالي"
 msgid "Permission denied"
 msgstr "تم رفض الإذن"
 
-#: tppcenter/templates/main/staticPages.html:10
+#: tppcenter/templates/main/paginator.html:5
+msgid "Total pages"
+msgstr "مجموع الصفحات"
+
+#: tppcenter/templates/main/paginator.html:7
+msgid "Back"
+msgstr "الخلف"
+
+#: tppcenter/templates/main/paginator.html:21
+msgid "Forward"
+msgstr "إلى الأمام"
+
+#: tppcenter/templates/main/staticPages.html:4
+msgid "Project news"
+msgstr "اخبار المشروع"
+
+#: tppcenter/templates/main/staticPages.html:12
 msgid "Advices"
 msgstr "النصائح"
 
-#: tppcenter/templates/main/user_profile.html:24
+#: tppcenter/templates/main/user_profile.html:25
 msgid "User profile"
 msgstr "ملف المستخدم"
 
-#: tppcenter/templates/main/user_profile.html:52
+#: tppcenter/templates/main/user_profile.html:53
 #: tppcenter/templates/registration/login.html:6
 msgid "Login"
 msgstr "دخول"
 
+#: tppcenter/templates/registration/activate.html:3
+#: tppcenter/templates/registration/registration_complete.html:29
+msgid "Registration is completed"
+msgstr "اكتمل تسجيلك"
+
+#: tppcenter/templates/registration/activate.html:6
+msgid "Your registration is complited"
+msgstr "اكتمل تسجيلك"
+
+#: tppcenter/templates/registration/activate.html:8
+msgid "Sorry, but your activation key is invalid"
+msgstr "آسف ولكن مفتاح التنشيط غير صالح"
+
 #: tppcenter/templates/registration/activation_complete.html:6
-#: tppcenter/templates/registration/activation_complete.html:28
 msgid "Activation complete"
 msgstr "تفعيل كامل"
 
+#: tppcenter/templates/registration/activation_complete.html:28
+msgid "Activation is completed"
+msgstr "اكتمل التفعيل"
+
+#: tppcenter/templates/registration/activation_complete.html:30
+msgid "Thank you for registration! Now you can  "
+msgstr "شكرا لك أنك قد أكملت التسجيل ! يمكنك الآن"
+
+#: tppcenter/templates/registration/activation_complete.html:31
+msgid "using email and password that you provided during sign up."
+msgstr "استخدم البريد الإلكتروني وكلمة المرور التي قدمت أثناء التسجيل."
+
 #: tppcenter/templates/registration/base.html:8
 msgid "Tpp-center"
-msgstr "مركز برنامج النقاط التجارية"
+msgstr "عام"
 
 #: tppcenter/templates/registration/login.html:26
 msgid "Authorization"
@@ -3983,6 +4154,10 @@ msgstr "نسيت كلمة المرور"
 msgid "Password reset"
 msgstr "إعادة تعيين كلمة المرور"
 
+#: tppcenter/templates/registration/password_reset_confirm.html:31
+msgid "Enter your new password below to change the old one:"
+msgstr "أدخل كلمة المرور الجديدة أدناه لتغيير كلمة المرور القديمة:"
+
 #: tppcenter/templates/registration/registration.html:58
 msgid "I have read and accept"
 msgstr "لقد قرأت، واوافق"
@@ -3991,17 +4166,50 @@ msgstr "لقد قرأت، واوافق"
 msgid "the terms of use"
 msgstr "شروط الاستخدام"
 
+#: tppcenter/templates/registration/registration_complete.html:32
+msgid ""
+"We sent you message. Please, check you email and click on the  link to "
+"activate your account. "
+msgstr ""
+"أرسلنا لك رسالة . يرجى التحقق من البريد الإلكتروني وانقر على الرابط لتفعيل "
+"حسابك."
+
+#: usersites/views.py:24 usersites/views.py:25
+#: usersites/templates/header.html:4
+msgid "About us"
+msgstr "عنا"
+
+#: usersites/Contact/views.py:38
+msgid "This message was sent to company:"
+msgstr "تم إرسال هذه الرسالة إلى الشركة:"
+
+#: usersites/Contact/views.py:41
+msgid "New message from "
+msgstr "رسالة جديدة من"
+
+#: usersites/Contact/views.py:47
+msgid "The message was succesfuly send "
+msgstr "تم ارسال رسالتك بنجاح"
+
+#: usersites/Contact/views.py:50
+msgid "Incoorect Recapcha"
+msgstr "احرف غير صحيحة في الصورة"
+
+#: usersites/Contact/views.py:55
+msgid "All field are required"
+msgstr "كل الحقول مطلوبة"
+
 #: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
 #: usersites/templates/contentPage.html:7
-#: usersites/templates/site_sidebar.html:19
+#: usersites/templates/site_sidebar.html:99
 msgid "Business proposals"
-msgstr "مقترحات الأعمال التجارية"
+msgstr "عروض تجارية"
 
-#: usersites/templates/site_sidebar.html:17
+#: usersites/templates/site_sidebar.html:97
 msgid "Company news"
 msgstr "أخبار الشركة"
 
-#: usersites/templates/site_sidebar.html:22
+#: usersites/templates/site_sidebar.html:102
 msgid "Company structure"
 msgstr "هيكل الشركة"
 
@@ -4013,6 +4221,50 @@ msgstr "موظفي الدائرة"
 msgid "Employee"
 msgstr "عامل"
 
-#: usersites/templates/Contact/contentPage.html:52
+#: usersites/templates/Contact/contentPage.html:60
 msgid "You email"
 msgstr "راسلت على البريد الإلكتروني"
+
+#: usersites/templates/Products/detailContent.html:112
+msgid "Deleviry method"
+msgstr "طريقة التسليم"
+
+#: usersites/templates/Products/detailContent.html:129
+msgid "Payment for Product: "
+msgstr "دفع ثمن المنتج:"
+
+#~ msgid "Insurance"
+#~ msgstr "تأمين"
+
+#~ msgid "Crediting"
+#~ msgstr "الإعتمادات"
+
+#~ msgid "add top"
+#~ msgstr "إضافة للأعلى"
+
+#~ msgid "Cost of project"
+#~ msgstr "تكلفة المشروع"
+
+#~ msgid "Register"
+#~ msgstr "تسجيل"
+
+#~ msgid "Target audience"
+#~ msgstr "الجمهور المستهدف"
+
+#~ msgid "Your organization"
+#~ msgstr "مؤسستك"
+
+#~ msgid "Worrk period"
+#~ msgstr "فترة العمل"
+
+#~ msgid "Languages skills"
+#~ msgstr "المهارات اللغات "
+
+#~ msgid "Date of publication"
+#~ msgstr "تاريخ النشر"
+
+#~ msgid "Send the message"
+#~ msgstr "إرسال رسالة"
+
+#~ msgid "Name of vacancy"
+#~ msgstr "اسم الشواغر"
