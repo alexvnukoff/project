@@ -4,8 +4,6 @@
 {% load inclusionTags %}
 {% load CustomFilters %}
 
-    {% block title %}{% endblock %}
-
     {% block header %}
         {% include "login_header.html" %}
     {% endblock %}
@@ -14,6 +12,14 @@
          {{ block.super }}
          <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css" />
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+        <style>
+            .selected-menu {
+                background-color: #D7D7D9;
+            }
+            .selected-menu a {
+               color: #FFF;
+            }
+        </style>
     {% endblock %}
 
     {% block js %}
@@ -78,30 +84,6 @@
                     $( ".tabfilter" ).tabs();
                 });
         </script>
-        <script>
-            // current active menu selection
-            var elem;
-            var orig_bg_color;
-            var orig_font_color = '#0089C1';
-            var sel_bg_color = '#D7D7D9';
-            var sel_font_color = '#FFFFFF'; //white
-
-            $(document).ready(function(){
-                var pathname = window.location.pathname.split('/')[1];
-                elem = $('.tab1-cate > li > a[href*='+pathname+']');
-                orig_bg_color = $(elem).parent('li').css('background-color');
-                $(elem).parent('li').css('background-color', sel_bg_color);
-                $(elem).css('color', sel_font_color);
-            });
-
-            $(document).on('click', '.tab1-cate > li > a', function() {
-                $(elem).parent('li').css('background-color', orig_bg_color);
-                $(elem).css('color', orig_font_color);
-                $(this).parent('li').css('background-color', sel_bg_color);
-                $(this).css('color', sel_font_color);
-                elem = $(this);
-            });
-       </script>
     {% endblock %}
 
 {% block body %}

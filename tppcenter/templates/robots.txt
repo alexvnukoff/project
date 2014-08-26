@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /admin-tpp/
 Disallow: /messages/
 Disallow: /advtop/
 Disallow: /advbanner/
@@ -18,4 +19,5 @@ Disallow: /logout/
 Disallow: /account/
 Disallow: /static/
 Disallow: */tabs/
+Disallow: /adv/
 Host: tppcenter.com

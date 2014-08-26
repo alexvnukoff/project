@@ -73,6 +73,7 @@ var ui =
 
         //Set filter from query string
         ui.initFilters();
+        ui.initMenu();
 
         //Custom events
         $(document).bind(ui.signals['end_load'], ui.loadScripts);
@@ -84,6 +85,7 @@ var ui =
         $(document).on('click', '.filter-remove', ui.onRemove);
         $(document).on('click', '#save-filter', ui.saveFilter);
         $(document).on('click', ui.container + ' .panging a', ui.pageNav);
+        $(document).on('click', '.tab1-cate > li', ui.setSelectedMenu);
         $(document).on('submit', 'form[name="search"]', ui.search);
     },
 
@@ -209,6 +211,25 @@ var ui =
         ui.setKeyFilters(filter_keys);
     },
 
+    initMenu: function() {
+        var pathname = window.location.pathname.split('/');
+
+        if (pathname.length == 2 && pathname[1] == 'my')
+        {
+            url = pathname;
+        } else {
+            url = pathname[0]
+        }
+
+        $('.tab1-cate > li > a[href=/' + url + '/]').parent().addClass('selected-menu');
+    },
+
+    setSelectedMenu: function() {
+
+        $('.tab1-cate > li.selected-menu').removeClass('selected-menu');
+        $(this).addClass('selected-menu');
+    },
+
     setKeyFilters: function(data)
     { //Removable filters
         keys = ''
@@ -272,6 +293,8 @@ var ui =
         $(ui.container).replaceWith( data.content );
         var addBtn = $('.add-new');
 
+
+
         if ( !addBtn.hasClass('logged-out')) {
             var imgBtn = addBtn.find('.btn-fil');
 
@@ -283,6 +306,10 @@ var ui =
                addBtn.attr('href', '#');
                imgBtn.addClass('disable');
             }
+        }
+
+        if ( data.current_section ) {
+            $('title').text(data.current_section);
         }
 
         ui.filter_form = $('form[name="filter-form"]');
