@@ -32,7 +32,13 @@
                 {% endautoescape %}
 
             {% else %}
-                <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
+
+                {% if current_section %}
+                    <title>{{ current_section }}</title>
+                {% else %}
+                    {% block title %}{% trans 'Main page' %}{% endblock %}
+                {% endif %}
+
                 {% block description %}
                  <meta name="description" content="Программа развития и продвижения предпринимательства,
                  Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
