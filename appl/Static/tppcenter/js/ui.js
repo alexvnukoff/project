@@ -213,7 +213,7 @@ var ui =
 
     initMenu: function() {
         var pathname = window.location.pathname;
-        pathname = pathname.substring(1, pathname.length - 2).split('/')
+        pathname = pathname.substring(1, pathname.length - 1).split('/')
 
         if (pathname.length == 2 && pathname[1] == 'my')
         {
