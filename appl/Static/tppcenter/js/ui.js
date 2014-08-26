@@ -85,7 +85,7 @@ var ui =
         $(document).on('click', '.filter-remove', ui.onRemove);
         $(document).on('click', '#save-filter', ui.saveFilter);
         $(document).on('click', ui.container + ' .panging a', ui.pageNav);
-        $(document).on('click', '.tab1-cate > li', ui.setSelectedMenu);
+        $(document).on('click', '.tab1-cate > li a', ui.setSelectedMenu);
         $(document).on('submit', 'form[name="search"]', ui.search);
     },
 
@@ -222,12 +222,12 @@ var ui =
             url = pathname[0]
         }
 
-        $('.tab1-cate > li > a[href="/' + url + '/"]').parent().addClass('selected-menu');
+        $('.tab1-cate > li > a[href="/' + url + '/"]').addClass('selected-menu');
     },
 
     setSelectedMenu: function() {
 
-        $('.tab1-cate > li.selected-menu').removeClass('selected-menu');
+        $('.tab1-cate > li a.selected-menu').removeClass('selected-menu');
         $(this).addClass('selected-menu');
     },
 
