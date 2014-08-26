@@ -63,61 +63,97 @@ class ItemsList(HybridListView):
 
     def _get_countrys_for_objects(self, object_list):
 
-        new_object_list = []
+        countries = []
 
         for obj in object_list:
-
             country = getattr(obj, 'country', False)
 
-            if country is False:
-                break
+            if not country:
+                continue
 
             if isinstance(country, list):
-                if len(country) == 0 or len(country) > 1:
-                    new_object_list.append(obj)
+                if len(country) != 1:
                     continue
                 else:
                     country = country[0]
 
-            country = SearchQuerySet().models(Country).filter(django_id=country)
+            countries.append(country)
 
-            if country.count() == 1:
-                obj.__setattr__('country', country[0])
+        if len(countries) > 0:
+            countryDict = {}
+            new_object_list = []
 
-            new_object_list.append(obj)
+            for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
+                countryDict[int(country.pk)] = country
 
-        if len(new_object_list) == 0:
-            return object_list
+            if len(countryDict) > 0:
+                for obj in object_list:
+                    country = getattr(obj, 'country', None)
 
-        return new_object_list
+                    if not country:
+                        new_object_list.append(obj)
+                        continue
+
+                    if isinstance(country, list):
+                        if len(country) == 1:
+                            country = int(country[0])
+                        else:
+                            new_object_list.append(obj)
+                            continue
+
+                    if country not in countryDict:
+                        new_object_list.append(obj)
+                        continue
+
+                    obj.country = countryDict[int(country)]
+                    new_object_list.append(obj)
+
+                return new_object_list
+
+        return object_list
+
 
     def _get_organization_for_objects(self, object_list):
 
-        new_object_list = []
+        orgs = []
 
         for obj in object_list:
 
             company = getattr(obj, 'company', False)
             tpp = getattr(obj, 'tpp', False)
 
-            organization = None
+            if company:
+                orgs.append(company)
+            elif tpp:
+                orgs.append(tpp)
 
-            try:
-                if company:
-                    organization = SearchQuerySet().models(Company).filter(django_id=company)[0]
-                    organization.__setattr__('url', 'companies:detail')
-                elif tpp:
-                    organization = SearchQuerySet().models(Tpp).filter(django_id=tpp)[0]
-                    organization.__setattr__('url', 'tpp:detail')
-            except IndexError:
-                pass
+        if len(orgs) > 0:
+            orgDict = {}
 
-            if organization:
-                obj.__setattr__('organization', organization)
+            for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
+                orgDict[int(org.pk)] = org
 
-            new_object_list.append(obj)
+            if len(orgDict) > 0:
+                new_object_list = []
 
-        return new_object_list
+                for obj in object_list:
+                    company = getattr(obj, 'company', False)
+                    tpp = getattr(obj, 'tpp', False)
+
+                    if company:
+                        if company in orgDict:
+                            orgDict[company].__setattr__('url', 'companies:detail')
+                            obj.__setattr__('organization', orgDict[company])
+                    elif tpp:
+                        if tpp in orgDict:
+                            orgDict[tpp].__setattr__('url', 'tpp:detail')
+                            obj.__setattr__('organization', orgDict[tpp])
+
+                    new_object_list.append(obj)
+
+                return new_object_list
+
+        return object_list
 
     def _get_items_perms(self, object_list):
         if self.request.user.is_authenticated():
@@ -217,7 +253,7 @@ class ItemsList(HybridListView):
                 for name, id in filtersIDs.items():
 
                     if int(item.pk) in id:
-                        self.filters[name].append({'id': item.pk, 'text': item.text})
+                        self.filters[name].append({'id': item.pk, 'text': item.title_auto})
 
 
         searchFilter = self._create_sqs_filter()

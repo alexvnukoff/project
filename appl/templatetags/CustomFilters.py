@@ -3,7 +3,7 @@ from copy import copy
 
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
-from haystack.query import SQ
+from haystack.query import SQ, SearchQuerySet
 from django.template import RequestContext, loader
 from django.conf import settings
 from django.template import Node, TemplateSyntaxError
@@ -273,21 +273,23 @@ def getOwner(item):
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
     request = context.get('request')
-    user = request.user
 
-    if user.is_authenticated():
-        cabinet = Cabinet.objects.filter(user=request.user)
-        if cabinet.exists():
-            cabinet = cabinet[0]
-            name = cabinet.getAttributeValues('USER_FIRST_NAME','USER_LAST_NAME')
+    user_name = ''
 
-            if isinstance(name, dict) and  name.get('USER_FIRST_NAME', False) and  name.get('USER_LAST_NAME', False):
-                user_name = name.get('USER_FIRST_NAME', [''])[0] + ' ' + name.get('USER_LAST_NAME', [''])[0]
-            else:
-                user_name = user.email
+    if request.user.is_authenticated():
+        try:
+            cabinet = Cabinet.objects.get(user=request.user)
+            cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cabinet.pk)
 
-    else:
-        user_name = None
+            if cabinet.count() > 0 and cabinet[0].text != '':
+                user_name = cabinet[0].text
+
+        except ObjectDoesNotExist:
+            pass
+
+        if user_name == '':
+            user_name = request.user.email
+
 
     return user_name
 

@@ -1815,7 +1815,7 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
 
         self.prepared_data[textIndex] = name
         self.prepared_data[sortIndex] = name.lower()
-        self.prepared_data[imageIndex] = attributes.get('NAME', [None])[0]
+        self.prepared_data[imageIndex] = attributes.get('IMAGE', [None])[0]
 
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
