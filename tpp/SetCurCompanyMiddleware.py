@@ -15,7 +15,7 @@ class SetCurCompany:
         except ValueError:
             compID = 0
 
-        if compID and request.user.is_authenticated():
+        if request.user.is_authenticated():
 
             current_company = request.session.get('current_company', False)
 
