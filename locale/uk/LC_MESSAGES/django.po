@@ -7,89 +7,84 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TppUA\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-02 13:06+0000\n"
+"POT-Creation-Date: 2014-08-26 10:49+0000\n"
 "PO-Revision-Date: 2014-07-14 14:57+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Language: uk_UA\n"
 
-#: appl/func.py:835 centerpokupok/templates/Company/header.html:48
+#: appl/func.py:895 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Company/products.html:6
 #: centerpokupok/templates/Product/detail.html:114
 #: centerpokupok/templates/Product/index.html:6
 #: centerpokupok/templates/Product/index.html:63
 #: centerpokupok/templates/Product/index.html:76
-#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:51
-#: tppcenter/Product/views.py:156 tppcenter/templates/base.html:140
-#: tppcenter/templates/main_page.html:126
-#: tppcenter/templates/main_page.html:151
+#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:31
+#: tppcenter/Product/views.py:51 tppcenter/Product/views.py:72
+#: tppcenter/templates/base.html:170 tppcenter/templates/main_page.html:185
+#: tppcenter/templates/main_page.html:210
 #: tppcenter/templates/Analytic/main.html:64
-#: tppcenter/templates/Companies/detailContent.html:612
-#: tppcenter/templates/Products/index.html:10
-#: tppcenter/templates/Wall/contentPage.html:250
-#: usersites/Products/views.py:32 usersites/Products/views.py:33
-#: usersites/templates/contentPage.html:86
+#: tppcenter/templates/Companies/detailContent.html:569
+#: tppcenter/templates/Wall/contentPage.html:8 usersites/Products/views.py:32
+#: usersites/Products/views.py:33 usersites/templates/contentPage.html:86
 #: usersites/templates/site_sidebar.html:100
 msgid "Products"
 msgstr "Продукти"
 
-#: appl/func.py:840 tppcenter/templates/main_page.html:129
-#: tppcenter/templates/main_page.html:154
+#: appl/func.py:900 tppcenter/templates/main_page.html:188
+#: tppcenter/templates/main_page.html:213
 #: tppcenter/templates/Analytic/main.html:72
-#: tppcenter/templates/Companies/detailContent.html:617
-#: tppcenter/templates/Tpp/detailContent.html:538
+#: tppcenter/templates/Companies/detailContent.html:574
+#: tppcenter/templates/Tpp/detailContent.html:513
 msgid "Innovation Projects"
 msgstr "Інноваційні проекти"
 
-#: appl/func.py:845 tppcenter/Companies/views.py:66
-#: tppcenter/Companies/views.py:645 tppcenter/templates/base.html:141
-#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:181
-#: tppcenter/templates/main_page.html:128
-#: tppcenter/templates/main_page.html:153
+#: appl/func.py:905 tppcenter/Companies/views.py:39
+#: tppcenter/Companies/views.py:76 tppcenter/Companies/views.py:627
+#: tppcenter/templates/base.html:171 tppcenter/templates/forms.html:6
+#: tppcenter/templates/index.html:192 tppcenter/templates/job_index.html:188
+#: tppcenter/templates/main_page.html:187
+#: tppcenter/templates/main_page.html:212
 #: tppcenter/templates/Analytic/main.html:95
-#: tppcenter/templates/Companies/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:563
+#: tppcenter/templates/Companies/index.html:5
+#: tppcenter/templates/Tpp/detailContent.html:538
 msgid "Companies"
 msgstr "Компанії"
 
-#: appl/func.py:850 tppcenter/templates/main_page.html:130
-#: tppcenter/templates/main_page.html:155
+#: appl/func.py:910 tppcenter/templates/main_page.html:189
+#: tppcenter/templates/main_page.html:214
 #: tppcenter/templates/Analytic/main.html:68
 #: tppcenter/templates/Analytic/main.html:111
-#: tppcenter/templates/BusinessProposal/index.html:10
-#: tppcenter/templates/Companies/detailContent.html:622
-#: tppcenter/templates/Tpp/detailContent.html:543
+#: tppcenter/templates/BusinessProposal/index.html:5
+#: tppcenter/templates/Companies/detailContent.html:579
+#: tppcenter/templates/Tpp/detailContent.html:518
 msgid "Business Proposals"
 msgstr "Бізнес Пропозиції"
 
-#: appl/func.py:855 tppcenter/Exhibitions/views.py:53
-#: tppcenter/Exhibitions/views.py:137
+#: appl/func.py:915 tppcenter/templates/main_page.html:196
+#: tppcenter/templates/main_page.html:227
+msgid "Job requirements"
+msgstr "Вимоги до кандидата"
+
+#: appl/func.py:920 tppcenter/Exhibitions/views.py:33
+#: tppcenter/Exhibitions/views.py:53 tppcenter/Exhibitions/views.py:72
 #: tppcenter/templates/Analytic/main.html:80
 #: tppcenter/templates/Analytic/main.html:115
-#: tppcenter/templates/Companies/detailContent.html:607
-#: tppcenter/templates/Exhibitions/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:533
-#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Companies/detailContent.html:564
+#: tppcenter/templates/Tpp/detailContent.html:508
+#: tppcenter/templates/Wall/contentPage.html:134
 msgid "Exhibitions"
 msgstr "Виставки"
 
-#: appl/func.py:987
+#: appl/func.py:1110
 msgid "Sorry but you cannot modify this item "
 msgstr "На жаль, але ви не можете змінити цей пункт"
-
-#: appl/templatetags/inclusionTags.py:108 tppcenter/Profile/views.py:19
-#: tppcenter/templates/login_header.html:103
-#: tppcenter/templates/login_header.html:163
-#: tppcenter/templates/main_page.html:169
-#: tppcenter/templates/Profile/index.html:6
-msgid "Profile"
-msgstr "Профіль"
 
 #: centerpokupok/forms.py:6
 msgid "Recipient name"
@@ -106,8 +101,10 @@ msgstr "Місто"
 #: centerpokupok/forms.py:8
 #: centerpokupok/templates/Product/orderStepOne.html:95
 #: tppcenter/templates/BusinessProposal/popupFilter.html:19
-#: tppcenter/templates/Companies/addForm.html:77
+#: tppcenter/templates/Companies/addForm.html:78
+#: tppcenter/templates/Companies/addForm.html:83
 #: tppcenter/templates/Companies/popupFilter.html:19
+#: tppcenter/templates/Exhibitions/addForm.html:65
 #: tppcenter/templates/Exhibitions/popupFilter.html:19
 #: tppcenter/templates/Innov/popupFilter.html:19
 #: tppcenter/templates/News/addForm.html:109
@@ -128,15 +125,15 @@ msgid "Zipcode"
 msgstr "Поштовий індекс"
 
 #: centerpokupok/forms.py:10
-#: tppcenter/templates/BusinessProposal/detailContent.html:126
-#: tppcenter/templates/Companies/addForm.html:176
-#: tppcenter/templates/Companies/detailContent.html:668
-#: tppcenter/templates/Exhibitions/detailContent.html:166
-#: tppcenter/templates/Innov/detailContent.html:159
+#: tppcenter/templates/BusinessProposal/detailContent.html:119
+#: tppcenter/templates/Companies/addForm.html:181
+#: tppcenter/templates/Companies/detailContent.html:626
+#: tppcenter/templates/Exhibitions/detailContent.html:157
+#: tppcenter/templates/Innov/detailContent.html:150
 #: tppcenter/templates/Resume/addForm.html:103
-#: tppcenter/templates/Resume/detailContent.html:75
+#: tppcenter/templates/Resume/detailContent.html:64
 #: tppcenter/templates/Tpp/addForm.html:182
-#: tppcenter/templates/Tpp/detailContent.html:587
+#: tppcenter/templates/Tpp/detailContent.html:563
 #: usersites/templates/Proposals/detailContent.html:132
 msgid "Address"
 msgstr "Адреса"
@@ -158,12 +155,12 @@ msgstr "Прізвище"
 #: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
 #: tppcenter/templates/Profile/addForm.html:85
 #: tppcenter/templates/Resume/addForm.html:66
-#: tppcenter/templates/Resume/detailContent.html:59
+#: tppcenter/templates/Resume/detailContent.html:48
 #: tppcenter/templates/main/user_profile.html:75
 msgid "Birthday"
 msgstr "День народження"
 
-#: centerpokupok/views.py:187 tppcenter/views.py:224
+#: centerpokupok/views.py:187 tppcenter/views.py:221
 msgid "Agreement with terms is required"
 msgstr "Згоден з умовами  Угоди _"
 
@@ -233,8 +230,7 @@ msgid "Quick reference"
 msgstr "Короткий довідник"
 
 #: centerpokupok/templates/base.html:56
-#: tppcenter/templates/Companies/detailContent.html:591
-#: tppcenter/templates/Tpp/detailContent.html:516
+#: tppcenter/templates/Companies/detailContent.html:548
 msgid "Services"
 msgstr "Послуги"
 
@@ -242,10 +238,11 @@ msgstr "Послуги"
 #: centerpokupok/templates/Company/contact.html:4
 #: centerpokupok/templates/Company/contact.html:50
 #: tppcenter/Project/urls.py:20
-#: tppcenter/templates/Companies/contentPage.html:104
-#: tppcenter/templates/Products/detailContent.html:128
+#: tppcenter/templates/Companies/contentPage.html:88
+#: tppcenter/templates/Products/detailContent.html:98
+#: tppcenter/templates/Products/detailContent.html:134
 #: tppcenter/templates/Project/contact.html:16
-#: tppcenter/templates/Tpp/contentPage.html:75
+#: tppcenter/templates/Tpp/contentPage.html:71
 #: usersites/templates/site_sidebar.html:103
 msgid "Contact us"
 msgstr "Зв'язатися з нами"
@@ -323,7 +320,7 @@ msgstr "Вийти"
 #: centerpokupok/templates/header_small.html:9
 #: centerpokupok/templates/Company/header.html:13
 #: centerpokupok/templates/registration/login.html:3
-#: tppcenter/templates/login_header.html:54
+#: tppcenter/templates/login_header.html:44
 #: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/login.html:46
 msgid "Sign in"
@@ -338,7 +335,7 @@ msgid "Workplace"
 msgstr "Робочий простір"
 
 #: centerpokupok/templates/header_big.html:92
-#: tppcenter/templates/login_header.html:52
+#: tppcenter/templates/login_header.html:42
 msgid "Sign out"
 msgstr "Вийти"
 
@@ -359,14 +356,11 @@ msgid "Search Products"
 msgstr "Пошук продуктів"
 
 #: centerpokupok/templates/header_big.html:108
-#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:22
-#: modules-mod/django-haystack-es_types/haystack/forms.py:22
-#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
 msgid "Search"
 msgstr "Пошук "
 
 #: centerpokupok/templates/header_small.html:6
-#: tppcenter/templates/base.html:30 usersites/templates/base.html:21
+#: tppcenter/templates/base.html:39 usersites/templates/base.html:21
 msgid "Main page"
 msgstr "Головна"
 
@@ -460,8 +454,8 @@ msgstr "Докладніше про користувача"
 #: centerpokupok/templates/Cabinet/index.html:45
 #: centerpokupok/templates/Cabinet/shippingAddress.html:39
 #: tppcenter/templates/BusinessProposal/addForm.html:159
-#: tppcenter/templates/Companies/addForm.html:259
-#: tppcenter/templates/Exhibitions/addForm.html:216
+#: tppcenter/templates/Companies/addForm.html:264
+#: tppcenter/templates/Exhibitions/addForm.html:228
 #: tppcenter/templates/Innov/addForm.html:190
 #: tppcenter/templates/Products/addForm.html:435
 #: tppcenter/templates/Profile/addForm.html:108
@@ -506,7 +500,7 @@ msgstr "Категорії"
 #: centerpokupok/templates/Product/index.html:60
 #: centerpokupok/templates/Product/new.html:96
 #: tppcenter/templates/Analytic/main.html:91
-#: tppcenter/templates/Innov/detailContent.html:94
+#: tppcenter/templates/Innov/detailContent.html:80
 #: usersites/templates/site_sidebar.html:95
 msgid "Main"
 msgstr "Головна"
@@ -518,10 +512,10 @@ msgstr "Всі категорії"
 
 #: centerpokupok/templates/Company/about.html:5
 #: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:11
-#: tppcenter/templates/BusinessProposal/detailContent.html:73
-#: tppcenter/templates/Companies/detailContent.html:572
+#: tppcenter/templates/BusinessProposal/detailContent.html:65
+#: tppcenter/templates/Companies/detailContent.html:529
 #: tppcenter/templates/Project/about.html:16
-#: tppcenter/templates/Tpp/detailContent.html:500
+#: tppcenter/templates/Tpp/detailContent.html:474
 #: tppcenter/templates/main/staticPages.html:3
 #: usersites/templates/Proposals/detailContent.html:79
 msgid "About"
@@ -562,7 +556,7 @@ msgid "Your email"
 msgstr "Ваша електронна пошта"
 
 #: centerpokupok/templates/Company/contact.html:74
-#: tppcenter/templates/base.html:181
+#: tppcenter/templates/base.html:211
 #: usersites/templates/CompanyStructure/contentPage.html:49
 #: usersites/templates/Contact/contentPage.html:65
 msgid "Message"
@@ -601,8 +595,8 @@ msgstr "Зберігти"
 #: centerpokupok/templates/Coupons/index.html:152
 #: centerpokupok/templates/Product/detail.html:211
 #: centerpokupok/templates/main/main_coupons.html:48
-#: tppcenter/templates/Products/contentPage.html:62
-#: tppcenter/templates/Wall/contentPage.html:285
+#: tppcenter/templates/Products/contentPage.html:53
+#: tppcenter/templates/Wall/contentPage.html:41
 #: usersites/templates/contentPage.html:103
 #: usersites/templates/Products/contentPage.html:21
 msgid "Buy"
@@ -640,11 +634,11 @@ msgid "Store main page"
 msgstr "Зберігти головну сторінку"
 
 #: centerpokupok/templates/Company/header.html:50
-#: tppcenter/templates/BusinessProposal/detailContent.html:76
-#: tppcenter/templates/Companies/detailContent.html:638
-#: tppcenter/templates/Exhibitions/detailContent.html:115
-#: tppcenter/templates/Innov/detailContent.html:97
-#: tppcenter/templates/Tpp/detailContent.html:558
+#: tppcenter/templates/BusinessProposal/detailContent.html:68
+#: tppcenter/templates/Companies/detailContent.html:595
+#: tppcenter/templates/Exhibitions/detailContent.html:104
+#: tppcenter/templates/Innov/detailContent.html:83
+#: tppcenter/templates/Tpp/detailContent.html:533
 #: tppcenter/templates/Tpp/tabCompanies.html:9
 #: tppcenter/templates/main/staticPages.html:18 usersites/Contact/views.py:15
 #: usersites/Contact/views.py:16
@@ -673,24 +667,24 @@ msgstr "Топ продаж"
 
 #: centerpokupok/templates/Company/index.html:248
 #: centerpokupok/templates/main/main_coupons.html:9
-#: tppcenter/templates/BusinessProposal/contentPage.html:56
-#: tppcenter/templates/Companies/contentPage.html:80
-#: tppcenter/templates/Exhibitions/contentPage.html:60
-#: tppcenter/templates/Innov/contentPage.html:80
-#: tppcenter/templates/News/detailContent.html:165
-#: tppcenter/templates/Resume/contentPage.html:42
-#: tppcenter/templates/Tenders/contentPage.html:51
-#: tppcenter/templates/Tpp/contentPage.html:54
+#: tppcenter/templates/BusinessProposal/contentPage.html:46
+#: tppcenter/templates/Companies/contentPage.html:56
+#: tppcenter/templates/Exhibitions/contentPage.html:42
+#: tppcenter/templates/Innov/contentPage.html:59
+#: tppcenter/templates/News/detailContent.html:170
+#: tppcenter/templates/Resume/contentPage.html:29
+#: tppcenter/templates/Tenders/contentPage.html:48
+#: tppcenter/templates/Tpp/contentPage.html:42
 #: tppcenter/templates/UserSites/contentPage.html:40
-#: tppcenter/templates/Vacancy/contentPage.html:53
-#: tppcenter/templates/Wall/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:128
-#: tppcenter/templates/Wall/contentPage.html:174
+#: tppcenter/templates/Vacancy/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:106
+#: tppcenter/templates/Wall/contentPage.html:164
+#: tppcenter/templates/Wall/contentPage.html:209
 msgid "More"
 msgstr "Більше"
 
 #: centerpokupok/templates/Company/index.html:302
-#: tppcenter/templates/index.html:282
+#: tppcenter/templates/index.html:293
 msgid "Best deals"
 msgstr "Кращі пропозиції"
 
@@ -731,7 +725,7 @@ msgstr "Дата створення"
 #: centerpokupok/templates/Product/new.html:136
 #: tppcenter/templates/Companies/tabProducts.html:11
 #: tppcenter/templates/Companies/tabTenders.html:10
-#: tppcenter/templates/Products/detailContent.html:75
+#: tppcenter/templates/Products/detailContent.html:67
 #: tppcenter/templates/Tpp/tabTenders.html:10
 #: usersites/templates/Products/detailContent.html:90
 msgid "Price"
@@ -771,7 +765,7 @@ msgid "View store"
 msgstr "Подивитися магазин"
 
 #: centerpokupok/templates/News/detail.html:39
-#: tppcenter/templates/Products/detailContent.html:134
+#: tppcenter/templates/Products/detailContent.html:141
 #: usersites/templates/Products/detailContent.html:153
 msgid "About company"
 msgstr "Про Компанію"
@@ -820,16 +814,16 @@ msgid "Raiting"
 msgstr "Рейтинг"
 
 #: centerpokupok/templates/News/index.html:143
-#: tppcenter/templates/BusinessProposal/contentPage.html:52
+#: tppcenter/templates/BusinessProposal/contentPage.html:37
 #: tppcenter/templates/Companies/tabInnov.html:10
 #: tppcenter/templates/Companies/tabProposal.html:9
 #: tppcenter/templates/News/addForm.html:127
 #: tppcenter/templates/Tpp/tabInnov.html:10
 #: tppcenter/templates/Tpp/tabProposal.html:9
 #: tppcenter/templates/TppTV/addForm.html:71
-#: tppcenter/templates/Vacancy/contentPage.html:50
-#: tppcenter/templates/Vacancy/detailContent.html:35
-#: tppcenter/templates/Wall/contentPage.html:170
+#: tppcenter/templates/Vacancy/contentPage.html:43
+#: tppcenter/templates/Vacancy/detailContent.html:36
+#: tppcenter/templates/Wall/contentPage.html:203
 #: usersites/templates/contentPage.html:20
 #: usersites/templates/contentPage.html:59
 #: usersites/templates/News/contentPage.html:19
@@ -868,21 +862,20 @@ msgstr "Улюблені"
 #: centerpokupok/templates/Product/detail.html:228
 #: tppcenter/templates/BusinessProposal/addForm.html:110
 #: tppcenter/templates/Companies/tabProducts.html:10
-#: tppcenter/templates/Exhibitions/addForm.html:179
+#: tppcenter/templates/Exhibitions/addForm.html:191
 #: tppcenter/templates/Innov/addForm.html:126
 #: tppcenter/templates/Innov/addForm.html:153
 #: tppcenter/templates/Tenders/addForm.html:139
-#: tppcenter/templates/Tenders/detailContent.html:91
+#: tppcenter/templates/Tenders/detailContent.html:80
 #: tppcenter/templates/Vacancy/addForm.html:255
-#: tppcenter/templates/Vacancy/detailContent.html:61
-#: tppcenter/templates/Vacancy/detailContent.html:75
+#: tppcenter/templates/Vacancy/detailContent.html:54
+#: tppcenter/templates/Vacancy/detailContent.html:68
 msgid "Description"
 msgstr "Опис "
 
 #: centerpokupok/templates/Product/detail.html:229
 #: centerpokupok/templates/Product/orderStepOne.html:117
 #: centerpokupok/templates/Product/orderStepTwo.html:53
-#: tppcenter/templates/Products/detailContent.html:93
 msgid "Delivery method"
 msgstr "Спосіб доставки"
 
@@ -967,16 +960,16 @@ msgid "Adress"
 msgstr "Адреса доставки"
 
 #: centerpokupok/templates/Product/orderStepOne.html:109
-#: tppcenter/templates/BusinessProposal/detailContent.html:130
-#: tppcenter/templates/Companies/addForm.html:104
-#: tppcenter/templates/Companies/detailContent.html:672
-#: tppcenter/templates/Exhibitions/detailContent.html:170
-#: tppcenter/templates/Exhibitions/detailContent.html:215
-#: tppcenter/templates/Innov/detailContent.html:163
+#: tppcenter/templates/BusinessProposal/detailContent.html:125
+#: tppcenter/templates/Companies/addForm.html:109
+#: tppcenter/templates/Companies/detailContent.html:632
+#: tppcenter/templates/Exhibitions/detailContent.html:163
+#: tppcenter/templates/Exhibitions/detailContent.html:214
+#: tppcenter/templates/Innov/detailContent.html:156
 #: tppcenter/templates/Resume/addForm.html:95
-#: tppcenter/templates/Resume/detailContent.html:71
+#: tppcenter/templates/Resume/detailContent.html:60
 #: tppcenter/templates/Tpp/addForm.html:99
-#: tppcenter/templates/Tpp/detailContent.html:591
+#: tppcenter/templates/Tpp/detailContent.html:569
 #: tppcenter/templates/main/user_profile.html:79
 #: usersites/templates/CompanyStructure/contentPage.html:22
 #: usersites/templates/Contact/contentPage.html:39
@@ -1064,7 +1057,7 @@ msgstr "Підтвердити замовлення"
 #: centerpokupok/templates/registration/password_reset_form.html:41
 #: centerpokupok/templates/registration/registration_closed.html:48
 #: centerpokupok/templates/registration/registration_complete.html:49
-#: tppcenter/templates/index.html:221
+#: tppcenter/templates/index.html:232 tppcenter/templates/job_index.html:228
 msgid "Registration"
 msgstr "Реєстрація"
 
@@ -1283,12 +1276,13 @@ msgid "Registration on"
 msgstr "Реєстрація підприємства на"
 
 #: centerpokupok/templates/registration/login.html:17
-#: tppcenter/templates/BusinessProposal/detailContent.html:138
-#: tppcenter/templates/Companies/detailContent.html:680
-#: tppcenter/templates/Exhibitions/detailContent.html:178
-#: tppcenter/templates/Innov/detailContent.html:171
+#: tppcenter/templates/BusinessProposal/detailContent.html:137
+#: tppcenter/templates/Companies/detailContent.html:644
+#: tppcenter/templates/Exhibitions/detailContent.html:175
+#: tppcenter/templates/Exhibitions/detailContent.html:210
+#: tppcenter/templates/Innov/detailContent.html:168
 #: tppcenter/templates/Profile/addForm.html:49
-#: tppcenter/templates/Tpp/detailContent.html:599
+#: tppcenter/templates/Tpp/detailContent.html:581
 #: tppcenter/templates/main/user_profile.html:49
 #: usersites/templates/Proposals/detailContent.html:144
 msgid "Email"
@@ -1297,7 +1291,8 @@ msgstr "E-mail"
 #: centerpokupok/templates/registration/login.html:23
 #: centerpokupok/templates/registration/registration_form.html:31
 #: centerpokupok/templates/registration/registration_form.html:42
-#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:268
+#: tppcenter/templates/index.html:279 tppcenter/templates/job_index.html:275
+#: tppcenter/templates/registration/login.html:42
 #: tppcenter/templates/registration/registration.html:46
 #: usersites/templates/slider.html:34
 msgid "Password"
@@ -1456,8 +1451,8 @@ msgid "Create new account"
 msgstr "Створити новий обліковий запис"
 
 #: centerpokupok/templates/registration/registration_form.html:20
-#: modules-mod/registration/forms.py:38
-#: tppcenter/templates/Companies/addForm.html:131
+#: tppcenter/templates/Companies/addForm.html:136
+#: tppcenter/templates/registration/login.html:37
 #: tppcenter/templates/registration/registration.html:41
 msgid "E-mail"
 msgstr "E-mail"
@@ -1471,610 +1466,112 @@ msgid "terms"
 msgstr "умови"
 
 #: centerpokupok/templates/registration/registration_form.html:56
-#: tppcenter/templates/index.html:212 tppcenter/templates/index.html.py:234
-#: tppcenter/templates/index.html:260 tppcenter/templates/index.html.py:275
+#: tppcenter/templates/index.html:223 tppcenter/templates/index.html.py:245
+#: tppcenter/templates/index.html:271 tppcenter/templates/index.html.py:286
+#: tppcenter/templates/job_index.html:219
+#: tppcenter/templates/job_index.html:241
+#: tppcenter/templates/job_index.html:267
+#: tppcenter/templates/job_index.html:282
 #: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/registration.html:61
 #: usersites/templates/slider.html:41
 msgid "Sign up"
 msgstr "Зареєструватися"
 
-#: core/models.py:92
+#: core/models.py:93
 msgid "date joined"
 msgstr "date joined"
 
-#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:118
-#: modules-mod/django-haystack-es_types/haystack/admin.py:118
-#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:118
-#, python-format
-msgid "0 of %(count)d selected"
-msgid_plural "of %(count)d selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:120
-#: modules-mod/django-haystack-es_types/haystack/admin.py:120
-#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:120
-#, python-format
-msgid "%(total_count)s selected"
-msgid_plural "All %(total_count)s selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:96
-#: modules-mod/django-haystack-es_types/haystack/forms.py:96
-#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:96
-msgid "Search In"
-msgstr "Шукати в"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:26
-#: modules-mod/django-haystack-es_types/haystack/panels.py:26
-#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:26
-msgid "Haystack"
-msgstr "Haystack"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:50
-#: modules-mod/django-haystack-es_types/haystack/panels.py:50
-#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:50
-msgid "Search Queries"
-msgstr "Пошукові Запити"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:5
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:5
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:5
-msgid "Query"
-msgstr "Запит"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:6
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:6
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:6
-msgid "Backend Alias"
-msgstr "Backend Alias"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:7
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:7
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:7
-msgid "Timeline"
-msgstr "Хронологія"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:8
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:8
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:8
-msgid "Time"
-msgstr "Час"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:9
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:9
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:9
-msgid "Kwargs"
-msgstr "Kwargs"
-
-#: modules-mod/djcelery/admin.py:51 modules-mod/djcelery/admin.py:58
-#: modules-mod/djcelery/models.py:27 modules-mod/djcelery/models.py:317
-msgid "state"
-msgstr "state"
-
-#: modules-mod/djcelery/admin.py:65 modules-mod/djcelery/models.py:326
-msgid "ETA"
-msgstr "ETA"
-
-#: modules-mod/djcelery/admin.py:72
-msgid "when"
-msgstr "when"
-
-#: modules-mod/djcelery/admin.py:79 modules-mod/djcelery/models.py:196
-#: modules-mod/djcelery/models.py:321
-msgid "name"
-msgstr "name"
-
-#: modules-mod/djcelery/admin.py:113
-msgid "Task detail"
-msgstr "Task detail"
-
-#: modules-mod/djcelery/admin.py:114
-msgid "Tasks"
-msgstr "Tasks"
-
-#: modules-mod/djcelery/admin.py:129 modules-mod/djcelery/models.py:319
-msgid "UUID"
-msgstr "UUID"
-
-#: modules-mod/djcelery/admin.py:153
-msgid "Revoke selected tasks"
-msgstr "Відкликати вибрані завдання"
-
-#: modules-mod/djcelery/admin.py:159
-msgid "Terminate selected tasks"
-msgstr "Завершити вибрані завдання"
-
-#: modules-mod/djcelery/admin.py:165
-msgid "Kill selected tasks"
-msgstr "Завершити вибрані завдання"
-
-#: modules-mod/djcelery/admin.py:172
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:9
-msgid "Rate limit selected tasks"
-msgstr "Rate limit selected tasks"
-
-#: modules-mod/djcelery/admin.py:185
-msgid "Rate limit selection"
-msgstr "Rate limit selection"
-
-#: modules-mod/djcelery/admin.py:210
-msgid "Node detail"
-msgstr "Node detail"
-
-#: modules-mod/djcelery/admin.py:211
-msgid "Worker Nodes"
-msgstr "Worker Nodes"
-
-#: modules-mod/djcelery/admin.py:218
-msgid "Shutdown selected worker nodes"
-msgstr "Shutdown selected worker nodes"
-
-#: modules-mod/djcelery/admin.py:222
-msgid "Enable event mode for selected nodes."
-msgstr "Enable event mode for selected nodes."
-
-#: modules-mod/djcelery/admin.py:227
-msgid "Disable event mode for selected nodes."
-msgstr "Disable event mode for selected nodes."
-
-#: modules-mod/djcelery/admin.py:257
-msgid "Task (registered)"
-msgstr "Task (registered)"
-
-#: modules-mod/djcelery/admin.py:259
-msgid "Task (custom)"
-msgstr "Task (custom)"
-
-#: modules-mod/djcelery/admin.py:271
-msgid "Need name of task"
-msgstr "Need name of task"
-
-#: modules-mod/djcelery/admin.py:282
-#, python-format
-msgid "Unable to parse JSON: %s"
-msgstr "Unable to parse JSON: %s"
-
-#: modules-mod/djcelery/humanize.py:8
-msgid "just now"
-msgstr "just now"
-
-#: modules-mod/djcelery/humanize.py:9
-msgid "{seconds} second ago"
-msgstr "{seconds} second ago"
-
-#: modules-mod/djcelery/humanize.py:9
-msgid "{seconds} seconds ago"
-msgstr "{seconds} seconds ago"
-
-#: modules-mod/djcelery/humanize.py:10
-msgid "{minutes} minute ago"
-msgstr "{minutes} minute ago"
-
-#: modules-mod/djcelery/humanize.py:10
-msgid "{minutes} minutes ago"
-msgstr "{minutes} minutes ago"
-
-#: modules-mod/djcelery/humanize.py:11
-msgid "{hours} hour ago"
-msgstr "{hours} hour ago"
-
-#: modules-mod/djcelery/humanize.py:11
-msgid "{hours} hours ago"
-msgstr "{hours} hours ago"
-
-#: modules-mod/djcelery/humanize.py:12
-msgid "yesterday at {time}"
-msgstr "yesterday at {time}"
-
-#: modules-mod/djcelery/humanize.py:13
-msgid "year"
-msgstr "year"
-
-#: modules-mod/djcelery/humanize.py:13
-msgid "years"
-msgstr "years"
-
-#: modules-mod/djcelery/humanize.py:14
-msgid "month"
-msgstr "month"
-
-#: modules-mod/djcelery/humanize.py:14
-msgid "months"
-msgstr "months"
-
-#: modules-mod/djcelery/humanize.py:15
-msgid "week"
-msgstr "week"
-
-#: modules-mod/djcelery/humanize.py:15
-msgid "weeks"
-msgstr "weeks"
-
-#: modules-mod/djcelery/humanize.py:16
-#: tppcenter/templates/AdvBanner/addForm.html:194
-#: tppcenter/templates/AdvBanner/order.html:193
-#: tppcenter/templates/AdvTop/addForm.html:194
-#: tppcenter/templates/AdvTop/order.html:193
-#: tppcenter/templates/Products/addForm.html:36
-msgid "day"
-msgstr "day"
-
-#: modules-mod/djcelery/humanize.py:16
-msgid "days"
-msgstr "days"
-
-#: modules-mod/djcelery/humanize.py:23
-msgid "{number} {type} ago"
-msgstr "{number} {type} ago"
-
-#: modules-mod/djcelery/models.py:25
-msgid "task id"
-msgstr "task id"
-
-#: modules-mod/djcelery/models.py:31
-msgid "done at"
-msgstr "done at"
-
-#: modules-mod/djcelery/models.py:32 modules-mod/djcelery/models.py:329
-msgid "traceback"
-msgstr "traceback"
-
-#: modules-mod/djcelery/models.py:35
-msgid "meta"
-msgstr "meta"
-
-#: modules-mod/djcelery/models.py:41
-msgid "task state"
-msgstr "task state"
-
-#: modules-mod/djcelery/models.py:42
-msgid "task states"
-msgstr "task states"
-
-#: modules-mod/djcelery/models.py:59
-msgid "group id"
-msgstr "group id"
-
-#: modules-mod/djcelery/models.py:61
-msgid "created at"
-msgstr "created at"
-
-#: modules-mod/djcelery/models.py:68
-msgid "saved group result"
-msgstr "saved group result"
-
-#: modules-mod/djcelery/models.py:69
-msgid "saved group results"
-msgstr "saved group results"
-
-#: modules-mod/djcelery/models.py:81
-msgid "Days"
-msgstr "Days"
-
-#: modules-mod/djcelery/models.py:82
-msgid "Hours"
-msgstr "Hours"
-
-#: modules-mod/djcelery/models.py:83
-msgid "Minutes"
-msgstr "Minutes"
-
-#: modules-mod/djcelery/models.py:84
-msgid "Seconds"
-msgstr "Seconds"
-
-#: modules-mod/djcelery/models.py:85
-msgid "Microseconds"
-msgstr "Microseconds"
-
-#: modules-mod/djcelery/models.py:89
-msgid "every"
-msgstr "every"
-
-#: modules-mod/djcelery/models.py:91
-msgid "period"
-msgstr "period"
-
-#: modules-mod/djcelery/models.py:95 modules-mod/djcelery/models.py:202
-msgid "interval"
-msgstr "interval"
-
-#: modules-mod/djcelery/models.py:96
-msgid "intervals"
-msgstr "intervals"
-
-#: modules-mod/djcelery/models.py:116
-msgid "every {0.period_singular}"
-msgstr "every {0.period_singular}"
-
-#: modules-mod/djcelery/models.py:117
-msgid "every {0.every} {0.period}"
-msgstr "every {0.every} {0.period}"
-
-#: modules-mod/djcelery/models.py:125
-msgid "minute"
-msgstr "хвилин"
-
-#: modules-mod/djcelery/models.py:126
-msgid "hour"
-msgstr "годину"
-
-#: modules-mod/djcelery/models.py:128
-msgid "day of week"
-msgstr "день тижня"
-
-#: modules-mod/djcelery/models.py:131
-msgid "day of month"
-msgstr "день місяця"
-
-#: modules-mod/djcelery/models.py:134
-msgid "month of year"
-msgstr "місяць року"
-
-#: modules-mod/djcelery/models.py:138 modules-mod/djcelery/models.py:205
-msgid "crontab"
-msgstr "crontab"
-
-#: modules-mod/djcelery/models.py:139
-msgid "crontabs"
-msgstr "crontabs"
-
-#: modules-mod/djcelery/models.py:197
-msgid "Useful description"
-msgstr "Useful description"
-
-#: modules-mod/djcelery/models.py:199
-msgid "task name"
-msgstr "task name"
-
-#: modules-mod/djcelery/models.py:206
-msgid "Use one of interval/crontab"
-msgstr "Use one of interval/crontab"
-
-#: modules-mod/djcelery/models.py:209 modules-mod/djcelery/models.py:324
-msgid "Arguments"
-msgstr "Arguments"
-
-#: modules-mod/djcelery/models.py:210
-msgid "JSON encoded positional arguments"
-msgstr "JSON encoded positional arguments"
-
-#: modules-mod/djcelery/models.py:213 modules-mod/djcelery/models.py:325
-msgid "Keyword arguments"
-msgstr "Keyword arguments"
-
-#: modules-mod/djcelery/models.py:214
-msgid "JSON encoded keyword arguments"
-msgstr "JSON encoded keyword arguments"
-
-#: modules-mod/djcelery/models.py:217
-msgid "queue"
-msgstr "queue"
-
-#: modules-mod/djcelery/models.py:218
-msgid "Queue defined in CELERY_QUEUES"
-msgstr "Queue defined in CELERY_QUEUES"
-
-#: modules-mod/djcelery/models.py:221
-msgid "exchange"
-msgstr "обмін"
-
-#: modules-mod/djcelery/models.py:224
-msgid "routing key"
-msgstr "ключ маршрутизації"
-
-#: modules-mod/djcelery/models.py:227 modules-mod/djcelery/models.py:327
-msgid "expires"
-msgstr "закінчується"
-
-#: modules-mod/djcelery/models.py:230
-msgid "enabled"
-msgstr "включений"
-
-#: modules-mod/djcelery/models.py:240
-msgid "description"
-msgstr "опис"
-
-#: modules-mod/djcelery/models.py:246
-msgid "periodic task"
-msgstr "periodic task"
-
-#: modules-mod/djcelery/models.py:247
-msgid "periodic tasks"
-msgstr "periodic tasks"
-
-#: modules-mod/djcelery/models.py:286
-msgid "hostname"
-msgstr "hostname"
-
-#: modules-mod/djcelery/models.py:287
-msgid "last heartbeat"
-msgstr "last heartbeat"
-
-#: modules-mod/djcelery/models.py:294 modules-mod/djcelery/models.py:336
-msgid "worker"
-msgstr "worker"
-
-#: modules-mod/djcelery/models.py:295
-msgid "workers"
-msgstr "workers"
-
-#: modules-mod/djcelery/models.py:323
-msgid "event received at"
-msgstr "event received at"
-
-#: modules-mod/djcelery/models.py:328
-msgid "result"
-msgstr "результат"
-
-#: modules-mod/djcelery/models.py:331
-msgid "execution time"
-msgstr "час виконання"
-
-#: modules-mod/djcelery/models.py:332
-msgid "in seconds if task succeeded"
-msgstr "in seconds if task succeeded"
-
-#: modules-mod/djcelery/models.py:334
-msgid "number of retries"
-msgstr "Кількість спроб"
-
-#: modules-mod/djcelery/models.py:344
-msgid "task"
-msgstr "Завдання"
-
-#: modules-mod/djcelery/models.py:345
-msgid "tasks"
-msgstr "Завдання"
-
-#: modules-mod/djcelery/templates/admin/djcelery/change_list.html:7
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:6
-msgid "Home"
-msgstr "Додому"
-
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:22
-msgid "Rate limit"
-msgstr "Обмеження"
-
-#: modules-mod/registration/admin.py:23
-msgid "Activate users"
-msgstr "Активуйте користувачів"
-
-#: modules-mod/registration/admin.py:43
-msgid "Re-send activation emails"
-msgstr "Вислати листа активації на e-mail"
-
-#: modules-mod/registration/forms.py:42
-msgid "Password (again)"
-msgstr "Пароль (ще раз)"
-
-#: modules-mod/registration/forms.py:66
-msgid "The two password fields didn't match."
-msgstr "Пароли не збігаються."
-
-#: modules-mod/registration/forms.py:77
-msgid "I have read and agree to the Terms of Service"
-msgstr "Я прочитав і згоден з Умови надання послуг"
-
-#: modules-mod/registration/forms.py:78
-msgid "You must agree to the terms to register"
-msgstr "Ви повинні погодитися з умовами, щоб зареєструватися"
-
-#: modules-mod/registration/forms.py:94
-msgid ""
-"This email address is already in use. Please supply a different email "
-"address."
-msgstr ""
-"Ця адреса електронної пошти вже використовується. Будь ласка, надайте іншу "
-"адресу електронної пошти."
-
-#: modules-mod/registration/forms.py:121
-msgid ""
-"Registration using free email addresses is prohibited. Please supply a "
-"different email address."
-msgstr ""
-"Реєстрація за допомогою безкоштовних адрес електронної пошти заборонено. "
-"Будь ласка, надайте іншу адресу електронної пошти."
-
-#: modules-mod/registration/models.py:180
-msgid "user"
-msgstr "користувач"
-
-#: modules-mod/registration/models.py:181
-msgid "activation key"
-msgstr "ключ активації"
-
-#: modules-mod/registration/models.py:186
-msgid "registration profile"
-msgstr "Реєстраційний профіль"
-
-#: modules-mod/registration/models.py:187
-msgid "registration profiles"
-msgstr "Профілі реєстрації"
-
-#: tpp/settings.py:229
+#: tpp/settings.py:232
 msgid "Russia"
 msgstr "Руська "
 
-#: tpp/settings.py:230
+#: tpp/settings.py:233
 msgid "Armenia"
 msgstr "Вірменська"
 
-#: tpp/settings.py:233
+#: tpp/settings.py:236
 msgid "England"
 msgstr "Англійська"
 
-#: tpp/settings.py:245
+#: tpp/settings.py:246 tppcenter/templates/index.html:93
+#: tppcenter/templates/job_index.html:109
+msgid "Ukrainian"
+msgstr ""
+
+#: tpp/settings.py:248
 msgid "Israel"
 msgstr "Ізраїль"
 
-#: tpp/settings.py:246
+#: tpp/settings.py:249 tppcenter/templates/index.html:88
+#: tppcenter/templates/job_index.html:104
 msgid "Arabic"
 msgstr "Арабська"
 
-#: tpp/settings.py:247
+#: tpp/settings.py:250 tppcenter/templates/index.html:92
+#: tppcenter/templates/job_index.html:108
 msgid "Chinese"
 msgstr "Китайська"
+
+#: tppcenter/cbv.py:392
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
 msgstr "Розмір зображення повинен бути не менше 2 Мб"
 
-#: tppcenter/views.py:154
+#: tppcenter/views.py:151
 #, python-format
 msgid "%(name)s , was registered to your event %(event)s ,"
 msgstr "%(name)s , був зареєстрований на ваш захід %(event)s ,"
 
-#: tppcenter/views.py:155
+#: tppcenter/views.py:152
 #, python-format
 msgid "working in the %(company)s "
 msgstr "працює в %(company)s "
 
-#: tppcenter/views.py:156
+#: tppcenter/views.py:153
 #, python-format
 msgid "on the position of %(position)s . "
 msgstr "від положення  %(position)s . "
 
-#: tppcenter/views.py:157
+#: tppcenter/views.py:154
 #, python-format
 msgid "You can contact him at this email address %(email)s  "
 msgstr ""
 "Ви можете зв'язатися з ним за цією адресою електронної пошти %(email)s  "
 
-#: tppcenter/views.py:160 tppcenter/views.py:163
+#: tppcenter/views.py:157 tppcenter/views.py:160
 msgid "Registartion to event"
 msgstr "Реєстрація у випадку"
 
-#: tppcenter/AdminTpp/views.py:550 tppcenter/AdminTpp/views.py:552
+#: tppcenter/AdminTpp/views.py:687 tppcenter/AdminTpp/views.py:689
 msgid "Banner type already exists"
 msgstr "Тип банера вже існує"
 
-#: tppcenter/AdminTpp/views.py:555
+#: tppcenter/AdminTpp/views.py:692
 msgid "Invalid site"
 msgstr "Невіреа сторона"
 
-#: tppcenter/AdminTpp/views.py:558
+#: tppcenter/AdminTpp/views.py:695
 msgid "Invalid height"
 msgstr "Невірна висота"
 
-#: tppcenter/AdminTpp/views.py:561
+#: tppcenter/AdminTpp/views.py:698
 msgid "Invalid width"
 msgstr "Невірна ширина"
 
-#: tppcenter/AdminTpp/views.py:564
+#: tppcenter/AdminTpp/views.py:701
 msgid "Invalid targeting"
 msgstr "Невірне орієнтування"
 
-#: tppcenter/AdminTpp/views.py:567
+#: tppcenter/AdminTpp/views.py:704
 msgid "Invalid code"
 msgstr "Невірний код"
 
-#: tppcenter/AdminTpp/views.py:721
+#: tppcenter/AdminTpp/views.py:858
 msgid "Invalid type"
 msgstr "Невірний тип"
 
@@ -2086,84 +1583,85 @@ msgstr "Топ"
 msgid "Banner"
 msgstr "Банер"
 
-#: tppcenter/AdvBanner/views.py:52 tppcenter/AdvBanner/views.py:290
-#: tppcenter/AdvBanner/views.py:355 tppcenter/AdvTop/views.py:216
-#: tppcenter/templates/main_page.html:163
+#: tppcenter/AdvBanner/views.py:53 tppcenter/AdvBanner/views.py:265
+#: tppcenter/AdvBanner/views.py:330 tppcenter/AdvTop/views.py:208
+#: tppcenter/templates/main_page.html:222
 #: tppcenter/templates/AdvBanner/index.html:7
 msgid "Banners"
 msgstr "Банери"
 
-#: tppcenter/AdvBanner/views.py:231 tppcenter/AdvTop/views.py:176
+#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvTop/views.py:168
 msgid "You must choose one filter al least"
 msgstr "Ви повинні вибрати один фільтр принаймні,"
 
-#: tppcenter/AdvBanner/views.py:237
+#: tppcenter/AdvBanner/views.py:213
 msgid "The image size cannot exceed 50 KB"
 msgstr "Розмір зображення не повинен перевищувати 50 Кб"
 
-#: tppcenter/AdvBanner/views.py:243
+#: tppcenter/AdvBanner/views.py:219
 msgid "Image dimension should not exceed"
 msgstr "Розмір зображення не повинен перевищувати"
 
-#: tppcenter/AdvBanner/views.py:250 tppcenter/AdvBanner/views.py:262
-#: tppcenter/AdvTop/views.py:184 tppcenter/AdvTop/views.py:195
+#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvBanner/views.py:238
+#: tppcenter/AdvTop/views.py:176 tppcenter/AdvTop/views.py:187
 msgid "You should choose a valid date range"
 msgstr "Ви повинні вибрати правильний діапазон дат"
 
-#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:190
+#: tppcenter/AdvBanner/views.py:233 tppcenter/AdvTop/views.py:182
 msgid "You should choose a date range"
 msgstr "Ви повинні вибрати діапазон дат"
 
-#: tppcenter/AdvBanner/views.py:272 tppcenter/AdvTop/views.py:203
+#: tppcenter/AdvBanner/views.py:248 tppcenter/AdvTop/views.py:195
 msgid "Error occurred while trying to proceed your request"
 msgstr "Помилка при обробці вашого запита"
 
-#: tppcenter/AdvBanner/views.py:282 tppcenter/AdvTop/views.py:211
+#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:203
 #: tppcenter/templates/baseFilter.html:10
 msgid "Select branch"
 msgstr "Вибрати галузь"
 
-#: tppcenter/AdvBanner/views.py:285 tppcenter/AdvTop/views.py:212
+#: tppcenter/AdvBanner/views.py:260 tppcenter/AdvTop/views.py:204
 #: tppcenter/templates/baseFilter.html:12
 msgid "Select country"
 msgstr "Виберіть країну"
 
-#: tppcenter/AdvBanner/views.py:288 tppcenter/AdvTop/views.py:213
+#: tppcenter/AdvBanner/views.py:263 tppcenter/AdvTop/views.py:205
 msgid "Select organization"
 msgstr "Виберіть організацію"
 
-#: tppcenter/AdvTop/views.py:282
+#: tppcenter/AdvTop/views.py:265
 msgid "Tops"
 msgstr "Топи"
 
-#: tppcenter/BusinessProposal/views.py:57
-#: tppcenter/BusinessProposal/views.py:133
+#: tppcenter/BusinessProposal/views.py:32
+#: tppcenter/BusinessProposal/views.py:52
+#: tppcenter/BusinessProposal/views.py:72
 msgid "Business Proposal"
 msgstr "Комерційна пропозиція"
 
-#: tppcenter/Companies/views.py:341 tppcenter/Tpp/views.py:586
-#, python-format
-msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+#: tppcenter/Companies/views.py:310
+#, fuzzy
+msgid "Can not delete Department hierarchy. "
 msgstr "Can not delete Department. The reason is: %(reason)s"
 
-#: tppcenter/Companies/views.py:349 tppcenter/Tpp/views.py:594
+#: tppcenter/Companies/views.py:319 tppcenter/Tpp/views.py:410
 #, python-format
 msgid "Can not delete Department. The reason is: %(reason)s"
 msgstr "Can not delete Department. The reason is: %(reason)s"
 
-#: tppcenter/Companies/views.py:388 tppcenter/Tpp/views.py:633
+#: tppcenter/Companies/views.py:361 tppcenter/Tpp/views.py:449
 #, python-format
 msgid "Could not find in DB Vacancy %(name)s"
 msgstr "Could not find in DB Vacancy %(name)s"
 
-#: tppcenter/Companies/views.py:401 tppcenter/Tpp/views.py:646
-#: tppcenter/Vacancy/views.py:554
+#: tppcenter/Companies/views.py:377 tppcenter/Tpp/views.py:462
+#: tppcenter/Vacancy/views.py:397
 #, python-format
 msgid "Can not set attributes for Vacancy %(name)s"
 msgstr "Can not set attributes for Vacancy %(name)s"
 
-#: tppcenter/Companies/views.py:408 tppcenter/Tpp/views.py:652
-#: tppcenter/Vacancy/views.py:563
+#: tppcenter/Companies/views.py:385 tppcenter/Tpp/views.py:468
+#: tppcenter/Vacancy/views.py:406
 #, python-format
 msgid ""
 "Can not create Relationship between Vacancy %(vac_name)s and Department ID "
@@ -2172,8 +1670,8 @@ msgstr ""
 "Can not create Relationship between Vacancy %(vac_name)s and Department ID "
 "%(dep_name)s. The reason is: %(reason)s"
 
-#: tppcenter/Companies/views.py:414 tppcenter/Tpp/views.py:658
-#: tppcenter/Vacancy/views.py:569
+#: tppcenter/Companies/views.py:391 tppcenter/Tpp/views.py:474
+#: tppcenter/Vacancy/views.py:412
 #, python-format
 msgid ""
 "Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
@@ -2182,17 +1680,17 @@ msgstr ""
 "Неможливо створити Vacancy for Department ID: %(dep_id)s. Причина в тому: "
 "%(reason)s"
 
-#: tppcenter/Companies/views.py:426 tppcenter/Tpp/views.py:670
+#: tppcenter/Companies/views.py:403 tppcenter/Tpp/views.py:486
 #, python-format
 msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
 msgstr "Неможливо видалити Vacancy ID: %(vac_id)s. Причина в тому: %(reason)s"
 
-#: tppcenter/Companies/views.py:493 tppcenter/Tpp/views.py:737
+#: tppcenter/Companies/views.py:470 tppcenter/Tpp/views.py:553
 #, python-format
 msgid "User %(user)s has not Cabinet."
 msgstr "Користувач  %(user)s не має Cabinet."
 
-#: tppcenter/Companies/views.py:531 tppcenter/Tpp/views.py:775
+#: tppcenter/Companies/views.py:513 tppcenter/Tpp/views.py:591
 #, python-format
 msgid ""
 "Can not set attributes for Cabinet ID: "
@@ -2203,44 +1701,55 @@ msgstr ""
 "%(cab_id)s.                                                Причина в тому: "
 "%(reason)s"
 
-#: tppcenter/Companies/views.py:541 tppcenter/Tpp/views.py:786
+#: tppcenter/Companies/views.py:523 tppcenter/Tpp/views.py:602
 msgid "You can not add user at Vacancy which already busy."
 msgstr "Ви не можете додати користувача в Вакансії, які вже зайняті."
 
-#: tppcenter/Companies/views.py:543 tppcenter/Tpp/views.py:788
+#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:604
 #, python-format
 msgid "You can not add user [%(user)s] at the company twice."
 msgstr "Ви не можете додати користувача [%(user)s] в компанії двічі."
 
-#: tppcenter/Companies/views.py:958 tppcenter/Companies/views.py:974
-#: tppcenter/templates/base.html:172 tppcenter/templates/Vacancy/index.html:43
+#: tppcenter/Companies/views.py:695 tppcenter/Companies/views.py:792
+#, fuzzy
+msgid "Please select a country"
+msgstr "Виберіть країну"
+
+#: tppcenter/Companies/views.py:699 tppcenter/Companies/views.py:796
+#, fuzzy
+msgid "Invalid Country"
+msgstr "Невірний тип"
+
+#: tppcenter/Companies/views.py:962 tppcenter/Companies/views.py:978
+#: tppcenter/templates/base.html:202
+#: tppcenter/templates/Vacancy/detailContent.html:96
 msgid "You have successfully sent the message."
 msgstr "Ви успішно відправили повідомлення."
 
-#: tppcenter/Companies/views.py:965
+#: tppcenter/Companies/views.py:969
 msgid "This message was sent to company with id:"
 msgstr "Це повідомлення було відправлено компанії з ідентифікатором:"
 
-#: tppcenter/Companies/views.py:968
+#: tppcenter/Companies/views.py:972
 msgid "New message"
 msgstr "Нове повідомлення"
 
-#: tppcenter/Companies/views.py:977
+#: tppcenter/Companies/views.py:981
 msgid "Message or file are required"
 msgstr "Повідомлення або файл вимагається"
 
-#: tppcenter/Companies/views.py:979
+#: tppcenter/Companies/views.py:983
 msgid "Only registered users can send the messages"
 msgstr "Тільки зареєстровані користувачі можуть відправляти повідомлення"
 
-#: tppcenter/Greetings/views.py:35 tppcenter/templates/index.html:453
-#: tppcenter/templates/Greetings/index.html:10
+#: tppcenter/Greetings/views.py:19 tppcenter/Greetings/views.py:45
+#: tppcenter/templates/index.html:464 tppcenter/templates/job_index.html:417
 #: tppcenter/templates/main/staticPages.html:8
 msgid "Greetings"
 msgstr "Привітання"
 
-#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:316
-#: tppcenter/templates/Wall/contentPage.html:11
+#: tppcenter/Innov/views.py:33 tppcenter/Innov/views.py:81
+#: tppcenter/Innov/views.py:113 tppcenter/templates/Wall/contentPage.html:56
 msgid "Innovation Project"
 msgstr "Інноваційний проект"
 
@@ -2248,13 +1757,14 @@ msgstr "Інноваційний проект"
 msgid "Private messages"
 msgstr "Приватні повідомлення"
 
-#: tppcenter/News/views.py:63 tppcenter/News/views.py:100
-#: tppcenter/templates/index.html:201 tppcenter/templates/main_page.html:125
-#: tppcenter/templates/main_page.html:150
-#: tppcenter/templates/Companies/detailContent.html:585
-#: tppcenter/templates/News/index.html:11
-#: tppcenter/templates/Tpp/detailContent.html:510
-#: tppcenter/templates/Wall/contentPage.html:194 usersites/News/views.py:41
+#: tppcenter/News/views.py:40 tppcenter/News/views.py:85
+#: tppcenter/News/views.py:114 tppcenter/templates/index.html:212
+#: tppcenter/templates/job_index.html:208
+#: tppcenter/templates/main_page.html:184
+#: tppcenter/templates/main_page.html:209
+#: tppcenter/templates/Companies/detailContent.html:542
+#: tppcenter/templates/Tpp/detailContent.html:484
+#: tppcenter/templates/Wall/contentPage.html:224 usersites/News/views.py:41
 #: usersites/News/views.py:42 usersites/templates/contentPage.html:43
 msgid "News"
 msgstr "Новини"
@@ -2293,7 +1803,13 @@ msgstr "мобільний телефон"
 msgid "Proffesion"
 msgstr "Cпеціальність"
 
-#: tppcenter/Profile/views.py:105
+#: tppcenter/Profile/views.py:21 tppcenter/templates/login_header.html:35
+#: tppcenter/templates/main_page.html:229
+#: tppcenter/templates/Profile/index.html:6
+msgid "Profile"
+msgstr "Профіль"
+
+#: tppcenter/Profile/views.py:100
 msgid "This email already in use"
 msgstr "Ця адреса email  вже використовується"
 
@@ -2302,6 +1818,7 @@ msgid "Advertise with us"
 msgstr "Реклама на сайті"
 
 #: tppcenter/Project/urls.py:13 tppcenter/templates/index.html:75
+#: tppcenter/templates/job_index.html:91
 msgid "Payment System"
 msgstr "Cистема платежів"
 
@@ -2329,32 +1846,35 @@ msgstr "Додати бізнес-пропозицію"
 msgid "Your own site"
 msgstr "Ваш власний сайт"
 
-#: tppcenter/Resume/views.py:211
-msgid "Name not found"
-msgstr "Ім'я не знайдено"
-
-#: tppcenter/Resume/views.py:250 tppcenter/templates/main_page.html:138
-#: tppcenter/templates/main_page.html:168
-#: tppcenter/templates/Resume/index.html:10
+#: tppcenter/Resume/views.py:38 tppcenter/Resume/views.py:83
+#: tppcenter/Resume/views.py:111 tppcenter/templates/main_page.html:197
+#: tppcenter/templates/main_page.html:228
 msgid "Resume"
 msgstr "Резюме"
 
-#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:142
-#: tppcenter/templates/index.html:189 tppcenter/templates/main_page.html:131
-#: tppcenter/templates/main_page.html:156
+#: tppcenter/Tenders/views.py:31 tppcenter/Tenders/views.py:51
+#: tppcenter/Tenders/views.py:71 tppcenter/templates/index.html:200
+#: tppcenter/templates/job_index.html:196
+#: tppcenter/templates/main_page.html:190
+#: tppcenter/templates/main_page.html:215
 #: tppcenter/templates/Analytic/main.html:76
 #: tppcenter/templates/Analytic/main.html:119
-#: tppcenter/templates/Companies/detailContent.html:602
-#: tppcenter/templates/Tenders/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:528
+#: tppcenter/templates/Companies/detailContent.html:559
+#: tppcenter/templates/Tpp/detailContent.html:503
 msgid "Tenders"
 msgstr "Тендери"
 
-#: tppcenter/Tpp/views.py:67 tppcenter/Tpp/views.py:278
+#: tppcenter/Tpp/views.py:41 tppcenter/Tpp/views.py:73
+#: tppcenter/Tpp/views.py:93
 msgid "Tpp"
 msgstr "ТПП"
 
-#: tppcenter/Tpp/views.py:790
+#: tppcenter/Tpp/views.py:402
+#, python-format
+msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+msgstr "Can not delete Department. The reason is: %(reason)s"
+
+#: tppcenter/Tpp/views.py:606
 msgid ""
 "Could not add User ID: %(user_id).                                  The "
 "reason is: %(reason)s"
@@ -2362,78 +1882,81 @@ msgstr ""
 "Could not add User ID: %(user_id).                                  The "
 "reason is: %(reason)s"
 
-#: tppcenter/TppTV/views.py:83
+#: tppcenter/TppTV/views.py:29 tppcenter/TppTV/views.py:65
+msgid "TPP-TV"
+msgstr ""
+
+#: tppcenter/TppTV/views.py:94
 msgid "TppTv"
 msgstr "ТПП ТВ"
 
-#: tppcenter/UserSites/views.py:105 tppcenter/templates/main_page.html:166
+#: tppcenter/UserSites/views.py:89 tppcenter/templates/main_page.html:226
 #: tppcenter/templates/Tpp/tabCompanies.html:10
 msgid "Site"
 msgstr "Сайт"
 
-#: tppcenter/UserSites/views.py:152
+#: tppcenter/UserSites/views.py:136
 msgid "You cannot add more than one site for your organization"
 msgstr "Ви не можете додати більше одного сайту для вашої організації"
 
-#: tppcenter/UserSites/views.py:179 tppcenter/UserSites/views.py:241
+#: tppcenter/UserSites/views.py:163 tppcenter/UserSites/views.py:225
 msgid "This domain is used, please try something else"
 msgstr "Цей домен використовується, будь ласка, спробуйте що-небудь інше"
 
-#: tppcenter/Users/views.py:41 tppcenter/templates/main_page.html:139
-#: tppcenter/templates/main_page.html:171
+#: tppcenter/Users/views.py:15 tppcenter/templates/main_page.html:198
+#: tppcenter/templates/main_page.html:231
 #: tppcenter/templates/Messages/index.html:49
-#: tppcenter/templates/Users/index.html:10
 msgid "Users"
 msgstr "Користувач"
 
-#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:283
-#: tppcenter/templates/Vacancy/index.html:10
+#: tppcenter/Vacancy/views.py:38 tppcenter/Vacancy/views.py:80
+#: tppcenter/Vacancy/views.py:118
 msgid "Vacancy"
 msgstr "Вакансія"
 
-#: tppcenter/Vacancy/views.py:348 tppcenter/Vacancy/views.py:406
+#: tppcenter/Vacancy/views.py:183 tppcenter/Vacancy/views.py:241
 msgid "You have to choose vacancy"
 msgstr "Ви повинні вибрати вакансію"
 
-#: tppcenter/Vacancy/views.py:490
+#: tppcenter/Vacancy/views.py:325
 msgid "You cannot send more than one resume at the same job position."
 msgstr "Ви не можете відправити більше одного резюме для вакансії."
 
-#: tppcenter/Vacancy/views.py:493
+#: tppcenter/Vacancy/views.py:328
 msgid "You have successfully sent the resume."
 msgstr "Ви успішно відправили резюме."
 
-#: tppcenter/Vacancy/views.py:496
+#: tppcenter/Vacancy/views.py:331
 msgid "Resume  are required"
 msgstr "Резюме потрібні"
 
-#: tppcenter/Vacancy/views.py:498
+#: tppcenter/Vacancy/views.py:333
 msgid "Only registred users can send resume"
 msgstr "Тільки зареєстровані користувачі можуть відправляти резюме"
 
-#: tppcenter/Vacancy/views.py:524
+#: tppcenter/Vacancy/views.py:359
 msgid "The error occurred"
 msgstr "Помилка"
 
-#: tppcenter/Vacancy/views.py:529
+#: tppcenter/Vacancy/views.py:364
 msgid "Department name  is required"
 msgstr "Потрібна назва відділу"
 
-#: tppcenter/Vacancy/views.py:531
+#: tppcenter/Vacancy/views.py:366
 msgid "Only registred users can add department"
 msgstr "Тільки зареєстровані користувачі можуть додавати відділ"
 
-#: tppcenter/Vacancy/views.py:574
+#: tppcenter/Vacancy/views.py:417
 msgid "Vacancy name  is required"
 msgstr "Потрібна назва вакансії"
 
-#: tppcenter/Vacancy/views.py:576
+#: tppcenter/Vacancy/views.py:419
 msgid "Only registred users can add vacancy"
 msgstr "Тільки зареєстровані користувачі можуть додати вакансію"
 
-#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:140
-#: tppcenter/templates/Wall/index.html:6 usersites/views.py:19
-#: usersites/views.py:20
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:199
+#: tppcenter/templates/Wall/index.html:4 usersites/views.py:20
+#: usersites/views.py:21
 msgid "Wall"
 msgstr "Стіна"
 
@@ -2465,41 +1988,41 @@ msgstr "Додати сторінку"
 msgid "Content"
 msgstr "Зміст"
 
-#: tppcenter/templates/base.html:142
+#: tppcenter/templates/base.html:172
 msgid "Partners"
 msgstr "Партнери"
 
-#: tppcenter/templates/base.html:150 tppcenter/templates/main_page.html:118
+#: tppcenter/templates/base.html:180 tppcenter/templates/main_page.html:174
 msgid "TPP-Center"
 msgstr "TПП-центр"
 
-#: tppcenter/templates/base.html:150
+#: tppcenter/templates/base.html:180
 msgid "Center of chambers of commerce, associations, unions and guilds "
 msgstr "Центр торгово-промислових палат, асоціацій, спілок та гільдій"
 
-#: tppcenter/templates/base.html:177
+#: tppcenter/templates/base.html:207
 msgid "Send message to"
 msgstr "Надіслати повідомлення"
 
-#: tppcenter/templates/base.html:185
+#: tppcenter/templates/base.html:215
 msgid "File"
 msgstr "Файл"
 
-#: tppcenter/templates/base.html:191
+#: tppcenter/templates/base.html:221
 #: tppcenter/templates/Messages/contentBox.html:15
-#: tppcenter/templates/Vacancy/index.html:70
+#: tppcenter/templates/Vacancy/detailContent.html:123
 #: usersites/templates/Contact/contentPage.html:88
 msgid "Send"
 msgstr "Відправити"
 
-#: tppcenter/templates/base.html:192
+#: tppcenter/templates/base.html:222
 #: tppcenter/templates/BusinessProposal/addForm.html:160
-#: tppcenter/templates/Companies/addForm.html:260
+#: tppcenter/templates/Companies/addForm.html:265
 #: tppcenter/templates/Companies/tabStaff.html:161
 #: tppcenter/templates/Companies/tabStructure.html:80
 #: tppcenter/templates/Companies/tabStructure.html:92
-#: tppcenter/templates/Exhibitions/addForm.html:217
-#: tppcenter/templates/Exhibitions/detailContent.html:231
+#: tppcenter/templates/Exhibitions/addForm.html:229
+#: tppcenter/templates/Exhibitions/detailContent.html:230
 #: tppcenter/templates/Products/addForm.html:436
 #: tppcenter/templates/Profile/addForm.html:109
 #: tppcenter/templates/Resume/addForm.html:325
@@ -2512,7 +2035,7 @@ msgstr "Відправити"
 #: tppcenter/templates/Vacancy/addForm.html:278
 #: tppcenter/templates/Vacancy/addForm.html:306
 #: tppcenter/templates/Vacancy/addForm.html:318
-#: tppcenter/templates/Vacancy/index.html:71
+#: tppcenter/templates/Vacancy/detailContent.html:124
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -2545,13 +2068,13 @@ msgid "Select category"
 msgstr "Оберіть категорію"
 
 #: tppcenter/templates/baseFilter.html:68
-#: tppcenter/templates/AdvBanner/addForm.html:334
-#: tppcenter/templates/AdvTop/addForm.html:305
+#: tppcenter/templates/AdvBanner/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:306
 msgid "Filter"
 msgstr "Фільтр"
 
 #: tppcenter/templates/baseFilter.html:80
-#: tppcenter/templates/main_page.html:119
+#: tppcenter/templates/main_page.html:175
 msgid "My"
 msgstr "Мій"
 
@@ -2583,52 +2106,71 @@ msgstr "Висхідний"
 msgid "Apply"
 msgstr "Застосовувати"
 
-#: tppcenter/templates/index.html:7
+#: tppcenter/templates/index.html:7 tppcenter/templates/job_index.html:7
 msgid "Tppcenter"
 msgstr "ТПП Центр"
 
-#: tppcenter/templates/index.html:63
+#: tppcenter/templates/index.html:63 tppcenter/templates/job_index.html:79
 msgid "B2C center"
 msgstr "B2C центр"
 
-#: tppcenter/templates/index.html:69
+#: tppcenter/templates/index.html:69 tppcenter/templates/job_index.html:85
 msgid "Innovation projects"
 msgstr "Інноваційні проекти"
 
-#: tppcenter/templates/index.html:85 tppcenter/templates/login_header.html:38
+#: tppcenter/templates/index.html:85 tppcenter/templates/job_index.html:101
+#: tppcenter/templates/main_page.html:94
 #: usersites/templates/site_sidebar.html:11
 msgid "Mother tongue"
 msgstr "рідна мова"
 
-#: tppcenter/templates/index.html:146
+#: tppcenter/templates/index.html:87 tppcenter/templates/job_index.html:103
+#, fuzzy
+msgid "Armenian"
+msgstr "Вірменська"
+
+#: tppcenter/templates/index.html:89 tppcenter/templates/job_index.html:105
+msgid "English"
+msgstr ""
+
+#: tppcenter/templates/index.html:90 tppcenter/templates/job_index.html:106
+msgid "Hebrew"
+msgstr ""
+
+#: tppcenter/templates/index.html:91 tppcenter/templates/job_index.html:107
+#, fuzzy
+msgid "Russian"
+msgstr "Руська "
+
+#: tppcenter/templates/index.html:157 tppcenter/templates/job_index.html:173
 msgid "Community"
 msgstr "Спільнота"
 
-#: tppcenter/templates/index.html:158
+#: tppcenter/templates/index.html:169
 msgid "Work with"
 msgstr "Робота з"
 
-#: tppcenter/templates/index.html:177
+#: tppcenter/templates/index.html:188 tppcenter/templates/job_index.html:184
 msgid "Producst and services"
 msgstr "Продукти та послуги"
 
-#: tppcenter/templates/index.html:185
+#: tppcenter/templates/index.html:196 tppcenter/templates/job_index.html:192
 msgid "Business community"
 msgstr "Ділове співтовариство"
 
-#: tppcenter/templates/index.html:193
+#: tppcenter/templates/index.html:204 tppcenter/templates/job_index.html:200
 msgid "Innovative projects"
 msgstr "Інноваційні проекти"
 
-#: tppcenter/templates/index.html:197
+#: tppcenter/templates/index.html:208 tppcenter/templates/job_index.html:204
 msgid "Jobs"
 msgstr "вакансії"
 
-#: tppcenter/templates/index.html:213
+#: tppcenter/templates/index.html:224 tppcenter/templates/job_index.html:220
 msgid "and get tools for business"
 msgstr "і отримати інструменти для бізнесу"
 
-#: tppcenter/templates/index.html:215
+#: tppcenter/templates/index.html:226 tppcenter/templates/job_index.html:222
 msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
@@ -2636,183 +2178,148 @@ msgstr ""
 "У 2014 році портал ТПП-Центр відзначено нагородою знак Бізнес-лідер СНД  за "
 "внесок у розвиток економічної інтеграції"
 
-#: tppcenter/templates/index.html:222
+#: tppcenter/templates/index.html:233 tppcenter/templates/job_index.html:229
 msgid "on the portal will allow you to"
 msgstr "на порталі дозволить Вам"
 
-#: tppcenter/templates/index.html:224
+#: tppcenter/templates/index.html:235 tppcenter/templates/job_index.html:231
 msgid "run a business behalf of the company"
 msgstr "запустити бізнес від імені компанії "
 
-#: tppcenter/templates/index.html:225
+#: tppcenter/templates/index.html:236 tppcenter/templates/job_index.html:232
 msgid "to buy goods as a private person"
 msgstr "купувати товари в якості приватної особи"
 
-#: tppcenter/templates/index.html:226
+#: tppcenter/templates/index.html:237 tppcenter/templates/job_index.html:233
 msgid "draw attention toward your projects"
 msgstr "привернути увагу до своїх проектів"
 
-#: tppcenter/templates/index.html:235
+#: tppcenter/templates/index.html:246 tppcenter/templates/job_index.html:242
 msgid "and you will be able"
 msgstr "і ви зможете"
 
-#: tppcenter/templates/index.html:237
+#: tppcenter/templates/index.html:248 tppcenter/templates/job_index.html:244
 msgid "create your own online shop"
 msgstr "створити свій власний інтернет-магазин"
 
-#: tppcenter/templates/index.html:238
+#: tppcenter/templates/index.html:249 tppcenter/templates/job_index.html:245
 msgid "to represent your products and services"
 msgstr "представляти свою продукцію та послуги"
 
-#: tppcenter/templates/index.html:239
+#: tppcenter/templates/index.html:250 tppcenter/templates/job_index.html:246
 msgid "communicate with potential customers"
 msgstr "спілкуватися з потенційними клієнтами"
 
-#: tppcenter/templates/index.html:247
+#: tppcenter/templates/index.html:258 tppcenter/templates/job_index.html:254
 msgid "Registred"
 msgstr "Зареєстровані"
 
-#: tppcenter/templates/index.html:248
+#: tppcenter/templates/index.html:259 tppcenter/templates/job_index.html:255
 msgid "users can"
 msgstr "користувачі можуть"
 
-#: tppcenter/templates/index.html:250
+#: tppcenter/templates/index.html:261 tppcenter/templates/job_index.html:257
 msgid "create their own websites"
 msgstr "створювати свої власні веб-сайти"
 
-#: tppcenter/templates/index.html:251
+#: tppcenter/templates/index.html:262 tppcenter/templates/job_index.html:258
 msgid "puts advertising on the portal"
 msgstr "розмістити рекламу на порталі"
 
-#: tppcenter/templates/index.html:252
+#: tppcenter/templates/index.html:263 tppcenter/templates/job_index.html:259
 msgid "create their own communities of interest"
 msgstr "створити свої власні спільноти за інтересами"
 
-#: tppcenter/templates/index.html:261
+#: tppcenter/templates/index.html:272 tppcenter/templates/job_index.html:268
 msgid "right now"
 msgstr "прямо зараз"
 
-#: tppcenter/templates/index.html:269
+#: tppcenter/templates/index.html:280 tppcenter/templates/job_index.html:276
 #: tppcenter/templates/registration/registration.html:52
 #: usersites/templates/slider.html:35
 msgid "Confirm password"
 msgstr "Підтвердіть пароль"
 
-#: tppcenter/templates/index.html:272 usersites/templates/slider.html:38
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "I agree to"
 msgstr "Я згоден"
 
-#: tppcenter/templates/index.html:272 usersites/templates/slider.html:38
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "the term"
 msgstr "термін"
 
-#: tppcenter/templates/index.html:328
+#: tppcenter/templates/index.html:339 tppcenter/templates/job_index.html:292
 msgid "Affiche"
 msgstr "Афіша"
 
-#: tppcenter/templates/index.html:370
+#: tppcenter/templates/index.html:381 tppcenter/templates/job_index.html:334
 msgid "All exhibitions and forums"
 msgstr "Всі виставки та форуми"
 
-#: tppcenter/templates/index.html:373
+#: tppcenter/templates/index.html:384 tppcenter/templates/job_index.html:337
 msgid "Business offers"
 msgstr "Ділові пропозиції"
 
-#: tppcenter/templates/index.html:411
+#: tppcenter/templates/index.html:422 tppcenter/templates/job_index.html:375
 msgid "All business offers"
 msgstr "Всі ділові пропозиції"
 
-#: tppcenter/templates/index.html:416
+#: tppcenter/templates/index.html:427 tppcenter/templates/job_index.html:380
 msgid "Introduction to London Markets"
 msgstr "Введення до ринку Лондону"
 
-#: tppcenter/templates/index.html:423
+#: tppcenter/templates/index.html:434 tppcenter/templates/job_index.html:387
 msgid "Download Presentation"
 msgstr "Завантажити презентацію"
 
-#: tppcenter/templates/index.html:431
+#: tppcenter/templates/index.html:442 tppcenter/templates/job_index.html:395
 msgid "Videoreference of V.Migirov"
 msgstr "Відеозвернення з V.Migirov"
 
-#: tppcenter/templates/index.html:442
+#: tppcenter/templates/index.html:453 tppcenter/templates/job_index.html:406
 msgid "Download Guide Site"
 msgstr "Завантажити покажчик до сайту"
 
-#: tppcenter/templates/login_header.html:107
-msgid "System notifications"
-msgstr "Повідомлення системи"
-
-#: tppcenter/templates/login_header.html:112
-msgid "Notifications"
-msgstr "Повідомлення"
-
-#: tppcenter/templates/login_header.html:118
-msgid "See all"
-msgstr "Переглянути все"
-
-#: tppcenter/templates/login_header.html:122
-#: tppcenter/templates/main_page.html:170
-msgid "Messages"
-msgstr "Повідомлення"
-
-#: tppcenter/templates/login_header.html:129
-msgid "Friend request"
-msgstr "пропозиція дружби"
-
-#: tppcenter/templates/login_header.html:132
-msgid "Notification in your communities"
-msgstr "Повідомлення до ваших спільнот"
-
-#: tppcenter/templates/login_header.html:140
-#: tppcenter/templates/login_header.html:142
-#: tppcenter/templates/Companies/tabStaff.html:160
-#: tppcenter/templates/Companies/tabStructure.html:79
-#: tppcenter/templates/Companies/tabStructure.html:91
-#: tppcenter/templates/Tpp/tabStaff.html:159
-#: tppcenter/templates/Tpp/tabStructure.html:76
-#: tppcenter/templates/Tpp/tabStructure.html:88
-#: tppcenter/templates/Vacancy/addForm.html:305
-#: tppcenter/templates/Vacancy/addForm.html:317
-msgid "Add"
-msgstr "Додати"
-
-#: tppcenter/templates/main_page.html:127
-#: tppcenter/templates/main_page.html:152
+#: tppcenter/templates/main_page.html:186
+#: tppcenter/templates/main_page.html:211
 #: tppcenter/templates/Messages/index.html:46
 msgid "Organizations"
 msgstr "Організації"
 
-#: tppcenter/templates/main_page.html:132
-#: tppcenter/templates/main_page.html:157
+#: tppcenter/templates/main_page.html:191
+#: tppcenter/templates/main_page.html:216
 msgid "Exhibitions / Forums"
 msgstr "Виставки / Форуми"
 
-#: tppcenter/templates/main_page.html:136
-#: tppcenter/templates/TppTV/index.html:10
+#: tppcenter/templates/main_page.html:195
 msgid "TPP TV"
 msgstr "ТПП ТВ"
 
-#: tppcenter/templates/main_page.html:137
-#: tppcenter/templates/main_page.html:167
-msgid "Job requirements"
-msgstr "Вимоги до кандидата"
-
-#: tppcenter/templates/main_page.html:148
+#: tppcenter/templates/main_page.html:207
 msgid "Admin Panel"
 msgstr "Панель адміністратора"
 
-#: tppcenter/templates/main_page.html:164
-#: tppcenter/templates/AdvTop/order.html:316
-msgid "Advertisement"
-msgstr "Анонс"
-
-#: tppcenter/templates/main_page.html:165
+#: tppcenter/templates/main_page.html:225
 msgid "Analytic"
 msgstr "Аналітика"
 
-#: tppcenter/templates/main_page.html:205
+#: tppcenter/templates/main_page.html:230
+msgid "Messages"
+msgstr "Повідомлення"
+
+#: tppcenter/templates/main_page.html:265
 msgid "Find.."
 msgstr "Знайти .."
+
+#: tppcenter/templates/main_page.html:287
+msgid "Notifications"
+msgstr "Повідомлення"
+
+#: tppcenter/templates/main_page.html:293
+msgid "See all"
+msgstr "Переглянути все"
 
 #: tppcenter/templates/permissionDen.html:6
 msgid ""
@@ -2835,18 +2342,18 @@ msgid "Targets List"
 msgstr "Цільовий список"
 
 #: tppcenter/templates/AdminTpp/targetsList.html:92
-#: tppcenter/templates/AdvBanner/addForm.html:359
+#: tppcenter/templates/AdvBanner/addForm.html:361
 #: tppcenter/templates/AdvBanner/order.html:298
-#: tppcenter/templates/AdvTop/addForm.html:331
+#: tppcenter/templates/AdvTop/addForm.html:333
 #: tppcenter/templates/AdvTop/order.html:298
 msgid "Days Q-ty"
 msgstr "Дні Кількість"
 
 #: tppcenter/templates/AdminTpp/targetsList.html:96
 #: tppcenter/templates/Adv/basket.html:22
-#: tppcenter/templates/AdvBanner/addForm.html:363
+#: tppcenter/templates/AdvBanner/addForm.html:365
 #: tppcenter/templates/AdvBanner/order.html:302
-#: tppcenter/templates/AdvTop/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:337
 #: tppcenter/templates/AdvTop/order.html:302
 msgid "Summary"
 msgstr "Перелік"
@@ -2860,11 +2367,11 @@ msgid "Type"
 msgstr "Тип"
 
 #: tppcenter/templates/Adv/basket.html:20
-#: tppcenter/templates/AdvBanner/addForm.html:310
+#: tppcenter/templates/AdvBanner/addForm.html:311
 #: tppcenter/templates/AdvBanner/order.html:290
-#: tppcenter/templates/AdvTop/addForm.html:293
+#: tppcenter/templates/AdvTop/addForm.html:294
 #: tppcenter/templates/AdvTop/order.html:290
-#: tppcenter/templates/Companies/addForm.html:96
+#: tppcenter/templates/Companies/addForm.html:101
 #: tppcenter/templates/Companies/tabTenders.html:8
 #: tppcenter/templates/Products/addForm.html:238
 #: tppcenter/templates/Tpp/addForm.html:85
@@ -2879,23 +2386,31 @@ msgstr "Дата початку"
 msgid "Status"
 msgstr "Статус"
 
-#: tppcenter/templates/AdvBanner/addForm.html:292
+#: tppcenter/templates/AdvBanner/addForm.html:194
+#: tppcenter/templates/AdvBanner/order.html:193
+#: tppcenter/templates/AdvTop/addForm.html:194
+#: tppcenter/templates/AdvTop/order.html:193
+#: tppcenter/templates/Products/addForm.html:36
+msgid "day"
+msgstr "day"
+
+#: tppcenter/templates/AdvBanner/addForm.html:293
 msgid "Image file (Maximum 50KB)"
 msgstr "Файл зображення (Максимум 50KB)"
 
-#: tppcenter/templates/AdvBanner/addForm.html:303
+#: tppcenter/templates/AdvBanner/addForm.html:304
 msgid "Link URL"
 msgstr "Посилання  URL"
 
-#: tppcenter/templates/AdvBanner/addForm.html:316
+#: tppcenter/templates/AdvBanner/addForm.html:317
 msgid "Image title"
 msgstr "Назва зображення"
 
-#: tppcenter/templates/AdvBanner/addForm.html:327
+#: tppcenter/templates/AdvBanner/addForm.html:328
 #: tppcenter/templates/AdvBanner/order.html:294
-#: tppcenter/templates/AdvTop/addForm.html:298
+#: tppcenter/templates/AdvTop/addForm.html:299
 #: tppcenter/templates/AdvTop/order.html:294
-#: tppcenter/templates/Companies/addForm.html:100
+#: tppcenter/templates/Companies/addForm.html:105
 #: tppcenter/templates/Companies/tabExhibitions.html:9
 #: tppcenter/templates/Companies/tabTenders.html:9
 #: tppcenter/templates/Products/addForm.html:247
@@ -2905,13 +2420,13 @@ msgstr "Назва зображення"
 msgid "End date"
 msgstr "Кінцевий термін"
 
-#: tppcenter/templates/AdvBanner/addForm.html:349
-#: tppcenter/templates/AdvTop/addForm.html:321
+#: tppcenter/templates/AdvBanner/addForm.html:351
+#: tppcenter/templates/AdvTop/addForm.html:323
 msgid "Basket"
 msgstr "Кошик"
 
-#: tppcenter/templates/AdvBanner/addForm.html:368
-#: tppcenter/templates/AdvTop/addForm.html:338
+#: tppcenter/templates/AdvBanner/addForm.html:370
+#: tppcenter/templates/AdvTop/addForm.html:340
 msgid "Pay"
 msgstr "Платня"
 
@@ -2933,6 +2448,12 @@ msgid ""
 msgstr ""
 "Дякуємо за замовлення, ви будете повідомлені, коли реклама буде опублікована"
 
+#: tppcenter/templates/AdvTop/order.html:316
+#: tppcenter/templates/News/index.html:30
+#: tppcenter/templates/News/index.html:52
+msgid "Advertisement"
+msgstr "Анонс"
+
 #: tppcenter/templates/AdvTop/tops.html:8
 msgid "Paid ads"
 msgstr "Платні оголошення"
@@ -2952,17 +2473,17 @@ msgid "Views"
 msgstr "Перегляд"
 
 #: tppcenter/templates/Analytic/main.html:85
-#: tppcenter/templates/Exhibitions/detailContent.html:219
+#: tppcenter/templates/Exhibitions/detailContent.html:218
 #: tppcenter/templates/News/popupFilter.html:21
 #: tppcenter/templates/Resume/addForm.html:180
 #: tppcenter/templates/Resume/addForm.html:213
 #: tppcenter/templates/Resume/addForm.html:246
-#: tppcenter/templates/Resume/detailContent.html:125
-#: tppcenter/templates/Resume/detailContent.html:133
-#: tppcenter/templates/Resume/detailContent.html:141
+#: tppcenter/templates/Resume/detailContent.html:114
+#: tppcenter/templates/Resume/detailContent.html:122
+#: tppcenter/templates/Resume/detailContent.html:130
 #: tppcenter/templates/Tenders/popupFilter.html:21
 #: tppcenter/templates/TppTV/popupFilter.html:21
-#: tppcenter/templates/Vacancy/detailContent.html:39
+#: tppcenter/templates/Vacancy/detailContent.html:40
 msgid "Company"
 msgstr "Компанія"
 
@@ -2971,10 +2492,10 @@ msgid "Chamber events"
 msgstr "Події палати "
 
 #: tppcenter/templates/BusinessProposal/addForm.html:31
-#: tppcenter/templates/Exhibitions/addForm.html:109
+#: tppcenter/templates/Exhibitions/addForm.html:121
 #: tppcenter/templates/Products/addForm.html:189
 #: tppcenter/templates/Tenders/addForm.html:67
-#: tppcenter/templates/Tenders/detailContent.html:93
+#: tppcenter/templates/Tenders/detailContent.html:82
 msgid "Documents"
 msgstr "Документація"
 
@@ -3007,8 +2528,8 @@ msgid "image"
 msgstr "зображення"
 
 #: tppcenter/templates/BusinessProposal/addForm.html:92
-#: tppcenter/templates/Companies/addForm.html:143
-#: tppcenter/templates/Exhibitions/addForm.html:93
+#: tppcenter/templates/Companies/addForm.html:148
+#: tppcenter/templates/Exhibitions/addForm.html:105
 #: tppcenter/templates/Products/addForm.html:229
 #: tppcenter/templates/Tenders/addForm.html:122
 #: tppcenter/templates/Tpp/addForm.html:127
@@ -3024,8 +2545,8 @@ msgstr "Ключові слова"
 #: tppcenter/templates/Companies/tabProposal.html:8
 #: tppcenter/templates/Companies/tabStaff.html:49
 #: tppcenter/templates/Companies/tabTenders.html:7
-#: tppcenter/templates/Exhibitions/addForm.html:170
-#: tppcenter/templates/Exhibitions/detailContent.html:207
+#: tppcenter/templates/Exhibitions/addForm.html:182
+#: tppcenter/templates/Exhibitions/detailContent.html:206
 #: tppcenter/templates/Products/addForm.html:260
 #: tppcenter/templates/Profile/addForm.html:39
 #: tppcenter/templates/Tpp/tabCompanies.html:8
@@ -3041,13 +2562,13 @@ msgstr "Назва"
 #: tppcenter/templates/BusinessProposal/popupFilter.html:22
 #: tppcenter/templates/Companies/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/popupFilter.html:21
-#: tppcenter/templates/Innov/contentPage.html:67
+#: tppcenter/templates/Innov/contentPage.html:45
 #: tppcenter/templates/Innov/popupFilter.html:21
 #: tppcenter/templates/News/popupFilter.html:22
 #: tppcenter/templates/Products/popupFilter.html:21
 #: tppcenter/templates/Tenders/popupFilter.html:22
 #: tppcenter/templates/TppTV/popupFilter.html:22
-#: tppcenter/templates/Wall/contentPage.html:56
+#: tppcenter/templates/Wall/contentPage.html:96
 msgid "Branch"
 msgstr "Філія"
 
@@ -3060,8 +2581,8 @@ msgid "Category"
 msgstr "Категорія"
 
 #: tppcenter/templates/BusinessProposal/addForm.html:142
-#: tppcenter/templates/Companies/addForm.html:242
-#: tppcenter/templates/Exhibitions/addForm.html:200
+#: tppcenter/templates/Companies/addForm.html:247
+#: tppcenter/templates/Exhibitions/addForm.html:212
 #: tppcenter/templates/Innov/addForm.html:173
 #: tppcenter/templates/Products/addForm.html:418
 #: tppcenter/templates/Tenders/addForm.html:149
@@ -3069,152 +2590,154 @@ msgstr "Категорія"
 msgid "Additional pages"
 msgstr "Додаткові сторінки"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:32
-#: tppcenter/templates/Companies/contentPage.html:39
-#: tppcenter/templates/Exhibitions/contentPage.html:36
-#: tppcenter/templates/Innov/contentPage.html:42
-#: tppcenter/templates/News/contentPage.html:32
-#: tppcenter/templates/Products/contentPage.html:28
-#: tppcenter/templates/Resume/contentPage.html:27
-#: tppcenter/templates/Tenders/contentPage.html:32
-#: tppcenter/templates/Tpp/contentPage.html:32
-#: tppcenter/templates/TppTV/contentPage.html:26
+#: tppcenter/templates/BusinessProposal/contentPage.html:19
+#: tppcenter/templates/Companies/contentPage.html:19
+#: tppcenter/templates/Exhibitions/contentPage.html:21
+#: tppcenter/templates/Innov/contentPage.html:19
+#: tppcenter/templates/News/contentPage.html:21
+#: tppcenter/templates/Products/contentPage.html:19
+#: tppcenter/templates/Resume/contentPage.html:19
+#: tppcenter/templates/Tenders/contentPage.html:19
+#: tppcenter/templates/Tpp/contentPage.html:19
+#: tppcenter/templates/TppTV/contentPage.html:17
 #: tppcenter/templates/UserSites/contentPage.html:24
-#: tppcenter/templates/Vacancy/contentPage.html:33
+#: tppcenter/templates/Vacancy/contentPage.html:24
 msgid "edit"
 msgstr "редагувати"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:35
-#: tppcenter/templates/Companies/contentPage.html:43
-#: tppcenter/templates/Exhibitions/contentPage.html:39
-#: tppcenter/templates/Innov/contentPage.html:45
-#: tppcenter/templates/Products/contentPage.html:31
-msgid "add top"
-msgstr "додати зверху"
+#: tppcenter/templates/BusinessProposal/contentPage.html:22
+#: tppcenter/templates/Companies/contentPage.html:23
+#: tppcenter/templates/Exhibitions/contentPage.html:24
+#: tppcenter/templates/Innov/contentPage.html:22
+#: tppcenter/templates/Products/contentPage.html:22
+#: tppcenter/templates/Vacancy/contentPage.html:27
+#, fuzzy
+msgid "Advertise"
+msgstr "Анонс"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:38
-#: tppcenter/templates/Companies/contentPage.html:46
+#: tppcenter/templates/BusinessProposal/contentPage.html:25
+#: tppcenter/templates/Companies/contentPage.html:26
 #: tppcenter/templates/Companies/tab_gallery_structure.html:11
-#: tppcenter/templates/Exhibitions/contentPage.html:42
-#: tppcenter/templates/Innov/contentPage.html:48
-#: tppcenter/templates/News/contentPage.html:35
-#: tppcenter/templates/Products/contentPage.html:34
-#: tppcenter/templates/Resume/contentPage.html:30
-#: tppcenter/templates/Tenders/contentPage.html:35
+#: tppcenter/templates/Exhibitions/contentPage.html:27
+#: tppcenter/templates/Innov/contentPage.html:25
+#: tppcenter/templates/News/contentPage.html:24
+#: tppcenter/templates/Products/contentPage.html:25
+#: tppcenter/templates/Resume/contentPage.html:20
+#: tppcenter/templates/Tenders/contentPage.html:22
 #: tppcenter/templates/Tpp/tab_gallery_structure.html:12
-#: tppcenter/templates/TppTV/contentPage.html:27
+#: tppcenter/templates/TppTV/contentPage.html:18
 #: tppcenter/templates/UserSites/contentPage.html:28
-#: tppcenter/templates/Vacancy/contentPage.html:37
+#: tppcenter/templates/Vacancy/contentPage.html:30
 msgid "remove"
 msgstr "видалити"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:55
+#: tppcenter/templates/BusinessProposal/contentPage.html:41
 #: tppcenter/templates/BusinessProposal/popupFilter.html:20
 #: tppcenter/templates/Companies/popupFilter.html:20
 #: tppcenter/templates/Exhibitions/popupFilter.html:20
-#: tppcenter/templates/Greetings/contentPage.html:26
-#: tppcenter/templates/Greetings/detailContent.html:17
+#: tppcenter/templates/Greetings/contentPage.html:19
+#: tppcenter/templates/Greetings/detailContent.html:27
 #: tppcenter/templates/Innov/popupFilter.html:20
 #: tppcenter/templates/News/popupFilter.html:20
 #: tppcenter/templates/Products/popupFilter.html:20
 #: tppcenter/templates/Tenders/popupFilter.html:20
 #: tppcenter/templates/TppTV/popupFilter.html:20
-#: tppcenter/templates/Wall/contentPage.html:173
+#: tppcenter/templates/Wall/contentPage.html:206
 msgid "Organization"
 msgstr "Організація"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:72
-#: tppcenter/templates/Companies/contentPage.html:129
+#: tppcenter/templates/BusinessProposal/contentPage.html:50
+#: tppcenter/templates/Companies/contentPage.html:96
 #: tppcenter/templates/Companies/tabExhibitions.html:44
 #: tppcenter/templates/Companies/tabInnov.html:39
 #: tppcenter/templates/Companies/tabNews.html:33
 #: tppcenter/templates/Companies/tabProducts.html:50
 #: tppcenter/templates/Companies/tabProposal.html:33
 #: tppcenter/templates/Companies/tabTenders.html:44
-#: tppcenter/templates/Exhibitions/contentPage.html:78
-#: tppcenter/templates/Greetings/contentPage.html:41
-#: tppcenter/templates/Innov/contentPage.html:105
-#: tppcenter/templates/News/contentPage.html:85
-#: tppcenter/templates/Products/contentPage.html:74
-#: tppcenter/templates/Resume/contentPage.html:50
-#: tppcenter/templates/Tenders/contentPage.html:67
-#: tppcenter/templates/Tpp/contentPage.html:94
+#: tppcenter/templates/Exhibitions/contentPage.html:45
+#: tppcenter/templates/Greetings/contentPage.html:28
+#: tppcenter/templates/Innov/contentPage.html:62
+#: tppcenter/templates/News/contentPage.html:64
+#: tppcenter/templates/Products/contentPage.html:56
+#: tppcenter/templates/Resume/contentPage.html:33
+#: tppcenter/templates/Tenders/contentPage.html:51
+#: tppcenter/templates/Tpp/contentPage.html:77
 #: tppcenter/templates/Tpp/tabCompanies.html:44
 #: tppcenter/templates/Tpp/tabExhibitions.html:44
 #: tppcenter/templates/Tpp/tabInnov.html:39
 #: tppcenter/templates/Tpp/tabNews.html:38
 #: tppcenter/templates/Tpp/tabProposal.html:33
 #: tppcenter/templates/Tpp/tabTenders.html:44
-#: tppcenter/templates/TppTV/contentPage.html:58
+#: tppcenter/templates/TppTV/contentPage.html:39
 #: tppcenter/templates/UserSites/contentPage.html:46
-#: tppcenter/templates/Users/contentPage.html:57
-#: tppcenter/templates/Vacancy/contentPage.html:65
+#: tppcenter/templates/Users/contentPage.html:42
+#: tppcenter/templates/Vacancy/contentPage.html:50
 #: tppcenter/templates/main/notoficationlist.html:17
 msgid "No results found"
 msgstr "Немає результатів"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:74
-#: tppcenter/templates/Exhibitions/detailContent.html:113
-#: tppcenter/templates/Products/detailContent.html:135
+#: tppcenter/templates/BusinessProposal/detailContent.html:66
+#: tppcenter/templates/Exhibitions/detailContent.html:102
+#: tppcenter/templates/Products/detailContent.html:142
 #: usersites/templates/Products/detailContent.html:154
 #: usersites/templates/Proposals/detailContent.html:80
 msgid "Document"
 msgstr "Документ"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:75
-#: tppcenter/templates/Companies/detailContent.html:597
-#: tppcenter/templates/Exhibitions/detailContent.html:114
+#: tppcenter/templates/BusinessProposal/detailContent.html:67
+#: tppcenter/templates/Companies/detailContent.html:554
+#: tppcenter/templates/Exhibitions/detailContent.html:103
 #: tppcenter/templates/Innov/addForm.html:82
-#: tppcenter/templates/Innov/detailContent.html:96
+#: tppcenter/templates/Innov/detailContent.html:82
 #: tppcenter/templates/News/addForm.html:59
 #: tppcenter/templates/Products/addForm.html:162
-#: tppcenter/templates/Tenders/detailContent.html:92
-#: tppcenter/templates/Tpp/detailContent.html:522
+#: tppcenter/templates/Tenders/detailContent.html:81
+#: tppcenter/templates/Tpp/detailContent.html:497
 #: usersites/templates/Proposals/detailContent.html:81
 msgid "Gallery"
 msgstr "Галерея"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:90
-#: tppcenter/templates/BusinessProposal/detailContent.html:93
-#: tppcenter/templates/BusinessProposal/detailContent.html:96
-#: tppcenter/templates/Exhibitions/detailContent.html:129
-#: tppcenter/templates/Exhibitions/detailContent.html:132
-#: tppcenter/templates/Exhibitions/detailContent.html:135
+#: tppcenter/templates/BusinessProposal/detailContent.html:82
+#: tppcenter/templates/BusinessProposal/detailContent.html:85
+#: tppcenter/templates/BusinessProposal/detailContent.html:88
+#: tppcenter/templates/Exhibitions/detailContent.html:118
+#: tppcenter/templates/Exhibitions/detailContent.html:121
+#: tppcenter/templates/Exhibitions/detailContent.html:125
 #: usersites/templates/Proposals/detailContent.html:96
 #: usersites/templates/Proposals/detailContent.html:99
 #: usersites/templates/Proposals/detailContent.html:102
 msgid "Link to the File"
 msgstr "Посилання на файл"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:112
+#: tppcenter/templates/BusinessProposal/detailContent.html:104
 #: tppcenter/templates/Companies/tab_gallery_structure.html:17
-#: tppcenter/templates/Exhibitions/detailContent.html:151
-#: tppcenter/templates/Innov/detailContent.html:145
-#: tppcenter/templates/Tenders/detailContent.html:112
+#: tppcenter/templates/Exhibitions/detailContent.html:141
+#: tppcenter/templates/Innov/detailContent.html:135
+#: tppcenter/templates/Tenders/detailContent.html:100
 #: tppcenter/templates/Tpp/tab_gallery_structure.html:18
 #: usersites/templates/Proposals/detailContent.html:118
 msgid "zoom"
 msgstr "збільшити"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:134
-#: tppcenter/templates/Companies/addForm.html:124
-#: tppcenter/templates/Companies/detailContent.html:676
-#: tppcenter/templates/Exhibitions/detailContent.html:174
-#: tppcenter/templates/Innov/detailContent.html:167
+#: tppcenter/templates/BusinessProposal/detailContent.html:131
+#: tppcenter/templates/Companies/addForm.html:129
+#: tppcenter/templates/Companies/detailContent.html:638
+#: tppcenter/templates/Exhibitions/detailContent.html:169
+#: tppcenter/templates/Innov/detailContent.html:162
 #: tppcenter/templates/Tpp/addForm.html:106
-#: tppcenter/templates/Tpp/detailContent.html:595
+#: tppcenter/templates/Tpp/detailContent.html:575
 #: usersites/templates/Proposals/detailContent.html:140
 msgid "Fax"
 msgstr "Факс"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:142
-#: tppcenter/templates/Companies/addForm.html:136
-#: tppcenter/templates/Companies/detailContent.html:684
-#: tppcenter/templates/Exhibitions/detailContent.html:182
-#: tppcenter/templates/Innov/detailContent.html:175
+#: tppcenter/templates/BusinessProposal/detailContent.html:143
+#: tppcenter/templates/Companies/addForm.html:141
+#: tppcenter/templates/Companies/detailContent.html:650
+#: tppcenter/templates/Exhibitions/detailContent.html:181
+#: tppcenter/templates/Innov/detailContent.html:174
 #: tppcenter/templates/Profile/addForm.html:54
 #: tppcenter/templates/Tpp/addForm.html:120
-#: tppcenter/templates/Tpp/detailContent.html:603
+#: tppcenter/templates/Tpp/detailContent.html:587
 #: tppcenter/templates/main/user_profile.html:57
 #: usersites/templates/Proposals/detailContent.html:148
 msgid "WWW"
@@ -3222,7 +2745,7 @@ msgstr "WWW"
 
 #: tppcenter/templates/Companies/addForm.html:58
 #: tppcenter/templates/Companies/tabProducts.html:8
-#: tppcenter/templates/Exhibitions/addForm.html:153
+#: tppcenter/templates/Exhibitions/addForm.html:165
 #: tppcenter/templates/News/addForm.html:31
 #: tppcenter/templates/Products/addForm.html:129
 #: tppcenter/templates/Tpp/addForm.html:58
@@ -3230,146 +2753,146 @@ msgstr "WWW"
 msgid "Image"
 msgstr "Зображення"
 
-#: tppcenter/templates/Companies/addForm.html:89
+#: tppcenter/templates/Companies/addForm.html:94
 msgid "Vatin"
 msgstr "Ватин"
 
-#: tppcenter/templates/Companies/addForm.html:110
+#: tppcenter/templates/Companies/addForm.html:115
 #: tppcenter/templates/Tpp/addForm.html:78
 msgid "Director name"
 msgstr "Ім'я директор"
 
-#: tppcenter/templates/Companies/addForm.html:117
+#: tppcenter/templates/Companies/addForm.html:122
 msgid "Slogan"
 msgstr "Гасло"
 
-#: tppcenter/templates/Companies/addForm.html:152
+#: tppcenter/templates/Companies/addForm.html:157
 msgid "Company name"
 msgstr "Назва фірми"
 
-#: tppcenter/templates/Companies/addForm.html:159
+#: tppcenter/templates/Companies/addForm.html:164
 msgid "Preview text"
 msgstr "Переглянути текст"
 
-#: tppcenter/templates/Companies/addForm.html:164
+#: tppcenter/templates/Companies/addForm.html:169
 #: tppcenter/templates/Products/addForm.html:289
 msgid "Detail text"
 msgstr "Детальний текст"
 
-#: tppcenter/templates/Companies/addForm.html:184
-#: tppcenter/templates/Exhibitions/addForm.html:65
+#: tppcenter/templates/Companies/addForm.html:189
+#: tppcenter/templates/Exhibitions/addForm.html:77
 #: tppcenter/templates/Innov/addForm.html:139
-#: tppcenter/templates/Innov/detailContent.html:111
+#: tppcenter/templates/Innov/detailContent.html:97
 msgid "Industry"
 msgstr "Промисловість"
 
-#: tppcenter/templates/Companies/addForm.html:194
+#: tppcenter/templates/Companies/addForm.html:199
 msgid "CCI"
 msgstr "ТПП"
 
-#: tppcenter/templates/Companies/addForm.html:196
+#: tppcenter/templates/Companies/addForm.html:201
 msgid "Choose CCI"
 msgstr "Виберіть  ТПП"
 
-#: tppcenter/templates/Companies/addForm.html:209
+#: tppcenter/templates/Companies/addForm.html:214
 #: tppcenter/templates/Tpp/addForm.html:190
 msgid "Place on the map"
 msgstr "Місце на мапі"
 
-#: tppcenter/templates/Companies/addForm.html:213
+#: tppcenter/templates/Companies/addForm.html:218
 msgid "Details"
 msgstr "Деталі"
 
-#: tppcenter/templates/Companies/addForm.html:216
+#: tppcenter/templates/Companies/addForm.html:221
 #: tppcenter/templates/Tpp/addForm.html:197
 msgid "RRC"
 msgstr "RRC"
 
-#: tppcenter/templates/Companies/addForm.html:219
+#: tppcenter/templates/Companies/addForm.html:224
 #: tppcenter/templates/Tpp/addForm.html:200
 msgid "RCEO"
 msgstr "RCEO"
 
-#: tppcenter/templates/Companies/addForm.html:222
+#: tppcenter/templates/Companies/addForm.html:227
 #: tppcenter/templates/Tpp/addForm.html:203
 msgid "RCOSD"
 msgstr "RCOSD"
 
-#: tppcenter/templates/Companies/addForm.html:225
+#: tppcenter/templates/Companies/addForm.html:230
 #: tppcenter/templates/Tpp/addForm.html:206
 msgid "ARCEA"
 msgstr "ARCEA"
 
-#: tppcenter/templates/Companies/addForm.html:228
+#: tppcenter/templates/Companies/addForm.html:233
 #: tppcenter/templates/Tpp/addForm.html:209
 msgid "Accountant name"
 msgstr "Accountant name (нужен контекст)"
 
-#: tppcenter/templates/Companies/addForm.html:233
+#: tppcenter/templates/Companies/addForm.html:238
 #: tppcenter/templates/Tpp/addForm.html:214
 msgid "Account number"
 msgstr "номер рахунку"
 
-#: tppcenter/templates/Companies/addForm.html:236
+#: tppcenter/templates/Companies/addForm.html:241
 #: tppcenter/templates/Tpp/addForm.html:217
 msgid "Bank details"
 msgstr "Банківські реквізити"
 
-#: tppcenter/templates/Companies/contentPage.html:40
-#: tppcenter/templates/Tpp/contentPage.html:33
+#: tppcenter/templates/Companies/contentPage.html:20
+#: tppcenter/templates/Tpp/contentPage.html:20
 msgid "set current"
 msgstr "всановити валюту"
 
-#: tppcenter/templates/Companies/contentPage.html:71
-#: tppcenter/templates/Companies/detailContent.html:554
+#: tppcenter/templates/Companies/contentPage.html:46
+#: tppcenter/templates/Companies/detailContent.html:519
 msgid "Member of"
 msgstr "Учасник"
 
-#: tppcenter/templates/Companies/detailContent.html:96
-#: tppcenter/templates/Tpp/detailContent.html:57
+#: tppcenter/templates/Companies/detailContent.html:85
+#: tppcenter/templates/Tpp/detailContent.html:56
 msgid "Do you want to delete this record?"
 msgstr "Ви хочете видалити цей запис?"
 
-#: tppcenter/templates/Companies/detailContent.html:368
-#: tppcenter/templates/Tpp/detailContent.html:329
+#: tppcenter/templates/Companies/detailContent.html:358
+#: tppcenter/templates/Tpp/detailContent.html:328
 msgid "Do you want to delete this Vacancy?"
 msgstr "Ви хочете видалити цю Вакансію?"
 
-#: tppcenter/templates/Companies/detailContent.html:379
-#: tppcenter/templates/Tpp/detailContent.html:340
+#: tppcenter/templates/Companies/detailContent.html:369
+#: tppcenter/templates/Tpp/detailContent.html:339
 msgid "Do you want to delete this Department?"
 msgstr "Ви хочете видалити цей відділ?"
 
-#: tppcenter/templates/Companies/detailContent.html:506
+#: tppcenter/templates/Companies/detailContent.html:471
 msgid "Free period is expired."
 msgstr "Безкоштовний період закінчився."
 
-#: tppcenter/templates/Companies/detailContent.html:508
+#: tppcenter/templates/Companies/detailContent.html:473
 msgid "Free period will expire in "
 msgstr "Безкоштовний період закінчується в"
 
-#: tppcenter/templates/Companies/detailContent.html:508
+#: tppcenter/templates/Companies/detailContent.html:473
 msgid " days."
 msgstr "днів."
 
-#: tppcenter/templates/Companies/detailContent.html:519
+#: tppcenter/templates/Companies/detailContent.html:484
 msgid "1-year www.b24online.com membership"
 msgstr "1 рік членства www.b24online.com"
 
-#: tppcenter/templates/Companies/detailContent.html:580
-#: tppcenter/templates/Tpp/detailContent.html:505
+#: tppcenter/templates/Companies/detailContent.html:537
+#: tppcenter/templates/Tpp/detailContent.html:479
 msgid "Recvisits"
 msgstr "Реквізити"
 
-#: tppcenter/templates/Companies/detailContent.html:627
-#: tppcenter/templates/Tpp/detailContent.html:548
+#: tppcenter/templates/Companies/detailContent.html:584
+#: tppcenter/templates/Tpp/detailContent.html:523
 #: usersites/CompanyStructure/views.py:15
 #: usersites/CompanyStructure/views.py:16
 msgid "Structure"
 msgstr "Структура"
 
-#: tppcenter/templates/Companies/detailContent.html:632
-#: tppcenter/templates/Tpp/detailContent.html:553
+#: tppcenter/templates/Companies/detailContent.html:589
+#: tppcenter/templates/Tpp/detailContent.html:528
 msgid "Staff"
 msgstr "Персонал"
 
@@ -3399,9 +2922,9 @@ msgstr "Наступні файли не були завантажені"
 
 #: tppcenter/templates/Companies/tabInnov.html:9
 #: tppcenter/templates/Innov/addForm.html:66
-#: tppcenter/templates/Innov/contentPage.html:64
+#: tppcenter/templates/Innov/contentPage.html:40
 #: tppcenter/templates/Tpp/tabInnov.html:9
-#: tppcenter/templates/Wall/contentPage.html:53
+#: tppcenter/templates/Wall/contentPage.html:93
 msgid "Project cost"
 msgstr "Вартість проекту"
 
@@ -3413,15 +2936,15 @@ msgid "Department"
 msgstr "Відділ"
 
 #: tppcenter/templates/Companies/tabStaff.html:51
-#: tppcenter/templates/Exhibitions/detailContent.html:223
-#: tppcenter/templates/Greetings/contentPage.html:27
-#: tppcenter/templates/Greetings/detailContent.html:18
+#: tppcenter/templates/Exhibitions/detailContent.html:222
+#: tppcenter/templates/Greetings/contentPage.html:20
+#: tppcenter/templates/Greetings/detailContent.html:28
 #: tppcenter/templates/Resume/addForm.html:187
 #: tppcenter/templates/Resume/addForm.html:220
 #: tppcenter/templates/Resume/addForm.html:253
-#: tppcenter/templates/Resume/detailContent.html:127
-#: tppcenter/templates/Resume/detailContent.html:135
-#: tppcenter/templates/Resume/detailContent.html:143
+#: tppcenter/templates/Resume/detailContent.html:116
+#: tppcenter/templates/Resume/detailContent.html:124
+#: tppcenter/templates/Resume/detailContent.html:132
 #: tppcenter/templates/Tpp/tabStaff.html:51
 #: tppcenter/templates/Vacancy/addForm.html:185
 #: usersites/templates/CompanyStructure/contentPage.html:20
@@ -3467,6 +2990,17 @@ msgstr "Виберіть Вакансію ..."
 msgid "Administrator"
 msgstr "Адміністратор"
 
+#: tppcenter/templates/Companies/tabStaff.html:160
+#: tppcenter/templates/Companies/tabStructure.html:79
+#: tppcenter/templates/Companies/tabStructure.html:91
+#: tppcenter/templates/Tpp/tabStaff.html:159
+#: tppcenter/templates/Tpp/tabStructure.html:76
+#: tppcenter/templates/Tpp/tabStructure.html:88
+#: tppcenter/templates/Vacancy/addForm.html:305
+#: tppcenter/templates/Vacancy/addForm.html:317
+msgid "Add"
+msgstr "Додати"
+
 #: tppcenter/templates/Companies/tabStructure.html:56
 #: tppcenter/templates/Tpp/tabStructure.html:53
 msgid "No Departments found."
@@ -3478,59 +3012,59 @@ msgid "Department name"
 msgstr "Назва відділу"
 
 #: tppcenter/templates/Companies/tabStructure.html:87
-#: tppcenter/templates/Resume/detailContent.html:51
+#: tppcenter/templates/Resume/detailContent.html:34
 #: tppcenter/templates/Tpp/tabStructure.html:84
 #: tppcenter/templates/Vacancy/addForm.html:209
 #: tppcenter/templates/Vacancy/addForm.html:312
 msgid "Vacancy title"
 msgstr "Назва вакансії"
 
-#: tppcenter/templates/Exhibitions/addForm.html:76
+#: tppcenter/templates/Exhibitions/addForm.html:88
 msgid "Start event date"
 msgstr "Дата початку події"
 
-#: tppcenter/templates/Exhibitions/addForm.html:85
+#: tppcenter/templates/Exhibitions/addForm.html:97
 msgid "End event date"
 msgstr "Дата закінчення події"
 
-#: tppcenter/templates/Exhibitions/addForm.html:101
+#: tppcenter/templates/Exhibitions/addForm.html:113
 msgid "Route description"
 msgstr "Опис маршруту"
 
-#: tppcenter/templates/Exhibitions/addForm.html:190
+#: tppcenter/templates/Exhibitions/addForm.html:202
 msgid "Map"
 msgstr "Мапа"
 
-#: tppcenter/templates/Exhibitions/contentPage.html:59
-#: tppcenter/templates/Innov/contentPage.html:69
-#: tppcenter/templates/Tenders/contentPage.html:50
-#: tppcenter/templates/Wall/contentPage.html:58
-#: tppcenter/templates/Wall/contentPage.html:127
+#: tppcenter/templates/Exhibitions/contentPage.html:41
+#: tppcenter/templates/Innov/contentPage.html:48
+#: tppcenter/templates/Tenders/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Wall/contentPage.html:161
 msgid "Organizer"
 msgstr "Організатор"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:98
-#: tppcenter/templates/Exhibitions/detailContent.html:230
+#: tppcenter/templates/Exhibitions/detailContent.html:87
+#: tppcenter/templates/Exhibitions/detailContent.html:229
 #: tppcenter/templates/registration/registration.html:8
 #: tppcenter/templates/registration/registration.html:30
 msgid "Sign Up"
 msgstr "Зареєструватися"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:112
+#: tppcenter/templates/Exhibitions/detailContent.html:101
 msgid "Route Description"
 msgstr "Опис маршруту"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:202
+#: tppcenter/templates/Exhibitions/detailContent.html:201
 msgid "Name and Email are required"
 msgstr "Ім'я та E-mail потрібні"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:203
+#: tppcenter/templates/Exhibitions/detailContent.html:202
 msgid "You are registered successfully."
 msgstr "Ви успішно зареєстровані."
 
-#: tppcenter/templates/Greetings/contentPage.html:30
-#: tppcenter/templates/News/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:230
+#: tppcenter/templates/Greetings/contentPage.html:23
+#: tppcenter/templates/News/contentPage.html:59
+#: tppcenter/templates/Wall/contentPage.html:261
 msgid "Read more"
 msgstr "Детальніше"
 
@@ -3566,7 +3100,7 @@ msgid "Product name"
 msgstr "Назва продукту"
 
 #: tppcenter/templates/Innov/addForm.html:147
-#: tppcenter/templates/Innov/detailContent.html:95
+#: tppcenter/templates/Innov/detailContent.html:81
 msgid "Business plan"
 msgstr "Бізнес-план "
 
@@ -3574,36 +3108,32 @@ msgstr "Бізнес-план "
 msgid "Business plan file"
 msgstr "Бізнес-план файл"
 
-#: tppcenter/templates/Innov/contentPage.html:61
-#: tppcenter/templates/Resume/contentPage.html:38
+#: tppcenter/templates/Innov/contentPage.html:36
+#: tppcenter/templates/Resume/contentPage.html:25
 #: tppcenter/templates/Tenders/addForm.html:34
-#: tppcenter/templates/Tenders/contentPage.html:46
-#: tppcenter/templates/Tenders/detailContent.html:59
+#: tppcenter/templates/Tenders/contentPage.html:38
+#: tppcenter/templates/Tenders/detailContent.html:56
 #: tppcenter/templates/UserSites/contentPage.html:36
-#: tppcenter/templates/Wall/contentPage.html:50
+#: tppcenter/templates/Wall/contentPage.html:90
 msgid "Publication date"
 msgstr "Дата публікації"
 
-#: tppcenter/templates/Innov/detailContent.html:107
+#: tppcenter/templates/Innov/detailContent.html:93
 msgid "Product"
 msgstr "Продукт"
 
-#: tppcenter/templates/Innov/detailContent.html:115
+#: tppcenter/templates/Innov/detailContent.html:105
 #: tppcenter/templates/Products/addForm.html:334
 msgid "Cost"
 msgstr "Вартість"
 
-#: tppcenter/templates/Innov/detailContent.html:119
+#: tppcenter/templates/Innov/detailContent.html:109
 msgid "Realese date"
 msgstr "Дата випуску"
 
-#: tppcenter/templates/Innov/detailContent.html:128
+#: tppcenter/templates/Innov/detailContent.html:118
 msgid "Link to Business Plan File"
 msgstr "Посилання на бізнес-план"
-
-#: tppcenter/templates/Innov/index.html:10
-msgid "Innovation project"
-msgstr "Інноваційний проект"
 
 #: tppcenter/templates/Messages/contentBox.html:10
 msgid "Send private message"
@@ -3624,8 +3154,8 @@ msgstr "Виберіть країну"
 msgid "Preview description"
 msgstr "Переглянути опис"
 
-#: tppcenter/templates/News/detailContent.html:145
-#: tppcenter/templates/TppTV/detailContent.html:48
+#: tppcenter/templates/News/detailContent.html:155
+#: tppcenter/templates/TppTV/detailContent.html:47
 msgid "Similar news"
 msgstr "Подібні новини"
 
@@ -3670,36 +3200,36 @@ msgstr "Одиниця виміру"
 msgid "Post on b2c portal"
 msgstr "Поділитися на B2C порталі"
 
-#: tppcenter/templates/Products/contentPage.html:59
+#: tppcenter/templates/Products/contentPage.html:50
 #: usersites/templates/Products/detailContent.html:95
 msgid "Contact to price"
 msgstr "Уточнити ціну"
 
-#: tppcenter/templates/Products/detailContent.html:80
+#: tppcenter/templates/Products/detailContent.html:72
 msgid "Get price"
 msgstr "Отримати ціну"
 
-#: tppcenter/templates/Products/detailContent.html:85
+#: tppcenter/templates/Products/detailContent.html:78
 #: usersites/templates/Products/detailContent.html:100
 msgid "Unit"
 msgstr "Одиниця"
 
-#: tppcenter/templates/Products/detailContent.html:89
+#: tppcenter/templates/Products/detailContent.html:83
 #: usersites/templates/Products/detailContent.html:106
 msgid "Amount"
 msgstr "Кількість"
 
-#: tppcenter/templates/Products/detailContent.html:101
-#: usersites/templates/Products/detailContent.html:144
-msgid "Countact us"
-msgstr "Зв'язатися з нами"
+#: tppcenter/templates/Products/detailContent.html:143
+#, fuzzy
+msgid "Reviews"
+msgstr "Перегляд"
 
-#: tppcenter/templates/Products/detailContent.html:148
-#: tppcenter/templates/Products/detailContent.html:151
-#: tppcenter/templates/Products/detailContent.html:154
-#: tppcenter/templates/Tenders/detailContent.html:123
-#: tppcenter/templates/Tenders/detailContent.html:126
-#: tppcenter/templates/Tenders/detailContent.html:129
+#: tppcenter/templates/Products/detailContent.html:155
+#: tppcenter/templates/Products/detailContent.html:158
+#: tppcenter/templates/Products/detailContent.html:161
+#: tppcenter/templates/Tenders/detailContent.html:111
+#: tppcenter/templates/Tenders/detailContent.html:114
+#: tppcenter/templates/Tenders/detailContent.html:117
 #: usersites/templates/Products/detailContent.html:167
 #: usersites/templates/Products/detailContent.html:170
 #: usersites/templates/Products/detailContent.html:173
@@ -3724,7 +3254,7 @@ msgid "Telephone Number"
 msgstr "Номер телефону"
 
 #: tppcenter/templates/Profile/addForm.html:100
-#: tppcenter/templates/Resume/detailContent.html:108
+#: tppcenter/templates/Resume/detailContent.html:97
 #: tppcenter/templates/main/user_profile.html:91
 msgid "Profession"
 msgstr "Професія"
@@ -3759,22 +3289,22 @@ msgid "Citizenship"
 msgstr "Citizenship"
 
 #: tppcenter/templates/Resume/addForm.html:110
-#: tppcenter/templates/Resume/detailContent.html:86
+#: tppcenter/templates/Resume/detailContent.html:75
 msgid "Education"
 msgstr "Освіта"
 
 #: tppcenter/templates/Resume/addForm.html:113
-#: tppcenter/templates/Resume/detailContent.html:96
+#: tppcenter/templates/Resume/detailContent.html:85
 msgid "Institution"
 msgstr "Заклад"
 
 #: tppcenter/templates/Resume/addForm.html:121
-#: tppcenter/templates/Resume/detailContent.html:100
+#: tppcenter/templates/Resume/detailContent.html:89
 msgid "Faculty"
 msgstr "Факультет"
 
 #: tppcenter/templates/Resume/addForm.html:128
-#: tppcenter/templates/Resume/detailContent.html:104
+#: tppcenter/templates/Resume/detailContent.html:93
 msgid "Study period"
 msgstr "Період навчання"
 
@@ -3807,7 +3337,7 @@ msgid "Additionally"
 msgstr "Додатково"
 
 #: tppcenter/templates/Resume/addForm.html:175
-#: tppcenter/templates/Resume/detailContent.html:87
+#: tppcenter/templates/Resume/detailContent.html:76
 msgid "Experience"
 msgstr "Досвід"
 
@@ -3822,17 +3352,17 @@ msgid "Work period"
 msgstr "Період роботи"
 
 #: tppcenter/templates/Resume/addForm.html:278
-#: tppcenter/templates/Resume/detailContent.html:88
+#: tppcenter/templates/Resume/detailContent.html:77
 msgid "Skills"
 msgstr "Навички"
 
 #: tppcenter/templates/Resume/addForm.html:281
-#: tppcenter/templates/Resume/detailContent.html:158
+#: tppcenter/templates/Resume/detailContent.html:147
 msgid "Language skills"
 msgstr "Мовні навички"
 
 #: tppcenter/templates/Resume/addForm.html:288
-#: tppcenter/templates/Resume/detailContent.html:162
+#: tppcenter/templates/Resume/detailContent.html:151
 msgid "Computer skills"
 msgstr "Комп'ютерні навички"
 
@@ -3856,52 +3386,61 @@ msgstr ""
 msgid "I don't mind for checking the information reported by me"
 msgstr "Я не проти перевірки інформації, представленої мною"
 
-#: tppcenter/templates/Resume/contentPage.html:43
-#: tppcenter/templates/Resume/detailContent.html:55
+#: tppcenter/templates/Resume/contentPage.html:30
+#: tppcenter/templates/Resume/detailContent.html:38
 msgid "User name"
 msgstr "Ім'я користувача"
 
-#: tppcenter/templates/Resume/detailContent.html:63
+#: tppcenter/templates/Resume/detailContent.html:43
+msgid "Name not found"
+msgstr "Ім'я не знайдено"
+
+#: tppcenter/templates/Resume/detailContent.html:52
 msgid "Marital status"
 msgstr "Сімейний стан"
 
-#: tppcenter/templates/Resume/detailContent.html:67
+#: tppcenter/templates/Resume/detailContent.html:56
 msgid "Citezenship"
 msgstr "Citezenship"
 
-#: tppcenter/templates/Resume/detailContent.html:79
+#: tppcenter/templates/Resume/detailContent.html:68
 msgid "Salary"
 msgstr "Заробітна плата"
 
-#: tppcenter/templates/Resume/detailContent.html:89
-#: tppcenter/templates/Resume/detailContent.html:112
+#: tppcenter/templates/Resume/detailContent.html:78
+#: tppcenter/templates/Resume/detailContent.html:101
 msgid "Additional"
 msgstr "Додатково"
 
-#: tppcenter/templates/Resume/detailContent.html:129
-#: tppcenter/templates/Resume/detailContent.html:137
-#: tppcenter/templates/Resume/detailContent.html:145
+#: tppcenter/templates/Resume/detailContent.html:118
+#: tppcenter/templates/Resume/detailContent.html:126
+#: tppcenter/templates/Resume/detailContent.html:134
 msgid "Work  period"
 msgstr "Період роботи"
 
-#: tppcenter/templates/Resume/detailContent.html:166
+#: tppcenter/templates/Resume/detailContent.html:155
 msgid "Additional skills"
 msgstr "Додаткові навички"
 
 #: tppcenter/templates/Tenders/addForm.html:41
-#: tppcenter/templates/Tenders/detailContent.html:63
+#: tppcenter/templates/Tenders/detailContent.html:60
 msgid "Deadline for receiving bids"
 msgstr "Дата закінчення прийому заявок"
 
 #: tppcenter/templates/Tenders/addForm.html:49
-#: tppcenter/templates/Tenders/contentPage.html:49
-#: tppcenter/templates/Tenders/detailContent.html:67
+#: tppcenter/templates/Tenders/contentPage.html:43
+#: tppcenter/templates/Tenders/detailContent.html:64
 msgid "Starting price"
 msgstr "Початкова ціна"
 
 #: tppcenter/templates/Tenders/addForm.html:132
 msgid "Tender title"
 msgstr "Назва тендеру"
+
+#: tppcenter/templates/Tenders/detailContent.html:52
+#, fuzzy
+msgid "Apply now"
+msgstr "Застосовувати"
 
 #: tppcenter/templates/Tpp/addForm.html:137
 msgid "VATIN"
@@ -3924,10 +3463,6 @@ msgstr "Подробиці  опис"
 msgid "Detail"
 msgstr "Подробиці"
 
-#: tppcenter/templates/Tpp/index.html:10
-msgid "TPP"
-msgstr "ТПП"
-
 #: tppcenter/templates/Tpp/tabCompanies.html:7
 msgid "Logo"
 msgstr "Лого"
@@ -3940,7 +3475,7 @@ msgstr "Назва департамента"
 msgid "Sites"
 msgstr "Сайти"
 
-#: tppcenter/templates/Users/contentPage.html:46
+#: tppcenter/templates/Users/contentPage.html:38
 msgid "Send message"
 msgstr "Надіслати повідомлення"
 
@@ -3973,12 +3508,12 @@ msgid "company title will be hidden"
 msgstr "назва компанії будє прихова"
 
 #: tppcenter/templates/Vacancy/addForm.html:262
-#: tppcenter/templates/Vacancy/detailContent.html:79
+#: tppcenter/templates/Vacancy/detailContent.html:72
 msgid "Requirements"
 msgstr "Потреба"
 
 #: tppcenter/templates/Vacancy/addForm.html:269
-#: tppcenter/templates/Vacancy/detailContent.html:83
+#: tppcenter/templates/Vacancy/detailContent.html:76
 msgid "Terms"
 msgstr "Умови"
 
@@ -3987,49 +3522,49 @@ msgstr "Умови"
 msgid "Please wait to response..."
 msgstr "Будь ласка, почекайте ..."
 
-#: tppcenter/templates/Vacancy/detailContent.html:32
+#: tppcenter/templates/Vacancy/detailContent.html:33
 msgid "Send Resume"
 msgstr "Відправити резюме"
 
-#: tppcenter/templates/Vacancy/detailContent.html:42
+#: tppcenter/templates/Vacancy/detailContent.html:43
 msgid "Anonymous company"
 msgstr "Анонімна компанія"
 
-#: tppcenter/templates/Vacancy/detailContent.html:70
+#: tppcenter/templates/Vacancy/detailContent.html:63
 msgid "Type of employments"
 msgstr "Тип наймання"
 
-#: tppcenter/templates/Vacancy/index.html:47
+#: tppcenter/templates/Vacancy/detailContent.html:100
 msgid "You send resume on position:"
 msgstr "Ви відправляєте резюме на позиції:"
 
-#: tppcenter/templates/Vacancy/index.html:53
+#: tppcenter/templates/Vacancy/detailContent.html:106
 msgid "Add new resume to profile"
 msgstr "Додати нове резюме в профіль"
 
-#: tppcenter/templates/Vacancy/index.html:54
+#: tppcenter/templates/Vacancy/detailContent.html:107
 msgid "New resume"
 msgstr "Нові резюме"
 
-#: tppcenter/templates/Vacancy/index.html:58
+#: tppcenter/templates/Vacancy/detailContent.html:111
 msgid "Send existing resume"
 msgstr "Надіслати існуючі резюме"
 
-#: tppcenter/templates/Vacancy/index.html:63
+#: tppcenter/templates/Vacancy/detailContent.html:116
 msgid "No existing resumes"
 msgstr "Резюме відсутні"
 
-#: tppcenter/templates/Wall/contentPage.html:8
+#: tppcenter/templates/Wall/contentPage.html:6
 msgid "Latest updates"
 msgstr "Останні оновлення"
 
-#: tppcenter/templates/Wall/contentPage.html:151
-msgid "Bussiness Proposals"
-msgstr "Бізнес Пропозиції"
-
-#: tppcenter/templates/Wall/contentPage.html:282
+#: tppcenter/templates/Wall/contentPage.html:38
 msgid "Get the price"
 msgstr "Дізнатися ціну"
+
+#: tppcenter/templates/Wall/contentPage.html:184
+msgid "Bussiness Proposals"
+msgstr "Бізнес Пропозиції"
 
 #: tppcenter/templates/main/currentCompany.html:5
 msgid "Current organization"
@@ -4142,7 +3677,7 @@ msgstr ""
 "Ми відправили вам повідомлення. Будь ласка, перевірте вашу електронну пошту "
 "і натисніть на посилання, щоб активувати обліковий запис."
 
-#: usersites/views.py:23 usersites/views.py:24
+#: usersites/views.py:24 usersites/views.py:25
 #: usersites/templates/header.html:4
 msgid "About us"
 msgstr "Про нас"
@@ -4200,3 +3735,375 @@ msgstr "Спосіб доставки"
 #: usersites/templates/Products/detailContent.html:129
 msgid "Payment for Product: "
 msgstr "Оплата товару:"
+
+#: usersites/templates/Products/detailContent.html:144
+msgid "Countact us"
+msgstr "Зв'язатися з нами"
+
+#~ msgid "Search In"
+#~ msgstr "Шукати в"
+
+#~ msgid "Haystack"
+#~ msgstr "Haystack"
+
+#~ msgid "Search Queries"
+#~ msgstr "Пошукові Запити"
+
+#~ msgid "Query"
+#~ msgstr "Запит"
+
+#~ msgid "Backend Alias"
+#~ msgstr "Backend Alias"
+
+#~ msgid "Timeline"
+#~ msgstr "Хронологія"
+
+#~ msgid "Time"
+#~ msgstr "Час"
+
+#~ msgid "Kwargs"
+#~ msgstr "Kwargs"
+
+#~ msgid "state"
+#~ msgstr "state"
+
+#~ msgid "ETA"
+#~ msgstr "ETA"
+
+#~ msgid "when"
+#~ msgstr "when"
+
+#~ msgid "name"
+#~ msgstr "name"
+
+#~ msgid "Task detail"
+#~ msgstr "Task detail"
+
+#~ msgid "Tasks"
+#~ msgstr "Tasks"
+
+#~ msgid "UUID"
+#~ msgstr "UUID"
+
+#~ msgid "Revoke selected tasks"
+#~ msgstr "Відкликати вибрані завдання"
+
+#~ msgid "Terminate selected tasks"
+#~ msgstr "Завершити вибрані завдання"
+
+#~ msgid "Kill selected tasks"
+#~ msgstr "Завершити вибрані завдання"
+
+#~ msgid "Rate limit selected tasks"
+#~ msgstr "Rate limit selected tasks"
+
+#~ msgid "Rate limit selection"
+#~ msgstr "Rate limit selection"
+
+#~ msgid "Node detail"
+#~ msgstr "Node detail"
+
+#~ msgid "Worker Nodes"
+#~ msgstr "Worker Nodes"
+
+#~ msgid "Shutdown selected worker nodes"
+#~ msgstr "Shutdown selected worker nodes"
+
+#~ msgid "Enable event mode for selected nodes."
+#~ msgstr "Enable event mode for selected nodes."
+
+#~ msgid "Disable event mode for selected nodes."
+#~ msgstr "Disable event mode for selected nodes."
+
+#~ msgid "Task (registered)"
+#~ msgstr "Task (registered)"
+
+#~ msgid "Task (custom)"
+#~ msgstr "Task (custom)"
+
+#~ msgid "Need name of task"
+#~ msgstr "Need name of task"
+
+#~ msgid "Unable to parse JSON: %s"
+#~ msgstr "Unable to parse JSON: %s"
+
+#~ msgid "just now"
+#~ msgstr "just now"
+
+#~ msgid "{seconds} second ago"
+#~ msgstr "{seconds} second ago"
+
+#~ msgid "{seconds} seconds ago"
+#~ msgstr "{seconds} seconds ago"
+
+#~ msgid "{minutes} minute ago"
+#~ msgstr "{minutes} minute ago"
+
+#~ msgid "{minutes} minutes ago"
+#~ msgstr "{minutes} minutes ago"
+
+#~ msgid "{hours} hour ago"
+#~ msgstr "{hours} hour ago"
+
+#~ msgid "{hours} hours ago"
+#~ msgstr "{hours} hours ago"
+
+#~ msgid "yesterday at {time}"
+#~ msgstr "yesterday at {time}"
+
+#~ msgid "year"
+#~ msgstr "year"
+
+#~ msgid "years"
+#~ msgstr "years"
+
+#~ msgid "month"
+#~ msgstr "month"
+
+#~ msgid "months"
+#~ msgstr "months"
+
+#~ msgid "week"
+#~ msgstr "week"
+
+#~ msgid "weeks"
+#~ msgstr "weeks"
+
+#~ msgid "days"
+#~ msgstr "days"
+
+#~ msgid "{number} {type} ago"
+#~ msgstr "{number} {type} ago"
+
+#~ msgid "task id"
+#~ msgstr "task id"
+
+#~ msgid "done at"
+#~ msgstr "done at"
+
+#~ msgid "traceback"
+#~ msgstr "traceback"
+
+#~ msgid "meta"
+#~ msgstr "meta"
+
+#~ msgid "task state"
+#~ msgstr "task state"
+
+#~ msgid "task states"
+#~ msgstr "task states"
+
+#~ msgid "group id"
+#~ msgstr "group id"
+
+#~ msgid "created at"
+#~ msgstr "created at"
+
+#~ msgid "saved group result"
+#~ msgstr "saved group result"
+
+#~ msgid "saved group results"
+#~ msgstr "saved group results"
+
+#~ msgid "Days"
+#~ msgstr "Days"
+
+#~ msgid "Hours"
+#~ msgstr "Hours"
+
+#~ msgid "Minutes"
+#~ msgstr "Minutes"
+
+#~ msgid "Seconds"
+#~ msgstr "Seconds"
+
+#~ msgid "Microseconds"
+#~ msgstr "Microseconds"
+
+#~ msgid "every"
+#~ msgstr "every"
+
+#~ msgid "period"
+#~ msgstr "period"
+
+#~ msgid "interval"
+#~ msgstr "interval"
+
+#~ msgid "intervals"
+#~ msgstr "intervals"
+
+#~ msgid "every {0.period_singular}"
+#~ msgstr "every {0.period_singular}"
+
+#~ msgid "every {0.every} {0.period}"
+#~ msgstr "every {0.every} {0.period}"
+
+#~ msgid "minute"
+#~ msgstr "хвилин"
+
+#~ msgid "hour"
+#~ msgstr "годину"
+
+#~ msgid "day of week"
+#~ msgstr "день тижня"
+
+#~ msgid "day of month"
+#~ msgstr "день місяця"
+
+#~ msgid "month of year"
+#~ msgstr "місяць року"
+
+#~ msgid "crontab"
+#~ msgstr "crontab"
+
+#~ msgid "crontabs"
+#~ msgstr "crontabs"
+
+#~ msgid "Useful description"
+#~ msgstr "Useful description"
+
+#~ msgid "task name"
+#~ msgstr "task name"
+
+#~ msgid "Use one of interval/crontab"
+#~ msgstr "Use one of interval/crontab"
+
+#~ msgid "Arguments"
+#~ msgstr "Arguments"
+
+#~ msgid "JSON encoded positional arguments"
+#~ msgstr "JSON encoded positional arguments"
+
+#~ msgid "Keyword arguments"
+#~ msgstr "Keyword arguments"
+
+#~ msgid "JSON encoded keyword arguments"
+#~ msgstr "JSON encoded keyword arguments"
+
+#~ msgid "queue"
+#~ msgstr "queue"
+
+#~ msgid "Queue defined in CELERY_QUEUES"
+#~ msgstr "Queue defined in CELERY_QUEUES"
+
+#~ msgid "exchange"
+#~ msgstr "обмін"
+
+#~ msgid "routing key"
+#~ msgstr "ключ маршрутизації"
+
+#~ msgid "expires"
+#~ msgstr "закінчується"
+
+#~ msgid "enabled"
+#~ msgstr "включений"
+
+#~ msgid "description"
+#~ msgstr "опис"
+
+#~ msgid "periodic task"
+#~ msgstr "periodic task"
+
+#~ msgid "periodic tasks"
+#~ msgstr "periodic tasks"
+
+#~ msgid "hostname"
+#~ msgstr "hostname"
+
+#~ msgid "last heartbeat"
+#~ msgstr "last heartbeat"
+
+#~ msgid "worker"
+#~ msgstr "worker"
+
+#~ msgid "workers"
+#~ msgstr "workers"
+
+#~ msgid "event received at"
+#~ msgstr "event received at"
+
+#~ msgid "result"
+#~ msgstr "результат"
+
+#~ msgid "execution time"
+#~ msgstr "час виконання"
+
+#~ msgid "in seconds if task succeeded"
+#~ msgstr "in seconds if task succeeded"
+
+#~ msgid "number of retries"
+#~ msgstr "Кількість спроб"
+
+#~ msgid "task"
+#~ msgstr "Завдання"
+
+#~ msgid "tasks"
+#~ msgstr "Завдання"
+
+#~ msgid "Home"
+#~ msgstr "Додому"
+
+#~ msgid "Rate limit"
+#~ msgstr "Обмеження"
+
+#~ msgid "Activate users"
+#~ msgstr "Активуйте користувачів"
+
+#~ msgid "Re-send activation emails"
+#~ msgstr "Вислати листа активації на e-mail"
+
+#~ msgid "Password (again)"
+#~ msgstr "Пароль (ще раз)"
+
+#~ msgid "The two password fields didn't match."
+#~ msgstr "Пароли не збігаються."
+
+#~ msgid "I have read and agree to the Terms of Service"
+#~ msgstr "Я прочитав і згоден з Умови надання послуг"
+
+#~ msgid "You must agree to the terms to register"
+#~ msgstr "Ви повинні погодитися з умовами, щоб зареєструватися"
+
+#~ msgid ""
+#~ "This email address is already in use. Please supply a different email "
+#~ "address."
+#~ msgstr ""
+#~ "Ця адреса електронної пошти вже використовується. Будь ласка, надайте "
+#~ "іншу адресу електронної пошти."
+
+#~ msgid ""
+#~ "Registration using free email addresses is prohibited. Please supply a "
+#~ "different email address."
+#~ msgstr ""
+#~ "Реєстрація за допомогою безкоштовних адрес електронної пошти заборонено. "
+#~ "Будь ласка, надайте іншу адресу електронної пошти."
+
+#~ msgid "user"
+#~ msgstr "користувач"
+
+#~ msgid "activation key"
+#~ msgstr "ключ активації"
+
+#~ msgid "registration profile"
+#~ msgstr "Реєстраційний профіль"
+
+#~ msgid "registration profiles"
+#~ msgstr "Профілі реєстрації"
+
+#~ msgid "System notifications"
+#~ msgstr "Повідомлення системи"
+
+#~ msgid "Friend request"
+#~ msgstr "пропозиція дружби"
+
+#~ msgid "Notification in your communities"
+#~ msgstr "Повідомлення до ваших спільнот"
+
+#~ msgid "add top"
+#~ msgstr "додати зверху"
+
+#~ msgid "Innovation project"
+#~ msgstr "Інноваційний проект"
+
+#~ msgid "TPP"
+#~ msgstr "ТПП"

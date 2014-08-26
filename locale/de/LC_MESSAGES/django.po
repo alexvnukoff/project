@@ -8,75 +8,3685 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-12 14:52+0200\n"
+"POT-Creation-Date: 2014-08-26 10:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\tpp\settings.py:143
+#: appl/func.py:895 centerpokupok/templates/Company/header.html:48
+#: centerpokupok/templates/Company/products.html:6
+#: centerpokupok/templates/Product/detail.html:114
+#: centerpokupok/templates/Product/index.html:6
+#: centerpokupok/templates/Product/index.html:63
+#: centerpokupok/templates/Product/index.html:76
+#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:31
+#: tppcenter/Product/views.py:51 tppcenter/Product/views.py:72
+#: tppcenter/templates/base.html:170 tppcenter/templates/main_page.html:185
+#: tppcenter/templates/main_page.html:210
+#: tppcenter/templates/Analytic/main.html:64
+#: tppcenter/templates/Companies/detailContent.html:569
+#: tppcenter/templates/Wall/contentPage.html:8 usersites/Products/views.py:32
+#: usersites/Products/views.py:33 usersites/templates/contentPage.html:86
+#: usersites/templates/site_sidebar.html:100
+msgid "Products"
+msgstr ""
+
+#: appl/func.py:900 tppcenter/templates/main_page.html:188
+#: tppcenter/templates/main_page.html:213
+#: tppcenter/templates/Analytic/main.html:72
+#: tppcenter/templates/Companies/detailContent.html:574
+#: tppcenter/templates/Tpp/detailContent.html:513
+msgid "Innovation Projects"
+msgstr ""
+
+#: appl/func.py:905 tppcenter/Companies/views.py:39
+#: tppcenter/Companies/views.py:76 tppcenter/Companies/views.py:627
+#: tppcenter/templates/base.html:171 tppcenter/templates/forms.html:6
+#: tppcenter/templates/index.html:192 tppcenter/templates/job_index.html:188
+#: tppcenter/templates/main_page.html:187
+#: tppcenter/templates/main_page.html:212
+#: tppcenter/templates/Analytic/main.html:95
+#: tppcenter/templates/Companies/index.html:5
+#: tppcenter/templates/Tpp/detailContent.html:538
+msgid "Companies"
+msgstr ""
+
+#: appl/func.py:910 tppcenter/templates/main_page.html:189
+#: tppcenter/templates/main_page.html:214
+#: tppcenter/templates/Analytic/main.html:68
+#: tppcenter/templates/Analytic/main.html:111
+#: tppcenter/templates/BusinessProposal/index.html:5
+#: tppcenter/templates/Companies/detailContent.html:579
+#: tppcenter/templates/Tpp/detailContent.html:518
+msgid "Business Proposals"
+msgstr ""
+
+#: appl/func.py:915 tppcenter/templates/main_page.html:196
+#: tppcenter/templates/main_page.html:227
+msgid "Job requirements"
+msgstr ""
+
+#: appl/func.py:920 tppcenter/Exhibitions/views.py:33
+#: tppcenter/Exhibitions/views.py:53 tppcenter/Exhibitions/views.py:72
+#: tppcenter/templates/Analytic/main.html:80
+#: tppcenter/templates/Analytic/main.html:115
+#: tppcenter/templates/Companies/detailContent.html:564
+#: tppcenter/templates/Tpp/detailContent.html:508
+#: tppcenter/templates/Wall/contentPage.html:134
+msgid "Exhibitions"
+msgstr ""
+
+#: appl/func.py:1110
+msgid "Sorry but you cannot modify this item "
+msgstr ""
+
+#: centerpokupok/forms.py:6
+msgid "Recipient name"
+msgstr ""
+
+#: centerpokupok/forms.py:7
+#: centerpokupok/templates/Product/orderStepOne.html:81
+#: tppcenter/templates/Companies/tabExhibitions.html:10
+#: tppcenter/templates/Exhibitions/addForm.html:58
+#: tppcenter/templates/Tpp/tabExhibitions.html:10
+msgid "City"
+msgstr ""
+
+#: centerpokupok/forms.py:8
+#: centerpokupok/templates/Product/orderStepOne.html:95
+#: tppcenter/templates/BusinessProposal/popupFilter.html:19
+#: tppcenter/templates/Companies/addForm.html:78
+#: tppcenter/templates/Companies/addForm.html:83
+#: tppcenter/templates/Companies/popupFilter.html:19
+#: tppcenter/templates/Exhibitions/addForm.html:65
+#: tppcenter/templates/Exhibitions/popupFilter.html:19
+#: tppcenter/templates/Innov/popupFilter.html:19
+#: tppcenter/templates/News/addForm.html:109
+#: tppcenter/templates/News/popupFilter.html:19
+#: tppcenter/templates/Products/popupFilter.html:19
+#: tppcenter/templates/Profile/addForm.html:71
+#: tppcenter/templates/Tenders/popupFilter.html:19
+#: tppcenter/templates/Tpp/addForm.html:142
+#: tppcenter/templates/TppTV/addForm.html:57
+#: tppcenter/templates/TppTV/popupFilter.html:19
+#: tppcenter/templates/main/user_profile.html:67
+msgid "Country"
+msgstr ""
+
+#: centerpokupok/forms.py:9
+#: centerpokupok/templates/Product/orderStepOne.html:88
+msgid "Zipcode"
+msgstr ""
+
+#: centerpokupok/forms.py:10
+#: tppcenter/templates/BusinessProposal/detailContent.html:119
+#: tppcenter/templates/Companies/addForm.html:181
+#: tppcenter/templates/Companies/detailContent.html:626
+#: tppcenter/templates/Exhibitions/detailContent.html:157
+#: tppcenter/templates/Innov/detailContent.html:150
+#: tppcenter/templates/Resume/addForm.html:103
+#: tppcenter/templates/Resume/detailContent.html:64
+#: tppcenter/templates/Tpp/addForm.html:182
+#: tppcenter/templates/Tpp/detailContent.html:563
+#: usersites/templates/Proposals/detailContent.html:132
+msgid "Address"
+msgstr ""
+
+#: centerpokupok/forms.py:11 tppcenter/Profile/profileForms.py:53
+msgid "Telephone"
+msgstr ""
+
+#: centerpokupok/forms.py:20
+msgid "Fisrt name"
+msgstr ""
+
+#: centerpokupok/forms.py:22 tppcenter/Profile/profileForms.py:16
+#: tppcenter/templates/Profile/addForm.html:34
+#: tppcenter/templates/main/user_profile.html:37
+msgid "Last name"
+msgstr ""
+
+#: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
+#: tppcenter/templates/Profile/addForm.html:85
+#: tppcenter/templates/Resume/addForm.html:66
+#: tppcenter/templates/Resume/detailContent.html:48
+#: tppcenter/templates/main/user_profile.html:75
+msgid "Birthday"
+msgstr ""
+
+#: centerpokupok/views.py:187 tppcenter/views.py:221
+msgid "Agreement with terms is required"
+msgstr ""
+
+#: centerpokupok/Cabinet/views.py:36 centerpokupok/Cabinet/views.py:66
+msgid "was successfully saved "
+msgstr ""
+
+#: centerpokupok/Product/views.py:85
+#: centerpokupok/templates/Product/orderStepOne.html:139
+msgid "Comment"
+msgstr ""
+
+#: centerpokupok/Product/views.py:110
+msgid "You can send one comment per minute"
+msgstr ""
+
+#: centerpokupok/templates/base.html:11
+#: centerpokupok/templates/header_big.html:22
+#: centerpokupok/templates/header_small.html:16
+#: centerpokupok/templates/index.html:4
+#: centerpokupok/templates/Company/header.html:7
+msgid "Shopcenter"
+msgstr ""
+
+#: centerpokupok/templates/base.html:41
+msgid "About project"
+msgstr ""
+
+#: centerpokupok/templates/base.html:42
+msgid "About system"
+msgstr ""
+
+#: centerpokupok/templates/base.html:43
+msgid "How the system works"
+msgstr ""
+
+#: centerpokupok/templates/base.html:44
+msgid "Announcements and product reviews"
+msgstr ""
+
+#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:16
+msgid "Public offer"
+msgstr ""
+
+#: centerpokupok/templates/base.html:48
+msgid "How to buy"
+msgstr ""
+
+#: centerpokupok/templates/base.html:49
+msgid "Subscribe to updates"
+msgstr ""
+
+#: centerpokupok/templates/base.html:50
+msgid "How to pay"
+msgstr ""
+
+#: centerpokupok/templates/base.html:51
+msgid "Delivery option"
+msgstr ""
+
+#: centerpokupok/templates/base.html:52
+msgid "Customers protection"
+msgstr ""
+
+#: centerpokupok/templates/base.html:53
+msgid "Quick reference"
+msgstr ""
+
+#: centerpokupok/templates/base.html:56
+#: tppcenter/templates/Companies/detailContent.html:548
+msgid "Services"
+msgstr ""
+
+#: centerpokupok/templates/base.html:57
+#: centerpokupok/templates/Company/contact.html:4
+#: centerpokupok/templates/Company/contact.html:50
+#: tppcenter/Project/urls.py:20
+#: tppcenter/templates/Companies/contentPage.html:88
+#: tppcenter/templates/Products/detailContent.html:98
+#: tppcenter/templates/Products/detailContent.html:134
+#: tppcenter/templates/Project/contact.html:16
+#: tppcenter/templates/Tpp/contentPage.html:71
+#: usersites/templates/site_sidebar.html:103
+msgid "Contact us"
+msgstr ""
+
+#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:21
+#: tppcenter/templates/Project/faq.html:16
+msgid "FAQ"
+msgstr ""
+
+#: centerpokupok/templates/base.html:59
+msgid "Ask about community"
+msgstr ""
+
+#: centerpokupok/templates/base.html:60
+msgid "Partner program"
+msgstr ""
+
+#: centerpokupok/templates/base.html:64
+#: centerpokupok/templates/Company/about.html:38
+#: centerpokupok/templates/Company/contact.html:37
+#: centerpokupok/templates/Company/index.html:79
+msgid "Subscribe to newsletter"
+msgstr ""
+
+#: centerpokupok/templates/base.html:66
+#: centerpokupok/templates/Company/about.html:40
+#: centerpokupok/templates/Company/contact.html:39
+#: centerpokupok/templates/Company/index.html:81
+msgid "Receive our weekly announcements and reviews of new products"
+msgstr ""
+
+#: centerpokupok/templates/base.html:68
+msgid "Subscribe"
+msgstr ""
+
+#: centerpokupok/templates/base.html:74
+msgid "Shopping center - buy with pleasure all over the world"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:7
+#: centerpokupok/templates/Cabinet/favorite.html:17
+#: centerpokupok/templates/Cabinet/index.html:18
+#: centerpokupok/templates/Cabinet/orderHistory.html:17
+#: centerpokupok/templates/Cabinet/shippingAddress.html:17
+#: centerpokupok/templates/Product/orderStepThree.html:28
+#: centerpokupok/templates/Registr/registr.html:58
+#: centerpokupok/templates/registration/activation_complete.html:45
+#: centerpokupok/templates/registration/password_reset_complete.html:41
+#: centerpokupok/templates/registration/password_reset_confirm.html:43
+#: centerpokupok/templates/registration/password_reset_done.html:43
+#: centerpokupok/templates/registration/password_reset_form.html:40
+#: centerpokupok/templates/registration/registration_closed.html:47
+#: centerpokupok/templates/registration/registration_complete.html:48
+msgid "Home page"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:8
+#: centerpokupok/templates/header_small.html:7
+#: centerpokupok/templates/Company/header.html:8
+#: centerpokupok/templates/main/cabinet_menu.html:29
+#: usersites/templates/Contact/contentPage.html:53
+msgid "Ask a question"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:9
+msgid "Comsumer protection"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:11
+#: centerpokupok/templates/Company/header.html:11
+msgid "sign out"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:13
+#: centerpokupok/templates/header_small.html:9
+#: centerpokupok/templates/Company/header.html:13
+#: centerpokupok/templates/registration/login.html:3
+#: tppcenter/templates/login_header.html:44
+#: tppcenter/templates/main_header.html:10
+#: tppcenter/templates/registration/login.html:46
+msgid "Sign in"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:90
+msgid "Your workplace"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:91
+msgid "Workplace"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:92
+#: tppcenter/templates/login_header.html:42
+msgid "Sign out"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:94
+msgid "Sign up now"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:95
+msgid "Seller"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:96
+msgid "Customer"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:104
+msgid "Search Products"
+msgstr ""
+
+#: centerpokupok/templates/header_big.html:108
+msgid "Search"
+msgstr ""
+
+#: centerpokupok/templates/header_small.html:6
+#: tppcenter/templates/base.html:39 usersites/templates/base.html:21
+msgid "Main page"
+msgstr ""
+
+#: centerpokupok/templates/header_small.html:8
+#: centerpokupok/templates/Company/header.html:9
+#: centerpokupok/templates/Registr/registr.html:37
+#: centerpokupok/templates/registration/activation_complete.html:24
+#: centerpokupok/templates/registration/password_reset_complete.html:20
+#: centerpokupok/templates/registration/password_reset_confirm.html:22
+#: centerpokupok/templates/registration/password_reset_done.html:22
+#: centerpokupok/templates/registration/password_reset_form.html:19
+#: centerpokupok/templates/registration/registration_closed.html:26
+#: centerpokupok/templates/registration/registration_complete.html:27
+msgid "Consumer protection"
+msgstr ""
+
+#: centerpokupok/templates/index.html:66
+#: centerpokupok/templates/News/detail.html:46
+msgid "Special price"
+msgstr ""
+
+#: centerpokupok/templates/paginator.html:6
+msgid "Start"
+msgstr ""
+
+#: centerpokupok/templates/paginator.html:9
+msgid "pages"
+msgstr ""
+
+#: centerpokupok/templates/paginator.html:23
+msgid "End"
+msgstr ""
+
+#: centerpokupok/templates/popular.html:5
+msgid "Most popular products"
+msgstr ""
+
+#: centerpokupok/templates/related_categories.html:4
+msgid "Related Categories"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/favorite.html:5
+#: centerpokupok/templates/Cabinet/favorite.html:21
+#: centerpokupok/templates/Cabinet/orderHistory.html:5
+#: centerpokupok/templates/Cabinet/orderHistory.html:21
+msgid "Order history"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/favorite.html:38
+#: centerpokupok/templates/Cabinet/orderHistory.html:38
+#: centerpokupok/templates/Product/detail.html:134
+msgid "Product ID"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/favorite.html:42
+#: centerpokupok/templates/Cabinet/orderHistory.html:44
+msgid "Size"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/favorite.html:43
+#: centerpokupok/templates/Cabinet/orderHistory.html:45
+msgid "Color"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/favorite.html:71
+#: tppcenter/templates/BusinessProposal/addForm.html:46
+#: tppcenter/templates/BusinessProposal/addForm.html:54
+#: tppcenter/templates/BusinessProposal/addForm.html:62
+#: tppcenter/templates/BusinessProposal/addForm.html:83
+msgid "Delete"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/index.html:22
+msgid "Welcome"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/index.html:23
+msgid "Here, you can change your data, shipment address and monitor orders."
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/index.html:26
+msgid "My profile"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/index.html:28
+msgid "User details "
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/index.html:45
+#: centerpokupok/templates/Cabinet/shippingAddress.html:39
+#: tppcenter/templates/BusinessProposal/addForm.html:159
+#: tppcenter/templates/Companies/addForm.html:264
+#: tppcenter/templates/Exhibitions/addForm.html:228
+#: tppcenter/templates/Innov/addForm.html:190
+#: tppcenter/templates/Products/addForm.html:435
+#: tppcenter/templates/Profile/addForm.html:108
+#: tppcenter/templates/Resume/addForm.html:324
+#: tppcenter/templates/Tenders/addForm.html:166
+#: tppcenter/templates/Tpp/addForm.html:240
+#: tppcenter/templates/TppTV/addForm.html:111
+#: tppcenter/templates/Vacancy/addForm.html:277
+msgid "Save"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/orderHistory.html:48
+#: centerpokupok/templates/Product/detail.html:199
+msgid "Quantity"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:4
+#: centerpokupok/templates/Cabinet/shippingAddress.html:23
+msgid "Shipping Address"
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:25
+msgid "Shipping Addres "
+msgstr ""
+
+#: centerpokupok/templates/Cabinet/shippingAddress.html:26
+#: centerpokupok/templates/Product/orderStepOne.html:68
+msgid "Required fields"
+msgstr ""
+
+#: centerpokupok/templates/Categories/index.html:6
+msgid "All Categories"
+msgstr ""
+
+#: centerpokupok/templates/Categories/index.html:8
+msgid "Categories"
+msgstr ""
+
+#: centerpokupok/templates/Categories/index.html:18
+#: centerpokupok/templates/Coupons/index.html:85
+#: centerpokupok/templates/Product/detail.html:106
+#: centerpokupok/templates/Product/index.html:60
+#: centerpokupok/templates/Product/new.html:96
+#: tppcenter/templates/Analytic/main.html:91
+#: tppcenter/templates/Innov/detailContent.html:80
+#: usersites/templates/site_sidebar.html:95
+msgid "Main"
+msgstr ""
+
+#: centerpokupok/templates/Categories/index.html:23
+#: centerpokupok/templates/main/main_menu.html:102
+msgid "All categories"
+msgstr ""
+
+#: centerpokupok/templates/Company/about.html:5
+#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:11
+#: tppcenter/templates/BusinessProposal/detailContent.html:65
+#: tppcenter/templates/Companies/detailContent.html:529
+#: tppcenter/templates/Project/about.html:16
+#: tppcenter/templates/Tpp/detailContent.html:474
+#: tppcenter/templates/main/staticPages.html:3
+#: usersites/templates/Proposals/detailContent.html:79
+msgid "About"
+msgstr ""
+
+#: centerpokupok/templates/Company/about.html:26
+#: centerpokupok/templates/Company/contact.html:25
+msgid "special price"
+msgstr ""
+
+#: centerpokupok/templates/Company/about.html:29
+#: centerpokupok/templates/Company/contact.html:28
+#: centerpokupok/templates/Company/index.html:70
+#: centerpokupok/templates/Product/detail.html:93
+msgid "Sale"
+msgstr ""
+
+#: centerpokupok/templates/Company/about.html:30
+#: centerpokupok/templates/Company/contact.html:29
+#: centerpokupok/templates/Company/index.html:71
+#: centerpokupok/templates/Product/detail.html:94
+msgid "winter collection"
+msgstr ""
+
+#: centerpokupok/templates/Company/about.html:42
+#: centerpokupok/templates/Company/contact.html:41
+#: centerpokupok/templates/Company/index.html:83
+msgid "Subscripe"
+msgstr ""
+
+#: centerpokupok/templates/Company/contact.html:60
+#: usersites/templates/Contact/contentPage.html:56
+msgid "Your name"
+msgstr ""
+
+#: centerpokupok/templates/Company/contact.html:67
+msgid "Your email"
+msgstr ""
+
+#: centerpokupok/templates/Company/contact.html:74
+#: tppcenter/templates/base.html:211
+#: usersites/templates/CompanyStructure/contentPage.html:49
+#: usersites/templates/Contact/contentPage.html:65
+msgid "Message"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:6
+#: centerpokupok/templates/Company/header.html:49
+#: centerpokupok/templates/Company/index.html:99
+#: centerpokupok/templates/Coupons/index.html:7
+#: centerpokupok/templates/Coupons/index.html:88
+#: centerpokupok/templates/Coupons/index.html:104
+#: centerpokupok/templates/Product/new.html:99
+#: centerpokupok/templates/main/main_coupons.html:8
+msgid "Coupons"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:55
+#: centerpokupok/templates/Company/products.html:36
+msgid "Best buy products"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:105
+#: centerpokupok/templates/Company/index.html:122
+#: centerpokupok/templates/Company/index.html:167
+#: centerpokupok/templates/Coupons/index.html:130
+msgid "Time till the end"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:119
+#: centerpokupok/templates/Coupons/index.html:144
+msgid "You save"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:127
+#: centerpokupok/templates/Company/index.html:144
+#: centerpokupok/templates/Coupons/index.html:152
+#: centerpokupok/templates/Product/detail.html:211
+#: centerpokupok/templates/main/main_coupons.html:48
+#: tppcenter/templates/Products/contentPage.html:53
+#: tppcenter/templates/Wall/contentPage.html:41
+#: usersites/templates/contentPage.html:103
+#: usersites/templates/Products/contentPage.html:21
+msgid "Buy"
+msgstr ""
+
+#: centerpokupok/templates/Company/coupons.html:150
+#: centerpokupok/templates/Coupons/index.html:244
+msgid "Till the end"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:25
+msgid "Store No"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:30
+msgid "Search in the store"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:33
+msgid "Advanced search"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:39
+#: centerpokupok/templates/Product/index.html:87
+#: centerpokupok/templates/Product/new.html:119
+msgid "Salesman online"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:41
+msgid "Write"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:46
+msgid "Store main page"
+msgstr ""
+
+#: centerpokupok/templates/Company/header.html:50
+#: tppcenter/templates/BusinessProposal/detailContent.html:68
+#: tppcenter/templates/Companies/detailContent.html:595
+#: tppcenter/templates/Exhibitions/detailContent.html:104
+#: tppcenter/templates/Innov/detailContent.html:83
+#: tppcenter/templates/Tpp/detailContent.html:533
+#: tppcenter/templates/Tpp/tabCompanies.html:9
+#: tppcenter/templates/main/staticPages.html:18 usersites/Contact/views.py:15
+#: usersites/Contact/views.py:16
+#: usersites/templates/Proposals/detailContent.html:82
+msgid "Contacts"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:5
+msgid "Company main"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:136
+msgid "You are saving"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:191
+#: centerpokupok/templates/Product/new.html:5
+#: centerpokupok/templates/main/products.html:9
+msgid "Latest"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:247
+#: centerpokupok/templates/main/products.html:75
+msgid "Top sales"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:248
+#: centerpokupok/templates/main/main_coupons.html:9
+#: tppcenter/templates/BusinessProposal/contentPage.html:46
+#: tppcenter/templates/Companies/contentPage.html:56
+#: tppcenter/templates/Exhibitions/contentPage.html:42
+#: tppcenter/templates/Innov/contentPage.html:59
+#: tppcenter/templates/News/detailContent.html:170
+#: tppcenter/templates/Resume/contentPage.html:29
+#: tppcenter/templates/Tenders/contentPage.html:48
+#: tppcenter/templates/Tpp/contentPage.html:42
+#: tppcenter/templates/UserSites/contentPage.html:40
+#: tppcenter/templates/Vacancy/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:106
+#: tppcenter/templates/Wall/contentPage.html:164
+#: tppcenter/templates/Wall/contentPage.html:209
+msgid "More"
+msgstr ""
+
+#: centerpokupok/templates/Company/index.html:302
+#: tppcenter/templates/index.html:293
+msgid "Best deals"
+msgstr ""
+
+#: centerpokupok/templates/Company/products.html:127
+#: centerpokupok/templates/Product/index.html:208
+#: centerpokupok/templates/Product/new.html:210
+msgid "Sales"
+msgstr ""
+
+#: centerpokupok/templates/Company/store_categories.html:4
+msgid "Store Categories"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:159
+msgid "Sort By"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:163
+#: centerpokupok/templates/Coupons/index.html:167
+#: tppcenter/templates/Products/addForm.html:344
+msgid "Discount"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:174
+#: centerpokupok/templates/Coupons/index.html:178
+#: tppcenter/templates/Adv/basket.html:21
+msgid "End Date"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:185
+#: centerpokupok/templates/Coupons/index.html:189
+msgid "Create Date"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:196
+#: centerpokupok/templates/Coupons/index.html:200
+#: centerpokupok/templates/Product/index.html:104
+#: centerpokupok/templates/Product/new.html:136
+#: tppcenter/templates/Companies/tabProducts.html:11
+#: tppcenter/templates/Companies/tabTenders.html:10
+#: tppcenter/templates/Products/detailContent.html:67
+#: tppcenter/templates/Tpp/tabTenders.html:10
+#: usersites/templates/Products/detailContent.html:90
+msgid "Price"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:206
+msgid "All "
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:208
+#: tppcenter/templates/baseFilter.html:79
+msgid "All"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:212
+#: centerpokupok/templates/Coupons/index.html:214
+msgid "Expire in 24 hours"
+msgstr ""
+
+#: centerpokupok/templates/Coupons/index.html:218
+#: centerpokupok/templates/Coupons/index.html:220
+msgid "Expire in 7 days"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:27
+#: centerpokupok/templates/News/index.html:15
+msgid "Product reviews"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:28
+#: centerpokupok/templates/News/index.html:16
+msgid "Seller anounses"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:32
+msgid "View store"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:39
+#: tppcenter/templates/Products/detailContent.html:141
+#: usersites/templates/Products/detailContent.html:153
+msgid "About company"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:40
+msgid "Company products"
+msgstr ""
+
+#: centerpokupok/templates/News/detail.html:41
+#: tppcenter/templates/Companies/tabStaff.html:52
+#: tppcenter/templates/Tpp/tabStaff.html:52
+msgid "Contact"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:21
+#: centerpokupok/templates/News/index.html:73
+msgid "Recommended"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:44
+msgid "Special Price"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:101
+msgid "All deals"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:112
+msgid "Popular reviews"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:137
+msgid "All products reviews"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:140
+#: centerpokupok/templates/Product/index.html:102
+#: centerpokupok/templates/Product/new.html:134
+msgid "Sort by"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:141
+#: centerpokupok/templates/Product/index.html:116
+#: centerpokupok/templates/Product/new.html:148
+msgid "Raiting"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:143
+#: tppcenter/templates/BusinessProposal/contentPage.html:37
+#: tppcenter/templates/Companies/tabInnov.html:10
+#: tppcenter/templates/Companies/tabProposal.html:9
+#: tppcenter/templates/News/addForm.html:127
+#: tppcenter/templates/Tpp/tabInnov.html:10
+#: tppcenter/templates/Tpp/tabProposal.html:9
+#: tppcenter/templates/TppTV/addForm.html:71
+#: tppcenter/templates/Vacancy/contentPage.html:43
+#: tppcenter/templates/Vacancy/detailContent.html:36
+#: tppcenter/templates/Wall/contentPage.html:203
+#: usersites/templates/contentPage.html:20
+#: usersites/templates/contentPage.html:59
+#: usersites/templates/News/contentPage.html:19
+#: usersites/templates/Proposals/contentPage.html:17
+msgid "Date"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:144
+msgid "Choose date"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:146
+msgid "Show product from"
+msgstr ""
+
+#: centerpokupok/templates/News/index.html:147
+msgid " all countries"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:6
+msgid "Product detail"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:119
+msgid "Back to catalog"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:181
+msgid "Discount will end in"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:215
+msgid "Favorite"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:228
+#: tppcenter/templates/BusinessProposal/addForm.html:110
+#: tppcenter/templates/Companies/tabProducts.html:10
+#: tppcenter/templates/Exhibitions/addForm.html:191
+#: tppcenter/templates/Innov/addForm.html:126
+#: tppcenter/templates/Innov/addForm.html:153
+#: tppcenter/templates/Tenders/addForm.html:139
+#: tppcenter/templates/Tenders/detailContent.html:80
+#: tppcenter/templates/Vacancy/addForm.html:255
+#: tppcenter/templates/Vacancy/detailContent.html:54
+#: tppcenter/templates/Vacancy/detailContent.html:68
+msgid "Description"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:229
+#: centerpokupok/templates/Product/orderStepOne.html:117
+#: centerpokupok/templates/Product/orderStepTwo.html:53
+msgid "Delivery method"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:229
+msgid "Return policy"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:234
+msgid "Short description"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:238
+msgid "Complete description"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:256
+msgid "Transaction History & Feedback"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:312
+msgid "Post"
+msgstr ""
+
+#: centerpokupok/templates/Product/detail.html:320
+msgid "Similar products"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:28
+msgid "Best discounts"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:83
+#: centerpokupok/templates/Product/new.html:115
+msgid "Show only"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:92
+#: centerpokupok/templates/Product/new.html:124
+msgid "High raiting"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:97
+#: centerpokupok/templates/Product/new.html:129
+msgid "Free shipping"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:186
+msgid "positive feedback"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:187
+#: centerpokupok/templates/Product/new.html:193
+msgid "Write to salesman"
+msgstr ""
+
+#: centerpokupok/templates/Product/index.html:259
+msgid "Sellers"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:7
+msgid "Order step one"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:22
+msgid "Start page"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:29
+msgid "Ordering"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:67
+msgid "Shipping Addres"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:74
+msgid "Recipient Name"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:102
+msgid "Adress"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:109
+#: tppcenter/templates/BusinessProposal/detailContent.html:125
+#: tppcenter/templates/Companies/addForm.html:109
+#: tppcenter/templates/Companies/detailContent.html:632
+#: tppcenter/templates/Exhibitions/detailContent.html:163
+#: tppcenter/templates/Exhibitions/detailContent.html:214
+#: tppcenter/templates/Innov/detailContent.html:156
+#: tppcenter/templates/Resume/addForm.html:95
+#: tppcenter/templates/Resume/detailContent.html:60
+#: tppcenter/templates/Tpp/addForm.html:99
+#: tppcenter/templates/Tpp/detailContent.html:569
+#: tppcenter/templates/main/user_profile.html:79
+#: usersites/templates/CompanyStructure/contentPage.html:22
+#: usersites/templates/Contact/contentPage.html:39
+#: usersites/templates/Proposals/detailContent.html:136
+msgid "Telephone number"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:120
+msgid "Choose delivery method"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:136
+msgid "Comment to your order"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:143
+msgid "Payment method"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepOne.html:151
+#: tppcenter/templates/AdvBanner/order.html:316
+msgid "Continue"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepThree.html:6
+msgid "Order Step three"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+msgid "Thank you for  shopping on our site,"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+#: centerpokupok/templates/registration/password_reset_complete.html:48
+#: tppcenter/templates/registration/password_reset_complete.html:33
+msgid "here"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepThree.html:32
+msgid "you can view your order history"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:7
+msgid "Order step two"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:29
+msgid "Home Page"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:30
+msgid "Step One"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:36
+msgid "Order summary"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:42
+msgid "Your order"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:60
+msgid "Payment"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:66
+msgid "The total amount of your order"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:74
+msgid "Make changes to your order"
+msgstr ""
+
+#: centerpokupok/templates/Product/orderStepTwo.html:75
+msgid "Confirm order"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:6
+#: centerpokupok/templates/Registr/registr.html:59
+#: centerpokupok/templates/registration/activation_complete.html:46
+#: centerpokupok/templates/registration/password_reset_complete.html:42
+#: centerpokupok/templates/registration/password_reset_confirm.html:44
+#: centerpokupok/templates/registration/password_reset_done.html:44
+#: centerpokupok/templates/registration/password_reset_form.html:41
+#: centerpokupok/templates/registration/registration_closed.html:48
+#: centerpokupok/templates/registration/registration_complete.html:49
+#: tppcenter/templates/index.html:232 tppcenter/templates/job_index.html:228
+msgid "Registration"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:33
+#: centerpokupok/templates/registration/activation_complete.html:20
+#: centerpokupok/templates/registration/password_reset_complete.html:16
+#: centerpokupok/templates/registration/password_reset_confirm.html:18
+#: centerpokupok/templates/registration/password_reset_done.html:18
+#: centerpokupok/templates/registration/password_reset_form.html:15
+#: centerpokupok/templates/registration/registration_closed.html:22
+#: centerpokupok/templates/registration/registration_complete.html:23
+msgid "On August 20 at the website registered"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:37
+#: centerpokupok/templates/registration/activation_complete.html:24
+#: centerpokupok/templates/registration/password_reset_complete.html:20
+#: centerpokupok/templates/registration/password_reset_confirm.html:22
+#: centerpokupok/templates/registration/password_reset_done.html:22
+#: centerpokupok/templates/registration/password_reset_form.html:19
+#: centerpokupok/templates/registration/registration_closed.html:26
+#: centerpokupok/templates/registration/registration_complete.html:27
+msgid "We protect the interests of our customers, so the site has a system"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:42
+#: centerpokupok/templates/registration/activation_complete.html:29
+#: centerpokupok/templates/registration/password_reset_complete.html:25
+#: centerpokupok/templates/registration/password_reset_confirm.html:27
+#: centerpokupok/templates/registration/password_reset_done.html:27
+#: centerpokupok/templates/registration/password_reset_form.html:24
+#: centerpokupok/templates/registration/registration_closed.html:31
+#: centerpokupok/templates/registration/registration_complete.html:32
+msgid "The guaranteed delivery within 30 days"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:46
+#: centerpokupok/templates/registration/activation_complete.html:33
+#: centerpokupok/templates/registration/password_reset_complete.html:29
+#: centerpokupok/templates/registration/password_reset_confirm.html:31
+#: centerpokupok/templates/registration/password_reset_done.html:31
+#: centerpokupok/templates/registration/password_reset_form.html:28
+#: centerpokupok/templates/registration/registration_closed.html:35
+#: centerpokupok/templates/registration/registration_complete.html:36
+msgid "Return policy and warranty"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:50
+#: centerpokupok/templates/registration/activation_complete.html:37
+#: centerpokupok/templates/registration/password_reset_complete.html:33
+#: centerpokupok/templates/registration/password_reset_confirm.html:35
+#: centerpokupok/templates/registration/password_reset_done.html:35
+#: centerpokupok/templates/registration/password_reset_form.html:32
+#: centerpokupok/templates/registration/registration_closed.html:39
+#: centerpokupok/templates/registration/registration_complete.html:40
+msgid ""
+"Freezing of seller's funds till then buyer  confirm receipt of the goods"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:52
+#: centerpokupok/templates/registration/activation_complete.html:39
+#: centerpokupok/templates/registration/password_reset_complete.html:35
+#: centerpokupok/templates/registration/password_reset_confirm.html:37
+#: centerpokupok/templates/registration/password_reset_done.html:37
+#: centerpokupok/templates/registration/password_reset_form.html:34
+#: centerpokupok/templates/registration/registration_closed.html:41
+#: centerpokupok/templates/registration/registration_complete.html:42
+msgid "Ask us a question"
+msgstr ""
+
+#: centerpokupok/templates/Registr/registr.html:66
+msgid "No, I am seller"
+msgstr ""
+
+#: centerpokupok/templates/main/Category.html:5
+#: tppcenter/templates/News/addForm.html:90
+#: tppcenter/templates/TppTV/addForm.html:46
+msgid "Choose category"
+msgstr ""
+
+#: centerpokupok/templates/main/Country.html:7
+msgid "Choose region"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:5
+msgid "My favorite products"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:8
+msgid "Personal data"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:11
+msgid "Shipment address"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:14
+msgid "Order History"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:20
+msgid "Eva"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:21
+msgid "Virtual Agent"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:23
+msgid "24 hour"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:24
+msgid "Smart Response"
+msgstr ""
+
+#: centerpokupok/templates/main/cabinet_menu.html:30
+msgid "Start chat"
+msgstr ""
+
+#: centerpokupok/templates/main/main_coupons.html:36
+msgid "Remaining time"
+msgstr ""
+
+#: centerpokupok/templates/main/products.html:10
+#: centerpokupok/templates/main/products.html:76
+#: usersites/templates/contentPage.html:29
+#: usersites/templates/contentPage.html:68
+#: usersites/templates/News/contentPage.html:28
+#: usersites/templates/Proposals/contentPage.html:26
+msgid "more"
+msgstr ""
+
+#: centerpokupok/templates/main/products_discount.html:5
+msgid "Best proposals"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:3
+msgid "Registration completed"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:3
+#: tppcenter/templates/registration/activate.html:3
+msgid "Activation problem"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:6
+msgid "Your registration complited"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:6
+#: tppcenter/templates/registration/activate.html:6
+msgid "You can sign in"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:6
+#: tppcenter/templates/permissionDen.html:7
+#: tppcenter/templates/registration/activate.html:6
+msgid "profile"
+msgstr ""
+
+#: centerpokupok/templates/registration/activate.html:8
+msgid "Sorry but you activation key is invalid"
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_complete.html:6
+#: tppcenter/templates/registration/registration_complete.html:7
+msgid "Registration complete"
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_complete.html:50
+msgid "Thank you that you have completed the registration! Now you can  "
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_complete.html:51
+#: tppcenter/templates/registration/activation_complete.html:31
+msgid "sign in"
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_complete.html:51
+msgid "using the email and password you provided during registration."
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email.html:2
+#: tppcenter/templates/registration/activation_email.html:2
+msgid "You joined to the site"
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email.html:3
+#: tppcenter/templates/registration/activation_email.html:3
+msgid "If you have received this message in error, ignore it."
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email.html:6
+#: tppcenter/templates/registration/activation_email.html:6
+msgid ""
+"In order to activate your account on the site, go, on the following link for "
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email.html:6
+#: tppcenter/templates/registration/activation_email.html:6
+msgid " days:"
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email.html:10
+#: tppcenter/templates/registration/activation_email.html:10
+msgid "Sincerely, Administration of, "
+msgstr ""
+
+#: centerpokupok/templates/registration/activation_email_subject.html:2
+#: tppcenter/templates/registration/activation_email_subject.html:2
+msgid "Registration on"
+msgstr ""
+
+#: centerpokupok/templates/registration/login.html:17
+#: tppcenter/templates/BusinessProposal/detailContent.html:137
+#: tppcenter/templates/Companies/detailContent.html:644
+#: tppcenter/templates/Exhibitions/detailContent.html:175
+#: tppcenter/templates/Exhibitions/detailContent.html:210
+#: tppcenter/templates/Innov/detailContent.html:168
+#: tppcenter/templates/Profile/addForm.html:49
+#: tppcenter/templates/Tpp/detailContent.html:581
+#: tppcenter/templates/main/user_profile.html:49
+#: usersites/templates/Proposals/detailContent.html:144
+msgid "Email"
+msgstr ""
+
+#: centerpokupok/templates/registration/login.html:23
+#: centerpokupok/templates/registration/registration_form.html:31
+#: centerpokupok/templates/registration/registration_form.html:42
+#: tppcenter/templates/index.html:279 tppcenter/templates/job_index.html:275
+#: tppcenter/templates/registration/login.html:42
+#: tppcenter/templates/registration/registration.html:46
+#: usersites/templates/slider.html:34
+msgid "Password"
+msgstr ""
+
+#: centerpokupok/templates/registration/login.html:31
+msgid "Forgot"
+msgstr ""
+
+#: centerpokupok/templates/registration/login.html:31
+msgid "your password"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_change_done.html:3
+#: centerpokupok/templates/registration/password_change_form.html:3
+#: tppcenter/templates/registration/password_change_done.html:3
+#: tppcenter/templates/registration/password_change_form.html:3
+msgid "Changing the password"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_change_done.html:5
+#: tppcenter/templates/registration/password_change_done.html:5
+msgid "The password has been changed successfully!"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_change_form.html:8
+#: centerpokupok/templates/registration/password_reset_confirm.html:52
+#: tppcenter/templates/registration/password_change_form.html:8
+#: tppcenter/templates/registration/password_reset_confirm.html:35
+msgid "Change password"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_complete.html:6
+msgid "Reset complete"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_complete.html:47
+#: tppcenter/templates/registration/password_reset_complete.html:32
+msgid "Your password has been changed!"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_complete.html:48
+#: tppcenter/templates/registration/password_reset_complete.html:33
+msgid "You can sign up"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_confirm.html:8
+msgid "Reset confirm"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_confirm.html:48
+msgid "Enter your new password below to change the old password:"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_done.html:8
+msgid "Password reset done"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_done.html:48
+#: tppcenter/templates/registration/password_reset_done.html:31
+msgid "We sent you an e-mail message with a link to change your password."
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_done.html:49
+#: tppcenter/templates/registration/password_reset_done.html:32
+msgid ""
+"Please, check you email. To change the password, click on the link in the "
+"message."
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_email.html:2
+#: tppcenter/templates/registration/password_reset_email.html:2
+msgid "Hello"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_email.html:4
+#: tppcenter/templates/registration/password_reset_email.html:4
+msgid ""
+"You received this message because you have a request to change the password"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_email.html:5
+#: tppcenter/templates/registration/password_reset_email.html:5
+msgid ""
+"on centerpokupok If you did not make such a request, please ignore this "
+"message."
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_email.html:7
+#: tppcenter/templates/registration/password_reset_email.html:7
+msgid ""
+"To change the password, click the following to link or copy it into your "
+"browser:"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_email.html:11
+#: tppcenter/templates/registration/password_reset_email.html:11
+msgid "Sincerely, Administration of,"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_form.html:5
+msgid "Reset password"
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_form.html:45
+#: tppcenter/templates/registration/password_reset_form.html:31
+msgid ""
+"Forgot your password? Enter your e-mail and we will send you the required "
+"information to create a new password."
+msgstr ""
+
+#: centerpokupok/templates/registration/password_reset_form.html:49
+#: tppcenter/templates/registration/password_reset_form.html:35
+msgid "Sent password"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_closed.html:6
+#: tppcenter/templates/registration/registration_closed.html:6
+#: tppcenter/templates/registration/registration_closed.html:28
+msgid "Registration error"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_closed.html:52
+#: tppcenter/templates/registration/registration_closed.html:31
+msgid "Registration error. Please try again "
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_complete.html:7
+msgid "Registartion complete"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_complete.html:53
+msgid ""
+"We sent you message. Please check you email and click on the  link to "
+"activate your account. "
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:5
+msgid "Registration of customer"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:9
+msgid "Create new account"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:20
+#: tppcenter/templates/Companies/addForm.html:136
+#: tppcenter/templates/registration/login.html:37
+#: tppcenter/templates/registration/registration.html:41
+msgid "E-mail"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:55
+msgid "I agree to the"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:55
+msgid "terms"
+msgstr ""
+
+#: centerpokupok/templates/registration/registration_form.html:56
+#: tppcenter/templates/index.html:223 tppcenter/templates/index.html.py:245
+#: tppcenter/templates/index.html:271 tppcenter/templates/index.html.py:286
+#: tppcenter/templates/job_index.html:219
+#: tppcenter/templates/job_index.html:241
+#: tppcenter/templates/job_index.html:267
+#: tppcenter/templates/job_index.html:282
+#: tppcenter/templates/main_header.html:10
+#: tppcenter/templates/registration/registration.html:61
+#: usersites/templates/slider.html:41
+msgid "Sign up"
+msgstr ""
+
+#: core/models.py:93
+msgid "date joined"
+msgstr ""
+
+#: tpp/settings.py:232
 msgid "Russia"
 msgstr ""
 
-#: .\tpp\settings.py:144
+#: tpp/settings.py:233
 msgid "Armenia"
 msgstr ""
 
-#: .\tpp\settings.py:145
-msgid "Azerbaijan"
-msgstr ""
-
-#: .\tpp\settings.py:146
-msgid "Belarus"
-msgstr ""
-
-#: .\tpp\settings.py:147
+#: tpp/settings.py:236
 msgid "England"
 msgstr ""
 
-#: .\tpp\settings.py:148
-msgid "Estonia"
-msgstr ""
-
-#: .\tpp\settings.py:149
-msgid "Georgia"
-msgstr ""
-
-#: .\tpp\settings.py:150
-msgid "Kazakhstan"
-msgstr ""
-
-#: .\tpp\settings.py:151
-msgid "Kyrgyzstan"
-msgstr ""
-
-#: .\tpp\settings.py:152
-msgid "Lithuania"
-msgstr ""
-
-#: .\tpp\settings.py:153
-msgid "Latvia"
-msgstr ""
-
-#: .\tpp\settings.py:154
-msgid "Moldova"
-msgstr ""
-
-#: .\tpp\settings.py:155
-msgid "Tajikistan"
-msgstr ""
-
-#: .\tpp\settings.py:156
-msgid "Turkmenistan"
-msgstr ""
-
-#: .\tpp\settings.py:157
+#: tpp/settings.py:246 tppcenter/templates/index.html:93
+#: tppcenter/templates/job_index.html:109
 msgid "Ukrainian"
 msgstr ""
 
-#: .\tpp\settings.py:158
-msgid "Uzbekistan"
+#: tpp/settings.py:248
+msgid "Israel"
+msgstr ""
+
+#: tpp/settings.py:249 tppcenter/templates/index.html:88
+#: tppcenter/templates/job_index.html:104
+msgid "Arabic"
+msgstr ""
+
+#: tpp/settings.py:250 tppcenter/templates/index.html:92
+#: tppcenter/templates/job_index.html:108
+msgid "Chinese"
+msgstr ""
+
+#: tppcenter/cbv.py:392
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: tppcenter/forms.py:224
+msgid "Image size must be less than 2 mb "
+msgstr ""
+
+#: tppcenter/views.py:151
+#, python-format
+msgid "%(name)s , was registered to your event %(event)s ,"
+msgstr ""
+
+#: tppcenter/views.py:152
+#, python-format
+msgid "working in the %(company)s "
+msgstr ""
+
+#: tppcenter/views.py:153
+#, python-format
+msgid "on the position of %(position)s . "
+msgstr ""
+
+#: tppcenter/views.py:154
+#, python-format
+msgid "You can contact him at this email address %(email)s  "
+msgstr ""
+
+#: tppcenter/views.py:157 tppcenter/views.py:160
+msgid "Registartion to event"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:687 tppcenter/AdminTpp/views.py:689
+msgid "Banner type already exists"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:692
+msgid "Invalid site"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:695
+msgid "Invalid height"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:698
+msgid "Invalid width"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:701
+msgid "Invalid targeting"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:704
+msgid "Invalid code"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:858
+msgid "Invalid type"
+msgstr ""
+
+#: tppcenter/Adv/views.py:61
+msgid "Top"
+msgstr ""
+
+#: tppcenter/Adv/views.py:63
+msgid "Banner"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:53 tppcenter/AdvBanner/views.py:265
+#: tppcenter/AdvBanner/views.py:330 tppcenter/AdvTop/views.py:208
+#: tppcenter/templates/main_page.html:222
+#: tppcenter/templates/AdvBanner/index.html:7
+msgid "Banners"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvTop/views.py:168
+msgid "You must choose one filter al least"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:213
+msgid "The image size cannot exceed 50 KB"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:219
+msgid "Image dimension should not exceed"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvBanner/views.py:238
+#: tppcenter/AdvTop/views.py:176 tppcenter/AdvTop/views.py:187
+msgid "You should choose a valid date range"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:233 tppcenter/AdvTop/views.py:182
+msgid "You should choose a date range"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:248 tppcenter/AdvTop/views.py:195
+msgid "Error occurred while trying to proceed your request"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:203
+#: tppcenter/templates/baseFilter.html:10
+msgid "Select branch"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:260 tppcenter/AdvTop/views.py:204
+#: tppcenter/templates/baseFilter.html:12
+msgid "Select country"
+msgstr ""
+
+#: tppcenter/AdvBanner/views.py:263 tppcenter/AdvTop/views.py:205
+msgid "Select organization"
+msgstr ""
+
+#: tppcenter/AdvTop/views.py:265
+msgid "Tops"
+msgstr ""
+
+#: tppcenter/BusinessProposal/views.py:32
+#: tppcenter/BusinessProposal/views.py:52
+#: tppcenter/BusinessProposal/views.py:72
+msgid "Business Proposal"
+msgstr ""
+
+#: tppcenter/Companies/views.py:310
+msgid "Can not delete Department hierarchy. "
+msgstr ""
+
+#: tppcenter/Companies/views.py:319 tppcenter/Tpp/views.py:410
+#, python-format
+msgid "Can not delete Department. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:361 tppcenter/Tpp/views.py:449
+#, python-format
+msgid "Could not find in DB Vacancy %(name)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:377 tppcenter/Tpp/views.py:462
+#: tppcenter/Vacancy/views.py:397
+#, python-format
+msgid "Can not set attributes for Vacancy %(name)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:385 tppcenter/Tpp/views.py:468
+#: tppcenter/Vacancy/views.py:406
+#, python-format
+msgid ""
+"Can not create Relationship between Vacancy %(vac_name)s and Department ID "
+"%(dep_name)s. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:391 tppcenter/Tpp/views.py:474
+#: tppcenter/Vacancy/views.py:412
+#, python-format
+msgid ""
+"Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
+"%(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:403 tppcenter/Tpp/views.py:486
+#, python-format
+msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:470 tppcenter/Tpp/views.py:553
+#, python-format
+msgid "User %(user)s has not Cabinet."
+msgstr ""
+
+#: tppcenter/Companies/views.py:513 tppcenter/Tpp/views.py:591
+#, python-format
+msgid ""
+"Can not set attributes for Cabinet ID: "
+"%(cab_id)s.                                                The reason is: "
+"%(reason)s"
+msgstr ""
+
+#: tppcenter/Companies/views.py:523 tppcenter/Tpp/views.py:602
+msgid "You can not add user at Vacancy which already busy."
+msgstr ""
+
+#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:604
+#, python-format
+msgid "You can not add user [%(user)s] at the company twice."
+msgstr ""
+
+#: tppcenter/Companies/views.py:695 tppcenter/Companies/views.py:792
+msgid "Please select a country"
+msgstr ""
+
+#: tppcenter/Companies/views.py:699 tppcenter/Companies/views.py:796
+msgid "Invalid Country"
+msgstr ""
+
+#: tppcenter/Companies/views.py:962 tppcenter/Companies/views.py:978
+#: tppcenter/templates/base.html:202
+#: tppcenter/templates/Vacancy/detailContent.html:96
+msgid "You have successfully sent the message."
+msgstr ""
+
+#: tppcenter/Companies/views.py:969
+msgid "This message was sent to company with id:"
+msgstr ""
+
+#: tppcenter/Companies/views.py:972
+msgid "New message"
+msgstr ""
+
+#: tppcenter/Companies/views.py:981
+msgid "Message or file are required"
+msgstr ""
+
+#: tppcenter/Companies/views.py:983
+msgid "Only registered users can send the messages"
+msgstr ""
+
+#: tppcenter/Greetings/views.py:19 tppcenter/Greetings/views.py:45
+#: tppcenter/templates/index.html:464 tppcenter/templates/job_index.html:417
+#: tppcenter/templates/main/staticPages.html:8
+msgid "Greetings"
+msgstr ""
+
+#: tppcenter/Innov/views.py:33 tppcenter/Innov/views.py:81
+#: tppcenter/Innov/views.py:113 tppcenter/templates/Wall/contentPage.html:56
+msgid "Innovation Project"
+msgstr ""
+
+#: tppcenter/Messages/views.py:82
+msgid "Private messages"
+msgstr ""
+
+#: tppcenter/News/views.py:40 tppcenter/News/views.py:85
+#: tppcenter/News/views.py:114 tppcenter/templates/index.html:212
+#: tppcenter/templates/job_index.html:208
+#: tppcenter/templates/main_page.html:184
+#: tppcenter/templates/main_page.html:209
+#: tppcenter/templates/Companies/detailContent.html:542
+#: tppcenter/templates/Tpp/detailContent.html:484
+#: tppcenter/templates/Wall/contentPage.html:224 usersites/News/views.py:41
+#: usersites/News/views.py:42 usersites/templates/contentPage.html:43
+msgid "News"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:20
+#: tppcenter/templates/main/user_profile.html:41
+msgid "First name"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:23
+#: tppcenter/templates/Profile/addForm.html:44
+#: tppcenter/templates/main/user_profile.html:45
+msgid "Middle name"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:38
+msgid "Site name"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:41
+msgid "Icq"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:44
+msgid "Skype"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:56
+#: tppcenter/templates/Profile/addForm.html:95
+#: tppcenter/templates/main/user_profile.html:83
+#: usersites/templates/CompanyStructure/contentPage.html:23
+msgid "Mobile number"
+msgstr ""
+
+#: tppcenter/Profile/profileForms.py:59
+msgid "Proffesion"
+msgstr ""
+
+#: tppcenter/Profile/views.py:21 tppcenter/templates/login_header.html:35
+#: tppcenter/templates/main_page.html:229
+#: tppcenter/templates/Profile/index.html:6
+msgid "Profile"
+msgstr ""
+
+#: tppcenter/Profile/views.py:100
+msgid "This email already in use"
+msgstr ""
+
+#: tppcenter/Project/urls.py:12 tppcenter/templates/Project/adv.html:16
+msgid "Advertise with us"
+msgstr ""
+
+#: tppcenter/Project/urls.py:13 tppcenter/templates/index.html:75
+#: tppcenter/templates/job_index.html:91
+msgid "Payment System"
+msgstr ""
+
+#: tppcenter/Project/urls.py:14 tppcenter/templates/Project/terms.html:16
+msgid "Terms of use"
+msgstr ""
+
+#: tppcenter/Project/urls.py:15
+msgid "Find a Business Partner"
+msgstr ""
+
+#: tppcenter/Project/urls.py:17 tppcenter/templates/Project/shop.html:16
+msgid "Create online shop"
+msgstr ""
+
+#: tppcenter/Project/urls.py:18
+msgid "Post announcement event"
+msgstr ""
+
+#: tppcenter/Project/urls.py:19 tppcenter/templates/Project/partner.html:16
+msgid "Add a business proposal"
+msgstr ""
+
+#: tppcenter/Project/urls.py:22 tppcenter/templates/Project/site.html:16
+msgid "Your own site"
+msgstr ""
+
+#: tppcenter/Resume/views.py:38 tppcenter/Resume/views.py:83
+#: tppcenter/Resume/views.py:111 tppcenter/templates/main_page.html:197
+#: tppcenter/templates/main_page.html:228
+msgid "Resume"
+msgstr ""
+
+#: tppcenter/Tenders/views.py:31 tppcenter/Tenders/views.py:51
+#: tppcenter/Tenders/views.py:71 tppcenter/templates/index.html:200
+#: tppcenter/templates/job_index.html:196
+#: tppcenter/templates/main_page.html:190
+#: tppcenter/templates/main_page.html:215
+#: tppcenter/templates/Analytic/main.html:76
+#: tppcenter/templates/Analytic/main.html:119
+#: tppcenter/templates/Companies/detailContent.html:559
+#: tppcenter/templates/Tpp/detailContent.html:503
+msgid "Tenders"
+msgstr ""
+
+#: tppcenter/Tpp/views.py:41 tppcenter/Tpp/views.py:73
+#: tppcenter/Tpp/views.py:93
+msgid "Tpp"
+msgstr ""
+
+#: tppcenter/Tpp/views.py:402
+#, python-format
+msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/Tpp/views.py:606
+msgid ""
+"Could not add User ID: %(user_id).                                  The "
+"reason is: %(reason)s"
+msgstr ""
+
+#: tppcenter/TppTV/views.py:29 tppcenter/TppTV/views.py:65
+msgid "TPP-TV"
+msgstr ""
+
+#: tppcenter/TppTV/views.py:94
+msgid "TppTv"
+msgstr ""
+
+#: tppcenter/UserSites/views.py:89 tppcenter/templates/main_page.html:226
+#: tppcenter/templates/Tpp/tabCompanies.html:10
+msgid "Site"
+msgstr ""
+
+#: tppcenter/UserSites/views.py:136
+msgid "You cannot add more than one site for your organization"
+msgstr ""
+
+#: tppcenter/UserSites/views.py:163 tppcenter/UserSites/views.py:225
+msgid "This domain is used, please try something else"
+msgstr ""
+
+#: tppcenter/Users/views.py:15 tppcenter/templates/main_page.html:198
+#: tppcenter/templates/main_page.html:231
+#: tppcenter/templates/Messages/index.html:49
+msgid "Users"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:38 tppcenter/Vacancy/views.py:80
+#: tppcenter/Vacancy/views.py:118
+msgid "Vacancy"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:183 tppcenter/Vacancy/views.py:241
+msgid "You have to choose vacancy"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:325
+msgid "You cannot send more than one resume at the same job position."
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:328
+msgid "You have successfully sent the resume."
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:331
+msgid "Resume  are required"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:333
+msgid "Only registred users can send resume"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:359
+msgid "The error occurred"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:364
+msgid "Department name  is required"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:366
+msgid "Only registred users can add department"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:417
+msgid "Vacancy name  is required"
+msgstr ""
+
+#: tppcenter/Vacancy/views.py:419
+msgid "Only registred users can add vacancy"
+msgstr ""
+
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:199
+#: tppcenter/templates/Wall/index.html:4 usersites/views.py:20
+#: usersites/views.py:21
+msgid "Wall"
+msgstr ""
+
+#: tppcenter/templates/additionalPage.html:4
+#: tppcenter/templates/baseFilter.html:97
+#: tppcenter/templates/baseFilter.html:123
+#: tppcenter/templates/News/addForm.html:145
+#: tppcenter/templates/TppTV/addForm.html:94
+msgid "Title"
+msgstr ""
+
+#: tppcenter/templates/additionalPage.html:8
+#: tppcenter/templates/Innov/addForm.html:94
+#: tppcenter/templates/News/addForm.html:41
+#: tppcenter/templates/News/addForm.html:69
+#: tppcenter/templates/Products/addForm.html:172
+#: tppcenter/templates/UserSites/addForm.html:107
+msgid "Remove"
+msgstr ""
+
+#: tppcenter/templates/additionalPage.html:10
+msgid "Add page"
+msgstr ""
+
+#: tppcenter/templates/additionalPage.html:15
+#: tppcenter/templates/Innov/addForm.html:191
+#: tppcenter/templates/News/addForm.html:162
+#: tppcenter/templates/News/addForm.html:184
+msgid "Content"
+msgstr ""
+
+#: tppcenter/templates/base.html:172
+msgid "Partners"
+msgstr ""
+
+#: tppcenter/templates/base.html:180 tppcenter/templates/main_page.html:174
+msgid "TPP-Center"
+msgstr ""
+
+#: tppcenter/templates/base.html:180
+msgid "Center of chambers of commerce, associations, unions and guilds "
+msgstr ""
+
+#: tppcenter/templates/base.html:207
+msgid "Send message to"
+msgstr ""
+
+#: tppcenter/templates/base.html:215
+msgid "File"
+msgstr ""
+
+#: tppcenter/templates/base.html:221
+#: tppcenter/templates/Messages/contentBox.html:15
+#: tppcenter/templates/Vacancy/detailContent.html:123
+#: usersites/templates/Contact/contentPage.html:88
+msgid "Send"
+msgstr ""
+
+#: tppcenter/templates/base.html:222
+#: tppcenter/templates/BusinessProposal/addForm.html:160
+#: tppcenter/templates/Companies/addForm.html:265
+#: tppcenter/templates/Companies/tabStaff.html:161
+#: tppcenter/templates/Companies/tabStructure.html:80
+#: tppcenter/templates/Companies/tabStructure.html:92
+#: tppcenter/templates/Exhibitions/addForm.html:229
+#: tppcenter/templates/Exhibitions/detailContent.html:230
+#: tppcenter/templates/Products/addForm.html:436
+#: tppcenter/templates/Profile/addForm.html:109
+#: tppcenter/templates/Resume/addForm.html:325
+#: tppcenter/templates/Tenders/addForm.html:167
+#: tppcenter/templates/Tpp/addForm.html:241
+#: tppcenter/templates/Tpp/tabStaff.html:160
+#: tppcenter/templates/Tpp/tabStructure.html:77
+#: tppcenter/templates/Tpp/tabStructure.html:89
+#: tppcenter/templates/TppTV/addForm.html:112
+#: tppcenter/templates/Vacancy/addForm.html:278
+#: tppcenter/templates/Vacancy/addForm.html:306
+#: tppcenter/templates/Vacancy/addForm.html:318
+#: tppcenter/templates/Vacancy/detailContent.html:124
+msgid "Cancel"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:7
+#: tppcenter/templates/AdvBanner/addForm.html:225
+#: tppcenter/templates/AdvBanner/order.html:224
+#: tppcenter/templates/AdvTop/addForm.html:225
+#: tppcenter/templates/AdvTop/order.html:224
+msgid "No result found"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:8
+#: tppcenter/templates/AdvBanner/addForm.html:223
+#: tppcenter/templates/AdvBanner/order.html:222
+#: tppcenter/templates/AdvTop/addForm.html:223
+#: tppcenter/templates/AdvTop/order.html:222
+msgid "Minimum length of search term is 3 characters"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:9
+msgid "Select organizations"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:11
+msgid "Select company"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:13
+msgid "Select category"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:68
+#: tppcenter/templates/AdvBanner/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:306
+msgid "Filter"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:80
+#: tppcenter/templates/main_page.html:175
+msgid "My"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:83
+msgid "Sorting"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:89
+#: tppcenter/templates/baseFilter.html:117
+msgid "Field"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:94
+#: tppcenter/templates/baseFilter.html:122
+msgid "Creation date"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:106
+#: tppcenter/templates/baseFilter.html:132
+msgid "Descending"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:109
+#: tppcenter/templates/baseFilter.html:135
+msgid "Ascending"
+msgstr ""
+
+#: tppcenter/templates/baseFilter.html:141
+msgid "Apply"
+msgstr ""
+
+#: tppcenter/templates/index.html:7 tppcenter/templates/job_index.html:7
+msgid "Tppcenter"
+msgstr ""
+
+#: tppcenter/templates/index.html:63 tppcenter/templates/job_index.html:79
+msgid "B2C center"
+msgstr ""
+
+#: tppcenter/templates/index.html:69 tppcenter/templates/job_index.html:85
+msgid "Innovation projects"
+msgstr ""
+
+#: tppcenter/templates/index.html:85 tppcenter/templates/job_index.html:101
+#: tppcenter/templates/main_page.html:94
+#: usersites/templates/site_sidebar.html:11
+msgid "Mother tongue"
+msgstr ""
+
+#: tppcenter/templates/index.html:87 tppcenter/templates/job_index.html:103
+msgid "Armenian"
+msgstr ""
+
+#: tppcenter/templates/index.html:89 tppcenter/templates/job_index.html:105
+msgid "English"
+msgstr ""
+
+#: tppcenter/templates/index.html:90 tppcenter/templates/job_index.html:106
+msgid "Hebrew"
+msgstr ""
+
+#: tppcenter/templates/index.html:91 tppcenter/templates/job_index.html:107
+msgid "Russian"
+msgstr ""
+
+#: tppcenter/templates/index.html:157 tppcenter/templates/job_index.html:173
+msgid "Community"
+msgstr ""
+
+#: tppcenter/templates/index.html:169
+msgid "Work with"
+msgstr ""
+
+#: tppcenter/templates/index.html:188 tppcenter/templates/job_index.html:184
+msgid "Producst and services"
+msgstr ""
+
+#: tppcenter/templates/index.html:196 tppcenter/templates/job_index.html:192
+msgid "Business community"
+msgstr ""
+
+#: tppcenter/templates/index.html:204 tppcenter/templates/job_index.html:200
+msgid "Innovative projects"
+msgstr ""
+
+#: tppcenter/templates/index.html:208 tppcenter/templates/job_index.html:204
+msgid "Jobs"
+msgstr ""
+
+#: tppcenter/templates/index.html:224 tppcenter/templates/job_index.html:220
+msgid "and get tools for business"
+msgstr ""
+
+#: tppcenter/templates/index.html:226 tppcenter/templates/job_index.html:222
+msgid ""
+"In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
+"of the CIS\" for his contribution to the development of economic integration"
+msgstr ""
+
+#: tppcenter/templates/index.html:233 tppcenter/templates/job_index.html:229
+msgid "on the portal will allow you to"
+msgstr ""
+
+#: tppcenter/templates/index.html:235 tppcenter/templates/job_index.html:231
+msgid "run a business behalf of the company"
+msgstr ""
+
+#: tppcenter/templates/index.html:236 tppcenter/templates/job_index.html:232
+msgid "to buy goods as a private person"
+msgstr ""
+
+#: tppcenter/templates/index.html:237 tppcenter/templates/job_index.html:233
+msgid "draw attention toward your projects"
+msgstr ""
+
+#: tppcenter/templates/index.html:246 tppcenter/templates/job_index.html:242
+msgid "and you will be able"
+msgstr ""
+
+#: tppcenter/templates/index.html:248 tppcenter/templates/job_index.html:244
+msgid "create your own online shop"
+msgstr ""
+
+#: tppcenter/templates/index.html:249 tppcenter/templates/job_index.html:245
+msgid "to represent your products and services"
+msgstr ""
+
+#: tppcenter/templates/index.html:250 tppcenter/templates/job_index.html:246
+msgid "communicate with potential customers"
+msgstr ""
+
+#: tppcenter/templates/index.html:258 tppcenter/templates/job_index.html:254
+msgid "Registred"
+msgstr ""
+
+#: tppcenter/templates/index.html:259 tppcenter/templates/job_index.html:255
+msgid "users can"
+msgstr ""
+
+#: tppcenter/templates/index.html:261 tppcenter/templates/job_index.html:257
+msgid "create their own websites"
+msgstr ""
+
+#: tppcenter/templates/index.html:262 tppcenter/templates/job_index.html:258
+msgid "puts advertising on the portal"
+msgstr ""
+
+#: tppcenter/templates/index.html:263 tppcenter/templates/job_index.html:259
+msgid "create their own communities of interest"
+msgstr ""
+
+#: tppcenter/templates/index.html:272 tppcenter/templates/job_index.html:268
+msgid "right now"
+msgstr ""
+
+#: tppcenter/templates/index.html:280 tppcenter/templates/job_index.html:276
+#: tppcenter/templates/registration/registration.html:52
+#: usersites/templates/slider.html:35
+msgid "Confirm password"
+msgstr ""
+
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
+msgid "I agree to"
+msgstr ""
+
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
+msgid "the term"
+msgstr ""
+
+#: tppcenter/templates/index.html:339 tppcenter/templates/job_index.html:292
+msgid "Affiche"
+msgstr ""
+
+#: tppcenter/templates/index.html:381 tppcenter/templates/job_index.html:334
+msgid "All exhibitions and forums"
+msgstr ""
+
+#: tppcenter/templates/index.html:384 tppcenter/templates/job_index.html:337
+msgid "Business offers"
+msgstr ""
+
+#: tppcenter/templates/index.html:422 tppcenter/templates/job_index.html:375
+msgid "All business offers"
+msgstr ""
+
+#: tppcenter/templates/index.html:427 tppcenter/templates/job_index.html:380
+msgid "Introduction to London Markets"
+msgstr ""
+
+#: tppcenter/templates/index.html:434 tppcenter/templates/job_index.html:387
+msgid "Download Presentation"
+msgstr ""
+
+#: tppcenter/templates/index.html:442 tppcenter/templates/job_index.html:395
+msgid "Videoreference of V.Migirov"
+msgstr ""
+
+#: tppcenter/templates/index.html:453 tppcenter/templates/job_index.html:406
+msgid "Download Guide Site"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:186
+#: tppcenter/templates/main_page.html:211
+#: tppcenter/templates/Messages/index.html:46
+msgid "Organizations"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:191
+#: tppcenter/templates/main_page.html:216
+msgid "Exhibitions / Forums"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:195
+msgid "TPP TV"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:207
+msgid "Admin Panel"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:225
+msgid "Analytic"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:230
+msgid "Messages"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:265
+msgid "Find.."
+msgstr ""
+
+#: tppcenter/templates/main_page.html:287
+msgid "Notifications"
+msgstr ""
+
+#: tppcenter/templates/main_page.html:293
+msgid "See all"
+msgstr ""
+
+#: tppcenter/templates/permissionDen.html:6
+msgid ""
+"Sorry, but you cannot manage this item. If you have created company you need "
+"choose it in your  "
+msgstr ""
+
+#: tppcenter/templates/permissionDen.html:7
+msgid " or create "
+msgstr ""
+
+#: tppcenter/templates/permissionDen.html:8
+msgid "a new company "
+msgstr ""
+
+#: tppcenter/templates/AdminTpp/targetsList.html:7
+msgid "Targets List"
+msgstr ""
+
+#: tppcenter/templates/AdminTpp/targetsList.html:92
+#: tppcenter/templates/AdvBanner/addForm.html:361
+#: tppcenter/templates/AdvBanner/order.html:298
+#: tppcenter/templates/AdvTop/addForm.html:333
+#: tppcenter/templates/AdvTop/order.html:298
+msgid "Days Q-ty"
+msgstr ""
+
+#: tppcenter/templates/AdminTpp/targetsList.html:96
+#: tppcenter/templates/Adv/basket.html:22
+#: tppcenter/templates/AdvBanner/addForm.html:365
+#: tppcenter/templates/AdvBanner/order.html:302
+#: tppcenter/templates/AdvTop/addForm.html:337
+#: tppcenter/templates/AdvTop/order.html:302
+msgid "Summary"
+msgstr ""
+
+#: tppcenter/templates/Adv/basket.html:7
+msgid "Advertisement basket"
+msgstr ""
+
+#: tppcenter/templates/Adv/basket.html:19
+msgid "Type"
+msgstr ""
+
+#: tppcenter/templates/Adv/basket.html:20
+#: tppcenter/templates/AdvBanner/addForm.html:311
+#: tppcenter/templates/AdvBanner/order.html:290
+#: tppcenter/templates/AdvTop/addForm.html:294
+#: tppcenter/templates/AdvTop/order.html:290
+#: tppcenter/templates/Companies/addForm.html:101
+#: tppcenter/templates/Companies/tabTenders.html:8
+#: tppcenter/templates/Products/addForm.html:238
+#: tppcenter/templates/Tpp/addForm.html:85
+#: tppcenter/templates/Tpp/tabExhibitions.html:8
+#: tppcenter/templates/Tpp/tabTenders.html:8
+msgid "Start date"
+msgstr ""
+
+#: tppcenter/templates/Adv/basket.html:23
+#: tppcenter/templates/Companies/tabStaff.html:53
+#: tppcenter/templates/Tpp/tabStaff.html:53
+msgid "Status"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:194
+#: tppcenter/templates/AdvBanner/order.html:193
+#: tppcenter/templates/AdvTop/addForm.html:194
+#: tppcenter/templates/AdvTop/order.html:193
+#: tppcenter/templates/Products/addForm.html:36
+msgid "day"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:293
+msgid "Image file (Maximum 50KB)"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:304
+msgid "Link URL"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:317
+msgid "Image title"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:328
+#: tppcenter/templates/AdvBanner/order.html:294
+#: tppcenter/templates/AdvTop/addForm.html:299
+#: tppcenter/templates/AdvTop/order.html:294
+#: tppcenter/templates/Companies/addForm.html:105
+#: tppcenter/templates/Companies/tabExhibitions.html:9
+#: tppcenter/templates/Companies/tabTenders.html:9
+#: tppcenter/templates/Products/addForm.html:247
+#: tppcenter/templates/Tpp/addForm.html:92
+#: tppcenter/templates/Tpp/tabExhibitions.html:9
+#: tppcenter/templates/Tpp/tabTenders.html:9
+msgid "End date"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:351
+#: tppcenter/templates/AdvTop/addForm.html:323
+msgid "Basket"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/addForm.html:370
+#: tppcenter/templates/AdvTop/addForm.html:340
+msgid "Pay"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/order.html:275
+#: tppcenter/templates/AdvTop/order.html:275
+msgid "Order details"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/order.html:306
+#: tppcenter/templates/AdvTop/order.html:306
+msgid "Order number"
+msgstr ""
+
+#: tppcenter/templates/AdvBanner/order.html:314
+#: tppcenter/templates/AdvTop/order.html:314
+msgid ""
+"Thank you for order, you will be notified when the advertisement will "
+"published"
+msgstr ""
+
+#: tppcenter/templates/AdvTop/order.html:316
+#: tppcenter/templates/News/index.html:30
+#: tppcenter/templates/News/index.html:52
+msgid "Advertisement"
+msgstr ""
+
+#: tppcenter/templates/AdvTop/tops.html:8
+msgid "Paid ads"
+msgstr ""
+
+#: tppcenter/templates/Analytic/main.html:57
+msgid "My sections"
+msgstr ""
+
+#: tppcenter/templates/Analytic/main.html:60
+#: tppcenter/templates/Analytic/main.html:107
+msgid "Section name"
+msgstr ""
+
+#: tppcenter/templates/Analytic/main.html:61
+#: tppcenter/templates/Analytic/main.html:108
+msgid "Views"
+msgstr ""
+
+#: tppcenter/templates/Analytic/main.html:85
+#: tppcenter/templates/Exhibitions/detailContent.html:218
+#: tppcenter/templates/News/popupFilter.html:21
+#: tppcenter/templates/Resume/addForm.html:180
+#: tppcenter/templates/Resume/addForm.html:213
+#: tppcenter/templates/Resume/addForm.html:246
+#: tppcenter/templates/Resume/detailContent.html:114
+#: tppcenter/templates/Resume/detailContent.html:122
+#: tppcenter/templates/Resume/detailContent.html:130
+#: tppcenter/templates/Tenders/popupFilter.html:21
+#: tppcenter/templates/TppTV/popupFilter.html:21
+#: tppcenter/templates/Vacancy/detailContent.html:40
+msgid "Company"
+msgstr ""
+
+#: tppcenter/templates/Analytic/main.html:103
+msgid "Chamber events"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:31
+#: tppcenter/templates/Exhibitions/addForm.html:121
+#: tppcenter/templates/Products/addForm.html:189
+#: tppcenter/templates/Tenders/addForm.html:67
+#: tppcenter/templates/Tenders/detailContent.html:82
+msgid "Documents"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:45
+#: tppcenter/templates/Products/addForm.html:204
+msgid "Doc 1"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:53
+#: tppcenter/templates/Products/addForm.html:212
+msgid "Doc 2"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:61
+#: tppcenter/templates/Products/addForm.html:220
+msgid "Doc 3"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:73
+#: tppcenter/templates/Tenders/addForm.html:106
+msgid "Images"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:75
+msgid "Load correct image"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:82
+msgid "image"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:92
+#: tppcenter/templates/Companies/addForm.html:148
+#: tppcenter/templates/Exhibitions/addForm.html:105
+#: tppcenter/templates/Products/addForm.html:229
+#: tppcenter/templates/Tenders/addForm.html:122
+#: tppcenter/templates/Tpp/addForm.html:127
+#: tppcenter/templates/TppTV/addForm.html:85
+#: tppcenter/templates/Vacancy/addForm.html:247
+msgid "Keywords"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:102
+#: tppcenter/templates/Companies/tabExhibitions.html:7
+#: tppcenter/templates/Companies/tabInnov.html:8
+#: tppcenter/templates/Companies/tabProducts.html:9
+#: tppcenter/templates/Companies/tabProposal.html:8
+#: tppcenter/templates/Companies/tabStaff.html:49
+#: tppcenter/templates/Companies/tabTenders.html:7
+#: tppcenter/templates/Exhibitions/addForm.html:182
+#: tppcenter/templates/Exhibitions/detailContent.html:206
+#: tppcenter/templates/Products/addForm.html:260
+#: tppcenter/templates/Profile/addForm.html:39
+#: tppcenter/templates/Tpp/tabCompanies.html:8
+#: tppcenter/templates/Tpp/tabExhibitions.html:7
+#: tppcenter/templates/Tpp/tabInnov.html:8
+#: tppcenter/templates/Tpp/tabProposal.html:8
+#: tppcenter/templates/Tpp/tabStaff.html:49
+#: tppcenter/templates/Tpp/tabTenders.html:7
+msgid "Name"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:119
+#: tppcenter/templates/BusinessProposal/popupFilter.html:22
+#: tppcenter/templates/Companies/popupFilter.html:21
+#: tppcenter/templates/Exhibitions/popupFilter.html:21
+#: tppcenter/templates/Innov/contentPage.html:45
+#: tppcenter/templates/Innov/popupFilter.html:21
+#: tppcenter/templates/News/popupFilter.html:22
+#: tppcenter/templates/Products/popupFilter.html:21
+#: tppcenter/templates/Tenders/popupFilter.html:22
+#: tppcenter/templates/TppTV/popupFilter.html:22
+#: tppcenter/templates/Wall/contentPage.html:96
+msgid "Branch"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:130
+#: tppcenter/templates/BusinessProposal/popupFilter.html:21
+#: tppcenter/templates/News/addForm.html:87
+#: tppcenter/templates/Products/addForm.html:380
+#: tppcenter/templates/TppTV/addForm.html:44
+msgid "Category"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:142
+#: tppcenter/templates/Companies/addForm.html:247
+#: tppcenter/templates/Exhibitions/addForm.html:212
+#: tppcenter/templates/Innov/addForm.html:173
+#: tppcenter/templates/Products/addForm.html:418
+#: tppcenter/templates/Tenders/addForm.html:149
+#: tppcenter/templates/Tpp/addForm.html:223
+msgid "Additional pages"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:19
+#: tppcenter/templates/Companies/contentPage.html:19
+#: tppcenter/templates/Exhibitions/contentPage.html:21
+#: tppcenter/templates/Innov/contentPage.html:19
+#: tppcenter/templates/News/contentPage.html:21
+#: tppcenter/templates/Products/contentPage.html:19
+#: tppcenter/templates/Resume/contentPage.html:19
+#: tppcenter/templates/Tenders/contentPage.html:19
+#: tppcenter/templates/Tpp/contentPage.html:19
+#: tppcenter/templates/TppTV/contentPage.html:17
+#: tppcenter/templates/UserSites/contentPage.html:24
+#: tppcenter/templates/Vacancy/contentPage.html:24
+msgid "edit"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:22
+#: tppcenter/templates/Companies/contentPage.html:23
+#: tppcenter/templates/Exhibitions/contentPage.html:24
+#: tppcenter/templates/Innov/contentPage.html:22
+#: tppcenter/templates/Products/contentPage.html:22
+#: tppcenter/templates/Vacancy/contentPage.html:27
+msgid "Advertise"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:25
+#: tppcenter/templates/Companies/contentPage.html:26
+#: tppcenter/templates/Companies/tab_gallery_structure.html:11
+#: tppcenter/templates/Exhibitions/contentPage.html:27
+#: tppcenter/templates/Innov/contentPage.html:25
+#: tppcenter/templates/News/contentPage.html:24
+#: tppcenter/templates/Products/contentPage.html:25
+#: tppcenter/templates/Resume/contentPage.html:20
+#: tppcenter/templates/Tenders/contentPage.html:22
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:12
+#: tppcenter/templates/TppTV/contentPage.html:18
+#: tppcenter/templates/UserSites/contentPage.html:28
+#: tppcenter/templates/Vacancy/contentPage.html:30
+msgid "remove"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:41
+#: tppcenter/templates/BusinessProposal/popupFilter.html:20
+#: tppcenter/templates/Companies/popupFilter.html:20
+#: tppcenter/templates/Exhibitions/popupFilter.html:20
+#: tppcenter/templates/Greetings/contentPage.html:19
+#: tppcenter/templates/Greetings/detailContent.html:27
+#: tppcenter/templates/Innov/popupFilter.html:20
+#: tppcenter/templates/News/popupFilter.html:20
+#: tppcenter/templates/Products/popupFilter.html:20
+#: tppcenter/templates/Tenders/popupFilter.html:20
+#: tppcenter/templates/TppTV/popupFilter.html:20
+#: tppcenter/templates/Wall/contentPage.html:206
+msgid "Organization"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/contentPage.html:50
+#: tppcenter/templates/Companies/contentPage.html:96
+#: tppcenter/templates/Companies/tabExhibitions.html:44
+#: tppcenter/templates/Companies/tabInnov.html:39
+#: tppcenter/templates/Companies/tabNews.html:33
+#: tppcenter/templates/Companies/tabProducts.html:50
+#: tppcenter/templates/Companies/tabProposal.html:33
+#: tppcenter/templates/Companies/tabTenders.html:44
+#: tppcenter/templates/Exhibitions/contentPage.html:45
+#: tppcenter/templates/Greetings/contentPage.html:28
+#: tppcenter/templates/Innov/contentPage.html:62
+#: tppcenter/templates/News/contentPage.html:64
+#: tppcenter/templates/Products/contentPage.html:56
+#: tppcenter/templates/Resume/contentPage.html:33
+#: tppcenter/templates/Tenders/contentPage.html:51
+#: tppcenter/templates/Tpp/contentPage.html:77
+#: tppcenter/templates/Tpp/tabCompanies.html:44
+#: tppcenter/templates/Tpp/tabExhibitions.html:44
+#: tppcenter/templates/Tpp/tabInnov.html:39
+#: tppcenter/templates/Tpp/tabNews.html:38
+#: tppcenter/templates/Tpp/tabProposal.html:33
+#: tppcenter/templates/Tpp/tabTenders.html:44
+#: tppcenter/templates/TppTV/contentPage.html:39
+#: tppcenter/templates/UserSites/contentPage.html:46
+#: tppcenter/templates/Users/contentPage.html:42
+#: tppcenter/templates/Vacancy/contentPage.html:50
+#: tppcenter/templates/main/notoficationlist.html:17
+msgid "No results found"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:66
+#: tppcenter/templates/Exhibitions/detailContent.html:102
+#: tppcenter/templates/Products/detailContent.html:142
+#: usersites/templates/Products/detailContent.html:154
+#: usersites/templates/Proposals/detailContent.html:80
+msgid "Document"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:67
+#: tppcenter/templates/Companies/detailContent.html:554
+#: tppcenter/templates/Exhibitions/detailContent.html:103
+#: tppcenter/templates/Innov/addForm.html:82
+#: tppcenter/templates/Innov/detailContent.html:82
+#: tppcenter/templates/News/addForm.html:59
+#: tppcenter/templates/Products/addForm.html:162
+#: tppcenter/templates/Tenders/detailContent.html:81
+#: tppcenter/templates/Tpp/detailContent.html:497
+#: usersites/templates/Proposals/detailContent.html:81
+msgid "Gallery"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:82
+#: tppcenter/templates/BusinessProposal/detailContent.html:85
+#: tppcenter/templates/BusinessProposal/detailContent.html:88
+#: tppcenter/templates/Exhibitions/detailContent.html:118
+#: tppcenter/templates/Exhibitions/detailContent.html:121
+#: tppcenter/templates/Exhibitions/detailContent.html:125
+#: usersites/templates/Proposals/detailContent.html:96
+#: usersites/templates/Proposals/detailContent.html:99
+#: usersites/templates/Proposals/detailContent.html:102
+msgid "Link to the File"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:104
+#: tppcenter/templates/Companies/tab_gallery_structure.html:17
+#: tppcenter/templates/Exhibitions/detailContent.html:141
+#: tppcenter/templates/Innov/detailContent.html:135
+#: tppcenter/templates/Tenders/detailContent.html:100
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:18
+#: usersites/templates/Proposals/detailContent.html:118
+msgid "zoom"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:131
+#: tppcenter/templates/Companies/addForm.html:129
+#: tppcenter/templates/Companies/detailContent.html:638
+#: tppcenter/templates/Exhibitions/detailContent.html:169
+#: tppcenter/templates/Innov/detailContent.html:162
+#: tppcenter/templates/Tpp/addForm.html:106
+#: tppcenter/templates/Tpp/detailContent.html:575
+#: usersites/templates/Proposals/detailContent.html:140
+msgid "Fax"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/detailContent.html:143
+#: tppcenter/templates/Companies/addForm.html:141
+#: tppcenter/templates/Companies/detailContent.html:650
+#: tppcenter/templates/Exhibitions/detailContent.html:181
+#: tppcenter/templates/Innov/detailContent.html:174
+#: tppcenter/templates/Profile/addForm.html:54
+#: tppcenter/templates/Tpp/addForm.html:120
+#: tppcenter/templates/Tpp/detailContent.html:587
+#: tppcenter/templates/main/user_profile.html:57
+#: usersites/templates/Proposals/detailContent.html:148
+msgid "WWW"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:58
+#: tppcenter/templates/Companies/tabProducts.html:8
+#: tppcenter/templates/Exhibitions/addForm.html:165
+#: tppcenter/templates/News/addForm.html:31
+#: tppcenter/templates/Products/addForm.html:129
+#: tppcenter/templates/Tpp/addForm.html:58
+#: tppcenter/templates/TppTV/addForm.html:23
+msgid "Image"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:94
+msgid "Vatin"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:115
+#: tppcenter/templates/Tpp/addForm.html:78
+msgid "Director name"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:122
+msgid "Slogan"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:157
+msgid "Company name"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:164
+msgid "Preview text"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:169
+#: tppcenter/templates/Products/addForm.html:289
+msgid "Detail text"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:189
+#: tppcenter/templates/Exhibitions/addForm.html:77
+#: tppcenter/templates/Innov/addForm.html:139
+#: tppcenter/templates/Innov/detailContent.html:97
+msgid "Industry"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:199
+msgid "CCI"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:201
+msgid "Choose CCI"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:214
+#: tppcenter/templates/Tpp/addForm.html:190
+msgid "Place on the map"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:218
+msgid "Details"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:221
+#: tppcenter/templates/Tpp/addForm.html:197
+msgid "RRC"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:224
+#: tppcenter/templates/Tpp/addForm.html:200
+msgid "RCEO"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:227
+#: tppcenter/templates/Tpp/addForm.html:203
+msgid "RCOSD"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:230
+#: tppcenter/templates/Tpp/addForm.html:206
+msgid "ARCEA"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:233
+#: tppcenter/templates/Tpp/addForm.html:209
+msgid "Accountant name"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:238
+#: tppcenter/templates/Tpp/addForm.html:214
+msgid "Account number"
+msgstr ""
+
+#: tppcenter/templates/Companies/addForm.html:241
+#: tppcenter/templates/Tpp/addForm.html:217
+msgid "Bank details"
+msgstr ""
+
+#: tppcenter/templates/Companies/contentPage.html:20
+#: tppcenter/templates/Tpp/contentPage.html:20
+msgid "set current"
+msgstr ""
+
+#: tppcenter/templates/Companies/contentPage.html:46
+#: tppcenter/templates/Companies/detailContent.html:519
+msgid "Member of"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:85
+#: tppcenter/templates/Tpp/detailContent.html:56
+msgid "Do you want to delete this record?"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:358
+#: tppcenter/templates/Tpp/detailContent.html:328
+msgid "Do you want to delete this Vacancy?"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:369
+#: tppcenter/templates/Tpp/detailContent.html:339
+msgid "Do you want to delete this Department?"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:471
+msgid "Free period is expired."
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:473
+msgid "Free period will expire in "
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:473
+msgid " days."
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:484
+msgid "1-year www.b24online.com membership"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:537
+#: tppcenter/templates/Tpp/detailContent.html:479
+msgid "Recvisits"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:584
+#: tppcenter/templates/Tpp/detailContent.html:523
+#: usersites/CompanyStructure/views.py:15
+#: usersites/CompanyStructure/views.py:16
+msgid "Structure"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:589
+#: tppcenter/templates/Tpp/detailContent.html:528
+msgid "Staff"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabExhibitions.html:8
+msgid "Start Event"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabGallery.html:37
+#: tppcenter/templates/Tpp/tabGallery.html:37
+msgid "Uploading"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabGallery.html:38
+#: tppcenter/templates/Tpp/tabGallery.html:38
+msgid "Uploaded"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabGallery.html:39
+#: tppcenter/templates/Tpp/tabGallery.html:39
+msgid "Fail"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabGallery.html:40
+#: tppcenter/templates/Tpp/tabGallery.html:40
+msgid "The following files were not uploaded"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabInnov.html:9
+#: tppcenter/templates/Innov/addForm.html:66
+#: tppcenter/templates/Innov/contentPage.html:40
+#: tppcenter/templates/Tpp/tabInnov.html:9
+#: tppcenter/templates/Wall/contentPage.html:93
+msgid "Project cost"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:50
+#: tppcenter/templates/Companies/tabStaff.html:128
+#: tppcenter/templates/Tpp/tabStaff.html:50
+#: tppcenter/templates/Tpp/tabStaff.html:127
+msgid "Department"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:51
+#: tppcenter/templates/Exhibitions/detailContent.html:222
+#: tppcenter/templates/Greetings/contentPage.html:20
+#: tppcenter/templates/Greetings/detailContent.html:28
+#: tppcenter/templates/Resume/addForm.html:187
+#: tppcenter/templates/Resume/addForm.html:220
+#: tppcenter/templates/Resume/addForm.html:253
+#: tppcenter/templates/Resume/detailContent.html:116
+#: tppcenter/templates/Resume/detailContent.html:124
+#: tppcenter/templates/Resume/detailContent.html:132
+#: tppcenter/templates/Tpp/tabStaff.html:51
+#: tppcenter/templates/Vacancy/addForm.html:185
+#: usersites/templates/CompanyStructure/contentPage.html:20
+msgid "Position"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:81
+#: tppcenter/templates/Tpp/tabStaff.html:80
+msgid "User with empty profile. Cabinet ID:"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:108
+#: tppcenter/templates/Tpp/tabStaff.html:107
+msgid "No Staff found."
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:130
+#: tppcenter/templates/Tpp/tabStaff.html:129
+msgid "Select Department..."
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:136
+#: tppcenter/templates/Companies/tabStaff.html:149
+#: tppcenter/templates/Tpp/tabStaff.html:135
+#: tppcenter/templates/Tpp/tabStaff.html:148
+#: tppcenter/templates/Vacancy/addForm.html:177
+#: tppcenter/templates/Vacancy/addForm.html:200
+msgid "Empty"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:139
+#: tppcenter/templates/Tpp/tabStaff.html:138
+msgid "/Vacancy"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:141
+#: tppcenter/templates/Tpp/tabStaff.html:140
+msgid "Select Vacancy..."
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:152
+#: tppcenter/templates/Tpp/tabStaff.html:151
+msgid "Administrator"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStaff.html:160
+#: tppcenter/templates/Companies/tabStructure.html:79
+#: tppcenter/templates/Companies/tabStructure.html:91
+#: tppcenter/templates/Tpp/tabStaff.html:159
+#: tppcenter/templates/Tpp/tabStructure.html:76
+#: tppcenter/templates/Tpp/tabStructure.html:88
+#: tppcenter/templates/Vacancy/addForm.html:305
+#: tppcenter/templates/Vacancy/addForm.html:317
+msgid "Add"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStructure.html:56
+#: tppcenter/templates/Tpp/tabStructure.html:53
+msgid "No Departments found."
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStructure.html:75
+#: tppcenter/templates/Vacancy/addForm.html:300
+msgid "Department name"
+msgstr ""
+
+#: tppcenter/templates/Companies/tabStructure.html:87
+#: tppcenter/templates/Resume/detailContent.html:34
+#: tppcenter/templates/Tpp/tabStructure.html:84
+#: tppcenter/templates/Vacancy/addForm.html:209
+#: tppcenter/templates/Vacancy/addForm.html:312
+msgid "Vacancy title"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/addForm.html:88
+msgid "Start event date"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/addForm.html:97
+msgid "End event date"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/addForm.html:113
+msgid "Route description"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/addForm.html:202
+msgid "Map"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/contentPage.html:41
+#: tppcenter/templates/Innov/contentPage.html:48
+#: tppcenter/templates/Tenders/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Wall/contentPage.html:161
+msgid "Organizer"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/detailContent.html:87
+#: tppcenter/templates/Exhibitions/detailContent.html:229
+#: tppcenter/templates/registration/registration.html:8
+#: tppcenter/templates/registration/registration.html:30
+msgid "Sign Up"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/detailContent.html:101
+msgid "Route Description"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/detailContent.html:201
+msgid "Name and Email are required"
+msgstr ""
+
+#: tppcenter/templates/Exhibitions/detailContent.html:202
+msgid "You are registered successfully."
+msgstr ""
+
+#: tppcenter/templates/Greetings/contentPage.html:23
+#: tppcenter/templates/News/contentPage.html:59
+#: tppcenter/templates/Wall/contentPage.html:261
+msgid "Read more"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:37
+msgid "Scope"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:44
+#: tppcenter/templates/News/addForm.html:135
+msgid "Keyword"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:51
+msgid "Release date"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:58
+msgid "Project site"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:71
+#: tppcenter/templates/Products/addForm.html:357
+#: tppcenter/templates/Tenders/addForm.html:56
+msgid "Currency"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:112
+msgid "Project name"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:119
+msgid "Product name"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:147
+#: tppcenter/templates/Innov/detailContent.html:81
+msgid "Business plan"
+msgstr ""
+
+#: tppcenter/templates/Innov/addForm.html:161
+msgid "Business plan file"
+msgstr ""
+
+#: tppcenter/templates/Innov/contentPage.html:36
+#: tppcenter/templates/Resume/contentPage.html:25
+#: tppcenter/templates/Tenders/addForm.html:34
+#: tppcenter/templates/Tenders/contentPage.html:38
+#: tppcenter/templates/Tenders/detailContent.html:56
+#: tppcenter/templates/UserSites/contentPage.html:36
+#: tppcenter/templates/Wall/contentPage.html:90
+msgid "Publication date"
+msgstr ""
+
+#: tppcenter/templates/Innov/detailContent.html:93
+msgid "Product"
+msgstr ""
+
+#: tppcenter/templates/Innov/detailContent.html:105
+#: tppcenter/templates/Products/addForm.html:334
+msgid "Cost"
+msgstr ""
+
+#: tppcenter/templates/Innov/detailContent.html:109
+msgid "Realese date"
+msgstr ""
+
+#: tppcenter/templates/Innov/detailContent.html:118
+msgid "Link to Business Plan File"
+msgstr ""
+
+#: tppcenter/templates/Messages/contentBox.html:10
+msgid "Send private message"
+msgstr ""
+
+#: tppcenter/templates/News/addForm.html:101
+#: tppcenter/templates/TppTV/addForm.html:78
+msgid "Youtube code"
+msgstr ""
+
+#: tppcenter/templates/News/addForm.html:112
+#: tppcenter/templates/TppTV/addForm.html:60
+msgid "Choose Country"
+msgstr ""
+
+#: tppcenter/templates/News/addForm.html:153
+#: tppcenter/templates/Products/addForm.html:282
+msgid "Preview description"
+msgstr ""
+
+#: tppcenter/templates/News/detailContent.html:155
+#: tppcenter/templates/TppTV/detailContent.html:47
+msgid "Similar news"
+msgstr ""
+
+#: tppcenter/templates/News/last.html:9
+msgid "Last News"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:141
+#: tppcenter/templates/Products/addForm.html:206
+#: tppcenter/templates/Products/addForm.html:214
+#: tppcenter/templates/Products/addForm.html:222
+#: tppcenter/templates/Tenders/addForm.html:82
+#: tppcenter/templates/Tenders/addForm.html:89
+#: tppcenter/templates/Tenders/addForm.html:96
+#: tppcenter/templates/Tenders/addForm.html:114
+#: tppcenter/templates/Tpp/addForm.html:66
+#: tppcenter/templates/TppTV/addForm.html:32
+msgid "delete"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:272
+msgid "Part number"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:301
+msgid "Temporary discount"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:312
+msgid "From(date)"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:321
+msgid "To(date)"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:368
+msgid "Measurement unit"
+msgstr ""
+
+#: tppcenter/templates/Products/addForm.html:414
+msgid "Post on b2c portal"
+msgstr ""
+
+#: tppcenter/templates/Products/contentPage.html:50
+#: usersites/templates/Products/detailContent.html:95
+msgid "Contact to price"
+msgstr ""
+
+#: tppcenter/templates/Products/detailContent.html:72
+msgid "Get price"
+msgstr ""
+
+#: tppcenter/templates/Products/detailContent.html:78
+#: usersites/templates/Products/detailContent.html:100
+msgid "Unit"
+msgstr ""
+
+#: tppcenter/templates/Products/detailContent.html:83
+#: usersites/templates/Products/detailContent.html:106
+msgid "Amount"
+msgstr ""
+
+#: tppcenter/templates/Products/detailContent.html:143
+msgid "Reviews"
+msgstr ""
+
+#: tppcenter/templates/Products/detailContent.html:155
+#: tppcenter/templates/Products/detailContent.html:158
+#: tppcenter/templates/Products/detailContent.html:161
+#: tppcenter/templates/Tenders/detailContent.html:111
+#: tppcenter/templates/Tenders/detailContent.html:114
+#: tppcenter/templates/Tenders/detailContent.html:117
+#: usersites/templates/Products/detailContent.html:167
+#: usersites/templates/Products/detailContent.html:170
+#: usersites/templates/Products/detailContent.html:173
+msgid "Link to the document"
+msgstr ""
+
+#: tppcenter/templates/Profile/addForm.html:5
+msgid "Your profile was updated"
+msgstr ""
+
+#: tppcenter/templates/Profile/addForm.html:25
+msgid "Change avatar"
+msgstr ""
+
+#: tppcenter/templates/Profile/addForm.html:76
+#: tppcenter/templates/main/user_profile.html:71
+msgid "Sex"
+msgstr ""
+
+#: tppcenter/templates/Profile/addForm.html:90
+msgid "Telephone Number"
+msgstr ""
+
+#: tppcenter/templates/Profile/addForm.html:100
+#: tppcenter/templates/Resume/detailContent.html:97
+#: tppcenter/templates/main/user_profile.html:91
+msgid "Profession"
+msgstr ""
+
+#: tppcenter/templates/Project/event.html:16
+#: tppcenter/templates/Project/proposal.html:16
+msgid "Post announcements"
+msgstr ""
+
+#: tppcenter/templates/Project/offer.html:16
+msgid "Offer"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:56
+msgid ""
+"Filling resume does not obligate company that publishes job on the site TPP-"
+"Center, enter into a contract of employment."
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:58
+msgid "Vacancy name"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:73
+msgid "Marital Status"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:88
+msgid "Citizenship"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:110
+#: tppcenter/templates/Resume/detailContent.html:75
+msgid "Education"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:113
+#: tppcenter/templates/Resume/detailContent.html:85
+msgid "Institution"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:121
+#: tppcenter/templates/Resume/detailContent.html:89
+msgid "Faculty"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:128
+#: tppcenter/templates/Resume/detailContent.html:93
+msgid "Study period"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:136
+#: tppcenter/templates/Resume/addForm.html:202
+#: tppcenter/templates/Resume/addForm.html:235
+#: tppcenter/templates/Resume/addForm.html:268
+msgid "from"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:140
+#: tppcenter/templates/Resume/addForm.html:206
+#: tppcenter/templates/Resume/addForm.html:239
+#: tppcenter/templates/Resume/addForm.html:272
+msgid "to"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:147
+msgid "Specialty"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:154
+msgid "Form of study"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:168
+#: tppcenter/templates/Resume/addForm.html:295
+#: tppcenter/templates/Resume/addForm.html:302
+msgid "Additionally"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:175
+#: tppcenter/templates/Resume/detailContent.html:76
+msgid "Experience"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:177
+msgid "Specify the last 3 jobs"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:194
+#: tppcenter/templates/Resume/addForm.html:227
+#: tppcenter/templates/Resume/addForm.html:260
+msgid "Work period"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:278
+#: tppcenter/templates/Resume/detailContent.html:77
+msgid "Skills"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:281
+#: tppcenter/templates/Resume/detailContent.html:147
+msgid "Language skills"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:288
+#: tppcenter/templates/Resume/detailContent.html:151
+msgid "Computer skills"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:305
+msgid "Your salary expectations"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:312
+msgid "Information about which you wish to inform"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:319
+msgid ""
+"I confirm that all information provided by me in this form on the site TPP-"
+"Center, are true and complete"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:320
+msgid "I don't mind for checking the information reported by me"
+msgstr ""
+
+#: tppcenter/templates/Resume/contentPage.html:30
+#: tppcenter/templates/Resume/detailContent.html:38
+msgid "User name"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:43
+msgid "Name not found"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:52
+msgid "Marital status"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:56
+msgid "Citezenship"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:68
+msgid "Salary"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:78
+#: tppcenter/templates/Resume/detailContent.html:101
+msgid "Additional"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:118
+#: tppcenter/templates/Resume/detailContent.html:126
+#: tppcenter/templates/Resume/detailContent.html:134
+msgid "Work  period"
+msgstr ""
+
+#: tppcenter/templates/Resume/detailContent.html:155
+msgid "Additional skills"
+msgstr ""
+
+#: tppcenter/templates/Tenders/addForm.html:41
+#: tppcenter/templates/Tenders/detailContent.html:60
+msgid "Deadline for receiving bids"
+msgstr ""
+
+#: tppcenter/templates/Tenders/addForm.html:49
+#: tppcenter/templates/Tenders/contentPage.html:43
+#: tppcenter/templates/Tenders/detailContent.html:64
+msgid "Starting price"
+msgstr ""
+
+#: tppcenter/templates/Tenders/addForm.html:132
+msgid "Tender title"
+msgstr ""
+
+#: tppcenter/templates/Tenders/detailContent.html:52
+msgid "Apply now"
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:137
+msgid "VATIN"
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:154
+msgid "Organization title"
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:162
+msgid "Preview description "
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:169
+#: tppcenter/templates/TppTV/addForm.html:101
+msgid "Detail description"
+msgstr ""
+
+#: tppcenter/templates/Tpp/addForm.html:194
+msgid "Detail"
+msgstr ""
+
+#: tppcenter/templates/Tpp/tabCompanies.html:7
+msgid "Logo"
+msgstr ""
+
+#: tppcenter/templates/Tpp/tabStructure.html:72
+msgid "Department title"
+msgstr ""
+
+#: tppcenter/templates/UserSites/index.html:10
+msgid "Sites"
+msgstr ""
+
+#: tppcenter/templates/Users/contentPage.html:38
+msgid "Send message"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:169
+msgid "Departament"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:171
+msgid "Choose department..."
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:191
+msgid "Choose from list..."
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:218
+msgid "City of vacancy"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:225
+msgid "Type of employment"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:243
+msgid "make vacancy anonymous"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:244
+msgid "company title will be hidden"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:262
+#: tppcenter/templates/Vacancy/detailContent.html:72
+msgid "Requirements"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:269
+#: tppcenter/templates/Vacancy/detailContent.html:76
+msgid "Terms"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/addForm.html:301
+#: tppcenter/templates/Vacancy/addForm.html:313
+msgid "Please wait to response..."
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:33
+msgid "Send Resume"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:43
+msgid "Anonymous company"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:63
+msgid "Type of employments"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:100
+msgid "You send resume on position:"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:106
+msgid "Add new resume to profile"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:107
+msgid "New resume"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:111
+msgid "Send existing resume"
+msgstr ""
+
+#: tppcenter/templates/Vacancy/detailContent.html:116
+msgid "No existing resumes"
+msgstr ""
+
+#: tppcenter/templates/Wall/contentPage.html:6
+msgid "Latest updates"
+msgstr ""
+
+#: tppcenter/templates/Wall/contentPage.html:38
+msgid "Get the price"
+msgstr ""
+
+#: tppcenter/templates/Wall/contentPage.html:184
+msgid "Bussiness Proposals"
+msgstr ""
+
+#: tppcenter/templates/main/currentCompany.html:5
+msgid "Current organization"
+msgstr ""
+
+#: tppcenter/templates/main/denied.html:10
+msgid "Permission denied"
+msgstr ""
+
+#: tppcenter/templates/main/paginator.html:5
+msgid "Total pages"
+msgstr ""
+
+#: tppcenter/templates/main/paginator.html:7
+msgid "Back"
+msgstr ""
+
+#: tppcenter/templates/main/paginator.html:21
+msgid "Forward"
+msgstr ""
+
+#: tppcenter/templates/main/staticPages.html:4
+msgid "Project news"
+msgstr ""
+
+#: tppcenter/templates/main/staticPages.html:12
+msgid "Advices"
+msgstr ""
+
+#: tppcenter/templates/main/user_profile.html:25
+msgid "User profile"
+msgstr ""
+
+#: tppcenter/templates/main/user_profile.html:53
+#: tppcenter/templates/registration/login.html:6
+msgid "Login"
+msgstr ""
+
+#: tppcenter/templates/registration/activate.html:3
+#: tppcenter/templates/registration/registration_complete.html:29
+msgid "Registration is completed"
+msgstr ""
+
+#: tppcenter/templates/registration/activate.html:6
+msgid "Your registration is complited"
+msgstr ""
+
+#: tppcenter/templates/registration/activate.html:8
+msgid "Sorry, but your activation key is invalid"
+msgstr ""
+
+#: tppcenter/templates/registration/activation_complete.html:6
+msgid "Activation complete"
+msgstr ""
+
+#: tppcenter/templates/registration/activation_complete.html:28
+msgid "Activation is completed"
+msgstr ""
+
+#: tppcenter/templates/registration/activation_complete.html:30
+msgid "Thank you for registration! Now you can  "
+msgstr ""
+
+#: tppcenter/templates/registration/activation_complete.html:31
+msgid "using email and password that you provided during sign up."
+msgstr ""
+
+#: tppcenter/templates/registration/base.html:8
+msgid "Tpp-center"
+msgstr ""
+
+#: tppcenter/templates/registration/login.html:26
+msgid "Authorization"
+msgstr ""
+
+#: tppcenter/templates/registration/login.html:47
+msgid "Forgot password"
+msgstr ""
+
+#: tppcenter/templates/registration/password_reset_complete.html:6
+#: tppcenter/templates/registration/password_reset_complete.html:28
+#: tppcenter/templates/registration/password_reset_confirm.html:6
+#: tppcenter/templates/registration/password_reset_confirm.html:28
+#: tppcenter/templates/registration/password_reset_done.html:6
+#: tppcenter/templates/registration/password_reset_done.html:28
+#: tppcenter/templates/registration/password_reset_form.html:6
+#: tppcenter/templates/registration/password_reset_form.html:28
+msgid "Password reset"
+msgstr ""
+
+#: tppcenter/templates/registration/password_reset_confirm.html:31
+msgid "Enter your new password below to change the old one:"
+msgstr ""
+
+#: tppcenter/templates/registration/registration.html:58
+msgid "I have read and accept"
+msgstr ""
+
+#: tppcenter/templates/registration/registration.html:58
+msgid "the terms of use"
+msgstr ""
+
+#: tppcenter/templates/registration/registration_complete.html:32
+msgid ""
+"We sent you message. Please, check you email and click on the  link to "
+"activate your account. "
+msgstr ""
+
+#: usersites/views.py:24 usersites/views.py:25
+#: usersites/templates/header.html:4
+msgid "About us"
+msgstr ""
+
+#: usersites/Contact/views.py:38
+msgid "This message was sent to company:"
+msgstr ""
+
+#: usersites/Contact/views.py:41
+msgid "New message from "
+msgstr ""
+
+#: usersites/Contact/views.py:47
+msgid "The message was succesfuly send "
+msgstr ""
+
+#: usersites/Contact/views.py:50
+msgid "Incoorect Recapcha"
+msgstr ""
+
+#: usersites/Contact/views.py:55
+msgid "All field are required"
+msgstr ""
+
+#: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
+#: usersites/templates/contentPage.html:7
+#: usersites/templates/site_sidebar.html:99
+msgid "Business proposals"
+msgstr ""
+
+#: usersites/templates/site_sidebar.html:97
+msgid "Company news"
+msgstr ""
+
+#: usersites/templates/site_sidebar.html:102
+msgid "Company structure"
+msgstr ""
+
+#: usersites/templates/CompanyStructure/contentPage.html:16
+msgid "Department staff"
+msgstr ""
+
+#: usersites/templates/CompanyStructure/contentPage.html:19
+msgid "Employee"
+msgstr ""
+
+#: usersites/templates/Contact/contentPage.html:60
+msgid "You email"
+msgstr ""
+
+#: usersites/templates/Products/detailContent.html:112
+msgid "Deleviry method"
+msgstr ""
+
+#: usersites/templates/Products/detailContent.html:129
+msgid "Payment for Product: "
+msgstr ""
+
+#: usersites/templates/Products/detailContent.html:144
+msgid "Countact us"
 msgstr ""
