@@ -212,7 +212,8 @@ var ui =
     },
 
     initMenu: function() {
-        var pathname = window.location.pathname.split('/');
+        var pathname = window.location.pathname;
+        pathname = pathname.substring(1, pathname.length - 1).split('/')
 
         if (pathname.length == 2 && pathname[1] == 'my')
         {
@@ -221,7 +222,7 @@ var ui =
             url = pathname[0]
         }
 
-        $('.tab1-cate > li > a[href=/' + url + '/]').parent().addClass('selected-menu');
+        $('.tab1-cate > li > a[href="/' + url + '/"]').parent().addClass('selected-menu');
     },
 
     setSelectedMenu: function() {
