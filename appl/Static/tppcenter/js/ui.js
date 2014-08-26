@@ -63,6 +63,7 @@ var ui =
 
     init: function()
     {
+	ui.initMenu();
         ui.curPage = $('.cur-page');
         ui.keywords = $('.keyword .list-key');
         ui.filter_form = $('form[name="filter-form"]');
@@ -73,7 +74,6 @@ var ui =
 
         //Set filter from query string
         ui.initFilters();
-        ui.initMenu();
 
         //Custom events
         $(document).bind(ui.signals['end_load'], ui.loadScripts);
