@@ -270,6 +270,10 @@ def getOwner(item):
     return None
 
 
+@register.simple_tag()
+def getLang():
+    return trans_real.get_language()
+
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
     request = context.get('request')
