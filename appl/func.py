@@ -890,6 +890,16 @@ def getTops(request, filterAdv=None):
     '''
 
     models = {
+        Tpp.__name__: {
+            'count': 1, #Limit of this type to fetch
+            'text': _('Organizations'), #Title
+            'detailUrl': 'tpp:detail' #URL namespace to detail page of this type of item
+        },
+        News.__name__: {
+            'count': 1, #Limit of this type to fetch
+            'text': _('News'), #Title
+            'detailUrl': 'news:detail' #URL namespace to detail page of this type of item
+        },
         Product.__name__: {
             'count': 1, #Limit of this type to fetch
             'text': _('Products'), #Title

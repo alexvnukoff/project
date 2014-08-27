@@ -32,6 +32,8 @@ logger = logging.getLogger('django.request')
 
 class get_companies_list(ItemsList):
 
+    paginate_by = 2
+
     #pagination url
     url_paginator = "companies:paginator"
     url_my_paginator = "companies:my_main_paginator"
@@ -58,15 +60,18 @@ class get_companies_list(ItemsList):
         self.template_name = 'Companies/index.html'
 
     def _get_my(self):
-        cab = Cabinet.objects.get(user=self.request.user.pk)
-        companies = Company.active.get_active().filter(Q(create_user=self.request.user) |
-                                                           Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
-        page_size = self.get_paginate_by(companies)
-        paginator, page, queryset, is_paginated = self.paginate_queryset(companies, page_size)
-        ids = [obj.pk for obj in queryset]
 
-        return SQ(django_id__in=ids)
+        return SQ(django_id__gt=0)
 
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated() and  self.is_my():
+            cab = Cabinet.objects.get(user=self.request.user.pk)
+            self.querysetDB = True
+            return Company.active.get_active().filter(Q(create_user=self.request.user) |
+                                                               Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+        else:
+            return super(get_companies_list, self).get_queryset()
 
 class get_company_detail(ItemDetail):
 

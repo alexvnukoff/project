@@ -8,29 +8,31 @@ __author__ = 'user'
 class SetCurCompany:
 
     def process_request(self, request):
-        compID = request.GET.get('set', 0)
+        compID = request.GET.get('set', False)
 
-        try:
-            compID = int(compID)
-        except ValueError:
-            compID = 0
+        if compID is not False:
 
-        if request.user.is_authenticated():
+            try:
+                compID = int(compID)
+            except ValueError:
+                compID = 0
 
-            current_company = request.session.get('current_company', False)
+            if request.user.is_authenticated():
 
-            if compID == 0:
-                request.session['current_company'] = False
-            elif compID != current_company:
+                current_company = request.session.get('current_company', False)
 
-                try:
-                    item = Organization.objects.get(pk=compID)
-                except ObjectDoesNotExist:
-                    return HttpResponseRedirect(reverse('denied'))
+                if compID == 0:
+                    request.session['current_company'] = False
+                elif compID != current_company:
 
-                perm_list = item.getItemInstPermList(request.user)
+                    try:
+                        item = Organization.objects.get(pk=compID)
+                    except ObjectDoesNotExist:
+                        return HttpResponseRedirect(reverse('denied'))
 
-                if 'change_company' not in perm_list and 'change_tpp' not in perm_list:
-                    return HttpResponseRedirect(reverse('denied'))
+                    perm_list = item.getItemInstPermList(request.user)
 
-                request.session['current_company'] = compID
+                    if 'change_company' not in perm_list and 'change_tpp' not in perm_list:
+                        return HttpResponseRedirect(reverse('denied'))
+
+                    request.session['current_company'] = compID

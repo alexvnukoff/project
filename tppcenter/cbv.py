@@ -32,6 +32,9 @@ class ItemsList(HybridListView):
     order1 = 'desc'
     order2 = None
 
+    #Queryset taken from db not indexes
+    querysetDB = False
+
     #current page
     page = 1
 
@@ -184,6 +187,10 @@ class ItemsList(HybridListView):
     def get_context_data(self, **kwargs):
         context = super(ItemsList, self).get_context_data(**kwargs)
 
+        if self.querysetDB:
+            ids = [obj.pk for obj in context['object_list']]
+            context['object_list'] = SearchQuerySet().models(self.model).filter(django_id__in=ids)
+
         context['object_list'] = self._get_countrys_for_objects(context['object_list'])
         context['object_list'] = self._get_organization_for_objects(context['object_list'])
 
@@ -217,6 +224,7 @@ class ItemsList(HybridListView):
         pass
 
     def get(self, request, *args, **kwargs):
+
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
         else:
@@ -339,7 +347,7 @@ class ItemsList(HybridListView):
 
         sqs = func.getActiveSQS().models(self.model)
 
-        if self.is_my():
+        if self.request.user.is_authenticated() and self.is_my():
             sqs = sqs.filter(self._get_my())
         else:
             searchFilter = self.filterLive()
