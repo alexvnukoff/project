@@ -30,7 +30,7 @@ def home(request, country=None):
     if not country:
         products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
 
-    products = [product.id for product in products]
+    products = [product.pk for product in products]
 
 
     newProducrList = Product.getCategoryOfPRoducts(products, ("NAME", "COST", "CURRENCY", "IMAGE", "DISCOUNT",
@@ -38,8 +38,8 @@ def home(request, country=None):
 
     #----NEW PRODUCT LIST -----#
     if not country:
-        products = products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-id")[:4]
-        products = [product.id for product in products]
+        products = products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID).order_by("-obj_create_date")[:4]
+        products = [product.pk for product in products]
     else:
         products = Product.getTopSales(productQuery)[:4]
 
@@ -73,7 +73,7 @@ def home(request, country=None):
 
     else:
         couponsObj = func.getActiveSQS().models(Product).order_by("coupon_end")[:3]
-    coupons_ids = [cat.id for cat in couponsObj]
+    coupons_ids = [cat.pk for cat in couponsObj]
 
     if len(coupons_ids) > 0:
         coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
@@ -93,7 +93,7 @@ def home(request, country=None):
 
 
 
-    productsSale_ids = [prod.id for prod in productsSale]
+    productsSale_ids = [prod.pk for prod in productsSale]
 
     if len(productsSale_ids) > 0:
         productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
