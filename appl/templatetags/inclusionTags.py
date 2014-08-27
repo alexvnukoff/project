@@ -148,6 +148,7 @@ def setContextMenu(context, obj):
        top_perm = "add_advtop"
        set_current = True
        url_namespace = "tpp"
+       delete_perm = False
     elif model_name == TppTV.__name__:
        url_namespace = "tv"
 

@@ -16,7 +16,7 @@
                                           <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
                                      {% endif %}
                                 {% endif %}
-                                {% if delete_perm in  permlist %}
+                                {% if delete_perm and delete_perm in  permlist %}
                                      <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url url_namespace|add:":delete" obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
                                 {% endif %}
                             </div>
