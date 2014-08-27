@@ -1,6 +1,10 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+
+{% load inclusionTags %}
+
+
 <div class="container">
      <div class="companies">
         {% include "Companies/popupFilter.html" %}
@@ -9,25 +13,11 @@
         <ul class="company-list">
             {% for company in object_list %}
 
-                {% resolve items_perms company.pk|slugify as permlist %}
+
+
+
                 <li>
-                    {% if 'delete_company' in  permlist or 'change_company' in permlist%}
-                        <div class="blockbox">
-                                    <a href="#"><i class="btn-afisha imgnews"></i></a>
-                                    <div class="localmenu">
-                                        {% if 'change_company' in permlist %}
-                                             <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'companies:update' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                              <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
-                                       {% endif %}
-                                       {% if 'add_advtop' in permlist %}
-                                           <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
-                                       {% endif %}
-                                       {% if 'delete_company' in  permlist %}
-                                             <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'companies:delete' company.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                    {% endif %}
+                     {% setContextMenu company %}
                     <div class="title">
                         {% if company.country.flag %}
                             <i class="flag sprite {{ company.country.flag }}"></i>

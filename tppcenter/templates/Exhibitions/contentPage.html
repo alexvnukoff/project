@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% load CustomFilters %}
-
+{% load inclusionTags %}
 <div class="container">
     <div class="companies">
         {% include "Exhibitions/popupFilter.html" %}
@@ -11,24 +11,12 @@
         <ul class="tender-list" id="afisha-list">
             {% for exhibition in object_list %}
                 <li>
-                    {% resolve items_perms exhibition.pk|slugify as permlist %}
 
-                    {% if 'delete_exhibition' in  permlist or 'change_exhibition' in permlist%}
-                        <div class="blockbox">
-                            <a href="#"><i class="btn-afisha imgnews"></i></a>
-                            <div class="localmenu">
-                                {% if 'change_exhibition' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'exhibitions:update' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                {% endif %}
-                                {% if 'add_advtop' in permlist %}
-                                    <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
-                                {% endif %}
-                                {% if 'delete_exhibition' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'exhibitions:delete' exhibition.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
+                {% setContextMenu exhibition %}
+
+
+
+
                     <div class="title">
                         {% if exhibition.country.flag %}
                             <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.text }}" ></i>

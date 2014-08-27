@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 <div class="container">
     <div class="companies">
         {% include "Tpp/popupFilter.html" %}
@@ -9,19 +10,10 @@
         <ul class="company-list">
             {% for tpp in object_list %}
                 <li>
-                    {% resolve tpps_perms tpp.pk|slugify as permlist %}
+                {% setContextMenu tpp %}
 
-                    {% if  'change_tpp' in permlist%}
-                            <div class="blockbox">
-                                <a href="#"><i class="btn-afisha imgnews"></i></a>
-                                <div class="localmenu">
-                                    {% if 'change_tpp' in permlist %}
-                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tpp:update' tpp.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                         <div class="tender-action"><i class="imgnews sett icon-action"></i><a href="{% url 'setCurrent' tpp.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'set current' %}</span></a></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                    {% endif %}
+
+
                     <div class="title">
                         {% if tpp.country.flag %}
                                 <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.text }}" ></i>
