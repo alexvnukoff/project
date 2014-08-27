@@ -32,8 +32,6 @@ logger = logging.getLogger('django.request')
 
 class get_companies_list(ItemsList):
 
-    paginate_by = 2
-
     #pagination url
     url_paginator = "companies:paginator"
     url_my_paginator = "companies:my_main_paginator"
@@ -485,11 +483,9 @@ def _tabsStaff(request, company, page=1):
 
         if len(departmentName):
             try:
-                dep = Department.objects.get(c2p__parent=company, item2value__attr__title='NAME',
-                                             item2value__title=departmentName)
+                dep = Department.objects.get(c2p__parent=company, pk=departmentName)
                 try:
-                    vac = Vacancy.objects.get(c2p__parent=dep, item2value__attr__title='NAME',
-                                              item2value__title=vacancyName)
+                    vac = Vacancy.objects.get(c2p__parent=dep, pk=vacancyName)
                 except:
                     #if this Department hasn't this Vacancy then add Vacancy to Department
                     vac = Vacancy.objects.create(title='VACANCY_FOR_DEPARTMENT_ID:'+str(dep.pk),
@@ -564,14 +560,7 @@ def _tabsStaff(request, company, page=1):
     url_paginator = "companies:tab_staff_paged"
 
     #create full list of Company's Departments
-    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
-
-    dep_lst = [dep.pk for dep in departments]
-
-    if len(dep_lst) == 0:
-        departmentsList = []
-    else:
-        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('title_sort')
 
     #create list of Company's Vacancies
     vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
@@ -610,7 +599,7 @@ def _tabsStaff(request, company, page=1):
 
     templateParams = {
         'workersList': workersList,
-        'departmentsList': departmentsList, #list for adding user form
+        'departmentsList': departments, #list for adding user form
         'vacanciesList': vacanciesList,     #list for adding user form
         'permissionsList': permissionsList,
         'page': page,

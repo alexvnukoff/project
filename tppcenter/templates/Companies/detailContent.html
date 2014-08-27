@@ -111,8 +111,8 @@
         // Staff adding from popup
 	    $(document).on('click','#btn-add-user', function(){
             var userEmail = $('#user-name').val();
-            var departmentName = $('#dep-list').find(":selected").text();
-            var vacancyName = $('#vacancy-list').find(":selected").text();
+            var departmentName = $('#dep-list').find(":selected").val();
+            var vacancyName = $('#vacancy-list').find(":selected").val();
             var isAdmin = 0;
 
             if ($('#is-admin').is(':checked')) {

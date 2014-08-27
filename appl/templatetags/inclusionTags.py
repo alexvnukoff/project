@@ -139,6 +139,7 @@ def setContextMenu(context, obj):
        url_namespace = "resume"
     elif model_name == News.__name__:
        url_namespace = "news"
+       top_perm = "add_advtop"
     elif model_name == Company.__name__:
        top_perm = "add_advtop"
        set_current = True

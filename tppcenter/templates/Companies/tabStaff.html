@@ -12,7 +12,7 @@
 
         // pull Vacancies related to selected Department in popup combobox
         $(document).on('change','#dep-list', function() {
-			depID = $('#dep-list').find(':selected').data('department');
+			depID = $('#dep-list').find(':selected').val();
 			$('#vacancy-list').html(savedItems);
 			$('#vacancy-list option:not([class = ' + depID + '])').remove();
 		});
@@ -20,7 +20,7 @@
         // pull Department related to selected Vacancy in popup combobox
         $(document).on('change','#vacancy-list', function() {
 			depID = $('#vacancy-list').find(':selected').data('department');
-			$('#dep-list option[data-department=' + depID + ']').prop('selected', true);
+			$('#dep-list option[value=' + depID + ']').prop('selected', true);
             return false;
 		});
     });
@@ -128,10 +128,8 @@
                 <label>{% trans "Department" %}</label>
                 <select id="dep-list" style="width:62%;">
                     <option disabled selected>{% trans "Select Department..." %}</option>
-                    {% for id, attr in departmentsList.items %}
-                    {% with attr.NAME|first as department %}
-                        <option data-department="{{ id }}">{{ department }}</option>
-                    {% endwith %}
+                    {% for dep in departmentsList %}
+                        <option value="{{ dep.pk }}">{{ dep.text }}</option>
                     {% empty %}
                         <div class="no-results">{% trans "Empty" %}</div>
                     {% endfor %}
@@ -142,7 +140,7 @@
                     {% for id, attr in vacanciesList.items %}
                     {% with attr.NAME|first as vacancy %}
                     {% with attr.DEPARTMENT_ID|first as dep_id %}
-                        <option data-vacancy="{{ id }}" data-department="{{ dep_id }}" class="{{ dep_id }}">{{ vacancy }}</option>
+                        <option value="{{ id }}" data-department="{{ dep_id }}" class="dep-{{ dep_id }}">{{ vacancy }}</option>
                     {% endwith %}
                     {% endwith %}
                     {% empty %}
