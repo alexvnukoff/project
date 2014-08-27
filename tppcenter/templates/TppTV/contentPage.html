@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 <div class="container">
     {% include "TppTV/popupFilter.html" %}
     {% include "main/paginator.html" %}
@@ -8,17 +9,8 @@
     <ul id="tv-list">
         {% for news in object_list %}
             <li>
-                {% resolve items_perms news.pk|slugify as permlist %}
+            {% setContextMenu news %}
 
-                {% if  redactor %}
-                       <div class="blockbox">
-                            <a href="#"><i class="btn-afisha imgnews"></i></a>
-                            <div class="localmenu">
-                                    <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tv:update' news.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tv:delete' news.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                            </div>
-                        </div>
-                {% endif %}
                 <div class="title-tv">
                         {% if news.country.flag %}
                             <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.text }}" />

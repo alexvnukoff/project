@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 <div class="container">
     <div class="companies">
         {% include "Tenders/popupFilter.html" %}
@@ -9,21 +10,11 @@
         <ul class="tender-list">
             {% for tender in object_list %}
             <li>
-                {% resolve items_perms tender.pk|slugify as permlist %}
+                {% setContextMenu tender %}
 
-                {% if 'delete_tender' in  permlist or 'change_tender' in permlist%}
-                    <div class="blockbox">
-                            <a href="#"><i class="btn-afisha imgnews"></i></a>
-                            <div class="localmenu">
-                                {% if 'change_tender' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'tenders:update' tender.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                {% endif %}
-                                {% if 'delete_tender' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'tenders:delete' tender.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                {% endif %}
+
+
+
                 <div class="title">
                     {% if tender.organization.flag %}
                         <img src="{{ MEDIA_URL }}small/{{ tender.organization.flag }}" class="flag" title="{{ tender.organization.title }}" alt="{{ tender.organization.title }}" />

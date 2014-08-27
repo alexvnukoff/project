@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
 <div class="container">
     <div class="companies">
@@ -10,17 +11,11 @@
         <ul class="tender-list">
             {% for resume in object_list %}
             <li>
-                {% resolve items_perms resume.pk|slugify as permlist %}
+            {% setContextMenu resume %}
 
-                {% if 'delete_resume' in  permlist or 'change_resume' in permlist %}
-                    <div class="blockbox">
-                        <a href="#"><i class="btn-afisha imgnews"></i></a>
-                        <div class="localmenu">
-                            <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'resume:update' resume.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                            <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'resume:delete' resume.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                        </div>
-                    </div>
-                {% endif %}
+
+
+
                 <div class="title">
                     <font class="name">{% trans 'Publication date' %}: {{ resume.obj_create_date|date:"d M Y" }}</font>
                         </div>

@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 <div class="container">
 
            {% include "main/paginator.html" %}
@@ -9,24 +10,9 @@
              <ul class="listprd">
                 {% for product in object_list %}
                     <li>
-                     {% resolve items_perms product.pk|slugify as permlist %}
+                     {% setContextMenu product %}
 
-                     {% if 'delete_product' in  permlist or 'change_product' in permlist%}
-                            <div class="blockbox">
-                                <a href="#"><i class="btn-afisha imgnews"></i></a>
-                                <div class="localmenu">
-                                    {% if 'change_product' in permlist %}
-                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'products:update' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                    {% endif %}
-                                    {% if 'add_advtop' in permlist %}
-                                       <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
-                                    {% endif %}
-                                    {% if 'delete_product' in  permlist %}
-                                         <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'products:delete' product.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                   {% endif %}
+
                       <div class="thumb">
                           <a href="{% url "products:detail" product.slug %}">
                               {% if product.image %}

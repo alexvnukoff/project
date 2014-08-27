@@ -209,7 +209,8 @@ class ItemsList(HybridListView):
             'addNew': '' if not self.addUrl else reverse(self.addUrl),
             'current_section': self.current_section,
             'styles': self.styles,
-            'scripts': self.scripts
+            'scripts': self.scripts,
+            'model': self.model.__name__
         })
 
         return context
