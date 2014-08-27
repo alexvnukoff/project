@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 <div class="container">
     <div class="companies">
             {% include "Innov/popupFilter.html" %}
@@ -9,24 +10,9 @@
            <ul class="tender-list" id="afisha-list">
                 {% for innov in object_list %}
                     <li>
-                    {% resolve items_perms innov.pk|slugify as permlist %}
+                    {% setContextMenu innov %}
 
-                     {% if 'delete_innovationproject' in  permlist or 'change_innovationproject' in permlist%}
-                    <div class="blockbox">
-                            <a href="#"><i class="btn-afisha imgnews"></i></a>
-                            <div class="localmenu">
-                                {% if 'change_innovationproject' in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url 'innov:update' innov.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-                                {% endif %}
-                                {% if 'add_advtop' in permlist %}
-                                     <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' innov.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
-                                {% endif %}
-                                {% if 'delete_innovationproject' in  permlist %}
-                                     <div class="tender-action"><i class="imgnews remove icon-action"></i><a href="{% url 'innov:delete' innov.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'remove' %}</span></a></div>
-                                {% endif %}
-                            </div>
-                        </div>
-                   {% endif %}
+
                         <div class="title">
                         {% if innov.country.flag %}
                              <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.text }}"></i>

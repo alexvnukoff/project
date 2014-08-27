@@ -1,7 +1,8 @@
 from django import template
 from appl import func
 from django.conf import settings
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery
+from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery,\
+    BusinessProposal, Product, InnovationProject, Tender, Exhibition, Requirement, Resume, Company, Tpp, TppTV
 from core.models import Item
 from haystack.query import SearchQuerySet
 from django.utils.translation import gettext as _
@@ -114,6 +115,72 @@ def getMyCompaniesList(context):
         'user': user_name,
         'current_path': request.get_full_path()
     }
+
+@register.inclusion_tag('main/contextMenu.html', takes_context=True)
+def setContextMenu(context, obj):
+
+    items_perms = context.get('items_perms')
+    current_path = context.get('current_path')
+    model_name = context.get('model', None)
+
+
+    delete_perm = "delete_" + model_name.lower()
+    change_perm = "change_" + model_name.lower()
+    top_perm = ""
+    url_namespace = ""
+    set_current = False
+
+    if model_name == BusinessProposal.__name__:
+        top_perm = "add_advtop"
+        url_namespace = "proposal"
+    elif model_name == Product.__name__:
+        top_perm = "add_advtop"
+        url_namespace = "products"
+    elif model_name == InnovationProject.__name__:
+        top_perm = "add_advtop"
+        url_namespace = "innov"
+    elif model_name == Tender.__name__:
+        url_namespace = "tenders"
+    elif model_name == Exhibition.__name__:
+        top_perm = "add_advtop"
+        url_namespace = "exhibitions"
+    elif model_name == Requirement.__name__:
+       top_perm = "add_advtop"
+       url_namespace = "vacancy"
+    elif model_name == Resume.__name__:
+       url_namespace = "resume"
+    elif model_name == News.__name__:
+       url_namespace = "news"
+    elif model_name == Company.__name__:
+       top_perm = "add_advtop"
+       set_current = True
+       url_namespace = "companies"
+    elif model_name == Tpp.__name__:
+       top_perm = "add_advtop"
+       set_current = True
+       url_namespace = "tpp"
+    elif model_name == TppTV.__name__:
+       url_namespace = "tv"
+
+
+
+
+
+
+    vars = {
+        "delete_perm": delete_perm,
+        'change_perm': change_perm,
+        "top_perm": top_perm,
+        'obj': obj,
+        'url_namespace': url_namespace,
+        "items_perms": items_perms,
+        'current_path':current_path,
+        'set_current': set_current,
+    }
+
+    return vars
+
+
 
 @register.inclusion_tag('main/user_profile.html', takes_context=True)
 def userProfile(context):
