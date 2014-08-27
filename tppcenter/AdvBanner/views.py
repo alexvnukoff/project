@@ -90,13 +90,12 @@ def advJsonFilter(request):
 
             for item in onPage.object_list:
 
-                if not isinstance(itemsAttr[item.pk], dict) :
-                    itemsAttr[item.pk] = {}
+                itemcost = itemsAttr.get(item.pk, [0])
 
                 resultDict = {
                     'title': item.title_auto,
                     'id': item.pk,
-                    'cost': itemsAttr[item.pk].get('COST', [0])[0],
+                    'cost': itemcost[0],
                 }
 
                 items.append(resultDict)

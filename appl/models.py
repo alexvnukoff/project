@@ -380,7 +380,7 @@ class Product(Item):
               products_id = [product.pk for product in productQuerySet]
         else:
               products_id = productQuerySet
-        categories = Category.objects.filter(p2c__child_id__in=products_id).values("id", "p2c__child_id")
+        categories = Category.objects.filter(p2c__child__in=products_id).values("id", "p2c__child_id")
         categories_id = [category['id'] for category in categories]
         products = Item.getItemsAttributesValues(attr, products_id)
         category = Item.getItemsAttributesValues(("NAME",), categories_id)

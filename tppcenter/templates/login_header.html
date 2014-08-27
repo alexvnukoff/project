@@ -38,7 +38,7 @@
 
 
 
-        	{% if user.email %}
+        	{% if user.is_authenticated %}
                 <a style="margin-left: 20px;" href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>
             {% else %}
                 <a style="margin-left: 20px;" href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>

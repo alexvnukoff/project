@@ -135,6 +135,7 @@ urlpatterns = patterns('',
     url(r'^adv/tops/', tppcenter.views.getLiveTop),
     url(r'^adv/bann/', tppcenter.views.getLiveBanner),
     url(r'^filter/', tppcenter.views.jsonFilter),
+    url(r'^company-manage/', tppcenter.views.myCompanies),
     url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.setCurrent, name="setCurrent"),
 
 

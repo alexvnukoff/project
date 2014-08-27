@@ -86,7 +86,8 @@ class get_news_detail(ItemDetail):
     addUrl = 'news:add'
 
     def _get_similar_news(self):
-        return func.getActiveSQS().models(News).filter(categories__in=self.object.categories)[:4]
+        categories = [category.pk for category in self.object.categories]
+        return func.getActiveSQS().models(News).filter(categories__in=categories)[:4]
 
     def _get_categories_for_object(self):
         return SearchQuerySet().filter(django_id__in=self.object.categories)

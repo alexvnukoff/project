@@ -63,6 +63,7 @@ var ui =
 
     init: function()
     {
+	ui.initMenu();
         ui.curPage = $('.cur-page');
         ui.keywords = $('.keyword .list-key');
         ui.filter_form = $('form[name="filter-form"]');
@@ -84,6 +85,7 @@ var ui =
         $(document).on('click', '.filter-remove', ui.onRemove);
         $(document).on('click', '#save-filter', ui.saveFilter);
         $(document).on('click', ui.container + ' .panging a', ui.pageNav);
+        $(document).on('click', '.tab1-cate > li a', ui.setSelectedMenu);
         $(document).on('submit', 'form[name="search"]', ui.search);
     },
 
@@ -209,6 +211,28 @@ var ui =
         ui.setKeyFilters(filter_keys);
     },
 
+    initMenu: function() {
+        var pathname = window.location.pathname;
+        pathname = pathname.substring(1, pathname.length - 1).split('/');
+
+        var url = '/'
+
+        if (pathname.length == 2 && pathname[1] == 'my')
+        {
+            url = pathname.join('/');
+        } else {
+            url = pathname[0]
+        }
+
+        $('.tab1-cate > li > a[href="/' + url + '/"]').addClass('selected-menu');
+    },
+
+    setSelectedMenu: function() {
+
+        $('.tab1-cate > li a.selected-menu').removeClass('selected-menu');
+        $(this).addClass('selected-menu');
+    },
+
     setKeyFilters: function(data)
     { //Removable filters
         keys = ''
@@ -235,17 +259,6 @@ var ui =
         ui.search_form.find('input[name="q"]').val('');
 
         var url = $(this).attr('href');
-        var text = $(this).text();
-        //Set current page to processing menu (top menu)
-        ui.curPage.text(text);
-
-        if (url == '/wall/')
-              $('.imgnews.btn-fil').addClass("disable");
-
-        else
-             $('.imgnews.btn-fil').removeClass("disable");
-
-        $('.b-filter  .add-new').attr('href', url + 'add/');
 
         ui.loading = ui.requester(url);
 
@@ -281,6 +294,26 @@ var ui =
         ui.setFilters(data.filters);
 
         $(ui.container).replaceWith( data.content );
+        var addBtn = $('.add-new');
+
+
+
+        if ( !addBtn.hasClass('logged-out')) {
+            var imgBtn = addBtn.find('.btn-fil');
+
+            if ( data.addNew != '' ) {
+               imgBtn.removeClass('disable');
+               addBtn.attr('href', data.addNew);
+
+            } else {
+               addBtn.attr('href', '#');
+               imgBtn.addClass('disable');
+            }
+        }
+
+        if ( data.current_section ) {
+            $('title').text(data.current_section);
+        }
 
         ui.filter_form = $('form[name="filter-form"]');
         ui.initFilters();

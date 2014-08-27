@@ -187,6 +187,10 @@ def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT:
     return queryset.model.objects.filter(pk__in=queryset, item2value__attr__title=attribute).extra(order_by=[case])
 
 def currencySymbol(currency):
+
+    if not currency:
+        return ""
+
     symbols = {
         'EUR': '€',
         'USD': '$',
@@ -318,7 +322,7 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent_id__in=list, c2p__child=filterChild, c2p__type="relation")\
+    return Item.objects.filter(c2p__parent__in=list, c2p__child=filterChild, c2p__type="relation")\
                                 .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
 def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
@@ -886,6 +890,16 @@ def getTops(request, filterAdv=None):
     '''
 
     models = {
+        Tpp.__name__: {
+            'count': 1, #Limit of this type to fetch
+            'text': _('Organizations'), #Title
+            'detailUrl': 'tpp:detail' #URL namespace to detail page of this type of item
+        },
+        News.__name__: {
+            'count': 1, #Limit of this type to fetch
+            'text': _('News'), #Title
+            'detailUrl': 'news:detail' #URL namespace to detail page of this type of item
+        },
         Product.__name__: {
             'count': 1, #Limit of this type to fetch
             'text': _('Products'), #Title
@@ -940,7 +954,60 @@ def getTops(request, filterAdv=None):
             topList += tops
             modelTop[model] = tops
 
+    topDict = {}
+    countries = []
+    orgs = []
 
+    for item in SearchQuerySet().filter(django_id__in=topList):
+        topDict[int(item.pk)] = item
+
+        if getattr(item, 'country', None) and item.country not in countries:
+            countries.append(item.country)
+        elif getattr(item, 'company', False):
+            orgs.append(item.company)
+        elif getattr(item, 'tpp', False):
+            orgs.append(item.tpp)
+
+    contryDict = {}
+    orgDict = {}
+
+    if len(countries) > 0:
+        for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
+            contryDict[int(country.pk)] = country
+
+    if len(orgs) > 0:
+        for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
+            orgDict[int(org.pk)] = org
+
+    newModelTop = {}
+
+    for model, topList in modelTop.items():
+
+        if len(topList) == 0:
+            continue
+
+        if model not in newModelTop:
+            newModelTop[model] = []
+
+        for top in topList:
+
+            if top not in topDict:
+                continue
+
+            country = getattr(topDict[top], 'country', None)
+            comapny = getattr(topDict[top], 'company', None)
+            tpp = getattr(topDict[top], 'tpp', None)
+
+            if country and country in contryDict:
+                topDict[top].country = contryDict[country]
+            elif comapny and comapny in orgDict:
+                topDict[top].organization = orgDict[comapny]
+            elif tpp and tpp in orgDict:
+                topDict[top].organization = orgDict[tpp]
+
+            newModelTop[model].append(topDict[top])
+
+    '''
     topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
 
     tops = {}
@@ -983,8 +1050,8 @@ def getTops(request, filterAdv=None):
 
         else:
             addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
-
-    return tops
+    '''
+    return newModelTop, models
 
 def getDeatailAdv(item_id):
     '''
@@ -994,7 +1061,7 @@ def getDeatailAdv(item_id):
     '''
     filterAdv = []
 
-    sqs = getActiveSQS().filter(pk=item_id)
+    sqs = getActiveSQS().filter(django_id=item_id)
 
     filterAdv += getattr(sqs, 'branch', [])
     filterAdv += getattr(sqs, 'tpp', [])
@@ -1028,7 +1095,7 @@ def getListAdv(request):
             filtersAdv += ids
 
         elif len(ids) > 0:
-            sqs = getActiveSQS().models(Tpp).filter(id__in=ids)
+            sqs = getActiveSQS().models(Tpp).filter(django_id__in=ids)
 
             for tpp in sqs: #Add filter of countries of each tpp
                 if len(tpp.country) > 0:
@@ -1099,7 +1166,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
             sortFields = {
-                'date': 'id',
+                'date': 'obj_create_date',
                 'name': 'title_sort'
             }
 
@@ -1116,7 +1183,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 else:
                     order.append(sortFields[sortField1])
             else:
-                order.append('-id')
+                order.append('-obj_create_date')
 
             if sortField2 and sortField2 in sortFields:
                 if order2 == 'desc':
@@ -1154,7 +1221,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
                     proposal = getActiveSQS().models(model).\
-                        filter(SQ(pk=current_organization) | SQ(company=current_organization))
+                        filter(SQ(django_id=current_organization) | SQ(company=current_organization))
 
                 #TODO: Fix search
                 #if q != '': #Search for content
@@ -1279,9 +1346,9 @@ def cachePisibility(request):
 
 def show_toolbar(request):
 
-#    if request.user.is_authenticated():
-#        if request.user.is_superuser:
-#            return True
+    if request.user.is_authenticated():
+        if request.user.is_superuser:
+            return True
 
     return False
 

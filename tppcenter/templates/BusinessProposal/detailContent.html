@@ -24,7 +24,7 @@
     </script>
 
     <script>
-        {% getOwner item_id as owner %}
+        {% getOwner item.pk as owner %}
 
         {% if owner %}
             {% if owner.type == 'tpp' %}
@@ -33,7 +33,6 @@
                 ga('set', 'dimension3', {{ owner.pk }});
             {% endif %}
         {% endif %}
-        ga('set', 'dimension2', 'product');
     </script>
 {% endblock %}
 
@@ -150,7 +149,8 @@
                 </div>
                 {% for page in additionalPages %}
                     <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                    <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                        <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                    </div>
                 {% endfor %}
             </div>
         </div>

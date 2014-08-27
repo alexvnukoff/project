@@ -1,23 +1,21 @@
 from collections import OrderedDict
 from copy import copy
-import urllib
-from urllib.request import FancyURLopener
-from django.contrib.sites.models import Site
+
 from django.utils.translation import trans_real
-from appl.func import currencySymbol
-from tpp.SiteUrlMiddleWare import get_request
 from lxml.html.clean import clean_html
-from appl import func
-from appl.models import *
-from urllib.parse import urlencode
-from haystack.query import SQ
+from haystack.query import SQ, SearchQuerySet
 from django.template import RequestContext, loader
 from django.conf import settings
 from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
+
+from appl.func import currencySymbol
+from appl import func
+from appl.models import *
 import tppcenter.urls
+
 
 register = template.Library()
 
@@ -86,7 +84,7 @@ def split(str, splitter):
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
 
-    if len(value) > 0 and value is not None:
+    if value is not None and len(value) > 0:
         return clean_html(value)
     else:
         return ""
@@ -252,44 +250,49 @@ def getOwner(item):
     if not item:
         return None
 
-    obj = func.getActiveSQS().filter(pk=item)
+    obj = func.getActiveSQS().filter(django_id=item)
 
-    if len(obj) == 0:
+    if obj.count() == 0:
         return None
     else:
         obj = obj[0]
 
+    company = getattr(obj, "company", False)
+    tpp = getattr(obj, "tpp", False)
 
-    if not obj:
-        return None
+    if company:
+        return {'type': 'company', 'pk': company}
 
-    if obj.company:
-        return {'type': 'company', 'id': obj.company}
-
-    if obj.tpp:
-        return {'type': 'tpp', 'id': obj.tpp}
+    if tpp:
+        return {'type': 'tpp', 'pk': tpp}
 
     return None
 
 
+@register.simple_tag()
+def getLang():
+    return trans_real.get_language()
+
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
     request = context.get('request')
-    user = request.user
 
-    if user.is_authenticated():
-        cabinet = Cabinet.objects.filter(user=request.user)
-        if cabinet.exists():
-            cabinet = cabinet[0]
-            name = cabinet.getAttributeValues('USER_FIRST_NAME','USER_LAST_NAME')
+    user_name = ''
 
-            if isinstance(name, dict) and  name.get('USER_FIRST_NAME', False) and  name.get('USER_LAST_NAME', False):
-                user_name = name.get('USER_FIRST_NAME', [''])[0] + ' ' + name.get('USER_LAST_NAME', [''])[0]
-            else:
-                user_name = user.email
+    if request.user.is_authenticated():
+        try:
+            cabinet = Cabinet.objects.get(user=request.user)
+            cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cabinet.pk)
 
-    else:
-        user_name = None
+            if cabinet.count() > 0 and cabinet[0].text != '':
+                user_name = cabinet[0].text
+
+        except ObjectDoesNotExist:
+            pass
+
+        if user_name == '':
+            user_name = request.user.email
+
 
     return user_name
 
@@ -406,7 +409,7 @@ def rightTv(context):
       if sqs.count() == 0:
           return ''
       else:
-          sqs = sqs.order_by('-pk')[0]
+          sqs = sqs.order_by('-obj_create_date')[0]
           tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
           tvValues = tvValues[sqs.pk]
           is_innov = False

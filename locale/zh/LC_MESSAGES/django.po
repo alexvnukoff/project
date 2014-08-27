@@ -8,86 +8,81 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 16:15+0300\n"
+"POT-Creation-Date: 2014-08-26 10:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-
-#: appl/func.py:788 centerpokupok/templates/Company/header.html:48
+#: appl/func.py:895 centerpokupok/templates/Company/header.html:48
 #: centerpokupok/templates/Company/products.html:6
 #: centerpokupok/templates/Product/detail.html:114
 #: centerpokupok/templates/Product/index.html:6
 #: centerpokupok/templates/Product/index.html:63
 #: centerpokupok/templates/Product/index.html:76
-#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:51
-#: tppcenter/Product/views.py:154 tppcenter/templates/base.html:142
-#: tppcenter/templates/main_page.html:117
-#: tppcenter/templates/main_page.html:140
+#: centerpokupok/templates/Product/new.html:112 tppcenter/Product/views.py:31
+#: tppcenter/Product/views.py:51 tppcenter/Product/views.py:72
+#: tppcenter/templates/base.html:170 tppcenter/templates/main_page.html:185
+#: tppcenter/templates/main_page.html:210
 #: tppcenter/templates/Analytic/main.html:64
-#: tppcenter/templates/Companies/detailContent.html:588
-#: tppcenter/templates/Products/index.html:10
-#: tppcenter/templates/Wall/contentPage.html:245
-#: usersites/Products/views.py:42 usersites/Products/views.py:43
-#: usersites/templates/contentPage.html:86
-#: usersites/templates/site_sidebar.html:20
+#: tppcenter/templates/Companies/detailContent.html:569
+#: tppcenter/templates/Wall/contentPage.html:8 usersites/Products/views.py:32
+#: usersites/Products/views.py:33 usersites/templates/contentPage.html:86
+#: usersites/templates/site_sidebar.html:100
 msgid "Products"
 msgstr "产品"
 
-#: appl/func.py:793 tppcenter/templates/main_page.html:121
-#: tppcenter/templates/main_page.html:144
+#: appl/func.py:900 tppcenter/templates/main_page.html:188
+#: tppcenter/templates/main_page.html:213
 #: tppcenter/templates/Analytic/main.html:72
-#: tppcenter/templates/Companies/detailContent.html:593
-#: tppcenter/templates/Tpp/detailContent.html:534
+#: tppcenter/templates/Companies/detailContent.html:574
+#: tppcenter/templates/Tpp/detailContent.html:513
 msgid "Innovation Projects"
 msgstr "创新项目"
 
-#: appl/func.py:798 tppcenter/Companies/views.py:61
-#: tppcenter/Companies/views.py:769 tppcenter/templates/base.html:143
-#: tppcenter/templates/forms.html:6 tppcenter/templates/index.html:133
-#: tppcenter/templates/main_page.html:120
-#: tppcenter/templates/main_page.html:143
+#: appl/func.py:905 tppcenter/Companies/views.py:39
+#: tppcenter/Companies/views.py:76 tppcenter/Companies/views.py:627
+#: tppcenter/templates/base.html:171 tppcenter/templates/forms.html:6
+#: tppcenter/templates/index.html:192 tppcenter/templates/job_index.html:188
+#: tppcenter/templates/main_page.html:187
+#: tppcenter/templates/main_page.html:212
 #: tppcenter/templates/Analytic/main.html:95
-#: tppcenter/templates/Companies/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:559
+#: tppcenter/templates/Companies/index.html:5
+#: tppcenter/templates/Tpp/detailContent.html:538
 msgid "Companies"
 msgstr "公司"
 
-#: appl/func.py:803 tppcenter/templates/main_page.html:122
-#: tppcenter/templates/main_page.html:145
+#: appl/func.py:910 tppcenter/templates/main_page.html:189
+#: tppcenter/templates/main_page.html:214
 #: tppcenter/templates/Analytic/main.html:68
 #: tppcenter/templates/Analytic/main.html:111
-#: tppcenter/templates/BusinessProposal/index.html:10
-#: tppcenter/templates/Companies/detailContent.html:598
-#: tppcenter/templates/Tpp/detailContent.html:539
+#: tppcenter/templates/BusinessProposal/index.html:5
+#: tppcenter/templates/Companies/detailContent.html:579
+#: tppcenter/templates/Tpp/detailContent.html:518
 msgid "Business Proposals"
 msgstr "企业建议"
 
-#: appl/func.py:808 tppcenter/Exhibitions/views.py:53
-#: tppcenter/Exhibitions/views.py:136
+#: appl/func.py:915 tppcenter/templates/main_page.html:196
+#: tppcenter/templates/main_page.html:227
+msgid "Job requirements"
+msgstr "工作要求"
+
+#: appl/func.py:920 tppcenter/Exhibitions/views.py:33
+#: tppcenter/Exhibitions/views.py:53 tppcenter/Exhibitions/views.py:72
 #: tppcenter/templates/Analytic/main.html:80
 #: tppcenter/templates/Analytic/main.html:115
-#: tppcenter/templates/Companies/detailContent.html:583
-#: tppcenter/templates/Exhibitions/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:529
-#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Companies/detailContent.html:564
+#: tppcenter/templates/Tpp/detailContent.html:508
+#: tppcenter/templates/Wall/contentPage.html:134
 msgid "Exhibitions"
 msgstr "展览"
 
-#: appl/func.py:948
+#: appl/func.py:1110
 msgid "Sorry but you cannot modify this item "
 msgstr "抱歉，你不能修改此项目"
-
-#: appl/templatetags/inclusionTags.py:77 tppcenter/Profile/views.py:18
-#: tppcenter/templates/login_header.html:23
-#: tppcenter/templates/login_header.html:74
-#: tppcenter/templates/main_page.html:155
-#: tppcenter/templates/Profile/index.html:6
-msgid "Profile"
-msgstr "简介"
 
 #: centerpokupok/forms.py:6
 msgid "Recipient name"
@@ -104,8 +99,10 @@ msgstr "城市"
 #: centerpokupok/forms.py:8
 #: centerpokupok/templates/Product/orderStepOne.html:95
 #: tppcenter/templates/BusinessProposal/popupFilter.html:19
-#: tppcenter/templates/Companies/addForm.html:77
+#: tppcenter/templates/Companies/addForm.html:78
+#: tppcenter/templates/Companies/addForm.html:83
 #: tppcenter/templates/Companies/popupFilter.html:19
+#: tppcenter/templates/Exhibitions/addForm.html:65
 #: tppcenter/templates/Exhibitions/popupFilter.html:19
 #: tppcenter/templates/Innov/popupFilter.html:19
 #: tppcenter/templates/News/addForm.html:109
@@ -113,10 +110,10 @@ msgstr "城市"
 #: tppcenter/templates/Products/popupFilter.html:19
 #: tppcenter/templates/Profile/addForm.html:71
 #: tppcenter/templates/Tenders/popupFilter.html:19
-#: tppcenter/templates/Tpp/addForm.html:141
+#: tppcenter/templates/Tpp/addForm.html:142
 #: tppcenter/templates/TppTV/addForm.html:57
 #: tppcenter/templates/TppTV/popupFilter.html:19
-#: tppcenter/templates/main/user_profile.html:66
+#: tppcenter/templates/main/user_profile.html:67
 msgid "Country"
 msgstr "国家"
 
@@ -126,15 +123,16 @@ msgid "Zipcode"
 msgstr "邮政编码"
 
 #: centerpokupok/forms.py:10
-#: tppcenter/templates/BusinessProposal/detailContent.html:126
-#: tppcenter/templates/Companies/addForm.html:176
-#: tppcenter/templates/Companies/detailContent.html:666
-#: tppcenter/templates/Exhibitions/detailContent.html:166
-#: tppcenter/templates/Innov/detailContent.html:159
-#: tppcenter/templates/Resume/addForm.html:100
-#: tppcenter/templates/Resume/detailContent.html:70
-#: tppcenter/templates/Tpp/addForm.html:181
-#: tppcenter/templates/Tpp/detailContent.html:586
+#: tppcenter/templates/BusinessProposal/detailContent.html:119
+#: tppcenter/templates/Companies/addForm.html:181
+#: tppcenter/templates/Companies/detailContent.html:626
+#: tppcenter/templates/Exhibitions/detailContent.html:157
+#: tppcenter/templates/Innov/detailContent.html:150
+#: tppcenter/templates/Resume/addForm.html:103
+#: tppcenter/templates/Resume/detailContent.html:64
+#: tppcenter/templates/Tpp/addForm.html:182
+#: tppcenter/templates/Tpp/detailContent.html:563
+#: usersites/templates/Proposals/detailContent.html:132
 msgid "Address"
 msgstr "地址"
 
@@ -148,19 +146,19 @@ msgstr "名"
 
 #: centerpokupok/forms.py:22 tppcenter/Profile/profileForms.py:16
 #: tppcenter/templates/Profile/addForm.html:34
-#: tppcenter/templates/main/user_profile.html:36
+#: tppcenter/templates/main/user_profile.html:37
 msgid "Last name"
 msgstr "姓"
 
 #: centerpokupok/forms.py:24 tppcenter/Profile/profileForms.py:48
-#: tppcenter/templates/Profile/addForm.html:92
-#: tppcenter/templates/Resume/addForm.html:63
-#: tppcenter/templates/Resume/detailContent.html:54
-#: tppcenter/templates/main/user_profile.html:74
+#: tppcenter/templates/Profile/addForm.html:85
+#: tppcenter/templates/Resume/addForm.html:66
+#: tppcenter/templates/Resume/detailContent.html:48
+#: tppcenter/templates/main/user_profile.html:75
 msgid "Birthday"
 msgstr "生日"
 
-#: centerpokupok/views.py:187 tppcenter/views.py:222
+#: centerpokupok/views.py:187 tppcenter/views.py:221
 msgid "Agreement with terms is required"
 msgstr "附条款的协议是必需的"
 
@@ -201,8 +199,7 @@ msgstr "系统运作方式"
 msgid "Announcements and product reviews"
 msgstr "通告和产品评论"
 
-#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:15
-#: tppcenter/templates/base.html:119 tppcenter/templates/Project/offer.html:16
+#: centerpokupok/templates/base.html:45 tppcenter/Project/urls.py:16
 msgid "Public offer"
 msgstr "公开报价"
 
@@ -231,26 +228,24 @@ msgid "Quick reference"
 msgstr "快速参考"
 
 #: centerpokupok/templates/base.html:56
-#: tppcenter/templates/Companies/detailContent.html:567
-#: tppcenter/templates/Tpp/detailContent.html:513
+#: tppcenter/templates/Companies/detailContent.html:548
 msgid "Services"
 msgstr "服务"
 
 #: centerpokupok/templates/base.html:57
 #: centerpokupok/templates/Company/contact.html:4
 #: centerpokupok/templates/Company/contact.html:50
-#: tppcenter/Project/urls.py:19
-#: tppcenter/templates/Companies/contentPage.html:98
-#: tppcenter/templates/Products/detailContent.html:124
+#: tppcenter/Project/urls.py:20
+#: tppcenter/templates/Companies/contentPage.html:88
+#: tppcenter/templates/Products/detailContent.html:98
+#: tppcenter/templates/Products/detailContent.html:134
 #: tppcenter/templates/Project/contact.html:16
-#: tppcenter/templates/Tpp/contentPage.html:75
-#: usersites/templates/site_sidebar.html:23
+#: tppcenter/templates/Tpp/contentPage.html:71
+#: usersites/templates/site_sidebar.html:103
 msgid "Contact us"
 msgstr "联系我们"
 
-#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:20
-#: tppcenter/templates/base.html:134 tppcenter/templates/login_header.html:10
-#: tppcenter/templates/main_header.html:6
+#: centerpokupok/templates/base.html:58 tppcenter/Project/urls.py:21
 #: tppcenter/templates/Project/faq.html:16
 msgid "FAQ"
 msgstr "常见问题解答"
@@ -264,14 +259,14 @@ msgid "Partner program"
 msgstr "合作伙伴计划"
 
 #: centerpokupok/templates/base.html:64
-#: centerpokupok/templates/Company/about.html:37
+#: centerpokupok/templates/Company/about.html:38
 #: centerpokupok/templates/Company/contact.html:37
 #: centerpokupok/templates/Company/index.html:79
 msgid "Subscribe to newsletter"
 msgstr "订阅电子报"
 
 #: centerpokupok/templates/base.html:66
-#: centerpokupok/templates/Company/about.html:39
+#: centerpokupok/templates/Company/about.html:40
 #: centerpokupok/templates/Company/contact.html:39
 #: centerpokupok/templates/Company/index.html:81
 msgid "Receive our weekly announcements and reviews of new products"
@@ -306,7 +301,7 @@ msgstr "主页"
 #: centerpokupok/templates/header_small.html:7
 #: centerpokupok/templates/Company/header.html:8
 #: centerpokupok/templates/main/cabinet_menu.html:29
-#: usersites/templates/Contact/contentPage.html:45
+#: usersites/templates/Contact/contentPage.html:53
 msgid "Ask a question"
 msgstr "提问"
 
@@ -323,8 +318,8 @@ msgstr "退出"
 #: centerpokupok/templates/header_small.html:9
 #: centerpokupok/templates/Company/header.html:13
 #: centerpokupok/templates/registration/login.html:3
-#: tppcenter/templates/login_header.html:13
-#: tppcenter/templates/main_header.html:9
+#: tppcenter/templates/login_header.html:44
+#: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/login.html:46
 msgid "Sign in"
 msgstr "登录"
@@ -338,7 +333,7 @@ msgid "Workplace"
 msgstr "工作场所"
 
 #: centerpokupok/templates/header_big.html:92
-#: tppcenter/templates/login_header.html:13
+#: tppcenter/templates/login_header.html:42
 msgid "Sign out"
 msgstr "退出"
 
@@ -359,14 +354,11 @@ msgid "Search Products"
 msgstr "搜索产品"
 
 #: centerpokupok/templates/header_big.html:108
-#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:22
-#: modules-mod/django-haystack-es_types/haystack/forms.py:22
-#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:22
 msgid "Search"
 msgstr "搜索"
 
 #: centerpokupok/templates/header_small.html:6
-#: tppcenter/templates/base.html:28 usersites/templates/base.html:21
+#: tppcenter/templates/base.html:39 usersites/templates/base.html:21
 msgid "Main page"
 msgstr "主页面"
 
@@ -435,7 +427,7 @@ msgstr "颜色"
 #: tppcenter/templates/BusinessProposal/addForm.html:46
 #: tppcenter/templates/BusinessProposal/addForm.html:54
 #: tppcenter/templates/BusinessProposal/addForm.html:62
-#: tppcenter/templates/BusinessProposal/addForm.html:80
+#: tppcenter/templates/BusinessProposal/addForm.html:83
 msgid "Delete"
 msgstr "删除"
 
@@ -457,17 +449,17 @@ msgstr "用户详细信息"
 
 #: centerpokupok/templates/Cabinet/index.html:45
 #: centerpokupok/templates/Cabinet/shippingAddress.html:39
-#: tppcenter/templates/BusinessProposal/addForm.html:145
-#: tppcenter/templates/Companies/addForm.html:259
-#: tppcenter/templates/Exhibitions/addForm.html:216
+#: tppcenter/templates/BusinessProposal/addForm.html:159
+#: tppcenter/templates/Companies/addForm.html:264
+#: tppcenter/templates/Exhibitions/addForm.html:228
 #: tppcenter/templates/Innov/addForm.html:190
 #: tppcenter/templates/Products/addForm.html:435
-#: tppcenter/templates/Profile/addForm.html:115
-#: tppcenter/templates/Resume/addForm.html:321
+#: tppcenter/templates/Profile/addForm.html:108
+#: tppcenter/templates/Resume/addForm.html:324
 #: tppcenter/templates/Tenders/addForm.html:166
-#: tppcenter/templates/Tpp/addForm.html:222
+#: tppcenter/templates/Tpp/addForm.html:240
 #: tppcenter/templates/TppTV/addForm.html:111
-#: tppcenter/templates/Vacancy/addForm.html:269
+#: tppcenter/templates/Vacancy/addForm.html:277
 msgid "Save"
 msgstr "保存"
 
@@ -504,8 +496,8 @@ msgstr "类别"
 #: centerpokupok/templates/Product/index.html:60
 #: centerpokupok/templates/Product/new.html:96
 #: tppcenter/templates/Analytic/main.html:91
-#: tppcenter/templates/Innov/detailContent.html:94
-#: usersites/templates/site_sidebar.html:15
+#: tppcenter/templates/Innov/detailContent.html:80
+#: usersites/templates/site_sidebar.html:95
 msgid "Main"
 msgstr "主要的"
 
@@ -514,45 +506,44 @@ msgstr "主要的"
 msgid "All categories"
 msgstr "所有类别"
 
-#: centerpokupok/templates/Company/about.html:4
-#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:10
-#: tppcenter/templates/base.html:115 tppcenter/templates/base.html.py:116
-#: tppcenter/templates/login_header.html:10
-#: tppcenter/templates/main_header.html:6
-#: tppcenter/templates/BusinessProposal/detailContent.html:73
-#: tppcenter/templates/Companies/detailContent.html:548
+#: centerpokupok/templates/Company/about.html:5
+#: centerpokupok/templates/Company/header.html:47 tppcenter/Project/urls.py:11
+#: tppcenter/templates/BusinessProposal/detailContent.html:65
+#: tppcenter/templates/Companies/detailContent.html:529
 #: tppcenter/templates/Project/about.html:16
-#: tppcenter/templates/Tpp/detailContent.html:497
+#: tppcenter/templates/Tpp/detailContent.html:474
+#: tppcenter/templates/main/staticPages.html:3
+#: usersites/templates/Proposals/detailContent.html:79
 msgid "About"
 msgstr "关于"
 
-#: centerpokupok/templates/Company/about.html:25
+#: centerpokupok/templates/Company/about.html:26
 #: centerpokupok/templates/Company/contact.html:25
 msgid "special price"
 msgstr "特价"
 
-#: centerpokupok/templates/Company/about.html:28
+#: centerpokupok/templates/Company/about.html:29
 #: centerpokupok/templates/Company/contact.html:28
 #: centerpokupok/templates/Company/index.html:70
 #: centerpokupok/templates/Product/detail.html:93
 msgid "Sale"
 msgstr "销售商"
 
-#: centerpokupok/templates/Company/about.html:29
+#: centerpokupok/templates/Company/about.html:30
 #: centerpokupok/templates/Company/contact.html:29
 #: centerpokupok/templates/Company/index.html:71
 #: centerpokupok/templates/Product/detail.html:94
 msgid "winter collection"
 msgstr "冬季时装"
 
-#: centerpokupok/templates/Company/about.html:41
+#: centerpokupok/templates/Company/about.html:42
 #: centerpokupok/templates/Company/contact.html:41
 #: centerpokupok/templates/Company/index.html:83
 msgid "Subscripe"
 msgstr "脚注"
 
 #: centerpokupok/templates/Company/contact.html:60
-#: usersites/templates/Contact/contentPage.html:48
+#: usersites/templates/Contact/contentPage.html:56
 msgid "Your name"
 msgstr "你的名字"
 
@@ -561,9 +552,9 @@ msgid "Your email"
 msgstr "你的邮件"
 
 #: centerpokupok/templates/Company/contact.html:74
-#: tppcenter/templates/base.html:183
+#: tppcenter/templates/base.html:211
 #: usersites/templates/CompanyStructure/contentPage.html:49
-#: usersites/templates/Contact/contentPage.html:57
+#: usersites/templates/Contact/contentPage.html:65
 msgid "Message"
 msgstr "信息"
 
@@ -600,8 +591,8 @@ msgstr "你节省/保存了"
 #: centerpokupok/templates/Coupons/index.html:152
 #: centerpokupok/templates/Product/detail.html:211
 #: centerpokupok/templates/main/main_coupons.html:48
-#: tppcenter/templates/Products/contentPage.html:62
-#: tppcenter/templates/Wall/contentPage.html:280
+#: tppcenter/templates/Products/contentPage.html:53
+#: tppcenter/templates/Wall/contentPage.html:41
 #: usersites/templates/contentPage.html:103
 #: usersites/templates/Products/contentPage.html:21
 msgid "Buy"
@@ -639,14 +630,15 @@ msgid "Store main page"
 msgstr "店铺主页"
 
 #: centerpokupok/templates/Company/header.html:50
-#: tppcenter/templates/base.html:132
-#: tppcenter/templates/BusinessProposal/detailContent.html:76
-#: tppcenter/templates/Companies/detailContent.html:614
-#: tppcenter/templates/Exhibitions/detailContent.html:115
-#: tppcenter/templates/Innov/detailContent.html:97
-#: tppcenter/templates/Tpp/detailContent.html:554
-#: tppcenter/templates/Tpp/tabCompanies.html:9 usersites/Contact/views.py:11
-#: usersites/Contact/views.py:12
+#: tppcenter/templates/BusinessProposal/detailContent.html:68
+#: tppcenter/templates/Companies/detailContent.html:595
+#: tppcenter/templates/Exhibitions/detailContent.html:104
+#: tppcenter/templates/Innov/detailContent.html:83
+#: tppcenter/templates/Tpp/detailContent.html:533
+#: tppcenter/templates/Tpp/tabCompanies.html:9
+#: tppcenter/templates/main/staticPages.html:18 usersites/Contact/views.py:15
+#: usersites/Contact/views.py:16
+#: usersites/templates/Proposals/detailContent.html:82
 msgid "Contacts"
 msgstr "联系方式"
 
@@ -671,24 +663,24 @@ msgstr "顶级销售/热销产品"
 
 #: centerpokupok/templates/Company/index.html:248
 #: centerpokupok/templates/main/main_coupons.html:9
-#: tppcenter/templates/BusinessProposal/contentPage.html:56
-#: tppcenter/templates/Companies/contentPage.html:74
-#: tppcenter/templates/Exhibitions/contentPage.html:60
-#: tppcenter/templates/Innov/contentPage.html:80
-#: tppcenter/templates/News/detailContent.html:162
-#: tppcenter/templates/Resume/contentPage.html:36
-#: tppcenter/templates/Tenders/contentPage.html:51
-#: tppcenter/templates/Tpp/contentPage.html:54
+#: tppcenter/templates/BusinessProposal/contentPage.html:46
+#: tppcenter/templates/Companies/contentPage.html:56
+#: tppcenter/templates/Exhibitions/contentPage.html:42
+#: tppcenter/templates/Innov/contentPage.html:59
+#: tppcenter/templates/News/detailContent.html:170
+#: tppcenter/templates/Resume/contentPage.html:29
+#: tppcenter/templates/Tenders/contentPage.html:48
+#: tppcenter/templates/Tpp/contentPage.html:42
 #: tppcenter/templates/UserSites/contentPage.html:40
-#: tppcenter/templates/Vacancy/contentPage.html:54
-#: tppcenter/templates/Wall/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:125
-#: tppcenter/templates/Wall/contentPage.html:169
+#: tppcenter/templates/Vacancy/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:106
+#: tppcenter/templates/Wall/contentPage.html:164
+#: tppcenter/templates/Wall/contentPage.html:209
 msgid "More"
 msgstr "更多"
 
 #: centerpokupok/templates/Company/index.html:302
-#: tppcenter/templates/index.html:234
+#: tppcenter/templates/index.html:293
 msgid "Best deals"
 msgstr "最好的交易"
 
@@ -714,6 +706,7 @@ msgstr "折扣"
 
 #: centerpokupok/templates/Coupons/index.html:174
 #: centerpokupok/templates/Coupons/index.html:178
+#: tppcenter/templates/Adv/basket.html:21
 msgid "End Date"
 msgstr "结束日期"
 
@@ -728,8 +721,9 @@ msgstr "创建日期"
 #: centerpokupok/templates/Product/new.html:136
 #: tppcenter/templates/Companies/tabProducts.html:11
 #: tppcenter/templates/Companies/tabTenders.html:10
-#: tppcenter/templates/Products/detailContent.html:73
+#: tppcenter/templates/Products/detailContent.html:67
 #: tppcenter/templates/Tpp/tabTenders.html:10
+#: usersites/templates/Products/detailContent.html:90
 msgid "Price"
 msgstr "价格"
 
@@ -738,7 +732,7 @@ msgid "All "
 msgstr "所有"
 
 #: centerpokupok/templates/Coupons/index.html:208
-#: tppcenter/templates/baseFilter.html:72
+#: tppcenter/templates/baseFilter.html:79
 msgid "All"
 msgstr "所有"
 
@@ -767,7 +761,8 @@ msgid "View store"
 msgstr "查看店铺"
 
 #: centerpokupok/templates/News/detail.html:39
-#: tppcenter/templates/Products/detailContent.html:130
+#: tppcenter/templates/Products/detailContent.html:141
+#: usersites/templates/Products/detailContent.html:153
 msgid "About company"
 msgstr "关于公司"
 
@@ -776,10 +771,8 @@ msgid "Company products"
 msgstr "公司产品"
 
 #: centerpokupok/templates/News/detail.html:41
-#: tppcenter/templates/base.html:133 tppcenter/templates/login_header.html:10
-#: tppcenter/templates/main_header.html:6
-#: tppcenter/templates/Companies/tabStaff.html:41
-#: tppcenter/templates/Tpp/tabStaff.html:42
+#: tppcenter/templates/Companies/tabStaff.html:52
+#: tppcenter/templates/Tpp/tabStaff.html:52
 msgid "Contact"
 msgstr "联系"
 
@@ -817,16 +810,16 @@ msgid "Raiting"
 msgstr "评分"
 
 #: centerpokupok/templates/News/index.html:143
-#: tppcenter/templates/BusinessProposal/contentPage.html:52
+#: tppcenter/templates/BusinessProposal/contentPage.html:37
 #: tppcenter/templates/Companies/tabInnov.html:10
 #: tppcenter/templates/Companies/tabProposal.html:9
 #: tppcenter/templates/News/addForm.html:127
 #: tppcenter/templates/Tpp/tabInnov.html:10
 #: tppcenter/templates/Tpp/tabProposal.html:9
 #: tppcenter/templates/TppTV/addForm.html:71
-#: tppcenter/templates/Vacancy/contentPage.html:51
-#: tppcenter/templates/Vacancy/detailContent.html:35
-#: tppcenter/templates/Wall/contentPage.html:165
+#: tppcenter/templates/Vacancy/contentPage.html:43
+#: tppcenter/templates/Vacancy/detailContent.html:36
+#: tppcenter/templates/Wall/contentPage.html:203
 #: usersites/templates/contentPage.html:20
 #: usersites/templates/contentPage.html:59
 #: usersites/templates/News/contentPage.html:19
@@ -863,15 +856,16 @@ msgid "Favorite"
 msgstr "最喜欢的"
 
 #: centerpokupok/templates/Product/detail.html:228
-#: tppcenter/templates/BusinessProposal/addForm.html:107
+#: tppcenter/templates/BusinessProposal/addForm.html:110
 #: tppcenter/templates/Companies/tabProducts.html:10
-#: tppcenter/templates/Exhibitions/addForm.html:179
+#: tppcenter/templates/Exhibitions/addForm.html:191
 #: tppcenter/templates/Innov/addForm.html:126
 #: tppcenter/templates/Innov/addForm.html:153
 #: tppcenter/templates/Tenders/addForm.html:139
-#: tppcenter/templates/Tenders/detailContent.html:88
-#: tppcenter/templates/Vacancy/addForm.html:247
-#: tppcenter/templates/Vacancy/detailContent.html:72
+#: tppcenter/templates/Tenders/detailContent.html:80
+#: tppcenter/templates/Vacancy/addForm.html:255
+#: tppcenter/templates/Vacancy/detailContent.html:54
+#: tppcenter/templates/Vacancy/detailContent.html:68
 msgid "Description"
 msgstr "描述"
 
@@ -962,19 +956,20 @@ msgid "Adress"
 msgstr "地址"
 
 #: centerpokupok/templates/Product/orderStepOne.html:109
-#: tppcenter/templates/BusinessProposal/detailContent.html:130
-#: tppcenter/templates/Companies/addForm.html:104
-#: tppcenter/templates/Companies/detailContent.html:670
-#: tppcenter/templates/Exhibitions/detailContent.html:170
-#: tppcenter/templates/Exhibitions/detailContent.html:215
-#: tppcenter/templates/Innov/detailContent.html:163
-#: tppcenter/templates/Resume/addForm.html:92
-#: tppcenter/templates/Resume/detailContent.html:66
-#: tppcenter/templates/Tpp/addForm.html:98
-#: tppcenter/templates/Tpp/detailContent.html:590
-#: tppcenter/templates/main/user_profile.html:78
+#: tppcenter/templates/BusinessProposal/detailContent.html:125
+#: tppcenter/templates/Companies/addForm.html:109
+#: tppcenter/templates/Companies/detailContent.html:632
+#: tppcenter/templates/Exhibitions/detailContent.html:163
+#: tppcenter/templates/Exhibitions/detailContent.html:214
+#: tppcenter/templates/Innov/detailContent.html:156
+#: tppcenter/templates/Resume/addForm.html:95
+#: tppcenter/templates/Resume/detailContent.html:60
+#: tppcenter/templates/Tpp/addForm.html:99
+#: tppcenter/templates/Tpp/detailContent.html:569
+#: tppcenter/templates/main/user_profile.html:79
 #: usersites/templates/CompanyStructure/contentPage.html:22
-#: usersites/templates/Contact/contentPage.html:34
+#: usersites/templates/Contact/contentPage.html:39
+#: usersites/templates/Proposals/detailContent.html:136
 msgid "Telephone number"
 msgstr "电话号码"
 
@@ -991,6 +986,7 @@ msgid "Payment method"
 msgstr "支付方式"
 
 #: centerpokupok/templates/Product/orderStepOne.html:151
+#: tppcenter/templates/AdvBanner/order.html:316
 msgid "Continue"
 msgstr "继续"
 
@@ -1057,10 +1053,7 @@ msgstr "确认订单"
 #: centerpokupok/templates/registration/password_reset_form.html:41
 #: centerpokupok/templates/registration/registration_closed.html:48
 #: centerpokupok/templates/registration/registration_complete.html:49
-#: tppcenter/templates/index.html:173
-#: tppcenter/templates/Exhibitions/detailContent.html:98
-#: tppcenter/templates/registration/registration.html:8
-#: tppcenter/templates/registration/registration.html:30
+#: tppcenter/templates/index.html:232 tppcenter/templates/job_index.html:228
 msgid "Registration"
 msgstr "注册"
 
@@ -1199,7 +1192,6 @@ msgid "Best proposals"
 msgstr "最佳方案"
 
 #: centerpokupok/templates/registration/activate.html:3
-#: tppcenter/templates/registration/activate.html:3
 msgid "Registration completed"
 msgstr "完成注册"
 
@@ -1209,7 +1201,6 @@ msgid "Activation problem"
 msgstr "激活问题"
 
 #: centerpokupok/templates/registration/activate.html:6
-#: tppcenter/templates/registration/activate.html:6
 msgid "Your registration complited"
 msgstr "你的注册已完成"
 
@@ -1219,24 +1210,21 @@ msgid "You can sign in"
 msgstr "你可以登录"
 
 #: centerpokupok/templates/registration/activate.html:6
-#: tppcenter/templates/permissionDen.html:12
+#: tppcenter/templates/permissionDen.html:7
 #: tppcenter/templates/registration/activate.html:6
 msgid "profile"
 msgstr "简介"
 
 #: centerpokupok/templates/registration/activate.html:8
-#: tppcenter/templates/registration/activate.html:8
 msgid "Sorry but you activation key is invalid"
 msgstr "抱歉，你的激活码无效"
 
 #: centerpokupok/templates/registration/activation_complete.html:6
 #: tppcenter/templates/registration/registration_complete.html:7
-#: tppcenter/templates/registration/registration_complete.html:29
 msgid "Registration complete"
 msgstr "注册完成"
 
 #: centerpokupok/templates/registration/activation_complete.html:50
-#: tppcenter/templates/registration/activation_complete.html:30
 msgid "Thank you that you have completed the registration! Now you can  "
 msgstr "谢谢，你已经完成注册！现在你可以"
 
@@ -1246,7 +1234,6 @@ msgid "sign in"
 msgstr "登录"
 
 #: centerpokupok/templates/registration/activation_complete.html:51
-#: tppcenter/templates/registration/activation_complete.html:31
 msgid "using the email and password you provided during registration."
 msgstr "在注册期间请使用你提供的邮箱和密码"
 
@@ -1282,21 +1269,25 @@ msgid "Registration on"
 msgstr "在注册"
 
 #: centerpokupok/templates/registration/login.html:17
-#: tppcenter/templates/BusinessProposal/detailContent.html:138
-#: tppcenter/templates/Companies/detailContent.html:678
-#: tppcenter/templates/Exhibitions/detailContent.html:178
-#: tppcenter/templates/Innov/detailContent.html:171
+#: tppcenter/templates/BusinessProposal/detailContent.html:137
+#: tppcenter/templates/Companies/detailContent.html:644
+#: tppcenter/templates/Exhibitions/detailContent.html:175
+#: tppcenter/templates/Exhibitions/detailContent.html:210
+#: tppcenter/templates/Innov/detailContent.html:168
 #: tppcenter/templates/Profile/addForm.html:49
-#: tppcenter/templates/Tpp/detailContent.html:598
-#: tppcenter/templates/main/user_profile.html:48
+#: tppcenter/templates/Tpp/detailContent.html:581
+#: tppcenter/templates/main/user_profile.html:49
+#: usersites/templates/Proposals/detailContent.html:144
 msgid "Email"
 msgstr "邮件"
 
 #: centerpokupok/templates/registration/login.html:23
 #: centerpokupok/templates/registration/registration_form.html:31
 #: centerpokupok/templates/registration/registration_form.html:42
-#: modules-mod/registration/forms.py:40 tppcenter/templates/index.html:220
+#: tppcenter/templates/index.html:279 tppcenter/templates/job_index.html:275
+#: tppcenter/templates/registration/login.html:42
 #: tppcenter/templates/registration/registration.html:46
+#: usersites/templates/slider.html:34
 msgid "Password"
 msgstr "密码"
 
@@ -1346,7 +1337,6 @@ msgid "Reset confirm"
 msgstr "重置确认"
 
 #: centerpokupok/templates/registration/password_reset_confirm.html:48
-#: tppcenter/templates/registration/password_reset_confirm.html:31
 msgid "Enter your new password below to change the old password:"
 msgstr "在下方输入你的新密码，替换旧密码"
 
@@ -1428,7 +1418,6 @@ msgid "Registartion complete"
 msgstr "注册完成"
 
 #: centerpokupok/templates/registration/registration_complete.html:53
-#: tppcenter/templates/registration/registration_complete.html:32
 msgid ""
 "We sent you message. Please check you email and click on the  link to "
 "activate your account. "
@@ -1443,8 +1432,8 @@ msgid "Create new account"
 msgstr "创建新账户"
 
 #: centerpokupok/templates/registration/registration_form.html:20
-#: modules-mod/registration/forms.py:38
-#: tppcenter/templates/Companies/addForm.html:131
+#: tppcenter/templates/Companies/addForm.html:136
+#: tppcenter/templates/registration/login.html:37
 #: tppcenter/templates/registration/registration.html:41
 msgid "E-mail"
 msgstr "邮箱"
@@ -1458,636 +1447,203 @@ msgid "terms"
 msgstr "条款"
 
 #: centerpokupok/templates/registration/registration_form.html:56
-#: tppcenter/templates/index.html:164 tppcenter/templates/index.html.py:186
-#: tppcenter/templates/index.html:212 tppcenter/templates/index.html.py:227
-#: tppcenter/templates/main_header.html:9
+#: tppcenter/templates/index.html:223 tppcenter/templates/index.html.py:245
+#: tppcenter/templates/index.html:271 tppcenter/templates/index.html.py:286
+#: tppcenter/templates/job_index.html:219
+#: tppcenter/templates/job_index.html:241
+#: tppcenter/templates/job_index.html:267
+#: tppcenter/templates/job_index.html:282
+#: tppcenter/templates/main_header.html:10
 #: tppcenter/templates/registration/registration.html:61
+#: usersites/templates/slider.html:41
 msgid "Sign up"
 msgstr "签订"
 
-#: core/models.py:84
+#: core/models.py:93
 msgid "date joined"
 msgstr "加入日期"
 
-#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:118
-#: modules-mod/django-haystack-es_types/haystack/admin.py:118
-#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:118
-#, python-format
-msgid "0 of %(count)d selected"
-msgid_plural "of %(count)d selected"
-msgstr[0] "选中%(count)d"
-msgstr[1] "选中%(count)d"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/admin.py:120
-#: modules-mod/django-haystack-es_types/haystack/admin.py:120
-#: modules-mod/django-haystack-master/build/lib/haystack/admin.py:120
-#, python-format
-msgid "%(total_count)s selected"
-msgid_plural "All %(total_count)s selected"
-msgstr[0] "全选%(total_count)s"
-msgstr[1] "全选%(total_count)s"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/forms.py:96
-#: modules-mod/django-haystack-es_types/haystack/forms.py:96
-#: modules-mod/django-haystack-master/build/lib/haystack/forms.py:96
-msgid "Search In"
-msgstr "在搜索"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:26
-#: modules-mod/django-haystack-es_types/haystack/panels.py:26
-#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:26
-msgid "Haystack"
-msgstr "干草堆"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/panels.py:50
-#: modules-mod/django-haystack-es_types/haystack/panels.py:50
-#: modules-mod/django-haystack-master/build/lib/haystack/panels.py:50
-msgid "Search Queries"
-msgstr "搜索查询"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:5
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:5
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:5
-msgid "Query"
-msgstr "查询"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:6
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:6
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:6
-msgid "Backend Alias"
-msgstr "后端别名"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:7
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:7
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:7
-msgid "Timeline"
-msgstr "时间轴"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:8
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:8
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:8
-msgid "Time"
-msgstr "时间"
-
-#: modules-mod/django-haystack-es_types/build/lib/haystack/templates/panels/haystack.html:9
-#: modules-mod/django-haystack-es_types/haystack/templates/panels/haystack.html:9
-#: modules-mod/django-haystack-master/build/lib/haystack/templates/panels/haystack.html:9
-msgid "Kwargs"
-msgstr "赃物"
-
-#: modules-mod/djcelery/admin.py:51 modules-mod/djcelery/admin.py:58
-#: modules-mod/djcelery/models.py:27 modules-mod/djcelery/models.py:317
-msgid "state"
-msgstr "声明"
-
-#: modules-mod/djcelery/admin.py:65 modules-mod/djcelery/models.py:326
-msgid "ETA"
-msgstr "估计到达时间"
-
-#: modules-mod/djcelery/admin.py:72
-msgid "when"
-msgstr "的时候"
-
-#: modules-mod/djcelery/admin.py:79 modules-mod/djcelery/models.py:196
-#: modules-mod/djcelery/models.py:321
-msgid "name"
-msgstr "名字"
-
-#: modules-mod/djcelery/admin.py:113
-msgid "Task detail"
-msgstr "任务细节"
-
-#: modules-mod/djcelery/admin.py:114
-msgid "Tasks"
-msgstr "任务"
-
-#: modules-mod/djcelery/admin.py:129 modules-mod/djcelery/models.py:319
-msgid "UUID"
-msgstr "通用唯一标识"
-
-#: modules-mod/djcelery/admin.py:153
-msgid "Revoke selected tasks"
-msgstr "取消选定任务"
-
-#: modules-mod/djcelery/admin.py:159
-msgid "Terminate selected tasks"
-msgstr "终止选定任务"
-
-#: modules-mod/djcelery/admin.py:165
-msgid "Kill selected tasks"
-msgstr "扼杀选定任务"
-
-#: modules-mod/djcelery/admin.py:172
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:9
-msgid "Rate limit selected tasks"
-msgstr "速率限制选定任务"
-
-#: modules-mod/djcelery/admin.py:185
-msgid "Rate limit selection"
-msgstr "速率限制选定"
-
-#: modules-mod/djcelery/admin.py:210
-msgid "Node detail"
-msgstr "节点详图"
-
-#: modules-mod/djcelery/admin.py:211
-msgid "Worker Nodes"
-msgstr "工作节点"
-
-#: modules-mod/djcelery/admin.py:218
-msgid "Shutdown selected worker nodes"
-msgstr "停止选定的工作节点"
-
-#: modules-mod/djcelery/admin.py:222
-msgid "Enable event mode for selected nodes."
-msgstr "对选定的节点启用事件模式"
-
-#: modules-mod/djcelery/admin.py:227
-msgid "Disable event mode for selected nodes."
-msgstr "对选定的节点禁用事件模式"
-
-#: modules-mod/djcelery/admin.py:257
-msgid "Task (registered)"
-msgstr "任务（注册登记）"
-
-#: modules-mod/djcelery/admin.py:259
-msgid "Task (custom)"
-msgstr "任务（海关）"
-
-#: modules-mod/djcelery/admin.py:271
-msgid "Need name of task"
-msgstr "任务命名"
-
-#: modules-mod/djcelery/admin.py:282
-#, python-format
-msgid "Unable to parse JSON: %s"
-msgstr "无法解析JSON(一种轻量级的数据交换格式)： %s"
-
-#: modules-mod/djcelery/humanize.py:8
-msgid "just now"
-msgstr "刚刚"
-
-#: modules-mod/djcelery/humanize.py:9
-msgid "{seconds} second ago"
-msgstr "{秒}秒前（单数）"
-
-#: modules-mod/djcelery/humanize.py:9
-msgid "{seconds} seconds ago"
-msgstr "{秒}秒前（复数）"
-
-#: modules-mod/djcelery/humanize.py:10
-msgid "{minutes} minute ago"
-msgstr "{分}分前（单数）"
-
-#: modules-mod/djcelery/humanize.py:10
-msgid "{minutes} minutes ago"
-msgstr "{分}分前（复数）"
-
-#: modules-mod/djcelery/humanize.py:11
-msgid "{hours} hour ago"
-msgstr "{小时}小时前（单数）"
-
-#: modules-mod/djcelery/humanize.py:11
-msgid "{hours} hours ago"
-msgstr "{小时}小时前（复数）"
-
-#: modules-mod/djcelery/humanize.py:12
-msgid "yesterday at {time}"
-msgstr "在昨天（时间）"
-
-#: modules-mod/djcelery/humanize.py:13
-msgid "year"
-msgstr "年（单数）"
-
-#: modules-mod/djcelery/humanize.py:13
-msgid "years"
-msgstr "年（复数）"
-
-#: modules-mod/djcelery/humanize.py:14
-msgid "month"
-msgstr "月（单数）"
-
-#: modules-mod/djcelery/humanize.py:14
-msgid "months"
-msgstr "月（复数）"
-
-#: modules-mod/djcelery/humanize.py:15
-msgid "week"
-msgstr "周（单数）"
-
-#: modules-mod/djcelery/humanize.py:15
-msgid "weeks"
-msgstr "周（复数）"
-
-#: modules-mod/djcelery/humanize.py:16
-#: tppcenter/templates/AdvBanner/addForm.html:193
-#: tppcenter/templates/AdvTop/addForm.html:191
-#: tppcenter/templates/Products/addForm.html:36
-msgid "day"
-msgstr "天（单数）"
-
-#: modules-mod/djcelery/humanize.py:16
-msgid "days"
-msgstr "天（复数）"
-
-#: modules-mod/djcelery/humanize.py:23
-msgid "{number} {type} ago"
-msgstr "{数字}{类型}在...之前"
-
-#: modules-mod/djcelery/models.py:25
-msgid "task id"
-msgstr "任务编号"
-
-#: modules-mod/djcelery/models.py:31
-msgid "done at"
-msgstr "在...完成"
-
-#: modules-mod/djcelery/models.py:32 modules-mod/djcelery/models.py:329
-msgid "traceback"
-msgstr "追溯"
-
-#: modules-mod/djcelery/models.py:35
-msgid "meta"
-msgstr "元"
-
-#: modules-mod/djcelery/models.py:41
-msgid "task state"
-msgstr "任务状态（单数）"
-
-#: modules-mod/djcelery/models.py:42
-msgid "task states"
-msgstr "任务状态（复数）"
-
-#: modules-mod/djcelery/models.py:59
-msgid "group id"
-msgstr "组标识"
-
-#: modules-mod/djcelery/models.py:61
-msgid "created at"
-msgstr "在...创建"
-
-#: modules-mod/djcelery/models.py:68
-msgid "saved group result"
-msgstr "保存组结果（单数）"
-
-#: modules-mod/djcelery/models.py:69
-msgid "saved group results"
-msgstr "保存组结果（复数）"
-
-#: modules-mod/djcelery/models.py:81
-msgid "Days"
-msgstr "天数"
-
-#: modules-mod/djcelery/models.py:82
-msgid "Hours"
-msgstr "小时数"
-
-#: modules-mod/djcelery/models.py:83
-msgid "Minutes"
-msgstr "分钟"
-
-#: modules-mod/djcelery/models.py:84
-msgid "Seconds"
-msgstr "秒"
-
-#: modules-mod/djcelery/models.py:85
-msgid "Microseconds"
-msgstr "微秒"
-
-#: modules-mod/djcelery/models.py:89
-msgid "every"
-msgstr "每一个"
-
-#: modules-mod/djcelery/models.py:91
-msgid "period"
-msgstr "阶段"
-
-#: modules-mod/djcelery/models.py:95 modules-mod/djcelery/models.py:202
-msgid "interval"
-msgstr "区间（单数）"
-
-#: modules-mod/djcelery/models.py:96
-msgid "intervals"
-msgstr "区间（复数）"
-
-#: modules-mod/djcelery/models.py:116
-msgid "every {0.period_singular}"
-msgstr "每{0.阶段_单数}"
-
-#: modules-mod/djcelery/models.py:117
-msgid "every {0.every} {0.period}"
-msgstr "每{0.每个}{0.阶段}"
-
-#: modules-mod/djcelery/models.py:125
-msgid "minute"
-msgstr "分钟"
-
-#: modules-mod/djcelery/models.py:126
-msgid "hour"
-msgstr "小时"
-
-#: modules-mod/djcelery/models.py:128
-msgid "day of week"
-msgstr "周中的一天"
-
-#: modules-mod/djcelery/models.py:131
-msgid "day of month"
-msgstr "月中的一天"
-
-#: modules-mod/djcelery/models.py:134
-msgid "month of year"
-msgstr "年中的一个月"
-
-#: modules-mod/djcelery/models.py:138 modules-mod/djcelery/models.py:205
-msgid "crontab"
-msgstr "定时任务（单数）"
-
-#: modules-mod/djcelery/models.py:139
-msgid "crontabs"
-msgstr "定时任务（复数）"
-
-#: modules-mod/djcelery/models.py:197
-msgid "Useful description"
-msgstr "有用的描述"
-
-#: modules-mod/djcelery/models.py:199
-msgid "task name"
-msgstr "任务名称"
-
-#: modules-mod/djcelery/models.py:206
-msgid "Use one of interval/crontab"
-msgstr "使用其中一个区间/定时任务"
-
-#: modules-mod/djcelery/models.py:209 modules-mod/djcelery/models.py:324
-msgid "Arguments"
-msgstr "命令行参数"
-
-#: modules-mod/djcelery/models.py:210
-msgid "JSON encoded positional arguments"
-msgstr "JSON（一种轻量级的数据交换格式）编码的位置参数"
-
-#: modules-mod/djcelery/models.py:213 modules-mod/djcelery/models.py:325
-msgid "Keyword arguments"
-msgstr "关键字参数"
-
-#: modules-mod/djcelery/models.py:214
-msgid "JSON encoded keyword arguments"
-msgstr "JSON（一种轻量级的数据交换格式）编码的关键字参数"
-
-#: modules-mod/djcelery/models.py:217
-msgid "queue"
-msgstr "队列"
-
-#: modules-mod/djcelery/models.py:218
-msgid "Queue defined in CELERY_QUEUES"
-msgstr "定义于异步任务队列中的队列"
-
-#: modules-mod/djcelery/models.py:221
-msgid "exchange"
-msgstr "交换"
-
-#: modules-mod/djcelery/models.py:224
-msgid "routing key"
-msgstr "路选键"
-
-#: modules-mod/djcelery/models.py:227 modules-mod/djcelery/models.py:327
-msgid "expires"
-msgstr "过期无效"
-
-#: modules-mod/djcelery/models.py:230
-msgid "enabled"
-msgstr "启用"
-
-#: modules-mod/djcelery/models.py:240
-msgid "description"
-msgstr "描述"
-
-#: modules-mod/djcelery/models.py:246
-msgid "periodic task"
-msgstr "周期性任务（单数）"
-
-#: modules-mod/djcelery/models.py:247
-msgid "periodic tasks"
-msgstr "周期性任务（复数）"
-
-#: modules-mod/djcelery/models.py:286
-msgid "hostname"
-msgstr "主机名"
-
-#: modules-mod/djcelery/models.py:287
-msgid "last heartbeat"
-msgstr "最后的心跳"
-
-#: modules-mod/djcelery/models.py:294 modules-mod/djcelery/models.py:336
-msgid "worker"
-msgstr "工作者（单数）"
-
-#: modules-mod/djcelery/models.py:295
-msgid "workers"
-msgstr "工作者（复数）"
-
-#: modules-mod/djcelery/models.py:323
-msgid "event received at"
-msgstr "在...接收事件"
-
-#: modules-mod/djcelery/models.py:328
-msgid "result"
-msgstr "结果"
-
-#: modules-mod/djcelery/models.py:331
-msgid "execution time"
-msgstr "执行时间"
-
-#: modules-mod/djcelery/models.py:332
-msgid "in seconds if task succeeded"
-msgstr "如果任务在几秒内成功"
-
-#: modules-mod/djcelery/models.py:334
-msgid "number of retries"
-msgstr "重试次数"
-
-#: modules-mod/djcelery/models.py:344
-msgid "task"
-msgstr "任务（单数）"
-
-#: modules-mod/djcelery/models.py:345
-msgid "tasks"
-msgstr "任务（复数）"
-
-#: modules-mod/djcelery/templates/admin/djcelery/change_list.html:7
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:6
-msgid "Home"
-msgstr "首页"
-
-#: modules-mod/djcelery/templates/djcelery/confirm_rate_limit.html:22
-msgid "Rate limit"
-msgstr "速率极限"
-
-#: modules-mod/registration/admin.py:23
-msgid "Activate users"
-msgstr "激活用户"
-
-#: modules-mod/registration/admin.py:43
-msgid "Re-send activation emails"
-msgstr "重发激活邮件"
-
-#: modules-mod/registration/forms.py:42
-msgid "Password (again)"
-msgstr "密码（再一次）"
-
-#: modules-mod/registration/forms.py:66
-msgid "The two password fields didn't match."
-msgstr "两次输入的密码不一致"
-
-#: modules-mod/registration/forms.py:77
-msgid "I have read and agree to the Terms of Service"
-msgstr "我已经阅读并同意服务条款"
-
-#: modules-mod/registration/forms.py:78
-msgid "You must agree to the terms to register"
-msgstr "注册前必须同意此条款"
-
-#: modules-mod/registration/forms.py:94
-msgid ""
-"This email address is already in use. Please supply a different email "
-"address."
-msgstr "此邮箱地址已使用。请提供另一个邮箱地址。"
-
-#: modules-mod/registration/forms.py:121
-msgid ""
-"Registration using free email addresses is prohibited. Please supply a "
-"different email address."
-msgstr "禁止使用免费注册的邮箱地址注册。请提供另一个邮箱地址。"
-
-#: modules-mod/registration/models.py:180
-msgid "user"
-msgstr "用户"
-
-#: modules-mod/registration/models.py:181
-msgid "activation key"
-msgstr "激活码"
-
-#: modules-mod/registration/models.py:186
-msgid "registration profile"
-msgstr "登记资料（单数）"
-
-#: modules-mod/registration/models.py:187
-msgid "registration profiles"
-msgstr "登记资料（复数）"
-
-#: tpp/settings.py:207
+#: tpp/settings.py:232
 msgid "Russia"
 msgstr "俄罗斯"
 
-#: tpp/settings.py:211
+#: tpp/settings.py:233
+msgid "Armenia"
+msgstr ""
+
+#: tpp/settings.py:236
 msgid "England"
 msgstr "英国"
 
-#: tpp/settings.py:223
+#: tpp/settings.py:246 tppcenter/templates/index.html:93
+#: tppcenter/templates/job_index.html:109
+msgid "Ukrainian"
+msgstr ""
+
+#: tpp/settings.py:248
 msgid "Israel"
 msgstr "以色列"
+
+#: tpp/settings.py:249 tppcenter/templates/index.html:88
+#: tppcenter/templates/job_index.html:104
+msgid "Arabic"
+msgstr ""
+
+#: tpp/settings.py:250 tppcenter/templates/index.html:92
+#: tppcenter/templates/job_index.html:108
+msgid "Chinese"
+msgstr ""
+
+#: tppcenter/cbv.py:392
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
 
 #: tppcenter/forms.py:224
 msgid "Image size must be less than 2 mb "
 msgstr "图片大小必须在2mb以内"
 
-#: tppcenter/views.py:154
+#: tppcenter/views.py:151
 #, python-format
 msgid "%(name)s , was registered to your event %(event)s ,"
 msgstr "你的%(name)s事件已注册名字%(event)s"
 
-#: tppcenter/views.py:155
+#: tppcenter/views.py:152
 #, python-format
 msgid "working in the %(company)s "
 msgstr "在%(company)s 工作"
 
-#: tppcenter/views.py:156
+#: tppcenter/views.py:153
 #, python-format
 msgid "on the position of %(position)s . "
 msgstr "在%(position)s职位 "
 
-#: tppcenter/views.py:157
+#: tppcenter/views.py:154
 #, python-format
 msgid "You can contact him at this email address %(email)s  "
 msgstr "你可以通过此邮箱地址%(email)s联系他。"
 
-#: tppcenter/views.py:160 tppcenter/views.py:163
+#: tppcenter/views.py:157 tppcenter/views.py:160
 msgid "Registartion to event"
 msgstr "事件登记"
 
-#: tppcenter/AdvBanner/views.py:34 tppcenter/AdvBanner/views.py:244
-#: tppcenter/AdvTop/views.py:203 tppcenter/templates/main_page.html:148
+#: tppcenter/AdminTpp/views.py:687 tppcenter/AdminTpp/views.py:689
+msgid "Banner type already exists"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:692
+msgid "Invalid site"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:695
+msgid "Invalid height"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:698
+msgid "Invalid width"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:701
+msgid "Invalid targeting"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:704
+msgid "Invalid code"
+msgstr ""
+
+#: tppcenter/AdminTpp/views.py:858
+msgid "Invalid type"
+msgstr ""
+
+#: tppcenter/Adv/views.py:61
+#, fuzzy
+msgid "Top"
+msgstr "tpp电脑格式"
+
+#: tppcenter/Adv/views.py:63
+#, fuzzy
+msgid "Banner"
+msgstr "横幅"
+
+#: tppcenter/AdvBanner/views.py:53 tppcenter/AdvBanner/views.py:265
+#: tppcenter/AdvBanner/views.py:330 tppcenter/AdvTop/views.py:208
+#: tppcenter/templates/main_page.html:222
 #: tppcenter/templates/AdvBanner/index.html:7
 msgid "Banners"
 msgstr "横幅"
 
-#: tppcenter/AdvBanner/views.py:188 tppcenter/AdvTop/views.py:165
+#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvTop/views.py:168
 msgid "You must choose one filter al least"
 msgstr "必须至少选择一个过滤器。"
 
-#: tppcenter/AdvBanner/views.py:194
+#: tppcenter/AdvBanner/views.py:213
 msgid "The image size cannot exceed 50 KB"
 msgstr "图片大小不能超过50KB"
 
-#: tppcenter/AdvBanner/views.py:200
+#: tppcenter/AdvBanner/views.py:219
 msgid "Image dimension should not exceed"
 msgstr "图片尺寸不可超出"
 
-#: tppcenter/AdvBanner/views.py:207 tppcenter/AdvBanner/views.py:219
-#: tppcenter/AdvTop/views.py:173 tppcenter/AdvTop/views.py:184
+#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvBanner/views.py:238
+#: tppcenter/AdvTop/views.py:176 tppcenter/AdvTop/views.py:187
 msgid "You should choose a valid date range"
 msgstr "需要选择一个有效的日期范围"
 
-#: tppcenter/AdvBanner/views.py:214 tppcenter/AdvTop/views.py:179
+#: tppcenter/AdvBanner/views.py:233 tppcenter/AdvTop/views.py:182
 msgid "You should choose a date range"
 msgstr "需要选择一个日期范围"
 
-#: tppcenter/AdvBanner/views.py:226 tppcenter/AdvTop/views.py:190
+#: tppcenter/AdvBanner/views.py:248 tppcenter/AdvTop/views.py:195
 msgid "Error occurred while trying to proceed your request"
 msgstr "尝试执行你的请求时发生错误"
 
-#: tppcenter/AdvBanner/views.py:236 tppcenter/AdvTop/views.py:198
+#: tppcenter/AdvBanner/views.py:257 tppcenter/AdvTop/views.py:203
 #: tppcenter/templates/baseFilter.html:10
 msgid "Select branch"
 msgstr "选择分支"
 
-#: tppcenter/AdvBanner/views.py:239 tppcenter/AdvTop/views.py:199
-#: tppcenter/templates/baseFilter.html:11
+#: tppcenter/AdvBanner/views.py:260 tppcenter/AdvTop/views.py:204
+#: tppcenter/templates/baseFilter.html:12
 msgid "Select country"
 msgstr "选择国家"
 
-#: tppcenter/AdvBanner/views.py:242 tppcenter/AdvTop/views.py:200
+#: tppcenter/AdvBanner/views.py:263 tppcenter/AdvTop/views.py:205
 msgid "Select organization"
 msgstr "选择组织"
 
-#: tppcenter/BusinessProposal/views.py:56
-#: tppcenter/BusinessProposal/views.py:131
+#: tppcenter/AdvTop/views.py:265
+msgid "Tops"
+msgstr ""
+
+#: tppcenter/BusinessProposal/views.py:32
+#: tppcenter/BusinessProposal/views.py:52
+#: tppcenter/BusinessProposal/views.py:72
 msgid "Business Proposal"
 msgstr "商业计划书"
 
-#: tppcenter/Companies/views.py:465 tppcenter/Tpp/views.py:585
-#, python-format
-msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+#: tppcenter/Companies/views.py:310
+#, fuzzy
+msgid "Can not delete Department hierarchy. "
 msgstr "无法删除部门层次结构。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:473 tppcenter/Tpp/views.py:593
+#: tppcenter/Companies/views.py:319 tppcenter/Tpp/views.py:410
 #, python-format
 msgid "Can not delete Department. The reason is: %(reason)s"
 msgstr "无法删除部门。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:512 tppcenter/Tpp/views.py:632
+#: tppcenter/Companies/views.py:361 tppcenter/Tpp/views.py:449
 #, python-format
 msgid "Could not find in DB Vacancy %(name)s"
 msgstr "在DB空位中无法找到%(name)s"
 
-#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:645
-#: tppcenter/Vacancy/views.py:531
+#: tppcenter/Companies/views.py:377 tppcenter/Tpp/views.py:462
+#: tppcenter/Vacancy/views.py:397
 #, python-format
 msgid "Can not set attributes for Vacancy %(name)s"
 msgstr "无法为空置%(name)s设置属性"
 
-#: tppcenter/Companies/views.py:532 tppcenter/Tpp/views.py:651
-#: tppcenter/Vacancy/views.py:540
+#: tppcenter/Companies/views.py:385 tppcenter/Tpp/views.py:468
+#: tppcenter/Vacancy/views.py:406
 #, python-format
 msgid ""
 "Can not create Relationship between Vacancy %(vac_name)s and Department ID "
@@ -2095,25 +1651,25 @@ msgid ""
 msgstr ""
 "无法创建空位%(vac_name)s和部门编号%(dep_name)s之间的关系。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:538 tppcenter/Tpp/views.py:657
-#: tppcenter/Vacancy/views.py:546
+#: tppcenter/Companies/views.py:391 tppcenter/Tpp/views.py:474
+#: tppcenter/Vacancy/views.py:412
 #, python-format
 msgid ""
 "Can not create Vacancy for Department ID: %(dep_id)s. The reason is: "
 "%(reason)s"
 msgstr "无法为部门编号%(dep_id)s创建空位。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:550 tppcenter/Tpp/views.py:669
+#: tppcenter/Companies/views.py:403 tppcenter/Tpp/views.py:486
 #, python-format
 msgid "Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s"
 msgstr "无法删除部门编号%(vac_id)s空位。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:617 tppcenter/Tpp/views.py:736
+#: tppcenter/Companies/views.py:470 tppcenter/Tpp/views.py:553
 #, python-format
 msgid "User %(user)s has not Cabinet."
 msgstr "%(user)s用户没有机壳"
 
-#: tppcenter/Companies/views.py:655 tppcenter/Tpp/views.py:774
+#: tppcenter/Companies/views.py:513 tppcenter/Tpp/views.py:591
 #, python-format
 msgid ""
 "Can not set attributes for Cabinet ID: "
@@ -2121,70 +1677,83 @@ msgid ""
 "%(reason)s"
 msgstr "无法为机壳编号%(cab_id)s设置属性。原因为：%(reason)s"
 
-#: tppcenter/Companies/views.py:665 tppcenter/Tpp/views.py:785
+#: tppcenter/Companies/views.py:523 tppcenter/Tpp/views.py:602
 msgid "You can not add user at Vacancy which already busy."
 msgstr "无法给繁忙的空位添加用户"
 
-#: tppcenter/Companies/views.py:667 tppcenter/Tpp/views.py:787
+#: tppcenter/Companies/views.py:525 tppcenter/Tpp/views.py:604
 #, python-format
 msgid "You can not add user [%(user)s] at the company twice."
 msgstr "无法重复在同一公司添加用户[%(user)s]"
 
-#: tppcenter/Companies/views.py:991
-msgid "This message was sent to company with id:"
-msgstr "此信息发送至公司编号:"
+#: tppcenter/Companies/views.py:695 tppcenter/Companies/views.py:792
+#, fuzzy
+msgid "Please select a country"
+msgstr "选择国家"
 
-#: tppcenter/Companies/views.py:994
-msgid "New message"
-msgstr "新消息"
+#: tppcenter/Companies/views.py:699 tppcenter/Companies/views.py:796
+#, fuzzy
+msgid "Invalid Country"
+msgstr "国家"
 
-#: tppcenter/Companies/views.py:1000 tppcenter/templates/base.html:174
-#: tppcenter/templates/Vacancy/index.html:43
+#: tppcenter/Companies/views.py:962 tppcenter/Companies/views.py:978
+#: tppcenter/templates/base.html:202
+#: tppcenter/templates/Vacancy/detailContent.html:96
 msgid "You have successfully sent the message."
 msgstr "信息成功发送。"
 
-#: tppcenter/Companies/views.py:1003
+#: tppcenter/Companies/views.py:969
+msgid "This message was sent to company with id:"
+msgstr "此信息发送至公司编号:"
+
+#: tppcenter/Companies/views.py:972
+msgid "New message"
+msgstr "新消息"
+
+#: tppcenter/Companies/views.py:981
 msgid "Message or file are required"
 msgstr "需要信息或档案"
 
-#: tppcenter/Companies/views.py:1005
-msgid "Only registred users can send the messages"
+#: tppcenter/Companies/views.py:983
+#, fuzzy
+msgid "Only registered users can send the messages"
 msgstr "只有注册的用户才能发送信息"
 
-#: tppcenter/Greetings/views.py:35 tppcenter/templates/base.html:120
-#: tppcenter/templates/index.html:405
-#: tppcenter/templates/Greetings/index.html:10
+#: tppcenter/Greetings/views.py:19 tppcenter/Greetings/views.py:45
+#: tppcenter/templates/index.html:464 tppcenter/templates/job_index.html:417
+#: tppcenter/templates/main/staticPages.html:8
 msgid "Greetings"
 msgstr "问候"
 
-#: tppcenter/Innov/views.py:55 tppcenter/Innov/views.py:314
-#: tppcenter/templates/Wall/contentPage.html:11
+#: tppcenter/Innov/views.py:33 tppcenter/Innov/views.py:81
+#: tppcenter/Innov/views.py:113 tppcenter/templates/Wall/contentPage.html:56
 msgid "Innovation Project"
 msgstr "创新项目"
 
-#: tppcenter/Messages/views.py:77
+#: tppcenter/Messages/views.py:82
 msgid "Private messages"
 msgstr "原始信息"
 
-#: tppcenter/News/views.py:62 tppcenter/News/views.py:99
-#: tppcenter/templates/index.html:153 tppcenter/templates/main_page.html:116
-#: tppcenter/templates/main_page.html:139
-#: tppcenter/templates/Companies/detailContent.html:561
-#: tppcenter/templates/News/index.html:11
-#: tppcenter/templates/Tpp/detailContent.html:507
-#: tppcenter/templates/Wall/contentPage.html:189 usersites/News/views.py:41
+#: tppcenter/News/views.py:40 tppcenter/News/views.py:85
+#: tppcenter/News/views.py:114 tppcenter/templates/index.html:212
+#: tppcenter/templates/job_index.html:208
+#: tppcenter/templates/main_page.html:184
+#: tppcenter/templates/main_page.html:209
+#: tppcenter/templates/Companies/detailContent.html:542
+#: tppcenter/templates/Tpp/detailContent.html:484
+#: tppcenter/templates/Wall/contentPage.html:224 usersites/News/views.py:41
 #: usersites/News/views.py:42 usersites/templates/contentPage.html:43
 msgid "News"
 msgstr "新闻"
 
 #: tppcenter/Profile/profileForms.py:20
-#: tppcenter/templates/main/user_profile.html:40
+#: tppcenter/templates/main/user_profile.html:41
 msgid "First name"
 msgstr "名"
 
 #: tppcenter/Profile/profileForms.py:23
 #: tppcenter/templates/Profile/addForm.html:44
-#: tppcenter/templates/main/user_profile.html:44
+#: tppcenter/templates/main/user_profile.html:45
 msgid "Middle name"
 msgstr "中间名"
 
@@ -2201,8 +1770,8 @@ msgid "Skype"
 msgstr " 网络电话"
 
 #: tppcenter/Profile/profileForms.py:56
-#: tppcenter/templates/Profile/addForm.html:102
-#: tppcenter/templates/main/user_profile.html:82
+#: tppcenter/templates/Profile/addForm.html:95
+#: tppcenter/templates/main/user_profile.html:83
 #: usersites/templates/CompanyStructure/contentPage.html:23
 msgid "Mobile number"
 msgstr "手机号码"
@@ -2211,146 +1780,165 @@ msgstr "手机号码"
 msgid "Proffesion"
 msgstr "职业"
 
-#: tppcenter/Profile/views.py:97
+#: tppcenter/Profile/views.py:21 tppcenter/templates/login_header.html:35
+#: tppcenter/templates/main_page.html:229
+#: tppcenter/templates/Profile/index.html:6
+msgid "Profile"
+msgstr "简介"
+
+#: tppcenter/Profile/views.py:100
 msgid "This email already in use"
 msgstr "此邮箱已使用"
 
-#: tppcenter/Project/urls.py:11 tppcenter/templates/base.html:117
-#: tppcenter/templates/Project/adv.html:16
+#: tppcenter/Project/urls.py:12 tppcenter/templates/Project/adv.html:16
 msgid "Advertise with us"
 msgstr "刊登广告"
 
-#: tppcenter/Project/urls.py:12 tppcenter/templates/base.html:121
-#: tppcenter/templates/index.html:75
+#: tppcenter/Project/urls.py:13 tppcenter/templates/index.html:75
+#: tppcenter/templates/job_index.html:91
 msgid "Payment System"
 msgstr "支付系统"
 
-#: tppcenter/Project/urls.py:13 tppcenter/templates/base.html:118
-#: tppcenter/templates/main_header.html:6
-#: tppcenter/templates/Project/terms.html:16
+#: tppcenter/Project/urls.py:14 tppcenter/templates/Project/terms.html:16
 msgid "Terms of use"
 msgstr "使用条款"
 
-#: tppcenter/Project/urls.py:14 tppcenter/templates/base.html:128
+#: tppcenter/Project/urls.py:15
 msgid "Find a Business Partner"
 msgstr "寻找一个企业合作伙伴"
 
-#: tppcenter/Project/urls.py:16 tppcenter/templates/base.html:125
-#: tppcenter/templates/Project/shop.html:16
+#: tppcenter/Project/urls.py:17 tppcenter/templates/Project/shop.html:16
 msgid "Create online shop"
 msgstr "开网店"
 
-#: tppcenter/Project/urls.py:17 tppcenter/templates/base.html:126
-#: tppcenter/templates/Project/event.html:16
-#: tppcenter/templates/Project/proposal.html:16
+#: tppcenter/Project/urls.py:18
 msgid "Post announcement event"
 msgstr "发布公告事件"
 
-#: tppcenter/Project/urls.py:18 tppcenter/templates/base.html:127
-#: tppcenter/templates/Project/partner.html:16
+#: tppcenter/Project/urls.py:19 tppcenter/templates/Project/partner.html:16
 msgid "Add a business proposal"
 msgstr "添加一个商业计划书"
 
-#: tppcenter/Project/urls.py:21 tppcenter/templates/base.html:129
-#: tppcenter/templates/Project/site.html:16
+#: tppcenter/Project/urls.py:22 tppcenter/templates/Project/site.html:16
 msgid "Your own site"
 msgstr "你自己的网站"
 
-#: tppcenter/Resume/views.py:125 tppcenter/templates/main_page.html:130
-#: tppcenter/templates/main_page.html:152
-#: tppcenter/templates/Resume/index.html:10
+#: tppcenter/Resume/views.py:38 tppcenter/Resume/views.py:83
+#: tppcenter/Resume/views.py:111 tppcenter/templates/main_page.html:197
+#: tppcenter/templates/main_page.html:228
 msgid "Resume"
 msgstr "简历"
 
-#: tppcenter/Tenders/views.py:55 tppcenter/Tenders/views.py:141
-#: tppcenter/templates/index.html:141 tppcenter/templates/main_page.html:123
-#: tppcenter/templates/main_page.html:146
+#: tppcenter/Tenders/views.py:31 tppcenter/Tenders/views.py:51
+#: tppcenter/Tenders/views.py:71 tppcenter/templates/index.html:200
+#: tppcenter/templates/job_index.html:196
+#: tppcenter/templates/main_page.html:190
+#: tppcenter/templates/main_page.html:215
 #: tppcenter/templates/Analytic/main.html:76
 #: tppcenter/templates/Analytic/main.html:119
-#: tppcenter/templates/Companies/detailContent.html:578
-#: tppcenter/templates/Tenders/index.html:10
-#: tppcenter/templates/Tpp/detailContent.html:524
+#: tppcenter/templates/Companies/detailContent.html:559
+#: tppcenter/templates/Tpp/detailContent.html:503
 msgid "Tenders"
 msgstr "投标"
 
-#: tppcenter/Tpp/views.py:60 tppcenter/Tpp/views.py:265
-#: tppcenter/templates/Tpp/index.html:10
+#: tppcenter/Tpp/views.py:41 tppcenter/Tpp/views.py:73
+#: tppcenter/Tpp/views.py:93
 msgid "Tpp"
 msgstr "tpp电脑格式"
 
-#: tppcenter/TppTV/views.py:83
+#: tppcenter/Tpp/views.py:402
+#, python-format
+msgid "Can not delete Department hierarchy. The reason is: %(reason)s"
+msgstr "无法删除部门层次结构。原因为：%(reason)s"
+
+#: tppcenter/Tpp/views.py:606
+#, fuzzy
+msgid ""
+"Could not add User ID: %(user_id).                                  The "
+"reason is: %(reason)s"
+msgstr "无法为机壳编号%(cab_id)s设置属性。原因为：%(reason)s"
+
+#: tppcenter/TppTV/views.py:29 tppcenter/TppTV/views.py:65
+msgid "TPP-TV"
+msgstr ""
+
+#: tppcenter/TppTV/views.py:94
 msgid "TppTv"
 msgstr "Tpp格式电视"
 
-#: tppcenter/UserSites/views.py:103 tppcenter/templates/main_page.html:150
+#: tppcenter/UserSites/views.py:89 tppcenter/templates/main_page.html:226
 #: tppcenter/templates/Tpp/tabCompanies.html:10
 msgid "Site"
 msgstr "网站"
 
-#: tppcenter/UserSites/views.py:153
+#: tppcenter/UserSites/views.py:136
 msgid "You cannot add more than one site for your organization"
 msgstr "无法为你的组织添加超过一个网站"
 
-#: tppcenter/UserSites/views.py:178 tppcenter/UserSites/views.py:231
+#: tppcenter/UserSites/views.py:163 tppcenter/UserSites/views.py:225
 msgid "This domain is used, please try something else"
 msgstr "此域名已被使用，请重试其他域名。"
 
-#: tppcenter/Vacancy/views.py:68 tppcenter/Vacancy/views.py:276
-#: tppcenter/templates/Vacancy/addForm.html:185
-#: tppcenter/templates/Vacancy/index.html:10
+#: tppcenter/Users/views.py:15 tppcenter/templates/main_page.html:198
+#: tppcenter/templates/main_page.html:231
+#: tppcenter/templates/Messages/index.html:49
+msgid "Users"
+msgstr "用户"
+
+#: tppcenter/Vacancy/views.py:38 tppcenter/Vacancy/views.py:80
+#: tppcenter/Vacancy/views.py:118
 msgid "Vacancy"
 msgstr "空位"
 
-#: tppcenter/Vacancy/views.py:338 tppcenter/Vacancy/views.py:392
+#: tppcenter/Vacancy/views.py:183 tppcenter/Vacancy/views.py:241
 msgid "You have to choose vacancy"
 msgstr "需选择空位"
 
-#: tppcenter/Vacancy/views.py:473
+#: tppcenter/Vacancy/views.py:325
 msgid "You cannot send more than one resume at the same job position."
 msgstr "同一工作职位不能发超过一份简历"
 
-#: tppcenter/Vacancy/views.py:476
+#: tppcenter/Vacancy/views.py:328
 msgid "You have successfully sent the resume."
 msgstr "简历成功发送"
 
-#: tppcenter/Vacancy/views.py:479
+#: tppcenter/Vacancy/views.py:331
 msgid "Resume  are required"
 msgstr "需要简历"
 
-#: tppcenter/Vacancy/views.py:481
+#: tppcenter/Vacancy/views.py:333
 msgid "Only registred users can send resume"
 msgstr "只有注册用户可发送简历"
 
-#: tppcenter/Vacancy/views.py:504
+#: tppcenter/Vacancy/views.py:359
 msgid "The error occurred"
 msgstr "错误发生"
 
-#: tppcenter/Vacancy/views.py:509
+#: tppcenter/Vacancy/views.py:364
 msgid "Department name  is required"
 msgstr "需要部门名称"
 
-#: tppcenter/Vacancy/views.py:511
+#: tppcenter/Vacancy/views.py:366
 msgid "Only registred users can add department"
 msgstr "只有注册用户可添加部门"
 
-#: tppcenter/Vacancy/views.py:551
+#: tppcenter/Vacancy/views.py:417
 msgid "Vacancy name  is required"
 msgstr "需要空位名称"
 
-#: tppcenter/Vacancy/views.py:553
+#: tppcenter/Vacancy/views.py:419
 msgid "Only registred users can add vacancy"
 msgstr "只有注册用户可添加空位"
 
-#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:132
-#: tppcenter/templates/main_page.html:156
-#: tppcenter/templates/Wall/index.html:6 usersites/views.py:18
-#: usersites/views.py:19
+#: tppcenter/Wall/views.py:13 tppcenter/templates/main_page.html:199
+#: tppcenter/templates/Wall/index.html:4 usersites/views.py:20
+#: usersites/views.py:21
 msgid "Wall"
 msgstr "墙"
 
 #: tppcenter/templates/additionalPage.html:4
-#: tppcenter/templates/baseFilter.html:90
-#: tppcenter/templates/baseFilter.html:116
+#: tppcenter/templates/baseFilter.html:97
+#: tppcenter/templates/baseFilter.html:123
 #: tppcenter/templates/News/addForm.html:145
 #: tppcenter/templates/TppTV/addForm.html:94
 msgid "Title"
@@ -2361,6 +1949,7 @@ msgstr "标题"
 #: tppcenter/templates/News/addForm.html:41
 #: tppcenter/templates/News/addForm.html:69
 #: tppcenter/templates/Products/addForm.html:172
+#: tppcenter/templates/UserSites/addForm.html:107
 msgid "Remove"
 msgstr "转移"
 
@@ -2375,70 +1964,70 @@ msgstr "添加页面"
 msgid "Content"
 msgstr "内容"
 
-#: tppcenter/templates/base.html:124
-msgid "Advices"
-msgstr "建议"
-
-#: tppcenter/templates/base.html:144
+#: tppcenter/templates/base.html:172
 msgid "Partners"
 msgstr "合作伙伴"
 
-#: tppcenter/templates/base.html:152 tppcenter/templates/main_page.html:109
+#: tppcenter/templates/base.html:180 tppcenter/templates/main_page.html:174
 msgid "TPP-Center"
 msgstr "TPP中心"
 
-#: tppcenter/templates/base.html:152
+#: tppcenter/templates/base.html:180
 msgid "Center of chambers of commerce, associations, unions and guilds "
 msgstr "商会中心，商务部，商会，工会和行业协会"
 
-#: tppcenter/templates/base.html:179
+#: tppcenter/templates/base.html:207
 msgid "Send message to"
 msgstr "发送信息至"
 
-#: tppcenter/templates/base.html:187
+#: tppcenter/templates/base.html:215
 msgid "File"
 msgstr "文件"
 
-#: tppcenter/templates/base.html:193
-#: tppcenter/templates/Messages/contentBox.html:14
-#: tppcenter/templates/Vacancy/index.html:70
-#: usersites/templates/Contact/contentPage.html:66
+#: tppcenter/templates/base.html:221
+#: tppcenter/templates/Messages/contentBox.html:15
+#: tppcenter/templates/Vacancy/detailContent.html:123
+#: usersites/templates/Contact/contentPage.html:88
 msgid "Send"
 msgstr "发送"
 
-#: tppcenter/templates/base.html:194
-#: tppcenter/templates/BusinessProposal/addForm.html:146
-#: tppcenter/templates/Companies/addForm.html:260
-#: tppcenter/templates/Companies/tabStaff.html:150
-#: tppcenter/templates/Companies/tabStructure.html:78
-#: tppcenter/templates/Companies/tabStructure.html:90
-#: tppcenter/templates/Exhibitions/addForm.html:217
-#: tppcenter/templates/Exhibitions/detailContent.html:231
+#: tppcenter/templates/base.html:222
+#: tppcenter/templates/BusinessProposal/addForm.html:160
+#: tppcenter/templates/Companies/addForm.html:265
+#: tppcenter/templates/Companies/tabStaff.html:161
+#: tppcenter/templates/Companies/tabStructure.html:80
+#: tppcenter/templates/Companies/tabStructure.html:92
+#: tppcenter/templates/Exhibitions/addForm.html:229
+#: tppcenter/templates/Exhibitions/detailContent.html:230
 #: tppcenter/templates/Products/addForm.html:436
-#: tppcenter/templates/Profile/addForm.html:116
-#: tppcenter/templates/Resume/addForm.html:322
+#: tppcenter/templates/Profile/addForm.html:109
+#: tppcenter/templates/Resume/addForm.html:325
 #: tppcenter/templates/Tenders/addForm.html:167
-#: tppcenter/templates/Tpp/addForm.html:223
-#: tppcenter/templates/Tpp/tabStaff.html:151
+#: tppcenter/templates/Tpp/addForm.html:241
+#: tppcenter/templates/Tpp/tabStaff.html:160
 #: tppcenter/templates/Tpp/tabStructure.html:77
 #: tppcenter/templates/Tpp/tabStructure.html:89
 #: tppcenter/templates/TppTV/addForm.html:112
-#: tppcenter/templates/Vacancy/addForm.html:270
-#: tppcenter/templates/Vacancy/addForm.html:298
-#: tppcenter/templates/Vacancy/addForm.html:310
-#: tppcenter/templates/Vacancy/index.html:71
+#: tppcenter/templates/Vacancy/addForm.html:278
+#: tppcenter/templates/Vacancy/addForm.html:306
+#: tppcenter/templates/Vacancy/addForm.html:318
+#: tppcenter/templates/Vacancy/detailContent.html:124
 msgid "Cancel"
 msgstr "取消"
 
 #: tppcenter/templates/baseFilter.html:7
-#: tppcenter/templates/AdvBanner/addForm.html:224
-#: tppcenter/templates/AdvTop/addForm.html:222
+#: tppcenter/templates/AdvBanner/addForm.html:225
+#: tppcenter/templates/AdvBanner/order.html:224
+#: tppcenter/templates/AdvTop/addForm.html:225
+#: tppcenter/templates/AdvTop/order.html:224
 msgid "No result found"
 msgstr "没找到结果"
 
 #: tppcenter/templates/baseFilter.html:8
-#: tppcenter/templates/AdvBanner/addForm.html:222
-#: tppcenter/templates/AdvTop/addForm.html:220
+#: tppcenter/templates/AdvBanner/addForm.html:223
+#: tppcenter/templates/AdvBanner/order.html:222
+#: tppcenter/templates/AdvTop/addForm.html:223
+#: tppcenter/templates/AdvTop/order.html:222
 msgid "Minimum length of search term is 3 characters"
 msgstr "搜索项目最短长度为3个字符"
 
@@ -2446,86 +2035,119 @@ msgstr "搜索项目最短长度为3个字符"
 msgid "Select organizations"
 msgstr "选择组织"
 
-#: tppcenter/templates/baseFilter.html:61
-#: tppcenter/templates/AdvBanner/addForm.html:333
-#: tppcenter/templates/AdvTop/addForm.html:302
+#: tppcenter/templates/baseFilter.html:11
+#, fuzzy
+msgid "Select company"
+msgstr "选择国家"
+
+#: tppcenter/templates/baseFilter.html:13
+#, fuzzy
+msgid "Select category"
+msgstr "选择国家"
+
+#: tppcenter/templates/baseFilter.html:68
+#: tppcenter/templates/AdvBanner/addForm.html:335
+#: tppcenter/templates/AdvTop/addForm.html:306
 msgid "Filter"
 msgstr "筛选"
 
-#: tppcenter/templates/baseFilter.html:73
-#: tppcenter/templates/main_page.html:110
+#: tppcenter/templates/baseFilter.html:80
+#: tppcenter/templates/main_page.html:175
 msgid "My"
 msgstr "我的"
 
-#: tppcenter/templates/baseFilter.html:76
+#: tppcenter/templates/baseFilter.html:83
 msgid "Sorting"
 msgstr "分类"
 
-#: tppcenter/templates/baseFilter.html:82
-#: tppcenter/templates/baseFilter.html:110
+#: tppcenter/templates/baseFilter.html:89
+#: tppcenter/templates/baseFilter.html:117
 msgid "Field"
 msgstr "领域"
 
-#: tppcenter/templates/baseFilter.html:87
-#: tppcenter/templates/baseFilter.html:115
+#: tppcenter/templates/baseFilter.html:94
+#: tppcenter/templates/baseFilter.html:122
 msgid "Creation date"
 msgstr "创建时间"
 
-#: tppcenter/templates/baseFilter.html:99
-#: tppcenter/templates/baseFilter.html:125
+#: tppcenter/templates/baseFilter.html:106
+#: tppcenter/templates/baseFilter.html:132
 msgid "Descending"
 msgstr "降序"
 
-#: tppcenter/templates/baseFilter.html:102
-#: tppcenter/templates/baseFilter.html:128
+#: tppcenter/templates/baseFilter.html:109
+#: tppcenter/templates/baseFilter.html:135
 msgid "Ascending"
 msgstr "升序"
 
-#: tppcenter/templates/baseFilter.html:134
+#: tppcenter/templates/baseFilter.html:141
 msgid "Apply"
 msgstr "申请"
 
-#: tppcenter/templates/index.html:7
+#: tppcenter/templates/index.html:7 tppcenter/templates/job_index.html:7
 msgid "Tppcenter"
 msgstr "TPP中心"
 
-#: tppcenter/templates/index.html:63
+#: tppcenter/templates/index.html:63 tppcenter/templates/job_index.html:79
 msgid "B2C center"
 msgstr "电子商务商业机构对消费者的电子商务中心"
 
-#: tppcenter/templates/index.html:69
+#: tppcenter/templates/index.html:69 tppcenter/templates/job_index.html:85
 msgid "Innovation projects"
 msgstr "创新项目"
 
-#: tppcenter/templates/index.html:98
+#: tppcenter/templates/index.html:85 tppcenter/templates/job_index.html:101
+#: tppcenter/templates/main_page.html:94
+#: usersites/templates/site_sidebar.html:11
+msgid "Mother tongue"
+msgstr ""
+
+#: tppcenter/templates/index.html:87 tppcenter/templates/job_index.html:103
+msgid "Armenian"
+msgstr ""
+
+#: tppcenter/templates/index.html:89 tppcenter/templates/job_index.html:105
+msgid "English"
+msgstr ""
+
+#: tppcenter/templates/index.html:90 tppcenter/templates/job_index.html:106
+msgid "Hebrew"
+msgstr ""
+
+#: tppcenter/templates/index.html:91 tppcenter/templates/job_index.html:107
+#, fuzzy
+msgid "Russian"
+msgstr "俄罗斯"
+
+#: tppcenter/templates/index.html:157 tppcenter/templates/job_index.html:173
 msgid "Community"
 msgstr "社区"
 
-#: tppcenter/templates/index.html:110
+#: tppcenter/templates/index.html:169
 msgid "Work with"
 msgstr "与...一起工作"
 
-#: tppcenter/templates/index.html:129
+#: tppcenter/templates/index.html:188 tppcenter/templates/job_index.html:184
 msgid "Producst and services"
 msgstr "产品和服务"
 
-#: tppcenter/templates/index.html:137
+#: tppcenter/templates/index.html:196 tppcenter/templates/job_index.html:192
 msgid "Business community"
 msgstr "企业社区"
 
-#: tppcenter/templates/index.html:145
+#: tppcenter/templates/index.html:204 tppcenter/templates/job_index.html:200
 msgid "Innovative projects"
 msgstr "创新项目"
 
-#: tppcenter/templates/index.html:149
+#: tppcenter/templates/index.html:208 tppcenter/templates/job_index.html:204
 msgid "Jobs"
 msgstr "工作单号"
 
-#: tppcenter/templates/index.html:165
+#: tppcenter/templates/index.html:224 tppcenter/templates/job_index.html:220
 msgid "and get tools for business"
 msgstr "为企业获得工具"
 
-#: tppcenter/templates/index.html:167
+#: tppcenter/templates/index.html:226 tppcenter/templates/job_index.html:222
 msgid ""
 "In 2014, Portal TPP-Center was marked by the reward sign \"Business Leader "
 "of the CIS\" for his contribution to the development of economic integration"
@@ -2533,237 +2155,284 @@ msgstr ""
 "2014年， Portal TPP-Center因其在经济一体化发展上的贡献被授予“CIS的企业领导"
 "者”称号。"
 
-#: tppcenter/templates/index.html:174
+#: tppcenter/templates/index.html:233 tppcenter/templates/job_index.html:229
 msgid "on the portal will allow you to"
 msgstr "在门户处会允许你"
 
-#: tppcenter/templates/index.html:176
+#: tppcenter/templates/index.html:235 tppcenter/templates/job_index.html:231
 msgid "run a business behalf of the company"
 msgstr "代表公司经营企业"
 
-#: tppcenter/templates/index.html:177
+#: tppcenter/templates/index.html:236 tppcenter/templates/job_index.html:232
 msgid "to buy goods as a private person"
 msgstr "私人名义购买商品"
 
-#: tppcenter/templates/index.html:178
+#: tppcenter/templates/index.html:237 tppcenter/templates/job_index.html:233
 msgid "draw attention toward your projects"
 msgstr "注意你的项目"
 
-#: tppcenter/templates/index.html:187
+#: tppcenter/templates/index.html:246 tppcenter/templates/job_index.html:242
 msgid "and you will be able"
 msgstr "你可以"
 
-#: tppcenter/templates/index.html:189
+#: tppcenter/templates/index.html:248 tppcenter/templates/job_index.html:244
 msgid "create your own online shop"
 msgstr "创建你自己的网店"
 
-#: tppcenter/templates/index.html:190
+#: tppcenter/templates/index.html:249 tppcenter/templates/job_index.html:245
 msgid "to represent your products and services"
 msgstr "代表你的产品和服务"
 
-#: tppcenter/templates/index.html:191
+#: tppcenter/templates/index.html:250 tppcenter/templates/job_index.html:246
 msgid "communicate with potential customers"
 msgstr "和潜在客户交流"
 
-#: tppcenter/templates/index.html:199
+#: tppcenter/templates/index.html:258 tppcenter/templates/job_index.html:254
 msgid "Registred"
 msgstr "注册"
 
-#: tppcenter/templates/index.html:200
+#: tppcenter/templates/index.html:259 tppcenter/templates/job_index.html:255
 msgid "users can"
 msgstr "用户可以"
 
-#: tppcenter/templates/index.html:202
+#: tppcenter/templates/index.html:261 tppcenter/templates/job_index.html:257
 msgid "create their own websites"
 msgstr "创建他们的网站"
 
-#: tppcenter/templates/index.html:203
+#: tppcenter/templates/index.html:262 tppcenter/templates/job_index.html:258
 msgid "puts advertising on the portal"
 msgstr "在门户发布广告"
 
-#: tppcenter/templates/index.html:204
+#: tppcenter/templates/index.html:263 tppcenter/templates/job_index.html:259
 msgid "create their own communities of interest"
 msgstr "创建自己的利益共同体"
 
-#: tppcenter/templates/index.html:213
+#: tppcenter/templates/index.html:272 tppcenter/templates/job_index.html:268
 msgid "right now"
 msgstr "现在"
 
-#: tppcenter/templates/index.html:221
+#: tppcenter/templates/index.html:280 tppcenter/templates/job_index.html:276
 #: tppcenter/templates/registration/registration.html:52
+#: usersites/templates/slider.html:35
 msgid "Confirm password"
 msgstr "确认密码"
 
-#: tppcenter/templates/index.html:224
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "I agree to"
 msgstr "我同意"
 
-#: tppcenter/templates/index.html:224
+#: tppcenter/templates/index.html:283 tppcenter/templates/job_index.html:279
+#: usersites/templates/slider.html:38
 msgid "the term"
 msgstr "条款"
 
-#: tppcenter/templates/index.html:280
+#: tppcenter/templates/index.html:339 tppcenter/templates/job_index.html:292
 msgid "Affiche"
 msgstr "公告"
 
-#: tppcenter/templates/index.html:322
+#: tppcenter/templates/index.html:381 tppcenter/templates/job_index.html:334
 msgid "All exhibitions and forums"
 msgstr "所有展览和论坛"
 
-#: tppcenter/templates/index.html:325
+#: tppcenter/templates/index.html:384 tppcenter/templates/job_index.html:337
 msgid "Business offers"
 msgstr "企业提供"
 
-#: tppcenter/templates/index.html:363
+#: tppcenter/templates/index.html:422 tppcenter/templates/job_index.html:375
 msgid "All business offers"
 msgstr "企业所能提供"
 
-#: tppcenter/templates/index.html:368
+#: tppcenter/templates/index.html:427 tppcenter/templates/job_index.html:380
 msgid "Introduction to London Markets"
 msgstr "伦敦市场介绍"
 
-#: tppcenter/templates/index.html:375
+#: tppcenter/templates/index.html:434 tppcenter/templates/job_index.html:387
 msgid "Download Presentation"
 msgstr "下载报告"
 
-#: tppcenter/templates/index.html:383
+#: tppcenter/templates/index.html:442 tppcenter/templates/job_index.html:395
 msgid "Videoreference of V.Migirov"
 msgstr "视频会议Migirov"
 
-#: tppcenter/templates/index.html:394
+#: tppcenter/templates/index.html:453 tppcenter/templates/job_index.html:406
 msgid "Download Guide Site"
 msgstr "下载指引网站"
 
-#: tppcenter/templates/login_header.html:27
-msgid "System notifications"
-msgstr "系统通告"
-
-#: tppcenter/templates/login_header.html:32
-msgid "Notifications"
-msgstr "通告"
-
-#: tppcenter/templates/login_header.html:38
-msgid "See all"
-msgstr "查看所有"
-
-#: tppcenter/templates/login_header.html:42
-msgid "Messages"
-msgstr "信息"
-
-#: tppcenter/templates/login_header.html:46
-msgid "Friend request"
-msgstr "朋友要求"
-
-#: tppcenter/templates/login_header.html:49
-msgid "Notification in your communities"
-msgstr "社区通告"
-
-#: tppcenter/templates/login_header.html:57
-#: tppcenter/templates/Companies/tabStaff.html:149
-#: tppcenter/templates/Companies/tabStructure.html:77
-#: tppcenter/templates/Companies/tabStructure.html:89
-#: tppcenter/templates/Tpp/tabStaff.html:150
-#: tppcenter/templates/Tpp/tabStructure.html:76
-#: tppcenter/templates/Tpp/tabStructure.html:88
-#: tppcenter/templates/Vacancy/addForm.html:297
-#: tppcenter/templates/Vacancy/addForm.html:309
-msgid "Add"
-msgstr "添加"
-
-#: tppcenter/templates/main_page.html:119
-#: tppcenter/templates/main_page.html:142
+#: tppcenter/templates/main_page.html:186
+#: tppcenter/templates/main_page.html:211
 #: tppcenter/templates/Messages/index.html:46
 msgid "Organizations"
 msgstr "组织"
 
-#: tppcenter/templates/main_page.html:124
-#: tppcenter/templates/main_page.html:147
+#: tppcenter/templates/main_page.html:191
+#: tppcenter/templates/main_page.html:216
 msgid "Exhibitions / Forums"
 msgstr "展览/论坛"
 
-#: tppcenter/templates/main_page.html:126
-#: tppcenter/templates/TppTV/index.html:10
+#: tppcenter/templates/main_page.html:195
 msgid "TPP TV"
 msgstr "TPP电视"
 
-#: tppcenter/templates/main_page.html:128
-#: tppcenter/templates/main_page.html:151
-msgid "Job requirements"
-msgstr "工作要求"
+#: tppcenter/templates/main_page.html:207
+msgid "Admin Panel"
+msgstr ""
 
-#: tppcenter/templates/main_page.html:149
+#: tppcenter/templates/main_page.html:225
 msgid "Analytic"
 msgstr "解析"
 
-#: tppcenter/templates/main_page.html:195
+#: tppcenter/templates/main_page.html:230
+msgid "Messages"
+msgstr "信息"
+
+#: tppcenter/templates/main_page.html:265
 msgid "Find.."
 msgstr "找到..."
 
-#: tppcenter/templates/permissionDen.html:11
+#: tppcenter/templates/main_page.html:287
+msgid "Notifications"
+msgstr "通告"
+
+#: tppcenter/templates/main_page.html:293
+msgid "See all"
+msgstr "查看所有"
+
+#: tppcenter/templates/permissionDen.html:6
+#, fuzzy
 msgid ""
-"Sorry but you cannot manipulate with this item , if you have created company "
-"you need choose it in you  "
+"Sorry, but you cannot manage this item. If you have created company you need "
+"choose it in your  "
 msgstr "抱歉，你不能操作此项目。如果你已经创建了一个你需要选择的公司，选择它"
 
-#: tppcenter/templates/permissionDen.html:12
+#: tppcenter/templates/permissionDen.html:7
 msgid " or create "
 msgstr "或者创建"
 
-#: tppcenter/templates/permissionDen.html:13
-msgid "new company "
+#: tppcenter/templates/permissionDen.html:8
+#, fuzzy
+msgid "a new company "
 msgstr "新公司"
 
-#: tppcenter/templates/AdvBanner/addForm.html:291
-msgid "Image file (Maximum 50KB)"
-msgstr "图片文档（最大50KB）"
+#: tppcenter/templates/AdminTpp/targetsList.html:7
+msgid "Targets List"
+msgstr ""
 
-#: tppcenter/templates/AdvBanner/addForm.html:302
-msgid "Link URL"
-msgstr "连接URL"
+#: tppcenter/templates/AdminTpp/targetsList.html:92
+#: tppcenter/templates/AdvBanner/addForm.html:361
+#: tppcenter/templates/AdvBanner/order.html:298
+#: tppcenter/templates/AdvTop/addForm.html:333
+#: tppcenter/templates/AdvTop/order.html:298
+msgid "Days Q-ty"
+msgstr "天数 数量"
 
-#: tppcenter/templates/AdvBanner/addForm.html:309
-#: tppcenter/templates/AdvTop/addForm.html:290
-#: tppcenter/templates/Companies/addForm.html:96
+#: tppcenter/templates/AdminTpp/targetsList.html:96
+#: tppcenter/templates/Adv/basket.html:22
+#: tppcenter/templates/AdvBanner/addForm.html:365
+#: tppcenter/templates/AdvBanner/order.html:302
+#: tppcenter/templates/AdvTop/addForm.html:337
+#: tppcenter/templates/AdvTop/order.html:302
+msgid "Summary"
+msgstr "总结"
+
+#: tppcenter/templates/Adv/basket.html:7
+#, fuzzy
+msgid "Advertisement basket"
+msgstr "刊登广告"
+
+#: tppcenter/templates/Adv/basket.html:19
+msgid "Type"
+msgstr ""
+
+#: tppcenter/templates/Adv/basket.html:20
+#: tppcenter/templates/AdvBanner/addForm.html:311
+#: tppcenter/templates/AdvBanner/order.html:290
+#: tppcenter/templates/AdvTop/addForm.html:294
+#: tppcenter/templates/AdvTop/order.html:290
+#: tppcenter/templates/Companies/addForm.html:101
+#: tppcenter/templates/Companies/tabTenders.html:8
 #: tppcenter/templates/Products/addForm.html:238
-#: tppcenter/templates/Tpp/addForm.html:84
+#: tppcenter/templates/Tpp/addForm.html:85
+#: tppcenter/templates/Tpp/tabExhibitions.html:8
+#: tppcenter/templates/Tpp/tabTenders.html:8
 msgid "Start date"
 msgstr "开始时间"
 
-#: tppcenter/templates/AdvBanner/addForm.html:315
+#: tppcenter/templates/Adv/basket.html:23
+#: tppcenter/templates/Companies/tabStaff.html:53
+#: tppcenter/templates/Tpp/tabStaff.html:53
+msgid "Status"
+msgstr "状态"
+
+#: tppcenter/templates/AdvBanner/addForm.html:194
+#: tppcenter/templates/AdvBanner/order.html:193
+#: tppcenter/templates/AdvTop/addForm.html:194
+#: tppcenter/templates/AdvTop/order.html:193
+#: tppcenter/templates/Products/addForm.html:36
+msgid "day"
+msgstr "天（单数）"
+
+#: tppcenter/templates/AdvBanner/addForm.html:293
+msgid "Image file (Maximum 50KB)"
+msgstr "图片文档（最大50KB）"
+
+#: tppcenter/templates/AdvBanner/addForm.html:304
+msgid "Link URL"
+msgstr "连接URL"
+
+#: tppcenter/templates/AdvBanner/addForm.html:317
 msgid "Image title"
 msgstr "图片标题"
 
-#: tppcenter/templates/AdvBanner/addForm.html:326
-#: tppcenter/templates/AdvTop/addForm.html:295
-#: tppcenter/templates/Companies/addForm.html:100
+#: tppcenter/templates/AdvBanner/addForm.html:328
+#: tppcenter/templates/AdvBanner/order.html:294
+#: tppcenter/templates/AdvTop/addForm.html:299
+#: tppcenter/templates/AdvTop/order.html:294
+#: tppcenter/templates/Companies/addForm.html:105
 #: tppcenter/templates/Companies/tabExhibitions.html:9
 #: tppcenter/templates/Companies/tabTenders.html:9
 #: tppcenter/templates/Products/addForm.html:247
-#: tppcenter/templates/Tpp/addForm.html:91
+#: tppcenter/templates/Tpp/addForm.html:92
 #: tppcenter/templates/Tpp/tabExhibitions.html:9
 #: tppcenter/templates/Tpp/tabTenders.html:9
 msgid "End date"
 msgstr "结束时间"
 
-#: tppcenter/templates/AdvBanner/addForm.html:348
-#: tppcenter/templates/AdvTop/addForm.html:318
+#: tppcenter/templates/AdvBanner/addForm.html:351
+#: tppcenter/templates/AdvTop/addForm.html:323
 msgid "Basket"
 msgstr "篮子"
 
-#: tppcenter/templates/AdvBanner/addForm.html:358
-#: tppcenter/templates/AdvTop/addForm.html:328
-msgid "Days Q-ty"
-msgstr "天数 数量"
-
-#: tppcenter/templates/AdvBanner/addForm.html:362
-#: tppcenter/templates/AdvTop/addForm.html:332
-msgid "Summary"
-msgstr "总结"
-
-#: tppcenter/templates/AdvBanner/addForm.html:367
-#: tppcenter/templates/AdvTop/addForm.html:335
+#: tppcenter/templates/AdvBanner/addForm.html:370
+#: tppcenter/templates/AdvTop/addForm.html:340
 msgid "Pay"
 msgstr "支付"
+
+#: tppcenter/templates/AdvBanner/order.html:275
+#: tppcenter/templates/AdvTop/order.html:275
+#, fuzzy
+msgid "Order details"
+msgstr "用户详细信息"
+
+#: tppcenter/templates/AdvBanner/order.html:306
+#: tppcenter/templates/AdvTop/order.html:306
+#, fuzzy
+msgid "Order number"
+msgstr "订单总结"
+
+#: tppcenter/templates/AdvBanner/order.html:314
+#: tppcenter/templates/AdvTop/order.html:314
+msgid ""
+"Thank you for order, you will be notified when the advertisement will "
+"published"
+msgstr ""
+
+#: tppcenter/templates/AdvTop/order.html:316
+#: tppcenter/templates/News/index.html:30
+#: tppcenter/templates/News/index.html:52
+#, fuzzy
+msgid "Advertisement"
+msgstr "刊登广告"
 
 #: tppcenter/templates/AdvTop/tops.html:8
 msgid "Paid ads"
@@ -2784,18 +2453,17 @@ msgid "Views"
 msgstr "评论"
 
 #: tppcenter/templates/Analytic/main.html:85
-#: tppcenter/templates/BusinessProposal/popupFilter.html:21
-#: tppcenter/templates/Exhibitions/detailContent.html:219
+#: tppcenter/templates/Exhibitions/detailContent.html:218
 #: tppcenter/templates/News/popupFilter.html:21
-#: tppcenter/templates/Resume/addForm.html:177
-#: tppcenter/templates/Resume/addForm.html:210
-#: tppcenter/templates/Resume/addForm.html:243
-#: tppcenter/templates/Resume/detailContent.html:120
-#: tppcenter/templates/Resume/detailContent.html:128
-#: tppcenter/templates/Resume/detailContent.html:136
+#: tppcenter/templates/Resume/addForm.html:180
+#: tppcenter/templates/Resume/addForm.html:213
+#: tppcenter/templates/Resume/addForm.html:246
+#: tppcenter/templates/Resume/detailContent.html:114
+#: tppcenter/templates/Resume/detailContent.html:122
+#: tppcenter/templates/Resume/detailContent.html:130
 #: tppcenter/templates/Tenders/popupFilter.html:21
 #: tppcenter/templates/TppTV/popupFilter.html:21
-#: tppcenter/templates/Vacancy/detailContent.html:39
+#: tppcenter/templates/Vacancy/detailContent.html:40
 msgid "Company"
 msgstr "公司"
 
@@ -2804,10 +2472,10 @@ msgid "Chamber events"
 msgstr "内部事件"
 
 #: tppcenter/templates/BusinessProposal/addForm.html:31
-#: tppcenter/templates/Exhibitions/addForm.html:109
+#: tppcenter/templates/Exhibitions/addForm.html:121
 #: tppcenter/templates/Products/addForm.html:189
 #: tppcenter/templates/Tenders/addForm.html:67
-#: tppcenter/templates/Tenders/detailContent.html:90
+#: tppcenter/templates/Tenders/detailContent.html:82
 msgid "Documents"
 msgstr "文档"
 
@@ -2831,496 +2499,564 @@ msgstr "文档3"
 msgid "Images"
 msgstr "图片（复数）"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:79
+#: tppcenter/templates/BusinessProposal/addForm.html:75
+msgid "Load correct image"
+msgstr ""
+
+#: tppcenter/templates/BusinessProposal/addForm.html:82
 msgid "image"
 msgstr "图片（单数）"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:89
-#: tppcenter/templates/Companies/addForm.html:143
-#: tppcenter/templates/Exhibitions/addForm.html:93
+#: tppcenter/templates/BusinessProposal/addForm.html:92
+#: tppcenter/templates/Companies/addForm.html:148
+#: tppcenter/templates/Exhibitions/addForm.html:105
 #: tppcenter/templates/Products/addForm.html:229
 #: tppcenter/templates/Tenders/addForm.html:122
-#: tppcenter/templates/Tpp/addForm.html:126
+#: tppcenter/templates/Tpp/addForm.html:127
 #: tppcenter/templates/TppTV/addForm.html:85
-#: tppcenter/templates/Vacancy/addForm.html:239
+#: tppcenter/templates/Vacancy/addForm.html:247
 msgid "Keywords"
 msgstr "关键字"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:99
+#: tppcenter/templates/BusinessProposal/addForm.html:102
 #: tppcenter/templates/Companies/tabExhibitions.html:7
 #: tppcenter/templates/Companies/tabInnov.html:8
 #: tppcenter/templates/Companies/tabProducts.html:9
 #: tppcenter/templates/Companies/tabProposal.html:8
-#: tppcenter/templates/Companies/tabStaff.html:38
+#: tppcenter/templates/Companies/tabStaff.html:49
 #: tppcenter/templates/Companies/tabTenders.html:7
-#: tppcenter/templates/Exhibitions/addForm.html:170
-#: tppcenter/templates/Exhibitions/detailContent.html:207
+#: tppcenter/templates/Exhibitions/addForm.html:182
+#: tppcenter/templates/Exhibitions/detailContent.html:206
 #: tppcenter/templates/Products/addForm.html:260
 #: tppcenter/templates/Profile/addForm.html:39
-#: tppcenter/templates/Resume/addForm.html:55
-#: tppcenter/templates/Resume/detailContent.html:50
 #: tppcenter/templates/Tpp/tabCompanies.html:8
 #: tppcenter/templates/Tpp/tabExhibitions.html:7
 #: tppcenter/templates/Tpp/tabInnov.html:8
 #: tppcenter/templates/Tpp/tabProposal.html:8
-#: tppcenter/templates/Tpp/tabStaff.html:39
+#: tppcenter/templates/Tpp/tabStaff.html:49
 #: tppcenter/templates/Tpp/tabTenders.html:7
 msgid "Name"
 msgstr "名字"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:116
+#: tppcenter/templates/BusinessProposal/addForm.html:119
 #: tppcenter/templates/BusinessProposal/popupFilter.html:22
 #: tppcenter/templates/Companies/popupFilter.html:21
 #: tppcenter/templates/Exhibitions/popupFilter.html:21
-#: tppcenter/templates/Innov/contentPage.html:67
+#: tppcenter/templates/Innov/contentPage.html:45
 #: tppcenter/templates/Innov/popupFilter.html:21
 #: tppcenter/templates/News/popupFilter.html:22
 #: tppcenter/templates/Products/popupFilter.html:21
 #: tppcenter/templates/Tenders/popupFilter.html:22
 #: tppcenter/templates/TppTV/popupFilter.html:22
-#: tppcenter/templates/Wall/contentPage.html:56
+#: tppcenter/templates/Wall/contentPage.html:96
 msgid "Branch"
 msgstr "分支"
 
-#: tppcenter/templates/BusinessProposal/addForm.html:128
-#: tppcenter/templates/Companies/addForm.html:242
-#: tppcenter/templates/Exhibitions/addForm.html:200
+#: tppcenter/templates/BusinessProposal/addForm.html:130
+#: tppcenter/templates/BusinessProposal/popupFilter.html:21
+#: tppcenter/templates/News/addForm.html:87
+#: tppcenter/templates/Products/addForm.html:380
+#: tppcenter/templates/TppTV/addForm.html:44
+msgid "Category"
+msgstr "类别"
+
+#: tppcenter/templates/BusinessProposal/addForm.html:142
+#: tppcenter/templates/Companies/addForm.html:247
+#: tppcenter/templates/Exhibitions/addForm.html:212
 #: tppcenter/templates/Innov/addForm.html:173
 #: tppcenter/templates/Products/addForm.html:418
 #: tppcenter/templates/Tenders/addForm.html:149
+#: tppcenter/templates/Tpp/addForm.html:223
 msgid "Additional pages"
 msgstr "额外的页面"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:32
-#: tppcenter/templates/Companies/contentPage.html:36
-#: tppcenter/templates/Exhibitions/contentPage.html:36
-#: tppcenter/templates/Innov/contentPage.html:42
-#: tppcenter/templates/News/contentPage.html:32
-#: tppcenter/templates/Products/contentPage.html:28
-#: tppcenter/templates/Resume/contentPage.html:22
-#: tppcenter/templates/Tenders/contentPage.html:32
-#: tppcenter/templates/Tpp/contentPage.html:32
-#: tppcenter/templates/TppTV/contentPage.html:26
+#: tppcenter/templates/BusinessProposal/contentPage.html:19
+#: tppcenter/templates/Companies/contentPage.html:19
+#: tppcenter/templates/Exhibitions/contentPage.html:21
+#: tppcenter/templates/Innov/contentPage.html:19
+#: tppcenter/templates/News/contentPage.html:21
+#: tppcenter/templates/Products/contentPage.html:19
+#: tppcenter/templates/Resume/contentPage.html:19
+#: tppcenter/templates/Tenders/contentPage.html:19
+#: tppcenter/templates/Tpp/contentPage.html:19
+#: tppcenter/templates/TppTV/contentPage.html:17
 #: tppcenter/templates/UserSites/contentPage.html:24
-#: tppcenter/templates/Vacancy/contentPage.html:34
+#: tppcenter/templates/Vacancy/contentPage.html:24
 msgid "edit"
 msgstr "编辑"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:35
-#: tppcenter/templates/Companies/contentPage.html:40
-#: tppcenter/templates/Exhibitions/contentPage.html:39
-#: tppcenter/templates/Innov/contentPage.html:45
-#: tppcenter/templates/Products/contentPage.html:31
-msgid "add top"
-msgstr "从顶端处添加"
+#: tppcenter/templates/BusinessProposal/contentPage.html:22
+#: tppcenter/templates/Companies/contentPage.html:23
+#: tppcenter/templates/Exhibitions/contentPage.html:24
+#: tppcenter/templates/Innov/contentPage.html:22
+#: tppcenter/templates/Products/contentPage.html:22
+#: tppcenter/templates/Vacancy/contentPage.html:27
+#, fuzzy
+msgid "Advertise"
+msgstr "刊登广告"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:38
-#: tppcenter/templates/Companies/contentPage.html:43
-#: tppcenter/templates/Companies/tabGalleryPhoto.html:10
-#: tppcenter/templates/Exhibitions/contentPage.html:42
-#: tppcenter/templates/Innov/contentPage.html:48
-#: tppcenter/templates/News/contentPage.html:35
-#: tppcenter/templates/Products/contentPage.html:34
-#: tppcenter/templates/Resume/contentPage.html:25
-#: tppcenter/templates/Tenders/contentPage.html:35
-#: tppcenter/templates/TppTV/contentPage.html:27
+#: tppcenter/templates/BusinessProposal/contentPage.html:25
+#: tppcenter/templates/Companies/contentPage.html:26
+#: tppcenter/templates/Companies/tab_gallery_structure.html:11
+#: tppcenter/templates/Exhibitions/contentPage.html:27
+#: tppcenter/templates/Innov/contentPage.html:25
+#: tppcenter/templates/News/contentPage.html:24
+#: tppcenter/templates/Products/contentPage.html:25
+#: tppcenter/templates/Resume/contentPage.html:20
+#: tppcenter/templates/Tenders/contentPage.html:22
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:12
+#: tppcenter/templates/TppTV/contentPage.html:18
 #: tppcenter/templates/UserSites/contentPage.html:28
-#: tppcenter/templates/Vacancy/contentPage.html:38
+#: tppcenter/templates/Vacancy/contentPage.html:30
 msgid "remove"
 msgstr "转移"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:55
+#: tppcenter/templates/BusinessProposal/contentPage.html:41
 #: tppcenter/templates/BusinessProposal/popupFilter.html:20
 #: tppcenter/templates/Companies/popupFilter.html:20
 #: tppcenter/templates/Exhibitions/popupFilter.html:20
-#: tppcenter/templates/Greetings/contentPage.html:26
-#: tppcenter/templates/Greetings/detailContent.html:17
+#: tppcenter/templates/Greetings/contentPage.html:19
+#: tppcenter/templates/Greetings/detailContent.html:27
 #: tppcenter/templates/Innov/popupFilter.html:20
 #: tppcenter/templates/News/popupFilter.html:20
 #: tppcenter/templates/Products/popupFilter.html:20
 #: tppcenter/templates/Tenders/popupFilter.html:20
 #: tppcenter/templates/TppTV/popupFilter.html:20
-#: tppcenter/templates/Wall/contentPage.html:168
+#: tppcenter/templates/Wall/contentPage.html:206
 msgid "Organization"
 msgstr "组织"
 
-#: tppcenter/templates/BusinessProposal/contentPage.html:72
-#: tppcenter/templates/Companies/contentPage.html:120
+#: tppcenter/templates/BusinessProposal/contentPage.html:50
+#: tppcenter/templates/Companies/contentPage.html:96
 #: tppcenter/templates/Companies/tabExhibitions.html:44
 #: tppcenter/templates/Companies/tabInnov.html:39
 #: tppcenter/templates/Companies/tabNews.html:33
 #: tppcenter/templates/Companies/tabProducts.html:50
 #: tppcenter/templates/Companies/tabProposal.html:33
 #: tppcenter/templates/Companies/tabTenders.html:44
-#: tppcenter/templates/Exhibitions/contentPage.html:78
-#: tppcenter/templates/Greetings/contentPage.html:41
-#: tppcenter/templates/Innov/contentPage.html:105
-#: tppcenter/templates/News/contentPage.html:85
-#: tppcenter/templates/Products/contentPage.html:74
-#: tppcenter/templates/Resume/contentPage.html:42
-#: tppcenter/templates/Tenders/contentPage.html:67
-#: tppcenter/templates/Tpp/contentPage.html:94
+#: tppcenter/templates/Exhibitions/contentPage.html:45
+#: tppcenter/templates/Greetings/contentPage.html:28
+#: tppcenter/templates/Innov/contentPage.html:62
+#: tppcenter/templates/News/contentPage.html:64
+#: tppcenter/templates/Products/contentPage.html:56
+#: tppcenter/templates/Resume/contentPage.html:33
+#: tppcenter/templates/Tenders/contentPage.html:51
+#: tppcenter/templates/Tpp/contentPage.html:77
 #: tppcenter/templates/Tpp/tabCompanies.html:44
 #: tppcenter/templates/Tpp/tabExhibitions.html:44
 #: tppcenter/templates/Tpp/tabInnov.html:39
 #: tppcenter/templates/Tpp/tabNews.html:38
 #: tppcenter/templates/Tpp/tabProposal.html:33
 #: tppcenter/templates/Tpp/tabTenders.html:44
-#: tppcenter/templates/TppTV/contentPage.html:58
+#: tppcenter/templates/TppTV/contentPage.html:39
 #: tppcenter/templates/UserSites/contentPage.html:46
-#: tppcenter/templates/Vacancy/contentPage.html:66
+#: tppcenter/templates/Users/contentPage.html:42
+#: tppcenter/templates/Vacancy/contentPage.html:50
 #: tppcenter/templates/main/notoficationlist.html:17
 msgid "No results found"
 msgstr "找不到结果"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:74
-#: tppcenter/templates/Exhibitions/detailContent.html:113
-#: tppcenter/templates/Products/detailContent.html:131
+#: tppcenter/templates/BusinessProposal/detailContent.html:66
+#: tppcenter/templates/Exhibitions/detailContent.html:102
+#: tppcenter/templates/Products/detailContent.html:142
+#: usersites/templates/Products/detailContent.html:154
+#: usersites/templates/Proposals/detailContent.html:80
 msgid "Document"
 msgstr "文档"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:75
-#: tppcenter/templates/Companies/detailContent.html:573
-#: tppcenter/templates/Exhibitions/detailContent.html:114
+#: tppcenter/templates/BusinessProposal/detailContent.html:67
+#: tppcenter/templates/Companies/detailContent.html:554
+#: tppcenter/templates/Exhibitions/detailContent.html:103
 #: tppcenter/templates/Innov/addForm.html:82
-#: tppcenter/templates/Innov/detailContent.html:96
+#: tppcenter/templates/Innov/detailContent.html:82
 #: tppcenter/templates/News/addForm.html:59
 #: tppcenter/templates/Products/addForm.html:162
-#: tppcenter/templates/Tenders/detailContent.html:89
-#: tppcenter/templates/Tpp/detailContent.html:519
+#: tppcenter/templates/Tenders/detailContent.html:81
+#: tppcenter/templates/Tpp/detailContent.html:497
+#: usersites/templates/Proposals/detailContent.html:81
 msgid "Gallery"
 msgstr "画廊"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:90
-#: tppcenter/templates/BusinessProposal/detailContent.html:93
-#: tppcenter/templates/BusinessProposal/detailContent.html:96
-#: tppcenter/templates/Exhibitions/detailContent.html:129
-#: tppcenter/templates/Exhibitions/detailContent.html:132
-#: tppcenter/templates/Exhibitions/detailContent.html:135
+#: tppcenter/templates/BusinessProposal/detailContent.html:82
+#: tppcenter/templates/BusinessProposal/detailContent.html:85
+#: tppcenter/templates/BusinessProposal/detailContent.html:88
+#: tppcenter/templates/Exhibitions/detailContent.html:118
+#: tppcenter/templates/Exhibitions/detailContent.html:121
+#: tppcenter/templates/Exhibitions/detailContent.html:125
+#: usersites/templates/Proposals/detailContent.html:96
+#: usersites/templates/Proposals/detailContent.html:99
+#: usersites/templates/Proposals/detailContent.html:102
 msgid "Link to the File"
 msgstr "连接到文件"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:112
-#: tppcenter/templates/Companies/tabGalleryPhoto.html:14
-#: tppcenter/templates/Exhibitions/detailContent.html:151
-#: tppcenter/templates/Innov/detailContent.html:145
-#: tppcenter/templates/Tenders/detailContent.html:109
+#: tppcenter/templates/BusinessProposal/detailContent.html:104
+#: tppcenter/templates/Companies/tab_gallery_structure.html:17
+#: tppcenter/templates/Exhibitions/detailContent.html:141
+#: tppcenter/templates/Innov/detailContent.html:135
+#: tppcenter/templates/Tenders/detailContent.html:100
+#: tppcenter/templates/Tpp/tab_gallery_structure.html:18
+#: usersites/templates/Proposals/detailContent.html:118
 msgid "zoom"
 msgstr "放大"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:134
-#: tppcenter/templates/Companies/addForm.html:124
-#: tppcenter/templates/Companies/detailContent.html:674
-#: tppcenter/templates/Exhibitions/detailContent.html:174
-#: tppcenter/templates/Innov/detailContent.html:167
-#: tppcenter/templates/Tpp/addForm.html:105
-#: tppcenter/templates/Tpp/detailContent.html:594
+#: tppcenter/templates/BusinessProposal/detailContent.html:131
+#: tppcenter/templates/Companies/addForm.html:129
+#: tppcenter/templates/Companies/detailContent.html:638
+#: tppcenter/templates/Exhibitions/detailContent.html:169
+#: tppcenter/templates/Innov/detailContent.html:162
+#: tppcenter/templates/Tpp/addForm.html:106
+#: tppcenter/templates/Tpp/detailContent.html:575
+#: usersites/templates/Proposals/detailContent.html:140
 msgid "Fax"
 msgstr "传真"
 
-#: tppcenter/templates/BusinessProposal/detailContent.html:142
-#: tppcenter/templates/Companies/addForm.html:136
-#: tppcenter/templates/Companies/detailContent.html:682
-#: tppcenter/templates/Exhibitions/detailContent.html:182
-#: tppcenter/templates/Innov/detailContent.html:175
+#: tppcenter/templates/BusinessProposal/detailContent.html:143
+#: tppcenter/templates/Companies/addForm.html:141
+#: tppcenter/templates/Companies/detailContent.html:650
+#: tppcenter/templates/Exhibitions/detailContent.html:181
+#: tppcenter/templates/Innov/detailContent.html:174
 #: tppcenter/templates/Profile/addForm.html:54
-#: tppcenter/templates/Tpp/addForm.html:119
-#: tppcenter/templates/Tpp/detailContent.html:602
-#: tppcenter/templates/main/user_profile.html:56
+#: tppcenter/templates/Tpp/addForm.html:120
+#: tppcenter/templates/Tpp/detailContent.html:587
+#: tppcenter/templates/main/user_profile.html:57
+#: usersites/templates/Proposals/detailContent.html:148
 msgid "WWW"
 msgstr "万维网"
 
 #: tppcenter/templates/Companies/addForm.html:58
 #: tppcenter/templates/Companies/tabProducts.html:8
-#: tppcenter/templates/Exhibitions/addForm.html:153
+#: tppcenter/templates/Exhibitions/addForm.html:165
 #: tppcenter/templates/News/addForm.html:31
 #: tppcenter/templates/Products/addForm.html:129
-#: tppcenter/templates/Tpp/addForm.html:57
+#: tppcenter/templates/Tpp/addForm.html:58
 #: tppcenter/templates/TppTV/addForm.html:23
 msgid "Image"
 msgstr "图片"
 
-#: tppcenter/templates/Companies/addForm.html:89
+#: tppcenter/templates/Companies/addForm.html:94
 msgid "Vatin"
 msgstr "完廷"
 
-#: tppcenter/templates/Companies/addForm.html:110
-#: tppcenter/templates/Tpp/addForm.html:77
+#: tppcenter/templates/Companies/addForm.html:115
+#: tppcenter/templates/Tpp/addForm.html:78
 msgid "Director name"
 msgstr "负责人名字"
 
-#: tppcenter/templates/Companies/addForm.html:117
+#: tppcenter/templates/Companies/addForm.html:122
 msgid "Slogan"
 msgstr "标语"
 
-#: tppcenter/templates/Companies/addForm.html:152
+#: tppcenter/templates/Companies/addForm.html:157
 msgid "Company name"
 msgstr "公司名字"
 
-#: tppcenter/templates/Companies/addForm.html:159
+#: tppcenter/templates/Companies/addForm.html:164
 msgid "Preview text"
 msgstr "预览文档"
 
-#: tppcenter/templates/Companies/addForm.html:164
+#: tppcenter/templates/Companies/addForm.html:169
 #: tppcenter/templates/Products/addForm.html:289
 msgid "Detail text"
 msgstr "详述文档"
 
-#: tppcenter/templates/Companies/addForm.html:184
-#: tppcenter/templates/Exhibitions/addForm.html:65
+#: tppcenter/templates/Companies/addForm.html:189
+#: tppcenter/templates/Exhibitions/addForm.html:77
 #: tppcenter/templates/Innov/addForm.html:139
-#: tppcenter/templates/Innov/detailContent.html:111
+#: tppcenter/templates/Innov/detailContent.html:97
 msgid "Industry"
 msgstr "行业"
 
-#: tppcenter/templates/Companies/addForm.html:194
+#: tppcenter/templates/Companies/addForm.html:199
 msgid "CCI"
 msgstr "同等事件"
 
-#: tppcenter/templates/Companies/addForm.html:196
+#: tppcenter/templates/Companies/addForm.html:201
 msgid "Choose CCI"
 msgstr "选择同等事件"
 
-#: tppcenter/templates/Companies/addForm.html:209
-#: tppcenter/templates/Tpp/addForm.html:189
+#: tppcenter/templates/Companies/addForm.html:214
+#: tppcenter/templates/Tpp/addForm.html:190
 msgid "Place on the map"
 msgstr "在地图上标识"
 
-#: tppcenter/templates/Companies/addForm.html:213
+#: tppcenter/templates/Companies/addForm.html:218
 msgid "Details"
 msgstr "详情"
 
-#: tppcenter/templates/Companies/addForm.html:216
-#: tppcenter/templates/Tpp/addForm.html:196
+#: tppcenter/templates/Companies/addForm.html:221
+#: tppcenter/templates/Tpp/addForm.html:197
 msgid "RRC"
 msgstr "资料库情况"
 
-#: tppcenter/templates/Companies/addForm.html:219
-#: tppcenter/templates/Tpp/addForm.html:199
+#: tppcenter/templates/Companies/addForm.html:224
+#: tppcenter/templates/Tpp/addForm.html:200
 msgid "RCEO"
 msgstr "RECO文件"
 
-#: tppcenter/templates/Companies/addForm.html:222
-#: tppcenter/templates/Tpp/addForm.html:202
+#: tppcenter/templates/Companies/addForm.html:227
+#: tppcenter/templates/Tpp/addForm.html:203
 msgid "RCOSD"
 msgstr "流"
 
-#: tppcenter/templates/Companies/addForm.html:225
-#: tppcenter/templates/Tpp/addForm.html:205
+#: tppcenter/templates/Companies/addForm.html:230
+#: tppcenter/templates/Tpp/addForm.html:206
 msgid "ARCEA"
 msgstr "ARCEA系列"
 
-#: tppcenter/templates/Companies/addForm.html:228
-#: tppcenter/templates/Tpp/addForm.html:208
+#: tppcenter/templates/Companies/addForm.html:233
+#: tppcenter/templates/Tpp/addForm.html:209
 msgid "Accountant name"
 msgstr "账户名"
 
-#: tppcenter/templates/Companies/addForm.html:233
-#: tppcenter/templates/Tpp/addForm.html:213
+#: tppcenter/templates/Companies/addForm.html:238
+#: tppcenter/templates/Tpp/addForm.html:214
 msgid "Account number"
 msgstr "账户号码"
 
-#: tppcenter/templates/Companies/addForm.html:236
-#: tppcenter/templates/Tpp/addForm.html:216
+#: tppcenter/templates/Companies/addForm.html:241
+#: tppcenter/templates/Tpp/addForm.html:217
 msgid "Bank details"
 msgstr "银行信息"
 
-#: tppcenter/templates/Companies/contentPage.html:37
-#: tppcenter/templates/Tpp/contentPage.html:33
+#: tppcenter/templates/Companies/contentPage.html:20
+#: tppcenter/templates/Tpp/contentPage.html:20
 msgid "set current"
 msgstr "设定最新的"
 
-#: tppcenter/templates/Companies/detailContent.html:50
-msgid "Uploading"
-msgstr "正在上传"
+#: tppcenter/templates/Companies/contentPage.html:46
+#: tppcenter/templates/Companies/detailContent.html:519
+msgid "Member of"
+msgstr ""
 
-#: tppcenter/templates/Companies/detailContent.html:51
-msgid "Uploaded"
-msgstr "已上传"
-
-#: tppcenter/templates/Companies/detailContent.html:52
-msgid "Fail"
-msgstr "失败"
-
-#: tppcenter/templates/Companies/detailContent.html:53
-msgid "The following files was not uploaded"
-msgstr "以下文件未上传成功"
-
-#: tppcenter/templates/Companies/detailContent.html:133
-#: tppcenter/templates/Tpp/detailContent.html:57
+#: tppcenter/templates/Companies/detailContent.html:85
+#: tppcenter/templates/Tpp/detailContent.html:56
 msgid "Do you want to delete this record?"
 msgstr "你想要删除此记录吗？"
 
-#: tppcenter/templates/Companies/detailContent.html:405
-#: tppcenter/templates/Tpp/detailContent.html:329
+#: tppcenter/templates/Companies/detailContent.html:358
+#: tppcenter/templates/Tpp/detailContent.html:328
 msgid "Do you want to delete this Vacancy?"
 msgstr "你想要删除此空处吗？"
 
-#: tppcenter/templates/Companies/detailContent.html:416
-#: tppcenter/templates/Tpp/detailContent.html:340
+#: tppcenter/templates/Companies/detailContent.html:369
+#: tppcenter/templates/Tpp/detailContent.html:339
 msgid "Do you want to delete this Department?"
 msgstr "你想要删除此部门吗？"
 
-#: tppcenter/templates/Companies/detailContent.html:556
-#: tppcenter/templates/Tpp/detailContent.html:502
+#: tppcenter/templates/Companies/detailContent.html:471
+msgid "Free period is expired."
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:473
+msgid "Free period will expire in "
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:473
+#, fuzzy
+msgid " days."
+msgstr "天数："
+
+#: tppcenter/templates/Companies/detailContent.html:484
+msgid "1-year www.b24online.com membership"
+msgstr ""
+
+#: tppcenter/templates/Companies/detailContent.html:537
+#: tppcenter/templates/Tpp/detailContent.html:479
 msgid "Recvisits"
 msgstr "回访数"
 
-#: tppcenter/templates/Companies/detailContent.html:603
-#: tppcenter/templates/Tpp/detailContent.html:544
+#: tppcenter/templates/Companies/detailContent.html:584
+#: tppcenter/templates/Tpp/detailContent.html:523
 #: usersites/CompanyStructure/views.py:15
 #: usersites/CompanyStructure/views.py:16
 msgid "Structure"
 msgstr "结构"
 
-#: tppcenter/templates/Companies/detailContent.html:608
-#: tppcenter/templates/Tpp/detailContent.html:549
+#: tppcenter/templates/Companies/detailContent.html:589
+#: tppcenter/templates/Tpp/detailContent.html:528
 msgid "Staff"
 msgstr "工作人员"
 
 #: tppcenter/templates/Companies/tabExhibitions.html:8
-#: tppcenter/templates/Companies/tabTenders.html:8
-#: tppcenter/templates/Tpp/tabExhibitions.html:8
-#: tppcenter/templates/Tpp/tabTenders.html:8
 msgid "Start Event"
 msgstr "开始事件"
 
+#: tppcenter/templates/Companies/tabGallery.html:37
+#: tppcenter/templates/Tpp/tabGallery.html:37
+msgid "Uploading"
+msgstr "正在上传"
+
+#: tppcenter/templates/Companies/tabGallery.html:38
+#: tppcenter/templates/Tpp/tabGallery.html:38
+msgid "Uploaded"
+msgstr "已上传"
+
+#: tppcenter/templates/Companies/tabGallery.html:39
+#: tppcenter/templates/Tpp/tabGallery.html:39
+msgid "Fail"
+msgstr "失败"
+
+#: tppcenter/templates/Companies/tabGallery.html:40
+#: tppcenter/templates/Tpp/tabGallery.html:40
+#, fuzzy
+msgid "The following files were not uploaded"
+msgstr "以下文件未上传成功"
+
 #: tppcenter/templates/Companies/tabInnov.html:9
 #: tppcenter/templates/Innov/addForm.html:66
-#: tppcenter/templates/Innov/contentPage.html:64
+#: tppcenter/templates/Innov/contentPage.html:40
 #: tppcenter/templates/Tpp/tabInnov.html:9
-#: tppcenter/templates/Wall/contentPage.html:53
-msgid "Cost of project"
-msgstr "项目花费"
+#: tppcenter/templates/Wall/contentPage.html:93
+#, fuzzy
+msgid "Project cost"
+msgstr "项目网站"
 
-#: tppcenter/templates/Companies/tabStaff.html:39
-#: tppcenter/templates/Companies/tabStaff.html:117
-#: tppcenter/templates/Tpp/tabStaff.html:40
-#: tppcenter/templates/Tpp/tabStaff.html:118
+#: tppcenter/templates/Companies/tabStaff.html:50
+#: tppcenter/templates/Companies/tabStaff.html:128
+#: tppcenter/templates/Tpp/tabStaff.html:50
+#: tppcenter/templates/Tpp/tabStaff.html:127
 msgid "Department"
 msgstr "部门"
 
-#: tppcenter/templates/Companies/tabStaff.html:40
-#: tppcenter/templates/Exhibitions/detailContent.html:223
-#: tppcenter/templates/Greetings/contentPage.html:27
-#: tppcenter/templates/Greetings/detailContent.html:18
-#: tppcenter/templates/Resume/addForm.html:184
-#: tppcenter/templates/Resume/addForm.html:217
-#: tppcenter/templates/Resume/addForm.html:250
-#: tppcenter/templates/Resume/detailContent.html:122
-#: tppcenter/templates/Resume/detailContent.html:130
-#: tppcenter/templates/Resume/detailContent.html:138
-#: tppcenter/templates/Tpp/tabStaff.html:41
+#: tppcenter/templates/Companies/tabStaff.html:51
+#: tppcenter/templates/Exhibitions/detailContent.html:222
+#: tppcenter/templates/Greetings/contentPage.html:20
+#: tppcenter/templates/Greetings/detailContent.html:28
+#: tppcenter/templates/Resume/addForm.html:187
+#: tppcenter/templates/Resume/addForm.html:220
+#: tppcenter/templates/Resume/addForm.html:253
+#: tppcenter/templates/Resume/detailContent.html:116
+#: tppcenter/templates/Resume/detailContent.html:124
+#: tppcenter/templates/Resume/detailContent.html:132
+#: tppcenter/templates/Tpp/tabStaff.html:51
+#: tppcenter/templates/Vacancy/addForm.html:185
 #: usersites/templates/CompanyStructure/contentPage.html:20
 msgid "Position"
 msgstr "职位"
 
-#: tppcenter/templates/Companies/tabStaff.html:42
-#: tppcenter/templates/Tpp/tabStaff.html:43
-msgid "Status"
-msgstr "状态"
-
-#: tppcenter/templates/Companies/tabStaff.html:70
-#: tppcenter/templates/Tpp/tabStaff.html:71
+#: tppcenter/templates/Companies/tabStaff.html:81
+#: tppcenter/templates/Tpp/tabStaff.html:80
 msgid "User with empty profile. Cabinet ID:"
 msgstr "空白文档用户。内部编号"
 
-#: tppcenter/templates/Companies/tabStaff.html:97
-#: tppcenter/templates/Tpp/tabStaff.html:98
+#: tppcenter/templates/Companies/tabStaff.html:108
+#: tppcenter/templates/Tpp/tabStaff.html:107
 msgid "No Staff found."
 msgstr "没发现工作人员"
 
-#: tppcenter/templates/Companies/tabStaff.html:119
-#: tppcenter/templates/Tpp/tabStaff.html:120
-#: tppcenter/templates/Vacancy/addForm.html:171
+#: tppcenter/templates/Companies/tabStaff.html:130
+#: tppcenter/templates/Tpp/tabStaff.html:129
 msgid "Select Department..."
 msgstr "选择部门..."
 
-#: tppcenter/templates/Companies/tabStaff.html:125
-#: tppcenter/templates/Companies/tabStaff.html:138
-#: tppcenter/templates/Tpp/tabStaff.html:126
-#: tppcenter/templates/Tpp/tabStaff.html:139
+#: tppcenter/templates/Companies/tabStaff.html:136
+#: tppcenter/templates/Companies/tabStaff.html:149
+#: tppcenter/templates/Tpp/tabStaff.html:135
+#: tppcenter/templates/Tpp/tabStaff.html:148
 #: tppcenter/templates/Vacancy/addForm.html:177
 #: tppcenter/templates/Vacancy/addForm.html:200
 msgid "Empty"
 msgstr "空白"
 
-#: tppcenter/templates/Companies/tabStaff.html:128
-#: tppcenter/templates/Tpp/tabStaff.html:129
+#: tppcenter/templates/Companies/tabStaff.html:139
+#: tppcenter/templates/Tpp/tabStaff.html:138
 msgid "/Vacancy"
 msgstr "/空位"
 
 #: tppcenter/templates/Companies/tabStaff.html:141
-#: tppcenter/templates/Tpp/tabStaff.html:142
+#: tppcenter/templates/Tpp/tabStaff.html:140
+#, fuzzy
+msgid "Select Vacancy..."
+msgstr "选择分支"
+
+#: tppcenter/templates/Companies/tabStaff.html:152
+#: tppcenter/templates/Tpp/tabStaff.html:151
 msgid "Administrator"
 msgstr "管理人"
 
-#: tppcenter/templates/Companies/tabStructure.html:54
+#: tppcenter/templates/Companies/tabStaff.html:160
+#: tppcenter/templates/Companies/tabStructure.html:79
+#: tppcenter/templates/Companies/tabStructure.html:91
+#: tppcenter/templates/Tpp/tabStaff.html:159
+#: tppcenter/templates/Tpp/tabStructure.html:76
+#: tppcenter/templates/Tpp/tabStructure.html:88
+#: tppcenter/templates/Vacancy/addForm.html:305
+#: tppcenter/templates/Vacancy/addForm.html:317
+msgid "Add"
+msgstr "添加"
+
+#: tppcenter/templates/Companies/tabStructure.html:56
 #: tppcenter/templates/Tpp/tabStructure.html:53
 msgid "No Departments found."
 msgstr "没找到部门"
 
-#: tppcenter/templates/Companies/tabStructure.html:73
-#: tppcenter/templates/Tpp/tabStructure.html:72
-#: tppcenter/templates/Vacancy/addForm.html:292
+#: tppcenter/templates/Companies/tabStructure.html:75
+#: tppcenter/templates/Vacancy/addForm.html:300
 msgid "Department name"
 msgstr "部门名字"
 
-#: tppcenter/templates/Companies/tabStructure.html:85
+#: tppcenter/templates/Companies/tabStructure.html:87
+#: tppcenter/templates/Resume/detailContent.html:34
 #: tppcenter/templates/Tpp/tabStructure.html:84
-#: tppcenter/templates/Vacancy/addForm.html:304
+#: tppcenter/templates/Vacancy/addForm.html:209
+#: tppcenter/templates/Vacancy/addForm.html:312
 msgid "Vacancy title"
 msgstr "空处标题"
 
-#: tppcenter/templates/Exhibitions/addForm.html:76
+#: tppcenter/templates/Exhibitions/addForm.html:88
 msgid "Start event date"
 msgstr "事件开始日期"
 
-#: tppcenter/templates/Exhibitions/addForm.html:85
+#: tppcenter/templates/Exhibitions/addForm.html:97
 msgid "End event date"
 msgstr "时间结束日期"
 
-#: tppcenter/templates/Exhibitions/addForm.html:101
+#: tppcenter/templates/Exhibitions/addForm.html:113
 msgid "Route description"
 msgstr "路径描述"
 
-#: tppcenter/templates/Exhibitions/addForm.html:190
+#: tppcenter/templates/Exhibitions/addForm.html:202
 msgid "Map"
 msgstr "地图"
 
-#: tppcenter/templates/Exhibitions/contentPage.html:59
-#: tppcenter/templates/Innov/contentPage.html:69
-#: tppcenter/templates/Tenders/contentPage.html:50
-#: tppcenter/templates/Wall/contentPage.html:58
-#: tppcenter/templates/Wall/contentPage.html:124
+#: tppcenter/templates/Exhibitions/contentPage.html:41
+#: tppcenter/templates/Innov/contentPage.html:48
+#: tppcenter/templates/Tenders/contentPage.html:46
+#: tppcenter/templates/Wall/contentPage.html:98
+#: tppcenter/templates/Wall/contentPage.html:161
 msgid "Organizer"
 msgstr "组织者"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:112
+#: tppcenter/templates/Exhibitions/detailContent.html:87
+#: tppcenter/templates/Exhibitions/detailContent.html:229
+#: tppcenter/templates/registration/registration.html:8
+#: tppcenter/templates/registration/registration.html:30
+#, fuzzy
+msgid "Sign Up"
+msgstr "签订"
+
+#: tppcenter/templates/Exhibitions/detailContent.html:101
 msgid "Route Description"
 msgstr "路径描述"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:202
+#: tppcenter/templates/Exhibitions/detailContent.html:201
 msgid "Name and Email are required"
 msgstr "需要名字和邮箱"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:203
-msgid "You have successfully registered."
+#: tppcenter/templates/Exhibitions/detailContent.html:202
+#, fuzzy
+msgid "You are registered successfully."
 msgstr "已成功注册"
 
-#: tppcenter/templates/Exhibitions/detailContent.html:230
-msgid "Register"
-msgstr "注册"
-
-#: tppcenter/templates/Greetings/contentPage.html:30
-#: tppcenter/templates/News/contentPage.html:69
-#: tppcenter/templates/Wall/contentPage.html:225
+#: tppcenter/templates/Greetings/contentPage.html:23
+#: tppcenter/templates/News/contentPage.html:59
+#: tppcenter/templates/Wall/contentPage.html:261
 msgid "Read more"
 msgstr "阅读更多"
 
 #: tppcenter/templates/Innov/addForm.html:37
-msgid "Target audience"
-msgstr "目标观众"
+msgid "Scope"
+msgstr ""
 
 #: tppcenter/templates/Innov/addForm.html:44
 #: tppcenter/templates/News/addForm.html:135
@@ -3328,8 +3064,8 @@ msgid "Keyword"
 msgstr "关键字"
 
 #: tppcenter/templates/Innov/addForm.html:51
-#: tppcenter/templates/Innov/detailContent.html:119
-msgid "Realese date"
+#, fuzzy
+msgid "Release date"
 msgstr "发布日期"
 
 #: tppcenter/templates/Innov/addForm.html:58
@@ -3351,7 +3087,7 @@ msgid "Product name"
 msgstr "产品名字"
 
 #: tppcenter/templates/Innov/addForm.html:147
-#: tppcenter/templates/Innov/detailContent.html:95
+#: tppcenter/templates/Innov/detailContent.html:81
 msgid "Business plan"
 msgstr "企业计划"
 
@@ -3359,43 +3095,36 @@ msgstr "企业计划"
 msgid "Business plan file"
 msgstr "企业计划文件"
 
-#: tppcenter/templates/Innov/contentPage.html:61
+#: tppcenter/templates/Innov/contentPage.html:36
+#: tppcenter/templates/Resume/contentPage.html:25
 #: tppcenter/templates/Tenders/addForm.html:34
-#: tppcenter/templates/Tenders/detailContent.html:59
-#: tppcenter/templates/Wall/contentPage.html:50
+#: tppcenter/templates/Tenders/contentPage.html:38
+#: tppcenter/templates/Tenders/detailContent.html:56
+#: tppcenter/templates/UserSites/contentPage.html:36
+#: tppcenter/templates/Wall/contentPage.html:90
 msgid "Publication date"
 msgstr "出版日期"
 
-#: tppcenter/templates/Innov/detailContent.html:107
+#: tppcenter/templates/Innov/detailContent.html:93
 msgid "Product"
 msgstr "产品"
 
-#: tppcenter/templates/Innov/detailContent.html:115
+#: tppcenter/templates/Innov/detailContent.html:105
 #: tppcenter/templates/Products/addForm.html:334
 msgid "Cost"
 msgstr "价格"
 
-#: tppcenter/templates/Innov/detailContent.html:128
+#: tppcenter/templates/Innov/detailContent.html:109
+msgid "Realese date"
+msgstr "发布日期"
+
+#: tppcenter/templates/Innov/detailContent.html:118
 msgid "Link to Business Plan File"
 msgstr "连接企业计划文件"
 
-#: tppcenter/templates/Innov/index.html:10
-msgid "Innovation project"
-msgstr "创新项目"
-
-#: tppcenter/templates/Messages/contentBox.html:9
+#: tppcenter/templates/Messages/contentBox.html:10
 msgid "Send private message"
 msgstr "发生私人信息"
-
-#: tppcenter/templates/Messages/index.html:49
-msgid "Users"
-msgstr "用户"
-
-#: tppcenter/templates/News/addForm.html:87
-#: tppcenter/templates/Products/addForm.html:380
-#: tppcenter/templates/TppTV/addForm.html:44
-msgid "Category"
-msgstr "类别"
 
 #: tppcenter/templates/News/addForm.html:101
 #: tppcenter/templates/TppTV/addForm.html:78
@@ -3412,8 +3141,8 @@ msgstr "选择国家"
 msgid "Preview description"
 msgstr "预览描述"
 
-#: tppcenter/templates/News/detailContent.html:142
-#: tppcenter/templates/TppTV/detailContent.html:45
+#: tppcenter/templates/News/detailContent.html:155
+#: tppcenter/templates/TppTV/detailContent.html:47
 msgid "Similar news"
 msgstr "类似新闻"
 
@@ -3429,7 +3158,7 @@ msgstr "最新新闻"
 #: tppcenter/templates/Tenders/addForm.html:89
 #: tppcenter/templates/Tenders/addForm.html:96
 #: tppcenter/templates/Tenders/addForm.html:114
-#: tppcenter/templates/Tpp/addForm.html:65
+#: tppcenter/templates/Tpp/addForm.html:66
 #: tppcenter/templates/TppTV/addForm.html:32
 msgid "delete"
 msgstr "删除"
@@ -3451,41 +3180,48 @@ msgid "To(date)"
 msgstr "到（日期）"
 
 #: tppcenter/templates/Products/addForm.html:368
-msgid "Measerument unit"
+#, fuzzy
+msgid "Measurement unit"
 msgstr "测量单位"
 
 #: tppcenter/templates/Products/addForm.html:414
 msgid "Post on b2c portal"
 msgstr "在企业到用户的电子商务模式门户上发布"
 
-#: tppcenter/templates/Products/contentPage.html:59
-#: tppcenter/templates/Products/detailContent.html:78
-#: tppcenter/templates/Wall/contentPage.html:277
+#: tppcenter/templates/Products/contentPage.html:50
+#: usersites/templates/Products/detailContent.html:95
 msgid "Contact to price"
 msgstr "相关价格"
 
-#: tppcenter/templates/Products/detailContent.html:83
+#: tppcenter/templates/Products/detailContent.html:72
+#, fuzzy
+msgid "Get price"
+msgstr "特价"
+
+#: tppcenter/templates/Products/detailContent.html:78
+#: usersites/templates/Products/detailContent.html:100
 msgid "Unit"
 msgstr "单位"
 
-#: tppcenter/templates/Products/detailContent.html:87
+#: tppcenter/templates/Products/detailContent.html:83
+#: usersites/templates/Products/detailContent.html:106
 msgid "Amount"
 msgstr "数量"
 
-#: tppcenter/templates/Products/detailContent.html:91
-msgid "Deleviry method"
-msgstr "送货方式"
+#: tppcenter/templates/Products/detailContent.html:143
+#, fuzzy
+msgid "Reviews"
+msgstr "评论"
 
-#: tppcenter/templates/Products/detailContent.html:98
-msgid "Countact us"
-msgstr "与我们联系"
-
-#: tppcenter/templates/Products/detailContent.html:144
-#: tppcenter/templates/Products/detailContent.html:147
-#: tppcenter/templates/Products/detailContent.html:150
-#: tppcenter/templates/Tenders/detailContent.html:120
-#: tppcenter/templates/Tenders/detailContent.html:123
-#: tppcenter/templates/Tenders/detailContent.html:126
+#: tppcenter/templates/Products/detailContent.html:155
+#: tppcenter/templates/Products/detailContent.html:158
+#: tppcenter/templates/Products/detailContent.html:161
+#: tppcenter/templates/Tenders/detailContent.html:111
+#: tppcenter/templates/Tenders/detailContent.html:114
+#: tppcenter/templates/Tenders/detailContent.html:117
+#: usersites/templates/Products/detailContent.html:167
+#: usersites/templates/Products/detailContent.html:170
+#: usersites/templates/Products/detailContent.html:173
 msgid "Link to the document"
 msgstr "连接到文档"
 
@@ -3497,207 +3233,224 @@ msgstr "资料已上传"
 msgid "Change avatar"
 msgstr "修改昵称"
 
-#: tppcenter/templates/Profile/addForm.html:75
-msgid "Your organization"
-msgstr "你的组织"
-
-#: tppcenter/templates/Profile/addForm.html:83
-#: tppcenter/templates/main/user_profile.html:70
+#: tppcenter/templates/Profile/addForm.html:76
+#: tppcenter/templates/main/user_profile.html:71
 msgid "Sex"
 msgstr "性别"
 
-#: tppcenter/templates/Profile/addForm.html:97
+#: tppcenter/templates/Profile/addForm.html:90
 msgid "Telephone Number"
 msgstr "电话号码"
 
-#: tppcenter/templates/Profile/addForm.html:107
-#: tppcenter/templates/Resume/detailContent.html:103
-#: tppcenter/templates/main/user_profile.html:90
+#: tppcenter/templates/Profile/addForm.html:100
+#: tppcenter/templates/Resume/detailContent.html:97
+#: tppcenter/templates/main/user_profile.html:91
 msgid "Profession"
 msgstr "职业"
 
-#: tppcenter/templates/Resume/addForm.html:53
+#: tppcenter/templates/Project/event.html:16
+#: tppcenter/templates/Project/proposal.html:16
+#, fuzzy
+msgid "Post announcements"
+msgstr "发布公告事件"
+
+#: tppcenter/templates/Project/offer.html:16
+msgid "Offer"
+msgstr ""
+
+#: tppcenter/templates/Resume/addForm.html:56
 msgid ""
 "Filling resume does not obligate company that publishes job on the site TPP-"
 "Center, enter into a contract of employment."
 msgstr "在TPP中心发布招聘职位的公司不承担简历填写的责任，包括就业合同"
 
-#: tppcenter/templates/Resume/addForm.html:70
+#: tppcenter/templates/Resume/addForm.html:58
+#, fuzzy
+msgid "Vacancy name"
+msgstr "空位"
+
+#: tppcenter/templates/Resume/addForm.html:73
 msgid "Marital Status"
 msgstr "婚姻状况"
 
-#: tppcenter/templates/Resume/addForm.html:85
+#: tppcenter/templates/Resume/addForm.html:88
 msgid "Citizenship"
 msgstr "国籍"
 
-#: tppcenter/templates/Resume/addForm.html:107
-#: tppcenter/templates/Resume/detailContent.html:81
+#: tppcenter/templates/Resume/addForm.html:110
+#: tppcenter/templates/Resume/detailContent.html:75
 msgid "Education"
 msgstr "教育"
 
-#: tppcenter/templates/Resume/addForm.html:110
-#: tppcenter/templates/Resume/detailContent.html:91
+#: tppcenter/templates/Resume/addForm.html:113
+#: tppcenter/templates/Resume/detailContent.html:85
 msgid "Institution"
 msgstr "学校"
 
-#: tppcenter/templates/Resume/addForm.html:118
-#: tppcenter/templates/Resume/detailContent.html:95
+#: tppcenter/templates/Resume/addForm.html:121
+#: tppcenter/templates/Resume/detailContent.html:89
 msgid "Faculty"
 msgstr "学院"
 
-#: tppcenter/templates/Resume/addForm.html:125
-#: tppcenter/templates/Resume/detailContent.html:99
+#: tppcenter/templates/Resume/addForm.html:128
+#: tppcenter/templates/Resume/detailContent.html:93
 msgid "Study period"
 msgstr "就学时间"
 
-#: tppcenter/templates/Resume/addForm.html:133
-#: tppcenter/templates/Resume/addForm.html:199
-#: tppcenter/templates/Resume/addForm.html:232
-#: tppcenter/templates/Resume/addForm.html:265
+#: tppcenter/templates/Resume/addForm.html:136
+#: tppcenter/templates/Resume/addForm.html:202
+#: tppcenter/templates/Resume/addForm.html:235
+#: tppcenter/templates/Resume/addForm.html:268
 msgid "from"
 msgstr "从"
 
-#: tppcenter/templates/Resume/addForm.html:137
-#: tppcenter/templates/Resume/addForm.html:203
-#: tppcenter/templates/Resume/addForm.html:236
-#: tppcenter/templates/Resume/addForm.html:269
+#: tppcenter/templates/Resume/addForm.html:140
+#: tppcenter/templates/Resume/addForm.html:206
+#: tppcenter/templates/Resume/addForm.html:239
+#: tppcenter/templates/Resume/addForm.html:272
 msgid "to"
 msgstr "到"
 
-#: tppcenter/templates/Resume/addForm.html:144
+#: tppcenter/templates/Resume/addForm.html:147
 msgid "Specialty"
 msgstr "专业"
 
-#: tppcenter/templates/Resume/addForm.html:151
+#: tppcenter/templates/Resume/addForm.html:154
 msgid "Form of study"
 msgstr "就读形式"
 
-#: tppcenter/templates/Resume/addForm.html:165
-#: tppcenter/templates/Resume/addForm.html:292
-#: tppcenter/templates/Resume/addForm.html:299
+#: tppcenter/templates/Resume/addForm.html:168
+#: tppcenter/templates/Resume/addForm.html:295
+#: tppcenter/templates/Resume/addForm.html:302
 msgid "Additionally"
 msgstr "附加"
 
-#: tppcenter/templates/Resume/addForm.html:172
-#: tppcenter/templates/Resume/detailContent.html:82
+#: tppcenter/templates/Resume/addForm.html:175
+#: tppcenter/templates/Resume/detailContent.html:76
 msgid "Experience"
 msgstr "经验"
 
-#: tppcenter/templates/Resume/addForm.html:174
+#: tppcenter/templates/Resume/addForm.html:177
 msgid "Specify the last 3 jobs"
 msgstr "详述最近3份工作"
 
-#: tppcenter/templates/Resume/addForm.html:191
-msgid "Worrk period"
-msgstr "工作时间"
-
-#: tppcenter/templates/Resume/addForm.html:224
-#: tppcenter/templates/Resume/addForm.html:257
+#: tppcenter/templates/Resume/addForm.html:194
+#: tppcenter/templates/Resume/addForm.html:227
+#: tppcenter/templates/Resume/addForm.html:260
 msgid "Work period"
 msgstr "工作时间"
 
-#: tppcenter/templates/Resume/addForm.html:275
-#: tppcenter/templates/Resume/detailContent.html:83
+#: tppcenter/templates/Resume/addForm.html:278
+#: tppcenter/templates/Resume/detailContent.html:77
 msgid "Skills"
 msgstr "技能"
 
-#: tppcenter/templates/Resume/addForm.html:278
-msgid "Languages skills"
+#: tppcenter/templates/Resume/addForm.html:281
+#: tppcenter/templates/Resume/detailContent.html:147
+msgid "Language skills"
 msgstr "语言技能"
 
-#: tppcenter/templates/Resume/addForm.html:285
-#: tppcenter/templates/Resume/detailContent.html:157
+#: tppcenter/templates/Resume/addForm.html:288
+#: tppcenter/templates/Resume/detailContent.html:151
 msgid "Computer skills"
 msgstr "电脑技能"
 
-#: tppcenter/templates/Resume/addForm.html:302
+#: tppcenter/templates/Resume/addForm.html:305
 msgid "Your salary expectations"
 msgstr "期望薪资"
 
-#: tppcenter/templates/Resume/addForm.html:309
+#: tppcenter/templates/Resume/addForm.html:312
 msgid "Information about which you wish to inform"
 msgstr "希望告知的信息"
 
-#: tppcenter/templates/Resume/addForm.html:316
+#: tppcenter/templates/Resume/addForm.html:319
 msgid ""
 "I confirm that all information provided by me in this form on the site TPP-"
 "Center, are true and complete"
 msgstr "我承诺所有我在TTP中心网站上提供的信息都是真实，完整的。"
 
-#: tppcenter/templates/Resume/addForm.html:317
+#: tppcenter/templates/Resume/addForm.html:320
 msgid "I don't mind for checking the information reported by me"
 msgstr "我不介意核实我所述的信息"
 
-#: tppcenter/templates/Resume/contentPage.html:32
-#: tppcenter/templates/Tenders/contentPage.html:46
-#: tppcenter/templates/UserSites/contentPage.html:36
-msgid "Date of publication"
-msgstr "发布日期"
+#: tppcenter/templates/Resume/contentPage.html:30
+#: tppcenter/templates/Resume/detailContent.html:38
+#, fuzzy
+msgid "User name"
+msgstr "名"
 
-#: tppcenter/templates/Resume/detailContent.html:58
+#: tppcenter/templates/Resume/detailContent.html:43
+#, fuzzy
+msgid "Name not found"
+msgstr "没找到部门"
+
+#: tppcenter/templates/Resume/detailContent.html:52
 msgid "Marital status"
 msgstr "婚姻状况"
 
-#: tppcenter/templates/Resume/detailContent.html:62
+#: tppcenter/templates/Resume/detailContent.html:56
 msgid "Citezenship"
 msgstr "国籍"
 
-#: tppcenter/templates/Resume/detailContent.html:74
+#: tppcenter/templates/Resume/detailContent.html:68
 msgid "Salary"
 msgstr "薪资"
 
-#: tppcenter/templates/Resume/detailContent.html:84
-#: tppcenter/templates/Resume/detailContent.html:107
+#: tppcenter/templates/Resume/detailContent.html:78
+#: tppcenter/templates/Resume/detailContent.html:101
 msgid "Additional"
 msgstr "附加"
 
-#: tppcenter/templates/Resume/detailContent.html:124
-#: tppcenter/templates/Resume/detailContent.html:132
-#: tppcenter/templates/Resume/detailContent.html:140
+#: tppcenter/templates/Resume/detailContent.html:118
+#: tppcenter/templates/Resume/detailContent.html:126
+#: tppcenter/templates/Resume/detailContent.html:134
 msgid "Work  period"
 msgstr "工作时间"
 
-#: tppcenter/templates/Resume/detailContent.html:153
-msgid "Language skills"
-msgstr "语言技能"
-
-#: tppcenter/templates/Resume/detailContent.html:161
+#: tppcenter/templates/Resume/detailContent.html:155
 msgid "Additional skills"
 msgstr "附加技能"
 
 #: tppcenter/templates/Tenders/addForm.html:41
-#: tppcenter/templates/Tenders/detailContent.html:63
+#: tppcenter/templates/Tenders/detailContent.html:60
 msgid "Deadline for receiving bids"
 msgstr "接受竞标的截至日期"
 
 #: tppcenter/templates/Tenders/addForm.html:49
-#: tppcenter/templates/Tenders/contentPage.html:49
-#: tppcenter/templates/Tenders/detailContent.html:67
+#: tppcenter/templates/Tenders/contentPage.html:43
+#: tppcenter/templates/Tenders/detailContent.html:64
 msgid "Starting price"
 msgstr "起始价格"
 
 #: tppcenter/templates/Tenders/addForm.html:132
-msgid "Tender name"
+#, fuzzy
+msgid "Tender title"
 msgstr "投标名字"
 
-#: tppcenter/templates/Tpp/addForm.html:136
+#: tppcenter/templates/Tenders/detailContent.html:52
+#, fuzzy
+msgid "Apply now"
+msgstr "申请"
+
+#: tppcenter/templates/Tpp/addForm.html:137
 msgid "VATIN"
 msgstr "万廷"
 
-#: tppcenter/templates/Tpp/addForm.html:153
-msgid "Organization name"
+#: tppcenter/templates/Tpp/addForm.html:154
+#, fuzzy
+msgid "Organization title"
 msgstr "组织名字"
 
-#: tppcenter/templates/Tpp/addForm.html:161
+#: tppcenter/templates/Tpp/addForm.html:162
 msgid "Preview description "
 msgstr "预览描述"
 
-#: tppcenter/templates/Tpp/addForm.html:168
+#: tppcenter/templates/Tpp/addForm.html:169
 #: tppcenter/templates/TppTV/addForm.html:101
 msgid "Detail description"
 msgstr "详情描述"
 
-#: tppcenter/templates/Tpp/addForm.html:193
+#: tppcenter/templates/Tpp/addForm.html:194
 msgid "Detail"
 msgstr "详情"
 
@@ -3705,21 +3458,32 @@ msgstr "详情"
 msgid "Logo"
 msgstr "标志"
 
+#: tppcenter/templates/Tpp/tabStructure.html:72
+#, fuzzy
+msgid "Department title"
+msgstr "部门名字"
+
 #: tppcenter/templates/UserSites/index.html:10
 msgid "Sites"
 msgstr "网站"
+
+#: tppcenter/templates/Users/contentPage.html:38
+#, fuzzy
+msgid "Send message"
+msgstr "发送信息至"
 
 #: tppcenter/templates/Vacancy/addForm.html:169
 msgid "Departament"
 msgstr "部门"
 
-#: tppcenter/templates/Vacancy/addForm.html:191
-msgid "Select Department to select vacancy..."
-msgstr "选择部门空位"
+#: tppcenter/templates/Vacancy/addForm.html:171
+#, fuzzy
+msgid "Choose department..."
+msgstr "选择日期"
 
-#: tppcenter/templates/Vacancy/addForm.html:209
-msgid "Name of vacancy"
-msgstr "空位"
+#: tppcenter/templates/Vacancy/addForm.html:191
+msgid "Choose from list..."
+msgstr ""
 
 #: tppcenter/templates/Vacancy/addForm.html:218
 msgid "City of vacancy"
@@ -3729,66 +3493,72 @@ msgstr "城市空位"
 msgid "Type of employment"
 msgstr "招聘类型"
 
-#: tppcenter/templates/Vacancy/addForm.html:235
+#: tppcenter/templates/Vacancy/addForm.html:243
 msgid "make vacancy anonymous"
 msgstr "空位匿名"
 
-#: tppcenter/templates/Vacancy/addForm.html:236
-msgid "name of company will be hidden"
+#: tppcenter/templates/Vacancy/addForm.html:244
+#, fuzzy
+msgid "company title will be hidden"
 msgstr "隐藏公司名字"
 
-#: tppcenter/templates/Vacancy/addForm.html:254
-#: tppcenter/templates/Vacancy/detailContent.html:76
+#: tppcenter/templates/Vacancy/addForm.html:262
+#: tppcenter/templates/Vacancy/detailContent.html:72
 msgid "Requirements"
 msgstr "要求"
 
-#: tppcenter/templates/Vacancy/addForm.html:261
-#: tppcenter/templates/Vacancy/detailContent.html:80
+#: tppcenter/templates/Vacancy/addForm.html:269
+#: tppcenter/templates/Vacancy/detailContent.html:76
 msgid "Terms"
 msgstr "条款"
 
-#: tppcenter/templates/Vacancy/addForm.html:293
-#: tppcenter/templates/Vacancy/addForm.html:305
+#: tppcenter/templates/Vacancy/addForm.html:301
+#: tppcenter/templates/Vacancy/addForm.html:313
 msgid "Please wait to response..."
 msgstr "请等待回复"
 
-#: tppcenter/templates/Vacancy/detailContent.html:32
+#: tppcenter/templates/Vacancy/detailContent.html:33
 msgid "Send Resume"
 msgstr "发送简历"
 
-#: tppcenter/templates/Vacancy/detailContent.html:42
+#: tppcenter/templates/Vacancy/detailContent.html:43
 msgid "Anonymous company"
 msgstr "匿名公司"
 
-#: tppcenter/templates/Vacancy/detailContent.html:67
+#: tppcenter/templates/Vacancy/detailContent.html:63
 msgid "Type of employments"
 msgstr "招聘类型"
 
-#: tppcenter/templates/Vacancy/index.html:47
+#: tppcenter/templates/Vacancy/detailContent.html:100
 msgid "You send resume on position:"
 msgstr "你发送简历的职位为："
 
-#: tppcenter/templates/Vacancy/index.html:53
+#: tppcenter/templates/Vacancy/detailContent.html:106
 msgid "Add new resume to profile"
 msgstr "在资料中添加新简历"
 
-#: tppcenter/templates/Vacancy/index.html:54
+#: tppcenter/templates/Vacancy/detailContent.html:107
 msgid "New resume"
 msgstr "新简历"
 
-#: tppcenter/templates/Vacancy/index.html:58
+#: tppcenter/templates/Vacancy/detailContent.html:111
 msgid "Send existing resume"
 msgstr "发送已有简历"
 
-#: tppcenter/templates/Vacancy/index.html:63
+#: tppcenter/templates/Vacancy/detailContent.html:116
 msgid "No existing resumes"
 msgstr "无已有简历"
 
-#: tppcenter/templates/Wall/contentPage.html:8
+#: tppcenter/templates/Wall/contentPage.html:6
 msgid "Latest updates"
 msgstr "最新更新"
 
-#: tppcenter/templates/Wall/contentPage.html:146
+#: tppcenter/templates/Wall/contentPage.html:38
+#, fuzzy
+msgid "Get the price"
+msgstr "相关价格"
+
+#: tppcenter/templates/Wall/contentPage.html:184
 msgid "Bussiness Proposals"
 msgstr "商务建议书"
 
@@ -3800,19 +3570,71 @@ msgstr "当前组织"
 msgid "Permission denied"
 msgstr "权限被拒绝"
 
-#: tppcenter/templates/main/user_profile.html:24
+#: tppcenter/templates/main/paginator.html:5
+#, fuzzy
+msgid "Total pages"
+msgstr "额外的页面"
+
+#: tppcenter/templates/main/paginator.html:7
+msgid "Back"
+msgstr ""
+
+#: tppcenter/templates/main/paginator.html:21
+msgid "Forward"
+msgstr ""
+
+#: tppcenter/templates/main/staticPages.html:4
+#, fuzzy
+msgid "Project news"
+msgstr "项目名字"
+
+#: tppcenter/templates/main/staticPages.html:12
+msgid "Advices"
+msgstr "建议"
+
+#: tppcenter/templates/main/user_profile.html:25
 msgid "User profile"
 msgstr "用户资料"
 
-#: tppcenter/templates/main/user_profile.html:52
+#: tppcenter/templates/main/user_profile.html:53
 #: tppcenter/templates/registration/login.html:6
 msgid "Login"
 msgstr "登入"
 
+#: tppcenter/templates/registration/activate.html:3
+#: tppcenter/templates/registration/registration_complete.html:29
+#, fuzzy
+msgid "Registration is completed"
+msgstr "完成注册"
+
+#: tppcenter/templates/registration/activate.html:6
+#, fuzzy
+msgid "Your registration is complited"
+msgstr "你的注册已完成"
+
+#: tppcenter/templates/registration/activate.html:8
+#, fuzzy
+msgid "Sorry, but your activation key is invalid"
+msgstr "抱歉，你的激活码无效"
+
 #: tppcenter/templates/registration/activation_complete.html:6
-#: tppcenter/templates/registration/activation_complete.html:28
 msgid "Activation complete"
 msgstr "完成激活"
+
+#: tppcenter/templates/registration/activation_complete.html:28
+#, fuzzy
+msgid "Activation is completed"
+msgstr "完成激活"
+
+#: tppcenter/templates/registration/activation_complete.html:30
+#, fuzzy
+msgid "Thank you for registration! Now you can  "
+msgstr "谢谢，你已经完成注册！现在你可以"
+
+#: tppcenter/templates/registration/activation_complete.html:31
+#, fuzzy
+msgid "using email and password that you provided during sign up."
+msgstr "在注册期间请使用你提供的邮箱和密码"
 
 #: tppcenter/templates/registration/base.html:8
 msgid "Tpp-center"
@@ -3837,6 +3659,11 @@ msgstr "忘记密码"
 msgid "Password reset"
 msgstr "重置密码"
 
+#: tppcenter/templates/registration/password_reset_confirm.html:31
+#, fuzzy
+msgid "Enter your new password below to change the old one:"
+msgstr "在下方输入你的新密码，替换旧密码"
+
 #: tppcenter/templates/registration/registration.html:58
 msgid "I have read and accept"
 msgstr "已阅读并接受"
@@ -3845,17 +3672,54 @@ msgstr "已阅读并接受"
 msgid "the terms of use"
 msgstr "使用条款"
 
+#: tppcenter/templates/registration/registration_complete.html:32
+#, fuzzy
+msgid ""
+"We sent you message. Please, check you email and click on the  link to "
+"activate your account. "
+msgstr "信息已发送。请查收邮件并点击进去链接激活你的账户。"
+
+#: usersites/views.py:24 usersites/views.py:25
+#: usersites/templates/header.html:4
+#, fuzzy
+msgid "About us"
+msgstr "关于"
+
+#: usersites/Contact/views.py:38
+#, fuzzy
+msgid "This message was sent to company:"
+msgstr "此信息发送至公司编号:"
+
+#: usersites/Contact/views.py:41
+#, fuzzy
+msgid "New message from "
+msgstr "新消息"
+
+#: usersites/Contact/views.py:47
+#, fuzzy
+msgid "The message was succesfuly send "
+msgstr "成功保存"
+
+#: usersites/Contact/views.py:50
+msgid "Incoorect Recapcha"
+msgstr ""
+
+#: usersites/Contact/views.py:55
+#, fuzzy
+msgid "All field are required"
+msgstr "需要信息或档案"
+
 #: usersites/Proposals/views.py:42 usersites/Proposals/views.py:43
 #: usersites/templates/contentPage.html:7
-#: usersites/templates/site_sidebar.html:19
+#: usersites/templates/site_sidebar.html:99
 msgid "Business proposals"
 msgstr "商务建议书"
 
-#: usersites/templates/site_sidebar.html:17
+#: usersites/templates/site_sidebar.html:97
 msgid "Company news"
 msgstr "公司新闻"
 
-#: usersites/templates/site_sidebar.html:22
+#: usersites/templates/site_sidebar.html:102
 msgid "Company structure"
 msgstr "公司结构"
 
@@ -3867,6 +3731,416 @@ msgstr "部门员工"
 msgid "Employee"
 msgstr "员工"
 
-#: usersites/templates/Contact/contentPage.html:52
+#: usersites/templates/Contact/contentPage.html:60
 msgid "You email"
 msgstr "发邮件至"
+
+#: usersites/templates/Products/detailContent.html:112
+msgid "Deleviry method"
+msgstr "送货方式"
+
+#: usersites/templates/Products/detailContent.html:129
+msgid "Payment for Product: "
+msgstr ""
+
+#: usersites/templates/Products/detailContent.html:144
+msgid "Countact us"
+msgstr "与我们联系"
+
+#~ msgid "0 of %(count)d selected"
+#~ msgid_plural "of %(count)d selected"
+#~ msgstr[0] "选中%(count)d"
+#~ msgstr[1] "选中%(count)d"
+
+#~ msgid "%(total_count)s selected"
+#~ msgid_plural "All %(total_count)s selected"
+#~ msgstr[0] "全选%(total_count)s"
+#~ msgstr[1] "全选%(total_count)s"
+
+#~ msgid "Search In"
+#~ msgstr "在搜索"
+
+#~ msgid "Haystack"
+#~ msgstr "干草堆"
+
+#~ msgid "Search Queries"
+#~ msgstr "搜索查询"
+
+#~ msgid "Query"
+#~ msgstr "查询"
+
+#~ msgid "Backend Alias"
+#~ msgstr "后端别名"
+
+#~ msgid "Timeline"
+#~ msgstr "时间轴"
+
+#~ msgid "Time"
+#~ msgstr "时间"
+
+#~ msgid "Kwargs"
+#~ msgstr "赃物"
+
+#~ msgid "state"
+#~ msgstr "声明"
+
+#~ msgid "ETA"
+#~ msgstr "估计到达时间"
+
+#~ msgid "when"
+#~ msgstr "的时候"
+
+#~ msgid "name"
+#~ msgstr "名字"
+
+#~ msgid "Task detail"
+#~ msgstr "任务细节"
+
+#~ msgid "Tasks"
+#~ msgstr "任务"
+
+#~ msgid "UUID"
+#~ msgstr "通用唯一标识"
+
+#~ msgid "Revoke selected tasks"
+#~ msgstr "取消选定任务"
+
+#~ msgid "Terminate selected tasks"
+#~ msgstr "终止选定任务"
+
+#~ msgid "Kill selected tasks"
+#~ msgstr "扼杀选定任务"
+
+#~ msgid "Rate limit selected tasks"
+#~ msgstr "速率限制选定任务"
+
+#~ msgid "Rate limit selection"
+#~ msgstr "速率限制选定"
+
+#~ msgid "Node detail"
+#~ msgstr "节点详图"
+
+#~ msgid "Worker Nodes"
+#~ msgstr "工作节点"
+
+#~ msgid "Shutdown selected worker nodes"
+#~ msgstr "停止选定的工作节点"
+
+#~ msgid "Enable event mode for selected nodes."
+#~ msgstr "对选定的节点启用事件模式"
+
+#~ msgid "Disable event mode for selected nodes."
+#~ msgstr "对选定的节点禁用事件模式"
+
+#~ msgid "Task (registered)"
+#~ msgstr "任务（注册登记）"
+
+#~ msgid "Task (custom)"
+#~ msgstr "任务（海关）"
+
+#~ msgid "Need name of task"
+#~ msgstr "任务命名"
+
+#~ msgid "Unable to parse JSON: %s"
+#~ msgstr "无法解析JSON(一种轻量级的数据交换格式)： %s"
+
+#~ msgid "just now"
+#~ msgstr "刚刚"
+
+#~ msgid "{seconds} second ago"
+#~ msgstr "{秒}秒前（单数）"
+
+#~ msgid "{seconds} seconds ago"
+#~ msgstr "{秒}秒前（复数）"
+
+#~ msgid "{minutes} minute ago"
+#~ msgstr "{分}分前（单数）"
+
+#~ msgid "{minutes} minutes ago"
+#~ msgstr "{分}分前（复数）"
+
+#~ msgid "{hours} hour ago"
+#~ msgstr "{小时}小时前（单数）"
+
+#~ msgid "{hours} hours ago"
+#~ msgstr "{小时}小时前（复数）"
+
+#~ msgid "yesterday at {time}"
+#~ msgstr "在昨天（时间）"
+
+#~ msgid "year"
+#~ msgstr "年（单数）"
+
+#~ msgid "years"
+#~ msgstr "年（复数）"
+
+#~ msgid "month"
+#~ msgstr "月（单数）"
+
+#~ msgid "months"
+#~ msgstr "月（复数）"
+
+#~ msgid "week"
+#~ msgstr "周（单数）"
+
+#~ msgid "weeks"
+#~ msgstr "周（复数）"
+
+#~ msgid "days"
+#~ msgstr "天（复数）"
+
+#~ msgid "{number} {type} ago"
+#~ msgstr "{数字}{类型}在...之前"
+
+#~ msgid "task id"
+#~ msgstr "任务编号"
+
+#~ msgid "done at"
+#~ msgstr "在...完成"
+
+#~ msgid "traceback"
+#~ msgstr "追溯"
+
+#~ msgid "meta"
+#~ msgstr "元"
+
+#~ msgid "task state"
+#~ msgstr "任务状态（单数）"
+
+#~ msgid "task states"
+#~ msgstr "任务状态（复数）"
+
+#~ msgid "group id"
+#~ msgstr "组标识"
+
+#~ msgid "created at"
+#~ msgstr "在...创建"
+
+#~ msgid "saved group result"
+#~ msgstr "保存组结果（单数）"
+
+#~ msgid "saved group results"
+#~ msgstr "保存组结果（复数）"
+
+#~ msgid "Days"
+#~ msgstr "天数"
+
+#~ msgid "Hours"
+#~ msgstr "小时数"
+
+#~ msgid "Minutes"
+#~ msgstr "分钟"
+
+#~ msgid "Seconds"
+#~ msgstr "秒"
+
+#~ msgid "Microseconds"
+#~ msgstr "微秒"
+
+#~ msgid "every"
+#~ msgstr "每一个"
+
+#~ msgid "period"
+#~ msgstr "阶段"
+
+#~ msgid "interval"
+#~ msgstr "区间（单数）"
+
+#~ msgid "intervals"
+#~ msgstr "区间（复数）"
+
+#~ msgid "every {0.period_singular}"
+#~ msgstr "每{0.阶段_单数}"
+
+#~ msgid "every {0.every} {0.period}"
+#~ msgstr "每{0.每个}{0.阶段}"
+
+#~ msgid "minute"
+#~ msgstr "分钟"
+
+#~ msgid "hour"
+#~ msgstr "小时"
+
+#~ msgid "day of week"
+#~ msgstr "周中的一天"
+
+#~ msgid "day of month"
+#~ msgstr "月中的一天"
+
+#~ msgid "month of year"
+#~ msgstr "年中的一个月"
+
+#~ msgid "crontab"
+#~ msgstr "定时任务（单数）"
+
+#~ msgid "crontabs"
+#~ msgstr "定时任务（复数）"
+
+#~ msgid "Useful description"
+#~ msgstr "有用的描述"
+
+#~ msgid "task name"
+#~ msgstr "任务名称"
+
+#~ msgid "Use one of interval/crontab"
+#~ msgstr "使用其中一个区间/定时任务"
+
+#~ msgid "Arguments"
+#~ msgstr "命令行参数"
+
+#~ msgid "JSON encoded positional arguments"
+#~ msgstr "JSON（一种轻量级的数据交换格式）编码的位置参数"
+
+#~ msgid "Keyword arguments"
+#~ msgstr "关键字参数"
+
+#~ msgid "JSON encoded keyword arguments"
+#~ msgstr "JSON（一种轻量级的数据交换格式）编码的关键字参数"
+
+#~ msgid "queue"
+#~ msgstr "队列"
+
+#~ msgid "Queue defined in CELERY_QUEUES"
+#~ msgstr "定义于异步任务队列中的队列"
+
+#~ msgid "exchange"
+#~ msgstr "交换"
+
+#~ msgid "routing key"
+#~ msgstr "路选键"
+
+#~ msgid "expires"
+#~ msgstr "过期无效"
+
+#~ msgid "enabled"
+#~ msgstr "启用"
+
+#~ msgid "description"
+#~ msgstr "描述"
+
+#~ msgid "periodic task"
+#~ msgstr "周期性任务（单数）"
+
+#~ msgid "periodic tasks"
+#~ msgstr "周期性任务（复数）"
+
+#~ msgid "hostname"
+#~ msgstr "主机名"
+
+#~ msgid "last heartbeat"
+#~ msgstr "最后的心跳"
+
+#~ msgid "worker"
+#~ msgstr "工作者（单数）"
+
+#~ msgid "workers"
+#~ msgstr "工作者（复数）"
+
+#~ msgid "event received at"
+#~ msgstr "在...接收事件"
+
+#~ msgid "result"
+#~ msgstr "结果"
+
+#~ msgid "execution time"
+#~ msgstr "执行时间"
+
+#~ msgid "in seconds if task succeeded"
+#~ msgstr "如果任务在几秒内成功"
+
+#~ msgid "number of retries"
+#~ msgstr "重试次数"
+
+#~ msgid "task"
+#~ msgstr "任务（单数）"
+
+#~ msgid "tasks"
+#~ msgstr "任务（复数）"
+
+#~ msgid "Home"
+#~ msgstr "首页"
+
+#~ msgid "Rate limit"
+#~ msgstr "速率极限"
+
+#~ msgid "Activate users"
+#~ msgstr "激活用户"
+
+#~ msgid "Re-send activation emails"
+#~ msgstr "重发激活邮件"
+
+#~ msgid "Password (again)"
+#~ msgstr "密码（再一次）"
+
+#~ msgid "The two password fields didn't match."
+#~ msgstr "两次输入的密码不一致"
+
+#~ msgid "I have read and agree to the Terms of Service"
+#~ msgstr "我已经阅读并同意服务条款"
+
+#~ msgid "You must agree to the terms to register"
+#~ msgstr "注册前必须同意此条款"
+
+#~ msgid ""
+#~ "This email address is already in use. Please supply a different email "
+#~ "address."
+#~ msgstr "此邮箱地址已使用。请提供另一个邮箱地址。"
+
+#~ msgid ""
+#~ "Registration using free email addresses is prohibited. Please supply a "
+#~ "different email address."
+#~ msgstr "禁止使用免费注册的邮箱地址注册。请提供另一个邮箱地址。"
+
+#~ msgid "user"
+#~ msgstr "用户"
+
+#~ msgid "activation key"
+#~ msgstr "激活码"
+
+#~ msgid "registration profile"
+#~ msgstr "登记资料（单数）"
+
+#~ msgid "registration profiles"
+#~ msgstr "登记资料（复数）"
+
+#~ msgid "System notifications"
+#~ msgstr "系统通告"
+
+#~ msgid "Friend request"
+#~ msgstr "朋友要求"
+
+#~ msgid "Notification in your communities"
+#~ msgstr "社区通告"
+
+#~ msgid "add top"
+#~ msgstr "从顶端处添加"
+
+#~ msgid "Cost of project"
+#~ msgstr "项目花费"
+
+#~ msgid "Register"
+#~ msgstr "注册"
+
+#~ msgid "Target audience"
+#~ msgstr "目标观众"
+
+#~ msgid "Innovation project"
+#~ msgstr "创新项目"
+
+#~ msgid "Your organization"
+#~ msgstr "你的组织"
+
+#~ msgid "Worrk period"
+#~ msgstr "工作时间"
+
+#~ msgid "Languages skills"
+#~ msgstr "语言技能"
+
+#~ msgid "Date of publication"
+#~ msgstr "发布日期"
+
+#~ msgid "Select Department to select vacancy..."
+#~ msgstr "选择部门空位"
+
+#~ msgid "Name of vacancy"
+#~ msgstr "空位"

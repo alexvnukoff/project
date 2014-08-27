@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.forms.models import modelformset_factory
-from django.db.models import get_app, get_models
+from django.db.models import get_app, get_models, Q
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -13,10 +14,11 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from haystack.query import SearchQuerySet
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 from appl.models import Country, Organization, Tpp, Gallery, Cabinet, Notification, \
-    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate
+    Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate, Company
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from core.models import Item, User
@@ -362,9 +364,59 @@ def meth(request):
             form.save(parent=ob.pk, user=request.user)
     return False
 
+def myCompanies(request):
 
+    result = {'content': [], 'total': 0}
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except ValueError:
+        return HttpResponse(json.dumps(result))
+
+    if request.is_ajax():
+        cab = Cabinet.objects.get(user=request.user)
+
+        current_company = request.session.get('current_company', False)
+
+        #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+        companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
+                                                    Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+
+        paginate_by = 10
+
+        if current_company is not False:
+
+            cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cab.pk)[0]
+
+            if not cabinet.text:
+                user_name = request.user.email
+            else:
+                user_name = cabinet.text
+
+            paginate_by = 9
+
+            result['content'] = [{'title': user_name, 'id': 0}]
+            companies.exclude(pk=current_company)
+
+
+        paginator = Paginator(companies, paginate_by)
+        result['total'] = paginator.count
+        onPage = paginator.page(page)
+
+        ids = [obj.pk for obj in onPage.object_list]
+
+        sqs = SearchQuerySet().models(Tpp, Company).filter(django_id__in=ids)
+
+        result['content'] += [{'title': item.title, 'id': item.pk} for item in sqs]
+
+        return HttpResponse(json.dumps(result))
+
+    return HttpResponse(json.dumps(result))
+
+
+@login_required(login_url='/login/')
 def jsonFilter(request):
-    import json
+
 
     filter = request.GET.get('type', None)
     q = request.GET.get('q', '').strip()
@@ -395,9 +447,12 @@ def getLiveTop(request):
 
     filterAdv = func.getListAdv(request)
 
+    tops, models = func.getTops(request, filterAdv)
+
     templateParams = {
         'MEDIA_URL': settings.MEDIA_URL,
-        'modelTop': func.getTops(request, filterAdv)
+        'modelTop': tops,
+        'models': models
     }
 
     return render_to_response("AdvTop/tops.html", templateParams)
@@ -716,3 +771,5 @@ def builTemplate(request):
             if res:
                 cntr.setAttributeValue({'NAME': attr['NAME']}, crt_usr)
                 cntr.setAttributeValue({'TEMPLATE_IMAGE_FOLDER': attr['TEMPLATE_IMAGE_FOLDER']}, crt_usr)
+
+
