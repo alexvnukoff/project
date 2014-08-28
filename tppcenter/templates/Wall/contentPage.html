@@ -7,271 +7,145 @@
     {% if productsValues %}
         <div class="wall-title-bg">{% trans 'Products' %}</div>
         <ul class="listprd">
-            {% for id , attr in productsValues.items %}
-                {% with attr.NAME.0 as name %}
-                {% with attr.IMAGE.0 as image %}
-                {% with attr.CREATE_DATE.0 as date%}
-                {% with attr.COUNTRY_NAME|first as country_name %}
-                {% with attr.SLUG|first as slug %}
-                {% with attr.FLAG_CLASS|first as flag %}
-                {% with attr.COST|first as price %}
-                {% with attr.CURRENCY|first as currency %}
-                {% with attr.COUNTRY_ID as country_id %}
+            {% for prod in productsValues %}
                 <li>
                     <div class="thumb">
                         <a href="{% url "products:detail" slug %}">
-                            {% if image %}
-                                <img src="{{ MEDIA_URL }}big/{{ image }}" alt="{{ name }}" title="{{ name }}" />
+                            {% if prod.image %}
+                                <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.title }}" title="{{ prod.title }}" />
                             {% else %}
                                 <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                             {% endif %}
                         </a>
                     </div>
                     <div class="link">
-                        <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
-                        <a href="{% url "products:detail" slug %}" class="name">{{ name|truncatechars:40 }}</a>
+                        <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.text }}"></i>
+                        <a href="{% url "products:detail" prod.slug %}" class="name">{{ prod.title|truncatechars:40 }}</a>
                     </div>
                     <div class="price">
-                        {% if price %}
-                            {{ currency|getSymbol }} {{ price }}
+                        {% if prod.price %}
+                            {{ prod.currency|getSymbol }} {{ prod.price }}
                         {% else %}
                             {% trans 'Get the price' %}
                         {% endif %}
                     </div>
-                    <a href="{% url "products:detail" slug %}" class="btnbuy">{% trans 'Buy' %}</a>
+                    <a href="{% url "products:detail" prod.slug %}" class="btnbuy">{% trans 'Buy' %}</a>
                 </li>
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
         </ul>
     {% endif %}
     {% if innovValues  %}
         <div class="wall-title-bg">{% trans 'Innovation Project' %}</div>
         <ul class="tender-list" id="afisha-list">
-            {% for id , attr in innovValues.items %}
-                {% with attr.NAME.0 as name %}
-                {% with attr.SLUG.0 as slug %}
-                {% with attr.COST.0 as cost %}
-                {% with attr.CURRENCY.0 as currency %}
-                {% with attr.DETAIL_TEXT.0 as content %}
-                {% with attr.CREATE_DATE.0 as date%}
-                {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
-                {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                {% with attr.ORGANIZATION_ID.0 as org_id %}
-                {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
-                {% with attr.ORGANIZATION_URL as org_url %}
-                {% with attr.COUNTRY_NAME|first as country_name %}
-                {% with attr.FLAG_CLASS|first as flag %}
-                {% with attr.COUNTRY_ID as country_id %}
-                {% with attr.BRANCH_NAME|first as branch_name %}
-                {% with attr.BRANCH_ID as branch_id %}
-                {% with attr.CABINET_NAME|first as cabinet_name %}
-                {% with attr.CABINET_LAST_NAME|first as cabinet_last_name %}
-                {% with attr.CABINET_ID as cabinet_id %}
-                {% with attr.CABINET_COUNTRY_NAME|first as cabinet_country_name %}
-                {% with attr.CABINET_COUNTRY_FLAG_CLASS|first as cabinet_country_flag %}
-                {% with attr.CABINET_COUNTRY_ID as cabinet_country_id %}
+            {% for innov in innovValues %}
                 <li>
                     <div class="title">
-                        {% if cabinet_country_flag %}
-                            <i class="flag sprite {{ cabinet_country_flag }}" title="{{ country_name }}"></i>
-                        {% elif org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
-                        {% elif flag %}
-                            <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                        {% if innov.country.flag %}
+                            <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.text }}"></i>
+                        {% elif innov.organization.flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ innov.organization.flag }}" class="flag" title="{{ innov.organization.title }}" alt="{{ innov.organization.title }}"/>
                         {% endif %}
-                        <font class="name">{% trans 'Publication date' %}: {{ date|date:'d M Y' }}</font>
+                        <font class="name">{% trans 'Publication date' %}: {{ innov.obj_create_date|date:'d M Y' }}</font>
                     </div>
-                    <h2><a href="{% url "innov:detail" slug %}">{{ name|truncatewords:14 }}</a></h2>
-                    <div class="desc">{% trans 'Project cost' %}: <b class="num">{{ currency|getSymbol }} {{ cost }}</b></div>
+                    <h2><a href="{% url "innov:detail" innov.slug %}">{{ innov.title|truncatewords:14 }}</a></h2>
+                    <div class="desc">{% trans 'Project cost' %}: <b class="num">{{ innov.currency|getSymbol }} {{ innov.price }}</b></div>
                     <div class="line">
-                        {% if branch_name != 0  %}
-                            <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch_name }}</font></span>
-                        {% endif %}
+                    {% if innov.branch %}
+                        <span class="clumn">{%  trans "Branch" %}:
+                        {% for branch in innov.branch %}
+                            {% if branch.title  %}
+                                 <font class="gray">{{ branch.title }}</font>
+                            {% endif %}
+                        {% endfor %}
+                        </span>
+                    {% endif %}
                         <span class="clumn">{% trans 'Organizer' %}:
-                            {% if  cabinet_name  %}
-                                <a href=""> {{ cabinet_last_name }} {{ cabinet_name }}</a>
-                            {% elif org_name %}
-                                <a href="{% url org_url org_slug %}">  {{ org_name }} </a>
+                            {% if  innov.cabinet  %}
+                                <a href=""> {{ innov.cabinet.text }}</a>
+                            {% elif innov.organization.title %}
+                                <a href="{% url innov.organization.url innov.organization.slug %}">  {{ innov.organization.title }} </a>
                             {% endif %}
                         </span>
                     </div>
-                    <a href="{% url "innov:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <a href="{% url "innov:detail" innov.slug %}" class="linkmore">{% trans 'More' %}...</a>
                 </li>
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
         </ul>
     {% endif %}
     {% if exhibitionsValues %}
         <div class="wall-title-bg">{% trans 'Exhibitions' %}</div>
         <ul class="tender-list" id="afisha-list">
-            {% for id , attr in exhibitionsValues.items %}
-                {% with attr.NAME.0 as name %}
-                {% with attr.CITY.0 as city %}
-                {% with attr.SLUG.0 as slug %}
-                {% with attr.COUNTRY.0 as country %}
-                {% with attr.START_EVENT_DATE.0 as start_date%}
-                {% with attr.END_EVENT_DATE.0 as end_date %}
-                {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
-                {% with attr.ORGANIZATION_SLUG.0 as org_slug %}
-                {% with attr.ORGANIZATION_URL as org_url %}
-                {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                {% with attr.ORGANIZATION_ID.0 as org_id %}
-                {% with attr.COUNTRY_NAME|first as country_name %}
-                {% with attr.FLAG_CLASS|first as flag %}
-                {% with attr.COUNTRY_ID as country_id %}
+            {% for exhibition in exhibitionsValues %}
                 <li>
                     <div class="title">
-                        {% if org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}"/>
-                        {% else %}
-                            <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                        {% if exhibition.country.flag %}
+                            <i class="flag sprite {{ exhibition.country.flag }}" title="{{ exhibition.country.text }}"></i>
+                        {% elif exhibition.organization.flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ exhibition.organization.flag }}" class="flag" title="{{ exhibition.organization.title }}" alt="{{ exhibition.organization.title }}"/>
                         {% endif %}
-                        <font class="name">{{ country }}  {{ city }},  {{ start_date|makeDate|date:"d M Y" }} - {{ end_date|makeDate|date:"d M Y"  }}</font>
+                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|makeDate|date:"d M Y" }} - {{ exhibition.end_event_date|makeDate|date:"d M Y"  }}</font>
                     </div>
                     <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
                     <div class="line">{% trans 'Organizer' %}:
-                        <a href="{% url org_url org_slug %}">{{ org_name }}</a>
+                        <a href="{% url exhibition.organization.url exhibition.organization.slug %}">{{ exhibition.organization.title }}</a>
                     </div>
-                    <a href="{% url 'exhibitions:detail' slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <a href="{% url 'exhibitions:detail' exhibition.slug %}" class="linkmore">{% trans 'More' %}...</a>
                 </li>
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
         </ul>
     {% endif %}
     {% if proposalsValues %}
         <div class="wall-title-bg">{% trans 'Bussiness Proposals' %}</div>
         <ul class="tender-list" id="afisha-list">
-            {% for id , attr in proposalsValues.items %}
-                {% with attr.NAME.0 as name %}
-                {% with attr.SLUG.0 as slug %}
-                {% with attr.CREATE_DATE.0 as create_date %}
-                {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
-                {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                {% with attr.ORGANIZATION_ID.0 as org_id %}
-                {% with attr.COUNTRY_NAME|first as country_name %}
-                {% with attr.FLAG_CLASS|first as flag %}
-                {% with attr.COUNTRY_ID as country_id %}
+            {% for proposal in proposalsValues %}
                 <li>
                     <div class="title">
-                        {% if org_flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag" title="{{ org_name }}" alt="{{ org_name }}" />
-                        {% else %}
-                            <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                        {% if proposal.country.flag %}
+                            <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.text }}"></i>
+                        {% elif proposal.organization.flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ proposal.organization.flag }}" class="flag" title="{{ proposal.organization.title }}" alt="{{ proposal.organization.title }}" />
                         {% endif %}
-                        <font class="name">{{ country_name }}, {% trans 'Date' %}: {{ create_date|date:"d M Y" }}</font>
+                        <font class="name">{{ proposal.country.text }}, {% trans 'Date' %}: {{ proposal.obj_create_date|date:"d M Y" }}</font>
                     </div>
-                    <h2><a href="{% url "proposal:detail" slug %}"> {{ name }} </a></h2>
+                    <h2><a href="{% url "proposal:detail" proposal.slug %}"> {{ proposal.title }} </a></h2>
                     <div class="line">{% trans 'Organization' %}:
-                        <a href="">{{ org_name }}</a>
+                        <a href="">{{ proposal.organization.title }}</a>
                     </div>
-                    <a href="{% url "proposal:detail" slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <a href="{% url "proposal:detail" proposal.slug %}" class="linkmore">{% trans 'More' %}...</a>
                 </li>
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
         </ul>
     {% endif %}
     {% if newsValues %}
         <div class="wall-title-bg">{% trans 'News' %}</div>
         <ul class="listnews">
-            {% for id , attr in newsValues.items %}
-                {% with attr.NAME.0 as name %}
-                {% with attr.IMAGE.0 as image %}
-                {% with attr.SLUG.0 as slug %}
-                {% with attr.DETAIL_TEXT.0 as content %}
-                {% with attr.CREATE_DATE.0 as date%}
-                {% with attr.ORGANIZATION_FLAG.0 as org_flag %}
-                {% with attr.ORGANIZATION_NAME.0 as org_name %}
-                {% with attr.ORGANIZATION_ID.0 as org_id %}
-                {% with attr.COUNTRY_NAME|first as country_name %}
-                {% with attr.FLAG_CLASS|first as flag %}
-                {% with attr.COUNTRY_ID as country_id %}
+            {% for news in newsValues %}
                 <li>
                     <div class="thumb shadow">
-                        <a href="{% url "news:detail" slug %}">
-                            {% if image %}
-                                <img src="{{ MEDIA_URL }}small/{{ image }} " alt="{{ name }}" title="{{ name }}"/>
+                        <a href="{% url "news:detail" news.slug %}">
+                            {% if news.image %}
+                                <img src="{{ MEDIA_URL }}small/{{ news.image }} " alt="{{ news.title }}" title="{{ news.title }}"/>
                             {% else %}
                                 <img src="{% static "tppcenter/img/news.jpg" %} " alt="" />
                             {% endif %}
                         </a>
                     </div>
                     <div class="infoprd">
-                        <a href="{% url "news:detail" slug %}" class="name">{{ name }}</a>
+                        <a href="{% url "news:detail" news.slug %}" class="name">{{ news.title }}</a>
                         <p class="date">
-                            {% if org_flag or flag %}
-                                {% if org_flag %}
-                                    <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  alt="{{ org_name }}" title="{{ org_name }}"/>
+                            {% if news.organization.flag or news.country.flag %}
+                                {% if news.organization.flag %}
+                                    <img src="{{ MEDIA_URL }}small/{{ news.organization.flag }}" class="flag"  alt="{{ news.organization.title }}" title="{{ news.organization.title }}"/>
                                 {% else %}
-                                    <i class="flag sprite {{ flag }}" title="{{ country_name }}"></i>
+                                    <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.text }}"></i>
                                 {% endif %}
                             {% endif %}
-                            {{ date|date:'d M Y' }}
+                            {{ news.obj_create_date|date:'d M Y' }}
                         </p>
-                        <p>{{ content|cleanHtml|safe|truncatewords_html:"30" }} </p>
-                        <!--noindex--><a href="{% url "news:detail" slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                        <p>{{ news.text|cleanHtml|safe|truncatewords_html:"30" }} </p>
+                        <!--noindex--><a href="{% url "news:detail" news.slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                     </div>
                 </li>
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
         </ul>
     {% endif %}

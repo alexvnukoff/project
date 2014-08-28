@@ -40,31 +40,25 @@ def home(request):
 
     #if not cached:
 
-    organizations = Tpp.active.get_active().filter(p2c__child__in=Country.objects.all()).distinct()
+    organizations = Tpp.active.get_active().filter(p2c__child__contentType__model=Country.__name__.lower()).distinct()
     organizations_id = [organization.pk for organization in organizations]
 
-    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG', 'TITLE_DESCRIPTION'), organizations_id)
+    organizationsList = SearchQuerySet().models(Tpp).filter(django_id__in=organizations_id)
 
-    products = Product.active.get_active().order_by('-pk')[:3]
+    productsList = SearchQuerySet().models(Product).order_by('-obj_create_date')[:3]
+    productsList = func.get_countrys_for_sqs_objects(productsList)
+    productsList = func.get_organization_for_objects(productsList)
 
-    products_id = [product.pk for product in products]
-    productsList = Item.getItemsAttributesValues(("NAME", 'IMAGE', 'SLUG'), products_id)
-    func.addDictinoryWithCountryAndOrganization(products_id, productsList)
 
-    services = BusinessProposal.active.get_active().order_by('-pk')[:3]
+    serviceList = SearchQuerySet().models(BusinessProposal).order_by('-obj_create_date')[:3]
+    serviceList = func.get_countrys_for_sqs_objects(serviceList)
+    serviceList = func.get_organization_for_objects(serviceList)
 
-    services_id = [service.pk for service in services]
-    serviceList = Item.getItemsAttributesValues(("NAME", 'SLUG'), services_id)
-    func.addDictinoryWithCountryAndOrganization(services_id, serviceList)
+    greetingsList = func.getActiveSQS().models(Greeting)
 
-    greetings = Greeting.active.get_active().all()
-    greetings_id = [greeting.pk for greeting in greetings]
-    greetingsList = Item.getItemsAttributesValues(("TPP", 'IMAGE', 'AUTHOR_NAME', "POSITION", "SLUG"), greetings_id)
-
-    exhibitions = Exhibition.active.get_active().order_by("-pk")[:3]
-    exhibitions_id = [exhibition.pk for exhibition in exhibitions]
-    exhibitionsList = Item.getItemsAttributesValues(("NAME", 'CITY', 'COUNTRY', "START_EVENT_DATE", 'SLUG'), exhibitions_id)
-    func.addDictinoryWithCountryAndOrganization(exhibitions_id, exhibitionsList)
+    exhibitionsList = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:3]
+    exhibitionsList = func.get_countrys_for_sqs_objects(exhibitionsList)
+    exhibitionsList = func.get_organization_for_objects(exhibitionsList)
 
     templateParams = {
         'organizationsList': organizationsList,
@@ -80,7 +74,6 @@ def home(request):
     template = loader.get_template('index.html')
     context = RequestContext(request, templateParams)
     rendered = template.render(context)
-
 
     return HttpResponse(rendered)
 

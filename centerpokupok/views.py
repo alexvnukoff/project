@@ -1,13 +1,9 @@
 from datetime import datetime
-from django.shortcuts import render
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from appl.models import News, Category, Country, Tpp, Review, Product, Cabinet, Order, Company
 from registration.backends.default.views import RegistrationView
-from core.models import Value, Item, Attribute, Dictionary, Relationship, User
-from django.db.models import Count
 from registration.forms import RegistrationFormUniqueEmail
-from appl import func
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -15,7 +11,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-
+from appl.models import Category, Product, Cabinet
+from core.models import Item
+from appl import func
 
 
 def home(request, country=None):
