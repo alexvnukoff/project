@@ -53,8 +53,8 @@
                     {% if innov.branch %}
                         <span class="clumn">{%  trans "Branch" %}:
                         {% for branch in innov.branch %}
-                            {% if branch.title  %}
-                                 <font class="gray">{{ branch.title }}</font>
+                            {% if branch.text  %}
+                                 <font class="gray">{{ branch.text }}</font>
                             {% endif %}
                         {% endfor %}
                         </span>
@@ -83,7 +83,7 @@
                         {% elif exhibition.organization.flag %}
                             <img src="{{ MEDIA_URL }}small/{{ exhibition.organization.flag }}" class="flag" title="{{ exhibition.organization.title }}" alt="{{ exhibition.organization.title }}"/>
                         {% endif %}
-                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|makeDate|date:"d M Y" }} - {{ exhibition.end_event_date|makeDate|date:"d M Y"  }}</font>
+                        <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|date:"d M Y" }} - {{ exhibition.end_event_date|date:"d M Y"  }}</font>
                     </div>
                     <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
                     <div class="line">{% trans 'Organizer' %}:

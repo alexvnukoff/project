@@ -320,7 +320,7 @@
                                          <img src="{{ MEDIA_URL }}small/{{ exh.organization.flag }}" width="18" height="12" class="flag" alt="{{ exh.organization.title }}" title="{{ exh.organization.title }}" />
                                      {% endif %}
                                     <div class="date">
-                                        <p><b>{{ exh.start_event_date|makeDate|date:"d M Y"}}</b></p>
+                                        <p><b>{{ exh.start_event_date|date:"d M Y"}}</b></p>
                                         <p>{{ exh.country.text }}  {{ exh.city }}</p>
                                     </div>
                                 </div>
