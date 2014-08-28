@@ -10,7 +10,7 @@
             {% for prod in productsValues %}
                 <li>
                     <div class="thumb">
-                        <a href="{% url "products:detail" slug %}">
+                        <a href="{% url "products:detail" prod.slug %}">
                             {% if prod.image %}
                                 <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.title }}" title="{{ prod.title }}" />
                             {% else %}
@@ -85,7 +85,7 @@
                         {% endif %}
                         <font class="name">{{ exhibition.country.text }}  {{ exhibition.city }},  {{ exhibition.start_event_date|makeDate|date:"d M Y" }} - {{ exhibition.end_event_date|makeDate|date:"d M Y"  }}</font>
                     </div>
-                    <h2><a href="{% url 'exhibitions:detail' slug %}">{{ name }}</a></h2>
+                    <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
                     <div class="line">{% trans 'Organizer' %}:
                         <a href="{% url exhibition.organization.url exhibition.organization.slug %}">{{ exhibition.organization.title }}</a>
                     </div>
