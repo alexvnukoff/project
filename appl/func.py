@@ -1423,3 +1423,106 @@ def getItemMeta(request, itemAttributes):
         'url': url.scheme + "://" + url.netloc + url.path,
         'text': itemAttributes.get('DETAIL_TEXT', [''])[0]
     }
+
+def get_countrys_for_sqs_objects(object_list):
+
+        countries = []
+
+        for obj in object_list:
+            country = getattr(obj, 'country', False)
+
+            if not country:
+                continue
+
+            if isinstance(country, list):
+                if len(country) != 1:
+                    continue
+                else:
+                    country = country[0]
+
+            countries.append(country)
+
+        if len(countries) > 0:
+            countryDict = {}
+            new_object_list = []
+
+            for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
+                countryDict[int(country.pk)] = country
+
+            if len(countryDict) > 0:
+                for obj in object_list:
+                    country = getattr(obj, 'country', None)
+
+                    if not country:
+                        new_object_list.append(obj)
+                        continue
+
+                    if isinstance(country, list):
+                        if len(country) == 1:
+                            country = int(country[0])
+                        else:
+                            new_object_list.append(obj)
+                            continue
+
+                    if country not in countryDict:
+                        new_object_list.append(obj)
+                        continue
+
+                    obj.country = countryDict[int(country)]
+                    new_object_list.append(obj)
+
+                return new_object_list
+
+        return object_list
+
+def get_organization_for_objects(object_list):
+
+        orgs = []
+
+        for obj in object_list:
+
+            company = getattr(obj, 'company', False)
+            tpp = getattr(obj, 'tpp', False)
+
+            if company:
+                orgs.append(company)
+            elif tpp:
+                orgs.append(tpp)
+
+        if len(orgs) > 0:
+            orgDict = {}
+
+            for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
+                orgDict[int(org.pk)] = org
+
+            if len(orgDict) > 0:
+                new_object_list = []
+
+                for obj in object_list:
+                    company = getattr(obj, 'company', False)
+                    tpp = getattr(obj, 'tpp', False)
+
+                    if company:
+                        if company in orgDict:
+                            orgDict[company].__setattr__('url', 'companies:detail')
+                            obj.__setattr__('organization', orgDict[company])
+                    elif tpp:
+                        if tpp in orgDict:
+                            orgDict[tpp].__setattr__('url', 'tpp:detail')
+                            obj.__setattr__('organization', orgDict[tpp])
+
+                    new_object_list.append(obj)
+
+                return new_object_list
+
+        return object_list
+
+def get_cabinet_data_for_objects(object_list):
+        new_object_list = []
+
+        for obj in object_list:
+            if obj.cabinet:
+                obj.__setattr__('cabinet', SearchQuerySet().models(Cabinet).filter(django_id=obj.cabinet))
+            new_object_list.append(obj)
+
+        return new_object_list

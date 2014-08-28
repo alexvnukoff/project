@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse
+from haystack.query import SearchQuerySet
 from appl import func
 from appl.models import InnovationProject, Product, BusinessProposal, Exhibition, News, Branch, NewsCategories
 from core.models import Item
@@ -95,58 +96,59 @@ def _wallContent(request):
 
     #------------------Innov--------------------------#
     #innov_projects = func.getActiveSQS().models(InnovationProject).order_by("-obj_create_date")[:1]
-    innov_ids = [project.pk for project in innov_projects]
-    innovValues = Item.getItemsAttributesValues(('NAME', 'SLUG', 'COST', 'CURRENCY'), innov_ids)
 
-    branches = Branch.objects.filter(p2c__child__in=innov_ids).values('p2c__child', 'pk')
-    branches_ids = [branch['pk'] for branch in branches]
-    branchesList = Item.getItemsAttributesValues(("NAME",), branches_ids)
+    branches_ids = []
+
+    for proj in innov_projects:
+        branches_ids += proj.branch
+
+    branchesList = SearchQuerySet().models(Branch).filter(django_id__in=branches_ids)
 
     branches_dict = {}
 
-    for branch in branches:
-        branches_dict[branch['p2c__child']] = branch['pk']
+    for branch in branchesList:
+        branches_dict[branch.pk] = branch
 
-    func.addDictinoryWithCountryAndOrganizationToInnov(innov_ids, innovValues)
+    innovValues = []
 
-    for id, innov in innovValues.items():
+    for proj in innov_projects:
 
-        toUpdate = {
-            'BRANCH_NAME': branchesList[branches_dict[id]].get('NAME', 0) if branches_dict.get(id, 0) else [0],
-            'BRANCH_ID': branches_dict.get(id, 0)
-        }
+        branches = []
 
-        innov.update(toUpdate)
+        for branch in proj.branch:
+            if branch in branches_dict:
+                branches.append(branches_dict[branch])
 
+        proj.branch = branches
+        innovValues.append(proj)
+
+    innovValues = func.get_countrys_for_sqs_objects(innovValues)
+    innovValues = func.get_organization_for_objects(innovValues)
+    innovValues = func.get_cabinet_data_for_objects(innovValues)
 
     #----------------Product----------------------------#
 
-    products_ids = [product.pk for product in products]
-    productsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'COST', 'CURRENCY', 'SLUG'), products_ids)
-    func.addDictinoryWithCountryAndOrganization(products_ids, productsValues)
+    productsValues = func.get_countrys_for_sqs_objects(products)
+    productsValues = func.get_organization_for_objects(productsValues)
 
     #---------------News---------------------------------#
-    #PAY ATTENTION HARDCODED CATEGORY
+    #TODO:PAY ATTENTION HARDCODED CATEGORY
     exlude_category = 85347
-    news = func.getActiveSQS().models(News).filter(categories__gt=0).exclude(categories=exlude_category).order_by("-obj_create_date")[:1]
-    news_ids = [new.pk for new in news]
-    newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news_ids)
-    func.addDictinoryWithCountryAndOrganization(news_ids, newsValues)
+    news = func.getActiveSQS().models(News).exclude(categories=exlude_category).order_by("-obj_create_date")[:1]
+    newsValues = func.get_countrys_for_sqs_objects(news)
+    newsValues = func.get_organization_for_objects(newsValues)
 
 
     #---------------BusinessProposal--------------------#
 
-    proposals_ids = [proposal.pk for proposal in proposals]
-    proposalsValues = Item.getItemsAttributesValues(('NAME', 'SLUG'), proposals_ids)
-    func.addDictinoryWithCountryAndOrganization(proposals_ids, proposalsValues)
+    proposalsValues = func.get_countrys_for_sqs_objects(proposals)
+    proposalsValues = func.get_organization_for_objects(proposalsValues)
 
 
     #--------------Exhibitions--------------------------#
 
-    exhibitions_ids = [exhibition.pk for exhibition in exhibitions]
-    exhibitionsValues = Item.getItemsAttributesValues(('NAME', 'CITY', 'COUNTRY', 'START_EVENT_DATE',
-                                                       'END_EVENT_DATE', 'SLUG'), exhibitions_ids)
-    func.addDictinoryWithCountryAndOrganization(exhibitions_ids, exhibitionsValues)
+    exhibitionsValues = func.get_organization_for_objects(exhibitions)
+    exhibitionsValues = func.get_countrys_for_sqs_objects(exhibitionsValues)
 
 
     template = loader.get_template('Wall/contentPage.html')
