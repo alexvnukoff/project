@@ -407,7 +407,6 @@ def myCompanies(request):
     return HttpResponse(json.dumps(result))
 
 
-@login_required(login_url='/login/')
 def jsonFilter(request):
 
 

@@ -458,7 +458,7 @@
             <h3> <i class="flag sprite {{ item.country.flag }}"></i>
                      {{ item.title }}
                     </h3>
-                    {% if image %}
+                    {% if item.image %}
                         <img src="{{ MEDIA_URL }}big/{{ item.image }}" class="thumb-deal" alt="{{ item.title }}" title="{{ item.title }}" />
                     {% else %}
                         <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
