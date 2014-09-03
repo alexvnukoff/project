@@ -254,7 +254,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('ru', 'en'),
+    'default': ('en', 'ru'),
     'en': ('ru',),
     'ru': ('en',),
     'he': ('en',),
@@ -272,7 +272,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     #'mo': ('ru',),
     #'tg': ('ru',),
     #'tm': ('ru',),
-    'uk': ('en',),
+    'uk': ('ru',),
     #'uz': ('ru',),
 }
 
@@ -294,7 +294,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ######################## Haystack settings ###############################
 
 HAYSTACK_CONNECTIONS = {
-    'default':{
+    'default': {
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
         'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/en'
     },
