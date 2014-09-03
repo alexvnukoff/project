@@ -454,12 +454,19 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
+    parent = indexes.IntegerField()
     
     title_auto = indexes.NgramField()
     slug = indexes.CharField(indexed=False)
 
     def get_model(self):
         return Category
+
+    def prepare_parent(self, obj):
+        try:
+            return self.get_model().objects.get(p2c__child=obj, p2c__type="hierarchy").pk
+        except ObjectDoesNotExist:
+            return 0
 
     def prepare(self, obj):
         self.prepared_data = super(CategoryIndex, self).prepare(obj)
@@ -471,19 +478,20 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
         else:
             name = attr.get('NAME', [''])[0]
 
+        sortIndex = self.fields['title_sort'].index_fieldname
+        textIndex = self.fields['text'].index_fieldname
+        titleAutoIndex = self.fields['title_auto'].index_fieldname
+
+        self.prepared_data[sortIndex] = name.lower().strip().replace(' ','_')
+        self.prepared_data[textIndex] = name.strip()
+        self.prepared_data[titleAutoIndex] = name.strip()
+
         if len(attr) == 0 or attr.get('SLUG', [''])[0] == '':
             return self.prepared_data
         else:
             slug = attr.get('SLUG', [''])[0]
 
-        sortIndex = self.fields['title_sort'].index_fieldname
-        textIndex = self.fields['text'].index_fieldname
-        titleAutoIndex = self.fields['title_auto'].index_fieldname
         slugIndex = self.fields['slug'].index_fieldname
-
-        self.prepared_data[sortIndex] = name.lower().strip().replace(' ','_')
-        self.prepared_data[textIndex] = name.strip()
-        self.prepared_data[titleAutoIndex] = name.strip()
         self.prepared_data[slugIndex] = slug.strip()
 
         return self.prepared_data

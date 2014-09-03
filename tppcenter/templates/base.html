@@ -184,7 +184,7 @@
  <div class="black_overlay" id="fade-profile"></div>
  {% endblock %}
     <script type="text/javascript">
-     if ( ui ){
+     if ( typeof ui != 'undefined' ){
          $(document).bind(ui.signals['end_load'], function(event, url, data, history) {
              ga('send', 'pageview', {page: history});
          });
