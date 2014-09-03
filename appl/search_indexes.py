@@ -415,23 +415,18 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare(self, obj):
 
-        self.prepared_data = super(CountryIndex, self).prepare(obj)
 
+        self.prepared_data = super(CountryIndex, self).prepare(obj)
+        
         attr = obj.getAttributeValues('NAME', 'COUNTRY_FLAG')
 
+        #from django.utils import translation
+        #if translation.get_language() == 'ar':
+        #    print(attr)
         if len(attr) == 0 or attr.get('NAME', [''])[0] == '':
             return self.prepared_data
         else:
             name = attr.get('NAME', [''])[0]
-
-        if len(attr) == 0 or attr.get('COUNTRY_FLAG', [''])[0] == '':
-            return self.prepared_data
-        else:
-            flag = attr.get('COUNTRY_FLAG', [''])[0]
-
-
-        flagIndex = self.fields['flag'].index_fieldname
-        self.prepared_data[flagIndex] = flag
 
         sortIndex = self.fields['title_sort'].index_fieldname
         textIndex = self.fields['text'].index_fieldname
@@ -440,7 +435,17 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
         self.prepared_data[sortIndex] = name.lower().strip().replace(' ','_')
         self.prepared_data[textIndex] = name.strip()
         self.prepared_data[titleAutoIndex] = name.strip()
+        
+        if len(attr) == 0 or attr.get('COUNTRY_FLAG', [''])[0] == '':
+            return self.prepared_data
+        else:
+            flag = attr.get('COUNTRY_FLAG', [''])[0]
 
+
+        flagIndex = self.fields['flag'].index_fieldname
+        self.prepared_data[flagIndex] = flag
+        #if translation.get_language() == 'ar':
+        #    print(self.prepared_data)
         return self.prepared_data
 
 
@@ -758,6 +763,10 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
         endDateIndex = self.fields['obj_end_date'].index_fieldname
         startDateIndex = self.fields['obj_start_date'].index_fieldname
+
+        #from django.utils.translation import trans_real
+        #if trans_real.get_language() == 'ar':
+        #    print(self.prepared_data[sortIndex])
 
         #Get parent active date
         try:
