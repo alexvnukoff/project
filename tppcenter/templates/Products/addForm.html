@@ -253,6 +253,11 @@ $.fn.onChangeSet = function(e) {
                     <input type="datetime" name="END_DATE" placeholder="" class="date"  value="{{ product.end_date|date:"m/d/Y" }}" />
                 </div>
         <div>
+                    {% if form.errors.CATEGORY %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.CATEGORY }}</div>
+                        </div>
+                    {% endif %}
                     <label class="sapce">{% trans 'Categories' %}</label>
                     <style>
                         .list-cat li {

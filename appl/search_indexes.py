@@ -455,12 +455,19 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     parent = indexes.IntegerField()
-    
+    sites = indexes.MultiValueField(null=True)
+
+
+
+
     title_auto = indexes.NgramField()
     slug = indexes.CharField(indexed=False)
 
     def get_model(self):
         return Category
+
+    def prepare_sites(self, obj):
+        return [site.pk for site in Category.objects.filter(pk=obj.pk).sites.all()]
 
     def prepare_parent(self, obj):
         try:
