@@ -1526,3 +1526,13 @@ def get_cabinet_data_for_objects(object_list):
             new_object_list.append(obj)
 
         return new_object_list
+
+
+def get_categories_data_for_products(object_list):
+    new_object_list = []
+
+    for obj in object_list:
+        obj.__setattr__('categories', SearchQuerySet().models(Category).filter(django_id__in=obj.categories))
+        new_object_list.append(obj)
+
+    return new_object_list

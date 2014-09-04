@@ -29,6 +29,9 @@ class SiteUrlMiddleWare:
 
         current_domain = current_domain.split('.')
 
+        if current_domain[0] == 'www':
+            current_domain.pop(0)
+
         lang = current_domain[0]
 
         if lang in languages:

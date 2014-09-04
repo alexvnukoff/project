@@ -174,8 +174,6 @@ def addProductsB2C(request):
     return productsPage
 
 
-
-
 def addProducts(request):
     current_company = request.session.get('current_company', False)
 
@@ -218,10 +216,9 @@ def addProducts(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+
         if getattr(pages, 'new_objects', False):
            pages = pages.new_objects
-
-
 
         values = {}
         values.update(request.POST)
@@ -229,6 +226,11 @@ def addProducts(request):
 
         form = ItemForm('Product', values=values)
         form.clean()
+        
+        categories = request.POST.getlist('category[]')
+
+        if not Category.objects.filter(pk__in=categories).exists():
+            form.errors.update({"CATEGORY": _("You must choose one category al least")})
 
         if gallery.is_valid() and form.is_valid():
 
