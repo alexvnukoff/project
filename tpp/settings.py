@@ -298,8 +298,32 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
         'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/en'
     },
+    'default_ru': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/ru'
+    },
+    'default_zh': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/zh'
+    },
+    'default_uk': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/uk'
+    },
+    'default_ar': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/ar'
+    },
+    'default_am': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/am'
+    },
+    'default_he': {
+        'ENGINE': 'tpp.backend.MultilingualElasticEngine',
+        'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/he'
+    }
 }
-
+'''
 for lang in LANGUAGES:
 
     if lang[0] is 'en':
@@ -309,7 +333,7 @@ for lang in LANGUAGES:
         'ENGINE': HAYSTACK_CONNECTIONS['default']['ENGINE'],
         'URL': 'http://ec2-54-72-220-8.eu-west-1.compute.amazonaws.com:8983/solr/' + lang[0],
     }
-
+'''
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 HAYSTACK_ID_FIELD = 'id'
 
