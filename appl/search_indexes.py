@@ -51,7 +51,7 @@ class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
             'text': 'DETAIL_TEXT',
             'slug': 'SLUG',
             'position': 'POSITION',
-            'tpp': 'TPP',
+            'tpp_name': 'TPP',
             'image': 'IMAGE'
         }
 

@@ -19,6 +19,6 @@ urlpatterns = patterns('',
      url(r'^add-b2c/$', tppcenter.Product.views.productForm,{'action': 'add_b2c'}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Product.views.productForm, {'action': 'update'}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Product.views.productForm, {'action': 'delete'}, name="delete"),
-     url(r'^category-list/$', tppcenter.Product.views.categoryList, name="categoryList"),
+     url(r'^category-list/([0-9]+)/$', tppcenter.Product.views.categoryList, name="categoryList"),
      url(r'^(?P<slug>[a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Product.views.get_product_detail.as_view(), name="detail"),
 )

@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -97,6 +98,8 @@ def productForm(request, action, item_id=None):
 def addProductsB2C(request):
     current_company = request.session.get('current_company', False)
 
+    categorySite = Site.objects.get(name="centerpokupok")
+
     if not request.session.get('current_company', False):
          return func.emptyCompany()
 
@@ -136,10 +139,9 @@ def addProductsB2C(request):
 
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
+
         if getattr(pages, 'new_objects', False):
            pages = pages.new_objects
-
-
 
         values = {}
         values.update(request.POST)
@@ -147,6 +149,11 @@ def addProductsB2C(request):
 
         form = ItemForm('Product', values=values)
         form.clean()
+
+        categories = request.POST.getlist('category[]')
+
+        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
+            form.errors.update({"CATEGORY": _("You must choose one category al least")})
 
         if gallery.is_valid() and form.is_valid():
 
@@ -177,6 +184,9 @@ def addProductsB2C(request):
 def addProducts(request):
     current_company = request.session.get('current_company', False)
 
+    categorySite = Site.objects.get(name="tppcenter")
+
+
     if not request.session.get('current_company', False):
          return func.emptyCompany()
 
@@ -226,10 +236,10 @@ def addProducts(request):
 
         form = ItemForm('Product', values=values)
         form.clean()
-        
+
         categories = request.POST.getlist('category[]')
 
-        if not Category.objects.filter(pk__in=categories).exists():
+        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
             form.errors.update({"CATEGORY": _("You must choose one category al least")})
 
         if gallery.is_valid() and form.is_valid():
@@ -249,7 +259,8 @@ def addProducts(request):
         'measurement_slots': measurement_slots,
         'currency_slots': currency_slots,
         'categotySelect': categotySelect,
-        'pages': pages
+        'pages': pages,
+        'categorySite': categorySite
     }
 
     context = RequestContext(request, templateParams)
@@ -380,7 +391,7 @@ def deleteProduct(request, item_id):
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
-def categoryList(request):
+def categoryList(request, site):
 
     parent = request.GET.get('parent', 0)
 
@@ -393,17 +404,17 @@ def categoryList(request):
     bread_crumbs = None
 
     if parent == 0:
-        categories = Category.hierarchy.getRootParents()
+        categories = Category.hierarchy.getRootParents(siteID=site)
         catList = [cat.pk for cat in categories]
-        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList)
+        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, site=site)
     else:
-        object_list = SearchQuerySet().models(Category).filter(parent=parent)
-        bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent))
+        object_list = SearchQuerySet().models(Category).filter(parent=parent, site=site)
+        bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent, site=site))
 
     new_obj_list = []
 
     for obj in object_list:
-        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk).count()
+        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, site=site).count()
         new_obj_list.append(obj)
 
 
