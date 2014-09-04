@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load inclusionTags %}
 {% load i18n %}
 {% block title %}{% trans 'Shopcenter' %}{% endblock %}
 
@@ -56,7 +57,7 @@
         {% block body %}
             <div id="main">
                 <div id="vartop">
-                    {% include "main/main_menu.html" %}
+                    {% mainMenuB2C %}
                     {% include "main/main_banner.html" %}
                 </div>
                 {% include "main/main_coupons.html" %}

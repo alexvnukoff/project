@@ -4,7 +4,8 @@ from django import template
 from django.conf import settings
 
 from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery,\
-    BusinessProposal, Product, InnovationProject, Tender, Exhibition, Requirement, Resume, Company, Tpp, TppTV
+    BusinessProposal, Product, InnovationProject, Tender, Exhibition, Requirement, Resume, Company, Tpp, TppTV, Category
+from centerpokupok.views import _sortMenu
 from core.models import Item
 
 from haystack.query import SearchQuerySet
@@ -83,16 +84,21 @@ def getMyCompaniesList(context):
 
     current_company = request.session.get('current_company', False)
 
-    cab = Cabinet.objects.get(user=request.user)
 
-    if current_company is not False:
-        if Organization.objects.filter(Q(create_user=request.user, department=None) |
-                                        Q(p2c__child__p2c__child__p2c__child=cab.pk), pk=current_company).exists():
-            current_company = SearchQuerySet().models(Tpp, Company).filter(django_id=current_company)[0].title
-        else:
+
+    if current_company:
+
+        try:
+            item = Organization.objects.get(pk=current_company)
+            perm_list = item.getItemInstPermList(request.user)
+
+            if 'change_company' in perm_list or 'change_tpp' in perm_list:
+                current_company = SearchQuerySet().models(Company, Tpp).filter(django_id=current_company)[0].title
+        except:
             current_company = False
 
     if current_company is False:
+        cab = Cabinet.objects.get(user=request.user)
         cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cab.pk)[0]
 
         if not cabinet.text:
@@ -352,3 +358,23 @@ def b2bSocialButtons(context, image, title, text):
 
 
     return {'MEDIA_URL': MEDIA_URL, 'image': image, 'title': title, 'text': text}
+
+
+@register.inclusion_tag("main/main_menu.html", takes_context=True)
+def mainMenuB2C(context):
+    #----MAIN MENU AND CATEGORIES IN HEADER ------#
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
+
+    sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
+    level = 0
+
+    for node in sortedHierarchyStructure:
+        node['pre_level'] = level
+        node['item'] = categories[node['ID']]
+        node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
+        level = node['LEVEL']
+
+    return {'sortedHierarchyStructure': sortedHierarchyStructure}

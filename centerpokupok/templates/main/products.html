@@ -24,7 +24,7 @@
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
                                       <a href="{% url "products:detail" product.pk %}">
-                                          <img src="{{ MEDIA_URL }}big/{{ product.pk }}" alt="{{ product.title }}" />
+                                          <img src="{{ MEDIA_URL }}big/{{ product.image }}" alt="{{ product.title }}" />
                                       </a>
                                     </div>
 					          </div>
@@ -43,7 +43,7 @@
                                 <p>
                                     {% if product.categories %}
                                         {% for cat in categories %}
-                                             <a href="{% url "products:category" cat.id %}" class="viewall">
+                                             <a href="{% url "products:category" cat.pk %}" class="viewall">
                                                 {{ cat.text|truncatewords:3 }}
                                             </a>
                                         {% endfor %}
@@ -96,7 +96,7 @@
                                 <p>
                                    {% if product.categories %}
                                         {% for cat in categories %}
-                                             <a href="{% url "products:category" cat.id %}" class="viewall">
+                                             <a href="{% url "products:category" cat.pk %}" class="viewall">
                                                 {{ cat.text|truncatewords:3 }}
                                             </a>
                                         {% endfor %}

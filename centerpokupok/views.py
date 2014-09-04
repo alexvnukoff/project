@@ -40,20 +40,6 @@ def home(request, country=None):
 
     topPoductList = func.getActiveSQS().models(Product).filter(django_id__in=products)
 
-     #----MAIN MENU AND CATEGORIES IN HEADER ------#
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-
-    sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
-    level = 0
-    for node in sortedHierarchyStructure:
-        node['pre_level'] = level
-        node['item'] = categories[node['ID']]
-        node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
-        level = node['LEVEL']
-
 
     #get 3 active coupons ordered by end date
     #---------COUPONS----------#
@@ -78,8 +64,7 @@ def home(request, country=None):
 
     user = request.user
 
-    return render_to_response("index.html", {'sortedHierarchyStructure': sortedHierarchyStructure,
-                                             'coupons': couponsObj, "newProducrList": newProducrList,
+    return render_to_response("index.html", {'coupons': couponsObj, "newProducrList": newProducrList,
                                              "topPoductList": topPoductList, "productsSale": productsSale,
                                              'user': user, 'url_country': url_country,
                                              'country': country}, context_instance=RequestContext(request))

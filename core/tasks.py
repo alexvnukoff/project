@@ -80,6 +80,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
     pages = Page(post, files, prefix="pages")
     pages.clean()
 
+    categories = post.getlist('category[]')
 
     values = {}
     values.update(post)
@@ -134,6 +135,10 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
         if current_company:
             parent = Organization.objects.get(pk=int(current_company))
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
+
+        for cat in Category.objects.filter(pk__in=categories):
+            Relationship.setRelRelationship(parent=cat, child=product, user=user)
+
 
         #site = Site.objects.get(name='centerpokupok')
 
