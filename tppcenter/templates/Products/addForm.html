@@ -283,7 +283,7 @@ $.fn.onChangeSet = function(e) {
                 </style>
                     <ul class="list-cat">
                         {% if choosen_category %}
-                            {% for pk, name in choosen_category %}
+                            {% for pk, name in choosen_category.items %}
                                 <li data-id="{{ pk }}'">{{ name|first }}<a href="#"><i class="i-close category-remove imgnews"></i></a></li>
                             {% endfor %}
 
@@ -291,7 +291,7 @@ $.fn.onChangeSet = function(e) {
 
                     </ul>
                     {% if choosen_category %}
-                        {% for pk, name in choosen_category %}
+                        {% for pk, name in choosen_category.items %}
                             <input type="hidden" class="category-{{ pk }}" name="category[]" value="{{ pk }}" />
                         {% endfor %}
 
