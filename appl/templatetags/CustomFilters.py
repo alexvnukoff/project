@@ -284,7 +284,7 @@ def setUserName(context):
             cabinet = Cabinet.objects.get(user=request.user)
             cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cabinet.pk)
 
-            if cabinet.count() > 0 and cabinet[0].text != '':
+            if cabinet.count() > 0 and cabinet[0].text:
                 user_name = cabinet[0].text
 
         except ObjectDoesNotExist:

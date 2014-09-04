@@ -12,58 +12,45 @@
                             </span>
                         </div>
                         <ul class="listnew">
-                    {% for id , attr  in newProducrList.items %}
-                        {% with attr.NAME|first as name %}
-                        {% with attr.IMAGE|first as picture %}
-                        {% with attr.CURRENCY|first as currency %}
-                        {% with attr.COST|first as cost  %}
-                        {% with attr.CATEGORY_NAME as category_name  %}
-                        {% with attr.CATEGORY_ID as category_id  %}
-                        {% with attr.DISCOUNT|first as discount  %}
-                        {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+                    {% for product in newProducrList %}
 
                             <li>
                                 {% if coupon_discount %}
-                                    <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                                    <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
                                 {% elif discount %}
-                                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                    <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
                                 {% endif %}
                                <div class="img_gallery">
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
-                                      <a href="{% url "products:detail" id %}">
-                                          <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" />
+                                      <a href="{% url "products:detail" product.pk %}">
+                                          <img src="{{ MEDIA_URL }}big/{{ product.pk }}" alt="{{ product.title }}" />
                                       </a>
                                     </div>
 					          </div>
-                                <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                <p><a href="{% url "products:detail" product.pk %}">{{ product.title }}</a></p>
                                 <p>
-                                    <font class="number"> {{ currency|getSymbol }}
-                                        {% if coupon_discount %}
-                                            {{ cost|discountPrice:coupon_discount }}
-                                        {% elif discount %}
-                                            {{ cost|discountPrice:discount }}
+                                    <font class="number"> {{ product.currency|getSymbol }}
+                                        {% if product.coupon %}
+                                            {{ product.price|discountPrice:product.coupon }}
+                                        {% elif product.discount %}
+                                            {{ product.price|discountPrice:product.discount }}
                                         {% else %}
-                                            {{ cost|formatPrice }}
+                                            {{ product.price|formatPrice }}
                                         {% endif %}
                                     </font>
                                 </p>
                                 <p>
-                                    {% if category_id %}
-                                         <a href="{% url "products:category" category_id %}" class="viewall">
-                                        {{ category_name|truncatewords:3 }}
+                                    {% if product.categories %}
+                                        {% for cat in categories %}
+                                             <a href="{% url "products:category" cat.id %}" class="viewall">
+                                                {{ cat.text|truncatewords:3 }}
+                                            </a>
+                                        {% endfor %}
                                     {% endif %}
-                                    </a>
+
                                 </p>
                             </li>
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
                     {% endfor %}
 
                         </ul>
@@ -78,61 +65,44 @@
                             </span>
                         </div>
                         <ul class="listnew">
-                        {% for id , attr  in topPoductList.items %}
-                        {% with attr.NAME|first as name %}
-                        {% with attr.IMAGE|first as picture %}
-                        {% with attr.CURRENCY|first as currency %}
-                        {% with attr.COST|first as cost  %}
-                        {% with attr.CATEGORY_NAME as category_name  %}
-                        {% with attr.CATEGORY_ID as category_id  %}
-                        {% with attr.DISCOUNT|first as discount  %}
-                        {% with attr.COUPON_DISCOUNT|first as coupon_discount  %}
+                        {% for product  in topPoductList %}
                             <li>
-                                {% if coupon_discount %}
-                                    <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
-                                {% elif discount %}
-                                    <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                                {% if product.coupon %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
+                                {% elif product.discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
                                 {% endif %}
                               <div class="img_gallery">
 					        	<div class="shadow"></div>
 					            	<div class="img_block">
-                                      <a href="{% url "products:detail" id %}">
-                                          <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" />
+                                      <a href="{% url "products:detail" product.pk %}">
+                                          <img src="{{ MEDIA_URL }}big/{{ product.image }}" alt="{{ product.title }}" />
                                       </a>
                                     </div>
 					          </div>
 
-                                <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                                <p><a href="{% url "products:detail" product.pk %}">{{ product.title }}</a></p>
                                 <p>
-                                    <font class="number"> {{ currency|getSymbol }}
-                                        {% if coupon_discount %}
-                                            {{ cost|discountPrice:coupon_discount }}
-                                        {% elif discount %}
-                                            {{ cost|discountPrice:discount }}
+                                    <font class="number"> {{ product.currency|getSymbol }}
+                                        {% if product.coupon %}
+                                            {{ product.price|discountPrice:product.coupon }}
+                                        {% elif product.discount %}
+                                            {{ product.price|discountPrice:product.discount }}
                                         {% else %}
-                                            {{ cost|formatPrice }}
+                                            {{ product.price|formatPrice }}
                                         {% endif %}
                                     </font>
                                 </p>
                                 <p>
-                                    {% if category_id %}
-                                      <a href="{% url "products:category" category_id %}" class="viewall">
-                                        {{ category_name|truncatewords:3 }}
-                                        {% endif %}
-                                    </a>
+                                   {% if product.categories %}
+                                        {% for cat in categories %}
+                                             <a href="{% url "products:category" cat.id %}" class="viewall">
+                                                {{ cat.text|truncatewords:3 }}
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
                                 </p>
                             </li>
-
-
-
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
-                       {% endwith %}
                     {% endfor %}
 
                         </ul>
