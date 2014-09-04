@@ -252,6 +252,68 @@ $.fn.onChangeSet = function(e) {
                     {% endif %}
                     <input type="datetime" name="END_DATE" placeholder="" class="date"  value="{{ product.end_date|date:"m/d/Y" }}" />
                 </div>
+        <div>
+                    <label class="sapce">{% trans 'Categories' %}</label>
+                    <style>
+                        .list-cat li {
+                            padding: 5px;
+                            border-radius: 5px;
+                            background-color: #333;
+                            color: #FFF;
+                            padding-right: 25px;
+                            position: relative;
+                            float: left;
+                            margin-bottom: 5px;
+                            margin-right: 5px;
+                        }
+
+                        .list-cat li .i-close {
+                            position: absolute;
+                            width: 8px;
+                            height: 7px;
+                            background-position: -195px 0;
+                            top: 8px;
+                            right: 5px;
+                        }
+                </style>
+                    <ul class="list-cat">
+                        {% if choosen_category %}
+                            {% for pk, name in choosen_category %}
+                                <li data-id="{{ pk }}'">{{ name|first }}<a href="#"><i class="i-close category-remove imgnews"></i></a></li>
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </ul>
+                    {% if choosen_category %}
+                        {% for pk, name in choosen_category %}
+                            <input type="hidden" class="category-{{ pk }}" name="category[]" value="{{ pk }}" />
+                        {% endfor %}
+
+                    {% endif %}
+                    <a href="#" id="select-cat" class="buttonclear  add-advandce">{% trans "Add categories" %}</a>
+
+                                    <script>
+                    $('#select-cat').click(function() {
+                        var url = "{% url "products:categoryList" categorySite %}";
+                        window.open(url, "", "width=600, height=600, directories=no, channelmode=no, location=no, resizable=no, scrollbars=no, status=no, titlebar=no, toolbar=no");
+
+                        return false;
+                    });
+                    $(document).bind('categorySelected', function(event, pk, name) {
+                        $('.list-cat').append('<li data-id="' + pk + '">' + name + '<a href="#"><i class="i-close category-remove imgnews"></i></a></li>');
+                        $('form').append('<input type="hidden" class="category-' + pk + '" name="category[]" value="' + pk + '" />');
+                    });
+                    $(document).on('click', '.category-remove', function() {
+                        var li = $(this).parents('li')
+                        var pk = li.data('pk');
+                        li.remove();
+                        $('input.category-' + pk).remove();
+                        return false;
+                    });
+                </script>
+
+                </div>
         </div>
 
         <ul class="uploadconfig">
@@ -375,43 +437,6 @@ $.fn.onChangeSet = function(e) {
                         </select>
                     </div>
                 </div>
-            </li>
-            <li>
-                <label>{% trans 'Category' %} <font color="#FF0000">*</font></label>
-                <select style="width: 50%;" name="CATEGORY">
-                    {% for parent_name , dict  in categotySelect|sort  %}
-                        {%  for name , item in  dict|sort%}
-                            {% with  item.ID as id%}
-                            {% with  item.LEVEL as  level %}
-
-
-                            {% if name == "@Parent" %}
-                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
-                                    {{ parent_name }}
-                                </option>
-                            {% endif %}
-
-                            {% if level == 2 %}
-                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
-                                    -{{name}}
-                                </option>
-                            {% endif %}
-
-                            {% if level == 3 %}
-                                <option value="{{ id }}" {% if choosen_category.pk == id %}selected="selected"{% endif %} >
-                                    --{{name}}
-                                </option>
-                            {% endif %}
-
-                            {% endwith %}
-                            {% endwith %}
-
-                        {% endfor %}
-                    {% endfor %}
-                </select>
-                <input type="checkbox" name="B2C_PRODUCT" style="vertical-align: middle;margin-left: 20px; width: 20px;height: 20px;"  {% if b2c_product %}checked{% endif %}  />
-
-                <span style="font-size: large;vertical-align: middle;">{% trans 'Post on b2c portal' %}</span>
             </li>
         </ul>
         <div class="append-formin">

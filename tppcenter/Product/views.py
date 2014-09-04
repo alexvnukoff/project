@@ -98,7 +98,7 @@ def productForm(request, action, item_id=None):
 def addProductsB2C(request):
     current_company = request.session.get('current_company', False)
 
-    categorySite = Site.objects.get(name="centerpokupok")
+    categorySite = Site.objects.get(name="centerpokupok").pk
 
     if not request.session.get('current_company', False):
          return func.emptyCompany()
@@ -121,14 +121,8 @@ def addProductsB2C(request):
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
 
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
     pages = None
+    choosen_category = {}
 
     if request.POST:
 
@@ -151,9 +145,13 @@ def addProductsB2C(request):
         form.clean()
 
         categories = request.POST.getlist('category[]')
+        choosen_category = Category.objects.filter(pk__in=categories, site=categorySite)
 
-        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
+        if not choosen_category.exists():
             form.errors.update({"CATEGORY": _("You must choose one category al least")})
+        else:
+            cats = [cat.pk for cat in choosen_category]
+            choosen_category = Item.getItemsAttributesValues('NAME', cats)
 
         if gallery.is_valid() and form.is_valid():
 
@@ -171,8 +169,9 @@ def addProductsB2C(request):
         'form': form,
         'measurement_slots': measurement_slots,
         'currency_slots': currency_slots,
-        'categotySelect': categotySelect,
-        'pages': pages
+        'pages': pages,
+        'choosen_category': choosen_category,
+        'categorySite': categorySite
     }
 
     context = RequestContext(request, templateParams)
@@ -184,7 +183,7 @@ def addProductsB2C(request):
 def addProducts(request):
     current_company = request.session.get('current_company', False)
 
-    categorySite = Site.objects.get(name="tppcenter")
+    categorySite = Site.objects.get(name="tppcenter").pk
 
 
     if not request.session.get('current_company', False):
@@ -208,14 +207,8 @@ def addProducts(request):
     currency = Dictionary.objects.get(title='CURRENCY')
     currency_slots = currency.getSlotsList()
 
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
     pages = None
+    choosen_category = {}
 
     if request.POST:
 
@@ -239,8 +232,13 @@ def addProducts(request):
 
         categories = request.POST.getlist('category[]')
 
-        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
+        choosen_category = Category.objects.filter(pk__in=categories, site=categorySite)
+
+        if not choosen_category.exists():
             form.errors.update({"CATEGORY": _("You must choose one category al least")})
+        else:
+            cats = [cat.pk for cat in choosen_category]
+            choosen_category = Item.getItemsAttributesValues('NAME', cats)
 
         if gallery.is_valid() and form.is_valid():
 
@@ -258,9 +256,9 @@ def addProducts(request):
         'form': form,
         'measurement_slots': measurement_slots,
         'currency_slots': currency_slots,
-        'categotySelect': categotySelect,
         'pages': pages,
-        'categorySite': categorySite
+        'categorySite': categorySite,
+        'choosen_category': choosen_category
     }
 
     context = RequestContext(request, templateParams)
@@ -282,17 +280,120 @@ def updateProduct(request, item_id):
     if 'change_product' not in perm_list:
         return func.permissionDenied()
 
+    categorySite = Site.objects.get(name="tppcenter").pk
+
+    choosen_category = Category.objects.filter(p2c__child=item_id, site=categorySite)
+
+    categories_ids = [cat.pk for cat in choosen_category]
+
+    categories = Item.getItemsAttributesValues('NAME', categories_ids)
+
+
+
+    measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
+    measurement_slots = measurement.getSlotsList()
+
+    currency = Dictionary.objects.get(title='CURRENCY')
+    currency_slots = currency.getSlotsList()
+
+    product = Product.objects.get(pk=item_id)
+
+
+    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
+    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
+
+    if getattr(pages, 'new_objects', False):
+        pages = pages.new_objects
+    else:
+        pages = pages.queryset
+
+    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+    gallery = Photo(parent_id=item_id)
+    photos = ""
+
+    if gallery.queryset:
+        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
+
+    coupon_date = Product.objects.get(pk=item_id).getAttributeValues("COUPON_DISCOUNT", fullAttrVal=True)
+    coupon_date = coupon_date[0] if len(coupon_date) > 0 else ""
+
+
+    form = ItemForm('Product', id=item_id)
+
+    if request.POST:
+
+
+
+
+        user = request.user
+        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
+        gallery = Photo(request.POST, request.FILES)
+
+
+
+        values = {}
+        values.update(request.POST)
+        values.update(request.FILES)
+
+        form = ItemForm('Product', values=values, id=item_id)
+        form.clean()
+
+        categories = request.POST.getlist('category[]')
+
+        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
+            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+
+        if gallery.is_valid() and form.is_valid():
+            func.notify("item_creating", 'notification', user=request.user)
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+                                      lang_code=trans_real.get_language())
+
+            return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
+
+
+    template = loader.get_template('Products/addForm.html')
+
+    templateParams = {
+        'gallery': gallery,
+        'photos': photos,
+        'form': form,
+        'coupon_date': coupon_date,
+        'measurement_slots': measurement_slots,
+        'currency_slots': currency_slots,
+        'pages': pages,
+        'product': product,
+        'choosen_category': categories,
+        'categorySite': categorySite
+    }
+
+    context = RequestContext(request, templateParams)
+
+    productsPage = template.render(context)
+
+    return productsPage
+
+
+def updateProductB2C(request, item_id):
+
     try:
-        choosen_category = Category.objects.get(p2c__child=item_id)
+        item = Company.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
-        choosen_category = ''
+        return func.emptyCompany()
 
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
 
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    perm_list = item.getItemInstPermList(request.user)
 
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+    if 'change_product' not in perm_list:
+        return func.permissionDenied()
+
+    categorySite = Site.objects.get(name="centerpokupok").pk
+
+    choosen_category = Category.objects.filter(p2c__child=item_id)
+
+    categories_ids = [cat.pk for cat in choosen_category]
+
+    categories = Item.getItemsAttributesValues('NAME', categories_ids)
+
 
 
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
@@ -341,6 +442,11 @@ def updateProduct(request, item_id):
         form = ItemForm('Product', values=values, id=item_id)
         form.clean()
 
+        categories = request.POST.getlist('category[]')
+
+        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
+            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
             addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
@@ -349,9 +455,9 @@ def updateProduct(request, item_id):
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
 
-    template = loader.get_template('Products/addForm.html')
+    template = loader.get_template('Products/addFormB2C.html')
 
-    templateParams =  {
+    templateParams = {
         'gallery': gallery,
         'photos': photos,
         'form': form,
@@ -360,9 +466,8 @@ def updateProduct(request, item_id):
         'currency_slots': currency_slots,
         'pages': pages,
         'product': product,
-        'choosen_category': choosen_category,
-        'categotySelect': categotySelect,
-        'b2c_product':  Item.objects.get(pk=item_id).sites.filter(name='centerpokupok').exists()
+        'choosen_category': categories,
+        'categorySite': categorySite
     }
 
     context = RequestContext(request, templateParams)

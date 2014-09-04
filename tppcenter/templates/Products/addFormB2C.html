@@ -196,13 +196,25 @@
                         }
                 </style>
                     <ul class="list-cat">
+                        {% if choosen_category %}
+                            {% for pk, name in choosen_category %}
+                                <li data-id="{{ pk }}'">{{ name|first }}<a href="#"><i class="i-close category-remove imgnews"></i></a></li>
+                            {% endfor %}
+
+                        {% endif %}
 
                     </ul>
+                    {% if choosen_category %}
+                        {% for pk, name in choosen_category %}
+                            <input type="hidden" class="category-{{ pk }}" name="category[]" value="{{ pk }}" />
+                        {% endfor %}
+
+                    {% endif %}
                     <a href="#" id="select-cat" class="buttonclear  add-advandce">{% trans "Add categories" %}</a>
 
                                     <script>
                     $('#select-cat').click(function() {
-                        var url = "{% url "products:categoryList" %}";
+                        var url = "{% url "products:categoryList" categorySite %}";
                         window.open(url, "", "width=600, height=600, directories=no, channelmode=no, location=no, resizable=no, scrollbars=no, status=no, titlebar=no, toolbar=no");
 
                         return false;
