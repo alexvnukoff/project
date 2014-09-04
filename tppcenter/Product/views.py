@@ -145,7 +145,7 @@ def addProductsB2C(request):
         form.clean()
 
         categories = request.POST.getlist('category[]')
-        choosen_category = Category.objects.filter(pk__in=categories, site=categorySite)
+        choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
 
         if not choosen_category.exists():
             form.errors.update({"CATEGORY": _("You must choose one category al least")})
@@ -232,7 +232,7 @@ def addProducts(request):
 
         categories = request.POST.getlist('category[]')
 
-        choosen_category = Category.objects.filter(pk__in=categories, site=categorySite)
+        choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
 
         if not choosen_category.exists():
             form.errors.update({"CATEGORY": _("You must choose one category al least")})
