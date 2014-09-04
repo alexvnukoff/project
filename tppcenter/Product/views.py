@@ -145,10 +145,14 @@ def addProductsB2C(request):
         form.clean()
 
         categories = request.POST.getlist('category[]')
+
+        if not categories:
+            categories = []
+
         choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
 
         if not choosen_category.exists():
-            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+            form.errors.update({"CATEGORY": _("You must choose one category at least")})
         else:
             cats = [cat.pk for cat in choosen_category]
             choosen_category = Item.getItemsAttributesValues('NAME', cats)
@@ -232,10 +236,13 @@ def addProducts(request):
 
         categories = request.POST.getlist('category[]')
 
+        if not categories:
+            categories = []
+
         choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
 
         if not choosen_category.exists():
-            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+            form.errors.update({"CATEGORY": _("You must choose one category at least")})
         else:
             cats = [cat.pk for cat in choosen_category]
             choosen_category = Item.getItemsAttributesValues('NAME', cats)
@@ -341,7 +348,7 @@ def updateProduct(request, item_id):
         categories = request.POST.getlist('category[]')
 
         if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
-            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+            form.errors.update({"CATEGORY": _("You must choose one category at least")})
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
@@ -445,7 +452,7 @@ def updateProductB2C(request, item_id):
         categories = request.POST.getlist('category[]')
 
         if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
-            form.errors.update({"CATEGORY": _("You must choose one category al least")})
+            form.errors.update({"CATEGORY": _("You must choose one category at least")})
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
