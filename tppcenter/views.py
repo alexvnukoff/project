@@ -54,7 +54,7 @@ def home(request):
     serviceList = func.get_countrys_for_sqs_objects(serviceList)
     serviceList = func.get_organization_for_objects(serviceList)
 
-    greetingsList = func.getActiveSQS().models(Greeting)
+    greetingsList = SearchQuerySet().models(Greeting)
 
     exhibitionsList = func.getActiveSQS().models(Exhibition).order_by("-obj_create_date")[:3]
     exhibitionsList = func.get_countrys_for_sqs_objects(exhibitionsList)
