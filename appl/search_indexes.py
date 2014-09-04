@@ -467,7 +467,7 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
         return Category
 
     def prepare_sites(self, obj):
-        return [site.pk for site in Category.objects.filter(pk=obj.pk).sites.all()]
+        return [site.pk for site in Category.objects.get(pk=obj.pk).sites.all()]
 
     def prepare_parent(self, obj):
         try:
