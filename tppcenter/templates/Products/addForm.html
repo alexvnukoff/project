@@ -286,9 +286,7 @@ $.fn.onChangeSet = function(e) {
                             {% for pk, name in choosen_category.items %}
                                 <li data-id="{{ pk }}'">{{ name.NAME|first }}<a href="#"><i class="i-close category-remove imgnews"></i></a></li>
                             {% endfor %}
-
                         {% endif %}
-
                     </ul>
                     {% if choosen_category %}
                         {% for pk, name in choosen_category.items %}
