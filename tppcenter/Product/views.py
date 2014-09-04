@@ -511,15 +511,15 @@ def categoryList(request, site):
     if parent == 0:
         categories = Category.hierarchy.getRootParents(siteID=site)
         catList = [cat.pk for cat in categories]
-        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, site=site)
+        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, sites=site)
     else:
-        object_list = SearchQuerySet().models(Category).filter(parent=parent, site=site)
-        bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent, site=site))
+        object_list = SearchQuerySet().models(Category).filter(parent=parent, sites=site)
+        bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent, sites=site))
 
     new_obj_list = []
 
     for obj in object_list:
-        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, site=site).count()
+        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, sites=site).count()
         new_obj_list.append(obj)
 
 
