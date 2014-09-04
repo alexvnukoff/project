@@ -289,7 +289,7 @@ def updateProduct(request, item_id):
 
     categorySite = Site.objects.get(name="tppcenter").pk
 
-    choosen_category = Category.objects.filter(p2c__child=item_id, site=categorySite)
+    choosen_category = Category.objects.filter(p2c__child=item_id, sites=categorySite)
 
     categories_ids = [cat.pk for cat in choosen_category]
 
