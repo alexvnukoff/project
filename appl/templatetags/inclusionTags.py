@@ -362,19 +362,29 @@ def b2bSocialButtons(context, image, title, text):
 
 @register.inclusion_tag("main/main_menu.html", takes_context=True)
 def mainMenuB2C(context):
-    #----MAIN MENU AND CATEGORIES IN HEADER ------#
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+
+    lang = settings.LANGUAGE_CODE
+    cache_name = "b2c_menu_%s" % lang
+
+    sortedHierarchyStructure = cache.get(cache_name)
+
+    if not sortedHierarchyStructure:
+
+        #----MAIN MENU AND CATEGORIES IN HEADER ------#
+        hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+        categories_id = [cat['ID'] for cat in hierarchyStructure]
+        categories = Item.getItemsAttributesValues(("NAME",), categories_id)
 
 
-    sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
-    level = 0
+        sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
+        level = 0
 
-    for node in sortedHierarchyStructure:
-        node['pre_level'] = level
-        node['item'] = categories[node['ID']]
-        node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
-        level = node['LEVEL']
+        for node in sortedHierarchyStructure:
+            node['pre_level'] = level
+            node['item'] = categories[node['ID']]
+            node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
+            level = node['LEVEL']
+
+        cache.set(cache_name, sortedHierarchyStructure, 60 * 60 * 24 * 7)
 
     return {'sortedHierarchyStructure': sortedHierarchyStructure}

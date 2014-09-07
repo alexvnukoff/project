@@ -15,10 +15,10 @@
                     {% for product in newProducrList %}
 
                             <li>
-                                {% if coupon_discount %}
+                                {% if product.coupon %}
                                     <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
-                                {% elif discount %}
-                                    <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
+                                {% elif product.discount %}
+                                    <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
                                 {% endif %}
                                <div class="img_gallery">
 					        	<div class="shadow"></div>
