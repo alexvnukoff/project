@@ -125,6 +125,7 @@ def addComment(request, item_id):
 class getProductList(ItemsList):
 
     model = Product
+    template_name = "Products/index.html"
 
     def _get_favorites(self, object_list):
         if self.request.user.is_authenticated():
