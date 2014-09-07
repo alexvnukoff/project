@@ -106,7 +106,7 @@ class get_innov_detail(ItemDetail):
 def innovForm(request, action, item_id=None):
 
     if item_id:
-       if not InnovationProject.active.get_active().filter(django_id=item_id).exists():
+       if not InnovationProject.active.get_active().filter(pk=item_id).exists():
          return HttpResponseNotFound()
 
 
