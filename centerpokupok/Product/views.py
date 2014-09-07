@@ -129,8 +129,9 @@ class getProductList(ItemsList):
 
     def _get_favorites(self, object_list):
         if self.request.user.is_authenticated():
+            obj_ids = [obj.pk for obj in object_list]
             return list(
-                Favorite.objects.filter(c2p__parent__cabinet__user=self.request.user, p2c__child__in=object_list)
+                Favorite.objects.filter(c2p__parent__cabinet__user=self.request.user, p2c__child__in=obj_ids)
                     .values_list("p2c__child", flat=True)
             )
 
