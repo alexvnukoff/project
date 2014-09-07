@@ -127,6 +127,12 @@ class getProductList(ItemsList):
     model = Product
     template_name = "Product/index.html"
 
+    def _get_sellers(self, object_list):
+        sellers_ids = [obj.company for obj in object_list]
+
+        return SearchQuerySet().models(Company).filter(django_id__in=sellers_ids)
+
+
     def _get_favorites(self, object_list):
         if self.request.user.is_authenticated():
             obj_ids = [obj.pk for obj in object_list]
@@ -153,6 +159,14 @@ class getProductList(ItemsList):
 
         return None
 
+    def _get_categories(self):
+
+        if self.category:
+            sib = Item.objects.get(pk=self.category).getSiblings(includeSelf=False)
+            return SearchQuerySet().models(Category).filter(django_id__in=[cat.pk for cat in sib])[:5]
+
+        return SearchQuerySet().models(Category)[:5]
+
     def get_context_data(self, **kwargs):
         context = super(ItemsList, self).get_context_data(**kwargs)
 
@@ -160,6 +174,8 @@ class getProductList(ItemsList):
         context['breadcrumb'] = self._get_breadcrumb()
         context['favorite'] = self._get_favorites(context['object_list'])
         context['currentCat'] = self._get_current_category()
+        context['sellers'] = self._get_sellers(context['object_list'])
+        context['categories'] = self._get_categories()
 
         return context
 
