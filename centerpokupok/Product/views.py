@@ -164,12 +164,18 @@ class getProductList(ItemsList):
         sqs = SearchQuerySet().models(Category).filter(sites=settings.SITE_ID)
 
         if self.category:
+
+            child = sqs.filter(parent=self.category)
+
+            if child.count() > 0:
+                return child
+
             sib = Item.objects.get(pk=self.category).getSiblings(includeSelf=False)
 
             if sib:
                 return sqs.filter(django_id__in=[cat.pk for cat in sib])[:limit]
-            else:
-                return sqs.filter(parent=0).exclude(django_id=self.category)[:limit]
+
+            return sqs.filter(parent=0).exclude(django_id=self.category)[:limit]
 
         return sqs.filter(parent=0)[:limit]
 

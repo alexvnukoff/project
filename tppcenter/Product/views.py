@@ -44,6 +44,36 @@ class get_products_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Products/index.html'
 
+class get_products_b2c_list(get_products_list):
+
+    #pagination url
+    url_my_paginator = "products:my_main_b2c_paginator"
+
+    #Lists of required scripts and styles for ajax request
+    scripts = []
+    styles = []
+
+    paginate_by = 12
+
+    current_section = _("Products B2C")
+    addUrl = 'products:addB2C'
+
+    #allowed filter list
+    filterList = ['tpp', 'country', 'company', 'branch']
+
+    model = Product
+
+    def ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/contentPage.html'
+
+    def no_ajax(self, request, *args, **kwargs):
+        self.template_name = 'Products/index.html'
+
+    def get_queryset(self):
+        sqs = super(get_products_b2c_list, self).get_queryset()
+
+        return sqs.filter(sites=Site.objects.get(name="centerpokupok").pk)
+
 
 class get_product_detail(ItemDetail):
 
@@ -79,6 +109,8 @@ def productForm(request, action, item_id=None):
         productsPage = addProducts(request)
     elif action == 'update':
         productsPage = updateProduct(request, item_id)
+    elif action == 'update_b2c':
+        productsPage = updateProductB2C(request, item_id)
     elif action == 'add_b2c':
         productsPage = addProductsB2C(request)
 

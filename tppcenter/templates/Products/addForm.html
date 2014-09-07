@@ -363,38 +363,6 @@ $.fn.onChangeSet = function(e) {
             </li>
             <li>
                 <div class="clumn1">
-                    <label>{% trans 'Temporary discount' %} %</label>
-                    {% if form.errors.COUPON_DISCOUNT %}
-                        <div class="error-handler">
-                            <div class="formserror">{{ form.errors.COUPON_DISCOUNT }}</div>
-                        </div>
-                    {% endif %}
-                    <input type="text" name="COUPON_DISCOUNT" value="{{ coupon_discount }}" placeholder="" class="text" />
-                </div>
-
-                <div class="clumn2">
-                    <div class="clumn3">
-                        <label>{% trans 'From(date)' %}</label>
-                        {% if form.errors.COUPON_DISCOUNT_START %}
-                            <div class="error-handler">
-                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT_START }}</div>
-                            </div>
-                        {% endif %}
-                        <input type="datetime" name="COUPON_DISCOUNT-START" value="{% if coupon_date.title %}{{ coupon_date.start_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" />
-                    </div>
-                    <div class="clumn4">
-                        <label>{% trans 'To(date)' %}</label>
-                         {% if form.errors.COUPON_DISCOUNT_END %}
-                            <div class="error-handler">
-                                <div class="formserror">{{ form.errors.COUPON_DISCOUNT_END }}</div>
-                            </div>
-                         {% endif %}
-                        <input type="datetime" name="COUPON_DISCOUNT-END" value="{% if coupon_date.title %}{{ coupon_date.end_date|date:"m/d/Y" }}{% endif %}" placeholder="" class="date" />
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="clumn1">
                     <div class="clumn3">
                         <label class="sapce">{% trans 'Cost' %}</label>
 
@@ -405,16 +373,6 @@ $.fn.onChangeSet = function(e) {
                         {% endif %}
                         <input type="text"  name="COST" value="{{ cost }}" placeholder="" class="text"/>
                     </div>
-                    <div class="clumn4">
-                        <label class="sapce">{% trans 'Discount' %} %</label>
-                        {% if form.errors.DISCOUNT %}
-                            <div class="error-handler">
-                                <div class="formserror">{{ form.errors.DISCOUNT }}</div>
-                            </div>
-                        {% endif %}
-                        <input type="text"  name="DISCOUNT" value="{{ discount }}" placeholder="" class="text"/>
-                    </div>
-
                 </div>
 
                 <div class="clumn2">
