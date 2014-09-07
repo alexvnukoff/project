@@ -38,13 +38,25 @@ class get_products_list(ItemsList):
 
     model = Product
 
+    def get_context_data(self, **kwargs):
+        context = super(get_products_list, self).get_context_data(**kwargs)
+
+        context['update_url'] = 'update'
+
+        return context
+
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Products/contentPage.html'
 
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Products/index.html'
 
-class get_products_b2c_list(get_products_list):
+    def get_queryset(self):
+        sqs = super(get_products_list, self).get_queryset()
+
+        return sqs.filter(sites=Site.objects.get(name="tppcenter").pk)
+
+class get_products_b2c_list(ItemsList):
 
     #pagination url
     url_my_paginator = "products:my_main_b2c_paginator"
@@ -62,6 +74,13 @@ class get_products_b2c_list(get_products_list):
     filterList = ['tpp', 'country', 'company', 'branch']
 
     model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super(get_products_b2c_list, self).get_context_data(**kwargs)
+
+        context['update_url'] = 'updateB2C'
+
+        return context
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Products/contentPage.html'

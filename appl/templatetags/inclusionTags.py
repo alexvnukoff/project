@@ -111,11 +111,12 @@ def getMyCompaniesList(context):
     }
 
 @register.inclusion_tag('main/contextMenu.html', takes_context=True)
-def setContextMenu(context, obj):
+def setContextMenu(context, obj, **kwargs):
 
     items_perms = context.get('items_perms')
     current_path = context.get('current_path')
     model_name = context.get('model', None)
+    update_url = None
 
 
     delete_perm = "delete_" + model_name.lower()
@@ -130,6 +131,7 @@ def setContextMenu(context, obj):
     elif model_name == Product.__name__:
         top_perm = "add_advtop"
         url_namespace = "products"
+
     elif model_name == InnovationProject.__name__:
         top_perm = "add_advtop"
         url_namespace = "innov"
@@ -158,11 +160,6 @@ def setContextMenu(context, obj):
     elif model_name == TppTV.__name__:
        url_namespace = "tv"
 
-
-
-
-
-
     vars = {
         "delete_perm": delete_perm,
         'change_perm': change_perm,
@@ -172,7 +169,10 @@ def setContextMenu(context, obj):
         "items_perms": items_perms,
         'current_path':current_path,
         'set_current': set_current,
+        'update_url': update_url
     }
+
+    vars.update(kwargs)
 
     return vars
 

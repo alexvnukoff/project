@@ -7,8 +7,11 @@
                             <a href="#"><i class="btn-afisha imgnews"></i></a>
                             <div class="localmenu">
                                 {% if change_perm in permlist %}
-                                     <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url url_namespace|add:':update' obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
-
+                                     {% if update_url %}
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url url_namespace|add:':'|add:update_url obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     {% else %}
+                                         <div class="tender-action"><i class="imgnews edit icon-action"></i><a href="{% url url_namespace|add:':update' obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'edit' %}</span></a></div>
+                                     {% endif %}
                                 {% endif %}
                                 {% if top_perm and top_perm in permlist %}
                                      <div class="tender-action"><i class="imgnews noty icon-action"></i><a href="{% url 'adv_top:top_form' obj.pk %}?next={{ current_path }}"> <span class="deletext">{% trans 'Advertise' %}</span></a></div>
