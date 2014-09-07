@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, get_object_or_404
+from haystack.query import SearchQuerySet
 from appl.models import News, Product, Comment, Category, Company, Country, Cabinet, Order, Favorite
+from centerpokupok.cbv import ItemsList
 from core.models import Value, Item, Attribute, Dictionary, Relationship, Slot
 from appl import func
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -120,25 +122,60 @@ def addComment(request, item_id):
             return form
 
 
+class getProductList(ItemsList):
 
+    model = Product
+
+    def _get_favorites(self, object_list):
+        if self.request.user.is_authenticated():
+            return list(
+                Favorite.objects.filter(c2p__parent__cabinet__user=self.request.user, p2c__child__in=object_list)
+                    .values_list("p2c__child", flat=True)
+            )
+
+        return []
+
+    def _get_breadcrumb(self):
+
+        if self.category:
+            ancestors = Category.hierarchy.getAncestors(self.category)
+            ancestors_ids = [cat['ID'] for cat in ancestors]
+            return SearchQuerySet().models(Category).filter(django_id__in=ancestors_ids)
+
+        return None
+
+    def _get_current_category(self):
+
+        if self.category:
+            return SearchQuerySet().models(Category).filter(django_id=self.category)[0]
+
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemsList, self).get_context_data(**kwargs)
+
+
+        context['breadcrumb'] = self._get_breadcrumb()
+        context['favorite'] = self._get_favorites(context['object_list'])
+        context['currentCat'] = self._get_current_category()
+
+        return context
+
+'''
 def getCategoryProduct(request, country=None, category_id=None, page=1):
     url_country = "products:country_products"
     url_country_parametr = []
 
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
 
     if category_id is None: #Not filtered by category
 
         #Get related categories
-        #categories = Category.hierarchy.getTree(15)
-        categories = hierarchyStructure
-        category_root_ids = [cat['ID'] for cat in categories if cat['LEVEL'] == 1]
+        category_root_ids = SearchQuerySet().models(Category).filter(parent=0)
 
         #Main Page
         breadCrumbs = None
 
         #Paginator
-
         if country:
             url_parameter = [country]
             url_paginator = "products:country_products_paginator"
@@ -159,11 +196,12 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
         #creating bread crumbs
         ancestors = Category.hierarchy.getAncestors(category_id)
         ancestors_ids = [cat['ID'] for cat in ancestors]
-        breadCrumbs = Product.getItemsAttributesValues(("NAME",), ancestors_ids)
+        breadCrumbs = SearchQuerySet().models(Category).filter(django_id__in=ancestors_ids)
 
         #Paginator
         url_country = "products:category_country"
         url_country_parametr = [category_id]
+
         if country:
             category_url = "products:category_country"
             category_parameters = [country]
@@ -175,21 +213,10 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
             url_parameter = [category_id]
             url_paginator = "products:cat_pagination"
 
+    products = func.getActiveSQS().models(Product).filter(sites=settings.SITE_ID)
 
-
-
-    #Products filtered by site
-    if country is None:
-        products = Product.active.get_active_related().filter(sites=settings.SITE_ID)
-    else:
-        products = Product.active.get_active_related().filter(sites=settings.SITE_ID).filter(c2p__parent_id__in=Company.objects.filter(c2p__parent_id=country))
-
-
-
-    #Main search by categories
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categoriesAttr = Item.getItemsAttributesValues(("NAME",), categories_id)
-
+    if country:
+        products = products.filter(country=country)
 
     #Related categories list with descendants
     category_ids = [cat['ID'] for cat in categories]
@@ -201,33 +228,22 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
     #Related categories list without descendants
     category_root_ids = [cat.pk for cat in sortedRootCat]
 
-
     #Get categories attributes & count
     if category_id is not None:
         category_root_ids.insert(0, category_id)
-
-    prodInCat = func.getCountofSepecificItemsRelated('Product', category_ids, products)
-
-    if category_id is not None:
-        currentCatName = categoriesAttr[category_id]['NAME'][0]
         category_ids.append(category_id)
-        del categoriesAttr[category_id]
     else:
         currentCatName = None
 
-    categories = func._categoryStructure(categories, prodInCat, categoriesAttr, category_root_ids)
+    SearchQuerySet().models(Category).filter(django_id__in=category_root_ids)
 
     if category_id is not None:
-        products = products.filter(c2p__parent_id__in=category_ids, c2p__type='relation', sites=settings.SITE_ID)\
-            .order_by("-pk")
-
-    result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                                 'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
+        products = products.filter(categories=category_id)
 
     #Product list , with companies and countries
-    products_list = result[0]
     products_ids = [key for key, value in products_list.items()]
     favorites_dict = {}
+
     if request.user.is_authenticated():
         favorites = Favorite.active.get_active_related().filter(c2p__parent__cabinet__user=request.user, p2c__child__in=products_ids).values("p2c__child")
         for favorite in favorites:
@@ -278,24 +294,18 @@ def getCategoryProduct(request, country=None, category_id=None, page=1):
 
 
     #Paginator
-    page = result[1]
     paginator_range = func.getPaginatorRange(page)
 
-
-
-
-
-
-    return render_to_response("Product/index.html", {'products_list': products_list,'companyList': companyList,
+    return render_to_response("Product/index.html", {'companyList': companyList,
                                                      'page': page, 'paginator_range': paginator_range,
-                                                     'url_paginator': url_paginator, 'url_parameter':url_parameter,
+                                                     'url_paginator': url_paginator, 'url_parameter' :url_parameter,
                                                      'categories': categories, 'country': country,
                                                      'currentCat': currentCatName, 'breadCrumbs': breadCrumbs,
                                                      'category_url': category_url, 'url_country': url_country,
                                                      'url_country_parametr': url_country_parametr,
                                                      'category_parameters': category_parameters,
                                                      'user': request.user}, context_instance=RequestContext(request))
-
+'''
 
 def getAllNewProducts(request, page=1):
 

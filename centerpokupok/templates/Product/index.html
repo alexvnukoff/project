@@ -62,20 +62,18 @@
                         <span typeof="v:Breadcrum">
                             <a href="{% url "products:list" %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                         </span>
-                        {% for id, crumb in breadCrumbs.items %}
-                            {% with crumb.NAME|first as name %}
-                                &rarr;
-                                <span typeof="v:Breadcrum">
-                                    <a href="{% url "products:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
-                                </span>
-                            {% endwith %}
+                        {% for crumb in breadCrumbs %}
+                            &rarr;
+                            <span typeof="v:Breadcrum">
+                                <a href="{% url "products:category" crumb.pk %}" property="v:title" rel="v:url">{{ crumb.text }}</a>
+                            </span>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="title-items">
                     {% trans "Products" %}
                     {% if currentCat %}
-                        <i>/</i>  {{ currentCat }}
+                        <i>/</i>  {{ currentCat.text }}
                     {% endif %}
                 </div>
 
@@ -118,44 +116,32 @@
 
                 </div>
                 <ul id="listitems">
-                    {% for id , product in products_list.items %}
-                         {% with product.NAME|first as name %}
-                         {% with product.IMAGE|first as picture %}
-                         {% with product.COST|first as price %}
-                         {% with product.CURRENCY|first as currency %}
-                         {% with product.COMPANY_NAME|first as company %}
-                         {% with product.COMPANY_ID as company_id %}
-                         {% with product.COMPANY_IMAGE|first as company_image %}
-                         {% with product.COUNTRY_NAME|first as country %}
-                         {% with product.DISCOUNT|first as discount %}
-                         {% with product.COUPON_DISCOUNT|first as coupon_discount %}
-                         {% with product.COMMENTS as comment %}
-                         {% with product.FAVORITE as favorite %}
+                    {% for product in object_list %}
                     <li>
-                        {% if coupon_discount %}
-                            <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
+                        {% if product.coupon %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.coupon }}%</div>
                         {% elif discount %}
-                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                            <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
                         {% endif %}
-                        <a href="{% url "products:detail" id %}">
+                        <a href="{% url "products:detail" product.pk %}">
                        <div class="img_gallery">
                             <div class="shadow"></div>
                             <div class="img_block">
 
-                                <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" >
+                                <img src="{{ MEDIA_URL }}big/{{ product.image }}" alt="{{ product.title }}" >
                             </div>
                         </div>
                     </a>
-                        <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                        <p><a href="{% url "products:detail" id %}">{{ product.title }}</a></p>
                         <div class="price">
-                            {% if coupon_discount %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|discountPrice:coupon_discount }}</font>
-                                <p><font class="price-old">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                            {% if product.coupon %}
+                                <font class="num">{{ product.currency|getSymbol }} {{ product.price|discountPrice:product.coupon }}</font>
+                                <p><font class="price-old">{{ currency|getSymbol }} {{ product.price|formatPrice }}</font></p>
                             {% elif discount %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
-                                <p><font class="price-old">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                                <font class="num">{{ product.currency|getSymbol }} {{ product.price|discountPrice:product.discount }}</font>
+                                <p><font class="price-old">{{ product.currency|getSymbol }} {{ product.price|formatPrice }}</font></p>
                             {% else %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|formatPrice }}</font>
+                                <font class="num">{{ product.currency|getSymbol }} {{ product.price|formatPrice }}</font>
                             {% endif %}
 
                         </div>
@@ -163,44 +149,15 @@
                             <img src="{% static "centerpokupok/images/stars.png" %}" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
-                                <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>
+                                <label><a href="{% url "products:detail" product.pk %}">0</a></label>
                             </div>
 
                             <a href="#" class="favorite" >
-                                <i class="icons {% if favorite == 1%}icon-colored-heart {% else %}icon-heart{% endif %}" data-gid="{{ id }}"></i>
+                                <i class="icons {% if product.pk in favorite %}icon-colored-heart {% else %}icon-heart{% endif %}" data-gid="{{ product.pk }}"></i>
                             </a>
                         </div>
-                        <div class="bgname">
-                            <a href="#" class="offline">
-                                <i class="icons i-name"></i>
-                                <b>{{ company }}</b>
-                                <i class="icons icon-chat"></i>
-                            </a>
-                            <div class="salepopup">
-                                <img src="{% static company_image %}" class="avatar" alt="{{ company }}" />
-                                <div class="infosale">
-                                    <i class="icons icon-status status-online"></i>
-                                    <a href="{% url "companies:main" company_id %}">{{ company }}</a>
-                                    <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
-                                    <p>{{ country }}</p>
-                                    <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">{% trans 'positive feedback' %}</a></p>
-                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>{% trans 'Write to salesman' %} </a></p>
-                                </div>
-                            </div>
-                        </div>
+
                     </li>
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
                     {% endfor %}
 
                 </ul>
