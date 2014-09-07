@@ -54,7 +54,7 @@ class get_products_list(ItemsList):
     def get_queryset(self):
         sqs = super(get_products_list, self).get_queryset()
 
-        return sqs.filter(sites=Site.objects.get(name="tppcenter").pk)
+        return sqs.exclude(sites=Site.objects.get(name="centerpokupok").pk)
 
 class get_products_b2c_list(ItemsList):
 
