@@ -132,7 +132,7 @@
                             </div>
                         </div>
                     </a>
-                        <p><a href="{% url "products:detail" id %}">{{ product.title }}</a></p>
+                        <p><a href="{% url "products:detail" product.pk %}">{{ product.title }}</a></p>
                         <div class="price">
                             {% if product.coupon %}
                                 <font class="num">{{ product.currency|getSymbol }} {{ product.price|discountPrice:product.coupon }}</font>
