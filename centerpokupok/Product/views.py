@@ -161,15 +161,17 @@ class getProductList(ItemsList):
 
     def _get_categories(self, limit=5):
 
+        sqs = SearchQuerySet().models(Category).filter(sites=settings.SITE_ID)
+
         if self.category:
             sib = Item.objects.get(pk=self.category).getSiblings(includeSelf=False)
 
             if sib:
-                return SearchQuerySet().models(Category).filter(django_id__in=[cat.pk for cat in sib])[:limit]
+                return sqs.filter(django_id__in=[cat.pk for cat in sib])[:limit]
             else:
-                return SearchQuerySet().models(Category).filter(parent=0).exclude(django_id=self.category)[:limit]
+                return sqs.filter(parent=0).exclude(django_id=self.category)[:limit]
 
-        return SearchQuerySet().models(Category).filter(parent=0)[:limit]
+        return sqs.filter(parent=0)[:limit]
 
     def get_context_data(self, **kwargs):
         context = super(ItemsList, self).get_context_data(**kwargs)
