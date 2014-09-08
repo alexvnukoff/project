@@ -41,7 +41,7 @@
         })
         $(function () {
             $('.countdowntext').each(function() {
-                var until = parseInt($(this).data('until')) * 1000;
+                var until = parseInt($(this).data('countdown')) * 1000;
                 now = +new Date();
                 var lay = ((until - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
                 $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
@@ -147,7 +147,7 @@
                             <li>
                                 <div class="thumb">
                                     <a href="{% url "products:detail" coupon.pk %}">
-                                        <img alt="" src="{{ MEDIA_URL }}small/{{ coupon.image }}">
+                                        <img width="140" height="100" alt="{{ coupon.title }}" src="{{ MEDIA_URL }}small/{{ coupon.image }}">
                                     </a>
                                     <div class="discount"><i class="icons i-after"></i> -{{ coupon.discount }}%</div>
                                 </div>
