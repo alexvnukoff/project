@@ -8,7 +8,7 @@ from django.views.generic import DetailView
 from haystack.query import SearchQuerySet
 
 from appl import func
-from appl.models import Country, AdditionalPages, Gallery
+from appl.models import Country, AdditionalPages, Gallery, Favorite
 from core.cbv import HybridListView
 from tpp import settings
 
