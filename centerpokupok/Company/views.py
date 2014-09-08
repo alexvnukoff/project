@@ -95,6 +95,7 @@ class companyProductList(ItemsList):
         context = super(companyProductList, self).get_context_data(**kwargs)
 
         context['favorite'] = self._get_favorites(context['object_list'])
+        context['companyID'] = self.kwargs.get('company')
 
         return context
 
@@ -224,6 +225,13 @@ class companyCoupontList(ItemsList):
 
     model = Product
     template_name = "Company/coupons.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(companyCoupontList, self).get_context_data(**kwargs)
+
+        context['companyID'] = self.kwargs.get('company')
+
+        return context
 
     def get_queryset(self):
         sqs = super(companyCoupontList, self).get_queryset()
