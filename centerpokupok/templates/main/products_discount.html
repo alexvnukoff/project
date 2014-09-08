@@ -1,6 +1,21 @@
 {% load staticfiles %}
 {% load i18n %}
 {% if productsSale %}
+    <style>
+        .discount-image-holder {
+            background-color: #FFF;
+            height: 155px;
+        }
+        .discount-image-holder img {
+            display: block;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
     <div id="bestprice">
         <h3>{% trans "Best proposals" %}</h3>
 
@@ -13,9 +28,11 @@
 
                 <div class="clumn-best">
                     <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
-                    <a href="{% url "products:detail" product.pk %}">
-                        <img width="180" height="135" alt="{{ product.title }}" src="{{ MEDIA_URL }}big/{{ product.image }}" class="thumb" />
-                    </a>
+                    <div class="discount-image-holder">
+                        <a href="{% url "products:detail" product.pk %}">
+                            <img alt="{{ product.title }}" src="{{ MEDIA_URL }}big/{{ product.image }}" class="thumb" />
+                        </a>
+                    </div>
                     <a href="{% url "products:detail" product.pk %}" class="name">{{ product.title }}</a>
                 </div>
 
