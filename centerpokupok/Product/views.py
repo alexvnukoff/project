@@ -149,6 +149,19 @@ class getProductList(ItemsList):
 
         return context
 
+    def get_queryset(self):
+
+
+        sqs = super(getProductList, self).get_queryset()
+
+        q = self.request.GET.get('q', '')
+
+        if q:
+            return sqs.filter(title=q)
+
+        return sqs
+
+
 '''
 def getCategoryProduct(request, country=None, category_id=None, page=1):
     url_country = "products:country_products"

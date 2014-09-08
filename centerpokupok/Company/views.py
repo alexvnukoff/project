@@ -104,8 +104,14 @@ class companyProductList(ItemsList):
 
         company = self.kwargs.get('company')
 
-        return sqs.filter(company=company)
+        sqs = sqs.filter(company=company)
 
+        q = self.request.GET.get('q', '')
+
+        if q:
+            return sqs.filter(title=q)
+
+        return sqs
 
 '''
 def products(request, company, category=None, page=1):
