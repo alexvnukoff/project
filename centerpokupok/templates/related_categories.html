@@ -7,6 +7,6 @@
         <li class="parent">{{ currentCat.text }}</li>
     {% endif %}
     {% for category in categories %}
-            <li><a href="{% dynurl "products:category" category_parameters category.pk %}" >{{ category.text }}</a></li>
+            <li><a href="{% url category_namespace category.pk %}" >{{ category.text }}</a></li>
     {% endfor %}
 </ul>

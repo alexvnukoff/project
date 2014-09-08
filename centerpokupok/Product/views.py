@@ -145,6 +145,7 @@ class getProductList(ItemsList):
         context['currentCat'] = self._get_current_category()
         context['sellers'] = self._get_sellers(context['object_list'])
         context['categories'] = self._get_categories()
+        context['category_namespace'] = "products:category"
 
         return context
 

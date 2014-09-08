@@ -199,6 +199,7 @@ class companyCoupontList(ItemsList):
         context['breadcrumb'] = self._get_breadcrumb()
         context['currentCat'] = self._get_current_category()
         context['categories'] = self._get_categories()
+        context['category_namespace'] = "coupons:category"
 
         return context
 
