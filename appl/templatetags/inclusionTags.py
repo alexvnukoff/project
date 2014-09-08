@@ -396,7 +396,7 @@ def companyMenuB2C(context, company, menu):
     MEDIA_URL = context.get('MEDIA_URL', '')
 
     return {
-        'company': SearchQuerySet().models(Company).filter(django_id__in=company)[0],
+        'company': SearchQuerySet().models(Company).filter(django_id=company)[0],
         'menu': menu,
         'MEDIA_URL': MEDIA_URL,
         'user': request.user
