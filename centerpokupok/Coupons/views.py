@@ -1,4 +1,9 @@
+from haystack.query import SearchQuerySet
+from centerpokupok.cbv import ItemsList
+from core.models import Item
+
 __author__ = 'user'
+
 from django.shortcuts import render_to_response
 from appl import func
 from appl.models import Product, Category, Company
@@ -7,6 +12,7 @@ from django.utils.timezone import now
 from datetime import timedelta
 from django.conf import settings
 
+'''
 def couponsList(request, currentCat = None, page=1, country=None):
     sort = request.GET.get('sort', 'ed-date')
     order = request.GET.get('order', 'ASC')
@@ -141,3 +147,62 @@ def couponsList(request, currentCat = None, page=1, country=None):
                                                      'category_url': category_url,
                                                      'category_parameters': category_parameters},
                                                      context_instance=RequestContext(request))
+
+'''
+
+
+class companyCoupontList(ItemsList):
+
+    model = Product
+    template_name = "Coupons/index.html"
+
+    def _get_breadcrumb(self):
+
+        if self.category:
+            ancestors = Category.hierarchy.getAncestors(self.category)
+            ancestors_ids = [cat['ID'] for cat in ancestors]
+            return SearchQuerySet().models(Category).filter(django_id__in=ancestors_ids)
+
+        return None
+
+    def _get_current_category(self):
+
+        if self.category:
+            return SearchQuerySet().models(Category).filter(django_id=self.category)[0]
+
+        return None
+
+    def _get_categories(self, limit=5):
+
+        sqs = SearchQuerySet().models(Category).filter(sites=settings.SITE_ID)
+
+        if self.category:
+
+            child = sqs.filter(parent=self.category)
+
+            if child.count() > 0:
+                return child
+
+            sib = Item.objects.get(pk=self.category).getSiblings(includeSelf=False)
+
+            if sib:
+                return sqs.filter(django_id__in=[cat.pk for cat in sib])[:limit]
+
+            return sqs.filter(parent=0).exclude(django_id=self.category)[:limit]
+
+        return sqs.filter(parent=0)[:limit]
+
+
+    def get_context_data(self, **kwargs):
+        context = super(companyCoupontList, self).get_context_data(**kwargs)
+
+        context['breadcrumb'] = self._get_breadcrumb()
+        context['currentCat'] = self._get_current_category()
+        context['categories'] = self._get_categories()
+
+        return context
+
+    def get_queryset(self):
+        sqs = super(companyCoupontList, self).get_queryset()
+
+        return sqs.filter(coupon__gt=0, coupon_end__gt=now(), coupon_start__lte=now())

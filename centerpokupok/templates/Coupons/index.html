@@ -88,13 +88,11 @@
                             <a href="{% url "coupons:list" %}" property="v:title" rel="v:url">{% trans "Coupons" %}</a>
                         </span>
 
-                        {% for id, crumb in breadCrumbs.items %}
-                            {% with crumb.NAME|first as name %}
+                         {% for crumb in breadCrumbs %}
                             &rarr;
                             <span typeof="v:Breadcrum">
-                                <a href="{% url "coupons:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
+                                <a href="{% url "products:category" crumb.pk %}" property="v:title" rel="v:url">{{ crumb.text }}</a>
                             </span>
-                            {% endwith %}
                         {% endfor %}
 
                     </div>
@@ -107,28 +105,22 @@
                     {% endif %}
                 </div>
 
-            {% for id, attr in coupons.items %}
+            {% for coupon in object_list %}
 
-                {% with attr.NAME as name  %}
-                {% with attr.COUPON_DISCOUNT as discount  %}
-                {% with attr.IMAGE as picture  %}
-                {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
-                {% with attr.COST as price  %}
-                {% with attr.CURRENCY as currency  %}
 
                 {% if forloop.first %}
                 <div class="coupontop">
                     <div class="thumb-cp">
-                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                        <a href="{% url "products:detail" id %}" title="{{ name }}">
-                            <img width="300" height="225" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }}" />
+                        <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon }}%</div>
+                        <a href="{% url "products:detail" coupon.pk %}" title="{{ coupon.title }}">
+                            <img width="300" height="225" alt="{{ coupon.title }}" src="{{ MEDIA_URL }}big/{{ coupon.image }}" />
                         </a>
                     </div>
                     <div class="couponinfo">
-                        <a href="{% url "products:detail" id %}">{{ name }}</a>
+                        <a href="{% url "products:detail" coupon.pk %}">{{ coupon.title }}</a>
                         <div class="clock">
                             <p>{% trans "Time till the end" %}</p>
-                            <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
+                            <div id="topCountdown" data-countdown="{{ coupon.coupon_end|date:"U" }}"></div>
                         </div>
                     </div>
                     <div class="bottom-cp">
@@ -136,7 +128,7 @@
                             <span>
                                 <p>
                                     <font class="price1">
-                                        {{ currency|getSymbol }} {{ price|discountPrice:discount }}
+                                        {{ coupon.currency|getSymbol }} {{ coupon.price|discountPrice:coupon.coupon }}
                                     </font>
                                 </p>
                             </span>
@@ -144,105 +136,37 @@
                                 <p>{% trans "You save" %}</p>
                                 <p>
                                     <font class="price2">
-                                        {{ currency|getSymbol }} {{  price|discountDiff:discount }}
+                                        {{ coupon.currency|getSymbol }} {{  coupon.price|discountDiff:coupon.coupon }}
                                     </font>
                                 </p>
                             </span>
                         </div>
-                        <a href="{% url "products:detail" id %}" class="btnbuy">{% trans "Buy" %}</a>
+                        <a href="{% url "products:detail" coupon.pk %}" class="btnbuy">{% trans "Buy" %}</a>
                     </div>
                 </div>
                 {% else %}
 
                 {% if forloop.counter == 2 %}
-                    <div class="topitems" style="margin-top: 20px;">
-                        <label>{% trans "Sort By" %}</label>
-                        <span>
-                            {% if sort == 'coupon-discount' %}
-                                <a href="{% query_string 'sort=coupon-discount&order=order' '' %}" class="dc">
-                                    {% trans "Discount" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=coupon-discount' 'order' %}" class="dc">
-                                    {% trans "Discount" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'ed-date' %}
-                                <a href="{% query_string 'sort=ed-date&order=order' '' %}" class="dc">
-                                    {% trans "End Date" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=ed-date' 'order' %}" class="dc">
-                                    {% trans "End Date" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'st-date' %}
-                                <a href="{% query_string 'sort=st-date&order=order' '' %}" class="dc">
-                                    {% trans "Create Date" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=st-date' 'order' %}" class="dc">
-                                    {% trans "Create Date" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <span>
-                            {% if sort == 'org-price' %}
-                                <a href="{% query_string 'sort=org-price&order=order' '' %}" class="dc">
-                                    {% trans "Price" %}
-                                </a>
-                            {% else %}
-                                <a href="{% query_string 'sort=org-price' 'order' %}" class="dc">
-                                    {% trans "Price" %}
-                                </a>
-                            {% endif %}
-                        </span>
-                        <div class="right">
-                            {% if not expire %}
-                                <label style="float: none;">{% trans "All " %} </label>
-                            {% else %}
-                                <a href="{% query_string '' 'expire' %}">{% trans "All" %} </a>
-                            {% endif %}
-
-                            {% if expire == 1 %}
-                                <label style="float: none;">{% trans "Expire in 24 hours" %} </label>
-                            {% else %}
-                                <a href="{% query_string 'expire=1' '' %}">{% trans "Expire in 24 hours" %} </a>
-                            {% endif %}
-
-                            {% if expire and expire != 1 %}
-                                <label style="float: none;">{% trans "Expire in 7 days" %}</label>
-                            {% else %}
-                                <a href="{% query_string 'expire=7' '' %}">{% trans "Expire in 7 days" %}</a>
-                            {% endif %}
-
-                        </div>
-                    </div>
-
 
                     <ul id="listcoupon">
                 {% endif %}
                     <li>
                         <div class="thumb">
-                            <a href="{% url "products:detail" id %}" title="{{ name }}">
-                                <img width="140" height="100" src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                            <a href="{% url "products:detail" coupon.pk %}" title="{{ coupon.title }}">
+                                <img width="140" height="100" src="{{ MEDIA_URL }}small/{{ coupon.image }}" alt="{{ coupon.title }}" />
                             </a>
-                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                            <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon }}%</div>
                         </div>
                         <div class="discountinfo">
-                            <a href="{% url "products:detail" id %}" title="{{ name }}">{{ name }}</a>
+                            <a href="{% url "products:detail" coupon.pk %}" title="{{ coupon.title }}">{{ coupon.title }}</a>
                             <div class="rows">
-                                <font class="old">{{ currency|getSymbol }} {{ price|formatPrice }}</font>
-                                <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                                <font class="old">{{ coupon.currency|getSymbol }} {{ coupon.price|formatPrice }}</font>
+                                <font class="number">{{ coupon.currency|getSymbol }} {{ coupon.price|discountPrice:coupon.coupon }}</font>
                             </div>
                             <div class="rows">
                                 <i class="icons i-clock"></i>
                                 <label>{% trans "Till the end" %}:</label>
-                                <div class="countdowntext"  data-countdown="{{ end_date|date:"U" }}"></div>
+                                <div class="countdowntext"  data-countdown="{{ coupon.coupon_end|date:"U" }}"></div>
                             </div>
                         </div>
                     </li>
@@ -250,12 +174,6 @@
                 </ul>
                 {% endif %}
                 {% endif %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
 
             {% include "paginator.html" %}
