@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block header %}
-    {% companyMenuB2C productValues.company "products" %}
+    {% companyMenuB2C company.pk "products" %}
 {% endblock %}
 
 {% block body %}
@@ -103,43 +103,36 @@
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:main" productValues.company %}" property="v:title" rel="v:url">{{ name }}</a>
+                        <a href="{% url "companies:main" company.pk %}" property="v:title" rel="v:url">{{ company.title }}</a>
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:products" productValues.company %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
+                        <a href="{% url "companies:products" company.pk %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                     </span>
 				</div>
 			</div>
             <div class="title-items">
 				<a href="javascript:history.back()" class="btnback">← {% trans "Back to catalog" %}</a>
 			</div>
-                    {% with productValues.title as name  %}
-                    {% with productValues.image as picture  %}
-                    {% with productValues.anons as anons  %}
-                    {% with productValues.text as content  %}
-                    {% with productValues.currency as currency  %}
-                    {% with productValues.price as price  %}
-                    {% with productValues.discount as discount %}
-                    {% with productValues.coupon as coupon_discount %}
-			<div class="titleproduct">{{ name }}</div>
+
+			<div class="titleproduct">{{ productValues.title }}</div>
 
             <div id="details-prd">
 				<div class="galleryprd">
-                    <p><font class="id">{% trans "Product ID" %}: {{ item_id }}</font></p>
+                    <p><font class="id">{% trans "Product ID" %}: {{ productValues.pk }}</font></p>
 					<div class="imagelib">
 						<div class="imgout">
 							<div id="imagebig">
                                 <a href="#" data-index="0" class="bzoom"><i class="icons i-zoom"></i></a>
-								<img src="{{ MEDIA_URL }}big/{{ picture }}" border="0" />
+								<img src="{{ MEDIA_URL }}big/{{ productValues.image }}" border="0" />
 							</div>
 						</div>
 						<ul class="allthumb">
 							<li>
-                                <a href="#"  data-big="{{ MEDIA_URL }}big/{{ picture }}" class="image">
-                                    <img src="{{ MEDIA_URL }}small/{{ picture }}" class="imagesmall" border="0"/>
+                                <a href="#"  data-big="{{ MEDIA_URL }}big/{{ productValues.image }}" class="image">
+                                    <img src="{{ MEDIA_URL }}small/{{ productValues.image }}" class="imagesmall" border="0"/>
                                 </a>
-                                <a href="{{ MEDIA_URL }}big/{{ picture }}" class="fancybox" rel="gallery" style="display: none;"></a>
+                                <a href="{{ MEDIA_URL }}big/{{ productValues.image }}" class="fancybox" rel="gallery" style="display: none;"></a>
                             </li>
 						</ul>
 					</div>
@@ -148,23 +141,23 @@
 				<div class="infodetails">
 					<div class="pricedt">
                         {% if coupon_discount.title %}
-                            <p><font class="price1"> {{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                            <p><font class="price1"> {{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
-                                    {{ currency|getSymbol  }} {{ price|discountPrice:coupon_discount.title }}
+                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.coupon }}
                                 </font>
                             </p>
                         {% elif discount %}
-                            <p><font class="price1">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                            <p><font class="price1">{{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
-                                    {{ currency|getSymbol  }} {{ price|discountPrice:discount }}
+                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.discount }}
                                 </font>
                             </p>
                         {% else %}
 						    <p>
                                 <font class="price2">
-                                    {{ currency|getSymbol  }} {{ price|formatPrice }}
+                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|formatPrice }}
                                 </font>
                             </p>
                         {% endif %}
@@ -176,8 +169,8 @@
                                 <label>{% trans "Discount will end in" %}:</label>
                                 <div class="countdowntext"
                                      {% if discount %}
-                                        data-discount="{{ currency|getSymbol  }} {{ price|discountPrice:discount }}"
-                                     {% endif %}  data-countdown="{{ coupon_discount.end_date|date:"U" }}">
+                                        data-discount="{{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.discount }}"
+                                     {% endif %}  data-countdown="{{ productValues.coupon_end|date:"U" }}">
                                 </div>
                             </div>
                         </div>
@@ -206,7 +199,7 @@
                             <a href="javascript:void(0);" onclick="$(this).closest('form').submit();" class="bigbuy">{% trans "Buy" %}</a>
 
                             <div class="wl favorite">
-                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ item_id }}" ></i>
+                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ productValues.pk }}" ></i>
                                 <p><a href="#"  class="wish">{% trans 'Favorite' %}</a></p>
                             </div>
                         </div>
@@ -225,24 +218,19 @@
 					</div>
 					<div class="configuration">
 						<ul>
+                            {% if productValues.anons %}
 							<li>
 								<span class="left">{% trans "Short description" %}:</span>
-								<span class="right">{{ anons }}</span>
+								<span class="right">{{ productValues.anons }}</span>
 							</li>
+                            {% endif %}
 							<li>
 								<span class="left">{% trans "Complete description" %}</span>
-								<span class="right">{{ content|striptags }}</span>
+								<span class="right">{{ productValues.text|striptags }}</span>
 							</li>
 
 						</ul>
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
+
 
 					</div>
 
@@ -314,12 +302,12 @@
                         <h1>{% trans "Similar products" %} </h1>
 
                         <ul id="slider2">
-                          {% for id , attr  in sameProducts.items %}
+                          {% for prod  in sameProducts %}
 
-                            {% with attr.NAME|first as name  %}
-                            {% with attr.COST|first as cost  %}
-                            {% with attr.CURRENCY|first as currency  %}
-                            {% with attr.IMAGE|first as picture  %}
+                            {% with prod.title as name  %}
+                            {% with prod.price as cost  %}
+                            {% with prod.currency as currency  %}
+                            {% with prod.image as picture  %}
 
                             {% if  forloop.counter == 1 %}
                                 <li>

@@ -61,7 +61,8 @@ def productDetail(request, item_id, page=1):
         'paginator_range': paginator_range,
         'page': page,
         'store_url': store_url,
-        'favorite': favorite
+        'favorite': favorite,
+        'company': SearchQuerySet().models(Company).filter(django_id=productValues.company)[0]
     }
 
     return render_to_response("Product/detail.html", templateParams, context_instance=RequestContext(request))
