@@ -30,8 +30,6 @@
 {% block body %}
 		<div id="main">
             <div id="sidebar">
-                {% include "Company/store_categories.html" %}
-                {% include "popular.html" %}
                     <div class="bestbuy">
                         <div class="items-coupon">
                             <h3>{% trans 'Best buy products' %}</h3>
@@ -65,40 +63,32 @@
             <div id="main-r">
 
                 <ul id="listitems">
-                    {% for id , product in products.items %}
-                         {% with product.NAME|first as name %}
-                         {% with product.IMAGE|first as picture %}
-                         {% with product.COST|first as price %}
-                         {% with product.CURRENCY|first as currency %}
-                         {% with product.DISCOUNT|first as discount %}
-                         {% with product.COUPON_DISCOUNT|first as coupon_discount %}
-                         {% with product.COMMENTS as comment %}
-                         {% with product.FAVORITE as favorite %}
+                    {% for prod in object_list %}
                     <li>
-                        {% if coupon_discount %}
-                            <div class="discount"><i class="icons i-after"></i> -{{ coupon_discount }}%</div>
-                        {% elif discount %}
-                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                        {% if prod.coupon %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ prod.coupon }}%</div>
+                        {% elif prod.discount %}
+                            <div class="discount"><i class="icons i-after"></i> -{{ prod.discount }}%</div>
                         {% endif %}
-                        <a href="{% url "products:detail" id %}">
-                       <div class="img_gallery">
+                        <a href="{% url "products:detail" prod.pk %}">
+                        <div class="img_gallery">
                             <div class="shadow"></div>
                             <div class="img_block">
 
-                                <img src="{{ MEDIA_URL }}big/{{ picture }}" alt="{{ name }}" >
+                                <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.title }}" >
                             </div>
                         </div>
                     </a>
-                        <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                        <p><a href="{% url "products:detail" prod.pk %}">{{ prod.title }}</a></p>
                         <div class="price">
-                            {% if coupon_discount %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|discountPrice:coupon_discount }}</font>
-                                <p><font class="price-old">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                            {% if prod.coupon %}
+                                <font class="num">{{ prod.currency|getSymbol }} {{ prod.price|discountPrice:prod.coupon }}</font>
+                                <p><font class="price-old">{{ prod.currency|getSymbol }} {{ prod.price|formatPrice }}</font></p>
                             {% elif discount %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
-                                <p><font class="price-old">{{ currency|getSymbol }} {{ price|formatPrice }}</font></p>
+                                <font class="num">{{ prod.currency|getSymbol }} {{ prod.price|discountPrice:prod.discount }}</font>
+                                <p><font class="price-old">{{ prod.currency|getSymbol }} {{ prod.price|formatPrice }}</font></p>
                             {% else %}
-                                <font class="num">{{ currency|getSymbol }} {{ price|formatPrice }}</font>
+                                <font class="num">{{ prod.currency|getSymbol }} {{ prod.price|formatPrice }}</font>
                             {% endif %}
 
                         </div>
@@ -106,21 +96,13 @@
                             <img src="{% static "centerpokupok/images/stars.png"  %}" alt="" class="star">
                             <div class="comment">
                                 <i class="icons icon-cmt"></i>
-                                <label><a href="{% url "products:detail" id %}">{{ comment }}</a></label>
+                                <label><a href="{% url "products:detail" prod.pk %}">0</a></label>
                             </div>
                              <a href="#" class="favorite" >
-                                <i class="icons {% if favorite == 1%}icon-colored-heart {% else %}icon-heart{% endif %}" data-gid="{{ id }}"></i>
+                                <i class="icons {% if prod.pk in favorite %}icon-colored-heart {% else %}icon-heart{% endif %}" data-gid="{{ prod.pk }}"></i>
                             </a>
                         </div>
                     </li>
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
                     {% endfor %}
 
                 </ul>

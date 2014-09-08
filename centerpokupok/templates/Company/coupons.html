@@ -49,8 +49,6 @@
     <div id="main">
             <div id="sidebar">
 
-                {% include "Company/store_categories.html" %}
-                {% include "popular.html" %}
                 <div class="bestbuy">
                     <div class="items-coupon">
                         <h3>{% trans 'Best buy products' %}</h3>
@@ -83,28 +81,20 @@
             </div>
             <div id="main-r">
 
-            {% for id, attr in coupons.items %}
-
-                {% with attr.NAME as name  %}
-                {% with attr.COUPON_DISCOUNT as discount  %}
-                {% with attr.IMAGE as picture  %}
-                {% with attr.COUPON_DISCOUNT_END_DATE as end_date  %}
-                {% with attr.COST as price  %}
-                {% with attr.CURRENCY as currency  %}
-
+            {% for prod in object_list %}
                 {% if forloop.first %}
                 <div class="coupontop">
                     <div class="thumb-cp">
-                        <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
-                        <a href="{% url "products:detail" id %}" title="{{ name }}">
-                            <img width="300" height="225" alt="{{ name }}" src="{{ MEDIA_URL }}big/{{ picture }}" />
+                        <div class="discount"><i class="icons i-after"></i> -{{ prod.discount }}%</div>
+                        <a href="{% url "products:detail" prod.pk %}" title="{{ prod.title }}">
+                            <img width="300" height="225" alt="{{ prod.title }}" src="{{ MEDIA_URL }}big/{{ prod.image }}" />
                         </a>
                     </div>
                     <div class="couponinfo">
-                        <a href="{% url "products:detail" id %}">{{ name }}</a>
+                        <a href="{% url "products:detail" prod.pk %}">{{ prod.title }}</a>
                         <div class="clock">
                             <p>{% trans "Time till the end" %}</p>
-                            <div id="topCountdown" data-countdown="{{ end_date|date:"U" }}"></div>
+                            <div id="topCountdown" data-countdown="{{ prod.coupon_end|date:"U" }}"></div>
                         </div>
                     </div>
                     <div class="bottom-cp">
@@ -112,7 +102,7 @@
                             <span>
                                 <p>
                                     <font class="price1">
-                                        {{ currency|getSymbol }} {{ price|discountPrice:discount }}
+                                        {{ prod.currency|getSymbol }} {{ prod.price|discountPrice:discount }}
                                     </font>
                                 </p>
                             </span>
@@ -120,12 +110,12 @@
                                 <p>{% trans "You save" %}</p>
                                 <p>
                                     <font class="price2">
-                                        {{ currency|getSymbol }} {{  price|discountDiff:discount }}
+                                        {{ prod.currency|getSymbol }} {{  prod.price|discountDiff:discount }}
                                     </font>
                                 </p>
                             </span>
                         </div>
-                        <a href="{% url "products:detail" id %}" class="btnbuy">{% trans "Buy" %}</a>
+                        <a href="{% url "products:detail" prod.pk %}" class="btnbuy">{% trans "Buy" %}</a>
                     </div>
                 </div>
                 {% else %}
@@ -135,21 +125,21 @@
                 {% endif %}
                     <li>
                         <div class="thumb">
-                            <a href="{% url "products:detail" id %}" title="{{ name }}">
-                                <img width="140" height="100" src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}" />
+                            <a href="{% url "products:detail" prod.pk %}" title="{{ prod.title }}">
+                                <img width="140" height="100" src="{{ MEDIA_URL }}small/{{ prod.image }}" alt="{{ prod.title }}" />
                             </a>
-                            <div class="discount"><i class="icons i-after"></i> -{{ discount }}%</div>
+                            <div class="discount"><i class="icons i-after"></i> -{{ prod.discount }}%</div>
                         </div>
                         <div class="discountinfo">
-                            <a href="{% url "products:detail" id %}" title="{{ name }}">{{ name }}</a>
+                            <a href="{% url "products:detail" prod.pk %}" title="{{ prod.title }}">{{ prod.title }}</a>
                             <div class="rows">
-                                <font class="old">{{ currency|getSymbol }} {{ price|formatPrice }}</font>
-                                <font class="number">{{ currency|getSymbol }} {{ price|discountPrice:discount }}</font>
+                                <font class="old">{{ prod.currency|getSymbol }} {{ prod.price|formatPrice }}</font>
+                                <font class="number">{{ prod.currency|getSymbol }} {{ prod.price|discountPrice:prod.discount }}</font>
                             </div>
                             <div class="rows">
                                 <i class="icons i-clock"></i>
                                 <label>{% trans "Till the end" %}:</label>
-                                <div class="countdowntext"  data-countdown="{{ end_date|date:"U" }}"></div>
+                                <div class="countdowntext"  data-countdown="{{ prod.coupon_end|date:"U" }}"></div>
                             </div>
                         </div>
                     </li>
@@ -157,12 +147,6 @@
                 </ul>
                 {% endif %}
                 {% endif %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
             {% endfor %}
 
             {% include "paginator.html" %}

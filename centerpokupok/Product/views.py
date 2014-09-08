@@ -22,6 +22,7 @@ from django.db import transaction
 import json
 
 def productDetail(request, item_id, page=1):
+
     if request.POST.get('subCom', False):
         form = addComment(request, item_id)
         if isinstance(form, HttpResponseRedirect):
@@ -31,53 +32,9 @@ def productDetail(request, item_id, page=1):
 
     product = get_object_or_404(Product, pk=item_id)
 
-    productValues = product.getAttributeValues("NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY', 'DISCOUNT', 'ANONS')
-    productCoupon = product.getAttributeValues('COUPON_DISCOUNT', fullAttrVal=True)
+    productValues = SearchQuerySet().models(Product).filter(django_id=item_id)[0]
 
-    category = Category.objects.filter(p2c__child_id=item_id).values_list("pk")
-    sameProducts = Product.active.get_active_related().filter(c2p__parent_id__in=category).exclude(pk=item_id)
-    product_id = [prod.id for prod in sameProducts]
-    sameProducts = Item.getItemsAttributesValues(("NAME", "IMAGE", "CURRENCY", "COST"), product_id)
-
-    try:
-        company = Company.active.get_active_related().get(p2c__child_id=item_id)
-        storeCategories = company.getStoreCategories()
-
-
-        attr = company.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
-
-        name = attr['NAME'][0]
-        picture = attr.get('IMAGE',[''])[0]
-        companyID = company.pk
-    except ObjectDoesNotExist:
-        pass
-
-
-
-    #----------- Popular Products ----------------#
-
-
-    popular = Product.getTopSales(Product.active.get_active_related())[:4]
-    product_id = [product.pk for product in popular]
-    popular = Item.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'DISCOUNT',
-                                                         'COUPON_DISCOUNT'), product_id)
-
-    #----------- Category Hierarchy ----------------#
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-
-
-    #----------- Store Categories ----------------#
-    root_cats = [cat['ID'] for cat in hierarchyStructure if cat['LEVEL'] == 1]
-    storeCategories = func._categoryStructure(hierarchyStructure, storeCategories, categories, root_cats)
-
-    #----------- Country List ----------------#
-    contrySorted = func.sortByAttr("Country", "NAME")
-    sorted_id  = [coun.id for coun in contrySorted]
-    countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
-
+    sameProducts = SearchQuerySet().models(Product).filter(categories__in=productValues.categories).exclude(django_id=item_id)[:4]
     #-------- Comments ----------------#
     result = _getComment(item_id, page)
     commentsList = result[0]
@@ -87,17 +44,27 @@ def productDetail(request, item_id, page=1):
     dictionaryLabels = {"DETAIL_TEXT": _("Comment")}
     form.setlabels(dictionaryLabels)
 
-    url_paginator = "products:paginator"
-    url_parameter = [item_id]
     store_url = 'companies:products_category'
+
+    favorite = 0
 
     if request.user.is_authenticated():
         try:
             favorite = Favorite.active.get_active_related().get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
         except ObjectDoesNotExist:
-            favorite = 0
+            pass
 
-    return render_to_response("Product/detail.html", locals(), context_instance=RequestContext(request))
+    templateParams = {
+        'productValues': productValues,
+        'sameProducts': sameProducts,
+        'commentsList': commentsList,
+        'paginator_range': paginator_range,
+        'page': page,
+        'store_url': store_url,
+        'favorite': favorite
+    }
+
+    return render_to_response("Product/detail.html", templateParams, context_instance=RequestContext(request))
 
 
 def addComment(request, item_id):
@@ -131,17 +98,6 @@ class getProductList(ItemsList):
         sellers_ids = [obj.company for obj in object_list]
 
         return SearchQuerySet().models(Company).filter(django_id__in=sellers_ids)
-
-
-    def _get_favorites(self, object_list):
-        if self.request.user.is_authenticated():
-            obj_ids = [obj.pk for obj in object_list]
-            return list(
-                Favorite.objects.filter(c2p__parent__cabinet__user=self.request.user, p2c__child__in=obj_ids)
-                    .values_list("p2c__child", flat=True)
-            )
-
-        return []
 
     def _get_breadcrumb(self):
 
@@ -180,7 +136,7 @@ class getProductList(ItemsList):
         return sqs.filter(parent=0)[:limit]
 
     def get_context_data(self, **kwargs):
-        context = super(ItemsList, self).get_context_data(**kwargs)
+        context = super(getProductList, self).get_context_data(**kwargs)
 
 
         context['breadcrumb'] = self._get_breadcrumb()

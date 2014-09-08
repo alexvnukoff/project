@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-
+{% load inclusionTags %}
 {% block title %}{% trans 'Product detail' %}{% endblock %}
 
 
@@ -73,16 +73,12 @@
 {% endblock %}
 
 {% block header %}
-    {% include "Company/header.html" %}
+    {% companyMenuB2C companyID "products" %}
 {% endblock %}
 
 {% block body %}
    	<div id="main">
 		<div id="sidebar">
-			{% include "Company/store_categories.html" %}
-
-			{% include "popular.html" %}
-
 			<div class="bestbuy">
 				<div class="items-coupon">
 					<ul>
@@ -118,15 +114,14 @@
             <div class="title-items">
 				<a href="javascript:history.back()" class="btnback">← {% trans "Back to catalog" %}</a>
 			</div>
-                    {% with productValues as  attr   %}
-                    {% with attr.NAME|first as name  %}
-                    {% with attr.IMAGE|first as picture  %}
-                    {% with attr.ANONS|first as anons  %}
-                    {% with attr.DETAIL_TEXT|first as content  %}
-                    {% with attr.CURRENCY|first as currency  %}
-                    {% with attr.COST|first as price  %}
-                    {% with attr.DISCOUNT|first as discount %}
-                    {% with productCoupon|first as coupon_discount %}
+                    {% with productValues.title as name  %}
+                    {% with productValues.image as picture  %}
+                    {% with productValues.anons as anons  %}
+                    {% with productValues.text as content  %}
+                    {% with productValues.currency as currency  %}
+                    {% with productValues.price as price  %}
+                    {% with productValues.discount as discount %}
+                    {% with productValues.coupon as coupon_discount %}
 			<div class="titleproduct">{{ name }}</div>
 
             <div id="details-prd">
@@ -240,7 +235,6 @@
 							</li>
 
 						</ul>
-                        {% endwith %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}

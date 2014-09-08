@@ -1,13 +1,15 @@
+from django.http import HttpResponseNotFound
 from django.utils.timezone import now
 from haystack.backends import SQ
 from haystack.query import SearchQuerySet
+from centerpokupok.Product.views import getProductList
+from centerpokupok.cbv import ItemsList
 
 __author__ = 'user'
 from core.models import Item
-from appl.models import Company, Category, Product, Comment, Cabinet, Favorite
+from appl.models import Company, Category, Product, Comment, Favorite
 from django.shortcuts import render_to_response, get_object_or_404
 from appl import func
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.db.models import Count
 from django.template import RequestContext
@@ -15,7 +17,9 @@ from django.template import RequestContext
 
 def storeMain(request, company, category=None):
 
-    get_object_or_404(Company, pk=company)
+    if not Company.objects.filter(pk=company).exists():
+        return HttpResponseNotFound()
+
 
     #----NEW PRODUCT LIST -----#
     newProducrList = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID, company=company)\
@@ -46,49 +50,67 @@ def storeMain(request, company, category=None):
         .filter(SQ(coupon=0) | SQ(coupon_end__lte=now()) | SQ(coupon_start__gt=now()),
                 sites=settings.SITE_ID, company=company, discount__gt=0).order_by('-discount')[:15]
 
+    templateParams = {
+        'companyID': company,
+        'coupons': coupons,
+        'productsSale': productsSale,
+        'newProducrList': newProducrList,
+        'topPoductList': topPoductList, 'menu': 'main',
+        'store_url': 'companies:category'
+    }
 
-    return render_to_response("Company/index.html", {'companyID': company, 'coupons': coupons,
-                                                     'productsSale': productsSale, 'newProducrList': newProducrList,
-                                                     'topPoductList': topPoductList, 'menu': 'main',
-                                                     'store_url': 'companies:category'},
-                              context_instance=RequestContext(request))
+
+    return render_to_response("Company/index.html", templateParams, context_instance=RequestContext(request))
 
 def about(request, company):
-    companyObj = get_object_or_404(Company, pk=company)
-
-    popular = Product.getTopSales().filter(sites=settings.SITE_ID)[:4]
-    popular = [prd.pk for prd in popular]
-
-    popular = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT','DISCOUNT'),
-                                                     popular)
-
-    #------------------- Company Details --------------------#
-    attr = companyObj.getAttributeValues('NAME', 'IMAGE', 'DETAIL_TEXT')
-    name = attr.get('NAME', [''])[0]
-    picture = attr.get('IMAGE', [''])[0]
-    detail_text = attr.get('DETAIL_TEXT', [''])[0]
+    if not Company.objects.filter(pk=company).exists():
+        return HttpResponseNotFound()
 
 
-    return render_to_response("Company/about.html", {'companyID': company, 'name': name, 'picture': picture,
-                                                     'menu': 'about', 'detail_text': detail_text, 'popular': popular,
-                                                     'user': request.user},
-                              context_instance=RequestContext(request))
+    templateParams = {
+        'companyID': company,
+        'detail_text': SearchQuerySet().models(Company).filter(django_id=company)[0].text,
+    }
+
+    return render_to_response("Company/about.html", templateParams, context_instance=RequestContext(request))
 
 def contact(request, company):
-    companyObj = get_object_or_404(Company, pk=company)
 
-    #------------------- Company Details --------------------#
-    attr = companyObj.getAttributeValues('NAME', 'IMAGE', 'SITE_NAME', 'EMAIL', 'TELEPHONE_NUMBER')
-    picture = attr.get('IMAGE', [''])[0]
-    name = attr['NAME'][0]
+    if not Company.objects.filter(pk=company).exists():
+        return HttpResponseNotFound()
 
 
-    return render_to_response("Company/contact.html", {'companyID': company, 'name': name, 'attr': attr,
-                                                       'menu': 'contact', 'user': request.user, 'picture': picture},
-                              context_instance=RequestContext(request))
+    templateParams = {
+        'companyID': company,
+    }
 
+    return render_to_response("Company/contact.html", templateParams, context_instance=RequestContext(request))
+
+class companyProductList(ItemsList):
+
+    model = Product
+    template_name = "Company/products.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(companyProductList, self).get_context_data(**kwargs)
+
+        context['favorite'] = self._get_favorites(context['object_list'])
+
+        return context
+
+    def get_queryset(self):
+        sqs = super(companyProductList, self).get_queryset()
+
+        company = self.kwargs.get('company')
+
+        return sqs.filter(company=company)
+
+
+'''
 def products(request, company, category=None, page=1):
+
     companyObj = get_object_or_404(Company, pk=company)
+
     filter = {}
 
     if category:
@@ -98,27 +120,7 @@ def products(request, company, category=None, page=1):
 
     products = Product.getNew().filter(sites=settings.SITE_ID, c2p__parent_id=company).filter(**filter)
 
-    popular = Product.getTopSales().filter(sites=settings.SITE_ID)[:4]
-    popular = [prd.pk for prd in popular]
 
-    popular = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT','DISCOUNT'),
-                                                     popular)
-
-    #------------------- Company Details --------------------#
-    attr = companyObj.getAttributeValues('NAME', 'IMAGE')
-    name = attr['NAME'][0]
-    picture = attr.get('IMAGE', [''])[0]
-
-    #-------------- Store Categories ---------------#
-    storeCategories = companyObj.getStoreCategories()
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    root_cats = [cat['ID'] for cat in hierarchyStructure if cat['LEVEL'] == 1]
-    categories = Item.getItemsAttributesValues(("NAME",), root_cats)
-
-    storeCategories = func._categoryStructure(hierarchyStructure, storeCategories, categories)
-
-    result = func.setPaginationForItemsWithValues(products, "NAME", 'DETAIL_TEXT', 'IMAGE', 'COST', 'CURRENCY',
-                                                 'DISCOUNT', 'COUPON_DISCOUNT', page_num=12, page=page)
     #Product list , with companies and countries
     products = result[0]
     products_ids = [key for key, value in products.items()]
@@ -215,3 +217,17 @@ def coupons(request, company, category=None, page=1):
                                                        'url_parameter': url_parameter, 'coupons': coupons,
                                                        'popular': popular, 'user': request.user},
                               context_instance=RequestContext(request))
+'''
+
+
+class companyCoupontList(ItemsList):
+
+    model = Product
+    template_name = "Company/coupons.html"
+
+    def get_queryset(self):
+        sqs = super(companyCoupontList, self).get_queryset()
+
+        company = self.kwargs.get('company')
+
+        return sqs.filter(coupon__gt=0, coupon_end__gt=now(), coupon_start__lte=now(), company=company)
