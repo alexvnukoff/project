@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
 {% block title %}{% trans 'Products' %}{% endblock %}
 
@@ -23,7 +24,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include "Company/header.html" %}
+    {% companyMenuB2C companyID "products" %}
 {% endblock %}
 
 {% block body %}
