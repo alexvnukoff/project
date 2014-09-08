@@ -38,10 +38,11 @@
                 var until = parseInt(bigCoupon.data('countdown')) * 1000;
                 bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
             }
-        })
+        });
         $(function () {
             $('.countdowntext').each(function() {
                 var until = parseInt($(this).data('countdown')) * 1000;
+
                 now = +new Date();
                 var lay = ((until - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
                 $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
@@ -53,7 +54,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include "Company/header.html" %}
+    {% companyMenuB2C companyID "main" %}
 {% endblock %}
 
 {% block body %}

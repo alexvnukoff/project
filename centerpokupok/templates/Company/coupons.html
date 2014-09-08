@@ -27,7 +27,7 @@
                 var until = parseInt(bigCoupon.data('countdown')) * 1000;
                 bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
             }
-        })
+        });
         $(function () {
             $('.countdowntext').each(function() {
                 var until = parseInt($(this).data('countdown')) * 1000;

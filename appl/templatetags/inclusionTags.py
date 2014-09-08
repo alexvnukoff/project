@@ -388,3 +388,16 @@ def mainMenuB2C(context):
         cache.set(cache_name, sortedHierarchyStructure, 60 * 60 * 24 * 7)
 
     return {'sortedHierarchyStructure': sortedHierarchyStructure}
+
+@register.inclusion_tag("Company/header.html", takes_context=True)
+def companyMenuB2C(context, company, menu):
+
+    request = context.get('request')
+    MEDIA_URL = context.get('MEDIA_URL', '')
+
+    return {
+        'company': SearchQuerySet().models(Company).filter(django_id__in=company),
+        'menu': menu,
+        'MEDIA_URL': MEDIA_URL,
+        'user': request.user
+    }
