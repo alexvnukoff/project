@@ -1,3 +1,7 @@
+from django.utils.timezone import now
+from haystack.backends import SQ
+from haystack.query import SearchQuerySet
+
 __author__ = 'user'
 from core.models import Item
 from appl.models import Company, Category, Product, Comment, Cabinet, Favorite
@@ -11,60 +15,42 @@ from django.template import RequestContext
 
 def storeMain(request, company, category=None):
 
-    companyObj = get_object_or_404(Company, pk=company)
-
-    filter = {}
-
-    if category:
-        filter['c2p__parent_id'] = category
+    get_object_or_404(Company, pk=company)
 
     #----NEW PRODUCT LIST -----#
-    products = Product.getNew().filter(sites=settings.SITE_ID, c2p__parent_id=company).filter(**filter)[:4]
-    products = [prd.pk for prd in products]
-    newProducrList = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT', 'DISCOUNT'),
-                                                      products)
+    newProducrList = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID, company=company)\
+        .order_by('-obj_create_date')[:4]
+
+    if category:
+        newProducrList = newProducrList.filter(categories=category)
 
     #----NEW PRODUCT LIST -----#
     products = Product.getTopSales().filter(sites=settings.SITE_ID)
-    popular = products[:4]
-    popular = [prd.pk for prd in popular]
 
-    popular = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT','DISCOUNT'),
-                                                     popular)
+    products = products.filter(c2p__parent_id=company)
 
-    products = products.filter(c2p__parent_id=company).filter(**filter)[:4]
-    products = [prd.pk for prd in products]
+    if category:
+        products = products.filter(c2p__parent_id=category)
 
-    topPoductList = Product.getItemsAttributesValues(("NAME", "COST", "CURRENCY", "IMAGE", 'COUPON_DISCOUNT','DISCOUNT'),
-                                                     products)
+    products = [prd.pk for prd in products[:4]]
+
+    topPoductList = SearchQuerySet().models(Product).filter(django_id__in=products)
 
     #------ 3 Coupons ----------#
-    couponsObj = Product.getCoupons().filter(sites=settings.SITE_ID, c2p__parent_id=company)\
-                     .filter(**filter).order_by('item2value__end_date')[:3]
-
-    coupons_ids = [cat.pk for cat in couponsObj]
-    coupons = Product.getItemsAttributesValues(("NAME", "COUPON_DISCOUNT", "CURRENCY", "COST", "IMAGE"), coupons_ids,
-                                               fullAttrVal=True)
-    coupons = func._setCouponsStructure(coupons)
+    coupons = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID, coupon__gt=0,
+                                                         coupon_end__gt=now(), coupon_start__lte=now(),
+                                                         company=company).order_by('coupon_end')[:3]
 
     #----------- Products with discount -------------#
-    productsSale = Product.getProdWithDiscount().filter(sites=settings.SITE_ID, c2p__parent_id=company)\
-                     .filter(**filter).order_by('item2value__end_date')
+    productsSale = SearchQuerySet().models(Product)\
+        .filter(SQ(coupon=0) | SQ(coupon_end__lte=now()) | SQ(coupon_start__gt=now()),
+                sites=settings.SITE_ID, company=company, discount__gt=0).order_by('-discount')[:15]
 
-    productsSale = func.sortQuerySetByAttr(productsSale, "DISCOUNT", "DESC", "int")[:15]
-    productsSale_ids = [prod.pk for prod in productsSale]
-    productsSale = Product.getItemsAttributesValues(("NAME", "DISCOUNT", "IMAGE", "COST"), productsSale_ids)
 
-    #------------------- Company Details --------------------#
-    attr = companyObj.getAttributeValues('NAME', 'IMAGE')
-    name = attr['NAME'][0]
-    picture = attr.get('IMAGE', [''])[0]
-
-    return render_to_response("Company/index.html", {'companyID': company, 'name': name, 'picture': picture,
-                                                     'coupons': coupons,'productsSale': productsSale,
-                                                     'newProducrList': newProducrList, 'topPoductList': topPoductList,
-                                                     'popular': popular, 'menu': 'main',
-                                                     'store_url': 'companies:category', 'user': request.user},
+    return render_to_response("Company/index.html", {'companyID': company, 'coupons': coupons,
+                                                     'productsSale': productsSale, 'newProducrList': newProducrList,
+                                                     'topPoductList': topPoductList, 'menu': 'main',
+                                                     'store_url': 'companies:category'},
                               context_instance=RequestContext(request))
 
 def about(request, company):
