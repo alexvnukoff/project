@@ -26,7 +26,7 @@
         </div>
         <div class="company-search">
         	<div class="bgsearch">
-                <form id="searchForm" action="{% url "companies:products" %}">
+                <form id="searchForm" action="{% url "companies:products" company.pk %}">
                     <input type="text" name="q" placeholder="{% trans 'Search in the store' %}" class="text">
                 </form>
                 <a onClick="$('#searchForm').submit();" href="#" class="icons btnsl"></a>
