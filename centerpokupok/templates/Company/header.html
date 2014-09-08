@@ -26,10 +26,11 @@
         </div>
         <div class="company-search">
         	<div class="bgsearch">
-                <input type="text" name="" placeholder="{% trans 'Search in the store' %}" class="text">
-                <a href="#" class="icons btnsl"></a>
+                <form id="searchForm" action="{% url "companies:products" %}">
+                    <input type="text" name="q" placeholder="{% trans 'Search in the store' %}" class="text">
+                </form>
+                <a onClick="$('#searchForm').submit();" href="#" class="icons btnsl"></a>
             </div>
-            <p><a href="#">{% trans 'Advanced search' %} &rarr;</a></p>
         </div>
         <div class="sale-left">
             <img src="{% static "centerpokupok/images/gallery/p1.png" %}" alt="" class="avatar">

@@ -101,10 +101,11 @@
                 <div id="homesearch">
                     <div class="bginput">
                         <i class="icon-search imgshop"></i>
-                        <input type="text" name="" placeholder={% trans "Search Products" %} class="text" />
-                         {% categories %}
-                         {% countries %}
+                        <form id="searchForm" action="{% url "products:list" %}">
+                            <input type="text" name="q" placeholder="{% trans "Search Products" %}" class="text" />
+                             {% countries %}
+                        </form>
                     </div>
-                    <a href="#" class="btns">{% trans 'Search' %}</a>
+                    <a href="#" onclick="$('#searchForm').submit();" class="btns">{% trans 'Search' %}</a>
                 </div>
                  {#% flags country url_country url_country_parametr %#}

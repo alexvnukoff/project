@@ -385,13 +385,12 @@ def setCategories(context):
 def setCountries(context):
 
   request = context.get('request')
+  selectd = request.GET.get("country", None)
 
-  contrySorted = func.sortByAttr("Country", "NAME")
-  sorted_id = [coun.pk for coun in contrySorted]
-  countryList = Item.getItemsAttributesValues(("NAME",), sorted_id)
+  countryList = SearchQuerySet().models(Country).order_by('title_sort')
 
   template = loader.get_template('main/Country.html')
-  context = RequestContext(request, {'countryList': countryList})
+  context = RequestContext(request, {'countryList': countryList, 'selectd': selectd})
   categories_select = template.render(context)
 
   return categories_select
