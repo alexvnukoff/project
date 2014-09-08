@@ -212,7 +212,9 @@ def addProductsB2C(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
+            site = Site.objects.get(name="centerpokupok")
+
+            addProductAttrubute.delay(request.POST, request.FILES, user, site.pk,
                                       current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
