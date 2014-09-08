@@ -140,14 +140,14 @@
 
 				<div class="infodetails">
 					<div class="pricedt">
-                        {% if coupon_discount.title %}
+                        {% if productValues.coupon %}
                             <p><font class="price1"> {{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
                                     {{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.coupon }}
                                 </font>
                             </p>
-                        {% elif discount %}
+                        {% elif productValues.discount %}
                             <p><font class="price1">{{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
@@ -162,13 +162,13 @@
                             </p>
                         {% endif %}
 					</div>
-                    {% if coupon_discount %}
+                    {% if productValues.coupon %}
                         <div class="discountinfo">
                             <div class="rows">
                                 <i class="icons i-clock"></i>
                                 <label>{% trans "Discount will end in" %}:</label>
                                 <div class="countdowntext"
-                                     {% if discount %}
+                                     {% if productValues.discount %}
                                         data-discount="{{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.discount }}"
                                      {% endif %}  data-countdown="{{ productValues.coupon_end|date:"U" }}">
                                 </div>
@@ -182,7 +182,7 @@
                             <ul>
                                 <li>
 
-                              <input type="hidden" name="product" value="{{ item_id }}">
+                              <input type="hidden" name="product" value="{{ productValues.pk }}">
 
                                     <label>{% trans "Quantity" %}</label>
 
