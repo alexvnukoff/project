@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block header %}
-    {% companyMenuB2C companyID "products" %}
+    {% companyMenuB2C productValues.company "products" %}
 {% endblock %}
 
 {% block body %}
@@ -103,11 +103,11 @@
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:main" companyID %}" property="v:title" rel="v:url">{{ name }}</a>
+                        <a href="{% url "companies:main" productValues.company %}" property="v:title" rel="v:url">{{ name }}</a>
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:products" companyID %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
+                        <a href="{% url "companies:products" productValues.company %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                     </span>
 				</div>
 			</div>
