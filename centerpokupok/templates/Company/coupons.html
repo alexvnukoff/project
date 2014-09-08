@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 {% load i18n %}
+{% load inclusionTags %}
 
 {% block title %}{% trans "Coupons" %}{% endblock %}
 
@@ -41,7 +42,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include "Company/header.html" %}
+    {% companyMenuB2C companyID "coupons" %}
 {% endblock %}
 
 {% block body %}
