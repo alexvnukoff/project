@@ -258,6 +258,7 @@
                     {% endif %}
 
                 </div>
+                {% if productsSale %}
                 <div id="bestprice-cpn">
                     <div id="bestprice">
                         <h3>{% trans 'Best deals' %}</h3>
@@ -284,6 +285,7 @@
                         </ul>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
 {% endblock %}
