@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.template import RequestContext, loader
@@ -45,7 +46,7 @@ def home(request):
 
     organizationsList = SearchQuerySet().models(Tpp).filter(django_id__in=organizations_id)
 
-    productsList = SearchQuerySet().models(Product).order_by('-obj_create_date')[:3]
+    productsList = SearchQuerySet().models(Product).exclude(sites=Site.objects.get(name="centerpokupok").pk).order_by('-obj_create_date')[:3]
     productsList = func.get_countrys_for_sqs_objects(productsList)
     productsList = func.get_organization_for_objects(productsList)
 

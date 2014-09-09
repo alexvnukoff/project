@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from haystack.query import SearchQuerySet
 from appl import func
@@ -90,7 +91,7 @@ def _wallContent(request):
 
 
     innov_projects = innov_projects.order_by(*order)[:1]
-    products = products.order_by(*order)[:4]
+    products = products.exclude(sites=Site.objects.get(name="centerpokupok").pk).order_by(*order)[:4]
     proposals = proposals.order_by(*order)[:1]
     exhibitions = exhibitions.order_by(*order)[:1]
 
