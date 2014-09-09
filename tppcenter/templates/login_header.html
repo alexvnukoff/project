@@ -12,23 +12,6 @@
         </div>
 
         <div class="tophead-center">
-            <!-- in User is not login show Google translate box here -->
-            {% if not user.email %}
-                <!-- Google Translate injection -->
-                <div id="google_translate_element"></div>
-                <script type="text/javascript">
-                    function googleTranslateElementInit() {
-                        new google.translate.TranslateElement({
-                            pageLanguage: 'en',
-                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                            multilanguagePage: true}, 'google_translate_element');
-                    }
-                </script>
-
-                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                <!-- /Google Translate injection -->
-
-            {% endif %}
         </div>
         <div class="tophead-r">
         {% if user.email %}
