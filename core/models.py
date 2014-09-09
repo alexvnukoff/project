@@ -954,17 +954,44 @@ class Item(models.Model):
                         continue
                     else:
                         # if passed argument itself is NOT a Dictionary, then...
+
                         if not isinstance(attrWithValues[val.attr.title], dict):
-                            if a.dict == None:
-                                val.__dict__['title_' + session_lang] = str(attrWithValues[val.attr.title])
-                                val.__dict__['sha1_code'] = createHash(attrWithValues[val.attr.title])
+                            step = 1
+                        else:
+                            try:
+                                int(list(attrWithValues[val.attr.title].keys())[0])
+                                step = 3
+                            except ValueError:
+                                step = 2
+
+
+                        if step in (1, 2):
+
+                            end_date = None
+                            start_date = now()
+
+                            if step == 2:
+                                value = str(attrWithValues[val.attr.title].get('title', ''))
+                                end_date = attrWithValues[val.attr.title].get('end_date', None)
+                                start_date = attrWithValues[val.attr.title].get('start_date', now())
                             else:
-                                slot = Slot.objects.get(id=attrWithValues[val.attr.title], dict=a.dict)
+                                value = str(attrWithValues[val.attr.title])
+
+                            if a.dict == None:
+                                val.__dict__['title_' + session_lang] = value
+                                val.__dict__['sha1_code'] = createHash(value)
+                                val.__dict__['start_date'] = start_date
+                                val.__dict__['end_date'] = end_date
+                            else:
+                                slot = Slot.objects.get(id=int(value), dict=a.dict)
                                 val.__dict__['title_' + session_lang] = slot.__dict__['title_' + session_lang]
                                 val.__dict__['sha1_code'] = createHash(slot.__dict__['title_' + session_lang])
+                                val.__dict__['start_date'] = start_date
+                                val.__dict__['end_date'] = end_date
                         else:
                             # if passed argument itself is Dictionary, then...
                             for arg_key, arg_val in attrWithValues[val.attr.title].items():
+
                                 if int(arg_key) == val.id:
                                     if a.dict == None:
                                         val.__dict__['title_' + session_lang] = str(arg_val)

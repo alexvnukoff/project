@@ -99,7 +99,7 @@
                             {% if product.coupon %}
                                 <font class="num">{{ product.currency|getSymbol }} {{ product.price|discountPrice:product.coupon }}</font>
                                 <p><font class="price-old">{{ currency|getSymbol }} {{ product.price|formatPrice }}</font></p>
-                            {% elif discount %}
+                            {% elif product.discount %}
                                 <font class="num">{{ product.currency|getSymbol }} {{ product.price|discountPrice:product.discount }}</font>
                                 <p><font class="price-old">{{ product.currency|getSymbol }} {{ product.price|formatPrice }}</font></p>
                             {% else %}
