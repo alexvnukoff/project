@@ -273,6 +273,10 @@ def getOwner(item):
 def getLang():
     return trans_real.get_language()
 
+@register.simple_tag()
+def getCountry(obj):
+    return SearchQuerySet().filter(django_id=obj.pk)[0].text
+
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):
     request = context.get('request')

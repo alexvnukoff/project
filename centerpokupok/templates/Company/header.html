@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load CustomFilters %}
 
 <div id="mainpage">
 	<div id="top">
@@ -22,7 +23,7 @@
         <div id="company-info">
         	<span class="company-name">{{ company.title }}</span>
             <p><font class="cpn-no">{% trans "Store No" %}.{{ company.pk }}</font></p>
-            <p>Израиль</p>
+            <p>{% getCountry company.pk %}</p>
         </div>
         <div class="company-search">
         	<div class="bgsearch">

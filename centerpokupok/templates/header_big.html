@@ -21,67 +21,44 @@
                     <div class="head-l">
                         <a href="/" class="imgshop" id="logo">{% trans 'Shopcenter' %}</a>
                         <div id="sl-lang">
-                           <!-- <div id="linklang">
-                                Израиль, Иерусалим
+                            <div id="linklang">
+                                {% trans 'Mother tongue' %}
                                 <i class="icons arrow-lang"></i>
-                            </div> -->
+                            </div>
                             <div class="languagetop">
                                 <ul id="localmenu">
-                                    <li class="level1-li sub"><a class="level1-a" href="#url">Иерусалим<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                                    <!--[if lte IE 6]><table><tr><td><![endif]-->
-                                        <div class="listHolder col1">
-                                            <div class="listCol">
-                                                <ul>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                                    </li>
-                                    <li class="level1-li sub"><a class="level1-a" href="#url">Иерусалим<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                                    <!--[if lte IE 6]><table><tr><td><![endif]-->
-                                        <div class="listHolder col1">
-                                            <div class="listCol">
-                                                <ul>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                                    </li>
-                                    <li class="level1-li sub"><a class="level1-a" href="#url">Иерусалим<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                                    <!--[if lte IE 6]><table><tr><td><![endif]-->
-                                        <div class="listHolder col1">
-                                            <div class="listCol">
-                                                <ul>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                                    </li>
-                                    <li class="level1-li sub"><a class="level1-a" href="#url">Иерусалим<!--[if gte IE 7]><!--></a><!--<![endif]-->
-                                    <!--[if lte IE 6]><table><tr><td><![endif]-->
-                                        <div class="listHolder col1">
-                                            <div class="listCol">
-                                                <ul>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                    <li><a href="#url">Израиль</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    <!--[if lte IE 6]></td></tr></table></a><![endif]-->
-                                    </li>
                                 </ul>
+                                <script>
+                                    var langs = [
+                                        ['am', '{% trans "Armenian" %}'],
+                                        ['ar', '{% trans "Arabic" %}'],
+                                        ['en', '{% trans "English" %}'],
+                                        ['he', '{% trans "Hebrew" %}'],
+                                        ['ru', '{% trans "Russian" %}'],
+                                        ['zh', '{% trans "Chinese" %}'],
+                                        ['uk', '{% trans "Ukrainian" %}']
+                                    ];
+
+                                    var local = $('#localmenu');
+
+                                    for (i in langs)
+                                    {
+                                        var language = langs[i][0];
+                                        var name = langs[i][1];
+
+                                        var host = (window.location.host).split('.');
+
+                                        if (host.length == 3)
+                                            host[0] = language;
+
+                                        host = host.unshift(language).join('.');
+
+                                        host = window.location.protocol + "//" + host + window.location.pathname + window.location.search + window.location.hash;
+
+                                        local.append('<li class="level1-li sub"><a class="level1-a" href="' + host + '">' + name + '</a></li>');
+                                    }
+
+                                </script>
                             </div>
                         </div>
                     </div>
