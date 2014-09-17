@@ -778,15 +778,18 @@ class Item(models.Model):
 
                 pk = False
 
-                if isinstance(value, dict) and value.get('title', False) is False:
-                    continue
+                if isinstance(value, dict):
 
-                if attribute in itemExistsAttribute:
-                    try:
-                        pk = int(value.get('UPDATE', False))
-                        del value['UPDATE']
-                    except ValueError:
-                        pk = list(itemExistsAttribute[attribute])[0]
+                    if value.get('title', False) is False:
+                        continue
+
+                    if attribute in itemExistsAttribute:
+                        try:
+                            pk = int(value.get('UPDATE', False))
+                            del value['UPDATE']
+                        except ValueError:
+                            pk = list(itemExistsAttribute[attribute])[0]
+
                 elif attribute in itemExistsAttribute:
                     pk = list(itemExistsAttribute[attribute].keys())[0]
 
