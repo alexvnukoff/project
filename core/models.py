@@ -972,7 +972,7 @@ class Value(models.Model):
                 for lang in settings.LANGUAGES:
                     value['title_' + lang[0]] = value['title']
 
-                Value.objects.filter(pk=to_update).update(**value)
+            Value.objects.filter(pk=to_update).update(**value)
 
         else:
             if attributeObj.multilingual:
