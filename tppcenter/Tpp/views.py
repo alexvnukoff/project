@@ -43,6 +43,16 @@ class get_tpp_list(ItemsList):
     #allowed filter list
     filterList = ['country']
 
+    def dispatch(self, request, *args, **kwargs):
+
+        user_groups = request.user.groups.values_list('name', flat=True)
+
+        if request.user.is_manager and 'TPP Creator' in user_groups:
+            self.addUrl = 'tpp:add'
+
+        return super().dispatch(request, *args, **kwargs)
+
+
     model = Tpp
 
     def ajax(self, request, *args, **kwargs):

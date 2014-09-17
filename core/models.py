@@ -771,14 +771,14 @@ class Item(models.Model):
             attribute = attr.title
 
             # Value should be a list of values
-            if not isinstance(values, (dict, list)):
+            if not isinstance(values, list):
                 values = [values]
 
             for value in values:
 
                 pk = False
 
-                if value.get('title', False) is False:
+                if isinstance(value, dict) and value.get('title', False) is False:
                     continue
 
                 if attribute in itemExistsAttribute:
@@ -964,9 +964,8 @@ class Value(models.Model):
         if attributeObj.dict:
             value = Value.getDictVal(attributeObj, itemObj, user, value, to_update)
 
-
         if to_update:
-            if attributeObj.multilingual:
+            if not attributeObj.multilingual:
                 for lang in settings.LANGUAGES:
                     value['title_' + lang[0]] = value['title']
 
