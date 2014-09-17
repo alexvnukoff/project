@@ -195,8 +195,7 @@ class ItemsList(HybridListView):
         context['object_list'] = self._get_organization_for_objects(context['object_list'])
 
         context.update({
-            #'filters': self.filters,
-            'filters': {},
+            'filters': self.filters,
             'sortField1': self.sortField1,
             'sortField2': self.sortField2,
             'order1': self.order1,
@@ -242,7 +241,7 @@ class ItemsList(HybridListView):
             obj request - request context
         '''
 
-        session_key_model_name = 'filter_' + self.model.__name__.lower()
+        #session_key_model_name = 'filter_' + self.model.__name__.lower()
 
         filtersIDs = {}
         ids = []
@@ -277,7 +276,7 @@ class ItemsList(HybridListView):
 
         if len(searchFilter) > 0: #Converting a list of filter parameters to big "OR" filter
 
-            self.request.session[session_key_model_name] = self.filters
+            #self.request.session[session_key_model_name] = self.filters
             return eval(' | '.join(searchFilter))
         '''
         elif len(self.request.session.get(session_key_model_name, {})) > 0:
