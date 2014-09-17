@@ -793,7 +793,7 @@ class Item(models.Model):
                 elif attribute in itemExistsAttribute:
                     pk = list(itemExistsAttribute[attribute].keys())[0]
 
-                Value.setValue(attr, self, value, pk)
+                Value.setValue(attr, self, user, value, pk)
 
         # For compatibility do not use it, should be surrounded with try-except
         return True
