@@ -70,7 +70,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     return True
 
 
-#@shared_task
+@shared_task
 def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -88,7 +88,6 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
 
     start_date = post.get('START_DATE', None)
     end_date = post.get('END_DATE', None)
-    category = post.get('CATEGORY', None)
     #is_b2c_product = post.get('B2C_PRODUCT', None)
 
     timezoneInfo = get_current_timezone()
@@ -127,14 +126,11 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
             product.end_date = make_aware(datetime.datetime.strptime(end_date, "%m/%d/%Y"), timezoneInfo)
             product.save()
 
-        if category:
-            category = Category.objects.get(pk=category)
-            Relationship.objects.filter(parent__in=Category.objects.all(), child=product.id).delete()
-            Relationship.setRelRelationship(parent=category, child=product, user=user)
-
         if current_company:
             parent = Organization.objects.get(pk=int(current_company))
             Relationship.setRelRelationship(parent=parent, child=product, type='dependence', user=user)
+
+        Relationship.objects.filter(parent__in=Category.objects.all(), child=product).delete()
 
         for cat in Category.objects.filter(pk__in=categories):
             Relationship.setRelRelationship(parent=cat, child=product, user=user)

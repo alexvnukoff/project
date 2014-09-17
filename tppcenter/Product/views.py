@@ -214,7 +214,7 @@ def addProductsB2C(request):
 
             site = Site.objects.get(name="centerpokupok")
 
-            addProductAttrubute(request.POST, request.FILES, user, site.pk,
+            addProductAttrubute.delay(request.POST, request.FILES, user, site.pk,
                                       current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
@@ -304,7 +304,7 @@ def addProducts(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID,
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
                                       current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
@@ -405,7 +405,7 @@ def updateProduct(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                       lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
@@ -509,7 +509,7 @@ def updateProductB2C(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
                                       lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
