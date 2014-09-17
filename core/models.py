@@ -948,7 +948,7 @@ class Value(models.Model):
         slotValues = Slot.objects.get(dict=attributeObj.dict, pk=slot)
 
         newVals = {
-            'title': slotValues.__dict__['title']
+            'title': slotValues.title
         }
 
         # Prepare fields for slot query to get all lang values
