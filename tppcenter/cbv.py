@@ -195,7 +195,8 @@ class ItemsList(HybridListView):
         context['object_list'] = self._get_organization_for_objects(context['object_list'])
 
         context.update({
-            'filters': self.filters,
+            #'filters': self.filters,
+            'filters': {},
             'sortField1': self.sortField1,
             'sortField2': self.sortField2,
             'order1': self.order1,

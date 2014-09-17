@@ -235,7 +235,7 @@ var ui =
 
     setKeyFilters: function(data)
     { //Removable filters
-        keys = ''
+        keys = '';
 
         if (data.length > 0)
         {

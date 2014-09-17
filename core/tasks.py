@@ -70,7 +70,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
     return True
 
 
-@shared_task
+#@shared_task
 def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -249,8 +249,6 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
     company = form.save(user, site_id, sizes=sizes)
     if company:
-
-
 
         if branch:
             branch = Branch.objects.get(pk=branch)
@@ -813,7 +811,8 @@ def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang
     form.clean()
 
     if form.is_valid():
-        site, created = Site.objects.get_or_create(domain=values['NAME'][0] +'.' + settings.USER_SITES_DOMAIN, name='usersites')
+        sub = values['NAME'][0].lower()
+        site, created = Site.objects.get_or_create(domain=sub + '.' + settings.USER_SITES_DOMAIN, name='usersites')
         user_site = form.save(user, site.pk)
         if user_site:
             user_site.organization = Organization.objects.get(pk=company_id)
