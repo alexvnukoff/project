@@ -943,7 +943,7 @@ class Value(models.Model):
         return self.title
 
     @staticmethod
-    def getDictVal(attributeObj, itemObj, user, slot, to_update):
+    def getDictVal(attributeObj, slot):
 
         slotValues = Slot.objects.get(dict=attributeObj.dict, pk=slot)
 
@@ -965,7 +965,7 @@ class Value(models.Model):
             value = {'title': value}
 
         if attributeObj.dict:
-            value = Value.getDictVal(attributeObj, itemObj, user, value, to_update)
+            value = Value.getDictVal(attributeObj, value['title'])
 
         if to_update:
             if not attributeObj.multilingual:

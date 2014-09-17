@@ -1,12 +1,8 @@
 from django import forms
-from appl.models import Country
+from django.utils.translation import ugettext as _
+
 from core.models import Dictionary
 from appl import func
-from django.utils.translation import ugettext as _
-from django.forms.extras.widgets import SelectDateWidget
-from tpp.SiteUrlMiddleWare import get_request
-
-
 
 
 class ProfileForm(forms.Form):
@@ -62,8 +58,6 @@ class ProfileForm(forms.Form):
 
       email = forms.EmailField(required=True)
       email.widget.attrs.update({'class': 'text'})
-
-
 
       def __init__(self,  *args, **kwargs):
          super(ProfileForm, self).__init__(*args, **kwargs)
