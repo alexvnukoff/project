@@ -275,7 +275,7 @@ def getLang():
 
 @register.simple_tag()
 def getCountry(obj):
-    return SearchQuerySet().filter(django_id=obj.pk)[0].text
+    return SearchQuerySet().filter(django_id=obj)[0].text
 
 @register.simple_tag(name='userName', takes_context=True)
 def setUserName(context):

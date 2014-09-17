@@ -50,8 +50,9 @@
 
                                         if (host.length == 3)
                                             host[0] = language;
-
-                                        host = host.unshift(language).join('.');
+                                        else
+                                            host.unshift(language);
+                                        host = host.join('.');
 
                                         host = window.location.protocol + "//" + host + window.location.pathname + window.location.search + window.location.hash;
 
