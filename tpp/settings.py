@@ -45,10 +45,12 @@ INTERNAL_IPS = ['80.179.7.34']
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = [
-    '.b24online.com', # Also allow FQDN and subdomains
-    '.tppcenter.com', # Also allow FQDN and subdomains
-]
+#ALLOWED_HOSTS = [
+#    '.b24online.com', # Also allow FQDN and subdomains
+#    '.tppcenter.com', # Also allow FQDN and subdomains
+#]
+
+ALLOWED_HOSTS = ['*']
 
 USER_SITES_DOMAIN = "b24online.com"
 
