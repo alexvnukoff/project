@@ -3,9 +3,9 @@
 {% block filterTopContent %}
     {% for name, ids in filters.items %}
         {% if ids %}
-            {% for dict in ids %}
-                {% with dict.id as id %}
-                {% with dict.text as text %}
+            {% for filterDict in ids %}
+                {% with filterDict.id as id %}
+                {% with filterDict.text as text %}
                     <input type="hidden" class="filter-item" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
                 {% endwith %}
                 {% endwith %}

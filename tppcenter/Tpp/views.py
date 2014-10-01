@@ -796,9 +796,9 @@ def galleryStructure(request, item, page=1):
 def galleryRemoveItem(request, item):
     photo = get_object_or_404(Gallery, pk=item)
 
-    comp = Company.objects.get(p2c__child=photo)
+    tpp = Tpp.objects.get(p2c__child=photo)
 
-    permissionsList = comp.getItemInstPermList(request.user)
+    permissionsList = tpp.getItemInstPermList(request.user)
 
 
     if 'change_tpp' in permissionsList:

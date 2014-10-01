@@ -1,3 +1,6 @@
+from collections import OrderedDict
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -8,24 +11,23 @@ from django.shortcuts import render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.forms.models import modelformset_factory
 from django.db.models import get_app, get_models, Q
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
+from django.core.mail import send_mail
+
 from appl.models import Country, Organization, Tpp, Gallery, Cabinet, Notification, \
     Exhibition, Greeting, BusinessProposal, Product, ExternalSiteTemplate, Company
 from tppcenter.forms import ItemForm, BasePhotoGallery
 from appl import func
 from core.models import Item, User
-from collections import OrderedDict
-from django.core.mail import send_mail
-import json
+
 
 @csrf_protect
 def home(request):
@@ -358,6 +360,7 @@ def meth(request):
             form.save(parent=ob.pk, user=request.user)
     return False
 
+@login_required(login_url='/login/')
 def myCompanies(request):
 
     result = {'content': [], 'total': 0}

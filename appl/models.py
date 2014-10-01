@@ -874,6 +874,8 @@ class staticPages(Item):
         ('about', 'About'),
         ('advices', 'Advices'),
         ('contacts', 'Contacts'),
+        ('buyer', 'To buyer'),
+        ('seller', 'To seller'),
     )
 
     onTop = models.BooleanField(default=False)

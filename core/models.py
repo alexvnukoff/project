@@ -740,16 +740,15 @@ class Item(models.Model):
         # Generate slug from NAME attribute
         if 'NAME' in attrWithValues:
 
-            if isinstance(attrWithValues['NAME'], dict) and len(attrWithValues['NAME']) > 0:
-                attrWithValues['SLUG'] = {}
+            slugName = ''
 
-                for attrTitle, attrValue in attrWithValues['NAME'].items():
-
-                    if attrTitle[:5] == 'title':
-                        attrWithValues['SLUG'][attrTitle] = Item.createItemSlug(attrValue, self.pk)
+            if isinstance(attrWithValues['NAME'], dict):
+                slugName = attrWithValues['NAME'].get('title')
 
             elif isinstance(attrWithValues['NAME'], str):
-                attrWithValues['SLUG'] = Item.createItemSlug(attrWithValues['NAME'], self.pk)
+                slugName = attrWithValues['NAME']
+
+            attrWithValues['SLUG'] = Item.createItemSlug(slugName, self.pk)
 
         # Get all passed attributes
         existsAttributes = Attribute.objects.filter(title__in=attrWithValues.keys())

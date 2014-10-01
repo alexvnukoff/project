@@ -1,6 +1,6 @@
 from django.db import models
 from django.db import connection
-from django.db.models import Q, ObjectDoesNotExist
+from django.db.models import ObjectDoesNotExist
 
 
 class hierarchyManager(models.Manager):
@@ -286,6 +286,5 @@ class hierarchyManager(models.Manager):
         else:
             return \
                 self.model.objects.filter(c2p__parent__isnull=True, **filter)[:limit]
-
 
 
