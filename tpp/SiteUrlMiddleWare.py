@@ -87,8 +87,9 @@ class SiteLangRedirect:
                 site = Site.objects.get(pk=settings.SITE_ID)
                 domain = site.domain
                 cache.set(cache_name, domain)
-
-            return HttpResponseRedirect('http://' + request.LANGUAGE_CODE + '.' + domain + request.get_full_path())
+            protocol = 'http' if not request.is_secure() else 'https'
+            
+            return HttpResponseRedirect(protocol + '://' + request.LANGUAGE_CODE + '.' + domain + request.get_full_path())
 
 
 class SubdomainLanguageMiddleware(object):
