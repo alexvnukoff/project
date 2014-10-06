@@ -10,9 +10,12 @@ from celery import shared_task, task
 import json
 from appl import func
 from django.conf import settings
+from core.ExceptionDecorator import log_exception
+
 
 
 @shared_task
+@log_exception('News Task exception')
 def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -71,6 +74,7 @@ def addNewsAttrubute(post, files, user, site_id, addAttr=None, item_id=None, cur
 
 
 @shared_task
+@log_exception('Product Task exception')
 def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -162,6 +166,7 @@ def addProductAttrubute(post, files, user, site_id, addAttr=None, item_id=None, 
 
 
 @shared_task
+@log_exception('Proposal Task exception')
 def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -212,6 +217,7 @@ def addBusinessPRoposal(post, files, user, site_id, addAttr=None, item_id=None, 
     return True
 
 @shared_task
+@log_exception('Company Task exception')
 def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -283,6 +289,7 @@ def addNewCompany(post, files, user, site_id, addAttr=None, item_id=None, branch
 
 
 @shared_task
+@log_exception('Tpp Task exception')
 def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -339,6 +346,7 @@ def addTppAttrubute(post, files, user, site_id, addAttr=None, item_id=None, lang
 
 
 @shared_task
+@log_exception('Tpp news Task exception')
 def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
     timezoneInfo = get_current_timezone()
@@ -398,6 +406,7 @@ def addNewTpp(post, files, user, site_id, addAttr=None, item_id=None, lang_code=
 
 
 @shared_task
+@log_exception('Tender Task exception')
 def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
@@ -437,6 +446,7 @@ def addNewTender(post, files, user, site_id, addAttr=None, item_id=None, current
 
 
 @shared_task
+@log_exception('Resume Task exception')
 def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -464,6 +474,7 @@ def addNewResume(post, files, user, site_id, addAttr=None, item_id=None, lang_co
 
 
 @shared_task
+@log_exception('Exhibition Task exception')
 def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -528,6 +539,7 @@ def addNewExhibition(post, files, user, site_id, addAttr=None, item_id=None, bra
 
 
 @shared_task
+@log_exception('Requirement Task exception')
 def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
 
@@ -572,6 +584,7 @@ def addNewRequirement(post, files, user, site_id, addAttr=None, item_id=None, br
 
 
 @shared_task
+@log_exception('Innovation project Task exception')
 def addNewProject(post, files, user, site_id, addAttr=None, item_id=None, branch=None, current_company=None, lang_code=None):
     trans_real.activate(lang_code)
     Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
@@ -792,6 +805,7 @@ def addTopAttr(post, object, user, site_id, ids, org, factor):
 
 
 @shared_task
+@log_exception('External site Task exception')
 def addNewSite(post, files, user, company_id,  addAttr=None,  item_id=None, lang_code=None):
     trans_real.activate(lang_code)
 
