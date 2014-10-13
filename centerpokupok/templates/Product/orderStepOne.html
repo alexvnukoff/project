@@ -77,6 +77,13 @@
                             <div class="warning">{% if orderForm.errors.recipient_name %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.recipient_name.as_text }}</span></div>
 						</div>
 					</li>
+                	<li>
+						<label class="control-left">{% trans "Region" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ region }}" name="city" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.region %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.region.as_text }}</span></div>
+						</div>
+					</li>
 					<li>
 						<label class="control-left">{% trans "City" %}<b>*</b></label>
 						<div class="control">

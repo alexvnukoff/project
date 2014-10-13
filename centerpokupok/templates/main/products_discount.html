@@ -31,7 +31,7 @@
                     <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
                     <div class="discount-image-holder">
                         <a href="{% url "products:detail" product.pk %}">
-                            <img alt="{{ product.title }}" src="{{ MEDIA_URL }}big/{{ product.image }}" class="thumb" />
+                            <img alt="{{ product.title }}" src="{{ MEDIA_URL }}small/{{ product.image }}" class="thumb" />
                         </a>
                     </div>
                     <a href="{% url "products:detail" product.pk %}" class="name">{{ product.title }}</a>
