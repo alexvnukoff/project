@@ -761,6 +761,7 @@ class Item(models.Model):
 
         #Select existing values for given attributes
         for value in Value.objects.filter(item=self, attr__in=existsAttributes).select_related('attr'):
+
             itemExistsAttribute[value.attr.title] = {
                 value.pk: value
             }
@@ -784,9 +785,9 @@ class Item(models.Model):
 
                     if attribute in itemExistsAttribute:
                         try:
-                            pk = int(value.get('UPDATE', False))
+                            pk = int(value['UPDATE'])
                             del value['UPDATE']
-                        except ValueError:
+                        except (ValueError, KeyError):
                             pk = list(itemExistsAttribute[attribute])[0]
 
                 elif attribute in itemExistsAttribute:
