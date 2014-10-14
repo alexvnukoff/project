@@ -48,12 +48,12 @@ def home(request):
 
     organizationsList = SearchQuerySet().models(Tpp).filter(django_id__in=organizations_id)
 
-    productsList = SearchQuerySet().models(Product).exclude(sites=Site.objects.get(name="centerpokupok").pk).order_by('-obj_create_date')[:3]
+    productsList = func.getActiveSQS().models(Product).exclude(sites=Site.objects.get(name="centerpokupok").pk).order_by('-obj_create_date')[:3]
     productsList = func.get_countrys_for_sqs_objects(productsList)
     productsList = func.get_organization_for_objects(productsList)
 
 
-    serviceList = SearchQuerySet().models(BusinessProposal).order_by('-obj_create_date')[:3]
+    serviceList = func.getActiveSQS().models(BusinessProposal).order_by('-obj_create_date')[:3]
     serviceList = func.get_countrys_for_sqs_objects(serviceList)
     serviceList = func.get_organization_for_objects(serviceList)
 
