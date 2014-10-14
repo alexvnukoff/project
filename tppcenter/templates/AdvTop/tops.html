@@ -22,9 +22,9 @@
                                     {% if top.country.flag %}
                                         <i class="sprite {{ top.country.flag }}"></i>
                                     {% elif top.organizaion.flag %}
-                                        <img class="flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} " />
+                                        <img class="sprite  flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} " />
                                     {% elif top.flag %}
-                                        <img class="flag" src="{{ MEDIA_URL}}th/{{top.flag }} " />
+                                        <img class="sprite flag" src="{{ MEDIA_URL}}th/{{top.flag }} " />
                                     {% endif %}
 
                                     {% if top.title %}

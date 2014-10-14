@@ -163,7 +163,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#f5f5
 .list-ads{ position:relative; float:left; width:178px; margin:0 10px; display:inline;}
 .list-ads li{ float:left; width:100%; padding:12px 0; border-top:1px #FFF solid; border-bottom:1px #cacaca solid;}
 .list-ads li .top{ float: left; width:100%;}
-.list-ads li .top .flag{ float:left; }
+.list-ads li .top .flag{ float:left; width: 20px; height: 15px;}
 .list-ads li .top a.linkads{ display:inline-block; max-width:145px; font-weight: bold;}
 .list-ads li .infoads{ float:left; width:100%; margin:5px 0 0 0; font-size:11px; color:#4a4a4a;}
 .list-ads li .infoads .thumb{ float:left; max-width:60px; max-height:52px; background:url(../img/shadow-ads.png) no-repeat bottom left; padding-bottom:2px; margin-right:8px; display:inline;}
