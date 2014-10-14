@@ -17,6 +17,7 @@ class SearchIndexActive(indexes.SearchIndex):
         return self.get_model().active.get_active()
 
 class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
+
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp_name = indexes.CharField(null=True)

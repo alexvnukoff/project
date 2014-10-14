@@ -961,7 +961,9 @@ def getTops(request, filterAdv=None):
     for item in SearchQuerySet().filter(django_id__in=topList):
         topDict[int(item.pk)] = item
 
-        if getattr(item, 'country', None) and item.country not in countries:
+        country = getattr(item, 'country', None)
+
+        if isinstance(country, int) and country not in countries:
             countries.append(item.country)
         elif getattr(item, 'company', False):
             orgs.append(item.company)
@@ -998,7 +1000,7 @@ def getTops(request, filterAdv=None):
             comapny = getattr(topDict[top], 'company', None)
             tpp = getattr(topDict[top], 'tpp', None)
 
-            if country and country in contryDict:
+            if isinstance(country, int) and country in contryDict:
                 topDict[top].country = contryDict[country]
             elif comapny and comapny in orgDict:
                 topDict[top].organization = orgDict[comapny]
