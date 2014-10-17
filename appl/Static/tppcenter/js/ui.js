@@ -63,7 +63,7 @@ var ui =
 
     init: function()
     {
-	ui.initMenu();
+	    ui.initMenu();
         ui.curPage = $('.cur-page');
         ui.keywords = $('.keyword .list-key');
         ui.filter_form = $('form[name="filter-form"]');
@@ -978,5 +978,318 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         });
         
         return false;
+    }
+};
+
+
+var companyStructure =
+{
+    overlay: '#fade-profile',
+
+    forms: {},
+
+    structureURL: "",
+
+    loader: '<div class="loader">' +
+                '<img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/>' +
+            '</div>',
+
+    init: function(structureURL, LANG) {
+
+        this.LANG = LANG;
+
+        var self = this;
+
+        self.structureURL = structureURL;
+        self.overlay = $(this.overlay);
+
+        self.setForms();
+        self.subIcon();
+
+        // mark Department row in Company-structure
+        $('.sitemap > li a, .vacancy li').on('click', function() {
+            return self.rowClick($(this))
+		});
+
+        $('#add-button').on('click', function() {
+            return self.addNew($(this));
+		});
+
+        // edit Department or Vacancy (popup window)
+        $('#edit-button').on('click', function () {
+            return self.edit($(this))
+        });
+
+        // remove Department or Vacancy
+        $('#remove-button').on('click', function() {
+            return self.remove($(this));
+		});
+    },
+
+
+    setForms: function() {
+        
+        var LANG = this.LANG;
+        
+        this.forms = {
+            vacancy: 
+                '<div class="vacadd" id="add-vac-popup">' +
+                    '<i class="close-formadd imgnews" />' +
+                    '<div class="title">' + LANG['popup_vac'] + '</div>' +
+                    '<div class="staffaddin">' +
+                        '<input type="text" name="" id="vac-name" class="textstructure" />' +
+                        '<div class="formadd-button">' +
+                            '<a class="btntype2" id="btn-add-vacancy" href="#">' + LANG['popup_ok'] + '</a>' +
+                            '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>',
+
+
+            departments:
+                '<div class="staffadd" id="add-dep-popup">' +
+                    '<i class="close-formadd imgnews" />' +
+                    '<div class="title">' + LANG['popup_dep'] + '</div>' +
+                    '<div class="staffaddin">' +
+                        '<input type="text" name="" id="dep-name" class="textstructure" />' +
+                        '<div class="formadd-button">' +
+                            '<a class="btntype2" id="btn-add-depart" href="#">' + LANG['popup_ok'] + '</a>' +
+                            '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+        }
+    },
+
+    subIcon: function() { // show or hide small arrows near the Department name
+        var dep_lst = $('.sitemap li');
+        dep_lst.each(function() {
+            var vac_lst = $(this).find('li');
+            if(vac_lst.size() == 0) {
+                $(this).children('a').css('background', 'none');
+            }
+        });
+    },
+
+    toggleSub: function(link) {
+
+        if (!link)
+            return;
+
+        var sub = link.parent().find(".sub");
+
+        if (sub.is(":hidden")){
+            sub.show();
+            link.addClass('lesssitemap');
+        } else {
+            sub.hide();
+            link.removeClass('lesssitemap');
+        }
+    },
+
+    rowClick: function(clickedItem) {
+
+        var link = null;
+
+        if (!clickedItem.parent().hasClass('vacancy')) { //Department link click
+            link = clickedItem;
+            clickedItem = clickedItem.parent();
+        }
+
+        if (this.item)
+        {
+            this.item.removeClass('selected');
+
+            if (this.item.data('item-id') == clickedItem.data('item-id')) {
+                delete this.item;
+                this.hidePanel();
+                this.toggleSub(link);
+
+                return false;
+            }
+
+        }
+
+
+        clickedItem.addClass('selected');
+        this.item = clickedItem;
+        this.toggleSub(link);
+
+        this.showPanel();
+        return false;
+    },
+
+    showPanel: function() {
+        $('.panel').show();
+    },
+
+    hidePanel: function() {
+        $('.panel').hide();
+    },
+
+    addNew: function(clickedItem) {
+
+        var action = "add";
+
+        // If no row selected , department
+        if(this.item) {
+            this.setVacValues(action);
+        } else {
+            this.setDepValues(action);
+        }
+
+        return false;
+    },
+
+    edit: function(clickedItem) {
+
+        var action = "edit";
+
+        if (this.item) {
+
+            if (!this.item.parent().hasClass('vacancy')) {
+                this.setDepValues(action);
+            } else {
+                this.setVacValues(action);
+            }
+
+        }
+
+        return false;
+    },
+
+    remove: function(clickedItem) {
+        var contentHolder = $('#structure-tab .tpp-dt-content');
+
+        if(this.item && confirm(this.LANG['confirm'])) {
+            this.hidePanel();
+            var id = this.item.data('item-id');
+            delete this.item;
+            contentHolder.html(this.loader);
+
+            $.post(this.structureURL, {id: id, "action": "remove"}, function(data){
+                contentHolder.replaceWith(data);
+            }, 'html');
+        }
+
+        return false;
+    },
+
+    setDepValues: function(action) {
+
+
+        var self = this;
+
+        var form = $(self.forms.departments);
+        var input = form.find('#dep-name');
+
+        if (action == 'edit') {//edit
+            input.val(self.item.text().trim());
+        }
+
+        // press Add button
+	    form.on('click','#btn-add-depart', function() {
+            var name = input.val().trim();
+
+            if (!name)
+                return false;
+
+            var id = null;
+
+            if (self.item)
+                id = self.item.data('item-id');
+
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+            contentHolder.html(self.loader);
+
+
+            $.post(self.structureURL,{ name: name, id: id, action: action}, function(data) {
+                contentHolder.replaceWith(data);
+            }, 'html');
+
+            self.hideOverlay();
+
+            return false;
+		});
+
+        <!-- press Cancel button -->
+	    form.on('click','.btntype1', function() {
+            self.hideOverlay();
+            return false;
+		});
+
+        this.showOverlayForm(form);
+    },
+
+    setVacValues: function(action) {
+
+        var self = this;
+
+        if (!self.item)
+            return false;
+
+        var form = $(self.forms.vacancy);
+
+        var input = form.find('#vac-name');
+
+        var id = null;
+
+        if (action == 'edit') {//edit
+            input.val(self.item.text().trim());
+        } else if (action == "add") {
+            if (this.item.parent().hasClass('department'))
+                id = this.item.data('item-id');
+            else
+                id = this.item.parents('li').data('item-id');
+
+        }
+
+        form.on('click','#btn-add-vacancy', function() {
+            var name = input.val().trim();
+
+            if (!name)
+                return false;
+
+            var contentHolder = $('#structure-tab .tpp-dt-content');
+
+            contentHolder.html(self.loader);
+            self.hideOverlay();
+
+            $.post(self.structureURL, {name: name, id: id, action: action}, function(data) {
+                    contentHolder.replaceWith(data);
+            } , 'html');
+
+
+            return false;
+        });
+
+        // press Cancel button
+        form.on('click','.btntype1', function() {
+            self.hideOverlay();
+            return false;
+        });
+
+        this.showOverlayForm(form);
+    },
+
+    showOverlayForm: function(form) {
+
+        this.hideOverlay();
+
+        this.overlay.show();
+
+        this.form = form;
+
+        $('body').append(this.form);
+    },
+
+    hideOverlay: function() {
+
+        if (this.form) {
+            this.form.remove();
+            delete this.form;
+        }
+
+        this.overlay.hide();
     }
 };

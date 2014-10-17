@@ -357,7 +357,7 @@ class ItemsList(HybridListView):
                 sqs = sqs.filter(searchFilter)
 
 
-        q = self.request.GET.get('q', '')
+        q = self.request.GET.get('q', '').strip()
 
         if q != '': #Search for content
             sqs = sqs.filter(SQ(title=q) | SQ(text=q))

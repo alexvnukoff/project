@@ -23,7 +23,9 @@ class get_news_list(ItemsList):
 
     #Lists of required scripts and styles for ajax request
     styles = [
-        settings.STATIC_URL + 'tppcenter/css/news.css'
+        settings.STATIC_URL + 'tppcenter/css/news.css',
+        settings.STATIC_URL + 'tppcenter/css/company.css',
+        settings.STATIC_URL + 'tppcenter/css/tpp.reset.css'
     ]
 
     current_section = _("TPP-TV")
@@ -32,6 +34,15 @@ class get_news_list(ItemsList):
     filterList = ['tpp', 'country', 'company']
 
     model = TppTV
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if request.user.is_authenticated():
+
+            if request.user.is_superuser or self._is_redactor():
+                self.addUrl = 'tv:add'
+
+        return super().dispatch(request, *args, **kwargs)
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'TppTV/contentPage.html'

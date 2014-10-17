@@ -160,6 +160,7 @@ CACHES = {
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_DOMAIN=".stackoverflow.com"
 
 DATABASES = {
     'default': {

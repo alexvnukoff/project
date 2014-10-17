@@ -3,13 +3,15 @@ import logging
 
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, \
+    HttpResponseNotAllowed
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
@@ -286,166 +288,92 @@ def _tabsInnovs(request, company, page=1):
         return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
 
 
+@transaction.atomic
 def _tabsStructure(request, company, page=1):
     '''
         Show content of the Company-details-structure panel
     '''
-    errorMessage = ''
-    usr = request.user
-    comp = Company.objects.get(pk=company)
 
-    # check Department for deletion
-    departmentForDeletion = request.POST.get('departmentDelID', 0)
-
-    try:
-        departmentForDeletion = int(departmentForDeletion)
-    except ValueError:
-        departmentForDeletion = 0
-
-    if departmentForDeletion > 0:
-        # delete all Department's Vacancies
-        itm_lst = Item.objects.filter(pk=departmentForDeletion)
-
-        for itm in itm_lst:
-            try:
-                Item.hierarchy.deleteTree(itm.pk)
-            except Exception as e:
-                errorMessage = _('Can not delete Department hierarchy. ')
-
-        # delete Department itself
-        dep_lst = Department.objects.filter(pk=departmentForDeletion)
-
-        for d in dep_lst:
-            try:
-                d.delete()
-            except Exception as e:
-                errorMessage = _('Can not delete Department. The reason is: %(reason)s') % {"reason": str(e)}
-                pass
-
-        comp.reindexItem()
-
-    #check if there Department for adding
-    departmentToChange = request.POST.get('departmentName', '')
-
-    if len(departmentToChange):
-        #if update department we receive previous name
-        prevDepName = request.POST.get('prevDepName', '')
-        try:
-            #check is there department with 'old' name
-            obj_dep = Department.objects.get(c2p__parent=company, item2value__attr__title="NAME",
-                                             item2value__title=prevDepName)
-        except:
-            obj_dep = Department.objects.create(title=departmentToChange, create_user=usr)
-            Relationship.setRelRelationship(comp, obj_dep, usr, type='hierarchy')
-            comp.reindexItem()
-
-        obj_dep.setAttributeValue({'NAME': departmentToChange}, usr)
-        obj_dep.reindexItem()
-
-    # add (edit) Vacancy to Department
-    vacancyName = request.POST.get('vacancyName', '')
-
-    if len(vacancyName):
-        #update vacancy if we received previous name
-        prevVacName = request.POST.get('prevVacName', '')
-
-        if len(prevVacName):
-            # edit Vacancy
-            dep_id = request.POST.get('departmentID', 0)
-            dep_id = int(dep_id)
-
-            try:
-                #check is there vacancy with 'old' name
-                vac = Vacancy.objects.get(c2p__parent__c2p__parent=company, c2p__parent=dep_id,
-                                          item2value__attr__title="NAME", item2value__title=prevVacName)
-                vac.setAttributeValue({'NAME': vacancyName}, usr)
-                vac.reindexItem()
-            except:
-                errorMessage = _('Could not find in DB Vacancy %(name)s') % {"name": vacancyName}
-                pass
-        else:
-            # add a new vacancy to Department
-            dep_id = request.POST.get('departmentID', 0)
-            dep_id = int(dep_id)
-
-            if dep_id > 0:
-
-                try:
-                    obj_dep = Department.objects.get(c2p__parent=company, pk=dep_id)
-                    vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(obj_dep.pk), create_user=usr)
-                    res = vac.setAttributeValue({'NAME': vacancyName}, usr)
-
-                    if not res:
-                        vac.delete()
-                        errorMessage = _('Can not set attributes for Vacancy %(name)s') % {"name": vacancyName}
-                    else:
-
-                        try:
-                            Relationship.setRelRelationship(obj_dep, vac, usr, type='hierarchy')
-                            obj_dep.reindexItem()
-                            vac.reindexItem()
-                        except Exception as e:
-                            errorMessage = _('Can not create Relationship between Vacancy %(vac_name)s and Department ID '
-                                             '%(dep_name)s. The reason is: %(reason)s') % {"vac_name": vacancyName,
-                                                                                           "dep_name": str(obj_dep.pk),
-                                                                                           "reason": str(e)}
-                            vac.delete()
-                except Exception as e:
-                    errorMessage = _('Can not create Vacancy for Department ID: %(dep_id)s. The reason is: %(reason)s')\
-                                    % {"dep_id": str(obj_dep.pk), "reason": str(e)}
-                    pass
-
-    # delete Vacancy from Department
-    vacancyID = request.POST.get('vacancyID', 0)
-    vacancyID = int(vacancyID)
-    if vacancyID > 0:
-        try:
-            vac = Vacancy.objects.get(pk=vacancyID)
-            vac.delete()
-        except Exception as e:
-            errorMessage = _('Can not delete Vacancy ID: %(vac_id)s. The reason is: %(reason)s') %\
-                                        {"dep_id": str(vacancyID), "reason": str(e)}
-            pass
-
-    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
-    attr = ('NAME', 'SLUG')
-
-    departmentsList, page = func.setPaginationForSearchWithValues(departments, *attr, page_num=10, page=page)
-
-    paginator_range = func.getPaginatorRange(page)
-    url_paginator = "companies:tab_structure_paged"
-
+    comp = get_object_or_404(Company, pk=company)
     permissionsList = comp.getItemInstPermList(request.user)
 
-    #create list of Company's Vacancies
-    vacancies = func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text')
+    if request.is_ajax() and request.user.is_authenticated():
 
-    vac_lst = [vac.pk for vac in vacancies]
+        if "change_company" not in permissionsList: # Error
+            return HttpResponseBadRequest()
 
-    if len(vac_lst) == 0:
-        vacanciesList = []
-    else:
-        vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
-        # correlation between Departments and Vacancies
-        correlation = list(Department.objects.filter(c2p__parent=company).values_list('pk', 'p2c__child'))
+        try:
+            id = int(request.POST.get("id", 0))
+        except ValueError:
+            id = 0
 
-        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
-        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
-            for t in correlation: #lookup into correlation list
-                if t[1] == vac_id: #if Vacancy ID is equal then...
-                    #... add a new key into Vacancy attribute dictionary
-                    vac_att['DEPARTMENT_ID'] = [t[0]]
-                    break
+        name = request.POST.get('name', '').strip()
+        action = request.POST.get("action", None)
+
+        if action == "add" and len(name) > 0:
+
+            if id == 0: # new department
+                obj_dep = Department.objects.create(title=name, create_user=request.user)
+                Relationship.setRelRelationship(comp, obj_dep, request.user, type='hierarchy')
+                obj_dep.setAttributeValue({'NAME': name}, request.user)
+
+                obj_dep.reindexItem()
+            else: # new vacancy
+                department = get_object_or_404(Department, pk=id)
+                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(department.pk), create_user=request.user)
+                vac.setAttributeValue({'NAME': name}, request.user)
+
+                Relationship.setRelRelationship(department, vac, request.user, type='hierarchy')
+
+                vac.reindexItem()
+
+        elif action == "edit" and id > 0 and len(name) > 0:
+
+            try:
+                obj = Department.objects.get(pk=id)
+            except ObjectDoesNotExist:
+                obj = get_object_or_404(Vacancy, pk=id)
+
+            obj.setAttributeValue({'NAME': name}, request.user)
+
+            obj.reindexItem()
+
+        elif action == "remove" and id > 0:
+            try:
+                obj = Department.objects.get(pk=id)
+                Item.hierarchy.deleteTree(obj.pk)
+            except ObjectDoesNotExist:
+                obj = get_object_or_404(Vacancy, pk=id)
+
+            obj.delete()
+
+    departments = func.getActiveSQS().models(Department).filter(company=company).order_by('text')
+
+    paginator = Paginator(departments, 10)
+    departments = paginator.page(page)
+    paginator_range = func.getPaginatorRange(departments)
+    url_paginator = "companies:tab_structure_paged"
+    departmentsDict = {}
+    departmentsList = []
+
+    for department in departments:
+        department.vacancyList = []
+        departmentsDict[int(department.pk)] = department
+        departmentsList.append(department.pk)
+
+    vacancies = func.getActiveSQS().models(Vacancy).filter(company=company, department__in=departmentsList).order_by('text')
+
+    for vacancy in vacancies:
+        departmentsDict[int(vacancy.department)].vacancyList.append(vacancy)
 
     templateParams = {
-        'departmentsList': departmentsList,
-        'vacanciesList': vacanciesList,
         'permissionsList': permissionsList,
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
-        'errorMessage': errorMessage,
+        'departments': departmentsDict,
+        'item_pk': company
     }
 
     return render_to_response('Companies/tabStructure.html', templateParams, context_instance=RequestContext(request))
@@ -493,7 +421,7 @@ def _tabsStaff(request, company, page=1):
                     vac.setAttributeValue({'NAME': vacancyName}, request.user)
                     Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=request.user)
 
-                usr = User.objects.get(email=userEmail)
+                usr = User.objects.get(email=userEmail.strip())
 
                 #if User already works in the Organization, don't allow to connect him to the Company
                 if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():

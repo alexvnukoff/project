@@ -14,3 +14,29 @@
 .table-big tr:nth-child(2n+2) td:nth-child(2) { vertical-align: top; }
 
 .table-deals td img{ width: 50px;}
+
+.sitemap .vacancy li:hover {
+    cursor: pointer;
+}
+
+.sitemap .vacancy li.selected {
+    background-color: #454ED6;
+    color: #FFFFFF;
+}
+
+.sitemap > li.selected {
+    background-color: #B9C9FA;
+}
+
+.sitemap .vacancy li:not(.selected):hover,
+.sitemap li.selected a {
+    color: #FFFFFF;
+}
+
+.sitemap > li:not(.selected):hover {
+    background-color: #E6E6E6;
+}
+
+.sitemap .vacancy li:not(.selected):hover {
+    background-color: #BBBEBE;
+}

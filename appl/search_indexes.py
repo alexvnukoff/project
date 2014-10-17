@@ -18,6 +18,16 @@ class SearchIndexActive(indexes.SearchIndex):
 
 class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
 
+    '''
+        return {
+            'properties': {
+                'django-id': {'type': 'integer'},
+                'title': {'type': 'string'},
+                'text': {'type': 'string'}
+            }
+        }
+    '''
+
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp_name = indexes.CharField(null=True)
@@ -2141,7 +2151,6 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
 
-    
     slug = indexes.CharField(indexed=False)
 
 

@@ -160,6 +160,7 @@ def setContextMenu(context, obj, **kwargs):
     elif model_name == TppTV.__name__:
        url_namespace = "tv"
 
+
     vars = {
         "delete_perm": delete_perm,
         'change_perm': change_perm,

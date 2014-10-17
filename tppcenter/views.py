@@ -390,6 +390,7 @@ def myCompanies(request):
             else:
                 user_name = cabinet.text
 
+            # -1 because the last element is selected org
             paginate_by = 9
 
             result['content'] = [{'title': user_name, 'id': 0}]

@@ -258,7 +258,7 @@ class hierarchyManager(models.Manager):
         if self.model.__name__ != 'Item':
             raise ValueError('Accepting only Item instances except child subclasses')
 
-        try:
+        try: #delete one by one ( Bulk not permitted )
             instList = self.model.objects.filter(pk__in=self.getChild(parent))
 
             for inst in instList:
