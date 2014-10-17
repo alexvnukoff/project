@@ -164,9 +164,7 @@ def addNews(request):
 @login_required(login_url='/login/')
 def updateNew(request, item_id):
 
-    perm = request.user.get_all_permissions()
-
-    if not {'appl.change_tpptv'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
+    if not request.user.has_perm('appl.change_tpptv') or not request.user.groups.filter(name="Redactor").exists():
           return func.permissionDenied()
 
     create_date = TppTV.objects.get(pk=item_id).create_date
