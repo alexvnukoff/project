@@ -24,7 +24,7 @@
             <h1>{{ item.title }}</h1>
                 <p class="date">
                 {% if item.country.flag %}
-                    <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.text }}" />
+                    <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.text }}" ></i>
                     {{ item.country.text }}
                 {% elif item.organization.flag %}
                     <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" alt="{{ item.organization.title }}" />
