@@ -13,7 +13,7 @@ B24 и остальные сайты
 
 Связи обьектов определяются в модели Relationship, через эту модоль обьект(Item) ссылается сам на себя как многое ко многим что позволяет создавать любые связи.
 
-Все начальные значнния для моделей в файле [/appl/management/__init__.py](https://github.com/migirov/tpp/blob/master/appl/management/__init__.py) и подгружаются **ТОЛЬКОпри ПЕРВОМ** suncdb 
+Все начальные значнния для моделей в файле [/appl/management/__init__.py](https://github.com/migirov/tpp/blob/master/appl/management/__init__.py) и подгружаются **ТОЛЬКО при ПЕРВОМ** suncdb 
 
 #####Логика
 При выводе всех детальныъ и списковых страниц( кроме главной и стены ) на B2B используетсе [Class Based Views](https://github.com/migirov/tpp/blob/master/tppcenter/cbv.py), при выводе остальных страгниц (формы и вкладки) используются обычные views которые в дальнейшем надо переделать табкже под CBV.
@@ -30,6 +30,23 @@ Cайт B2C также частично [перешел](https://github.com/migi
 
 Статика находится в папке [/appl/Static](https://github.com/migirov/tpp/tree/master/appl/Static).
 Статика не сжимается ни чем , а стоило бы.
+
+#####Аналитика
+
+Вся аналитика посещейний делается через google analytics использую ихние именованные метрики:
+
+    <script>
+        {% getOwner item_id as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+        {% endif %}
+        ga('set', 'dimension2', 'product');
+    </script>
 
 
 ####Правила при разработке
