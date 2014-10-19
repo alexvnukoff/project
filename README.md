@@ -1,13 +1,25 @@
 B24 и остальные сайты
 ===
 
+####Система изнутри
+
+#####Начнём с моделей 
+
+Основные модели находятся в [core/models.py](https://github.com/migirov/tpp/blob/master/core/models.py)
+и представляют собой модель хранения данных под названием [Entity–attribute–value](http://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model)
+
+Тоесть все данные(Название описание) о каком либо обьекте(Продукт, компания) находятся в таблице(Моделе) Value 
+а и привязана она к таблице Attribute. А все обьекты в системе расширяют модель(класс) Item и находлятся в файле [appl / models.py](https://github.com/migirov/tpp/blob/master/appl/models.py)  
+
+
+
 
 ####Используемые модули:
 
 #####celery
 
 Используется для добавления обьектов в базу данных ассинхороно и их индексации.
-[Таски тут](https://github.com/migirov/tpp/blob/master/core/tasks.py)
+[Таски](https://github.com/migirov/tpp/blob/master/core/tasks.py) и [Коннект](https://github.com/migirov/tpp/blob/master/tpp/celery.py)
 
 #####django-celery
 Нужно включить celerycam в supervisorctl для просмотра лога тасков 
@@ -38,27 +50,41 @@ B24 и остальные сайты
 и настраевается в файле [tanslation.py](https://github.com/migirov/tpp/blob/master/core/translation.py)
 
 
-#####django-registration
-Регистрация , восстановление пароля и отправка имейлов
-
 #####elasticsearch
 
 Драйвер на питоне для elasticsearch используется в django-haystack
 
-#####google-api-python-client
+#####google-api-python-client, rauth
 
 [Форк python 3.x](https://github.com/fatal10110/GoogleApiPython3x) клиента на питоне для гугла скоро будет [официальный](https://github.com/google/google-api-python-client)
 
-Выводим с его помощью [аналитику](https://github.com/migirov/tpp/tree/master/appl/analytic) вот [ТУТ]()
+Выводим с его помощью [аналитику](https://github.com/migirov/tpp/tree/master/appl/analytic) вот [ТУТ](https://github.com/migirov/tpp/blob/master/tppcenter/Analytic/views.py)
 
 #####lxml
 Зашита (хоть какая) от XSS при выводе текста
 
-#####psutil, pygeoipб python-dateutil, Pillow
+#####psutil, pygeoipб python-dateutil, Pillow, pytz, recaptcha-client, django-registration
 
 Просто нужно
 
-#####python-dateutil
+#####South
+
+Миграция, пока что не используем Django 1.7 да и не известно поддерживает ли он миграцию Oracle
+
+#####sockjs-tornado, tornado-redis
+
+Serverside sockjs это замена websocket.io , работает вместе с Tornado и Redis для нотификаций в реальном времени как на Facebook управляется всё [ТУТ](https://github.com/migirov/tpp/blob/master/appl/realtime.py) и [ТУТ](https://github.com/migirov/tpp/blob/master/appl/management/commands/async_server.py)
+
+#####Unidecode
+Создаем SEO slug для ссылок конвертируюя UTF в URL символы в методе  [createItemSlug](https://github.com/migirov/tpp/blob/master/core/models.py#L697)
+
+
+#####tinys3
+
+Заливка изображений на Amazon S3, вся логика [ТУТ](https://github.com/migirov/tpp/blob/master/core/amazonMethods.py) .
+
+Используется форк
+
 
 
 
