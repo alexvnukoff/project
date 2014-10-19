@@ -48,6 +48,14 @@ Cайт B2C также частично [перешел](https://github.com/migi
         ga('set', 'dimension2', 'product');
     </script>
 
+Потом эти метрики выводятся с помощью AJAX через функцию [getAnalytic](https://github.com/migirov/tpp/blob/master/appl/func.py#L489)
+
+#####Индексация
+Мы используем "Entity–attribute–value" и храним все данные в Text field (Потом с этим надо чтото сделать) по этой причине мы не можем выводить отсортированные данные или фильтровать по ним( Можем но это капец ), для этого нам нужна второй слой БД.
+Мы используем elasticsearch для хранения, фильтрации(включая поиск) и вывода данных, без этого слоя системы ничего не выводит.
+
+Система хранит мультиязычные данные и для каждого языка мы используем разные индексы, файл индекса находится [ТУТ](https://github.com/migirov/tpp/blob/master/appl/search_indexes.py) а мультиязычный backend [ТУТ](https://github.com/migirov/tpp/blob/master/tpp/backend.py)
+
 
 ####Правила при разработке
  + В конце любой операции по изменению обьекта (кроме удаления) нужно бызывать переиндексацию, а иммено метод [reindexItem](https://github.com/migirov/tpp/blob/master/core/models.py#L425)
