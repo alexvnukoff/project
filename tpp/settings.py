@@ -304,7 +304,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE': 'tpp.backend.MultilingualElasticEngine',
-        'URL': 'ec2-54-77-12-192.eu-west-1.compute.amazonaws.com:9200',
+        'URL': 'ec2-54-171-67-193.eu-west-1.compute.amazonaws.com:9200',
         'INDEX_NAME': 'lang-en',
     },
 }
