@@ -250,7 +250,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, obj):
         try:
             branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
@@ -407,7 +407,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, obj):
         try:
             branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
@@ -478,7 +478,7 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
         return Category
 
     def prepare_sites(self, obj):
-        return [site.pk for site in Category.objects.get(pk=obj.pk).sites.all()]
+        return [str(site.pk) for site in Category.objects.get(pk=obj.pk).sites.all()]
 
     def prepare_parent(self, obj):
         try:
@@ -705,7 +705,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, object):
         try:
             branches = Branch.objects.filter(p2c__child_id=object.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
@@ -837,7 +837,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_country(self, obj):
         try:
-            return list(Country.objects.filter(p2c__child_id=obj.pk).values_list('pk', flat=True))
+            return [str(pk) for pk in Country.objects.filter(p2c__child_id=obj.pk).values_list('pk', flat=True)]
         except ObjectDoesNotExist:
             return None
 
@@ -1032,7 +1032,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
             for category in categories:
                 hierarchy = Category.hierarchy.getDescendants(category.pk, includeSelf=True)
-                categoryList += [int(cat['ID']) for cat in hierarchy if cat['ID'] not in categoryList]
+                categoryList += [str(cat['ID']) for cat in hierarchy if cat['ID'] not in categoryList]
 
             return categoryList
         except ObjectDoesNotExist:
@@ -1041,7 +1041,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, obj):
         try:
             branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
@@ -1049,7 +1049,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.create_date
 
     def prepare_sites(self, obj):
-        return [site.pk for site in obj.sites.all()]
+        return [str(site.pk) for site in obj.sites.all()]
 
 ########################## News Index #############################
 
@@ -1198,14 +1198,14 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, obj):
         try:
             branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
     def prepare_categories(self, obj):
         try:
             categories = NewsCategories.objects.filter(p2c__child=obj.pk, p2c__type='relation')
-            return [category.pk for category in categories]
+            return [str(category.pk) for category in categories]
         except ObjectDoesNotExist:
             return None
 
@@ -1537,7 +1537,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_branch(self, obj):
         try:
             branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
+            return [str(branch.pk) for branch in branches]
         except ObjectDoesNotExist:
             return None
 
@@ -1646,17 +1646,10 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
 
         return self.prepared_data
 
-    def prepare_branch(self, obj):
-        try:
-            branches = Branch.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [branch.pk for branch in branches]
-        except ObjectDoesNotExist:
-            return None
-
     def prepare_categories(self, obj):
         try:
             categories = NewsCategories.objects.filter(p2c__child_id=obj.pk, p2c__type='relation')
-            return [category.pk for category in categories]
+            return [str(category.pk) for category in categories]
         except ObjectDoesNotExist:
             return None
 
