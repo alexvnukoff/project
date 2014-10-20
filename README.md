@@ -1,6 +1,18 @@
 B24 и остальные сайты
 ===
 
+####Amazon и Dynect
+
+ + EC2 на котором балансер HAproxy (ELB когда перейдем на Route 53)
+ + N x EC2 на котор развёрнут Django
+ + 1 Elastic Cache Redis для очередей Celery
+ + 1 Elastic Cache Redis для очередей Tornado + SockJS
+ + 1 Elastic Cache Memcached для кэширования и сессий
+ + RDS Oracle + License
+ + 1 EC2 для Elasticsearch
+ + Cloud Front + S3 для файлов (static.tppcenter.com)
+ + DNS у компании Dynect (Надо перейти на Route 53)
+
 ####Система изнутри
 
 #####Модели 
@@ -70,7 +82,7 @@ Cайт B2C также частично [перешел](https://github.com/migi
  + Удалять обьекты можно только по одному (bulk нельзя) для переиндексации
  + При любом "удалении" обьекта пользлвателем нужно его просто деактивировать использую метов [activation](https://github.com/migirov/tpp/blob/master/core/models.py#L410) а также нужно переиндексировать обьект
  + При любом выводе обьекта нужно проверять активен ли он
- + Язык разрбатывается на языке Python 3
+ + Разрабатывать на Python 3
  
 ####Используемые модули:
 
