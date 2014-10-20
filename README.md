@@ -70,6 +70,7 @@ Cайт B2C также частично [перешел](https://github.com/migi
  + Удалять обьекты можно только по одному (bulk нельзя) для переиндексации
  + При любом "удалении" обьекта пользлвателем нужно его просто деактивировать использую метов [activation](https://github.com/migirov/tpp/blob/master/core/models.py#L410) а также нужно переиндексировать обьект
  + При любом выводе обьекта нужно проверять активен ли он
+ + Язык разрбатывается на языке Python 3
  
 ####Используемые модули:
 
@@ -120,13 +121,15 @@ Cайт B2C также частично [перешел](https://github.com/migi
 #####lxml
 Зашита (хоть какая) от XSS при выводе текста
 
-#####psutil, pygeoipб python-dateutil, Pillow, pytz, recaptcha-client, django-registration
+#####psutil, pygeoipб python-dateutil, Pillow, pytz
 
 Просто нужно
 
 #####South
 
 Миграция, пока что не используем Django 1.7 да и не известно поддерживает ли он миграцию Oracle
+
+**Не использовать версию 1.0 она не работает с Py3**
 
 #####sockjs-tornado, tornado-redis
 
@@ -140,16 +143,11 @@ Serverside sockjs это замена websocket.io , работает вмест
 
 Заливка изображений на Amazon S3, вся логика [ТУТ](https://github.com/migirov/tpp/blob/master/core/amazonMethods.py) .
 
-Используется форк
+Используется [форк](https://github.com/fatal10110/tinys3).
 
+#####recaptcha-client
+используется [форк](https://github.com/dave-gallagher/recaptcha-client-1.0.6-ssl-Python3) стоит подумать о [django-recaptcha](https://github.com/praekelt/django-recaptcha)
 
+#####django-registration
 
-
-
-
-
-
-
-
-
-
+Используется [форк](https://github.com/fatal10110/django-registration), стоит подумать о [django-registration-redux](https://github.com/macropin/django-registration)
