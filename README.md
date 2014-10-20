@@ -16,7 +16,7 @@ B24 и остальные сайты
 
 Связи обьектов определяются в модели Relationship, через эту модоль обьект(Item) ссылается сам на себя как многое ко многим что позволяет создавать любые связи.
 
-Все начальные значнния для моделей в файле [/appl/management/__init__.py](https://github.com/migirov/tpp/blob/master/appl/management/__init__.py) и подгружаются **ТОЛЬКО при ПЕРВОМ** syncdb 
+Все начальные значнния для моделей в файле [/appl/management/__ init __.py](https://github.com/migirov/tpp/blob/master/appl/management/__init__.py) и подгружаются **ТОЛЬКО при ПЕРВОМ** syncdb 
 
 #####Логика
 При выводе всех детальныъ и списковых страниц( кроме главной и стены ) на B2B используетсе [Class Based Views](https://github.com/migirov/tpp/blob/master/tppcenter/cbv.py), при выводе остальных страгниц (формы и вкладки) используются обычные views которые в дальнейшем надо переделать табкже под CBV.
