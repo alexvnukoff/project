@@ -1,4 +1,4 @@
-
+import re
 from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate, Gallery, Company
 from appl import func
 from core.tasks import addNewSite
@@ -96,23 +96,22 @@ def resumeForm(request, action, item_id=None):
         pass
         #sitePage = deleteResume(request, item_id)
     elif action == 'add':
-        sitePage = addSite(request)
+        sitePage = addSite(request, template_values)
     elif action == 'update':
-        sitePage = updateSite(request, item_id)
+        sitePage = updateSite(request, template_values, item_id)
 
     if isinstance(sitePage, HttpResponseRedirect) or isinstance(sitePage, HttpResponse):
         return sitePage
 
     templateParams = {
-        'sitePage': sitePage,
-        'current_section': current_section,
-        'template_values': template_values
+        'formContent': sitePage,
+        'current_section': current_section
     }
 
-    return render_to_response('UserSites/index.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 
-def addSite(request):
+def addSite(request, template_values):
     current_organization = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
@@ -165,13 +164,13 @@ def addSite(request):
 
 
     template = loader.get_template('UserSites/addForm.html')
-    context = RequestContext(request, {'form': form})
+    context = RequestContext(request, {'form': form, 'template_values': template_values})
     sitePage = template.render(context)
 
     return sitePage
 
 
-def updateSite(request, item_id):
+def updateSite(request, template_values, item_id):
     current_organization = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
@@ -231,6 +230,7 @@ def updateSite(request, item_id):
         'form': form,
         'gallery': gallery,
         'photos': photos,
+        'template_values': template_values
 
     }
 

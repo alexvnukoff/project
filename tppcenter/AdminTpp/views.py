@@ -781,13 +781,13 @@ def pages(request, editPage=None):
             return HttpResponse()
         else:
 
-            start = int(request.GET.get('start', 1))
-            length = int(request.GET.get('', 10))
+            start = int(request.GET.get('start', 1)) - 1
+            length = int(request.GET.get('length', 10))
 
             pages = staticPages.objects.all()
 
             try:
-                onPage = pages[start:length]
+                onPage = pages[start:length + start]
             except Exception:
                 onPage = pages[:10]
 
