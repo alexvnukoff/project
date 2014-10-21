@@ -14,46 +14,81 @@ from datetime import datetime
 
 class BaseSearchIndex(indexes.SearchIndex):
 
-    def get_updated_field(self):
-        return "create_date"
-
-class GreetignsIndex(BaseSearchIndex, indexes.Indexable):
-
-    '''
-        return {
-            'properties': {
-                'django-id': {'type': 'integer'},
-                'title': {'type': 'string'},
-                'text': {'type': 'string'}
-            }
-        }
-    '''
+    #Standard fields for all indexes
 
     text = indexes.CharField(document=True)
-    title = indexes.CharField()
-    tpp_name = indexes.CharField(null=True)
-    image = indexes.CharField(null=True, indexed=False)
 
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField(null=True)
+
+    def get_updated_field(self):
+        return "create_date"
+
+    def prepare_obj_create_date(self, obj):
+        return obj.create_date
+
+    def prepare(self, obj):
+
+        self.prepared_data = super(BaseSearchIndex, self).prepare(obj)
+
+        endDateIndex = self.fields['obj_end_date'].index_fieldname
+        startDateIndex = self.fields['obj_start_date'].index_fieldname
+
+        #Get parent active date
+        try:
+            parentRel = Relationship.objects.get(child=obj.pk, type__in=('dependence', 'hierarchy'))
+
+            parentRel = func.make_object_dates_aware(parentRel)
+
+            parentRelEnd = parentRel.end_date
+            parendStart = parentRel.start_date
+        except ObjectDoesNotExist:
+            parentRelEnd = None
+            parendStart = None
+
+        obj = func.make_object_dates_aware(obj)
+
+        #END DATE
+        if not obj.end_date and parentRelEnd:
+            self.prepared_data[endDateIndex] = parentRelEnd
+        elif not parentRelEnd and obj.end_date:
+            self.prepared_data[endDateIndex] = obj.end_date
+        elif parentRelEnd and obj.end_date:
+
+                if parentRelEnd > obj.end_date:
+                    self.prepared_data[endDateIndex] = obj.end_date
+                else:
+                    self.prepared_data[endDateIndex] = parentRelEnd
+        else:
+            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
+
+
+        #START DATE
+        if not parendStart and obj.start_date:
+                self.prepared_data[startDateIndex] = obj.start_date
+        elif parendStart and obj.start_date:
+
+            if parendStart > obj.start_date:
+                self.prepared_data[startDateIndex] = parendStart
+            else:
+                self.prepared_data[startDateIndex] = obj.start_date
+
+        return self.prepared_data
+
+class GreetignsIndex(BaseSearchIndex, indexes.Indexable):
+
+    title = indexes.CharField()
+    tpp_name = indexes.CharField(null=True)
+    image = indexes.CharField(null=True, indexed=False)
 
     slug = indexes.CharField(indexed=False)
     position = indexes.CharField(indexed=False, null=True)
 
     title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
 
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
-
     def get_model(self):
         return Greeting
-
-    def prepare_obj_start_date(self, obj):
-        return obj.start_date
-
-    def prepare_obj_end_date(self, obj):
-        return obj.end_date
 
     def prepare(self, obj):
         self.prepared_data = super(GreetignsIndex, self).prepare(obj)
@@ -90,18 +125,14 @@ class GreetignsIndex(BaseSearchIndex, indexes.Indexable):
 
 ################## Exhibition Index #############################
 class ExhibitionProposalIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp = indexes.IntegerField(null=True)
     country = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
-    
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
+
     start_event_date = indexes.DateField(null=True)
     end_event_date = indexes.DateField(null=True)
-    obj_create_date = indexes.DateTimeField(null=True)
 
     slug = indexes.CharField(indexed=False)
     city = indexes.CharField(indexed=False, null=True)
@@ -111,11 +142,7 @@ class ExhibitionProposalIndex(BaseSearchIndex, indexes.Indexable):
     doc_2 = indexes.CharField(null=True, indexed=False)
     doc_3 = indexes.CharField(null=True, indexed=False)
 
-
     title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def get_model(self):
         return Exhibition
@@ -158,50 +185,6 @@ class ExhibitionProposalIndex(BaseSearchIndex, indexes.Indexable):
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
-
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        timezoneInfo = get_current_timezone()
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-            
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-            
-            if parentRelEnd > obj.end_date:
-                self.prepared_data[endDateIndex] = obj.end_date
-            else:
-                self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date            
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -258,27 +241,18 @@ class ExhibitionProposalIndex(BaseSearchIndex, indexes.Indexable):
 ################## Business Proposal Index #############################
 
 class BusinessProposalIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp = indexes.IntegerField(null=True)
     country = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     branch = indexes.MultiValueField(null=True)
     bp_category = indexes.IntegerField(null=True)
-    
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_create_date = indexes.DateTimeField(null=True)
-
 
     title_sort = indexes.CharField(null=True, indexed=False, faceted=True, stored=True)
     slug = indexes.CharField(null=False, indexed=False)
     doc_1 = indexes.CharField(null=True, indexed=False)
     doc_2 = indexes.CharField(null=True, indexed=False)
     doc_3 = indexes.CharField(null=True, indexed=False)
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def get_model(self):
         return BusinessProposal
@@ -314,47 +288,6 @@ class BusinessProposalIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
         #country
         countryIndex = self.fields['country'].index_fieldname
 
@@ -371,8 +304,6 @@ class BusinessProposalIndex(BaseSearchIndex, indexes.Indexable):
             self.prepared_data[bp_categoryIndex] = cat.pk
         else:
             self.prepared_data[bp_categoryIndex] = 0
-
-
 
         comp = Company.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
         tpp = Tpp.objects.filter(p2c__child_id=obj.pk, p2c__type="dependence")
@@ -415,8 +346,6 @@ class BusinessProposalIndex(BaseSearchIndex, indexes.Indexable):
 ################## Countries  Index #############################
 
 class CountryIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
-
     title_sort = indexes.CharField(indexed=False, faceted=True)
     
     title_auto = indexes.NgramField()
@@ -427,14 +356,10 @@ class CountryIndex(BaseSearchIndex, indexes.Indexable):
 
     def prepare(self, obj):
 
-
         self.prepared_data = super(CountryIndex, self).prepare(obj)
         
         attr = obj.getAttributeValues('NAME', 'COUNTRY_FLAG')
 
-        #from django.utils import translation
-        #if translation.get_language() == 'ar':
-        #    print(attr)
         if len(attr) == 0 or attr.get('NAME', [''])[0] == '':
             return self.prepared_data
         else:
@@ -456,21 +381,16 @@ class CountryIndex(BaseSearchIndex, indexes.Indexable):
 
         flagIndex = self.fields['flag'].index_fieldname
         self.prepared_data[flagIndex] = flag
-        #if translation.get_language() == 'ar':
-        #    print(self.prepared_data)
+
         return self.prepared_data
 
 
 ########################## Category Index #############################
 
 class CategoryIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     parent = indexes.IntegerField()
     sites = indexes.MultiValueField(null=True)
-
-
-
 
     title_auto = indexes.NgramField()
     slug = indexes.CharField(indexed=False)
@@ -518,9 +438,7 @@ class CategoryIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Branches Index #############################
 
 class BranchIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
-    
     title_auto = indexes.NgramField()
 
     def get_model(self):
@@ -589,7 +507,6 @@ class BpCategoriesIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Company Index #############################
 
 class CompanyIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
     branch = indexes.MultiValueField(null=True)
@@ -597,9 +514,6 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
     tpp = indexes.IntegerField(null=True)
     title_auto = indexes.NgramField(null=True)
     
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_create_date = indexes.DateTimeField()
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
 
     slug = indexes.CharField(indexed=False)
@@ -611,8 +525,6 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
     fax = indexes.CharField(indexed=False, null=True)
     position = indexes.CharField(indexed=False, null=True)
 
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(CompanyIndex, self).prepare(obj)
@@ -652,49 +564,6 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
         return self.prepared_data
 
     def prepare_tpp(self, object):
@@ -722,14 +591,9 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Tpp Index #############################
 
 class TppIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
     country = indexes.MultiValueField(null=True)
-    
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_create_date = indexes.DateTimeField()
 
     title_auto = indexes.NgramField()
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
@@ -743,11 +607,6 @@ class TppIndex(BaseSearchIndex, indexes.Indexable):
     fax = indexes.CharField(indexed=False, null=True)
     flag = indexes.CharField(indexed=False, null=True)
     position = indexes.CharField(indexed=False, null=True)
-
-
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(TppIndex, self).prepare(obj)
@@ -788,52 +647,6 @@ class TppIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #from django.utils.translation import trans_real
-        #if trans_real.get_language() == 'ar':
-        #    print(self.prepared_data[sortIndex])
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
         return self.prepared_data
 
     def prepare_country(self, obj):
@@ -848,7 +661,6 @@ class TppIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Products Index #############################
 
 class ProductIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     branch = indexes.MultiValueField(null=True)
     categories = indexes.MultiValueField(null=True)
@@ -864,12 +676,7 @@ class ProductIndex(BaseSearchIndex, indexes.Indexable):
     currency = indexes.CharField(null=True)
     discount_price = indexes.FloatField(null=True)
 
-    
-
     sites = indexes.MultiValueField(null=True)
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_create_date = indexes.DateTimeField(null=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
 
@@ -883,9 +690,6 @@ class ProductIndex(BaseSearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Product
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(ProductIndex, self).prepare(obj)
@@ -925,48 +729,6 @@ class ProductIndex(BaseSearchIndex, indexes.Indexable):
                     self.prepared_data[field.index_fieldname] = float(attributes[attr][0])
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
 
         comp = Company.objects.get(p2c__child_id=obj.pk, p2c__type="dependence")
 
@@ -1046,16 +808,12 @@ class ProductIndex(BaseSearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             return None
 
-    def prepare_obj_creae_date(self, obj):
-        return obj.create_date
-
     def prepare_sites(self, obj):
         return [str(site.pk) for site in obj.sites.all()]
 
 ########################## News Index #############################
 
 class NewsIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
@@ -1064,15 +822,11 @@ class NewsIndex(BaseSearchIndex, indexes.Indexable):
     categories = indexes.MultiValueField(null=True)
     branch = indexes.MultiValueField(null=True)
     
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_create_date = indexes.DateTimeField()
     video = indexes.BooleanField(default=False)
     image = indexes.CharField(null=True, indexed=False)
 
     slug = indexes.CharField(indexed=False)
     youtube_code = indexes.CharField(indexed=False, null=True)
-
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
 
@@ -1113,47 +867,6 @@ class NewsIndex(BaseSearchIndex, indexes.Indexable):
                         self.prepared_data[field.index_fieldname] = True
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -1210,25 +923,18 @@ class NewsIndex(BaseSearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             return None
 
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
-
     def get_model(self):
         return News
 
 ########################## Tenders Index #############################
 
 class TenderIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     start_event_date = indexes.DateField(null=True)
     end_event_date = indexes.DateField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
-    obj_create_date = indexes.DateTimeField()
     price = indexes.FloatField(null=True)
     currency = indexes.CharField(null=True)
 
@@ -1238,10 +944,6 @@ class TenderIndex(BaseSearchIndex, indexes.Indexable):
     doc_1 = indexes.CharField(indexed=False, null=True)
     doc_2 = indexes.CharField(indexed=False, null=True)
     doc_3 = indexes.CharField(indexed=False, null=True)
-
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
         self.prepared_data = super(TenderIndex, self).prepare(obj)
@@ -1280,47 +982,6 @@ class TenderIndex(BaseSearchIndex, indexes.Indexable):
                     self.prepared_data[field.index_fieldname] = datetime.strptime(attributes[attr][0], "%m/%d/%Y")
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -1367,15 +1028,11 @@ class TenderIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Innovation Projects Index #############################
 
 class InnovIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
     cabinet = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
-    obj_create_date = indexes.DateTimeField()
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     branch = indexes.MultiValueField(null=True)
     doc_1 = indexes.CharField(indexed=False, null=True)
     doc_2 = indexes.CharField(indexed=False, null=True)
@@ -1391,9 +1048,6 @@ class InnovIndex(BaseSearchIndex, indexes.Indexable):
     slug = indexes.CharField(indexed=False)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
 
@@ -1434,48 +1088,6 @@ class InnovIndex(BaseSearchIndex, indexes.Indexable):
                     self.prepared_data[field.index_fieldname] = float(attributes[attr][0])
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -1533,6 +1145,7 @@ class InnovIndex(BaseSearchIndex, indexes.Indexable):
                     self.prepared_data[countryIndex] = country.pk
             except:
                 self.prepared_data[countryIndex] = None
+
         return self.prepared_data
 
     def prepare_branch(self, obj):
@@ -1547,22 +1160,14 @@ class InnovIndex(BaseSearchIndex, indexes.Indexable):
 
 ########################## Tpp Index #############################
 class TppTvIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
-    obj_create_date = indexes.DateTimeField()
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     categories = indexes.MultiValueField(null=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     slug = indexes.CharField(indexed=False)
     image = indexes.CharField(null=True, indexed=False)
     youtube_code = indexes.CharField(indexed=False, null=True)
-
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
 
@@ -1595,48 +1200,6 @@ class TppTvIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
         #country
         countryIndex = self.fields['country'].index_fieldname
 
@@ -1659,9 +1222,7 @@ class TppTvIndex(BaseSearchIndex, indexes.Indexable):
 
 
 class NewsCategoriesIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True)
-    
     title_auto = indexes.NgramField()
 
     def prepare(self, obj):
@@ -1693,9 +1254,6 @@ class NewsCategoriesIndex(BaseSearchIndex, indexes.Indexable):
 
 ########################## Department Index #############################
 class DepartmentIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
 
@@ -1728,48 +1286,6 @@ class DepartmentIndex(BaseSearchIndex, indexes.Indexable):
         self.prepared_data[sortIndex] = name.lower()
         self.prepared_data[slugIndex] = slug
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
-
         #company , tpp
         companyIndex = self.fields['company'].index_fieldname
         tppIndexfield = self.fields['tpp'].index_fieldname
@@ -1795,11 +1311,8 @@ class DepartmentIndex(BaseSearchIndex, indexes.Indexable):
 
 ########################## Cabinet Index #############################
 class CabinetIndex(BaseSearchIndex, indexes.Indexable):
-    text = indexes.CharField(document=True)
     country = indexes.IntegerField(null=True)
     email = indexes.CharField(null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     image = indexes.CharField(indexed=False, null=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
@@ -1847,25 +1360,8 @@ class CabinetIndex(BaseSearchIndex, indexes.Indexable):
         self.prepared_data[imageIndex] = attributes.get('IMAGE', [None])[0]
 
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        parendStart = None
-
         emailIndex = self.fields['email'].index_fieldname
         self.prepared_data[emailIndex] = obj.user.email
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        self.prepared_data[startDateIndex] = obj.start_date
 
         #country
         countryIndex = self.fields['country'].index_fieldname
@@ -1885,11 +1381,7 @@ class CabinetIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Resume Index #############################
 class ResumeIndex(BaseSearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
-    text = indexes.CharField(document=True)
 
-    obj_create_date = indexes.DateTimeField()
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     cabinet = indexes.IntegerField(null=True)
 
     slug = indexes.CharField(indexed=False)
@@ -1926,10 +1418,6 @@ class ResumeIndex(BaseSearchIndex, indexes.Indexable):
     salary = indexes.CharField(indexed=False, null=True)
     additional_information = indexes.CharField(indexed=False, null=True)
     institution = indexes.CharField(indexed=False, null=True)
-
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
 
@@ -1989,23 +1477,6 @@ class ResumeIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        self.prepared_data[startDateIndex] = obj.start_date
-
         #country
         countryIndex = self.fields['country'].index_fieldname
 
@@ -2033,12 +1504,8 @@ class ResumeIndex(BaseSearchIndex, indexes.Indexable):
 ########################## Requirement Index #############################
 class RequirementIndex(BaseSearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
-    text = indexes.CharField(document=True)
     title = indexes.CharField()
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     organization = indexes.IntegerField(null=True)
-    obj_create_date = indexes.DateTimeField()
 
 
     slug = indexes.CharField(indexed=False)
@@ -2048,9 +1515,6 @@ class RequirementIndex(BaseSearchIndex, indexes.Indexable):
     is_anonymous = indexes.BooleanField(default=False)
     requirements = indexes.CharField(null=True)
     terms = indexes.CharField(null=True)
-
-    def prepare_obj_create_date(self, obj):
-        return obj.create_date
 
     def prepare(self, obj):
 
@@ -2090,25 +1554,6 @@ class RequirementIndex(BaseSearchIndex, indexes.Indexable):
                 else:
                     self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-        #START DATE
-        self.prepared_data[startDateIndex] = obj.start_date
-
         #country
         countryIndex = self.fields['country'].index_fieldname
 
@@ -2127,9 +1572,6 @@ class RequirementIndex(BaseSearchIndex, indexes.Indexable):
         except ObjectDoesNotExist:
             self.prepared_data[organizationIndex] = None
 
-
-
-
         return self.prepared_data
 
 
@@ -2139,8 +1581,6 @@ class RequirementIndex(BaseSearchIndex, indexes.Indexable):
 
 class VacancyIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
-    obj_start_date = indexes.DateTimeField()
-    obj_end_date = indexes.DateTimeField(null=True)
     department = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
@@ -2173,48 +1613,6 @@ class VacancyIndex(BaseSearchIndex, indexes.Indexable):
 
                 self.prepared_data[field.index_fieldname] = attributes[attr][0].strip()
 
-
-        endDateIndex = self.fields['obj_end_date'].index_fieldname
-        startDateIndex = self.fields['obj_start_date'].index_fieldname
-
-        #Get parent active date
-        try:
-            parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
-
-            parentRel = func.make_object_dates_aware(parentRel)
-
-            parentRelEnd = parentRel.end_date
-            parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
-            parentRelEnd = None
-            parendStart = None
-
-        obj = func.make_object_dates_aware(obj)
-
-        #END DATE
-        if not obj.end_date and parentRelEnd:
-            self.prepared_data[endDateIndex] = parentRelEnd
-        elif not parentRelEnd and obj.end_date:
-            self.prepared_data[endDateIndex] = obj.end_date
-        elif parentRelEnd and obj.end_date:
-
-                if parentRelEnd > obj.end_date:
-                    self.prepared_data[endDateIndex] = obj.end_date
-                else:
-                    self.prepared_data[endDateIndex] = parentRelEnd
-        else:
-            self.prepared_data[endDateIndex] = datetime(1, 1, 1)
-
-
-        #START DATE
-        if not parendStart and obj.start_date:
-                self.prepared_data[startDateIndex] = obj.start_date
-        elif parendStart and obj.start_date:
-
-            if parendStart > obj.start_date:
-                self.prepared_data[startDateIndex] = parendStart
-            else:
-                self.prepared_data[startDateIndex] = obj.start_date
 
         #department
         departmentIndex = self.fields['department'].index_fieldname
