@@ -781,8 +781,8 @@ def pages(request, editPage=None):
             return HttpResponse()
         else:
 
-            displayStart = int(request.GET.get('iDisplayStart', 1))
-            displayLen = int(request.GET.get('iDisplayLength', 10))
+            displayStart = int(request.GET.get('start', 1))
+            displayLen = int(request.GET.get('length', 10))
 
             if displayStart == 1:
                 page = 1
@@ -823,10 +823,10 @@ def pages(request, editPage=None):
 
 
             return HttpResponse(json.dumps({
-                    "sEcho": int(request.GET.get('sEcho', 1)),
-                    "iTotalRecords": paginator.count,
-                    "iTotalDisplayRecords": paginator.count,
-                    "aaData" : resultData
+                    "draw": int(request.GET.get('draw', 1)),
+                    "recordsTotal": paginator.count,
+                    "recordsFiltered": paginator.count,
+                    "data" : resultData
             }))
     else:
 
