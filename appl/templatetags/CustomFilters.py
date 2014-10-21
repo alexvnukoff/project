@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from copy import copy
+from django.contrib.sites.models import get_current_site
 
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
@@ -442,7 +443,9 @@ def detail_page_to_tppcenter(context, url, slug=None):
 @register.simple_tag(takes_context=True)
 def isSiteOrganizationTpp(context):
 
-    SITE_ID = context.get('SITE_ID', 1)
+
+    request = context.get('request', None)
+    SITE_ID = get_current_site(request).pk
     organization = UserSites.objects.get(sites__id=SITE_ID).organization
 
     return hasattr(organization, "tpp")

@@ -2,6 +2,7 @@ import os
 
 from django import template
 from django.conf import settings
+from django.contrib.sites.models import get_current_site
 
 from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery,\
     BusinessProposal, Product, InnovationProject, Tender, Exhibition, Requirement, Resume, Company, Tpp, TppTV, Category
@@ -23,8 +24,11 @@ register = template.Library()
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
 def userSitegetTopOnPage(context):
 
+
+    request = context.get('request')
+    SITE_ID = get_current_site(request).pk
     MEDIA_URL = context.get('MEDIA_URL', '')
-    SITE_ID = context.get('SITE_ID', 1)
+
     organization = UserSites.objects.get(sites__id=SITE_ID).organization.pk
 
     cache_name = "%s_adv_top_cache_site_%d" % (get_language(), SITE_ID)
