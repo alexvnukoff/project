@@ -781,30 +781,23 @@ def pages(request, editPage=None):
             return HttpResponse()
         else:
 
-            displayStart = int(request.GET.get('start', 1))
-            displayLen = int(request.GET.get('length', 10))
-
-            if displayStart == 1:
-                page = 1
-            else:
-                page = int(displayStart / displayLen + 1)
+            start = int(request.GET.get('start', 1))
+            length = int(request.GET.get('', 10))
 
             pages = staticPages.objects.all()
 
-            paginator = Paginator(pages, 10)
-
             try:
-                onPage = paginator.page(page)
+                onPage = pages[start:length]
             except Exception:
-                onPage = paginator.page(1)
+                onPage = pages[:10]
 
-            pages_ids = [itm.pk for itm in onPage.object_list]
+            pages_ids = [itm.pk for itm in onPage]
 
             ItemsWithValues = Item.getItemsAttributesValues(('NAME', 'DESCRIPTION'), pages_ids)
 
             resultData = []
 
-            for page in onPage.object_list:
+            for page in onPage:
 
                 if page.pk not in ItemsWithValues:
                     ItemsWithValues[page.pk] = {}
@@ -824,8 +817,8 @@ def pages(request, editPage=None):
 
             return HttpResponse(json.dumps({
                     "draw": int(request.GET.get('draw', 1)),
-                    "recordsTotal": paginator.count,
-                    "recordsFiltered": paginator.count,
+                    "recordsTotal": pages.count(),
+                    "recordsFiltered": pages.count(),
                     "data" : resultData
             }))
     else:
