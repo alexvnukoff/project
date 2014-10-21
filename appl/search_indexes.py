@@ -12,9 +12,10 @@ from core.models import Relationship
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime
 
-class SearchIndexActive(indexes.SearchIndex):
-    def index_queryset(self, using=None):
-        return self.get_model().active.get_active()
+class BaseSearchIndex(indexes.SearchIndex):
+
+    def get_updated_field(self):
+        return "create_date"
 
 class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
 
@@ -32,7 +33,7 @@ class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
     title = indexes.CharField()
     tpp_name = indexes.CharField(null=True)
     image = indexes.CharField(null=True, indexed=False)
-    
+
     obj_end_date = indexes.DateTimeField(null=True)
     obj_start_date = indexes.DateTimeField()
     obj_create_date = indexes.DateTimeField(null=True)
