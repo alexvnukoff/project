@@ -66,10 +66,6 @@ class SiteUrlMiddleWare:
             os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tpp'), 'templates').replace('\\', '/')
         )
 
-
-
-
-
 class SiteLangRedirect:
 
     def process_request(self, request):
