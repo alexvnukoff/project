@@ -444,7 +444,7 @@ def getLiveTop(request):
 
     filterAdv = func.getListAdv(request)
 
-    tops, models = func.getTops(request, filterAdv)
+    tops, models = func.getTops(filterAdv)
 
     templateParams = {
         'MEDIA_URL': settings.MEDIA_URL,

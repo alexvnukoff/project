@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
+{% load inclusionTags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -26,6 +27,11 @@
             <link type="text/css" href="{% static 'usersites/css/externalsite.css'%}" rel="stylesheet" />
             <link type="text/css" href="{% static 'usersites/css/flags.css'%}" rel="stylesheet" />
             <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery.bxslider.css'%}" />
+
+            {% if isSiteOrganizationTpp %}
+                <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
+            {% endif %}
+
         {% endblock %}
 
         {% block js %}
@@ -60,6 +66,9 @@
     {% block body %}
 
     {% endblock %}
+    {% if isSiteOrganizationTpp %}
+        {% userSitegetTopOnPage %}
+    {% endif %}
 
     {% block rtl %}
         {% if site|getSide %}

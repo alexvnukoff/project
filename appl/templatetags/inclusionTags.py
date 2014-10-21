@@ -18,8 +18,27 @@ from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, 
     Company, Tpp
 from core.models import Item
 
-
 register = template.Library()
+
+@register.inclusion_tag('AdvTop/tops.html', takes_context=True)
+def userSitegetTopOnPage(context):
+
+    MEDIA_URL = context.get('MEDIA_URL', '')
+    SITE_ID = context.get('SITE_ID', 1)
+    organization = UserSites.objects.get(sites__id=SITE_ID).organization.pk
+
+    cache_name = "%s_adv_top_cache_site_%d" % (get_language(), SITE_ID)
+
+    cached = cache.get(cache_name)
+
+    if not cached:
+        tops, models = func.getTops([organization])
+
+        cache.set(cache_name, (tops, models), 60 * 10)
+    else:
+        tops, models = cache.get(cache_name)
+
+    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops, 'models': models}
 
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
 def getTopOnPage(context, item_id=None):
@@ -40,7 +59,7 @@ def getTopOnPage(context, item_id=None):
         cached = cache.get(cache_name)
 
     if not cached:
-        tops, models = func.getTops(request, filterAdv)
+        tops, models = func.getTops(filterAdv)
 
         if filterAdv is None:
             cache.set(cache_name, (tops, models), 60 * 10)

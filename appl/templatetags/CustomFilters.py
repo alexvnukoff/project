@@ -439,3 +439,13 @@ def detail_page_to_tppcenter(context, url, slug=None):
 
     return 'http://' + url
 
+@register.simple_tag(takes_context=True)
+def isSiteOrganizationTpp(context):
+
+    SITE_ID = context.get('SITE_ID', 1)
+    organization = UserSites.objects.get(sites__id=SITE_ID).organization.pk
+
+    if hasattr(organization, "tpp"):
+        return True
+
+    return False

@@ -1,0 +1,75 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div class="news-ads-wrapper">
+        <div class="news-ads">
+            <div class="title">{% trans "Paid ads" %}</div>
+            {% if modelTop and modelTop|length > 0 %}
+                {% for model, modelDict in models.items %}
+
+                    {% resolve modelTop model as topList %}
+
+                    {% if topList and topList|length > 0 %}
+
+                    <span class="titlesub">{{ modelDict.text }}</span>
+                    <ul class="list-ads">
+
+                        {% for top in topList %}
+                                <li>
+                                    <div class="top">
+
+                                        {% if top.country.flag %}
+                                            <i class="sprite {{ top.country.flag }}"></i>
+                                        {% elif top.organizaion.flag %}
+                                            <img class="sprite  flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} " />
+                                        {% elif top.flag %}
+                                            <img class="sprite flag" src="{{ MEDIA_URL}}th/{{top.flag }} " />
+                                        {% endif %}
+
+                                        {% if top.title %}
+                                            <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.title }}</a>
+                                        {% else %}
+                                            <a title="{{ top.text }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.text }}</a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="infoads">
+                                    <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}">
+                                        {% if top.image %}
+                                            {% if top.title %}
+                                                <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.title }}<" class="thumb" />
+                                            {% else %}
+                                                <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.text }}<" class="thumb" />
+                                            {% endif %}
+                                        {% endif %}
+                                    </a>
+                                    {% if top.text and top.title %}
+                                        {{ top.text|cleanHtml|safe|truncatewords_html:7 }}
+                                    {% endif %}
+                                    </div>
+                                </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <ul class="list-ads">
+                    <li>
+                        <div class="top">
+                            <a href="#" class="linkads">{% trans "YOUR AD HERE" %}</a>
+                        </div>
+                        <div class="infoads">
+                            <div><p>
+                                {% blocktrans %}
+                                    this space for rent this space for rent
+                                    this space for rent this space for rent
+                                    this space for rent this space for rent
+                                {% endblocktrans %}
+                            </p></div>
+                        </div>
+                        </li>
+                </ul>
+            {% endif %}
+        </div>
+
+</div>

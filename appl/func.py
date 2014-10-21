@@ -880,11 +880,10 @@ def getBanners(places, site, filterAdv=None):
 
     return bAttr
 
-def getTops(request, filterAdv=None):
+def getTops(filterAdv=None):
     '''
         Get context advertisement items depended on received filter
 
-        obj request - request context
         dict filterAdv - advertisement filter , can include countries organizations or branches
                 (get it from getDeatailAdv() or getListAdv() )
     '''
