@@ -443,9 +443,6 @@ def detail_page_to_tppcenter(context, url, slug=None):
 def isSiteOrganizationTpp(context):
 
     SITE_ID = context.get('SITE_ID', 1)
-    organization = UserSites.objects.get(sites__id=SITE_ID).organization.pk
+    organization = UserSites.objects.get(sites__id=SITE_ID).organization
 
-    if hasattr(organization, "tpp"):
-        return True
-
-    return False
+    return hasattr(organization, "tpp")
