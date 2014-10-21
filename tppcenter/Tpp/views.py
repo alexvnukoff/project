@@ -398,9 +398,6 @@ def _tabsStructure(request, tpp, page=1):
 
     if request.is_ajax() and request.user.is_authenticated():
 
-        if "change_tpp" not in permissionsList: # Error
-            return HttpResponseBadRequest()
-
         try:
             id = int(request.POST.get("id", 0))
         except ValueError:
@@ -408,6 +405,9 @@ def _tabsStructure(request, tpp, page=1):
 
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
+
+        if "change_tpp" not in permissionsList and action is not None: # Error
+            return HttpResponseBadRequest()
 
         if action == "add" and len(name) > 0:
 
