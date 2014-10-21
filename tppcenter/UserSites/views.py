@@ -253,6 +253,3 @@ def deleteResume(request, item_id):
 
 
     return HttpResponseRedirect(reverse('resume:main'))
-
-
-

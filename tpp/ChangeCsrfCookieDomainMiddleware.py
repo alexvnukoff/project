@@ -1,13 +1,12 @@
 """
-Cross Site Request Forgery Middleware.
-
-This module provides a middleware that implements protection
-against request forgeries from other sites.
+Change cookie domain to accept form sub domains( Lang sub domains )
 """
 from django.conf import settings
 
 
 class ChangeCsrfCookieDomainMiddleware:
+
+
     def process_request(self, request):
 
         current_domain = request.get_host().split('.')

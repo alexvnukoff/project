@@ -6,6 +6,10 @@ from appl.models import Organization
 __author__ = 'user'
 
 class SetCurCompany:
+    '''
+        Set current company in B2B for user when company selected for manging
+    '''
+
 
     def process_request(self, request):
         compID = request.GET.get('set', False)

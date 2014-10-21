@@ -12,12 +12,20 @@ from django.core.cache import cache
 
 
 class UserBasedExceptionMiddleware(object):
+    '''
+        Show django stack trace when it's our IP
+    '''
+
     def process_exception(self, request, exception):
         if request.user.is_superuser or request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS:
             return technical_500_response(request, *sys.exc_info())
 
 
 class SiteUrlMiddleWare:
+
+    '''
+        Set requested site ( we have 3: UserSites, B2B and B2C) by domain
+    '''
 
     def process_request(self, request):
 
@@ -34,7 +42,7 @@ class SiteUrlMiddleWare:
 
         lang = current_domain[0]
 
-        if lang in languages:
+        if lang in languages: #remove lang sub domain
             current_domain.pop(0)
 
         current_domain = '.'.join(current_domain)
@@ -67,6 +75,10 @@ class SiteUrlMiddleWare:
         )
 
 class SiteLangRedirect:
+
+    '''
+        Redirect to lang sub domain
+    '''
 
     def process_request(self, request):
         lang = request.get_host().split('.')[0]
@@ -137,8 +149,6 @@ class LocaleMiddleware(object):
         translation.deactivate()
 
         return response
-
-
 
 class GlobalRequest(object):
     _requests = {}
