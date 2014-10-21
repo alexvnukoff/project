@@ -17,7 +17,7 @@ class BaseSearchIndex(indexes.SearchIndex):
     def get_updated_field(self):
         return "create_date"
 
-class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
+class GreetignsIndex(BaseSearchIndex, indexes.Indexable):
 
     '''
         return {
@@ -89,7 +89,7 @@ class GreetignsIndex(indexes.SearchIndex, indexes.Indexable):
         return self.prepared_data
 
 ################## Exhibition Index #############################
-class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
+class ExhibitionProposalIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp = indexes.IntegerField(null=True)
@@ -257,7 +257,7 @@ class ExhibitionProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
 ################## Business Proposal Index #############################
 
-class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
+class BusinessProposalIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     tpp = indexes.IntegerField(null=True)
@@ -414,7 +414,7 @@ class BusinessProposalIndex(indexes.SearchIndex, indexes.Indexable):
 
 ################## Countries  Index #############################
 
-class CountryIndex(indexes.SearchIndex, indexes.Indexable):
+class CountryIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
 
     title_sort = indexes.CharField(indexed=False, faceted=True)
@@ -463,7 +463,7 @@ class CountryIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Category Index #############################
 
-class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
+class CategoryIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     parent = indexes.IntegerField()
@@ -517,7 +517,7 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Branches Index #############################
 
-class BranchIndex(indexes.SearchIndex, indexes.Indexable):
+class BranchIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     
@@ -548,7 +548,7 @@ class BranchIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## BpCategories Index #############################
 
-class BpCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
+class BpCategoriesIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
     
@@ -588,7 +588,7 @@ class BpCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Company Index #############################
 
-class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
+class CompanyIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
@@ -721,7 +721,7 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Tpp Index #############################
 
-class TppIndex(indexes.SearchIndex, indexes.Indexable):
+class TppIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
@@ -847,7 +847,7 @@ class TppIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Products Index #############################
 
-class ProductIndex(indexes.SearchIndex, indexes.Indexable):
+class ProductIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     branch = indexes.MultiValueField(null=True)
@@ -1054,7 +1054,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## News Index #############################
 
-class NewsIndex(indexes.SearchIndex, indexes.Indexable):
+class NewsIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
@@ -1218,7 +1218,7 @@ class NewsIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Tenders Index #############################
 
-class TenderIndex(indexes.SearchIndex, indexes.Indexable):
+class TenderIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
@@ -1366,7 +1366,7 @@ class TenderIndex(indexes.SearchIndex, indexes.Indexable):
 
 ########################## Innovation Projects Index #############################
 
-class InnovIndex(indexes.SearchIndex, indexes.Indexable):
+class InnovIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
@@ -1546,7 +1546,7 @@ class InnovIndex(indexes.SearchIndex, indexes.Indexable):
         return InnovationProject
 
 ########################## Tpp Index #############################
-class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
+class TppTvIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title = indexes.CharField()
     country = indexes.IntegerField(null=True)
@@ -1658,7 +1658,7 @@ class TppTvIndex(indexes.SearchIndex, indexes.Indexable):
         return TppTV
 
 
-class NewsCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
+class NewsCategoriesIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     title_sort = indexes.CharField(indexed=False, faceted=True)
     
@@ -1692,7 +1692,7 @@ class NewsCategoriesIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 ########################## Department Index #############################
-class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
+class DepartmentIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
@@ -1794,7 +1794,7 @@ class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 ########################## Cabinet Index #############################
-class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
+class CabinetIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True)
     country = indexes.IntegerField(null=True)
     email = indexes.CharField(null=True)
@@ -1883,7 +1883,7 @@ class CabinetIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 ########################## Resume Index #############################
-class ResumeIndex(indexes.SearchIndex, indexes.Indexable):
+class ResumeIndex(BaseSearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     text = indexes.CharField(document=True)
 
@@ -2031,7 +2031,7 @@ class ResumeIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 ########################## Requirement Index #############################
-class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
+class RequirementIndex(BaseSearchIndex, indexes.Indexable):
     country = indexes.IntegerField(null=True)
     text = indexes.CharField(document=True)
     title = indexes.CharField()
@@ -2137,7 +2137,7 @@ class RequirementIndex(indexes.SearchIndex, indexes.Indexable):
         return Requirement
 
 
-class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
+class VacancyIndex(BaseSearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, null=True)
     obj_start_date = indexes.DateTimeField()
     obj_end_date = indexes.DateTimeField(null=True)
