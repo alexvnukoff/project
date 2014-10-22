@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 from appl.models import Cabinet, Country, Organization
 from core.amazonMethods import add, delete
 from core.models import Item, Dictionary, Relationship
-from tppcenter.Profile.profileForms import ProfileForm
+
 from tppcenter.views import user_logout
 
 
@@ -35,6 +35,7 @@ def getProfileForm(request):
 
 
 def _profileContent(request):
+    from tppcenter.Profile.profileForms import ProfileForm
 
     user_groups = request.user.groups.values_list('pk', flat=True)
 

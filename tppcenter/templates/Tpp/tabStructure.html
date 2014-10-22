@@ -12,7 +12,7 @@
     <div class="content-staff">
         <div class="content-staffin">
             {% if departments|length > 0 %}
-                <ul class="sitemap">
+                <ul class="sitemap department">
                     {% for id, department in departments.items %}
                         <li data-item-id="{{ id }}">
                             <a href="#" title="{{ department.text }}">{{ department.text }}</a>

@@ -12,8 +12,4 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Profile.views.getProfileForm, name='main'),
-
-
-
-
 )
