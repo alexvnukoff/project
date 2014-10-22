@@ -320,6 +320,7 @@ for lang in LANGUAGES:
         'INDEX_NAME': 'lang-' + lang[0],
     }
 
+HAYSTACK_ROUTERS = ['tpp.backend.DefaultRouter']
 HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 HAYSTACK_ID_FIELD = 'id'
 

@@ -1,3 +1,6 @@
+from haystack.routers import BaseRouter
+from tpp.settings import HAYSTACK_CONNECTIONS
+
 __author__ = 'user'
 from django.conf import settings
 from django.utils import translation
@@ -13,8 +16,9 @@ def get_using(language, alias=DEFAULT_ALIAS):
 
 class MultilingualElasticSearchBackend(ElasticsearchSearchBackend):
     def update(self, index, iterable, commit=True, multilingual=True):
+        '''
         if multilingual:
-            initial_language = translation.get_language()[:2]
+
             # retrieve unique backend name
             backends = []
             for language, __ in settings.LANGUAGES:
@@ -24,20 +28,44 @@ class MultilingualElasticSearchBackend(ElasticsearchSearchBackend):
                     continue
                 else:
                     backends.append(using)
-                translation.activate(language)
+
                 backend = connections[using].get_backend()
                 backend.update(index, iterable, commit, multilingual=False)
-            translation.activate(initial_language)
-        else:
-            print("[{0}]".format(self.connection_alias))
-            super(MultilingualElasticSearchBackend, self).update(index, iterable, commit)
 
-class MultilingualElasticSearchQuery(ElasticsearchSearchQuery):
-    def __init__(self, using=DEFAULT_ALIAS):
-        language = translation.get_language()[:2]
-        using = get_using(language)
-        super(MultilingualElasticSearchQuery, self).__init__(using)
+        else:
+            initial_language = translation.get_language()[:2]
+            print("[{0}]".format(self.connection_alias))
+
+
+            if DEFAULT_ALIAS != self.connection_alias:
+                language = self.connection_alias[-2:]
+                translation.activate(language)
+
+            super(MultilingualElasticSearchBackend, self).update(index, iterable, commit)
+            translation.activate(initial_language)
+        '''
+        languages = [lan[0] for lan in settings.LANGUAGES]
+
+        initial_language = translation.get_language()[:2]
+        language = self.connection_alias[-2:]
+
+        print("[{0}]".format(self.connection_alias))
+
+        if language in languages:
+            translation.activate(language)
+
+        super(MultilingualElasticSearchBackend, self).update(index, iterable, commit)
+        translation.activate(initial_language)
+
 
 class MultilingualElasticEngine(ElasticsearchSearchEngine):
     backend = MultilingualElasticSearchBackend
-    query = MultilingualElasticSearchQuery
+
+class DefaultRouter(BaseRouter):
+    def for_read(self, **hints):
+        language = translation.get_language()[:2]
+        return get_using(language)
+
+    def for_write(self, **hints):
+        language = translation.get_language()[:2]
+        return get_using(language)

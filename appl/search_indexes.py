@@ -1,4 +1,5 @@
 from django.utils.timezone import now, get_current_timezone
+from django.utils import translation
 
 from appl import func
 
@@ -37,13 +38,23 @@ class BaseSearchIndex(indexes.SearchIndex):
 
         #Get parent active date
         try:
-            parentRel = Relationship.objects.get(child=obj.pk, type__in=('dependence', 'hierarchy'))
+
+            parentRel = Relationship.objects.get(child=obj.pk, type='dependence')
+
+        except ObjectDoesNotExist:
+
+            try:
+                parentRel = Relationship.objects.get(child=obj.pk, type='hierarchy')
+            except ObjectDoesNotExist:
+                parentRel = None
+
+        if parentRel:
 
             parentRel = func.make_object_dates_aware(parentRel)
 
             parentRelEnd = parentRel.end_date
             parendStart = parentRel.start_date
-        except ObjectDoesNotExist:
+        else:
             parentRelEnd = None
             parendStart = None
 
