@@ -19,7 +19,7 @@
                             {% with attr.WIDTH|first as width %}
                             {% with attr.HEIGHT|first as height %}
                                 <li><a href="{% url "adv_banners:banner_form" id %}" class="btn-size">
-                                    {{ name }} | {{ width }} X {{ height }}
+                                    <span>{{ name }}</span> | <span>{{ width }} X {{ height }}</span>
                                 </a></li>
                             {% endwith %}
                             {% endwith %}
