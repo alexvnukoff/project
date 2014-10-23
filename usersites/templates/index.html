@@ -2,12 +2,17 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
+{% isSiteOrganizationTpp as isOrg %}
 
 {% block title %}{{ title }}{% endblock %}
 
   {% block header %}
        {% getUserSitTopMenu %}
     {% endblock %}
+
+            {% if isOrg %}
+                <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
+            {% endif %}
 
   {% block body %}
 
@@ -47,8 +52,12 @@
 
 
        {{ contentPage }}
+
                    {% endblock %}
         </div>
+        {% if isOrg %}
+            {% userSitegetTopOnPage %}
+        {% endif %}
     </div>
 </div>
   {% endblock %}

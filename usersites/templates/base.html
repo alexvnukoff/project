@@ -2,7 +2,6 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load inclusionTags %}
-{% isSiteOrganizationTpp as isOrg %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -28,9 +27,7 @@
             <link type="text/css" href="{% static 'usersites/css/flags.css'%}" rel="stylesheet" />
             <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery.bxslider.css'%}" />
 
-            {% if isOrg %}
-                <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
-            {% endif %}
+
 
         {% endblock %}
 
@@ -66,9 +63,6 @@
     {% block body %}
 
     {% endblock %}
-    {% if isOrg %}
-        {% userSitegetTopOnPage %}
-    {% endif %}
 
     {% block rtl %}
         {% if site|getSide %}
