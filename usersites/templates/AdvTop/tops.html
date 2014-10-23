@@ -28,13 +28,13 @@
                                         {% endif %}
 
                                         {% if top.title %}
-                                            <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.title }}</a>
+                                            <a title="{{ top.title }}" href="{% detail_page_to_tppcenter modelDict.detailUrl top.slug %}" class="linkads">{{ top.title }}</a>
                                         {% else %}
-                                            <a title="{{ top.text }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.text }}</a>
+                                            <a title="{{ top.text }}" href="{% detail_page_to_tppcenter modelDict.detailUrl top.slug %}" class="linkads">{{ top.text }}</a>
                                         {% endif %}
                                     </div>
                                     <div class="infoads">
-                                    <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}">
+                                    <a title="{{ top.title }}" href="{% detail_page_to_tppcenter modelDict.detailUrl top.slug %}">
                                         {% if top.image %}
                                             {% if top.title %}
                                                 <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.title }}<" class="thumb" />
