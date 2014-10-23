@@ -1595,6 +1595,7 @@ class VacancyIndex(BaseSearchIndex, indexes.Indexable):
     department = indexes.IntegerField(null=True)
     company = indexes.IntegerField(null=True)
     tpp = indexes.IntegerField(null=True)
+    cabinet = indexes.IntegerField(null=True)
 
     slug = indexes.CharField(indexed=False)
 
@@ -1656,6 +1657,14 @@ class VacancyIndex(BaseSearchIndex, indexes.Indexable):
             self.prepared_data[tppIndex] = tpp.pk
 
         return self.prepared_data
+
+    def prepare_cabinet(self, obj):
+        try:
+            return Cabinet.objects.get(c2p__parent=obj.pk).pk
+        except MultipleObjectsReturned:
+            return Cabinet.objects.filter(c2p__parent=obj.pk)[0].pk
+        except ObjectDoesNotExist:
+            return None
 
     def get_model(self):
         return Vacancy

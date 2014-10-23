@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 
 from django.core.mail import EmailMessage
@@ -356,7 +357,7 @@ def _tabsStructure(request, company, page=1):
     departmentsDict = {}
     departmentsList = []
 
-    for department in departments:
+    for department in departments.object_list:
         department.vacancyList = []
         departmentsDict[int(department.pk)] = department
         departmentsList.append(department.pk)
@@ -383,78 +384,99 @@ def _tabsStaff(request, company, page=1):
         Show content of the Company-details-staff panel
     '''
     # get Cabinet ID if user should be detach from Organization
-    errorMessage = ''
-    cabinetToDetach = request.POST.get('cabinetID', 0)
+    organization = get_object_or_404(Company, pk=company)
+    permissionsList = organization.getItemInstPermList(request.user)
 
-    try:
-        cabinetToDetach = int(cabinetToDetach)
-    except ValueError:
-        cabinetToDetach = 0
+    if request.is_ajax() and request.user.is_authenticated():
 
-    if cabinetToDetach > 0:
-        try:
-            curr_user_cab = Cabinet.objects.get(user=request.user)
-            if curr_user_cab.pk != cabinetToDetach:
-                Relationship.objects.filter(parent__c2p__parent__c2p__parent=company, child=cabinetToDetach,
-                                            type='relation').delete()
-        except Exception as e:
-            errorMessage = _('User %(user)s has not Cabinet.') % {"user": str(request.user)}
-            pass
+        action = request.POST.get('action', False)
 
-    # add a new user to department
-    userEmail = request.POST.get('userEmail', '')
+        action = action if action else request.GET.get('action', None)
 
-    if len(userEmail):
-        departmentName = request.POST.get('departmentName', '')
-        vacancyName = request.POST.get('vacancyName', '')
-        isAdmin = int(request.POST.get('isAdmin', 0))
+        if "add_cabinet" not in permissionsList and action is not None: # Error
+            return HttpResponseBadRequest()
 
-        if len(departmentName):
+        if action == "department":
+            departments = [{'name': _("Select department"), "value": ""}]
+
+            for department in func.getActiveSQS().models(Department).filter(company=company).order_by('text'):
+                departments.append({"name": department.text, "value": department.pk})
+
+            return HttpResponse(json.dumps(departments))
+
+        elif action == "vacancy":
+
+            department = int(request.GET.get("department", 0))
+
+            if department <= 0:
+                return HttpResponseBadRequest()
+
+            vacancies = [{'name': _("Select vacancy"), "value": ""}]
+
+            for vacancy in func.getActiveSQS().models(Vacancy).filter(company=company, department=department).order_by('text'):
+                vacancies.append({"name": vacancy.text, "value": vacancy.pk})
+
+            return HttpResponse(json.dumps(vacancies))
+
+        elif action == "add":
+
+            user = request.POST.get('user', "").strip()
+            department = int(request.POST.get('department', 0))
+            vacancy = int(request.POST.get('vacancy', 0))
+
+            if not user or department <= 0 or vacancy <= 0:
+                return HttpResponseBadRequest()
+
             try:
-                dep = Department.objects.get(c2p__parent=company, pk=departmentName)
-                try:
-                    vac = Vacancy.objects.get(c2p__parent=dep, pk=vacancyName)
-                except:
-                    #if this Department hasn't this Vacancy then add Vacancy to Department
-                    vac = Vacancy.objects.create(title='VACANCY_FOR_DEPARTMENT_ID:'+str(dep.pk),
-                                                 create_user=request.user)
-                    vac.setAttributeValue({'NAME': vacancyName}, request.user)
-                    Relationship.objects.create(parent=dep, child=vac, type='hierarchy', create_user=request.user)
+                user = User.objects.get(email=user)
+                department = Department.objects.get(pk=department, c2p__parent=company)
+                vacancy = Vacancy.objects.get(pk=vacancy, c2p__parent=department)
+            except ObjectDoesNotExist:
+                return HttpResponseBadRequest(_('User not found'))
 
-                usr = User.objects.get(email=userEmail.strip())
+            # One user for vacancy
+            if Cabinet.objects.filter(c2p__parent=vacancy.pk).exists():
+                return HttpResponseBadRequest(_("The vacancy already have employee attached"))
 
-                #if User already works in the Organization, don't allow to connect him to the Company
-                if not Cabinet.objects.filter(user=usr, c2p__parent__c2p__parent__c2p__parent=company).exists():
+            cab, res = Cabinet.objects.get_or_create(user=user, create_user=user)
 
-                    if not Cabinet.objects.filter(c2p__parent=vac.pk).exists():
-                        # if no attached Cabinets to this Vacancy then ...
-                        cab, res = Cabinet.objects.get_or_create(user=usr, create_user=usr)
+            if res: # user exists but never logged in
+                cab.setAttributeValue({
+                                          'USER_FIRST_NAME': user.first_name,
+                                          'USER_MIDDLE_NAME':'',
+                                          'USER_LAST_NAME': user.last_name,
+                                          'EMAIL': user.email
+                }, user)
+            elif Cabinet.objects.filter(pk=cab.pk, c2p__parent__c2p__parent__c2p__parent=company).exists():
+                return HttpResponseBadRequest(_("The user already employed in your organization"))
 
-                        if res:
-                            try:
-                                cab.setAttributeValue({'USER_FIRST_NAME': usr.first_name, 'USER_MIDDLE_NAME':'',
-                                                        'USER_LAST_NAME': usr.last_name, 'EMAIL': usr.email}, usr)
-                                group = Group.objects.get(name='Company Creator')
-                                usr.is_manager = True
-                                usr.save()
-                                group.user_set.add(usr)
-                            except Exception as e:
-                                errorMessage = _('Can not set attributes for Cabinet ID: %(cab_id)s.\
-                                                The reason is: %(reason)s') % {"cab_id": str(cab.pk), "reason": str(e)}
-                        if isAdmin:
-                            flag = True
-                        else:
-                            flag = False
 
-                        Relationship.objects.get_or_create(parent=vac, child=cab, is_admin=flag, type='relation',
-                                                                   create_user=usr)
-                    else:
-                        errorMessage = _('You can not add user at Vacancy which already busy.')
-                else:
-                    errorMessage = _('You can not add user [%(user)s] at the company twice.') % {"user": str(usr)}
-            except:
-                logger.exception("Error in tab staff",  exc_info=True)
-                pass
+            admin = int(request.POST.get('admin', 0))
+            admin = True if admin != 0 else False
+
+            if admin:
+                user.is_manager = True
+                user.save()
+
+            Relationship.objects.get_or_create(parent=vacancy, child=cab, is_admin=admin, type='relation',
+                                                create_user=user)
+            cab.reindexItem()
+            vacancy.reindexItem()
+
+        elif action == "remove":
+            cabinet = int(request.POST.get('id', 0))
+
+            if cabinet > 0:
+
+                cabinet = get_object_or_404(Cabinet, pk=cabinet)
+
+                vacancy = get_object_or_404(Vacancy, p2c__child=cabinet.pk, c2p__parent__c2p__parent=company)
+
+                Relationship.objects.filter(parent__c2p__parent__c2p__parent=company, child=cabinet,
+                                                type='relation').delete()
+
+                cabinet.reindexItem()
+                vacancy.reindexItem()
 
     cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=company).distinct()
     attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
@@ -534,7 +556,7 @@ def _tabsStaff(request, company, page=1):
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': company,
-        'errorMessage': errorMessage,
+        'item_pk': company
     }
 
     return render_to_response('Companies/tabStaff.html', templateParams, context_instance=RequestContext(request))

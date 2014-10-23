@@ -546,7 +546,7 @@ def adv_save_price(request):
 @login_required(login_url="/login/")
 def adv_settings(request):
 
-    if not request.user.is_commando and not request.user.is_superuser:
+    if not request.user.is_commando and not request.user.is_superuser and not request.user.is_manager:
         return HttpResponseBadRequest()
 
 

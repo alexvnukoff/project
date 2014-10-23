@@ -1293,3 +1293,222 @@ var companyStructure =
         this.overlay.hide();
     }
 };
+
+var companyStaff =
+{
+    overlay: '#fade-profile',
+
+    forms: '',
+
+    staffURL: "",
+    cache: {},
+
+    loader: '<div class="loader">' +
+                '<img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/>' +
+            '</div>',
+
+    init: function(staffURL, LANG) {
+
+        this.LANG = LANG;
+
+        var self = this;
+
+        self.staffURL = staffURL;
+        self.overlay = $(this.overlay);
+
+        self.setForms();
+
+        $('#user-add-button').on('click', function() {
+            return self.addNew($(this));
+		});
+
+        $('.btnremove-small').on('click', function() {
+            return self.remove($(this));
+		});
+    },
+
+
+    setForms: function() {
+
+        var LANG = this.LANG;
+
+        this.form =
+                        '<div class="staffadd" id="add-user-popup">' +
+                            '<i class="close-formadd imgnews"></i>' +
+                            '<div class="title">' + LANG['popup_title'] + '</div>' +
+                            '<div class="error"></div>' +
+                            '<div id="popup-context">' +
+                                '<div class="staffaddin">' +
+                                    '<div class="holder">' +
+                                        '<label>' + LANG['popup_dep'] + '</label>' +
+                                        '<select id="dep-list" style="width:62%;">' +
+                                           '<option disabled selected>' + LANG['popup_loading'] + '</option>' +
+                                        '</select>' +
+                                    '</div>' +
+                                    '<div class="holder">' +
+                                        '<label>' + LANG['popup_vac'] + '</label>' +
+                                        '<select id="vacancy-list" style="width:62%;">' +
+                                            '<option disabled selected>' + LANG['select_department'] + '</option>' +
+                                        '</select>' +
+                                    '</div>' +
+                                    '<div class="holder">' +
+                                        '<input type="checkbox" id="is-admin">' + LANG['popup_administrator'] +
+                                    '</div>' +
+                                    '<div class="inputadd">' +
+                                        '<input type="text" id="user-name" class="text" />' +
+                                    '</div>' +
+                                    '<div class="formadd-button">' +
+                                        '<a class="btntype2" id="btn-add-user" href="#">' + LANG['popup_add'] + '</a>' +
+                                        '<a class="btntype1" href="#">' + LANG['popup_cancel'] + '</a>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+    },
+
+    remove: function(clickedItem) {
+        var contentHolder = $('#staff-tabs');
+        var id = clickedItem.data('item-id');
+
+        if(id && confirm(this.LANG['confirm'])) {
+            contentHolder.html(this.loader);
+
+            $.post(this.staffURL, {id: id, "action": "remove"}, function(data){
+                contentHolder.replaceWith(data);
+            }, 'html');
+        }
+
+        return false;
+    },
+
+    setOptions: function(select, options) {
+
+        select.find('option').remove();
+
+        for (i in options) {
+            obj = options[i];
+
+            select.append('<option value="' + obj.value + '">' + obj.name + '</option>');
+        }
+    },
+
+    addNew: function(clickedItem) {
+
+        var self = this;
+        var form = $(self.form);
+
+        form.on("change", "#dep-list", function() {
+           var id = $(this).find("option:selected").val();
+           var select = $('#vacancy-list');
+           var option_loading = {'value': '', 'name': self.LANG['popup_loading']};
+           var option_department = {'value': '', 'name': self.LANG['select_department']};
+
+           if ( !id ) {
+               self.setOptions(select, [option_department])
+           } else {
+
+               if ( id in self.cache )
+               {
+                   var options = self.cache[id];
+                   self.setOptions(select, options);
+               } else {
+
+                   self.setOptions(select, [option_loading]);
+
+                   $.get(self.staffURL, {"action": "vacancy", "department": id}, function(options) {
+                       self.cache[id] = options;
+                       self.setOptions(select, options);
+                   }, 'json');
+               }
+           }
+        });
+
+        // press Add button
+	    form.on('click','#btn-add-user', function() {
+
+            if (self.xhr)
+                return false;
+
+            var user = form.find('#user-name').val();
+            var vacancy = form.find('#vacancy-list option:selected').val();
+            var department = form.find('#dep-list option:selected').val();
+            var admin = 0;
+
+            if(!user || !vacancy || !department)
+                return false;
+
+            if (form.find('#is-admin').is(':checked'))
+               admin = 1;
+
+            var contentHolder = $('#staff-tabs');
+            var error = form.find('.error');
+
+            error.text(self.LANG['popup_loading']);
+
+            self.xhr = $.ajax({
+                url: self.staffURL,
+                type: 'POST',
+                data : {
+                    action: "add",
+                    user: user,
+                    vacancy: vacancy,
+                    admin: admin,
+                    department: department
+                },
+                success: function (data) {
+                    contentHolder.replaceWith(data);
+                    self.hideOverlay();
+                },
+                error: function (xhr, status, error) {
+                    if (error) {
+                        console.log(xhr.responseText);
+                        form.find('.error').text(xhr.responseText );
+                    }
+                },
+                complete: function() {
+                    delete self.xhr;
+                },
+                dataType: 'html'
+            });
+
+            return false;
+		});
+
+        <!-- press Cancel button -->
+	    form.on('click','.btntype1', function() {
+            self.hideOverlay();
+            return false;
+		});
+
+        this.showOverlayForm(form);
+    },
+
+    showOverlayForm: function(form) {
+
+        var self = this;
+
+        self.hideOverlay();
+
+        self.overlay.show();
+        self.popup = form;
+
+        var select = form.find('#dep-list');
+
+        $.get(self.staffURL, {"action": "department"}, function(options) {
+            self.setOptions(select, options);
+        }, 'json');
+
+        $('body').append(self.popup);
+    },
+
+    hideOverlay: function(form) {
+
+        if (this.popup) {
+            this.popup.remove();
+            delete this.popup;
+            this.cache = {};
+        }
+
+        this.overlay.hide();
+    }
+};

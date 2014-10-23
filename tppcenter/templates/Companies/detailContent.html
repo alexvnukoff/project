@@ -64,79 +64,20 @@
             'popup_dep': '{% trans "Department name" %}',
             'popup_vac': '{% trans "Vacancy title" %}'
         };
+
+        LANG['staff'] = {
+            'confirm': '{% trans "Do you want to delete this record?" %}',
+            'popup_add': '{% trans "OK" %}',
+            'popup_cancel': '{% trans "Cancel" %}',
+            'popup_dep': '{% trans "Department name" %}',
+            'popup_vac': '{% trans "Vacancy title" %}',
+            'popup_administrator': '{% trans "Administrator" %}',
+            'popup_title': '{% trans "Add staff" %}',
+            'popup_loading': '{% trans "Loading..." %}',
+            'select_department': '{% trans "Select department" %}'
+        };
     </script>
 
-
-
-<!-- script for Staff add popup and delete -->
-<script type="text/javascript">
-    $(function() {
-	    $(document).on('click','.btnremove-small', function() {
-            var tr = $(this).parents('tr');
-            var cabinetID = tr.data('cabinet');
-            tr.css("background-color","#FF3700");
-
-            if (confirm('{%  trans "Do you want to delete this record?" %}')) {
-                var contentHolder = $('#staff-tab .tpp-dt-content');
-                contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
-
-                $.post("{% url "companies:tab_staff" item.pk %}", {cabinetID: cabinetID}, function(data){
-                        contentHolder.replaceWith(data);
-                        }, 'html');
-            } else {
-                 tr.css("background-color", "");
-            }
-
-            return false;
-		});
-        <!-- add Staff (popup window) -->
-        $(document).on('click','#user-add-button', function() {
-            $('#fade-profile').show();
-            $('#popup-context').load("{% url "companies:tab_staff" item.pk %} .staffaddin");
-            $('#add-user-popup').show();
-
-            return false;
-		});
-    });
-</script>
-
-<script type="text/javascript">
-    $(function(){
-        // Staff adding from popup
-	    $(document).on('click','#btn-add-user', function(){
-            var userEmail = $('#user-name').val();
-            var departmentName = $('#dep-list').find(":selected").val();
-            var vacancyName = $('#vacancy-list').find(":selected").val();
-            var isAdmin = 0;
-
-            if ($('#is-admin').is(':checked')) {
-                isAdmin = 1;
-            }
-            else {
-                isAdmin = 0;
-            }
-
-            var contentHolder = $('#staff-tab .tpp-dt-content');
-            contentHolder.html('<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>');
-
-            $.post("{% url "companies:tab_staff" item.pk %}",
-                    {departmentName: departmentName, userEmail: userEmail, vacancyName: vacancyName, isAdmin: isAdmin},
-                    function(data){
-                        contentHolder.replaceWith(data);
-                    }, 'html');
-
-            $('#dep-list:eq(0)').attr('selected','selected');
-            $('#fade-profile').hide();
-
-            return false;
-		});
-	});
-</script>
-
-<!-- script for Departments and Vacancies selection -->
-<script type="text/javascript">
-
-</script>
 {% endblock %}
 
 {% block keywords %}{% endblock %}
