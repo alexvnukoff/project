@@ -14,7 +14,7 @@
 
   {% block styles %}
     {{ block.super }}
-      {% isSiteOrganizationTpp as isOrg %}
+     {% isSiteOrganizationTpp as isOrg %}
     {% if isOrg %}
         <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
     {% endif %}
@@ -62,6 +62,7 @@
 
                    {% endblock %}
         </div>
+        {% isSiteOrganizationTpp as isOrg %}
         {% if isOrg %}
             {% userSitegetTopOnPage %}
         {% endif %}
