@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load CustomFilters %}
 {% load inclusionTags %}
-
+{% load staticfiles %}
+{% load i18n %}
 {% isSiteOrganizationTpp as isOrg %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -20,11 +21,11 @@
 	<div class="wrapper">
     	<div class="menutop">
         	<div class="linkleft">
-            	<a href="{% detail_page_to_tppcenter "project:about" %}">О проекте</a>|<a href="{% detail_page_to_tppcenter "project:offer" %}">Услуги</a>|<a href="{% detail_page_to_tppcenter "project:faq" %}">Помощь</a>
+            	<a href="{% detail_page_to_tppcenter "project:about" %}">{% trans "About" %}</a>|<a href="{% detail_page_to_tppcenter "project:offer" %}">{% trans "Services" %}</a>|<a href="{% detail_page_to_tppcenter "project:faq" %}">{% trans "Help" %}</a>
             </div>
             <div class="signup">
             	<i class="i-lock imgmain"></i>
-                <a href="#">Войти </a>
+                <a href="#">{% trans "Sign in" %} </a>
             </div>
             <div class="notify none">
                 <span><i class="imgmain i-note"></i></span>
