@@ -35,13 +35,6 @@ def get_wall(request, page_id=None, language=None, about=None):
 
     return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
 
-
-
-
-
-
-
-
 def _get_content(request, language):
      user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
      organization = user_site.organization.pk

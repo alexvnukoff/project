@@ -3,6 +3,7 @@
 {% load inclusionTags %}
 {% load staticfiles %}
 {% load i18n %}
+
 {% isSiteOrganizationTpp as isOrg %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -11,9 +12,13 @@
        {% getUserSitTopMenu %}
     {% endblock %}
 
-            {% if isOrg %}
-                <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
-            {% endif %}
+  {% block styles %}
+    {{ block.super }}
+    {% if isOrg %}
+        <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
+    {% endif %}
+  {% endblock %}
+
 
   {% block body %}
 

@@ -447,10 +447,7 @@ def isSiteOrganizationTpp(context):
     SITE_ID = get_current_site(request).pk
     organization = UserSites.objects.get(sites__id=SITE_ID).organization
 
-    try:
-        return hasattr(organization, "tpp")
-    except:
-        pass
 
-    return False
+    return hasattr(organization, "tpp")
+
 
