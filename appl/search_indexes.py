@@ -604,7 +604,7 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
 class TppIndex(BaseSearchIndex, indexes.Indexable):
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
-    country = indexes.MultiValueField(null=True)
+    country = indexes.IntegerField(null=True)
 
     title_auto = indexes.NgramField()
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)
@@ -662,7 +662,7 @@ class TppIndex(BaseSearchIndex, indexes.Indexable):
 
     def prepare_country(self, obj):
         try:
-            return [str(pk) for pk in Country.objects.filter(p2c__child_id=obj.pk).values_list('pk', flat=True)]
+            return [pk for pk in Country.objects.filter(p2c__child_id=obj.pk).values_list('pk', flat=True)]
         except ObjectDoesNotExist:
             return None
 
