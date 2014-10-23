@@ -440,9 +440,8 @@ def detail_page_to_tppcenter(context, url, slug=None):
 
     return 'http://' + url
 
-@register.simple_tag(takes_context=True)
+@register.assignment_tag(takes_context=True)
 def isSiteOrganizationTpp(context):
-
 
     request = context.get('request', None)
     SITE_ID = get_current_site(request).pk
