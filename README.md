@@ -199,7 +199,7 @@ Permissions
 #####lxml
 Зашита (хоть какая) от XSS при выводе текста
 
-#####psutil, pygeoip, python-dateutil, Pillow, pytz
+#####psutil, pygeoip, python-dateutil, Pillow, pytz, python3-memcached
 
 Просто нужно
 
