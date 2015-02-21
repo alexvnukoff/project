@@ -1,13 +1,7 @@
 from __future__ import absolute_import
-
-import os
-
 from celery import Celery
 
 from django.conf import settings
-
-# set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tpp.settings')
 
 CELERY_REDIS = getattr(settings, 'CELERY_REDIS', 'localhost')
 CELERY_PORT_REDIS = str(getattr(settings, 'CELERY_PORT_REDIS', 6379))
