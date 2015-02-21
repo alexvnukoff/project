@@ -72,7 +72,7 @@ if USE_DYNAMIC_SITE_MIDDLEWARE == True:
 
     # Use Fallback ID if host not exist in Site table. We use int() here, because
     # os environment variables are always strings.
-    FALLBACK_SITE_ID = None#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
+    FALLBACK_SITE_ID = 0#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
     logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
 
     # Use Fallback ID at startup before process_request(), e.g. in unittests
