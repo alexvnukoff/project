@@ -150,6 +150,8 @@ class DynamicSiteMiddleware(object):
         if lang in languages: #remove lang sub domain
             host.pop(0)
 
+        host = '.'.join(current_domain)
+
         try:
             return SITE_CACHE[host]
         except KeyError:

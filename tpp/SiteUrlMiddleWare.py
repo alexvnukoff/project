@@ -45,24 +45,38 @@ class SiteUrlMiddleWare:
         if lang in languages: #remove lang sub domain
             current_domain.pop(0)
 
-        try:
-            site = Site.objects.get(domain=current_domain)
-        except Site.DoesNotExist:
-            return HttpResponseBadRequest()
+        current_domain = '.'.join(current_domain)
 
-        cached = {
-            'pk': site.pk,
-            'name': str(site.name)
-        }
+        cache_name = 'site_domain_%s' % current_domain
 
-        settings.SITE_ID = site.pk
-        settings.ROOT_URLCONF = "%s.urls" % str(site.name)
-        request.urlconf = "%s.urls" % str(site.name)
+        cached = cache.get(cache_name)
 
-        settings.TEMPLATE_DIRS = [
+        if not cached:
+
+            try:
+                site = Site.objects.get(domain=current_domain)
+            except Site.DoesNotExist:
+                return HttpResponseBadRequest()
+
+            cached = {
+                'pk': site.pk,
+                'name': str(site.name)
+            }
+
+            cache.set(cache_name, cached)
+
+        settings.SITE_ID = cached.get('pk', None)
+        settings.ROOT_URLCONF = cached.get('name', 'tppcenter') + ".urls"
+        request.urlconf = cached.get('name', 'tppcenter') + ".urls"
+
+        settings.TEMPLATE_DIRS = (
             #os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
             os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tppcenter'), 'templates').replace('\\', '/')
-        ]
+        )
+
+        SITE_THREAD_LOCAL = local()
+        SITE_THREAD_LOCAL.ROOT_URLCONF = "%s.urls" % str(site.name)
+        SITE_THREAD_LOCAL.SITE_ID = site.pk
 
         Site.objects.clear_cache()
 
