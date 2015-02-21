@@ -149,7 +149,7 @@ class DynamicSiteMiddleware(object):
         if lang in languages: #remove lang sub domain
             host.pop(0)
 
-        host = '.'.join(current_domain)
+        host = '.'.join(host)
 
         try:
             return SITE_CACHE[host]
