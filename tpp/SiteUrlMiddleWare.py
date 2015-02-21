@@ -40,15 +40,14 @@ class SiteUrlMiddleWare:
         if current_domain[0] == 'www':
             current_domain.pop(0)
 
+        cache_name = 'site_domain_%s' % current_domain
+
         lang = current_domain[0]
 
         if lang in languages: #remove lang sub domain
             current_domain.pop(0)
 
         current_domain = '.'.join(current_domain)
-
-        cache_name = 'site_domain_%s' % current_domain
-
         cached = cache.get(cache_name)
 
         if not cached:
@@ -66,13 +65,13 @@ class SiteUrlMiddleWare:
             cache.set(cache_name, cached)
 
         settings.SITE_ID = cached.get('pk', None)
-        settings.ROOT_URLCONF = cached.get('name', 'tpp') + ".urls"
-        request.urlconf = cached.get('name', 'tpp') + ".urls"
+        settings.ROOT_URLCONF = cached.get('name', 'tppcenter') + ".urls"
+        request.urlconf = cached.get('name', 'tppcenter') + ".urls"
 
-        settings.TEMPLATE_DIRS = (
-            os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
-            os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tpp'), 'templates').replace('\\', '/')
-        )
+        settings.TEMPLATE_DIRS = [
+            #os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
+            os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tppcenter'), 'templates').replace('\\', '/')
+        ]
 
 class SiteLangRedirect:
 
