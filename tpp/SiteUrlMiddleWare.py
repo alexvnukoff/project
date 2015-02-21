@@ -45,32 +45,26 @@ class SiteUrlMiddleWare:
         if lang in languages: #remove lang sub domain
             current_domain.pop(0)
 
-        current_domain = '.'.join(current_domain)
-        cache_name = 'site_domain_%s' % current_domain
-        cached = cache.get(cache_name)
+        try:
+            site = Site.objects.get(domain=current_domain)
+        except Site.DoesNotExist:
+            return HttpResponseBadRequest()
 
-        if not cached:
+        cached = {
+            'pk': site.pk,
+            'name': str(site.name)
+        }
 
-            try:
-                site = Site.objects.get(domain=current_domain)
-            except Site.DoesNotExist:
-                return HttpResponseBadRequest()
-
-            cached = {
-                'pk': site.pk,
-                'name': str(site.name)
-            }
-
-            cache.set(cache_name, cached)
-
-        settings.SITE_ID = cached.get('pk', None)
-        settings.ROOT_URLCONF = cached.get('name', 'tppcenter') + ".urls"
-        request.urlconf = cached.get('name', 'tppcenter') + ".urls"
+        settings.SITE_ID = site.pk
+        settings.ROOT_URLCONF = "%s.urls" % str(site.name)
+        request.urlconf = "%s.urls" % str(site.name)
 
         settings.TEMPLATE_DIRS = [
             #os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
             os.path.join(os.path.dirname(__file__), '..', cached.get('name', 'tppcenter'), 'templates').replace('\\', '/')
         ]
+
+        Site.objects.clear_cache()
 
 class SiteLangRedirect:
 

@@ -126,7 +126,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'tpp.SiteUrlMiddleWare.SiteUrlMiddleWare',
+    'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
     'tpp.SiteUrlMiddleWare.SiteLangRedirect',
     'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
