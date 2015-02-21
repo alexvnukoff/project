@@ -8,7 +8,8 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tpp.users_settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "usersites.settings")
+os.environ['DJANGO_SETTINGS_MODULE'] = "usersites.settings"
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
