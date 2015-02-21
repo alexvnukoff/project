@@ -1,3 +1,4 @@
+'''
 from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 import appl.views
@@ -68,3 +69,4 @@ urlpatterns = patterns('',
     url(r'^test/$', tppcenter.views.test),
 
 )
+'''
