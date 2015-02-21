@@ -15,7 +15,7 @@
 from __future__ import absolute_import, division, print_function
 
 
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 import os
 import sys
 import warnings
@@ -113,6 +113,9 @@ class DynamicSiteMiddleware(object):
     def process_request(self, request):
         # Get django.contrib.sites.models.Site instance by the current domain name:
         site = self._get_site_id_from_host(request)
+
+        if isinstance(site, HttpResponse):
+            return site
 
         # Save the current site
         SITE_THREAD_LOCAL.SITE_ID = site.pk
