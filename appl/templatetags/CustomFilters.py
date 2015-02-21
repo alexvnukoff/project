@@ -440,6 +440,22 @@ def detail_page_to_tppcenter(context, url, slug=None):
 
     return 'http://' + url
 
+@register.simple_tag(takes_context=True)
+def getTppName(context):
+
+    request = context.get('request', None)
+    SITE_ID = get_current_site(request).pk
+    organization = UserSites.objects.get(sites__id=SITE_ID).organization
+    company = getattr(organization, 'company', False)
+
+    if company:
+        company = SearchQuerySet().models(Company).filter(django_id=company.pk)[0]
+
+        if company.tpp:
+            return SearchQuerySet().models(Tpp).filter(django_id=company.tpp)[0].title
+
+    return ""
+
 @register.assignment_tag(takes_context=True)
 def isSiteOrganizationTpp(context):
 
@@ -453,4 +469,6 @@ def isSiteOrganizationTpp(context):
         pass
 
     return False
+
+
 
