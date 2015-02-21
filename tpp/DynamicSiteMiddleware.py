@@ -61,42 +61,41 @@ def _clear_cache(self):
     SITE_CACHE.clear()
 
 
-if USE_DYNAMIC_SITE_MIDDLEWARE == True:
-    # Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
-    # [1] here in DynamicSiteMiddleware._get_site_id_from_host()
-    # [2] in django.contrib.sites.models.SiteManager.get_current()
-    SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
-    sites_models.SITE_CACHE = SITE_CACHE
+# Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
+# [1] here in DynamicSiteMiddleware._get_site_id_from_host()
+# [2] in django.contrib.sites.models.SiteManager.get_current()
+SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
+sites_models.SITE_CACHE = SITE_CACHE
 
-    SITE_THREAD_LOCAL = local()
+SITE_THREAD_LOCAL = local()
 
-    # Use Fallback ID if host not exist in Site table. We use int() here, because
-    # os environment variables are always strings.
-    FALLBACK_SITE_ID = 143#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
-    logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
+# Use Fallback ID if host not exist in Site table. We use int() here, because
+# os environment variables are always strings.
+FALLBACK_SITE_ID = 143#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
+logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
 
-    # Use Fallback ID at startup before process_request(), e.g. in unittests
-    SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
+# Use Fallback ID at startup before process_request(), e.g. in unittests
+SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
 
-    try:
-        FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
-    except Site.DoesNotExist as e:
-        all_sites = Site.objects.all()
-        msg = "Fallback SITE_ID %i doesn't exist: %s (Existing sites: %s)" % (
-            FALLBACK_SITE_ID, e, repr(all_sites.values_list("id", "domain").order_by('id'))
-        )
-        logger.critical(msg)
-        raise ImproperlyConfigured(msg)
+try:
+    FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
+except Site.DoesNotExist as e:
+    all_sites = Site.objects.all()
+    msg = "Fallback SITE_ID %i doesn't exist: %s (Existing sites: %s)" % (
+        FALLBACK_SITE_ID, e, repr(all_sites.values_list("id", "domain").order_by('id'))
+    )
+    logger.critical(msg)
+    raise ImproperlyConfigured(msg)
 #        site = Site(id=FALLBACK_SITE_ID, domain="example.tld", name="Auto Created!")
 #        site.save()
 
-    settings.SITE_ID = DynamicSiteId()
+settings.SITE_ID = DynamicSiteId()
 
-    # Use the same cache for Site.objects.get_current():
-    sites_models.SITE_CACHE = SITE_CACHE
+# Use the same cache for Site.objects.get_current():
+sites_models.SITE_CACHE = SITE_CACHE
 
-    # monkey patch for django.contrib.sites.models.SiteManager.clear_cache
-    sites_models.SiteManager.clear_cache = _clear_cache
+# monkey patch for django.contrib.sites.models.SiteManager.clear_cache
+sites_models.SiteManager.clear_cache = _clear_cache
 
 
 class DynamicSiteMiddleware(object):
