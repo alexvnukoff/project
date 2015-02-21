@@ -98,6 +98,9 @@ INSTALLED_APPS = (
     'legacy_data',
     'djcelery',
     'loginas',
+    'tppcenter',
+    'centerpokupok',
+    'usersites',
     #'paypal.standard.ipn'
     'debug_toolbar'
 )
