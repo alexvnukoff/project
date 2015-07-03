@@ -1,4 +1,4 @@
- {% load i18n %}
+ {% load i18n %
  {% load CustomFilters %}
   <div class="sidebar">
         	<a href="#"><i class="" id="logo"><img src="{{ midea_url }}big/{% logo %}"/></i></a>
@@ -28,6 +28,16 @@
                             if( opt.value === path )
                                 $(opt).attr('selected', 'selected');
                         });
+			$("#lang_select" ).change(function(e) {
+				if(!$(this).val())
+					return;
+					path = (src).split('.');
+							var languages = ["am","ar","en","he","ru","zh"];
+					if ($.inArray(path[0], languages) > -1 {
+						path[0] = $(this).val();
+			}
+					});	
+	
                     });
                     $( "#lang_select" ).change(function(e) {
                         if (!$( this ).val())
@@ -72,7 +82,6 @@
                     });
 
                 </script>
-
 
           <div id="google_translate_element_main"></div>
             <script type="text/javascript">
