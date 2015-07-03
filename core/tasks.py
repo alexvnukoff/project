@@ -1,4 +1,4 @@
- django.db import transaction
+from django.db import transaction
 from django.utils.timezone import make_aware, get_current_timezone
 from appl.models import *
 from django.utils.translation import trans_real
