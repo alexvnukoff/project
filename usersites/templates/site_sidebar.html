@@ -37,19 +37,23 @@
                         if (path[0] == 'www'){
                             delete path[0]
                         }
-
-                        if (path.length > 2){
+		
+			var languages = ["am", "ar", "en", "he", "ru", "zh"];	
+			if($.inArray(path[0], languages)>-1){
+			    path[0] = $(this).val();
+			}
+			
+			window.location.href = window.location.protocol + "//" + path.join('.');
+			/*
+			if (path.length > 2){
                             host = path[0] + '.' + path[1] + "." + path[2]
-                        }
-                        else{
+                        }else{
                             host = window.location.host
                         }
-
                          if (window.location.pathname.length > 1) {
                              path = window.location.pathname.split("/");
 
 
-                             var languages = ["am", "ar", "en", "he", "ru", "zh"];
                              if ($.inArray(path[1], languages) > -1) {
                                  path[1] = $(this).val()
                              }
@@ -61,12 +65,9 @@
                          else{
                              path = "/" +  $(this).val() + "/";
                          }
-
-
-
-
                         window.location.href =window.location.protocol + "//" + host  +
                                 path + window.location.search + window.location.hash;
+			*/
 
                     });
 

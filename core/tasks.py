@@ -1,4 +1,4 @@
-from django.db import transaction
+ django.db import transaction
 from django.utils.timezone import make_aware, get_current_timezone
 from appl.models import *
 from django.utils.translation import trans_real
@@ -759,7 +759,7 @@ def addTopAttr(post, object, user, site_id, ids, org, factor):
     if not item:
         raise Exception('Error occurred while saving form')
 
-    item.sites.add(site_id)
+    #item.sites.add(site_id)
 
     timezoneInfo = get_current_timezone()
 
