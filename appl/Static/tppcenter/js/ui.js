@@ -1319,11 +1319,15 @@ var companyStaff =
         self.setForms();
 
         $('#user-add-button').on('click', function() {
+		console.log(self);
             return self.addNew($(this));
 		});
 
         $('.btnremove-small').on('click', function() {
-            return self.remove($(this));
+console.log(self);
+console.log($(this));
+console.log(this);
+            return self.removeStaff($(this));
 		});
     },
 
@@ -1366,10 +1370,9 @@ var companyStaff =
                         '</div>';
     },
 
-    remove: function(clickedItem) {
+    removeStaff: function(clickedItem) {
         var contentHolder = $('#staff-tabs');
-        var id = clickedItem.data('item-id');
-
+        var id = clickedItem.closest('tr').find('i.staff-contact-msg').data('id');
         if(id && confirm(this.LANG['confirm'])) {
             contentHolder.html(this.loader);
 
