@@ -14,6 +14,18 @@ function getFormat(until)
 }
 
 $(document).ready(function () {
+    //langSwitch fix
+    var isAr = window.location.host.indexOf('ar.');
+    var isHebrew = window.location.host.indexOf('he.');
+
+    if (isAr>=0 || isHebrew>=0)
+        $('head').append('<link id="txtalign" href="/static/centerpokupok/css/alignSwitch.css" type="text/css" rel="stylesheet" />');
+    else {
+        var alignSwitchCss = $("#txtalign");
+        if (alignSwitchCss.length>0)
+            $("#txtalign").remove();
+    }
+
 
 	$('.checkbox').change(function(){
    	if($(this).is(':checked')) 

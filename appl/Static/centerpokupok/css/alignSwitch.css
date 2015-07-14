@@ -1,0 +1,61 @@
+html {
+	text-align: right;
+}
+
+.reg {
+	float: left;
+}
+
+.head-l {
+	float: right;
+}
+
+.regacc {
+	float: right;
+	margin: 0 100px 0 0;
+}
+
+#slidevar {
+	float: right;
+}
+
+#slide-var {
+	float: left;
+}
+
+.title-discount .left {
+	float: right;
+}
+
+#subscribe {
+	float: left;
+}
+
+#linkun {
+	float: right;
+}
+
+#footer .social {
+	float: left;
+}
+
+#footer label {
+	float: right;
+}
+
+#homesearch .bginput {
+	float: right;
+}
+
+#homesearch .bginput i {
+	left: 96.5%;
+}
+
+#searchForm .styled-select{
+	float: left;
+	margin: 0 1px 0 0;
+}
+
+.bginput input.text {
+	margin: 0 45px 0 0;
+}
