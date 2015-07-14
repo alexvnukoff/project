@@ -77,6 +77,7 @@ html {
   list-style: none;
   width: 240px;
   float: right;
+}
   
   #sidevar div.listCol {
   width: 200px;
@@ -168,8 +169,34 @@ html {
   float: left;
 }
 
+#subscribe li input {
+  text-align: right;
+}
+
+#subscribe li a.btnreg
+{
+  float: left;
+}
+
 #linkun {
+  float: right !important;
+}
+
+.head-l {
   float: right;
 }
 
+#linklang {
+ float: left;
+  margin: 0 0 0 50px;
+}
 
+.regacc {
+  text-align: right;
+
+}
+
+.title-discount .left
+{
+  float: right;
+}
