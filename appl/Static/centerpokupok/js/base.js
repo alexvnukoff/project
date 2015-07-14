@@ -13,17 +13,45 @@ function getFormat(until)
         return 'HMS'
 }
 
+function reverseMenu(id, len){
+    var menuInd = len-1;
+    var reversed = Array();
+
+    $(id+" li").each(function(){
+        reversed[menuInd] = $(this);
+        $(this).remove();
+        menuInd--;
+    });
+
+    for (var i=0; i<len; i++){
+        $(id).append($(reversed[i]));
+    }
+}
+
 $(document).ready(function () {
     //langSwitch fix
     var isAr = window.location.host.indexOf('ar.');
     var isHebrew = window.location.host.indexOf('he.');
 
-    if (isAr>=0 || isHebrew>=0)
+    if (isAr>=0 || isHebrew>=0) {
         $('head').append('<link id="txtalign" href="/static/centerpokupok/css/text-align.css" type="text/css" rel="stylesheet" />');
+        $("select[name='country']").attr('dir', 'rtl');
+
+        var menuLen = $("#nav-company li").length; //меню на странице продукта
+        if (menuLen>0){
+            reverseMenu("#nav-company", menuLen);
+        }
+    }
     else {
         var alignSwitchCss = $("#txtalign");
         if (alignSwitchCss.length>0)
             $("#txtalign").remove();
+        $("select[name='country']").attr('dir', 'ltr');
+
+        var menuLen = $("#nav-company li").length; //меню на странице продукта
+        if (menuLen>0){
+            reverseMenu("#nav-company", menuLen);
+        }
     }
 
 
