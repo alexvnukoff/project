@@ -19,7 +19,7 @@ $(document).ready(function () {
     var isHebrew = window.location.host.indexOf('he.');
 
     if (isAr>=0 || isHebrew>=0)
-        $('head').append('<link id="txtalign" href="/static/centerpokupok/css/alignSwitch.css" type="text/css" rel="stylesheet" />');
+        $('head').append('<link id="txtalign" href="/static/centerpokupok/css/text-align.css" type="text/css" rel="stylesheet" />');
     else {
         var alignSwitchCss = $("#txtalign");
         if (alignSwitchCss.length>0)
