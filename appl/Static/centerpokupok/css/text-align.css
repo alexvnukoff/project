@@ -86,7 +86,7 @@ html {
 }
 
 .title-discount .left {
-  float: right;
+  float: right !important;
 }
 
 #bestproduct li .clumn-best .name {
@@ -156,8 +156,12 @@ html {
   padding-right: 10px;
 }
 
-#top span.reg {
+#top span {
   float: left;
+}
+
+#top span.reg {
+  float: right;
 }
 
 #subscribe {
