@@ -2,7 +2,7 @@ html {
 	text-align: right;
 }
 
-.reg {
+#top span.reg {
 	float: left;
 }
 
@@ -15,7 +15,7 @@ html {
 	margin: 0 100px 0 0;
 }
 
-#slidevar {
+#sidevar {
 	float: right;
 }
 
@@ -54,6 +54,14 @@ html {
 #searchForm .styled-select{
 	float: left;
 	margin: 0 1px 0 0;
+}
+
+#searchForm input {
+	float: right;
+}
+
+.bginput {
+
 }
 
 .bginput input.text {
