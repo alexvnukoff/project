@@ -82,7 +82,7 @@ $(document).ready(function () {
             reverseMenu("#nav-company", menuLen);
         }
 
-        if (isHebrew)
+        if (isHebrew>=0)
             convertToSheckel(true);
     }
     else {
