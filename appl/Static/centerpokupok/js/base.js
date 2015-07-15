@@ -1,3 +1,4 @@
+
 function getFormat(until)
 {
     now = +new Date();
@@ -28,6 +29,45 @@ function reverseMenu(id, len){
     }
 }
 
+function convertToSheckel(isHebrew)
+{
+    var sheckelSym = "₪";
+    var dollarSym = "$";
+    var fromDollarToSheckel = 3.77;
+    var fromSheckelToDollar = 0.27;
+
+    var curSym;
+    var prevSym;
+    var priceMultiplier;
+
+    if (isHebrew) {
+        curSym = sheckelSym;
+        prevSym = dollarSym;
+        priceMultiplier = fromDollarToSheckel;
+    }
+    else {
+        curSym = dollarSym;
+        prevSym = sheckelSym;
+        priceMultiplier = fromSheckelToDollar;
+    }
+
+    $('font.number').each(function(){
+        var prevText = $(this).text();
+        var price = prevText.match(/\d/g);
+        price = price.join("");
+
+        if (price!=0) {
+            price = price / 10;
+            price *= priceMultiplier;
+            price = price.toFixed(2);
+        }
+
+        //var newText = prevText.replace(prevSym, curSym);
+        $(this).text(price+" "+curSym);
+    });
+}
+
+
 $(document).ready(function () {
     //langSwitch fix
     var isAr = window.location.host.indexOf('ar.');
@@ -41,6 +81,9 @@ $(document).ready(function () {
         if (menuLen>0){
             reverseMenu("#nav-company", menuLen);
         }
+
+        if (isHebrew)
+            convertToSheckel(true);
     }
     else {
         var alignSwitchCss = $("#txtalign");
