@@ -48,7 +48,7 @@ function convertToSheckel(isHebrew)
         var newPriceTop = $(".price1").text().match(/\d/g).join("")/10*3.77;
         $('.price1').text(newPriceTop+" "+sheckelSym);
 
-        if ($('.price2')){
+        if ($('.price2').length > 0 ){
             var newPriceTop = $(".price2").text().match(/\d/g).join("")/10*3.77;
             $('.price2').text(newPriceTop+" "+sheckelSym);
         }
