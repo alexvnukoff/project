@@ -44,6 +44,9 @@ function convertToSheckel(isHebrew)
         curSym = sheckelSym;
         prevSym = dollarSym;
         priceMultiplier = fromDollarToSheckel;
+
+        var newPriceTop = $(".price1").text().match(/\d/g).join("")/10*3.77;
+        $('.price1').text(newPriceTop+" "+sheckelSym);
     }
     else {
         curSym = dollarSym;
