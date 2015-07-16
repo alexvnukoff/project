@@ -1,0 +1,36 @@
+/*
+    CSS rule for right-to-left languages
+
+    Created by Andrey Ryasnoy (07/10/2015)
+    Reklamazov brothers, Ltd.
+*/
+
+h2, p, span, .tovar_item_small_title, .tovar_view_title, .tovar_description, .recent_post_title, .recent_post_content, .post_meta, footer h4, footer ul, .foot_address, .social, .foot_phone, .foot_mail, .foot_live_chat, .school_sale_description, .sale_caption1, .shoes_page_description, .article_title, .sidepanel, .price_range label , h1{
+    text-align: right;
+}
+.tovar_title {
+    float: right;
+}
+.tovar_title {
+    display: inline;
+}
+div.social a:last-child {
+    margin: 0;
+}
+.services_section_description p, .post_meta li, .about_us_description p {
+    padding: 0;
+}
+.jCarousel_pagination a:first-child {
+/*    left: 0;*/
+}
+.jCarousel_pagination a:last-child {
+/*    left: 30px;*/
+}
+/*
+
+    RESET
+
+*/
+.recent_post_item span, .middle span, .fashion_week_description p, .article_date span, .team_item p {
+    text-align: center;
+}
