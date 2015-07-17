@@ -28,9 +28,9 @@
                             {% for id,  page in addPagesValues.items %}
                             	<li><a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a></li>
                             {% endfor %}
-                            <li><a href="{% detail_page_to_tppcenter "project:about" %}">{% trans "About" %}</a></li>
-                            <li><a href="{% detail_page_to_tppcenter "project:offer" %}">{% trans "Services" %}</a></li>
-                            <li><a href="{% detail_page_to_tppcenter "project:faq" %}">{% trans "Help" %}</a></li>
+                            <li><a href="/">{% trans "About" %}</a></li>
+                            <li><a href="/">{% trans "Services" %}</a></li>
+                            <li><a href="/">{% trans "Help" %}</a></li>
 						</ul>
 					</div>
 					

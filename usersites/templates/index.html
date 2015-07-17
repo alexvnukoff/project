@@ -8,70 +8,19 @@
 	{{ title }}
 {% endblock %}
 
-{% block header %}
-	{% getUserSitTopMenu %}
-{% endblock %}
-
-{% block styles %}
-	{{ block.super }}
-    {% isSiteOrganizationTpp as isOrg %}
-    {% if isOrg %}
-        <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
-    {% endif %}
-{% endblock %}
-
 {% block body %}
-  
-<!-- PAGE -->
-<div id="page">
-	<div class="main">
-    	<div class="wrapper">
-        
-        	<div class="menutop">
-            	
-                <div class="signup">
-                	<i class="i-lock imgmain"></i>
-                    <a href="#">{% trans "Sign in" %} </a>
-                </div>
-                
-                <div class="notify none">
-                	<span><i class="imgmain i-note"></i></span>
-                    <span><i class="imgmain i-mail"></i></span>
-                    <span><i class="imgmain i-user" id="showevent"></i></span>
-                    <span><i class="imgmain i-book"></i></span>
-                </div>
-                
-             </div>
-             
-             {% block sidebar %}
-             	{% getUserSiteMenu %}
-             {% endblock %}
 
-			<div class="mainright">
-            
-            	{% block slider %}
-                	{% getUserSiteSlider %}
-                {% endblock %}
-                
-                {% block content %}
-                
-                	<span style="padding-left: 225px;font-size: large;color: red;">{{ responseMessage }}</span>
-                    <h1 class="titlepage">{{ current_section }}</h1>
-                    
-                    {{ contentPage }}
-                    
-                {% endblock %}
-                
-            </div>
-            
-            {% isSiteOrganizationTpp as isOrg %}
-            {% if isOrg %}
-            	{% userSitegetTopOnPage %}
-            {% endif %}
-            
-        </div>
-    </div>
-</div>
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+    
+    {% block slider %}
+    	{% getUserSiteSlider %}
+    {% endblock %}
+    
+    {% block content %}
+    	{{ contentPage }}
+    {% endblock %}
 
 {% endblock %}
 
