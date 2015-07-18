@@ -1,73 +1,42 @@
-{% load i18n %}
-{% load CustomFilters %}
-{% load staticfiles %}
-           {% include 'Paginator.html' %}
-            <ul class="walllist">
-                 {% for id ,attr in content.items %}
-                     {% with attr.NAME.0 as name %}
-                      {% with attr.users as users %}
+{% load i18n %} {% load CustomFilters %} {% load staticfiles %}
 
-
-
-            	 <h3 class="titlecpn">{{ name }}</h3>
-            <ul class="phoneinfo">
-
-            </ul>
-            <h4 class="titlecate">{% trans 'Department staff' %}:</h4>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-company">
-              <tr class="top">
-                <td class="name">{% trans 'Employee' %}</td>
-                <td>{% trans 'Position' %}</td>
-                <td>E-mail</td>
-                <td>{% trans 'Telephone number' %}</td>
-                <td>{% trans 'Mobile number' %}</td>
-                <td>&nbsp;</td>
-              </tr>
-                {% for user in users %}
-                    {% with user.USER_FIRST_NAME.0 as user_name%}
-                    {% with user.USER_LAST_NAME.0 as user_last_name%}
-                    {% with user.VACANCY_NAME.0 as vacancy%}
-                    {% with user.TELEPHONE_NUMBER.0 as telephone_number%}
-                    {% with user.EMAIL.0 as email%}
-                    {% with user.MOBILE_NUMBER.0 as mobile_number%}
-                    {% with user.IMAGE.0 as image%}
-              <tr>
-                <td class="name">
-                    {% if image %}
-                          <img src="{{ MEDIA_URL }}th/{{ image }}" class="avatar" alt="" />
-                    {% else%}
-                        <img src="{% static 'tppcenter/img/profile.jpg' %}" class="avatar" alt="" />
-                    {% endif %}
-
-
-                   {{ user_last_name }} {{ user_name }}
-                </td>
-                <td>{{ vacancy }}</td>
-                <td><a href="#">{{ email }}</a></td>
-                <td>{{ telephone_number }}</td>
-                <td>{{ mobile_number }}</td>
-                <td class="message"><a href="#">{% trans 'Message' %}</a></td>
-              </tr>
-                   {% endwith %}
-                   {% endwith %}
-                   {% endwith %}
-                   {% endwith %}
-                   {% endwith %}
-                   {% endwith %}
-                   {% endwith %}
-            {% endfor %}
-
-            </table>
-
-
-
-
-
-
-
-                     {% endwith %}
-                     {% endwith %}
-
-                {% endfor %}
-            </ul>
-          {% include 'Paginator.html' %}
+<!-- ABOUT US INFO -->
+<section class="about_us_info">
+	<!-- CONTAINER -->
+    <div class="container">
+    {% for id ,attr in content.items %} {% with attr.NAME.0 as name %} {% with attr.users as users %}
+	<!-- PAGE HEADER -->
+    <section class="page_header">
+    	<!-- CONTAINER -->
+        <div class="container">
+        	<h3 class="pull-left"><b>{{ name }}</b></h3>
+            <div class="pull-right"><a href="{% dynurl products_url url_parameter %}" >{% trans 'Products' %}<i class="fa fa-angle-right"></i></a></div>
+        </div>
+        <!-- //CONTAINER -->
+    </section>
+    <!-- //PAGE HEADER -->
+    
+    <div class="row team_wrapper padbot60" data-appear-top-offset="-100" data-animated="fadeInUp">
+    	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-ss-12 padbot30">
+        {% for user in users %} {% with user.USER_FIRST_NAME.0 as user_name%} {% with user.USER_LAST_NAME.0 as user_last_name%} {% with user.VACANCY_NAME.0 as vacancy%}
+        {% with user.TELEPHONE_NUMBER.0 as telephone_number%} {% with user.EMAIL.0 as email%} {% with user.MOBILE_NUMBER.0 as mobile_number%} {% with user.IMAGE.0 as image%}
+        	<div class="team_item center">
+            	{% if image %}<img class="team_foto" src="{{ MEDIA_URL }}th/{{ image }}" alt="" />
+                {% else%}<img class="team_foto" src="{% static 'tppcenter/img/profile.jpg' %}" alt="" />{% endif %}
+                <p>{{ user_last_name }} {{ user_name }}</p>
+                <span>{{ vacancy }}</span>
+                <span>{{ email }}</span>
+                <span>{{ telephone_number }}</span>
+                <span>{{ mobile_number }}</span>
+                <div class="team_social">
+                	<a href="javascript:void(0);" ><i class="fa fa-facebook"></i></a>
+                    <a href="javascript:void(0);" ><i class="fa fa-twitter"></i></a>
+                    <a href="javascript:void(0);" ><i class="fa fa-linkedin"></i></a>
+                    <a href="javascript:void(0);" ><i class="fa fa-google-plus"></i></a>
+                </div>
+            </div>
+        {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endfor %}
+        </div>
+{% endwith %} {% endwith %} {% endfor %}
+	</div>
+</div>

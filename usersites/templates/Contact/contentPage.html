@@ -1,94 +1,90 @@
-{% load staticfiles %}
-{% load i18n %}
-
-<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-
+{% load staticfiles %} {% load i18n %}
+<link rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+
+<script>
+	var RecaptchaOptions = {
+		theme : 'clean'
+	};
+</script>
+
+{% with organizationValues.POSITION.0 as position %} {% with organizationValues.ADDRESS.0 as address %} {% with organizationValues.TELEPHONE_NUMBER.0 as telephone_number %}
+
 <script type="text/javascript">
- var RecaptchaOptions = {
-    theme : 'clean'
- };
- </script>
+	var marker;
+	$(function()  {
+		if (position){
+			marker = new google.maps.Marker();
+			position: new google.maps.LatLng(position );
+		}
+		else
+			initialize(false);
+	});
+</script>
+    
+    <!-- CONTACTS BLOCK -->
+		<section class="contacts_block">
+			
+			<!-- CONTAINER -->
+			<div class="container">
+				
+				<!-- ROW -->
+				<div class="row padbot30">
+					<div class="col-lg-6 col-md-6 padbot30">
+						<div id="map-canvas"></div>
+					</div>
+					
+					<div class="col-lg-3 col-md-3 col-sm-6 padbot30">
+						<ul class="contact_info_block">
+							<li>
+								<h3><i class="fa fa-map-marker"></i><b>Store locations</b></h3>
+								<p><a href="/" ><img src="{{ midea_url }}big/{% logo %}" alt="" /></a></p>
+								<span>{{address }}</span>
+							</li>
+							<li>
+								<h3><i class="fa fa-phone"></i><b>{% trans 'Telephone number' %}</b></h3>
+								<p class="phone">{{ telephone_number }}</p>
+								<p class="phone">{{ telephone_number }}</p>
+							</li>
+							<li>
+								<h3><i class="fa fa-envelope"></i><b>E-mail</b></h3>
+								<p>Advertising</p>
+								<a href="mailto:adv@glammyshop.com">adv@youdomain.com</a>
 
-{% with organizationValues.POSITION.0 as position %}
-{% with organizationValues.ADDRESS.0 as address %}
-{% with organizationValues.TELEPHONE_NUMBER.0 as telephone_number %}
+								<p>Partnership</p>
+								<a href="mailto:partner@glammyshop.com">partner@youdomain.com</a>
 
- <script type="text/javascript">
-   var marker;
-   $(function()  {
-
-
-
-              {% if position %}
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ position }})
-                });
-                {% endif %}
-
-            initialize(false);
-  });
-    </script>
-
-
-            <div class="map">
-            	<ul class="map-l">
-                	<li>{{address }}</li>
-                    <li>
-                    	<span class="left">{% trans 'Telephone number' %}: </span>
-                        <span class="right">
-                        	<p>{{ telephone_number }}</p>
-
-                        </span>
-                    </li>
-
-                </ul>
-                <div class="ggmap"> <div   id="map-canvas"></div></div>
-            </div>
-
-    <form method="post" name="sendMessage">
-    {% csrf_token %}
-            <ul class="contact-form">
-            	<li class="top">{% trans 'Ask a question' %}</li>
-                <li>
-                	<div class="clumn1">
-                    	<label>{% trans 'Your name' %}</label>
-                        <input type="text" name="NAME" placeholder="" class="text" style="width:95%;" />
-                    </div>
-                    <div class="clumn2">
-                    	<label>{% trans 'You email' %}</label>
-                        <input type="text" name="EMAIL" placeholder="" class="text" style="width:95%;" />
-                    </div>
-                </li>
-                <li>
-                	<label>{% trans 'Message' %}</label>
-                	<textarea name="MESSAGE" cols="40" rows="5" style="width:98%;"></textarea>
-                </li>
-                <li class="center">
-
-
-
-
-                      <script type="text/javascript"
-                              src="http://api.recaptcha.net/challenge?k=6LeHR_QSAAAAAMpmnolyXMQhe-WB6CUpbNfEKbXQ">
-
-                               </script>
-
-                        <noscript>
-                        <iframe src="http://api.recaptcha.net/noscript?k=6LeHR_QSAAAAAMpmnolyXMQhe-WB6CUpbNfEKbXQ"
-                          height="100" width="100" frameborder="0"></iframe><br>
-                        <textarea name="recaptcha_challenge_field" rows="3" cols="3">
-                        </textarea>
-                        <input type="hidden" name="recaptcha_response_field"
-                        value="manual_challenge">
-                        </noscript>
-                </li>
-                <li class="end center">
-                	<input name="Send" type="submit" class="btnsend" value="{% trans 'Send' %}"/>
-                </li>
-            </ul>
-    </form>
-{% endwith %}
-{% endwith %}
-{% endwith %}
+								<p>Returns and Refunds</p>
+								<a href="mailto:return@glammyshop.com">return@youdomain.com</a>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="col-lg-3 col-md-3 col-sm-6 padbot30">
+						<!-- CONTACT FORM -->
+						<div class="contact_form">
+							<h3><b>Contacts form</b></h3>
+							<p>{% trans 'Ask a question' %}</p>
+							<div id="note"></div>
+							<div id="fields">
+								<form id="ajax-contact-form" action="" method="post" name="sendMessage">
+                                {% csrf_token %}
+									<label>{% trans 'Your name' %}</label>
+									<input type="text" name="name" value="" placeholder="{% trans 'Your name' %}" />
+									<label>{% trans 'You email' %}</label>
+									<input type="text" name="email" value="" placeholder="{% trans 'You email' %}" />
+									<label>Phone</label>
+									<input type="text" name="phone" value="" placeholder="Phone" />
+									<label>{% trans 'Message' %}</label>
+									<textarea name="message" placeholder="{% trans 'Message' %}" ></textarea><br>
+									<input class="btn active" type="submit" value="{% trans 'Send' %}" />
+								</form>
+							</div>
+						</div><!-- //CONTACT FORM -->
+					</div>
+				</div><!-- //ROW -->
+			</div><!-- //CONTAINER -->
+		</section><!-- //CONTACTS BLOCK -->
+    
+{% endwith %} {% endwith %} {% endwith %}

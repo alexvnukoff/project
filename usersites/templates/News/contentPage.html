@@ -1,40 +1,89 @@
-{% load i18n %}
-{% load CustomFilters %}
-           {% include 'Paginator.html' %}
-            <ul class="walllist">
-                 {% for id ,attr in content.items %}
-                     {% with attr.NAME.0 as name %}
-                     {% with attr.ANONS.0 as anons %}
-                     {% with attr.DETAIL_TEXT.0 as detail_text %}
-                     {% with attr.IMAGE.0 as image %}
-                     {% with attr.SLUG.0 as slug %}
-                     {% with attr.CREATE_DATE.0 as create_date %}
+{% load i18n %} {% load CustomFilters %}
 
-            	<li>
-                	<h3><a href="{% dynurl news_url url_parameter slug %}">{{ name }}</a></h3>
-                    <div class="thumb"><img style="max-width: 70px;" src="{{ MEDIA_URL }}small/{{ image }} " alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
+{% for id ,attr in content.items %} {% with attr.NAME.0 as name %} {% with attr.ANONS.0 as anons %} {% with attr.DETAIL_TEXT.0 as detail_text %}
+{% with attr.IMAGE.0 as image %} {% with attr.SLUG.0 as slug %} {% with attr.CREATE_DATE.0 as create_date %}
 
-                             {% trans 'Date' %}:  {{ create_date|date:'d M Y' }}
-                        </p>
-                        <p>
-                            {% if anons %}
-                                 {{ anons|force_escape|linebreaks }}
-                            {% else %}
-                                 {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
-                            {% endif %}
-                        </p>
-                        <p class="linkmore"><a href="{% dynurl news_url url_parameter slug %}">{% trans "more" %}...</a></p>
+<!-- BLOG BLOCK -->
+<section class="blog">
+	<!-- CONTAINER -->
+    <div class="container">
+    	<!-- ROW -->
+        <div class="row">
+        	<!-- BLOG LIST -->
+            <div class="col-lg-9 col-md-9 col-sm-9 padbot30">
+            	<article class="post large_image clearfix margbot30" data-appear-top-offset='-100' data-animated='fadeInUp'>
+                	<a class="post_title" href="{% dynurl news_url url_parameter slug %}" >{{ name }}</a>
+                    <ul class="post_meta">
+                    	{% for user in users %} {% with user.USER_FIRST_NAME.0 as user_name%} {% with user.USER_LAST_NAME.0 as user_last_name%}
+                    	<li><i class="fa fa-user"></i><a href="{% dynurl structure_url url_parameter %}" >{{ user_last_name }} {{ user_name }}</a></li>
+                        {% endwith %} {% endwith %} {% endfor %}
+                        <li><i class="fa fa-comments"></i>Commetcs <span class="sep">|</span> 15</li>
+                        <li><i class="fa fa-eye"></i>views <span class="sep">|</span> 259</li>
+                    </ul>
+                    <a class="post_large_image" href="{% dynurl news_url url_parameter slug %}" >
+                    	<div class="recent_post_date">{{ create_date|date:'d' }}<span>{{ create_date|date:'M Y' }}</span></div>
+                        <img src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                    </a>
+                </article>
+                
+                <article class="post margbot40 clearfix" data-appear-top-offset='-100' data-animated='fadeInUp'>
+                	<a class="post_image pull-left" href="{% dynurl news_url url_parameter slug %}" >
+                    	<div class="recent_post_date">{{ create_date|date:'d' }}<span>{{ create_date|date:'M Y' }}</span></div>
+                        <img src="{{ MEDIA_URL }}big/{{ image }}" alt="" />
+                    </a>
+                    <a class="post_title" href="{% dynurl news_url url_parameter slug %}" >
+                    	{% if anons %} {{ anons|force_escape|linebreaks }} {% else %} {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }} {% endif %}
+                    </a>
+                    <ul class="post_meta">
+                    	{% for user in users %} {% with user.USER_FIRST_NAME.0 as user_name%} {% with user.USER_LAST_NAME.0 as user_last_name%}
+                    	<li><i class="fa fa-user"></i><a href="{% dynurl structure_url url_parameter %}" >{{ user_last_name }} {{ user_name }}</a></li>
+                        {% endwith %} {% endwith %} {% endfor %}
+                        <li><i class="fa fa-comments"></i>Commetcs <span class="sep">|</span> 15</li>
+                        <li><i class="fa fa-eye"></i>views <span class="sep">|</span> 259</li>
+                    </ul>
+                </article>
+                
+                <hr>
+                {% include 'Paginator.html' %}
+            </div>
+            <!-- //BLOG LIST -->
+            
+            <!-- SIDEBAR -->
+            <div id="sidebar" class="col-lg-3 col-md-3 col-sm-3 padbot50">
+            	<!-- WIDGET SEARCH -->
+                <div class="sidepanel widget_search">
+                	<form class="search_form" action="javascript:void(0);" method="get" name="search_form">
+                    	<input type="text" name="Search..." value="Search..." onFocus="if (this.value == 'Search...') this.value = '';" onBlur="if (this.value == '') this.value = 'Search...';" />
+                    </form>
+                </div>
+                <!-- //WIDGET SEARCH -->
+                
+                <!-- WIDGET POPULAR POSTS -->
+                <div class="sidepanel widget_popular_posts">
+                	<h3>POPULAR POSTS</h3>
+                    	<ul>
+                        	<li class="widget_popular_post_item clearfix">
+                            	<a class="widget_popular_post_img" href="{% dynurl news_url url_parameter slug %}" ><img src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a>
+                                <a class="widget_popular_post_title" href="{% dynurl news_url url_parameter slug %}" >{{ name }}</a>
+                                <span class="widget_popular_post_date">{{ create_date|date:'d M Y' }}</span>
+                            </li>
+                        </ul>
                     </div>
-                </li>
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-
-                {% endfor %}
-            </ul>
-          {% include 'Paginator.html' %}
+                    <!-- //WIDGET POPULAR POSTS -->
+                    
+                    <!-- BANNERS WIDGET -->
+                    	<div class="widget_banners">
+                        	<a class="banner nobord margbot10" href="javascript:void(0);" ><img src="{% static 'usersites/images/tovar/banner10.jpg'%}" alt="" /></a>
+							<a class="banner nobord margbot10" href="javascript:void(0);" ><img src="{% static 'usersites/images/tovar/banner9.jpg'%}" alt="" /></a>
+							<a class="banner nobord margbot10" href="javascript:void(0);" ><img src="{% static 'usersites/images/tovar/banner8.jpg'%}" alt="" /></a>
+						</div>
+                        <!-- //BANNERS WIDGET -->
+					</div>
+                    <!-- //SIDEBAR -->
+				</div>
+                <!-- //ROW -->
+			</div>
+            <!-- //CONTAINER -->
+		</section>
+        <!-- //BLOG BLOCK -->
+{% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endfor %}
