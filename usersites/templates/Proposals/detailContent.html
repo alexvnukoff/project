@@ -1,15 +1,7 @@
-{% load static %}
-{% load i18n %}
-{% load CustomFilters %}
-
-<script>
-$(function() {
-	$(".prj-details-tab").tabs();});
-</script>
+{% load static %}{% load i18n %}{% load CustomFilters %}
 
 <script>
     {% getOwner item_id as owner %}
-
     {% if owner %}
         {% if owner.type == 'tpp' %}
             ga('set', 'dimension1', {{ owner.pk }});
@@ -20,172 +12,97 @@ $(function() {
     ga('set', 'dimension2', 'proposal');
 </script>
 
+<!-- BLOG BLOCK -->
+<section class="blog">
 
-            {% with proposalValues.NAME.0 as name %}
+{% with proposalValues.NAME.0 as name %}{% with proposalValues.DETAIL_TEXT.0 as content %}{% with proposalValues.DOCUMENT_1.0 as doc_1 %}{% with proposalValues.DOCUMENT_2.0 as doc_2 %}
+{% with proposalValues.DOCUMENT_3.0 as doc_3 %}{% with proposalValues.FLAG_CLASS.0 as flag_class %}{% with proposalValues.ORGANIZATION_FLAG.0 as org_flag %}
+{% with proposalValues.ORGANIZATION_NAME.0 as org_name %}{% with proposalValues.ORGANIZATION_SLUG.0 as org_slug %}{% with proposalValues.ORGANIZATION_URL as org_url %}
+{% with proposalValues.ORGANIZATION_IMAGE.0 as org_image %}{% with proposalValues.ORGANIZATION_ID.0 as org_id %}{% with proposalValues.COUNTRY_NAME|first as country_name %}
+{% with proposalValues.COUNTRY_FLAG|first as flag %}{% with proposalValues.COUNTRY_ID as country_id %}{% with proposalValues.ORGANIZATION_EMAIL|first as org_email %}
+{% with proposalValues.ORGANIZATION_SITE_NAME|first as org_site %}{% with proposalValues.ORGANIZATION_ADDRESS|first as org_address %}
+{% with proposalValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}{% with proposalValues.ORGANIZATION_FAX|first as org_fax %}
 
-            {% with proposalValues.DETAIL_TEXT.0 as content %}
-            {% with proposalValues.DOCUMENT_1.0 as doc_1 %}
-            {% with proposalValues.DOCUMENT_2.0 as doc_2 %}
-            {% with proposalValues.DOCUMENT_3.0 as doc_3 %}
-            {% with proposalValues.FLAG_CLASS.0 as flag_class %}
-
-            {% with proposalValues.ORGANIZATION_FLAG.0 as org_flag %}
-            {% with proposalValues.ORGANIZATION_NAME.0 as org_name %}
-            {% with proposalValues.ORGANIZATION_SLUG.0 as org_slug %}
-            {% with proposalValues.ORGANIZATION_URL as org_url %}
-            {% with proposalValues.ORGANIZATION_IMAGE.0 as org_image %}
-            {% with proposalValues.ORGANIZATION_ID.0 as org_id %}
-            {% with proposalValues.COUNTRY_NAME|first as country_name %}
-            {% with proposalValues.COUNTRY_FLAG|first as flag %}
-             {% with proposalValues.COUNTRY_ID as country_id %}
-             {% with proposalValues.ORGANIZATION_EMAIL|first as org_email %}
-            {% with proposalValues.ORGANIZATION_SITE_NAME|first as org_site %}
-            {% with proposalValues.ORGANIZATION_ADDRESS|first as org_address %}
-            {% with proposalValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}
-            {% with proposalValues.ORGANIZATION_FAX|first as org_fax %}
-
-
-
-
-
-
-
-
-
-
-                    <div class="country">
-               		  {% if flag_class %}
-                         <i class="sprite {{ flag_class }}" title="{{ country_name }}"></i>
-                            {% elif org_flag %}
-                         <img src="{{ MEDIA_URL }}small/{{ org_flag }}" class="flag"  title="{{ org_name }}"/>
-                            {% else %}
-                         <img src="{{ MEDIA_URL }}small/{{ flag }}" class="flag" title="{{ country_name }}" />
-                            {% endif %}
-                      {% if country_name %}{{ country_name }}{% else %}{{ org_name }}{% endif %}
+	<!-- CONTAINER -->
+    <div class="container">
+    	<!-- ROW -->
+        <div class="row">
+        	<!-- BLOG LIST -->
+            <div class="col-lg-9 col-md-9 col-sm-9">
+            	<article class="post blog_post clearfix margbot20" data-appear-top-offset='-100' data-animated='fadeInUp'>
+                	<div class="post_title" href="{% dynurl news_url url_parameter slug %}" >{{ name }}</div>
+                    <ul class="post_meta">
+                    	{% for user in users %} {% with user.USER_FIRST_NAME.0 as user_name%} {% with user.USER_LAST_NAME.0 as user_last_name%}
+                    	<li><i class="fa fa-user"></i><a href="{% dynurl structure_url url_parameter %}" >{{ user_last_name }} {{ user_name }}</a></li>
+                        {% endwith %} {% endwith %} {% endfor %}
+                        <li><a href="/"><img class="logo-cpn" src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" /></a></li>
+                        <li><i class="fa fa-eye"></i>views <span class="sep">|</span> 259</li>
+                    </ul>
+                    <div class="post_large_image">
+                    	<div class="recent_post_date">{{ date|date:"d" }}<span>{{ date|date:"M Y" }}</span></div>
+                        {% if youtube_code %}<iframe width="100%" height="320" src="//www.youtube.com/embed/{{ youtube_code }}" frameborder="0" allowfullscreen></iframe>
+                        {% else%}<img src="{{ MEDIA_URL }}big/{{ image }}" alt="" />{% endif %}
                     </div>
-
-
-				    <h2 class="title-details">{{ name }}</h2>
-                    <div class="company-dt">
-                      	<img class="logo-cpn" src="{{ MEDIA_URL }}small/{% if org_flag %}{{ org_flag }}{% else %}{{ org_image }}{% endif %}" class="thumb" />
-                        <a href="#">{{ org_name }}</a>
-                    </div>
-
-
-
-                    <div class="prj-details-tab">
-                        <div class="tab-cate">
-                            <ul>
-                                <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
-                                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
-                                <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
-                                <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
-                                {% for page in additionalPages %}
-                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div id="goods-tabs-1">
-                            <div class="content-goods-tab">
-                            	{{ content|cleanHtml|safe }}
+                    <div class="blog_post_content">
+                    	<h2>{% trans 'About' %}</h2>
+                        <p>{{ content|cleanHtml|safe }}</p>
+                        <h2>{% trans 'Document' %}</h2>
+                        {% if doc_1 %}<p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to the File' %}</a> </p>{% endif %}
+                        {% if doc_2 %}<p><a href="{{ MEDIA_URL }}document/{{ doc_2 }}">{% trans 'Link to the File' %}</a> </p>{% endif %}
+                        {% if doc_3 %}<p><a href="{{ MEDIA_URL }}document/{{ doc_3 }}">{% trans 'Link to the File' %}</a> </p>{% endif %}
+                        <h2>{% trans 'Gallery' %}</h2>
+                        {% for photo in photos %}
+                        <!-- ROW -->
+                        <div class="row gallery_block padbot70">
+                        	<!-- Gallery ITEM -->
+                            <div class="gallery_item col-md-3 col-sm-6 padbot30">
+                            	<a class="zoom" href="{{ MEDIA_URL }}original/{{ photo.photo }}" ><img src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" /></a>
                             </div>
+                            <!-- //gallery ITEM -->
                         </div>
-                        <div id="goods-tabs-2">
-                            <div class="content-goods-tab">
-                                {% if doc_1 %}
-                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_1 }}">{% trans 'Link to the File' %}</a> </p>
-                                {% endif %}
-                                {% if doc_2 %}
-                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_2 }}">{% trans 'Link to the File' %}</a> </p>
-                                {% endif %}
-                                {% if doc_3 %}
-                                   <p><a href="{{ MEDIA_URL }}document/{{ doc_3 }}">{% trans 'Link to the File' %}</a> </p>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                        <div id="goods-tabs-3">
-                            <div class="content-goods-tab">
-                                <ul class="tpp-gallery">
-                                    {% for photo in photos %}
-                                        <li>
-                                            <div class="b-img">
-                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
-                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
-                                                </a>
-                                                <div class="viewimge">
-                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
-                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
-                                                    </a>
-                                                </div>
-                                                <div class="gray-img"></div>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                        <div id="goods-tabs-4">
-                            <div class="content-goods-tab">
-                                <ul class="innov-tab-content">
-                                	<li>
-                                    	<span class="left">{% trans 'Address' %}: </span>
-                                        <span class="right">{{ org_address }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Telephone number' %}: </span>
-                                        <span class="right">{{ org_telephone }} </span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Fax' %}: </span>
-                                        <span class="right">{{ org_fax }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'Email' %}: </span>
-                                        <span class="right">{{ org_email }}</span>
-                                    </li>
-                                    <li>
-                                    	<span class="left">{% trans 'WWW' %}: </span>
-                                        <span class="right">{{ org_site }}</span>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                        {% for page in additionalPages %}
-                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
-                         </div>
+                        <!-- //ROW -->
                         {% endfor %}
+                        <h2>{% trans 'Contacts' %}</h2>
+                        <div class="col-lg-9 col-md-9 col-sm-9">
+						<ul class="contact_info_block">
+							<li>
+								<h3><i class="fa fa-map-marker"></i><b>{{ org_name }}</b></h3>
+								<p><a href="/" ><img src="{{ midea_url }}big/{% logo %}" alt="" /></a></p>
+								<span>{{ org_address }}</span>
+							</li>
+							<li>
+								<h3><i class="fa fa-phone"></i><b>{% trans 'Telephone number' %}</b></h3>
+								<p class="phone">{{ org_telephone }}</p>
+							</li>
+							<li>
+								<h3><i class="fa fa-envelope"></i><b>{% trans 'Email' %}</b></h3>
+								<a href="mailto:{{ org_email }}">{{ org_email }}</a>
+							</li>
+						</ul>
+					</div>
                     </div>
+                </article>
+                
+                <div class="shared_tags_block clearfix" data-appear-top-offset='-100' data-animated='fadeInUp'>
+                	<div class="pull-right tovar_shared clearfix">
+                    	<p>Share item with friends</p>
+                        <ul>
+                        	<li><a class="facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="fa fa-facebook"></i></a></li>
+                            <li><a class="twitter" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)" ><i class="fa fa-twitter"></i></a></li>
+                            <li><a class="vkontakte" href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);" ><i class="fa fa-vk"></i></a></li>
+                            <li><a class="odnoklassniki" href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="fa fa-odnoklassniki"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- //BLOG LIST -->
+            {% for page in additionalPages %}
+        </div>
+        <!-- //ROW -->
+    </div>
+    <!-- //CONTAINER -->
 
-
-
-
-
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-
-
-
-
-
-
+{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}
+{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}{% endwith %}
+</section>
+<!-- //BLOG BLOCK -->
