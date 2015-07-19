@@ -148,13 +148,12 @@ $(document).ready(function () {
     }
 
     //версия для слабовидящих
-    var isEyeProblems = getCookieMy('isInvert');
+    var isEyeProblems = Boolean(getCookieMy('isInvert'));
 
-    if (typeof isEyeProblems == 'undefined') {
+    if (!isEyeProblems) {
         setCookie('isInvert', false);
-        isEyeProblems = false;
     }
-    else if(Boolean(isEyeProblems) == true){
+    else {
         $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
     }
 
