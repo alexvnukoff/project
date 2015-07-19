@@ -11,17 +11,21 @@
 
 {% with organizationValues.POSITION.0 as position %} {% with organizationValues.ADDRESS.0 as address %} {% with organizationValues.TELEPHONE_NUMBER.0 as telephone_number %}
 
-<script type="text/javascript">
-	var marker;
-	$(function()  {
-		if (position){
-			marker = new google.maps.Marker();
-			position: new google.maps.LatLng(position );
-		}
-		else
-			initialize(false);
-	});
-</script>
+ <script type="text/javascript">
+   var marker;
+   $(function()  {
+
+
+
+              {% if position %}
+                  marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ position }})
+                });
+                {% endif %}
+
+            initialize(false);
+  });
+    </script>
     
     <!-- CONTACTS BLOCK -->
 		<section class="contacts_block">

@@ -1,5 +1,18 @@
 {% load static %} {% load i18n %} {% load CustomFilters %}
 
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.pk }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.pk }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'news');
+</script>
+
 <!-- BLOG BLOCK -->
 <section class="blog">
 

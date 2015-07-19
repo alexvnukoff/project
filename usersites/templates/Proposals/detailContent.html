@@ -2,6 +2,7 @@
 
 <script>
     {% getOwner item_id as owner %}
+
     {% if owner %}
         {% if owner.type == 'tpp' %}
             ga('set', 'dimension1', {{ owner.pk }});

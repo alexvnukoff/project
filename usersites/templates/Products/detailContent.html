@@ -1,5 +1,18 @@
 {% load static %} {% load i18n %} {% load CustomFilters %}
 
+<script>
+    {% getOwner item_id as owner %}
+
+    {% if owner %}
+        {% if owner.type == 'tpp' %}
+            ga('set', 'dimension1', {{ owner.id }});
+        {% else %}
+            ga('set', 'dimension3', {{ owner.id }});
+        {% endif %}
+    {% endif %}
+    ga('set', 'dimension2', 'product');
+</script>
+
 <!-- TOVAR DETAILS -->
 <section class="tovar_details padbot70">
 
