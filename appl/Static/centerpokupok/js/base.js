@@ -1,3 +1,45 @@
+function setCookie(name, value, options) {
+  options = options || {};
+
+  var expires = options.expires;
+
+  if (typeof expires == "number" && expires) {
+    var d = new Date();
+    d.setTime(d.getTime() + expires * 1000);
+    expires = options.expires = d;
+  }
+  if (expires && expires.toUTCString) {
+    options.expires = expires.toUTCString();
+  }
+
+  value = encodeURIComponent(value);
+
+  var updatedCookie = name + "=" + value;
+
+  for (var propName in options) {
+    updatedCookie += "; " + propName;
+    var propValue = options[propName];
+    if (propValue !== true) {
+      updatedCookie += "=" + propValue;
+    }
+  }
+
+  document.cookie = updatedCookie;
+}
+
+// возвращает cookie с именем name, если есть, если нет, то undefined
+function getCookieMy(name) {
+  var matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function deleteCookie(name) {
+  setCookie(name, "", {
+    expires: -1
+  })
+}
 
 function getFormat(until)
 {
@@ -104,6 +146,33 @@ $(document).ready(function () {
             reverseMenu("#nav-company", menuLen);
         }
     }
+
+    //версия для слабовидящих
+    var isEyeProblems = getCookieMy('isInvert');
+
+    if (typeof isEyeProblems == 'undefined') {
+        setCookie('isInvert', false);
+        isEyeProblems = false;
+    }
+    else if(isEyeProblems){
+        $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
+    }
+
+    $('#eyeProblems').on('click', function(){
+        if (isEyeProblems){
+            if ($('#pageInvert').length > 0)
+                $('#pageInvert').remove();
+
+            setCookie('isInvert', false);
+        }
+        else {
+            if ($('#pageInvert').length <= 0)
+                $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
+            
+            setCookie('isInvert',true)
+        }
+    });
+    //
 
 
 	$('.checkbox').change(function(){

@@ -1,0 +1,127 @@
+html 
+{
+	-webkit-filter: invert(85%);
+	-moz-filter: invert(85%);
+	-o-filter: invert(85%);
+	filter: invert(85%);
+}
+
+@-moz-document url-prefix() {
+	body {
+		background: #121212;
+	}
+}
+
+#sidevar li.sub a.level1-a{
+	font-size: 16pt;
+	font-weight: bold;
+	color: black;
+}
+
+.btnreg {
+	font-size: 16pt;
+	color: black;
+	font-weight: bold;
+}
+
+#linklang {
+	font-size: 16pt;
+	color: black;
+	font-weight: bold;
+}
+
+#top {
+	font-size: 16pt;
+}
+
+.btns {
+	font-size: 13pt;
+}
+
+.bginput input.text {
+	font-size: 16pt;
+}
+
+.regacc p {
+	font-size: 16pt;
+	color: black;
+	font-weight: bold;
+}
+
+#linkun li.top {
+	font-size: 16pt;
+	color: #ca4228;
+}
+
+#linkun li {
+	font-size: 16pt;
+	color: black;
+}
+
+#subscribe {
+	font-size: 16pt;
+}
+
+#subscribe li {
+	color: black;
+}
+
+#subscribe li input.text {
+	font-size: 16pt;
+}
+
+#subscribe li.top {
+	font-size: 16pt;
+	color: #ca4228;
+}
+
+#footer label {
+	font-weight: bold;
+	font-size: 16pt;
+}
+
+.bginput .styled-select select {
+	width: 200px;
+	font-size: 16pt;
+}
+
+.title-discount .left label, .title-discount .left a {
+	font-size: 32pt;
+	color: black;
+	font-weight: bold;
+}
+
+.discount {
+	font-weight: bold;
+	font-size: 16pt;
+	color: black;
+}
+
+.listnew li p {
+	font-weight: bold;
+	font-size: 12pt;
+	color: black;
+}
+
+.listnew li font.number {
+	font-size: 16pt;
+	line-height: 24pt;
+}
+
+.items-coupon h2 {
+	color: black;
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+.coupon-info a {
+	font-size: 16pt;
+}
+
+.coupon-info .price{
+	font-size: 24pt;
+}
+
+#nav-company li a:hover, #nav-company li a.current {
+    font-size: 170%;
+}

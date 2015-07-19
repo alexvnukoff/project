@@ -780,3 +780,7 @@ width: 0; height: 0; border: solid transparent; border-color: rgba(255, 255, 255
     box-shadow:         0px 0px 12px rgba(50, 50, 50, 0.75);
 
 }
+
+.invertSpan {
+	float: right;
+}

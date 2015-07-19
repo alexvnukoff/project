@@ -149,12 +149,12 @@ html {
 
 #company-info {
   position: relative;
-  float: left;
-  width: 375px;
-  margin: 0 0 0 20px;
   display: inline;
   color: #999;
   padding-right: 10px;
+  width: 300px;
+  margin: 0px 0px 0px 20px;
+  float: right;
 }
 
 #top span {
@@ -194,4 +194,18 @@ html {
 .title-discount .left
 {
   float: right;
+}
+
+#company-header .sale-left {
+    float: right;
+    margin: 10px 95px 0px 0px;
+}
+
+.company-search {
+    float: right;
+    margin: 30px 0px 0px;
+}
+
+#company-logo {
+    float: right;
 }
