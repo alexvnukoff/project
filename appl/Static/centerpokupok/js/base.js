@@ -161,13 +161,13 @@ $(document).ready(function () {
     $('#eyeProblems').on('click', function(evt){
         var isEyeProblems = getCookieMy('isInvert');
 
-        if (isEyeProblems == true){
+        if (isEyeProblems == false){
             if ($('#pageInvert').length > 0)
                 $('#pageInvert').remove();
 
             setCookie('isInvert', false);
         }
-        else if (isEyeProblems == false){
+        else if (isEyeProblems == true){
             if ($('#pageInvert').length <= 0)
                 $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
             
