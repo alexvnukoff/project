@@ -158,7 +158,7 @@ $(document).ready(function () {
         $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
     }
 
-    $('#eyeProblems').on('click', function(){
+    $('#eyeProblems').on('click', function(evt){
         if (isEyeProblems){
             if ($('#pageInvert').length > 0)
                 $('#pageInvert').remove();
@@ -171,6 +171,8 @@ $(document).ready(function () {
             
             setCookie('isInvert',true)
         }
+
+        evt.preventDefault();
     });
     //
 
