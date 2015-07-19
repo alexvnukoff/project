@@ -1,15 +1,27 @@
-{% extends 'base.html' %} {% load CustomFilters %} {% load inclusionTags %} {% load staticfiles %} {% load i18n %}
+{% extends 'base.html' %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load staticfiles %}
+{% load i18n %}
 
-{% block title %} {{ title }} {% endblock %}
-
-{% block body %}
-
-	{% block header %} {% include 'header.html' %} {% endblock %}
-    
-    {% block slider %} {% getUserSiteSlider %} {% endblock %}
-    
-    {% block content %} {{ contentPage }} {% endblock %}
-
+{% block title %}
+	{{ title }}
 {% endblock %}
 
-{% block footer %} {% include 'footer.html' %} {% endblock %}
+{% block body %}
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+
+	{% block slider %}
+		{% getUserSiteSlider %}
+	{% endblock %}
+    
+	{% block content %}
+		{{ contentPage }}
+	{% endblock %}
+{% endblock %}
+
+{% block footer %}
+	{% include 'footer.html' %}
+{% endblock %}

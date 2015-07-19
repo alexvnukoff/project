@@ -1,17 +1,22 @@
-{% load CustomFilters %} {% if page.paginator.num_pages > 1 %}
- <div class="clearfix">
- 	{%  if page.has_previous %}<a class="show_all_tovar" href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" ><i class="fa fa-chevron-left"></i></a>{% endif %}
-	<!-- PAGINATION -->
+{% load CustomFilters %}
+{% if page.paginator.num_pages > 1 %}
+
+<div class="clearfix">
+	{%  if page.has_previous %}
+    	<a class="show_all_tovar" href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" ><i class="fa fa-chevron-left"></i></a>
+    {% endif %}
+    <!-- PAGINATION -->
 	<ul class="pagination">
-    {% for i in paginator_range %} {% ifequal i page.number %}
-		<li class="active">{{ page.number }}</li>
-        {% else %}
-		<li><a href="{% dynurl url_paginator url_parameter i%}" >{{ i }}</a></li>
-        {% endifequal %} {% endfor %}
-	</ul>
+    {% for i in paginator_range %}
+    {% ifequal i page.number %}
+    	<li class="active">{{ page.number }}</li>
+    {% else %}
+    	<li><a href="{% dynurl url_paginator url_parameter i%}" >{{ i }}</a></li>
+    {% endifequal %}
+    {% endfor %}
+    </ul>
     <!-- //PAGINATION -->
     {%  if page.has_next %}
-	<a class="show_all_tovar" href="{% dynurl url_paginator url_parameter page.next_page_number%}" ><i class="fa fa-chevron-right"></i></a>
+    	<a class="show_all_tovar" href="{% dynurl url_paginator url_parameter page.next_page_number%}" ><i class="fa fa-chevron-right"></i></a>
     {% endif %}
 </div>
-{% endif %}

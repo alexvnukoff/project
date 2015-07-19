@@ -1,84 +1,90 @@
-{% load CustomFilters %} {% load inclusionTags %} {% load staticfiles %} {% load i18n %} {% isSiteOrganizationTpp as isOrg %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+{% load staticfiles %}
+{% load i18n %}
+{% isSiteOrganizationTpp as isOrg %}
 
-		<!-- FOOTER -->
-		<footer>
-			
-			<!-- CONTAINER -->
-			<div class="container" data-animated='fadeInUp'>
-				
-				<!-- ROW -->
-				<div class="row">
-					
-					<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 col-ss-12 padbot30">
-						<h4>Мы на связи</h4>
-						<div class="foot_address"><span>Sales System</span>Москва, ул.Правды, 24с3</div>
-						<div class="foot_phone"><a href="tel:8 800 123 4567" >8 800 123 4567</a></div>
-						<div class="foot_mail"><a href="mailto:welcome@b24online.com" >welcome@b24online.com</a></div>
-						<div class="foot_live_chat"><a href="javascript:void(0);" ><i class="fa fa-comment-o"></i> Live-чат техподдержки</a></div>
-					</div>
-					
-					<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 col-ss-12 padbot30">
-						<h4>Полезная информация</h4>
-						<ul class="foot_menu">
-							<li><a href="{% dynurl about_us_url url_parameter %}">{% trans 'About us' %}</a></li>
-                            {% for id,  page in addPagesValues.items %}
-                            	<li><a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a></li>
-                            {% endfor %}
-                            <li><a href="/">{% trans "About" %}</a></li>
-                            <li><a href="/">{% trans "Services" %}</a></li>
-                            <li><a href="/">{% trans "Help" %}</a></li>
-						</ul>
-					</div>
-					
-					<div class="respond_clear_480"></div>
-					
-					<div class="col-lg-4 col-md-4 col-sm-6 padbot30">
-						<h4>О нашей компании</h4>
-						<p>{% footer_text %}</p>
-					</div>
-					
-					<div class="respond_clear_768"></div>
-					
-					<div class="col-lg-4 col-md-4 padbot30">
-						<h4>Подписка</h4>
-						<form class="newsletter_form clearfix" action="javascript:void(0);" method="get">
-							<input type="text" name="newsletter" value="Укажите свой E-mail, чтобы получать новости о распродажах" onFocus="if (this.value == 'Укажите свой E-mail, чтобы получать новости о распродажах') this.value = '';" onBlur="if (this.value == '') this.value = 'Укажите свой E-mail, чтобы получать новости о распродажах';" />
-							<input class="btn newsletter_btn" type="submit" value="Подписаться">
-						</form>
-						
-						<h4>Мы в социальных сетях</h4>
-						<div class="social">
-							<a href="javascript:void(0);" ><i class="fa fa-twitter"></i></a>
-							<a href="javascript:void(0);" ><i class="fa fa-facebook"></i></a>
-							<a href="javascript:void(0);" ><i class="fa fa-google-plus"></i></a>
-							<a href="javascript:void(0);" ><i class="fa fa-pinterest-square"></i></a>
-							<a href="javascript:void(0);" ><i class="fa fa-tumblr"></i></a>
-							<a href="javascript:void(0);" ><i class="fa fa-instagram"></i></a>
-						</div>
-					</div>
-				</div><!-- //ROW -->
-			</div><!-- //CONTAINER -->
-			
-			<!-- COPYRIGHT -->
-			<div class="copyright">
-				
-				<!-- CONTAINER -->
-				<div class="container clearfix">
-					<div class="foot_logo">
-                    <i class="logofooter imgmain"></i>
-                    <div class="logfoottxt">
-                    {% if not isOrg %}
-                    <h3>{% trans "Member of" %} {% getTppName %}</h3>
+<!-- FOOTER -->
+<footer>
+	<!-- CONTAINER -->
+    <div class="container" data-animated='fadeInUp'>
+    <!-- ROW -->
+    <div class="row">
+    	<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 col-ss-12 padbot30">
+        	<h4>Мы на связи</h4>
+            {% with proposalValues.ORGANIZATION_EMAIL|first as org_email %}
+            {% with proposalValues.ORGANIZATION_SITE_NAME|first as org_site %}
+            {% with proposalValues.ORGANIZATION_ADDRESS|first as org_address %}
+            {% with proposalValues.ORGANIZATION_TELEPHONE_NUMBER|first as org_telephone %}
+            {% with proposalValues.ORGANIZATION_NAME.0 as org_name %}
+			<div class="foot_address"><span>{{ org_name }}</span> {{ org_address }}</div>
+			<div class="foot_phone"><a href="tel:{{ org_telephone }}" >{{ org_telephone }}</a></div>
+			<div class="foot_mail"><a href="mailto:{{ org_email }}" >{{ org_email }}</a></div>
+			<div class="foot_live_chat"><a href="javascript:void(0);" ><i class="fa fa-comment-o"></i> Live-чат техподдержки</a></div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+		</div>				
+		<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 col-ss-12 padbot30">
+			<h4>Полезная информация</h4>
+			<ul class="foot_menu">
+				<li><a href="{% dynurl about_us_url url_parameter %}">{% trans 'About us' %}</a></li>
+                {% for id,  page in addPagesValues.items %}
+                <li><a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a></li>
+                {% endfor %}
+                <li><a href="/">{% trans "About" %}</a></li>
+                <li><a href="/">{% trans "Services" %}</a></li>
+                <li><a href="/">{% trans "Help" %}</a></li>
+			</ul>
+		</div>
+        <div class="respond_clear_480"></div>
+        <div class="col-lg-4 col-md-4 col-sm-6 padbot30">
+        	<h4>О нашей компании</h4>
+            <p>{% footer_text %}</p>
+        </div>
+        <div class="respond_clear_768"></div>
+        <div class="col-lg-4 col-md-4 padbot30">
+        	<h4>Подписка</h4>
+			<form class="newsletter_form clearfix" action="javascript:void(0);" method="get">
+				<input type="text" name="newsletter" value="Укажите свой E-mail, чтобы получать новости о распродажах" onFocus="if (this.value == 'Укажите свой E-mail, чтобы получать новости о распродажах') this.value = '';" onBlur="if (this.value == '') this.value = 'Укажите свой E-mail, чтобы получать новости о распродажах';" />
+				<input class="btn newsletter_btn" type="submit" value="Подписаться">
+			</form>						
+			<h4>Мы в социальных сетях</h4>
+				<div class="social">
+					<a class="facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=TITLE&p%5Bsummary%5D=DESC&p%5Burl%5D=URL&p%5Bimages%5D%5B0%5D=IMG_PATH" target="_blank" onclick="return Share.me(this);"><i class="fa fa-facebook"></i></a>
+					<a class="twitter" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffiddle.jshell.net%2F_display%2F&text=TITLE&url=URL" target="_blank" onclick="return Share.me(this)" ><i class="fa fa-twitter"></i></a>
+					<a class="vkontakte" href="http://vk.com/share.php?url=URL&title=TITLE&description=DESC&image=IMG_PATH&noparse=true" target="_blank" onclick="return Share.me(this);" ><i class="fa fa-vk"></i></a>
+					<a class="odnoklassniki" href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st.comments=DESC&st._surl=URL" target="_blank" onclick="return Share.me(this);"><i class="fa fa-odnoklassniki"></i></a>
+                </div>
+			</div>
+		</div>
+        <!-- //ROW -->
+	</div>
+    <!-- //CONTAINER -->
+    
+    <!-- COPYRIGHT -->
+	<div class="copyright">				
+		<!-- CONTAINER -->
+		<div class="container clearfix">
+			<div class="foot_logo">
+            	<i class="logofooter imgmain"></i>
+                <div class="logfoottxt">
+                	{% if not isOrg %}
+                    	<h3>{% trans "Member of" %} {% getTppName %}</h3>
                     {% endif %}
                     <p>&copy; 2011 - 2015 ТПП-Центр - центр торгово промышленных палат, ассоциаций, собзов и гильдий предпринимателей и промышленников.</p>
-                    </div>
-                    </div>
-					
-					<div class="copyright_inf">
-                    	<span><img src="{% static "usersites/img/b24logo.png" %}"/></span>
-						<span><a href="http://shop.reklamazov.com" target="_blank">Уникальные магазины на B24Online</a></span> |
-						<a class="back_top" href="javascript:void(0);" >В начало <i class="fa fa-angle-up"></i></a>
-					</div>
-				</div><!-- //CONTAINER -->
-			</div><!-- //COPYRIGHT -->
-		</footer><!-- //FOOTER -->
+                </div>
+            </div>					
+			<div class="copyright_inf">
+            	<span><img src="{% static "usersites/img/b24logo.png" %}"/></span>
+				<span><a href="http://reklamazov.com" target="_blank">Разработано у Братьев Рекламазовых</a></span> |
+				<a class="back_top" href="javascript:void(0);" >В начало <i class="fa fa-angle-up"></i></a>
+			</div>
+		</div>
+        <!-- //CONTAINER -->
+	</div>
+    <!-- //COPYRIGHT -->
+</footer>
+<!-- //FOOTER -->
