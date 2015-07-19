@@ -153,7 +153,7 @@ $(document).ready(function () {
     if (typeof isEyeProblems == "undefined") {
         setCookie('isInvert', false);
     }
-    else (isEyeProblems == "true"){
+    else if (isEyeProblems == "true"){
         $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
     }
 
