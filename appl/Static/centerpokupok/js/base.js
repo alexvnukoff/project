@@ -154,18 +154,20 @@ $(document).ready(function () {
         setCookie('isInvert', false);
         isEyeProblems = false;
     }
-    else if(isEyeProblems){
+    else if(isEyeProblems == true){
         $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
     }
 
     $('#eyeProblems').on('click', function(evt){
-        if (isEyeProblems){
+        var isEyeProblems = getCookieMy('isInvert');
+
+        if (isEyeProblems == true){
             if ($('#pageInvert').length > 0)
                 $('#pageInvert').remove();
 
             setCookie('isInvert', false);
         }
-        else {
+        else if (isEyeProblems == false){
             if ($('#pageInvert').length <= 0)
                 $('head').append('<link id="pageInvert" href="/static/centerpokupok/css/gurckaya.css" type="text/css" rel="stylesheet" />');
             
