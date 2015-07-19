@@ -8,10 +8,11 @@
 	{{ title }}
 {% endblock %}
 
+{% block header %}
+	{% include 'header.html' %}
+{% endblock %}
+
 {% block body %}
-	{% block header %}
-		{% include 'header.html' %}
-	{% endblock %}
 
 	{% block slider %}
 		{% getUserSiteSlider %}

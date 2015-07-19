@@ -51,9 +51,9 @@
         <div class="preloader_hide">
         	<!-- PAGE -->
             <div id="page">
+            	{% block header %}
+                {% endblock %}
             	{% block body %}
-                	{% block header %}
-                    {% endblock %}
                 {% endblock %}
                 {% block rtl %}
                 	{% if site|getSide %}
