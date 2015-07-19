@@ -102,7 +102,8 @@ INSTALLED_APPS = (
     'centerpokupok',
     'usersites',
     #'paypal.standard.ipn'
-    'debug_toolbar'
+    'debug_toolbar',
+	'social_auth'
 )
 
 # For installations on which you want to use the sandbox,
@@ -231,6 +232,7 @@ MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
+	'social_auth.backends.facebook.FacebookBackend',
     ('django.contrib.auth.backends.ModelBackend'),
 )
 
@@ -332,6 +334,21 @@ HAYSTACK_ID_FIELD = 'id'
 AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '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'
 BUCKET = 'uploadstg'
+
+########################## FACEBOOK ################################
+
+FACEBOOK_APP_ID = '800591470062414'
+FACEBOOK_API_SECRET = '79d6e027c7e7183f096905dfeec89e9c'
+
+SOCIAL_AUTH_PIPELINE (
+	'social_auth.backends.pipeline.social.social_auth_user',
+    'social_auth.backends.pipeline.associate.associate_by_email',
+    'social_auth.backends.pipeline.user.get_username',
+    'social_auth.backends.pipeline.user.create_user',
+    'social_auth.backends.pipeline.social.associate_user',
+    'social_auth.backends.pipeline.social.load_extra_data',
+    'social_auth.backends.pipeline.user.update_user_details'
+)
 
 
 ##################### Celery settings ####################################
