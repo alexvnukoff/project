@@ -76,7 +76,8 @@ urlpatterns = patterns('',
     url(r'^users/', include(tppcenter.Users.urls, namespace='users')),
     url(r'^payments/', include(tppcenter.Payments.urls, namespace='payments')),
     url(r'^upload/yandex_news_rss.xml$', NewsFeed()),
-
+	
+	url(r'^social/', include('social_auth.urls')),
 
     url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
 
