@@ -21,6 +21,11 @@
 	{% block content %}
 		{{ contentPage }}
 	{% endblock %}
+    
+     {% isSiteOrganizationTpp as isOrg %}
+        {% if isOrg %}
+            {% userSitegetTopOnPage %}
+        {% endif %}
 {% endblock %}
 
 {% block footer %}
