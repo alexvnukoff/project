@@ -413,8 +413,9 @@ def _tabsStaff(request, company, page=1):
 
             vacancies = [{'name': _("Select vacancy"), "value": ""}]
 
-            for vacancy in func.getActiveSQS().models(Vacancy).filter(company=company, department=department).order_by('text'):
-                vacancies.append({"name": vacancy.text, "value": vacancy.pk})
+            for vacancy in func.getActiveSQS().models(Vacancy).filter(company=company).order_by('text'):
+                if vacancy.department == department:
+                    vacancies.append({"name": vacancy.text, "value": vacancy.pk})
 
             return HttpResponse(json.dumps(vacancies))
 
