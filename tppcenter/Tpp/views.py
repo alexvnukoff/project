@@ -512,9 +512,9 @@ def _tabsStaff(request, tpp, page=1):
                 return HttpResponseBadRequest()
 
             vacancies = [{'name': _("Select vacancy"), "value": ""}]
-
-            for vacancy in func.getActiveSQS().models(Vacancy).filter(tpp=tpp, department=department).order_by('text'):
-                vacancies.append({"name": vacancy.text, "value": vacancy.pk})
+            for vacancy in func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text'):
+                if vacancy.department == department:
+                    vacancies.append({"name": vacancy.text, "value": vacancy.pk})
 
             return HttpResponse(json.dumps(vacancies))
 

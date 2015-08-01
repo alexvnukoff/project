@@ -4,7 +4,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from recaptcha.client import captcha
+#from recaptcha.client import captcha
 
 def get_news_list(request, language=None):
 

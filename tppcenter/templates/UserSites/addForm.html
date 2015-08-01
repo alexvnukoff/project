@@ -66,7 +66,11 @@
         {% with form.fields.SITE_SLOGAN.initial as slogan %}
         {% with form.fields.SITE_LOGO.initial as logo %}
         {% with form.fields.DETAIL_TEXT.initial as content %}
-         {% with form.fields.TEMPLATE.initial as template %}
+        {% with form.fields.TEMPLATE.initial as template %}
+        {% with form.fields.SITE_BANNER_1.initial as banner_1 %}
+        {% with form.fields.SITE_BANNER_2.initial as banner_2 %}
+        {% with form.fields.URL_BANNER_1.initial as url_banner_1 %}
+        {% with form.fields.URL_BANNER_2.initial as url_banner_2 %}
 
             <div class="external-step3">
             	<ul class="step3form">
@@ -107,6 +111,54 @@
                                     <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span></div>
                                     <div class="gray-img"></div>
                                     <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ logo }}" hidden="hidden" />
+                                </div>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                   <li>
+                    	<div class="left">{% trans "Left Banner" %}:</div>
+                        {% if form.errors.SITE_BANNER_1 %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.SITE_BANNER_1 }}</div></div>
+                         {% endif %}
+                        <div class="right">
+                        	<div class="fileinputs">
+                                <div class="file-wrapper">
+                                    <input type="file" name="SITE_BANNER_1">
+                                    <span class="button">{% trans "Pick a file" %}</span>
+                                </div>
+                            </div>
+                            <div class="viewimg">
+                               {% if banner_1 %}
+                                <div class="b-img">
+                                    <img src="{{ MEDIA_URL }}big/{{ banner_1.name }}">
+                                    <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span></div>
+                                    <div class="gray-img"></div>
+                                    <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ banner_1 }}" hidden="hidden" />
+                                </div>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                <li>
+                    	<div class="left">{% trans "Right Banner" %}:</div>
+                        {% if form.errors.SITE_BANNER_1 %}
+                         <div class="error-handler"><div class="formserror">{{ form.errors.SITE_BANNER_2 }}</div></div>
+                         {% endif %}
+                        <div class="right">
+                        	<div class="fileinputs">
+                                <div class="file-wrapper">
+                                    <input type="file" name="SITE_BANNER_2">
+                                    <span class="button">{% trans "Pick a file" %}</span>
+                                </div>
+                            </div>
+                            <div class="viewimg">
+                               {% if banner_2 %}
+                                <div class="b-img">
+                                    <img src="{{ MEDIA_URL }}big/{{ banner_2.name }}">
+                                    <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span></div>
+                                    <div class="gray-img"></div>
+                                    <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ banner_2 }}" hidden="hidden" />
                                 </div>
                             {% endif %}
                             </div>
@@ -178,6 +230,10 @@
                     <input type="submit" class="bigbuy right" value="{% trans "Save" %}" >
                 </div>
             </div>
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}

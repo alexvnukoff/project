@@ -369,6 +369,28 @@ def setLogo(context):
   return ""
 
 
+@register.simple_tag(name='left_banner', takes_context=True)
+def left_banner(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('SITE_BANNER_1')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='right_banner', takes_context=True)
+def right_banner(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  right_banner = user_site.getAttributeValues('SITE_BANNER_2')
+  if len(right_banner) > 0:
+      return right_banner[0]
+
+
+  return ""
+
+
+
 
 @register.simple_tag(name='categories', takes_context=True)
 def setCategories(context):
