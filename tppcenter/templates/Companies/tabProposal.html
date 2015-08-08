@@ -7,28 +7,20 @@
             <td>№</td>
             <td>{% trans "Name" %}</td>
             <td>{% trans "Date" %}</td>
-
-
         </tr>
 
-       {% for id, attr in proposalList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.CREATE_DATE|first as date %}
+       {% for proposal in page.object_list %}
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ proposal.pk }}</td>
                 <td>
-                    <a href="{% url 'proposal:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:10 }}
+                    <a href="{% url 'proposal:detail' proposal.slug %}" title="{{ proposal.title }}">
+                        {{ proposal.title|truncatewords:10 }}
                     </a>
                 </td>
                 <td>
-                    {{ date|date:'d M Y' }}
+                    {{ proposal.created_at|date:'d M Y' }}
                 </td>
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

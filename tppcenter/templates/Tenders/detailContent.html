@@ -42,11 +42,12 @@ $(function() {
     <div class="tender">
         <div class="tender-details-title">
             {% if item.organization.flag %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" />
+                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                <font class="name">{{ item.organization.name }}</font>
             {% else %}
-                <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.text }}"></i>
+                <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
+            <font class="name">{{ item.country.name }}</font>
             {% endif %}
-            <font class="name">{% if item.organization.title %}{{ item.organization.title }}{% else %}{{ item.country.text }}{% endif %}</font>
         </div>
         <div class="tender-info">
             <div class="tender-button"><a class="bigbuy" href="#">{% trans "Apply now" %}</a></div>
@@ -54,24 +55,24 @@ $(function() {
                 <ul class="infolist">
                     <li>
                         <label>{% trans 'Publication date' %}:</label>
-                        <span class="right">{{ item.start_event_date|default_if_none:"" }}</span>
+                        <span class="right">{{ item.start_date|default_if_none:"" }}</span>
                     </li>
                     <li>
                         <label>{% trans 'Deadline for receiving bids' %}:</label>
-                        <span class="right">{{ item.end_event_date|default_if_none:"" }}</span>
+                        <span class="right">{{ item.end_date|default_if_none:"" }}</span>
                     </li>
                     <li>
                         <label>{% trans 'Starting price' %}:</label>
-                        <span class="right"><font class="price">{{ item.currency|default_if_none:""|getSymbol }} {{ item.price|default_if_none:""|formatPrice }} </font></span>
+                        <span class="right"><font class="price">{{ item.currency|default_if_none:""|getSymbol }} {{ item.cost|default_if_none:""|formatPrice }} </font></span>
                     </li>
                 </ul>
                 <div class="tender-bottom">
                     <div class="tender-bottom-left">
-                        <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.image }}{% endif %}" class="thumb" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" />
-                        <a href="{% url item.organization.url item.organization.slug %}">{{ item.organization.title }}</a>
+                        <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" class="thumb" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                        <a href="{{ item.organization.detail_url }}">{{ item.organization.name }}</a>
                     </div>
                     <div class="tender-bottom-right">
-                        {% b2bSocialButtons  item.image item.title item.text %}
+                        {% b2bSocialButtons  item.logo item.title item.description %}
                     </div>
                 </div>
                 <div class="goods-details-tab">
@@ -80,49 +81,49 @@ $(function() {
                         <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
                         <li><a href="#goods-tabs-2">{% trans 'Gallery' %}</a></li>
                         <li><a href="#goods-tabs-3">{% trans 'Documents' %}</a></li>
-                        {% for page in additionalPages %}
-                            <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
+                        {% for page in item.additional_pages.all %}
+                             <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                         {% endfor %}
                         </ul>
                     </div>
                     <div id="goods-tabs-1">
-                        <div class="content-goods-tab">{{ item.text|cleanHtml|safe }} </div>
+                        <div class="content-goods-tab">{{ item.description|cleanHtml|safe }} </div>
                     </div>
                     <div id="goods-tabs-2">
                         <div class="content-goods-tab">
                             <ul class="tpp-gallery">
-                                {% for photo in photos %}
-                                    <li>
-                                        <div class="b-img">
-                                            <img alt=""  src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
-
-                                            <div class="viewimge" onclick="document.getElementById('white-tpp').style.display='block';document.getElementById('black-tpp').style.display='block'">
-                                                <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span></div>
-                                            <div class="gray-img"></div>
-                                        </div>
-                                    </li>
+                                {% for gallery in item.galleries.all %}
+                                    {% for gallery_item in gallery.gallery_items.all %}
+                                        <li>
+                                            <div class="b-img">
+                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" />
+                                                </a>
+                                                <div class="viewimge">
+                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="gray-img"></div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
                                 {% endfor %}
                             </ul>
                         </div>
                     </div>
                     <div id="goods-tabs-3">
                         <div class="content-goods-tab">
-                            {% if item.doc_1 %}
-                                <a href="{{ MEDIA_URL}}document/{{ item.doc_1 }}">{% trans 'Link to the document' %}</a><br>
-                            {% endif %}
-                            {% if item.doc_2 %}
-                                <a href="{{ MEDIA_URL}}document/{{ item.doc_2 }}">{% trans 'Link to the document' %}</a><br>
-                            {% endif %}
-                            {% if item.doc_3 %}
-                                <a href="{{ MEDIA_URL}}document/{{ item.doc_3 }}">{% trans 'Link to the document' %}</a><br>
-                            {% endif %}
+                        {% for document in item.documents.all %}
+                            <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
+                        {% endfor %}
                         </div>
                     </div>
-                    {% for page in additionalPages %}
-                        <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
-                            <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
-                        </div>
-                    {% endfor %}
+                {% for page in item.additional_pages.all %}
+                    <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                          <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                     </div>
+                {% endfor %}
             </div>
         </div>
     </div>

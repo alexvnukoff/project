@@ -11,26 +11,27 @@
             {% for tpp in object_list %}
                 <li>
                 {% setContextMenu tpp %}
-
-
-
                     <div class="title">
-                        {% if tpp.country.flag %}
-                                <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.text }}" ></i>
-                        {% elif tpp.flag %}
-                               <img src="{{ MEDIA_URL }}small/{{ tpp.flag }}" class="flag" alt="{{ tpp.title }}" title="{{ tpp.title }}"/>
+                        {% if tpp.flag %}
+                                <img src="{{ MEDIA_URL }}small/{{ tpp.flag }}" class="flag" alt="{{ tpp.name }}" title="{{ tpp.name }}"/>
+                        {% else %}
+                               <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.name }}" ></i>
                         {% endif %}
-                        <a href="{% url 'tpp:detail' tpp.slug %}">{{ tpp.title }}</a>
+                        <a href="{% url 'tpp:detail' tpp.slug %}">{{ tpp.name }}</a>
                     </div>
 
                     <div class="company-infor">
-                        {% if tpp.image %}
-                            <img src="{{MEDIA_URL}}small/{{ tpp.image }}" class="logocompany" alt="{{ tpp.title }}" title="{{ tpp.title }}" />
+                        {% if tpp.logo %}
+                            <img src="{{MEDIA_URL}}small/{{ tpp.logo }}" class="logocompany" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
                         {% else %}
                             <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="logocompany" alt="" />
                         {% endif %}
                         <div class="desc">
-                            {{ tpp.text|cleanHtml|safe|truncatewords_html:30 }}
+                            {% if tpp.short_description %}
+                                {{ tpp.short_description|force_escape|linebreaks }}
+                            {% else %}
+                                {{ tpp.description|cleanHtml|safe|truncatewords_html:"30" }}
+                            {% endif %}
                             <a href="{% url 'tpp:detail' tpp.slug %}">{% trans "More" %}...</a>
                         </div>
                         <div class="companycontact">

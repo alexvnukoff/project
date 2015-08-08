@@ -1,12 +1,9 @@
 from haystack.routers import BaseRouter
-from tpp.settings import HAYSTACK_CONNECTIONS
 
 __author__ = 'user'
 from django.conf import settings
 from django.utils import translation
-from haystack import connections
-from haystack.backends.elasticsearch_backend import ElasticsearchSearchBackend, ElasticsearchSearchQuery, \
-    ElasticsearchSearchEngine
+from haystack.backends.elasticsearch_backend import ElasticsearchSearchBackend, ElasticsearchSearchEngine
 from haystack.constants import DEFAULT_ALIAS
 
 def get_using(language, alias=DEFAULT_ALIAS):

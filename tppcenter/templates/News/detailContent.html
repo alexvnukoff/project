@@ -50,14 +50,14 @@
     <div class="new-details">
         <h1>{{ item.title }}</h1>
         <p class="date">
-            {% if item.organization.flag %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" />
-            {% elif item.country.flag %}
+            {% if item.country %}
                 <i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
+            {% elif item.organization %}
+                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.flag }}" alt="{{ item.organization.name }}" />
             {% endif %}
 
-            {% if item.country.name %}{{ item.country.name }},{% endif %} {{ item.obj_create_date|date:"d M Y" }},
-            {% for category in item.categories %} {{ category.text }}{% endfor %}
+            {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }},
+            {% for category in item.categories.all %} {{ category.name }}{% endfor %}
         </p>
                           <!-- Яндекс.Директ -->
                     <div id="yandex_ad"></div>
@@ -103,14 +103,16 @@
                                 {% endif %}
                             </div>
                             <div id="thumbs">
-                               {% for photo in photos %}
-                                <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" alt="" />
+                               {% for gallery in item.galleries.all %}
+                                {% for gallery_item in gallery.gallery_items %}
+                                    <img src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" alt="" />
+                                {% endfor %}
                                {% endfor %}
                             </div>
                         </div>
-                        <p>{{ item.text|cleanHtml|safe }} </p>
+                        <p>{{ item.content|cleanHtml|safe }} </p>
                     </div>
-                    {% b2bSocialButtons  item.image item.title item.text %}
+                    {% b2bSocialButtons  item.image item.title item.content %}
                     <!-- Яндекс.Директ -->
                     <div id="yandex_ad2"></div>
                     <script type="text/javascript">
@@ -146,8 +148,8 @@
                     })(window, document, "yandex_context_callbacks");
                     </script>
                     <div class="video-details">
-                    {% if item.youtube_code %}
-                        <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.youtube_code }}" frameborder="0" allowfullscreen></iframe>
+                    {% if item.video_code %}
+                        <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
                     {% endif %}
                     </div>
 
@@ -165,8 +167,8 @@
                                     </div>
 
                                     <a href="{% url 'news:detail' news.slug %}">{{ news.title|truncatechars:23 }}</a>
-                                    <span class="date">{{ news.obj_create_date|date:'d M Y' }}</span>
-                                    <div class="description">{{ news.text|cleanHtml|safe|truncatewords_html:12 }}</div>
+                                    <span class="date">{{ news.created_at|date:'d M Y' }}</span>
+                                    <div class="description">{{ news.content|cleanHtml|safe|truncatewords_html:12 }}</div>
                                     <a href="{% url 'news:detail' news.slug %}" class="more">{% trans 'More' %}...</a>
                                 </li>
                             {% endfor %}

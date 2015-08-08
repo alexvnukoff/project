@@ -1,42 +1,26 @@
-
-{% extends 'main_page.html' %}
+{% extends "registration/registration_base.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
 
+{% block title %}{% trans 'Registration complete' %}{% endblock %}
 
-   {% block title %}{% trans 'Registration complete' %}{% endblock %}
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
 
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+{% endblock %}
 
+{% block content %}
+    <div class="blogin">
+        <h3>{% trans "Activation email sent" %}</h3>
 
-    {% block header %}
-        {% include "login_header.html" %}
-    {% endblock %}
-
-    {% block styles %}
-         {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-
-    {% endblock %}
-
-{% block keywords %}{% endblock %}
-
-
-
-            {% block content %}
-            <div class="blogin">
-            <h3>{% trans 'Registration is completed' %}</h3>
-
-            <div style="margin-top: 20px;">
-           <span style="font-size: 15px;"> {% trans "We sent you message. Please, check you email and click on the  link to activate your account. " %}</span>
-            </div>
-            </div>
-          {% endblock %}
-
-
-
-
-
-
-
+        <div style="margin-top: 20px;">
+        <span style="font-size: 15px;"> {% trans "Please check your email to complete the registration process." %}</span>
+        </div>
+    </div>
+{% endblock %}

@@ -4,17 +4,17 @@ from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginat
 from appl.models import Product, UserSites, AdditionalPages, Company, Country, Gallery
 from core.models import Item
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import  HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-def get_products_list(request, page=1, item_id=None, my=None, slug=None, language=None):
 
+def get_products_list(request, page=1, item_id=None, my=None, slug=None, language=None):
     if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+        if not Item.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     try:
         if not item_id:
@@ -33,99 +33,93 @@ def get_products_list(request, page=1, item_id=None, my=None, slug=None, languag
     title = _("Products")
 
     templateParams = {
-    'current_section': current_section,
-    'contentPage': contentPage,
-    'title': title
+        'current_section': current_section,
+        'contentPage': contentPage,
+        'title': title
     }
 
     return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
 
 
-
-
-
-
-
-
 def _get_content(request, page, language):
-     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-     organization = user_site.organization.pk
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    organization = user_site.organization.pk
 
-     sqs = getActiveSQS().models(Product).filter(SQ(tpp=organization) |
-                                              SQ(company=organization)).order_by('-obj_create_date')
+    sqs = getActiveSQS().models(Product).filter(SQ(tpp=organization) |
+                                                SQ(company=organization)).order_by('-obj_create_date')
 
-     if not language:
-         url_paginator = 'products:paginator'
-         products_url = 'products:detail'
-     else:
-         url_paginator ="products_lang:paginator"
-         products_url = 'products_lang:detail'
+    if not language:
+        url_paginator = 'products:paginator'
+        products_url = 'products:detail'
+    else:
+        url_paginator = "products_lang:paginator"
+        products_url = 'products_lang:detail'
 
+    attr = ('NAME', 'COST', 'CURRENCY', 'SLUG', 'IMAGE')
 
-     attr = ('NAME', 'COST', 'CURRENCY', 'SLUG', 'IMAGE')
+    result = setPaginationForSearchWithValues(sqs, *attr, page_num=12, page=page)
 
-     result = setPaginationForSearchWithValues(sqs, *attr, page_num=12, page=page)
+    content = result[0]
 
-     content = result[0]
+    page = result[1]
 
-     page = result[1]
+    paginator_range = getPaginatorRange(page)
 
-     paginator_range = getPaginatorRange(page)
+    templateParams = {
+        'url_parameter': language if language else [],
+        'url_paginator': url_paginator,
+        'content': content,
+        'page': page,
+        'paginator_range': paginator_range,
+        'products_url': products_url
 
-     templateParams = {
-         'url_parameter': language if language else [],
-         'url_paginator': url_paginator,
-         'content': content,
-         'page': page,
-         'paginator_range': paginator_range,
-         'products_url': products_url
+    }
 
-     }
+    template = loader.get_template('Products/contentPage.html')
+    context = RequestContext(request, templateParams)
+    rendered = template.render(context)
 
-     template = loader.get_template('Products/contentPage.html')
-     context = RequestContext(request, templateParams)
-     rendered = template.render(context)
-
-     return rendered
+    return rendered
 
 
 def _getdetailcontent(request, item_id, slug):
-     product = get_object_or_404(Product, pk=item_id)
+    product = get_object_or_404(Product, pk=item_id)
 
-     attr = (
+    attr = (
         'NAME', 'COST', 'CURRENCY', 'IMAGE', 'DETAIL_TEXT',
         'COUPON_DISCOUNT', 'DISCOUNT', 'MEASUREMENT_UNIT',
         'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SKU'
-     )
+    )
 
-     productValues = product.getAttributeValues(*attr)
-     photos = Gallery.objects.filter(c2p__parent=item_id)
-     additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
-     country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence", p2c__child__p2c__type="dependence")
-     company = Company.objects.get(p2c__child=item_id)
-     companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
-     companyValues.update({'COMPANY_ID': company.id})
-     countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
+    productValues = product.getAttributeValues(*attr)
+    photos = Gallery.objects.filter(c2p__parent=item_id)
+    additionalPages = AdditionalPages.objects.filter(c2p__parent=item_id)
+    country = Country.objects.get(p2c__child__p2c__child=item_id, p2c__type="dependence",
+                                  p2c__child__p2c__type="dependence")
+    company = Company.objects.get(p2c__child=item_id)
+    companyValues = company.getAttributeValues("NAME", 'ADDRESS', 'FAX', 'TELEPHONE_NUMBER', 'SITE_NAME', 'SLUG')
+    companyValues.update({'COMPANY_ID': company.id})
+    countriesList = country.getAttributeValues("NAME", 'FLAG', 'COUNTRY_FLAG')
 
-     toUpdate = {
+    toUpdate = {
         'COUNTRY_NAME': countriesList.get('NAME', 0),
         'COUNTRY_FLAG': countriesList.get('FLAG', 0),
         'FLAG_CLASS': countriesList.get('COUNTRY_FLAG', 0),
-        'COUNTRY_ID':  country.id
-     }
+        'COUNTRY_ID': country.id
+    }
 
-     companyValues.update(toUpdate)
-     template = loader.get_template('Products/detailContent.html')
+    companyValues.update(toUpdate)
+    template = loader.get_template('Products/detailContent.html')
 
-     templateParams = {
+    templateParams = {
         'productValues': productValues,
         'photos': photos,
         'additionalPages': additionalPages,
         'companyValues': companyValues,
         'item_id': item_id
-     }
+    }
 
-     context = RequestContext(request, templateParams)
-     rendered = template.render(context)
+    context = RequestContext(request, templateParams)
+    rendered = template.render(context)
 
-     return rendered
+    return rendered

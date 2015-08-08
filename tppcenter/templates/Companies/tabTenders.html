@@ -7,39 +7,24 @@
             <td>{% trans "Name" %}</td>
             <td>{% trans "Start date" %}</td>
             <td>{% trans "End date" %}</td>
-           <td>{% trans "Price" %}</td>
-
-
+            <td>{% trans "Price" %}</td>
         </tr>
-
-       {% for id, attr in tendersList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.START_EVENT_DATE|first as start_date %}
-            {% with attr.END_EVENT_DATE|first as end_date %}
-            {% with attr.COST|first as cost %}
-            {% with attr.CURRENCY|first as currency %}
+       {% for tender in page.object_list %}
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ tender.pk }}</td>
                 <td>
-                    <a href="{% url 'tenders:detail' slug %}" title="{{ name }}">
-                       {{ name|truncatewords:10 }}
+                    <a href="{% url 'tenders:detail' tender.slug %}" title="{{ tender.title }}">
+                       {{ tender.title|truncatewords:10 }}
                     </a>
                 </td>
                 <td>
-                    {{ start_date|makeDate|date:"d M Y" }}
+                    {{ tender.start_date|makeDate|date:"d M Y" }}
 
                 </td>
-                <td>{{ end_date|makeDate|date:"d M Y" }}</td>
-                <td>{{ currency|getSymbol }} {{ cost }}</td>
+                <td>{{ tender.end_date|makeDate|date:"d M Y" }}</td>
+                <td>{{ tender.currency|getSymbol }} {{ tender.cost }}</td>
 
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

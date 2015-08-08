@@ -5,11 +5,9 @@ from django.conf import settings
 
 
 class ChangeCsrfCookieDomainMiddleware:
-
-
     def process_request(self, request):
-
-        current_domain = request.get_host().split('.')
+        current_domain = request.get_host().split(':')[0]
+        current_domain = current_domain.split('.')
 
         if current_domain[0] == "www":
             current_domain.pop()

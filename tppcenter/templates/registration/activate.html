@@ -1,12 +1,16 @@
-{% extends "registration/registration_base.html" %}
+{% extends "main_page.html" %}
 {% load i18n %}
-{% block title %}{% if account %}{% trans 'Registration is completed' %}{% else %}{% trans 'Activation problem' %}{% endif %}{% endblock %}
-{% block body %}
-    {% if account %}
-         {{ account }}! {% trans 'Your registration is complited' %}!  {% trans 'You can sign in' %} <a href='{% url auth_login %}'>{% trans 'profile' %}</a>
-    {% else %}
-        {% trans 'Sorry, but your activation key is invalid' %}
 
-    {% endif %}
+{% block content %}
+<p>{% trans "Account activation failed." %}</p>
 {% endblock %}
 
+
+{% comment %}
+**registration/activate.html**
+
+Used if account activation fails. With the default setup, has the following context:
+
+``activation_key``
+    The activation key used during the activation attempt.
+{% endcomment %}

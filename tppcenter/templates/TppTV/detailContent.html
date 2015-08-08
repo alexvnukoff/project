@@ -19,46 +19,50 @@
 {% block keywords %}{% endblock %}
 
 {% block content %}
-  <div class="new-details">
+    <div class="new-details">
+        <h1>{{ item.title }}</h1>
+        <p class="date">
+        {% if item.organization %}
+            {% if item.organization.flag %}
+                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                {{ item.organization.name }}
+            {% else %}
+                <i class="sprite {{ item.organization.country.flag }}" title="{{ item.organization.country.name }}"></i>
+                {{ item.organization.country.name }}
+            {% endif %}
+        {% elif item.country.flag %}
+            <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}" ></i>
+            {{ item.country.name }}
+        {% endif %}
 
-            <h1>{{ item.title }}</h1>
-                <p class="date">
-                {% if item.country.flag %}
-                    <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.text }}" ></i>
-                    {{ item.country.text }}
-                {% elif item.organization.flag %}
-                    <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" alt="{{ item.organization.title }}" />
-                    {{ item.organization.title }}
-                {% endif %}
+        {{ item.created_at|date:"d M Y" }},
+        {% for category in item.categories.all %} <a href="#">{{ category.name }}</a>{% endfor %}</p>
 
-                   {{ item.obj_create_date|date:"d M Y" }},
-                    {% for category in item.categories %} <a href="#">{{ category.text }}</a>{% endfor %}</p>
+        <div class="video-details">
+         <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.video_code }}" frameborder="0" allowfullscreen></iframe>
+        </div>
 
-                <div class="video-details">
-                 <iframe width="540" height="322" src="//www.youtube.com/embed/{{ item.youtube_code }}" frameborder="0" allowfullscreen></iframe>
-                </div>
+        {% b2bSocialButtons  "" item.image item.content %}
+        <div class="content-news">
+           <p>{{ item.content|cleanHtml|safe }}</p>
+        </div>
 
-                {% b2bSocialButtons  "" item.image item.text %}
-                <div class="content-news">
-                   <p>{{ item.text|cleanHtml|safe }}</p>
-                </div>
+        <div class="related-news">
+            <span class="title">{% trans 'Similar news' %}</span>
+            <ul>
+            {% for news in similarNews %}
+                <li>
+                    <span class="date">{{ news.created_at|date:"d M y" }}</span>
+                    {% if news.image %}
+                        <img src="{{ MEDIA_URL }}big/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}" class="thumb" />
+                    {% else %}
+                        <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
+                    {% endif %}
 
-                <div class="related-news">
-                	<span class="title">{% trans 'Similar news' %}</span>
-                    <ul>
-                    {% for news in similarNews %}
-                      	<li>
-                        	<span class="date">{{ news.obj_create_date|date:"d M y" }}</span>
-                            {% if news.image %}
-                        	    <img src="{{ MEDIA_URL }}big/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}" class="thumb" />
-                            {% else %}
-                                <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
-                            {% endif %}
-
-                            <a href="{% url  "tv:detail" news.slug %}" class="more">{{ news.title }} </a>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                </div>
-  </div>
+                    <a href="{% url  "tv:detail" news.slug %}" class="more">{{ news.title }} </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

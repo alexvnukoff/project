@@ -1,10 +1,10 @@
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 import datetime
 from dateutil.parser import parse
 from appl.models import Company, PayPalPayment, AdvOrder, Product
 from core.models import Relationship, User
-from tpp import settings
 
 
 def membership_payment(request):

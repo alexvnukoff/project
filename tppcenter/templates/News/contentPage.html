@@ -14,10 +14,6 @@
             <li>
             {% setContextMenu news %}
 
-
-
-
-
                 <div class="thumb shadow">
                     <a href="{% url "news:detail" news.slug %}">
                         {% if news.image %}
@@ -31,20 +27,23 @@
                 <div class="infoprd">
                     <a href="{% url "news:detail" news.slug %}" class="name">{{ news.title }}</a>
                     <p class="date">
-                    {% if news.organization.flag %}
-                        <img src="{{ MEDIA_URL }}small/{{ news.organization.flag }}" class="flag" title="{{ news.organization.title }}" alt="{{ news.organization.title }}" />
-                    {% elif news.country.flag %}
+                    {% if news.organization %}
+                        {% if news.organization.flag %}
+                            <img src="{{ MEDIA_URL }}small/{{ news.organization.flag }}" class="flag" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
+                        {% else %}
+                            <i class="sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+                        {% endif %}
+                    {% elif news.country %}
                         <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
                     {% endif %}
-                    {{ news.obj_create_date|date:'d M Y' }}</p>
+                    {{ news.created_at|date:'d M Y' }}</p>
                     <p>
-                        {% if news.anons %}
+                        {% if news.short_description %}
                             {% autoescape off %}
-                                {{ news.anons|force_escape|linebreaks }}
+                                {{ news.short_description|force_escape|linebreaks }}
                             {% endautoescape %}
                         {% else %}
-                            {{ news.text|cleanHtml|safe|truncatewords_html:"30" }}
-
+                            {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
                         {% endif %}
                     </p>
                     <!--noindex--><a href="{% url "news:detail" news.slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->

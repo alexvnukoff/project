@@ -1,52 +1,45 @@
-{% extends 'main_page.html' %}
+{% extends "registration/registration_base.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
 
-{% block keywords %}{% endblock %}
-   {% block title %}{% trans 'Login' %}{% endblock %}
+{% block title %}{% trans "Log in" %}{% endblock %}
 
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
 
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
+{% endblock %}
 
-    {% block header %}
-        {% include "login_header.html" %}
-    {% endblock %}
-
-    {% block styles %}
-         {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-
-    {% endblock %}
-
-
-
-            {% block content %}
-            <div class="blogin">
-				<h3>{% trans 'Authorization' %}</h3>
-                <form method='post' action=''>
-                     {% csrf_token %}
-
-                <ul class="formlogin" id="register">
-                     <div>
-                         {% for key, value in form.errors.items %}
-                             {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
-                         {% endfor %}
-                     </div>
-                	<li>
-                    	<label>{% trans "E-mail" %}</label>
-                        <input id="id_email" name="username" class="text   {% if form.username.errors   %}error{% endif %}" type="email" >
-                        {% if form.username.errors   %}<div class="formerror">{{ form.username.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans "Password" %}</label>
-                        <input id="id_password1" type="password"  class="text {% if form.password.errors   %}error{% endif %}"  name="password">
-                       {% if form.password.errors   %}<div class="formerror">{{ form.password.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li><input type="submit" name="Login"  class="btnlogin" value="{% trans "Sign in" %}"></li>
-                     <li><a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a></li>
-
-                </ul>
-                </form>
-            </div>
-         {% endblock %}
+{% block content %}
+<div class="blogin">
+    <h3>{% trans 'Authorization' %}</h3>
+    <form method='post' action=''>
+         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <ul class="formlogin" id="register">
+             <div>
+                 {% for key, value in form.errors.items %}
+                     {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
+                 {% endfor %}
+             </div>
+            <li>
+                <label>{% trans "E-mail" %}</label>
+                <input id="id_email" name="username" class="text   {% if form.username.errors   %}error{% endif %}" type="email" >
+                {% if form.username.errors   %}<div class="formerror">{{ form.username.errors.as_text }}</div>{% endif %}
+            </li>
+            <li>
+                <label>{% trans "Password" %}</label>
+                <input id="id_password1" type="password"  class="text {% if form.password.errors   %}error{% endif %}"  name="password">
+               {% if form.password.errors   %}<div class="formerror">{{ form.password.errors.as_text }}</div>{% endif %}
+            </li>
+            <li><input type="submit" name="Login"  class="btnlogin" value="{% trans "Sign in" %}"></li>
+             <li><a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a></li>
+        </ul>
+    </form>
+</div>
+{% endblock %}

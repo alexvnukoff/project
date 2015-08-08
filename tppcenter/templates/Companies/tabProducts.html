@@ -9,43 +9,32 @@
             <td>{% trans "Name" %}</td>
             <td>{% trans "Description" %}</td>
            <td>{% trans "Price" %}</td>
-
-
         </tr>
-
-       {% for id, attr in productsList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.DETAIL_TEXT|first as content %}
-            {% with attr.IMAGE|first as logo %}
-            {% with attr.COST|first as cost %}
-            {% with attr.CURRENCY|first as currency %}
+       {% for product in page.object_list %}
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ product.pk }}</td>
                 <td>
-                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
-                        {% if logo %}
-                             <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" title="{{ name }}"/>
+                    <a href="{% url 'products:detail' product.slug %}" title="{{ product.name }}">
+                        {% if product.image %}
+                             <img src="{{ MEDIA_URL }}small/{{ product.image }}" alt="{{ product.name }}" title="{{ product.name }}"/>
                         {% else %}
                              <img src="{% static "tppcenter/img/item.jpg"  %}" alt="" />
                         {% endif %}
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'products:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:2 }}
+                    <a href="{% url 'products:detail' product.slug %}" title="{{ product.name }}">
+                        {{ product.name|truncatewords:2 }}
                     </a>
                 </td>
-                <td>{{ content|cleanHtml|safe|truncatewords_html:10 }}</td>
-                <td>{{ currency|getSymbol }} {{ cost }}</td>
+                <td>{{ product.description|cleanHtml|safe|truncatewords_html:10 }}</td>
+                <td>
+                    {% if product.cost %}
+                        {{ product.currency|getSymbol }} {{ product.cost }}
+                    {% endif %}
+                </td>
 
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

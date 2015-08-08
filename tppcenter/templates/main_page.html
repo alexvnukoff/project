@@ -246,7 +246,9 @@
                     </iframe>
                 </div>
                 <!-- /Booking.com injection -->
-                {% getBanners item_id "Left 1" "Left 2" "Left 3" %}
+                {% get_banner "Left 1" item_id %}
+                {% get_banner "Left 2" item_id %}
+                {% get_banner "Left 3" item_id %}
             </div>
         </div>
     {% endblock %}
@@ -298,10 +300,11 @@
                 <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
                 <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
             </div>
-        
                 {% getTopOnPage item_id %}
                  <div class="banner-wrapper-right">
-                {% getBanners item_id "Right 1" "Right 2" "Right 3" %}
+                 {% get_banner "Right 1" item_id %}
+                 {% get_banner "Right 2" item_id  %}
+                 {% get_banner "Right 3" item_id  %}
                  </div>
             </div>
 

@@ -6,30 +6,27 @@
     {% include "BusinessProposal/popupFilter.html" %}
     {% include "main/paginator.html" %}
     {% include "main/local_menu_script.html" %}
-
     <ul class="tender-list" id="afisha-list">
         {% for proposal in object_list %}
             <li>
                {% setContextMenu proposal %}
-
-
-                        <div class="title">
-                           {% if proposal.country.flag %}
-                                <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.text }}"></i>
-                           {% elif proposal.organization.flag %}
-                                <img src="{{ MEDIA_URL }}small/{{ proposal.organization.flag }}" class="flag" title="{{ proposal.organization.title }}" />
-                           {% endif %}
-                           <font class="name">{{ proposal.country.text }}, {% trans 'Date' %}: {{ proposal.obj_create_date|date:"d M Y" }}</font>
-                        </div>
-                        <h2><a href="{% url "proposal:detail" proposal.slug %}"> {{ proposal.title }} </a></h2>
-                        <div class="line">
-                            {% trans 'Organization' %}:
-                                {% if proposal.organization.title %}
-                                    <a href="{% url proposal.organization.url proposal.organization.slug %}">{{ proposal.organization.title }}</a>
-                                {% endif %}
-                        </div>
-                        <a href="{% url "proposal:detail" proposal.slug %}" class="linkmore">{% trans 'More' %}...</a>
-
+            <div class="title">
+               {% if proposal.country %}
+                    <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
+                    <font class="name">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
+               {% elif proposal.organization.flag %}
+                    <img src="{{ MEDIA_URL }}small/{{ proposal.organization.flag }}" class="flag" title="{{ proposal.organization.name }}" />
+                    <font class="name">{{ proposal.organization.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
+                {% endif %}
+            </div>
+            <h2><a href="{% url "proposal:detail" proposal.slug %}"> {{ proposal.title }} </a></h2>
+            <div class="line">
+                {% trans 'Organization' %}:
+                    {% if proposal.organization %}
+                        <a href="{{ proposal.organization.detail_url }}">{{ proposal.organization.name }}</a>
+                    {% endif %}
+            </div>
+            <a href="{% url "proposal:detail" proposal.slug %}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>

@@ -12,36 +12,32 @@
         {% include "main/local_menu_script.html" %}
         <ul class="company-list">
             {% for company in object_list %}
-
-
-
-
                 <li>
                      {% setContextMenu company %}
                     <div class="title">
                         {% if company.country.flag %}
                             <i class="flag sprite {{ company.country.flag }}"></i>
                         {% endif %}
-                        <a href="{% url 'companies:detail' company.slug %}">{{ company.title }}</a>
+                        <a href="{% url 'companies:detail' company.slug %}">{{ company.name }}</a>
                     </div>
                     <div class="company-infor">
-                        {% if company.image %}
-                            <img src="{{ MEDIA_URL }}small/{{ company.image }}" class="logocompany" alt="{{ company.title }}" title="{{ company.title }}"/>
+                        {% if company.logo %}
+                            <img src="{{ MEDIA_URL }}small/{{ company.logo }}" class="logocompany" alt="{{ company.name }}" title="{{ company.name }}"/>
                         {% else %}
                            <img src="{% static "tppcenter/img/company.jpg" %}" class="logocompany" alt="" />
                         {% endif %}
                         <div class="desc">
-                            {% if company.organization.title %}
+                            {% if company.parent %}
                                 <p class="link">
                                     <b>{% trans 'Member of' %}</b>
-                                    <a href="{% url company.organization.url company.organization.slug %}">{{ company.organization.title|truncatechars:30 }}</a>
+                                    <a href="{{ company.parent.detail_url }}">{{ company.parent.name|truncatechars:30 }}</a>
                                 </p>
                             {% endif %}
 
-                            {% if company.anons %}
-                                {{ company.anons|cleanHtml|safe|truncatechars:200 }}
+                            {% if company.short_description %}
+                                {{ company.short_description|cleanHtml|safe|truncatechars:200 }}
                             {% else %}
-                                {{ company.text|cleanHtml|safe|truncatewords_html:200 }}
+                                {{ company.description|cleanHtml|safe|truncatewords_html:200 }}
                             {% endif %}
                             <a href="{% url 'companies:detail' company.slug %}">{% trans "More" %}...</a>
 

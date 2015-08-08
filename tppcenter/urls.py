@@ -3,9 +3,6 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from loginas.views import user_login
 #from tppcenter.sitemaps import all_sitemaps as sitemaps
-from django.conf import settings
-from tpp.SiteUrlMiddleWare import get_request
-from appl.func import show_toolbar
 
 import tppcenter.views
 import tppcenter.News.urls
@@ -55,8 +52,8 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', tppcenter.views.home, name="main"),
     url(r"^login/user/(?P<user_id>.+)/$", user_login, name="loginas-user-login"),
-    url(r'^addcon/', tppcenter.views.buildCountries),
-    url(r'^addTemp/', tppcenter.views.builTemplate),
+    #url(r'^addcon/', tppcenter.views.buildCountries),
+    #url(r'^addTemp/', tppcenter.views.builTemplate),
     url(r'^news/', include(tppcenter.News.urls, namespace='news')),
     url(r'^products/', include(tppcenter.Product.urls, namespace='products')),
     url(r'^innovation/', include(tppcenter.Innov.urls, namespace='innov')),
@@ -81,7 +78,7 @@ urlpatterns = patterns('',
     url(r'^admin-tpp/', include(tppcenter.AdminTpp.urls, namespace='AdminTpp')),
 
 
-    url(r'^register/exhibition/$', tppcenter.views.registerToExebition),
+    url(r'^register/exhibition/$', tppcenter.views.register_to_exhibition),
 
     url(r'^denied/', tppcenter.views.perm_denied, name='denied'),
 
@@ -101,7 +98,7 @@ urlpatterns = patterns('',
     url(r'^project/', include(tppcenter.Project.urls, namespace='project')),
 
 
-    url(r'^test/', tppcenter.views.test),
+    #url(r'^test/', tppcenter.views.test),
     #url(r'^test2/', tppcenter.views.test2),
     url(r'^ping/', tppcenter.views.ping),
     url(r'^admin/tpp/', include(admin.site.urls)),
@@ -110,33 +107,33 @@ urlpatterns = patterns('',
 
 
 
-    url(r'^items/$', tppcenter.views.set_items_list),
-    url(r'^items/([a-zA-Z]+)/$', tppcenter.views.set_item_list),
-    url(r'^items/([a-zA-Z]+)/create/$', tppcenter.views.get_item_form),
-    url(r'^items/([a-zA-Z]+)/update/([0-9]+)/$', tppcenter.views.update_item),
-    url(r'^items/([a-zA-Z]+)/showlist/([0-9]+)/$', tppcenter.views.showlist),
+    #url(r'^items/$', tppcenter.views.set_items_list),
+    #url(r'^items/([a-zA-Z]+)/$', tppcenter.views.set_item_list),
+    #url(r'^items/([a-zA-Z]+)/create/$', tppcenter.views.get_item_form),
+    #url(r'^items/([a-zA-Z]+)/update/([0-9]+)/$', tppcenter.views.update_item),
+    #url(r'^items/([a-zA-Z]+)/showlist/([0-9]+)/$', tppcenter.views.showlist),
 
 
 
-    url(r'^notification/get/$', tppcenter.views.getNotifList),
-    url(r'^addPage/get/$', tppcenter.views.getAdditionalPage),
-    url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
-    url(r'^accounts/password/change/done/$', auth_views.password_change_done, name='password_change_done'),
-    url(r'^accounts/password/reset/$', auth_views.password_reset, name='password_reset'),
-    url(r'^accounts/password/reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
-    url(r'^accounts/password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    url(r'^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
+    url(r'^notification/get/$', tppcenter.views.get_notification_list),
+    url(r'^addPage/get/$', tppcenter.views.get_additional_page),
+    # url(r'^accounts/password/change/$', auth_views.password_change, name='password_change'),
+    # url(r'^accounts/password/change/done/$', auth_views.password_change_done, name='password_change_done'),
+    # url(r'^accounts/password/reset/$', auth_views.password_reset, name='password_reset'),
+    # url(r'^accounts/password/reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
+    # url(r'^accounts/password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    # url(r'^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', name='password_reset_confirm'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
 
 
 
 
-    url(r'^adv/tops/', tppcenter.views.getLiveTop),
-    url(r'^adv/bann/', tppcenter.views.getLiveBanner),
-    url(r'^filter/', tppcenter.views.jsonFilter),
-    url(r'^company-manage/', tppcenter.views.myCompanies),
-    url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.setCurrent, name="setCurrent"),
+    url(r'^adv/tops/', tppcenter.views.get_live_top),
+    url(r'^adv/bann/', tppcenter.views.get_live_banner),
+    url(r'^filter/', tppcenter.views.json_filter),
+    url(r'^company-manage/', tppcenter.views.my_companies),
+    url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.set_current, name="setCurrent"),
 
 
 

@@ -32,13 +32,13 @@
 					<ul class="inforesume">
                     	<li>
                         	<label>{% trans 'Vacancy title' %}:</label>
-                            <span class="right">{{ item.text }}</span>
+                            <span class="right">{{ item.title }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'User name' %}:</label>
                             <span class="right">
-                                {% if item.cabinet.text %}
-                                    {{ item.cabinet.text }}
+                                {% if item.created_by.profile.full_name %}
+                                    {{ item.created_by.profile.full_name }}
                                 {% else %}
                                     {% trans "Name not found" %}
                                 {% endif %}
@@ -46,7 +46,7 @@
                         </li>
                         <li>
                         	<label>{% trans 'Birthday' %}:</label>
-                            <span class="right">{{ item.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                            <span class="right">{{ item.created_by.profile.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Marital status' %}:</label>

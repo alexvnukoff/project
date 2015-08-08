@@ -7,39 +7,25 @@
             <td>{% trans "Name" %}</td>
             <td>{% trans "Start Event" %}</td>
             <td>{% trans "End date" %}</td>
-           <td>{% trans "City" %}</td>
-
-
+            <td>{% trans "City" %}</td>
         </tr>
 
-       {% for id, attr in exhibitionList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.START_EVENT_DATE|first as start_date %}
-            {% with attr.END_EVENT_DATE|first as end_date %}
-            {% with attr.CITY|first as city %}
+       {% for exhibition in page.object_list %}
 
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ exhibition.pk }}</td>
                 <td>
-                    <a href="{% url 'exhibitions:detail' slug %}" title="{{ name }}">
-                       {{ name|truncatewords:10 }}
+                    <a href="{% url 'exhibitions:detail' exhibition.slug %}" title="{{ exhibition.title }}">
+                       {{ exhibition.title|truncatewords:10 }}
                     </a>
                 </td>
                 <td>
-                    {{ start_date|makeDate|date:"d M Y" }}
+                    {{ exhibition.start_date|makeDate|date:"d M Y" }}
 
                 </td>
-                <td>{{ end_date|makeDate|date:"d M Y" }}</td>
-                <td>{{city }}</td>
-
+                <td>{{ exhibition.end_date|makeDate|date:"d M Y" }}</td>
+                <td>{{ exhibition.city }}</td>
             </tr>
-
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

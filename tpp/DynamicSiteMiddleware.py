@@ -71,7 +71,7 @@ SITE_THREAD_LOCAL = local()
 
 # Use Fallback ID if host not exist in Site table. We use int() here, because
 # os environment variables are always strings.
-FALLBACK_SITE_ID = 143#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
+FALLBACK_SITE_ID = 1#int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
 logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
 
 # Use Fallback ID at startup before process_request(), e.g. in unittests

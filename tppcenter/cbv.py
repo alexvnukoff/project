@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.utils.text import Truncator
@@ -11,7 +12,6 @@ from haystack.query import SearchQuerySet
 from appl import func
 from appl.models import Country, AdditionalPages, Gallery, Company, Tpp
 from core.cbv import HybridListView
-from tpp import settings
 
 class TabItemList(HybridListView):
     paginate_by = 10

@@ -8,16 +8,16 @@ from django.shortcuts import render_to_response
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _, trans_real
 
-from appl.models import Tender, Gallery, AdditionalPages, Organization
+from appl.models import Gallery, AdditionalPages, Organization
 from appl import func
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import Tender
 from core.tasks import addNewTender
 from core.models import Dictionary
-from tppcenter.cbv import ItemsList, ItemDetail
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
-class get_tenders_list(ItemsList):
-
+class TenderList(ItemsList):
     #pagination url
     url_paginator = "tenders:paginator"
     url_my_paginator = "tenders:my_main_paginator"
@@ -42,24 +42,18 @@ class get_tenders_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Tenders/index.html'
 
+    def get_queryset(self):
+        queryset = super(TenderList, self).get_queryset()
+        return queryset.select_related('country').prefetch_related('organization')
 
-class get_tender_detail(ItemDetail):
 
+class TenderDetail(ItemDetail):
     model = Tender
     template_name = 'Tenders/detailContent.html'
 
     current_section = _("Tenders")
     addUrl = 'tenders:add'
 
-    def get_context_data(self, **kwargs):
-        context = super(get_tender_detail, self).get_context_data(**kwargs)
-
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
 
 @login_required(login_url='/login/')
 def tenderForm(request, action, item_id=None):

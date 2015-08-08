@@ -11,15 +11,15 @@
 <div class="tpp-dt-content">
     <div class="content-staff">
         <div class="content-staffin">
-            {% if departments|length > 0 %}
+            {% if page.object_list|length > 0 %}
                 <ul class="sitemap department">
-                    {% for id, department in departments.items %}
-                        <li data-item-id="{{ id }}">
-                            <a href="#" title="{{ department.text }}">{{ department.text }}</a>
+                    {% for department in page.object_list %}
+                        <li data-item-id="{{ department.pk }}">
+                            <a href="#" title="{{ department.name }}">{{ department.name }}</a>
                             <ul class="sub vacancy">
-<li>Eto list				{{department.vacancyList}}</li>
-                                {% for vacancy in department.vacancyList %}
-                                    <li  data-item-id="{{ vacancy.pk }}"><span>{{ vacancy.text }}</span></li>
+                                <li>{{ department.vacancyList}}</li>
+                                {% for vacancy in department.vacancies %}
+                                    <li  data-item-id="{{ vacancy.pk }}"><span>{{ vacancy.name }}</span></li>
                                 {% endfor %}
                             </ul>
                         </li>
@@ -30,13 +30,9 @@
             {% endif %}
             <!-- right buttons menu -->
             <div class="btn-clumn">
-                {% if 'add_department' in permissionsList %}
+                {% if has_perm %}
                     <i class="btnadd btnaction imgnews addform department" id="add-button"></i>
-                {% endif %}
-                {% if 'change_department' in permissionsList %}
                     <i class="btnedit btnaction imgnews panel" style="display: none;" id="edit-button"></i>
-                {% endif %}
-                {% if 'delete_department' in permissionsList %}
                     <i class="btnremove btnaction imgnews panel" style="display: none;" id="remove-button"></i>
                 {% endif %}
             </div>

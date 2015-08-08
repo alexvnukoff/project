@@ -1,3 +1,94 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
-# Create your models here.
+from b24online.models import Vacancy, Country, ContextAdvertisement
+from core.models import User
+
+
+class Requirement(models.Model):
+    title = models.CharField(max_length=255, blank=False, null=False)
+    slug = models.SlugField()
+    vacancy = models.ForeignKey(Vacancy)
+    city = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(blank=False, null=False)
+    requirements = models.TextField(blank=False, null=False)
+    terms = models.TextField(blank=False, null=False)
+    is_anonymous = models.BooleanField(default=False)
+    keywords = models.CharField(max_length=255, blank=True, null=False)
+    country = models.ForeignKey(Country)
+    context_advertisements = GenericRelation(ContextAdvertisement)
+
+    TYPES_OF_EMPLOYMENT = [
+        ('full_time', _('Full-time')),
+        ('partial', _('Partial')),
+        ('shifts', _('Shifts')),
+        ('for_students', _('For students')),
+    ]
+
+    type_of_employment = models.CharField(max_length=10, null=False, blank=False, choices=TYPES_OF_EMPLOYMENT)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def organization(self):
+        return self.vacancy.department.organization
+
+    def __str__(self):
+        return self.title
+
+
+class Resume(models.Model):
+    MARTIAL_STATUSES = [
+        ('married', _('Married')),
+        ('widowed', _('Widowed')),
+        ('separated', _('Separated')),
+        ('divorced', _('Divorced')),
+        ('single', _('Single')),
+    ]
+
+    STUDY_FORMS = [
+        ('extramural', _('Extramural')),
+        ('full_time', _('Full-time'))
+    ]
+
+    title = models.CharField(max_length=255, blank=False, null=False)
+    martial_status = models.CharField(max_length=10, blank=False, null=False, choices=MARTIAL_STATUSES)
+    nationality = models.CharField(max_length=255, null=False, blank=True)
+    telephone_number = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    faculty = models.CharField(max_length=255, null=True, blank=True)
+    profession = models.CharField(max_length=255, null=True, blank=True)
+    user = models.ForeignKey(User)
+    is_active = models.BooleanField(default=True, db_index=True)
+    study_start_date = models.DateField(blank=True, null=True)
+    study_end_date = models.DateField(blank=True, null=True)
+    study_form = models.CharField(max_length=30, choices=STUDY_FORMS)
+    company_exp_1 = models.CharField(max_length=255, null=True, blank=True)
+    company_exp_2 = models.CharField(max_length=255, null=True, blank=True)
+    company_exp_3 = models.CharField(max_length=255, null=True, blank=True)
+    position_exp_1 = models.CharField(max_length=255, null=True, blank=True)
+    position_exp_2 = models.CharField(max_length=255, null=True, blank=True)
+    position_exp_3 = models.CharField(max_length=255, null=True, blank=True)
+    start_date_exp_1 = models.DateField(blank=True, null=True)
+    start_date_exp_2 = models.DateField(blank=True, null=True)
+    start_date_exp_3 = models.DateField(blank=True, null=True)
+    end_date_exp_1 = models.DateField(blank=True, null=True)
+    end_date_exp_2 = models.DateField(blank=True, null=True)
+    end_date_exp_3 = models.DateField(blank=True, null=True)
+    additional_study = models.CharField(max_length=1024, null=True, blank=True)
+    language_skill = models.CharField(max_length=1024, null=True, blank=True)
+    computer_skill = models.CharField(max_length=1024, null=True, blank=True)
+    additional_skill = models.CharField(max_length=1024, null=True, blank=True)
+    salary = models.CharField(max_length=100, null=True, blank=True)
+    additional_information = models.TextField(max_length=100, null=True, blank=True)
+    institution = models.CharField(max_length=100, null=True, blank=True)
+
+    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

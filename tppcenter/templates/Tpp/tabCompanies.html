@@ -10,36 +10,26 @@
             <td>{% trans "Site" %}</td>
         </tr>
 
-        {% for id, attr in companyList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.IMAGE|first as logo %}
-            {% with attr.SITE_NAME|first as site %}
-            {% with attr.TELEPHONE_NUMBER|first as phone %}
-            {% with attr.SLUG|first as slug %}
+        {% for company in page.object_list %}
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ company.pk }}</td>
                 <td>
-                    <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
+                    <a href="{% url 'companies:detail' company.slug %}" title="{{ company.name }}">
                         {% if logo %}
-                            <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" title="{{ name }}" />
+                            <img src="{{ MEDIA_URL }}small/{{ company.logo }}" alt="{{ company.name }}" title="{{ company.name }}" />
                         {% else %}
-                            <img src="{% static "tppcenter/img/company.jpg"  %}" alt="{{ name }}" />
+                            <img src="{% static "tppcenter/img/company.jpg"  %}" alt="{{ company.name }}" />
                         {%endif %}
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'companies:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:2 }}
+                    <a href="{% url 'companies:detail' company.slug %}" title="{{ company.name }}">
+                        {{ company.name|truncatewords:2 }}
                     </a>
                 </td>
-                <td>{{ phone }}</td>
-                <td>{{ site }}</td>
+                <td>{{ company.phone }}</td>
+                <td>{{ company.site }}</td>
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

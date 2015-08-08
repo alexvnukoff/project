@@ -11,19 +11,20 @@ from django.utils.translation import ugettext as _, trans_real
 from haystack.backends import SQ
 from haystack.query import SearchQuerySet
 
-from appl.models import Resume, Cabinet
+from appl.models import Cabinet
 from appl import func
+from b24online.cbv import ItemsList, ItemDetail
 from core.tasks import addNewResume
 from core.models import Dictionary
-from tppcenter.cbv import ItemsList, ItemDetail
+from jobs.models import Resume
 from tppcenter.forms import ItemForm
 
 
-class get_resume_list(ItemsList):
+class ResumeList(ItemsList):
 
     @method_decorator(login_required(login_url='/login/'))
     def dispatch(self, *args, **kwargs):
-        return super(get_resume_list, self).dispatch(*args, **kwargs)
+        return super(ResumeList, self).dispatch(*args, **kwargs)
 
     #pagination url
     url_paginator = "resume:paginator"
@@ -61,13 +62,6 @@ class get_resume_list(ItemsList):
 
         return new_object_list
 
-    def get_context_data(self, **kwargs):
-        context = super(get_resume_list, self).get_context_data(**kwargs)
-
-        context['object_list'] = self._get_cabinet_for_objects(context['object_list'])
-
-        return context
-
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Resume/contentPage.html'
 
@@ -75,7 +69,12 @@ class get_resume_list(ItemsList):
         self.template_name = 'Resume/index.html'
 
 
-class get_resume_detail(ItemDetail):
+    def get_queryset(self):
+        queryset = super(ResumeList, self).get_queryset()
+        return queryset.select_related('user__profile')
+
+
+class ResumeDetail(ItemDetail):
 
     model = Resume
     template_name = 'Resume/detailContent.html'
@@ -85,21 +84,8 @@ class get_resume_detail(ItemDetail):
 
     @method_decorator(login_required(login_url='/login/'))
     def dispatch(self, *args, **kwargs):
-        return super(get_resume_detail, self).dispatch(*args, **kwargs)
+        return super(ResumeDetail, self).dispatch(*args, **kwargs)
 
-
-    def _get_cabinet_for_object(self):
-        try:
-            return SearchQuerySet().models(Cabinet).filter(django_id=self.object.cabinet)[0]
-        except IndexError:
-            return self.object.cabinet
-
-    def get_context_data(self, **kwargs):
-        context = super(get_resume_detail, self).get_context_data(**kwargs)
-
-        context[self.context_object_name].__setattr__('cabinet', self._get_cabinet_for_object())
-
-        return context
 
 @login_required(login_url='/login/')
 def resumeForm(request, action, item_id=None):

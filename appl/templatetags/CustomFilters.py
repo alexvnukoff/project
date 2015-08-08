@@ -15,6 +15,8 @@ from django import template
 from appl.func import currencySymbol
 from appl import func
 from appl.models import *
+import b24online
+import b24online.models
 import tppcenter.urls
 
 
@@ -315,12 +317,13 @@ def setNotification(context):
 @register.simple_tag(name='mail', takes_context=True)
 def setMessage(context):
     request = context.get('request')
-    user = request.user
-    if user.is_authenticated():
-        cab_pk = Cabinet.objects.get(user=request.user)
-        message = Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+
+    if request.user.is_authenticated():
+        #cab_pk = request.user.objects.get(user=request.user)
+        message = 0#Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
     else:
-        message = ""
+        message = 0
+
     return message
 
 
@@ -469,6 +472,3 @@ def isSiteOrganizationTpp(context):
         pass
 
     return False
-
-
-

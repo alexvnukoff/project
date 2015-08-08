@@ -3,37 +3,28 @@
 {% load staticfiles %}
 <div class="tpp-dt-content">
     <table class="table-big" cellpadding="0" cellpadding="0">
-        {% for id, attr in newsList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.IMAGE|first as logo %}
-            {% with attr.DETAIL_TEXT|first as text %}
-            {% with attr.SLUG|first as slug %}
+        {% for news in page.object_list %}
             <tr>
-
                 <td colspan="2">
-                    <a href="{% url 'news:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:10 }}
+                    <a href="{% url 'news:detail' news.slug %}" title="{{ news.title }}">
+                        {{ news.title|truncatewords:10 }}
                     </a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'news:detail' slug %}" title="{{ name }}">
-                        {% if logo %}
-                             <img src="{{ MEDIA_URL }}small/{{ logo }}" alt="{{ name }}" title="{{ name }}"/>
+                    <a href="{% url 'news:detail' news.slug %}" title="{{ news.title }}">
+                        {% if news.image %}
+                             <img src="{{ MEDIA_URL }}small/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}"/>
                         {% else %}
-                              <img src="{% static "tppcenter/img/news.jpg" %}" alt="{{ name }}" />
+                              <img src="{% static "tppcenter/img/news.jpg" %}" alt="{{ news.title }}" />
                         {% endif %}
                     </a>
                 </td>
                 <td>
-                    {{ text|cleanHtml|safe|truncatewords_html:50 }}
+                    {{ news.content|cleanHtml|safe|truncatewords_html:50 }}
                 </td>
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

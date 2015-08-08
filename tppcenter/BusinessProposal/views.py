@@ -10,15 +10,15 @@ from django.utils.timezone import now
 from django.utils.translation import trans_real
 
 from appl import func
-from appl.models import BusinessProposal, Gallery, AdditionalPages, Organization, Branch, BpCategories
+from appl.models import AdditionalPages, Organization, Branch, BpCategories
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import BusinessProposal, Gallery
 from core.models import Item
 from core.tasks import addBusinessPRoposal
-from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
-class get_proposal_list(ItemsList):
-
+class BusinessProposalList(ItemsList):
     #pagination url
     url_paginator = "proposal:paginator"
     url_my_paginator = "proposal:my_main_paginator"
@@ -43,24 +43,18 @@ class get_proposal_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'BusinessProposal/index.html'
 
+    def get_queryset(self):
+        queryset = super(BusinessProposalList, self).get_queryset()
+        return queryset.prefetch_related('branches', 'organization', 'organization__countries')
 
-class get_proposal_detail(ItemDetail):
 
+class BusinessProposalDetail(ItemDetail):
     model = BusinessProposal
     template_name = 'BusinessProposal/detailContent.html'
 
     current_section = _("Business Proposal")
     addUrl = 'proposal:add'
 
-    def get_context_data(self, **kwargs):
-        context = super(get_proposal_detail, self).get_context_data(**kwargs)
-
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
 
 @login_required(login_url='/login/')
 def proposalForm(request, action, item_id=None):

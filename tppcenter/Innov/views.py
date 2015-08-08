@@ -8,23 +8,22 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _, trans_real
-from haystack.query import SearchQuerySet
 
 from appl import func
-from appl.models import InnovationProject, Branch, AdditionalPages, Cabinet, Gallery, Organization
+from appl.models import Branch, AdditionalPages, Cabinet, Gallery, Organization
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import InnovationProject
 from core.tasks import addNewProject
 from core.models import Item, Dictionary
-from tppcenter.cbv import ItemsList, ItemDetail
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
-class get_innov_list(ItemsList):
-
-    #pagination url
+class InnovationProjectList(ItemsList):
+    # pagination url
     url_paginator = "innov:paginator"
     url_my_paginator = "innov:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -33,38 +32,10 @@ class get_innov_list(ItemsList):
     current_section = _("Innovation Project")
     addUrl = 'innov:add'
 
-    #allowed filter list
+    # allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch']
 
     model = InnovationProject
-
-    def _get_branches_data_for_objects(self, object_list):
-        new_object_list = []
-
-        for obj in object_list:
-            obj.__setattr__('branch', SearchQuerySet().models(Branch).filter(django_id__in=obj.branch))
-            new_object_list.append(obj)
-
-        return new_object_list
-
-    def _get_cabinet_data_for_objects(self, object_list):
-        new_object_list = []
-
-        for obj in object_list:
-            if obj.cabinet:
-                obj.__setattr__('cabinet', SearchQuerySet().models(Cabinet).filter(django_id=obj.cabinet))
-            new_object_list.append(obj)
-
-        return new_object_list
-
-    def get_context_data(self, **kwargs):
-        context = super(get_innov_list, self).get_context_data(**kwargs)
-
-        context['object_list'] = self._get_branches_data_for_objects(context['object_list'])
-        context['object_list'] = self._get_cabinet_data_for_objects(context['object_list'])
-
-        return context
-
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Innov/contentPage.html'
@@ -72,43 +43,28 @@ class get_innov_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Innov/index.html'
 
+    def get_queryset(self):
+        queryset = super(InnovationProjectList, self).get_queryset()
+        return queryset.prefetch_related('organization', 'organization__countries')
 
-class get_innov_detail(ItemDetail):
 
+class InnovationProjectDetail(ItemDetail):
     model = InnovationProject
     template_name = 'Innov/detailContent.html'
 
     current_section = _("Innovation Project")
     addUrl = 'innov:add'
 
-    def _get_branches_data_for_object(self):
-
-        return SearchQuerySet().filter(django_id__in=self.object.branch)
-
-
-    def _get_cabinet_data_for_object(self):
-        return SearchQuerySet().filter(django_id=self.object.cabinet)
-
-    def get_context_data(self, **kwargs):
-        context = super(get_innov_detail, self).get_context_data(**kwargs)
-        context[self.context_object_name].__setattr__('branch', self._get_branches_data_for_object())
-        context[self.context_object_name].__setattr__('cabinet', self._get_cabinet_data_for_object())
-
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
+    def get_queryset(self):
+        return super().get_queryset() \
+            .prefetch_related('galleries', 'galleries__gallery_items')
 
 
 @login_required(login_url='/login/')
 def innovForm(request, action, item_id=None):
-
     if item_id:
-       if not InnovationProject.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
+        if not InnovationProject.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     current_section = _("Innovation Project")
     newsPage = ''
@@ -130,21 +86,19 @@ def innovForm(request, action, item_id=None):
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
+
 def addProject(request):
     current_company = request.session.get('current_company', False)
 
     if not request.session.get('current_company', False):
-         return func.emptyCompany()
+        return func.emptyCompany()
 
     item = Organization.objects.get(pk=current_company)
 
     perm_list = item.getItemInstPermList(request.user)
 
-
-
     if 'add_innovationproject' not in perm_list:
-         return func.permissionDenied()
-
+        return func.permissionDenied()
 
     form = None
 
@@ -165,7 +119,7 @@ def addProject(request):
         Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
         pages = Page(request.POST, request.FILES, prefix="pages")
         if getattr(pages, 'new_objects', False):
-           pages = pages.new_objects
+            pages = pages.new_objects
 
         values = {}
         values.update(request.POST)
@@ -183,13 +137,13 @@ def addProject(request):
 
             return HttpResponseRedirect(reverse('innov:main'))
 
-
     template = loader.get_template('Innov/addForm.html')
-    context = RequestContext(request, {'form': form, 'branches': branches, 'currency_slots': currency_slots, 'pages': pages})
+    context = RequestContext(request,
+                             {'form': form, 'branches': branches, 'currency_slots': currency_slots, 'pages': pages})
     newsPage = template.render(context)
 
-
     return newsPage
+
 
 def updateProject(request, item_id):
     try:
@@ -230,7 +184,6 @@ def updateProject(request, item_id):
 
     if request.POST:
 
-
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
@@ -257,10 +210,7 @@ def updateProject(request, item_id):
                                        'currency_slots': currency_slots})
     newsPage = template.render(context)
 
-
     return newsPage
-
-
 
 
 def deleteInnov(request, item_id):
@@ -279,8 +229,4 @@ def deleteInnov(request, item_id):
     instance.end_date = now()
     instance.reindexItem()
 
-
-
-
     return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
-

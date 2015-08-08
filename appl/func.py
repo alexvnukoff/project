@@ -1,21 +1,29 @@
-import urllib
+from copy import copy
 from urllib.parse import urlparse
+import datetime
+
+from django.conf import settings
+from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import QueryDict
+from django.utils import timezone
 from django.utils.text import Truncator
 from django.utils.timezone import make_aware, is_naive, get_current_timezone
-from core.models import *
-from appl.models import *
-from django.db.models import Count, F
+from django.db.models import F, Q
 from django.core.paginator import Paginator
-from django.conf import settings
 from PIL import Image
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
-from django.core.cache import cache
-from tpp.settings import MEDIA_URL
+
+from appl.models import BpCategories, Category, Tpp, Cabinet, TppTV, AdvBanner, SystemMessages
+from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
+    Organization, Notification, B2BProduct, Banner
+from core.models import Item
+from jobs.models import Requirement
+from tpp.SiteUrlMiddleWare import get_request
 
 
 def getPaginatorRange(page):
@@ -59,7 +67,8 @@ def setPaginationForSearchWithValues(items, *attr, page_num=10, page=1, fullAttr
         items = tuple([item.pk for item in page.object_list])
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
-    return attributeValues, page #Return List Item and Page object of current page
+    return attributeValues, page  # Return List Item and Page object of current page
+
 
 def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrVal=False):
     '''
@@ -81,10 +90,10 @@ def setPaginationForItemsWithValues(items, *attr, page_num=10, page=1, fullAttrV
 
     attributeValues = Item.getItemsAttributesValues(attr, items, fullAttrVal)
 
-    return attributeValues, page #Return List Item and Page object of current page
+    return attributeValues, page  # Return List Item and Page object of current page
 
 
-def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
+def getItemsListWithPagination(cls, *attr, page=1, site=False):
     '''
     Method  return List of Item of specific class including Pagination
     cls = (class name of specific Item (News , Company))
@@ -104,17 +113,17 @@ def getItemsListWithPagination(cls,  *attr,  page=1, site=False):
 
     paginator = Paginator(items, 10)
     try:
-      page = items = paginator.page(page)  #check if page is valid
+        page = items = paginator.page(page)  # check if page is valid
     except Exception:
-      page = items = paginator.page(1)
+        page = items = paginator.page(1)
 
     items = tuple([item.pk for item in page.object_list])
     attributeValues = clsObj.getItemsAttributesValues(attr, items)
 
-    return attributeValues, page  #Return List Item and Page object of current page
+    return attributeValues, page  # Return List Item and Page object of current page
 
 
-def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
+def getItemsList(cls, *attr, qty=None, site=False, fullAttrVal=False):
     '''
     Method  return List of Item of specific class including Pagination
     cls = (class name of specific Item (News , Company))
@@ -132,14 +141,14 @@ def getItemsList(cls,  *attr,  qty=None, site=False, fullAttrVal=False):
     else:
         items = clsObj.active.get_active().all()[:qty]
 
-
     items = tuple([item.pk for item in items])
     attributeValues = clsObj.getItemsAttributesValues(attr, items, fullAttrVal=fullAttrVal)
 
     return attributeValues
 
-#Deprecated
-def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
+
+# Deprecated
+def sortByAttr(cls, attribute, order="ASC", type="str"):  # IMPORTANT: should be called before any filter
     '''
         Order Items by attribute
         cls: class name instance of Item
@@ -165,7 +174,8 @@ def sortByAttr(cls, attribute, order="ASC", type="str"):#IMPORTANT: should be ca
 
     return clsObj.active.get_active().filter(item2value__attr__title=attribute).extra(order_by=[case])
 
-def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT: should be called before any filter
+
+def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):  # IMPORTANT: should be called before any filter
     '''
         Order Items by attribute
         cls: class name instance of Item
@@ -186,8 +196,8 @@ def sortQuerySetByAttr(queryset, attribute, order="ASC", type="str"):#IMPORTANT:
 
     return queryset.model.objects.filter(pk__in=queryset, item2value__attr__title=attribute).extra(order_by=[case])
 
-def currencySymbol(currency):
 
+def currencySymbol(currency):
     if not currency:
         return ""
 
@@ -199,8 +209,8 @@ def currencySymbol(currency):
 
     return symbols.get(currency.upper(), currency)
 
-def _setCouponsStructure(couponsDict):
 
+def _setCouponsStructure(couponsDict):
     for item, attrs in couponsDict.items():
 
         if 'COST' not in attrs or 'COUPON_DISCOUNT' not in attrs:
@@ -225,9 +235,9 @@ def _setCouponsStructure(couponsDict):
 
     return couponsDict
 
-#Deprecated
-def _setProductStructure(prodDict):
 
+# Deprecated
+def _setProductStructure(prodDict):
     for item, attrs in prodDict.items():
 
         if 'COST' not in attrs or 'DISCOUNT' not in attrs:
@@ -300,7 +310,7 @@ def setStructureForHiearhy(dictinory, items):
     return dictStructured
 
 
-def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
+def getCountofSepecificItemsRelated(childCls, list, filterChild=None):
     '''
         Get count of some type of child for list of some type of parents parents
             "childCls" - Type / Class of child objects
@@ -322,11 +332,11 @@ def getCountofSepecificItemsRelated(childCls, list, filterChild = None):
     if filterChild is None:
         filterChild = F(clsObj._meta.model_name)
 
-    return Item.objects.filter(c2p__parent__in=list, c2p__child=filterChild, c2p__type="relation")\
-                                .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
+    return Item.objects.filter(c2p__parent__in=list, c2p__child=filterChild, c2p__type="relation") \
+        .values('c2p__parent').annotate(childCount=Count('c2p__parent'))
 
-def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
 
+def _categoryStructure(categories, listCount, catWithAttr, needed=None):
     elCount = {}
     parent = 0
 
@@ -349,7 +359,6 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
     for dictCount in listCount:
         elCount[dictCount[parentKey]] = dictCount[childKey]
 
-
     for cat in categories:
 
         if cat['LEVEL'] == categories[0]['LEVEL']:
@@ -364,46 +373,44 @@ def _categoryStructure(categories,  listCount, catWithAttr, needed=None):
 
 
 def resize(img, box, fit, out):
-        '''Downsample the image.
+    '''Downsample the image.
         @param img: Image -  an Image-object
         @param box: tuple(x, y) - the bounding box of the result image
         @param fit: boolean - crop the image to fill the box
         @param out: file-like-object - save the image into the output stream
         '''
-        #preresize image with factor 2, 4, 8 and fast algorithm
+    # preresize image with factor 2, 4, 8 and fast algorithm
 
-        img = Image.open(img)
+    img = Image.open(img)
 
-        factor = 1
-        while img.size[0]/factor > 2*box[0] and img.size[1]/factor > 2*box[1]:
-            factor *=2
-        if factor > 1:
-            img.thumbnail((img.size[0]/factor, img.size[1]/factor), Image.NEAREST)
+    factor = 1
+    while img.size[0] / factor > 2 * box[0] and img.size[1] / factor > 2 * box[1]:
+        factor *= 2
+    if factor > 1:
+        img.thumbnail((img.size[0] / factor, img.size[1] / factor), Image.NEAREST)
 
-        #calculate the cropping box and get the cropped part
-        if fit:
-            x1 = y1 = 0
-            x2, y2 = img.size
-            wRatio = 1.0 * x2/box[0]
-            hRatio = 1.0 * y2/box[1]
-            if hRatio > wRatio:
-                y1 = int(y2/2-box[1]*wRatio/2)
-                y2 = int(y2/2+box[1]*wRatio/2)
-            else:
-                x1 = int(x2/2-box[0]*hRatio/2)
-                x2 = int(x2/2+box[0]*hRatio/2)
-            img = img.crop((x1,y1,x2,y2))
+    # calculate the cropping box and get the cropped part
+    if fit:
+        x1 = y1 = 0
+        x2, y2 = img.size
+        wRatio = 1.0 * x2 / box[0]
+        hRatio = 1.0 * y2 / box[1]
+        if hRatio > wRatio:
+            y1 = int(y2 / 2 - box[1] * wRatio / 2)
+            y2 = int(y2 / 2 + box[1] * wRatio / 2)
+        else:
+            x1 = int(x2 / 2 - box[0] * hRatio / 2)
+            x2 = int(x2 / 2 + box[0] * hRatio / 2)
+        img = img.crop((x1, y1, x2, y2))
 
-        #Resize the image with best quality algorithm ANTI-ALIAS
-        img.thumbnail(box, Image.ANTIALIAS)
+    # Resize the image with best quality algorithm ANTI-ALIAS
+    img.thumbnail(box, Image.ANTIALIAS)
 
-        if img.mode == "CMYK":
-            img = img.convert("RGB")
+    if img.mode == "CMYK":
+        img = img.convert("RGB")
 
-        #save it into a file-like object
-        img.save(out, "PNG", quality=95)
-
-
+    # save it into a file-like object
+    img.save(out, "PNG", quality=95)
 
 
 def findKeywords(tosearch):
@@ -459,7 +466,6 @@ def notify(message_type, notificationtype, **params):
     notif = Notification(user=user, message=message, create_user=user)
     notif.save()
 
-
     sendTask(notificationtype, **params)
 
 
@@ -467,7 +473,6 @@ def sendTask(type, **params):
     import redis
     from django.conf import settings
     import json
-    from django.http import HttpResponse
 
     ORDERS_FREE_LOCK_TIME = getattr(settings, 'ORDERS_FREE_LOCK_TIME', 0)
     ORDERS_REDIS_HOST = getattr(settings, 'ORDERS_REDIS_HOST', 'localhost')
@@ -486,8 +491,7 @@ def sendTask(type, **params):
     service_queue(type, json.dumps(params))
 
 
-def getAnalytic(params = None):
-
+def getAnalytic(params=None):
     from appl.analytic.analytic import get_results
 
     if not isinstance(params, dict):
@@ -502,10 +506,10 @@ def getAnalytic(params = None):
 
     return get_results(**params)
 
-def addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList):
 
-    countries = Country.objects.filter(p2c__child__p2c__child__p2c__child__p2c__child__in=vacancy_ids).distinct()\
-            .values('pk', 'p2c__child__p2c__child__p2c__child__p2c__child')
+def addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList):
+    countries = Country.objects.filter(p2c__child__p2c__child__p2c__child__p2c__child__in=vacancy_ids).distinct() \
+        .values('pk', 'p2c__child__p2c__child__p2c__child__p2c__child')
 
     countries_id = [country['pk'] for country in countries]
     countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
@@ -519,15 +523,15 @@ def addDictinoryWithCountryToVacancy(vacancy_ids, vacancyList):
             'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
             'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
             'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
-            'COUNTRY_ID':  country_dict.get(id, 0)
+            'COUNTRY_ID': country_dict.get(id, 0)
         }
 
         vacancy.update(toUpdate)
 
     return vacancyList
 
-def addDictinoryWithCountryAndOrganization(ids, itemList):
 
+def addDictinoryWithCountryAndOrganization(ids, itemList):
     org_models = [Tpp.__name__.lower(), Company.__name__.lower()]
 
     countries = Country.objects.filter(p2c__child__contentType__model__in=org_models, p2c__child__p2c__child__in=ids,
@@ -544,7 +548,6 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
 
-
     country_dict = {}
     for country in countries:
         country_dict[country['p2c__child__p2c__child']] = country['pk']
@@ -554,8 +557,10 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
             toUpdate = {
                 'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, [0]) else [0],
                 'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                'COUNTRY_ID':  country_dict.get(id, 0)
+                'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id,
+                                                                                                           [0]) else [
+                    0],
+                'COUNTRY_ID': country_dict.get(id, 0)
             }
 
             item.update(toUpdate)
@@ -567,112 +572,123 @@ def addDictinoryWithCountryAndOrganization(ids, itemList):
                 url = 'tpp:detail'
 
             toUpdate = {
-                'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
-                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
+                'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG',
+                                                                                   [0]) if organizations_dict.get(id, [
+                    0]) else [0],
+                'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME',
+                                                                                   [0]) if organizations_dict.get(id, [
+                    0]) else [0],
+                'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG',
+                                                                                   [0]) if organizations_dict.get(id, [
+                    0]) else [0],
                 'ORGANIZATION_ID': organizations_dict.get(id, 0),
                 'ORGANIZATION_URL': url
             }
 
             item.update(toUpdate)
 
+
 def addDictinoryWithCountryAndOrganizationToInnov(ids, itemList):
+    cabinets = Cabinet.objects.filter(p2c__child__in=ids).values('p2c__child', 'pk')
 
-        cabinets = Cabinet.objects.filter(p2c__child__in=ids).values('p2c__child', 'pk')
+    cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
+    countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
 
-        cabinets_ids = [cabinet['pk'] for cabinet in cabinets]
-        countries = Country.objects.filter(p2c__child__in=cabinets_ids).values('p2c__child', 'pk')
+    countries_id = [country['pk'] for country in countries]
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
 
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
+    country_dict = {}
 
-        country_dict = {}
+    for country in countries:
+        if country['pk']:
+            country_dict[country['p2c__child']] = country['pk']
 
-        for country in countries:
-            if country['pk']:
-               country_dict[country['p2c__child']] = country['pk']
+    cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
 
-        cabinetList = Item.getItemsAttributesValues(("USER_FIRST_NAME", 'USER_LAST_NAME'), cabinets_ids)
+    cabinets_dict = {}
 
-        cabinets_dict = {}
+    for cabinet in cabinets:
+        cabinets_dict[cabinet['p2c__child']] = {
+            'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'],
+                                                                                                    0) else [0],
+            'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'],
+                                                                                                        0) else [0],
+            'CABINET_ID': cabinet['pk'],
+            'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(
+                cabinet['pk'], False) else [0],
+            'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(
+                cabinet['pk'], False) else [0],
+            'CABINET_COUNTRY_FLAG_CLASS': countriesList[country_dict[cabinet['pk']]].get('COUNTRY_FLAG',
+                                                                                         [0]) if country_dict.get(
+                cabinet['pk'], False) else [0],
+            'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
+        }
 
-        for cabinet in cabinets:
-            cabinets_dict[cabinet['p2c__child']] = {
-                'CABINET_NAME': cabinetList[cabinet['pk']].get('USER_FIRST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_LAST_NAME': cabinetList[cabinet['pk']].get('USER_LAST_NAME', 0) if cabinetList.get(cabinet['pk'], 0) else [0],
-                'CABINET_ID': cabinet['pk'],
-                'CABINET_COUNTRY_NAME': countriesList[country_dict[cabinet['pk']]].get('NAME', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_FLAG': countriesList[country_dict[cabinet['pk']]].get('FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_FLAG_CLASS': countriesList[country_dict[cabinet['pk']]].get('COUNTRY_FLAG', [0]) if country_dict.get(cabinet['pk'], False) else [0],
-                'CABINET_COUNTRY_ID': country_dict.get(cabinet['pk'], "")
-            }
+    addDictinoryWithCountryAndOrganization(ids, itemList)
 
-        addDictinoryWithCountryAndOrganization(ids, itemList)
-
-
-        for id, innov in itemList.items():
-            if cabinets_dict.get(id, 0):
-                innov.update(cabinets_dict.get(id, 0))
-
+    for id, innov in itemList.items():
+        if cabinets_dict.get(id, 0):
+            innov.update(cabinets_dict.get(id, 0))
 
 
 def addDictinoryWithCountryToCompany(ids, itemList, add_organization=False):
+    countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
 
-        countries = Country.objects.filter(p2c__child__in=ids, p2c__type='dependence').values('p2c__child', 'pk')
+    countries_id = [country['pk'] for country in countries]
+    countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
+    country_dict = {}
 
-        countries_id = [country['pk'] for country in countries]
-        countriesList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'COUNTRY_FLAG'), countries_id)
-        country_dict = {}
+    for country in countries:
+        country_dict[country['p2c__child']] = country['pk']
 
-        for country in countries:
-            country_dict[country['p2c__child']] = country['pk']
+    organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='relation').values('p2c__child', 'pk')
 
-        organizations = Organization.objects.filter(p2c__child__in=ids, p2c__type='relation').values('p2c__child', 'pk')
+    organizations_ids = [organization['pk'] for organization in organizations]
+    organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
+    organizations_dict = {}
 
-        organizations_ids = [organization['pk'] for organization in organizations]
-        organizationsList = Item.getItemsAttributesValues(("NAME", 'FLAG', 'SLUG'), organizations_ids)
-        organizations_dict = {}
+    for organization in organizations:
+        organizations_dict[organization['p2c__child']] = organization['pk']
 
-        for organization in organizations:
-            organizations_dict[organization['p2c__child']] = organization['pk']
+    for id, company in itemList.items():
+        toUpdate = {
+            'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
+            'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
+            'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [
+                0],
+            'COUNTRY_ID': country_dict.get(id, 0)}
+        try:
+            company.update(toUpdate)
+        except Exception as e:
+            print('Passed Company ID:' + id + 'has not attribute list. The reason is:' + str(
+                e) + 'Please, rebuild index.')
+            pass
 
+        if add_organization:
+            if organizations_dict.get(id, False):
+                if organizationIsCompany(id):
+                    url = 'companies:detail'
+                else:
+                    url = 'tpp:detail'
 
-        for id, company in itemList.items():
-            toUpdate = {'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
-                        'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
-                        'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, [0]) else [0],
-                        'COUNTRY_ID':  country_dict.get(id, 0)}
-            try:
+                toUpdate = {
+                    'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG',
+                                                                                       [0]) if organizations_dict.get(
+                        id, [0]) else [0],
+                    'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME',
+                                                                                       [0]) if organizations_dict.get(
+                        id, [0]) else [0],
+                    'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG',
+                                                                                       [0]) if organizations_dict.get(
+                        id, [0]) else [0],
+                    'ORGANIZATION_ID': organizations_dict.get(id, 0),
+                    'ORGANIZATION_URL': url
+                }
+
                 company.update(toUpdate)
-            except Exception as e:
-                print('Passed Company ID:' + id + 'has not attribute list. The reason is:' + str(e) + 'Please, rebuild index.')
-                pass
-
-            if add_organization:
-                if organizations_dict.get(id, False):
-                    if organizationIsCompany(id):
-                        url = 'companies:detail'
-                    else:
-                        url = 'tpp:detail'
-
-                    toUpdate = {
-                        'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-                        'ORGANIZATION_ID': organizations_dict.get(id, 0),
-                        'ORGANIZATION_URL': url
-                    }
-
-                    company.update(toUpdate)
-
-
-
-
-
 
 
 def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=False):
-
     org_models = [Tpp.__name__.lower(), Company.__name__.lower()]
 
     countries = Country.objects.filter(p2c__child__contentType__model__in=org_models,
@@ -696,7 +712,6 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
     for organization in organizations:
         organizations_dict[organization['p2c__child']] = organization['pk']
 
-
     country_dict = {}
 
     for country in countries:
@@ -707,7 +722,7 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
             'COUNTRY_NAME': countriesList[country_dict[id]].get('NAME', [0]) if country_dict.get(id, 0) else [0],
             'COUNTRY_FLAG': countriesList[country_dict[id]].get('FLAG', [0]) if country_dict.get(id, 0) else [0],
             'FLAG_CLASS': countriesList[country_dict[id]].get('COUNTRY_FLAG', [0]) if country_dict.get(id, 0) else [0],
-            'COUNTRY_ID':  country_dict.get(id, 0)
+            'COUNTRY_ID': country_dict.get(id, 0)
         }
 
         itemList.update(toUpdate)
@@ -720,15 +735,31 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
             url = 'tpp:detail'
 
         toUpdate = {
-            'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(id, 0) else [0],
-            'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(id, 0) else [0],
-            'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(id, 0) else [0],
-            'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(id, [0]) else [0],
-            'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL', [""]) if organizations_dict.get(id, [0]) else [0],
-            'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME', [""]) if organizations_dict.get(id, [0]) else [0],
-            'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS', [""]) if organizations_dict.get(id, [0]) else [0],
-            'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
-            'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_FLAG': organizationsList[organizations_dict[id]].get('FLAG', [0]) if organizations_dict.get(
+                id, 0) else [0],
+            'ORGANIZATION_NAME': organizationsList[organizations_dict[id]].get('NAME', [0]) if organizations_dict.get(
+                id, 0) else [0],
+            'ORGANIZATION_IMAGE': organizationsList[organizations_dict[id]].get('IMAGE', [0]) if organizations_dict.get(
+                id, 0) else [0],
+            'ORGANIZATION_SLUG': organizationsList[organizations_dict[id]].get('SLUG', [0]) if organizations_dict.get(
+                id, [0]) else [0],
+            'ORGANIZATION_EMAIL': organizationsList[organizations_dict[id]].get('EMAIL',
+                                                                                [""]) if organizations_dict.get(id, [
+                0]) else [0],
+            'ORGANIZATION_SITE_NAME': organizationsList[organizations_dict[id]].get('SITE_NAME',
+                                                                                    [""]) if organizations_dict.get(id,
+                                                                                                                    [
+                                                                                                                        0]) else [
+                0],
+            'ORGANIZATION_ADDRESS': organizationsList[organizations_dict[id]].get('ADDRESS',
+                                                                                  [""]) if organizations_dict.get(id, [
+                0]) else [0],
+            'ORGANIZATION_TELEPHONE_NUMBER': organizationsList[organizations_dict[id]].get('FAX', [
+                ""]) if organizations_dict.get(id, [0]) else [0],
+            'ORGANIZATION_FAX': organizationsList[organizations_dict[id]].get('FAX', [""]) if organizations_dict.get(id,
+                                                                                                                     [
+                                                                                                                         0]) else [
+                0],
             'ORGANIZATION_ID': organizations_dict.get(id, 0),
             'ORGANIZATION_URL': url
         }
@@ -737,11 +768,11 @@ def addToItemDictinoryWithCountryAndOrganization(id, itemList, withContacts=Fals
 
 
 def organizationIsCompany(item_id):
-
     if Company.objects.filter(p2c__child=item_id, p2c__type='dependence').exists():
         return True
 
     return False
+
 
 def filterLive(request, model_name=None):
     '''
@@ -756,8 +787,8 @@ def filterLive(request, model_name=None):
             getParameters = QueryDict(request.session.get(model_name, False))
         elif len(request.GET) > 1 and request.GET.urlencode() != request.session.get(model_name, ""):
             if 'filter' in request.GET.urlencode():
-                 request.session[model_name] = request.GET.urlencode()
-                 getParameters = QueryDict(request.session.get(model_name, ""))
+                request.session[model_name] = request.GET.urlencode()
+                getParameters = QueryDict(request.session.get(model_name, ""))
             else:
                 del request.session[model_name]
                 getParameters = QueryDict(request.session.get(model_name, ""))
@@ -770,17 +801,15 @@ def filterLive(request, model_name=None):
     else:
         getParameters = request.GET
 
-
-
     searchFilter = []
     filtersIDs = {}
     filters = {}
     ids = []
 
-    #allowed filter list
+    # allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch', 'bp_category']
 
-    #get all filter parameters from request GET
+    # get all filter parameters from request GET
     for name in filterList:
         filtersIDs[name] = []
         filters[name] = []
@@ -793,12 +822,12 @@ def filterLive(request, model_name=None):
 
         ids += filtersIDs[name]
 
-    #Do we have any valid filter ?
+    # Do we have any valid filter ?
     if len(ids) > 0:
         attributes = Item.getItemsAttributesValues('NAME', ids)
 
         for pk, attr in attributes.items():
-            #Creating a list of filter parameters
+            # Creating a list of filter parameters
 
             if not isinstance(attr, dict) or 'NAME' not in attr or len(attr['NAME']) != 1:
                 continue
@@ -809,7 +838,7 @@ def filterLive(request, model_name=None):
                     filters[name].append({'id': pk, 'text': attr['NAME'][0]})
 
                 newIDs = []
-                #Security
+                # Security
                 for i in id:
                     try:
                         newIDs.append(str(int(i)))
@@ -819,9 +848,8 @@ def filterLive(request, model_name=None):
                 if len(newIDs) > 0:
                     searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
 
-    if len(searchFilter) > 0: #Converting a list of filter parameters to big "OR" filter
+    if len(searchFilter) > 0:  # Converting a list of filter parameters to big "OR" filter
         searchFilter = eval(' | '.join(searchFilter))
-
 
     return filters, searchFilter
 
@@ -839,48 +867,39 @@ def getB2BcabinetValues(request):
         cabinetValues = {}
         cabinetValues['EMAIL'] = [user.email]
         cabinetValues['LOGIN'] = [user.username]
-        cabinetValues.update(cabinet.getAttributeValues('PROFESSION', 'MOBILE_NUMBER', 'BIRTHDAY', 'PERSONAL_STATUS', 'SEX',
-                                                'SKYPE', 'SITE_NAME', 'ICQ', 'USER_MIDDLE_NAME', 'USER_FIRST_NAME',
-                                                'USER_LAST_NAME', 'IMAGE', 'TELEPHONE_NUMBER'))
+        cabinetValues.update(
+            cabinet.getAttributeValues('PROFESSION', 'MOBILE_NUMBER', 'BIRTHDAY', 'PERSONAL_STATUS', 'SEX',
+                                       'SKYPE', 'SITE_NAME', 'ICQ', 'USER_MIDDLE_NAME', 'USER_FIRST_NAME',
+                                       'USER_LAST_NAME', 'IMAGE', 'TELEPHONE_NUMBER'))
         cabinetValues['COUNTRY'] = country
-
 
         return cabinetValues
 
     return None
 
-def getBanners(places, site, filterAdv=None):
-    '''
-        Get banners to show
 
-        list places - Names of position blocks (The names are the titles of the items)
-        int site - show banners of some specified site
-        dict filterAdv - advertisement filter , can include countries organizations or branches
-                (get it from getDeatailAdv() or getListAdv() )
+def get_banner(block, site_id, filterAdv=None):
+    banner_queryset = Banner.objects.filter(block__code=block, is_active=True, site=site_id)
+    targeting_filter = None
 
-        Example:
-            adv_filters = getDetailAdv()
+    for target_model, target_items in filterAdv.items():
+        if not target_items:
+            continue
 
-            banners = getBanners(['RIGHT 1', 'RIGHT 2'], settings.SITE_ID, adv_filters)
-    '''
-    bList = []
+        tmp_filter = Q(
+            targets__content_type__model=target_model.lower(),
+            targets__object_id__in=target_items
+        )
 
-    for place in places:
-        banner = AdvBanner.active.get_active().filter(c2p__parent__title=place, c2p__type="relation", sites=site)
+        if targeting_filter is None:
+            targeting_filter = tmp_filter
+        else:
+            targeting_filter = targeting_filter.__or__(tmp_filter)
 
-        if filterAdv is not None and len(filterAdv) > 0:
-            banner = banner.filter(c2p__parent__in=filterAdv, c2p__type='relation')
+    return banner_queryset.order_by('?').first()
 
-        banner = banner.order_by('?').values_list('pk', flat=True)[:1]
 
-        if len(banner) == 1:
-            bList.append(banner[0])
-
-    bAttr = Item.getItemsAttributesValues(('NAME', 'SITE_NAME', 'IMAGE'), bList)
-
-    return bAttr
-
-def getTops(filterAdv=None):
+def get_tops(filterAdv=None):
     '''
         Get context advertisement items depended on received filter
 
@@ -889,244 +908,171 @@ def getTops(filterAdv=None):
     '''
 
     models = {
-        Tpp.__name__: {
-            'count': 1, #Limit of this type to fetch
-            'text': _('Organizations'), #Title
-            'detailUrl': 'tpp:detail' #URL namespace to detail page of this type of item
+        Chamber: {
+            'count': 1,  # Limit of this type to fetch
+            'text': _('Organizations'),  # Title
+            'detailUrl': 'tpp:detail',  # URL namespace to detail page of this type of item
+            'select_related': None,
+            'prefetch_related': ['countries']
         },
-        News.__name__: {
-            'count': 1, #Limit of this type to fetch
-            'text': _('News'), #Title
-            'detailUrl': 'news:detail' #URL namespace to detail page of this type of item
+        News: {
+            'count': 1,  # Limit of this type to fetch
+            'text': _('News'),  # Title
+            'detailUrl': 'news:detail',  # URL namespace to detail page of this type of item
+            'select_related': ['country'],
+            'prefetch_related': ['organization', 'organization__countries']
         },
-        Product.__name__: {
-            'count': 1, #Limit of this type to fetch
-            'text': _('Products'), #Title
-            'detailUrl': 'products:detail' #URL namespace to detail page of this type of item
+        B2BProduct: {
+            'count': 1,  # Limit of this type to fetch
+            'text': _('Products'),  # Title
+            'detailUrl': 'products:detail',  # URL namespace to detail page of this type of item
+            'select_related': None,
+            'prefetch_related': ['company', 'company__countries']
         },
-        InnovationProject.__name__: {
+        InnovationProject: {
             'count': 1,
             'text': _('Innovation Projects'),
-            'detailUrl': 'innov:detail'
+            'detailUrl': 'innov:detail',  # URL namespace to detail page of this type of item
+            'select_related': None,
+            'prefetch_related': ['organization', 'organization__countries']
         },
-        Company.__name__: {
+        Company: {
             'count': 1,
             'text': _('Companies'),
-            'detailUrl': 'companies:detail'
+            'detailUrl': 'companies:detail',  # URL namespace to detail page of this type of item
+            'select_related': None,
+            'prefetch_related': ['countries']
         },
-        BusinessProposal.__name__: {
+        BusinessProposal: {
             'count': 1,
             'text': _('Business Proposals'),
-            'detailUrl': 'proposal:detail'
+            'detailUrl': 'proposal:detail',  # URL namespace to detail page of this type of item
+            'select_related': ['country'],
+            'prefetch_related': ['organization', 'organization__countries']
         },
-        Requirement.__name__: {
+        Requirement: {
             'count': 3,
             'text': _('Job requirements'),
-            'detailUrl': 'vacancy:detail'
+            'detailUrl': 'vacancy:detail',  # URL namespace to detail page of this type of item
+            'select_related': ['country'],
+            'prefetch_related': ['vacancy__department__organization', 'vacancy__department__organization__countries']
         },
-        Exhibition.__name__: {
+        Exhibition: {
             'count': 1,
             'text': _('Exhibitions'),
-            'detailUrl': 'exhibitions:detail'
+            'detailUrl': 'exhibitions:detail',  # URL namespace to detail page of this type of item
+            'select_related': ['country'],
+            'prefetch_related': ['organization', 'organization__countries']
         }
 
     }
 
-    topList = []
-    modelTop = {}
-
     for model, modelDict in models.items():
+        # Get all active context advertisement of some specific type
+        queryset = model.objects.filter(
+            context_advertisements__is_active=True,
+            context_advertisements__content_type__model=model.__name__.lower()
+        )
 
-        #Get all active context advertisement of some specific type
-        top = AdvTop.active.get_active().filter(c2p__parent__contentType__model=model.lower(), c2p__type="dependence")\
-            .values_list('c2p__parent', flat=True)
+        targeting_filter = None
+
+        # Do we have some filters depended on current page ?
+        for target_model, target_items in filterAdv.items():
+            if not target_items:
+                continue
+
+            tmp_filter = Q(
+                context_advertisements__targets__content_type__model=target_model.lower(),
+                context_advertisements__targets__object_id__in=target_items
+            )
+
+            if targeting_filter is None:
+                targeting_filter = tmp_filter
+            else:
+                targeting_filter = targeting_filter.__or__(tmp_filter)
+
+        if targeting_filter is not None:
+            queryset = queryset.filter(targeting_filter)
+
+        if modelDict['select_related'] is not None:
+            queryset = queryset.select_related(*modelDict['select_related'])
+
+        if modelDict['prefetch_related'] is not None:
+            queryset = queryset.prefetch_related(*modelDict['prefetch_related'])
+
+        modelDict['queryset'] = queryset.order_by('?')[:int(modelDict['count'])]
+
+    return models
 
 
-        if filterAdv is not None and len(filterAdv) > 0: #Do we have some filters depended on current page ?
-            top = top.filter(c2p__parent__in=filterAdv, c2p__type='relation')
+def get_detail_adv_filter(obj):
+    filter_by_model = {}
 
-        top = top.order_by('?')[:int(modelDict['count'])]
+    org = getattr(obj, 'organization', None)
+    branches = getattr(obj, 'branches', None)
 
-        tops = list(top)
+    if org is not None:
+        filter_by_model[Chamber.__name__] = [org]
 
-        if len(tops) > 0:
-            topList += tops
-            modelTop[model] = tops
+    if branches is not None:
+        filter_by_model[Branch.__name__] = branches.all().values_lis('pk', flat=True)
 
-    topDict = {}
+    return filter_by_model
+
+
+def get_list_adv_filter(request):
+    filter_by_model = {
+        Chamber.__name__: [],
+        Country.__name__: [],
+        Branch.__name__: []
+    }
+
     countries = []
-    orgs = []
 
-    for item in SearchQuerySet().filter(django_id__in=topList):
-        topDict[int(item.pk)] = item
+    for name, filter_items in filter_by_model.items():
+        filter_key = 'tpp' if name == Chamber.__name__ else name.lower()
 
-        country = getattr(item, 'country', None)
-
-        if isinstance(country, int) and country not in countries:
-            countries.append(item.country)
-        elif getattr(item, 'company', False):
-            orgs.append(item.company)
-        elif getattr(item, 'tpp', False):
-            orgs.append(item.tpp)
-
-    contryDict = {}
-    orgDict = {}
-
-    if len(countries) > 0:
-        for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
-            contryDict[int(country.pk)] = country
-
-    if len(orgs) > 0:
-        for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
-            orgDict[int(org.pk)] = org
-
-    newModelTop = {}
-
-    for model, topList in modelTop.items():
-
-        if len(topList) == 0:
-            continue
-
-        if model not in newModelTop:
-            newModelTop[model] = []
-
-        for top in topList:
-
-            if top not in topDict:
-                continue
-
-            country = getattr(topDict[top], 'country', None)
-            comapny = getattr(topDict[top], 'company', None)
-            tpp = getattr(topDict[top], 'tpp', None)
-
-            if isinstance(country, int) and country in contryDict:
-                topDict[top].country = contryDict[country]
-            elif comapny and comapny in orgDict:
-                topDict[top].organization = orgDict[comapny]
-            elif tpp and tpp in orgDict:
-                topDict[top].organization = orgDict[tpp]
-
-            newModelTop[model].append(topDict[top])
-
-    '''
-    topAttr = Item.getItemsAttributesValues(('NAME', 'DETAIL_TEXT', 'IMAGE', 'SLUG'), topList)
-
-    tops = {}
-
-    for id, attrs in topAttr.items():
-
-        if not isinstance(attrs, dict):
-            continue
-
-        for model in models:
-
-            if model not in modelTop:
-                continue
-
-
-            if model not in tops:
-                tops[model] = {}
-                tops[model]['MODEL'] = models[model] #Some template helper
-                tops[model]['elements'] = {} #Items with attributes are stored here
-                tops[model]['ids'] = [] #List of items to get their flags
-
-            if id in modelTop[model]:
-                attrs['DETAIL_TEXT'] = cleanFromHtml(attrs.get('DETAIL_TEXT', [''])[0])
-                tops[model]['elements'][id] = attrs
-                tops[model]['ids'].append(id)
-
-                break
-
-    for name, attr in tops.items():
-        #Special method to fetch a flag for each item type
-
-        if name == InnovationProject.__name__:
-            addDictinoryWithCountryAndOrganizationToInnov(attr['ids'], attr['elements'])
-
-        elif name == Company.__name__ :
-            addDictinoryWithCountryToCompany(attr['ids'], attr['elements'])
-
-        elif name == Requirement.__name__:
-            addDictinoryWithCountryToVacancy(attr['ids'], attr['elements'])
-
-        else:
-            addDictinoryWithCountryAndOrganization(attr['ids'], attr['elements'])
-    '''
-    return newModelTop, models
-
-def getDeatailAdv(item_id):
-    '''
-        Get advertisement filter for detail page depended on current item and section
-
-        item_id - ID of current item that we are viewing
-    '''
-    filterAdv = []
-
-    sqs = getActiveSQS().filter(django_id=item_id)
-
-    filterAdv += getattr(sqs, 'branch', [])
-    filterAdv += getattr(sqs, 'tpp', [])
-
-    if len(filterAdv) == 0:
-        filterAdv.append(item_id)
-
-    return filterAdv
-
-def getListAdv(request):
-    '''
-        Get advertisement filter for content pages depended on current page , section and filter
-    '''
-
-    filtersAdv = []
-
-    filterList = ['tpp', 'country', 'branch']
-
-
-    for name in filterList:
-
-        ids = []
-
-        for pk in request.GET.getlist('filter[' + name + '][]', []):
+        for pk in request.GET.getlist('filter[' + filter_key + '][]', []):
             try:
-                ids.append(int(pk))
+                filter_items.append(int(pk))
             except ValueError:
                 continue
 
-        if name != 'tpp': #Add filter items to advertisement filter
-            filtersAdv += ids
+        # Add filter of countries of each tpp
+        if name == Chamber.__name__ and len(filter_items) > 0:
+            countries + Country.objects.filter(organizations__pk__in=filter_items).values_list('pk', flat=True)
 
-        elif len(ids) > 0:
-            sqs = getActiveSQS().models(Tpp).filter(django_id__in=ids)
+    filter_by_model[Country.__name__] = countries
 
-            for tpp in sqs: #Add filter of countries of each tpp
-                if len(tpp.country) > 0:
-                    filtersAdv += tpp.country
-
-    return filtersAdv
+    return filter_by_model
 
 
 def getActiveSQS():
     '''
         Get active items from search indexes
     '''
-    return SearchQuerySet().filter(SQ(obj_end_date__gt=timezone.now())| SQ(obj_end_date__exact=datetime.datetime(1 , 1, 1)),
-                                                               obj_start_date__lt=timezone.now())
+    return SearchQuerySet().filter(
+        SQ(obj_end_date__gt=timezone.now()) | SQ(obj_end_date__exact=datetime.datetime(1, 1, 1)),
+        obj_start_date__lt=timezone.now())
+
+
 def emptyCompany():
-     template = loader.get_template('permissionDen.html')
-     request = get_request()
-     context = RequestContext(request, {})
-     page = template.render(context)
-     return page
+    template = loader.get_template('permissionDen.html')
+    request = get_request()
+    context = RequestContext(request, {})
+    page = template.render(context)
+    return page
+
 
 def permissionDenied(message=_('Sorry but you cannot modify this item ')):
-     template = loader.get_template('permissionDenied.html')
-     request = get_request()
-     context = RequestContext(request, {'message': message})
-     page = template.render(context)
-     return page
+    template = loader.get_template('permissionDenied.html')
+    request = get_request()
+    context = RequestContext(request, {'message': message})
+    page = template.render(context)
+    return page
+
 
 def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
-
     if 'category' in kwargs:
         category = kwargs['category']
     else:
@@ -1137,10 +1083,10 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
     url_parameter = []
 
     if category:
-         cache_name = "category_%s_list_result_page_%s" % (model.__name__, page)
-         url_parameter = category
+        cache_name = "category_%s_list_result_page_%s" % (model.__name__, page)
+        url_parameter = category
     else:
-         cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
+        cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
 
     q = request.GET.get('q', '')
 
@@ -1155,15 +1101,15 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             sqs = getActiveSQS().models(model).order_by('-obj_create_date')
 
             if model is News:
-               if category:
-                   sqs = sqs.filter(categories=category)
-               else:
-                   sqs = sqs.filter(categories__gt=0)
+                if category:
+                    sqs = sqs.filter(categories=category)
+                else:
+                    sqs = sqs.filter(categories__gt=0)
 
-            if len(searchFilter) > 0: #Got filter values
+            if len(searchFilter) > 0:  # Got filter values
                 sqs = sqs.filter(searchFilter)
 
-            if q != '': #Search for content
+            if q != '':  # Search for content
                 sqs = sqs.filter(SQ(title=q) | SQ(text=q))
 
             sortFields = {
@@ -1214,18 +1160,20 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 if model == Company:
                     cab = Cabinet.objects.get(user=request.user.pk)
 
-                    #read all Organizations which hasn't foreign key from Department and current User is create user or worker
+                    # read all Organizations which hasn't foreign key
+                    # from Department and current User is create user or worker
                     proposal = Company.active.get_active().filter(Q(create_user=request.user) |
-                                                            Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
+                                                                  Q(
+                                                                      p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
                 elif model != Tpp:
-                    proposal = getActiveSQS().models(model).\
+                    proposal = getActiveSQS().models(model). \
                         filter(SQ(tpp=current_organization) | SQ(company=current_organization))
                 else:
-                    proposal = getActiveSQS().models(model).\
+                    proposal = getActiveSQS().models(model). \
                         filter(SQ(django_id=current_organization) | SQ(company=current_organization))
 
-                #TODO: Fix search
-                #if q != '': #Search for content
+                # TODO: Fix search
+                # if q != '': #Search for content
                 #    proposal = proposal.filter(SQ(title=q) | SQ(text=q))
 
                 proposal.order_by('-obj_create_date')
@@ -1233,8 +1181,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
                 url_paginator = "%s:my_main_paginator" % url
                 params = {}
             else:
-                 raise ObjectDoesNotExist('you need check company')
-
+                raise ObjectDoesNotExist('you need check company')
 
         result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
 
@@ -1249,21 +1196,15 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
         if model is News or model is TppTV:
             if 'Redactor' in request.user.groups.values_list('name', flat=True):
-                 redactor = True
-
-
+                redactor = True
 
         if model == Company:
             addDictinoryWithCountryToCompany(proposal_ids, proposalList, add_organization=True)
         else:
             addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
 
-
         page = result[1]
         paginator_range = getPaginatorRange(page)
-
-
-
 
         template = loader.get_template(template_page)
 
@@ -1271,7 +1212,7 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
             'proposalList': proposalList,
             'page': page,
             'paginator_range': paginator_range,
-            'url_parameter' : url_parameter,
+            'url_parameter': url_parameter,
             'url_paginator': url_paginator,
             'items_perms': items_perms,
             'current_path': request.get_full_path(),
@@ -1291,13 +1232,13 @@ def setContent(request, model, attr, url, template_page, page_num, page=1, my=No
 
 
 def cleanFromHtml(value):
-
     if len(value) > 0:
         document = lxml.html.document_fromstring(value)
         raw_text = document.text_content()
         return raw_text
     else:
-        return  ""
+        return ""
+
 
 def getUserPermsForObjectsList(user, obj_lst, obj_model_name):
     '''
@@ -1339,14 +1280,12 @@ def cachePisibility(request):
 
     if not request.user.is_authenticated() and query.find('sortField') == -1 and query.find('order') == -1 and \
                     query.find('filter') == -1 and q == '':
-
-            return True
+        return True
 
     return False
 
 
 def show_toolbar(request):
-
     if request.user.is_authenticated():
         if request.user.is_superuser:
             return True
@@ -1355,7 +1294,6 @@ def show_toolbar(request):
 
 
 def make_object_dates_aware(obj):
-
     timezoneInfo = get_current_timezone()
 
     if obj.end_date and is_naive(obj.end_date):
@@ -1370,11 +1308,9 @@ def make_object_dates_aware(obj):
 
 
 def autocompleteFilter(filter, q, page):
-
     if (len(q) == 0 or len(q) > 2) and page > 0:
 
         model = None
-
 
         if filter == 'tpp':
             model = Tpp
@@ -1410,11 +1346,10 @@ def autocompleteFilter(filter, q, page):
 
 
 def getItemMeta(request, itemAttributes):
-
     image = ''
 
     if itemAttributes.get('IMAGE', [''])[0]:
-        image = MEDIA_URL + 'original/' + itemAttributes.get('IMAGE', [''])[0]
+        image = settings.MEDIA_URL + 'original/' + itemAttributes.get('IMAGE', [''])[0]
 
     url = urlparse(request.build_absolute_uri())
 
@@ -1425,108 +1360,109 @@ def getItemMeta(request, itemAttributes):
         'text': itemAttributes.get('DETAIL_TEXT', [''])[0]
     }
 
+
 def get_countrys_for_sqs_objects(object_list):
+    countries = []
 
-        countries = []
+    for obj in object_list:
+        country = getattr(obj, 'country', False)
 
-        for obj in object_list:
-            country = getattr(obj, 'country', False)
+        if not country:
+            continue
 
-            if not country:
+        if isinstance(country, list):
+            if len(country) != 1:
                 continue
+            else:
+                country = country[0]
 
-            if isinstance(country, list):
-                if len(country) != 1:
-                    continue
-                else:
-                    country = country[0]
+        countries.append(country)
 
-            countries.append(country)
-
-        if len(countries) > 0:
-            countryDict = {}
-            new_object_list = []
-
-            for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
-                countryDict[int(country.pk)] = country
-
-            if len(countryDict) > 0:
-                for obj in object_list:
-                    country = getattr(obj, 'country', None)
-
-                    if not country:
-                        new_object_list.append(obj)
-                        continue
-
-                    if isinstance(country, list):
-                        if len(country) == 1:
-                            country = int(country[0])
-                        else:
-                            new_object_list.append(obj)
-                            continue
-
-                    if country not in countryDict:
-                        new_object_list.append(obj)
-                        continue
-
-                    obj.country = countryDict[int(country)]
-                    new_object_list.append(obj)
-
-                return new_object_list
-
-        return object_list
-
-def get_organization_for_objects(object_list):
-
-        orgs = []
-
-        for obj in object_list:
-
-            company = getattr(obj, 'company', False)
-            tpp = getattr(obj, 'tpp', False)
-
-            if company:
-                orgs.append(company)
-            elif tpp:
-                orgs.append(tpp)
-
-        if len(orgs) > 0:
-            orgDict = {}
-
-            for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
-                orgDict[int(org.pk)] = org
-
-            if len(orgDict) > 0:
-                new_object_list = []
-
-                for obj in object_list:
-                    company = getattr(obj, 'company', False)
-                    tpp = getattr(obj, 'tpp', False)
-
-                    if company:
-                        if company in orgDict:
-                            orgDict[company].__setattr__('url', 'companies:detail')
-                            obj.__setattr__('organization', orgDict[company])
-                    elif tpp:
-                        if tpp in orgDict:
-                            orgDict[tpp].__setattr__('url', 'tpp:detail')
-                            obj.__setattr__('organization', orgDict[tpp])
-
-                    new_object_list.append(obj)
-
-                return new_object_list
-
-        return object_list
-
-def get_cabinet_data_for_objects(object_list):
+    if len(countries) > 0:
+        countryDict = {}
         new_object_list = []
 
-        for obj in object_list:
-            if obj.cabinet:
-                obj.__setattr__('cabinet', SearchQuerySet().models(Cabinet).filter(django_id=obj.cabinet))
-            new_object_list.append(obj)
+        for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
+            countryDict[int(country.pk)] = country
 
-        return new_object_list
+        if len(countryDict) > 0:
+            for obj in object_list:
+                country = getattr(obj, 'country', None)
+
+                if not country:
+                    new_object_list.append(obj)
+                    continue
+
+                if isinstance(country, list):
+                    if len(country) == 1:
+                        country = int(country[0])
+                    else:
+                        new_object_list.append(obj)
+                        continue
+
+                if country not in countryDict:
+                    new_object_list.append(obj)
+                    continue
+
+                obj.country = countryDict[int(country)]
+                new_object_list.append(obj)
+
+            return new_object_list
+
+    return object_list
+
+
+def get_organization_for_objects(object_list):
+    orgs = []
+
+    for obj in object_list:
+
+        company = getattr(obj, 'company', False)
+        tpp = getattr(obj, 'tpp', False)
+
+        if company:
+            orgs.append(company)
+        elif tpp:
+            orgs.append(tpp)
+
+    if len(orgs) > 0:
+        orgDict = {}
+
+        for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
+            orgDict[int(org.pk)] = org
+
+        if len(orgDict) > 0:
+            new_object_list = []
+
+            for obj in object_list:
+                company = getattr(obj, 'company', False)
+                tpp = getattr(obj, 'tpp', False)
+
+                if company:
+                    if company in orgDict:
+                        orgDict[company].__setattr__('url', 'companies:detail')
+                        obj.__setattr__('organization', orgDict[company])
+                elif tpp:
+                    if tpp in orgDict:
+                        orgDict[tpp].__setattr__('url', 'tpp:detail')
+                        obj.__setattr__('organization', orgDict[tpp])
+
+                new_object_list.append(obj)
+
+            return new_object_list
+
+    return object_list
+
+
+def get_cabinet_data_for_objects(object_list):
+    new_object_list = []
+
+    for obj in object_list:
+        if obj.cabinet:
+            obj.__setattr__('cabinet', SearchQuerySet().models(Cabinet).filter(django_id=obj.cabinet))
+        new_object_list.append(obj)
+
+    return new_object_list
 
 
 def get_categories_data_for_products(object_list):

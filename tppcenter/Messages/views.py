@@ -1,8 +1,8 @@
-from django.utils import formats
-from appl import func
-from appl.models import Cabinet, Messages, Organization
-from core.models import Item, Relationship
 from collections import OrderedDict
+from copy import copy
+from datetime import datetime
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max, ObjectDoesNotExist, Count
 from django.template import RequestContext, loader
@@ -10,12 +10,14 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.dateparse import parse_datetime
 from django.utils.translation import trans_real
-from copy import copy
-from datetime import datetime
 import pygeoip
 from pytz import *
-import os
 from django.conf import settings
+
+from appl import func
+from appl.models import Cabinet, Messages, Organization
+from core.models import Item, Relationship
+
 
 @login_required(login_url='/login/')
 def viewMessages(request, recipient=None):

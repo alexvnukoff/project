@@ -13,7 +13,6 @@ from dateutil.parser import parse
 from django.contrib.sites.models import Site
 import json
 from django.utils.translation import get_language
-from tpp.settings import MEDIA_URL
 from tppcenter.forms import ItemForm
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -345,7 +344,7 @@ def adv(request):
             image = advAttr.get('IMAGE', [""])[0]
 
             if len(image) > 0:
-                image = MEDIA_URL + 'original/' + image
+                image = settings.MEDIA_URL + 'original/' + image
 
             jsonResponse['aaData'].append([
                 type,

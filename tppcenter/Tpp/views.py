@@ -1,7 +1,6 @@
 import json
-import logging
-from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms.models import modelformset_factory
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,24 +14,22 @@ from django.utils.translation import trans_real
 from haystack.backends import SQ
 
 from appl import func
-from appl.models import Tpp, Country, Organization, Company, Tender, News, Exhibition, BusinessProposal, Department, \
-                        Cabinet, InnovationProject, Vacancy, Gallery, AdditionalPages
-from core.models import Item, Relationship, Group, User
-from tppcenter.cbv import ItemDetail, ItemsList
+from appl.models import Tpp, Country, AdditionalPages
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
+    Organization, Department, Vacancy, Gallery, GalleryImage
+from core.amazonMethods import add
+from core.models import User
 from tppcenter.forms import ItemForm, BasePages
 from core.tasks import addNewTpp
-from core.amazonMethods import add
 
 
-logger = logging.getLogger('django.request')
-
-class get_tpp_list(ItemsList):
-
-    #pagination url
+class ChamberList(ItemsList):
+    # pagination url
     url_paginator = "tpp:paginator"
     url_my_paginator = "tpp:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css',
@@ -41,7 +38,7 @@ class get_tpp_list(ItemsList):
 
     current_section = _("Tpp")
 
-    #allowed filter list
+    # allowed filter list
     filterList = ['country']
 
     def dispatch(self, request, *args, **kwargs):
@@ -55,8 +52,7 @@ class get_tpp_list(ItemsList):
 
         return super().dispatch(request, *args, **kwargs)
 
-
-    model = Tpp
+    model = Chamber
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Tpp/contentPage.html'
@@ -77,52 +73,43 @@ class get_tpp_list(ItemsList):
 
         return SQ(django_id=current_organization) | SQ(company=current_organization)
 
+    def get_queryset(self):
+        queryset = super(ChamberList, self).get_queryset()
+        return queryset.select_related('parent').prefetch_related('countries')
 
-class get_tpp_detail(ItemDetail):
 
-    model = Tpp
+class ChamberDetail(ItemDetail):
+    model = Chamber
     template_name = 'Tpp/detailContent.html'
 
     current_section = _("Tpp")
 
-    def get_context_data(self, **kwargs):
-        context = super(get_tpp_detail, self).get_context_data(**kwargs)
-
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
-
 
 @login_required(login_url='/login/')
-def tppForm(request, action, item_id=None):
+def tpp_form(request, action, item_id=None):
     if item_id:
-       if not Tpp.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
+        if not Tpp.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     current_section = _("Tpp")
 
     if action == 'add':
-        tppPage = addTpp(request)
+        tpp_page = add_tpp(request)
     else:
-        tppPage = updateTpp(request, item_id)
+        tpp_page = update_tpp(request, item_id)
 
-    if isinstance(tppPage, HttpResponseRedirect) or isinstance(tppPage, HttpResponse):
-        return tppPage
+    if isinstance(tpp_page, HttpResponseRedirect) or isinstance(tpp_page, HttpResponse):
+        return tpp_page
 
-    templateParams = {
-        'formContent': tppPage,
+    template_params = {
+        'formContent': tpp_page,
         'current_section': current_section
     }
 
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('forms.html', template_params, context_instance=RequestContext(request))
 
 
-def addTpp(request):
-
+def add_tpp(request):
     form = None
     countries = func.getItemsList("Country", 'NAME')
     user = request.user
@@ -165,8 +152,7 @@ def addTpp(request):
     return tppPage
 
 
-def updateTpp(request, item_id):
-
+def update_tpp(request, item_id):
     item = Organization.objects.get(pk=item_id)
 
     perm_list = item.getItemInstPermList(request.user)
@@ -178,7 +164,6 @@ def updateTpp(request, item_id):
         choosen_country = Country.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         choosen_country = ""
-
 
     countries = func.getItemsList("Country", 'NAME')
     tpp = Tpp.objects.get(pk=item_id)
@@ -192,13 +177,8 @@ def updateTpp(request, item_id):
     else:
         pages = pages.queryset
 
-
-
-
-
     if request.POST:
         user = request.user
-
 
         values = {}
         values.update(request.POST)
@@ -217,7 +197,7 @@ def updateTpp(request, item_id):
 
     template = loader.get_template('Tpp/addForm.html')
 
-    templateParams = {
+    template_params = {
         'form': form,
         'choosen_country': choosen_country,
         'countries': countries,
@@ -225,301 +205,220 @@ def updateTpp(request, item_id):
         'pages': pages
     }
 
-    context = RequestContext(request, templateParams)
-    tppPage = template.render(context)
+    context = RequestContext(request, template_params)
+    tpp_page = template.render(context)
 
-    return tppPage
+    return tpp_page
 
-def _tabsCompanies(request, tpp, page=1):
 
-        companies = func.getActiveSQS().models(Company).filter(tpp=tpp)
-        attr = ('NAME', 'IMAGE', 'SITE_NAME', 'TELEPHONE_NUMBER', 'SLUG')
+def _tab_companies(request, tpp, page=1):
+    companies = Company.objects.filter(parent=tpp)
+    paginator = Paginator(companies, 10)
 
-        result = func.setPaginationForSearchWithValues(companies, *attr, page_num=10, page=page)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
+    url_paginator = "tpp:tab_companies_paged"
 
-        companyList = result[0]
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
+    return render_to_response('Tpp/tabCompanies.html', template_params, context_instance=RequestContext(request))
 
-        url_paginator = "tpp:tab_companies_paged"
 
-        templateParams = {
-            'companyList': companyList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
+def _tab_news(request, tpp, page=1):
+    news = News.objects.filter(organization=tpp)
+    paginator = Paginator(news, 10)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
+    url_paginator = "tpp:tab_news_paged"
 
-        return render_to_response('Tpp/tabCompanies.html', templateParams, context_instance=RequestContext(request))
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
-def _tabsNews(request, tpp, page=1):
+    return render_to_response('Tpp/tabNews.html', template_params, context_instance=RequestContext(request))
 
-        news = func.getActiveSQS().models(News).filter(company=0, tpp=tpp)
-        attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG')
 
-        result = func.setPaginationForSearchWithValues(news, *attr, page_num=5, page=page)
+def _tab_tenders(request, tpp, page=1):
+    tenders = Tender.objects.filter(organization=tpp)
+    paginator = Paginator(tenders, 10)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
+    url_paginator = "tpp:tab_tenders_paged"
 
-        newsList = result[0]
+    template_arams = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
+    return render_to_response('Tpp/tabTenders.html', template_arams, context_instance=RequestContext(request))
 
-        url_paginator = "tpp:tab_news_paged"
 
-        templateParams = {
-            'newsList': newsList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
+def _tab_exhibitions(request, tpp, page=1):
+    exhibitions = Exhibition.objects.filter(organization=tpp)
+    paginator = Paginator(exhibitions, 10)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
+    url_paginator = "tpp:tab_exhibitions_paged"
 
-        return render_to_response('Tpp/tabNews.html', templateParams, context_instance=RequestContext(request))
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
+    return render_to_response('Tpp/tabExhibitions.html', template_params, context_instance=RequestContext(request))
 
-def _tabsTenders(request, tpp, page=1):
 
-        tenders = func.getActiveSQS().models(Tender).filter(company=0, tpp=tpp)
-        attr = ('NAME', 'START_EVENT_DATE', 'END_EVENT_DATE', 'COST', 'CURRENCY', 'SLUG')
+def _tab_proposals(request, tpp, page=1):
+    proposals = BusinessProposal.objects.filter(organization=tpp)
+    paginator = Paginator(proposals, 10)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
-        result = func.setPaginationForSearchWithValues(tenders, *attr, page_num=5, page=page)
+    url_paginator = "tpp:tab_proposal_paged"
 
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
-        tendersList = result[0]
+    return render_to_response('Companies/tabProposal.html', template_params, context_instance=RequestContext(request))
 
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
 
-        url_paginator = "tpp:tab_tenders_paged"
+def _tab_innovation_projects(request, tpp, page=1):
+    projects = InnovationProject.objects.filter(organization=tpp)
+    paginator = Paginator(projects, 10)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
-        templateParams = {
-            'tendersList': tendersList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
+    url_paginator = "tpp:tab_innov_paged"
 
+    template_params = {
+        'page': page,
+        'paginator_range': paginator_range,
+        'url_paginator': url_paginator,
+        'url_parameter': tpp
+    }
 
-        return render_to_response('Tpp/tabTenders.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Companies/tabInnov.html', template_params, context_instance=RequestContext(request))
 
-def _tabsExhibitions(request, tpp, page=1):
 
-        exhibition = func.getActiveSQS().models(Exhibition).filter(company=0, tpp=tpp)
-        attr = ('NAME', 'SLUG', 'START_EVENT_DATE', 'END_EVENT_DATE', 'CITY')
+def _tab_structure(request, tpp, page=1):
+    organization = get_object_or_404(Chamber, pk=tpp)
 
-        result = func.setPaginationForSearchWithValues(exhibition, *attr, page_num=5, page=page)
-
-
-        exhibitionList = result[0]
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-        url_paginator = "tpp:tab_exhibitions_paged"
-
-        templateParams = {
-            'exhibitionList': exhibitionList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
-
-
-
-        return render_to_response('Tpp/tabExhibitions.html', templateParams, context_instance=RequestContext(request))
-
-
-def _tabsProposals(request, tpp, page=1):
-
-        products = func.getActiveSQS().models(BusinessProposal).filter(company=0, tpp=tpp)
-        attr = ('NAME', 'SLUG')
-
-        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
-
-
-        proposalList = result[0]
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-        url_paginator = "tpp:tab_proposal_paged"
-
-        templateParams = {
-            'productsList': proposalList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
-
-
-        return render_to_response('Companies/tabProposal.html', templateParams, context_instance=RequestContext(request))
-
-
-def _tabsInnovs(request, tpp, page=1):
-
-        products = func.getActiveSQS().models(InnovationProject).filter(company=0, tpp=tpp)
-        attr = ('NAME', 'COST', 'CURRENCY', 'SLUG')
-
-        result = func.setPaginationForSearchWithValues(products, *attr, page_num=5, page=page)
-
-
-        innovList = result[0]
-
-        page = result[1]
-        paginator_range = func.getPaginatorRange(page)
-
-        url_paginator = "tpp:tab_innov_paged"
-
-        templateParams = {
-            'productsList': innovList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'url_parameter': tpp
-        }
-
-
-        return render_to_response('Companies/tabInnov.html', templateParams, context_instance=RequestContext(request))
-
-def _tabsStructure(request, tpp, page=1):
-    '''
-        Show content of the TPP-Structure panel
-    '''
-    organization = get_object_or_404(Tpp, pk=tpp)
-    permissionsList = organization.getItemInstPermList(request.user)
-
-    if request.is_ajax() and request.user.is_authenticated():
-
+    if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
         try:
-            id = int(request.POST.get("id", 0))
+            item_id = int(request.POST.get("id", 0))
         except ValueError:
-            id = 0
+            item_id = 0
 
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
 
-        if "change_tpp" not in permissionsList and action is not None: # Error
+        if not organization.has_perm(request.user) and action is not None:
             return HttpResponseBadRequest()
 
         if action == "add" and len(name) > 0:
-
-            if id == 0: # new department
-                obj_dep = Department.objects.create(title=name, create_user=request.user)
-                Relationship.setRelRelationship(organization, obj_dep, request.user, type='hierarchy')
-                obj_dep.setAttributeValue({'NAME': name}, request.user)
-
-                obj_dep.reindexItem()
-            else: # new vacancy
-                department = get_object_or_404(Department, pk=id)
-                vac = Vacancy.objects.create(title='VACANCY_FOR_ORGANIZATION_ID:'+str(department.pk), create_user=request.user)
-                vac.setAttributeValue({'NAME': name}, request.user)
-
-                Relationship.setRelRelationship(department, vac, request.user, type='hierarchy')
-
-                vac.reindexItem()
-
-        elif action == "edit" and id > 0 and len(name) > 0:
-
+            if item_id == 0:  # new department
+                Department.objects.create(
+                    name=name, created_by=request.user,
+                    updated_by=request.user,
+                    organization=organization
+                )
+            else:  # new vacancy
+                department = get_object_or_404(Department, pk=item_id, organization=organization)
+                Vacancy.objects.create(
+                    name=name,
+                    created_by=request.user,
+                    updated_by=request.user,
+                    department=department
+                )
+        elif action == "edit" and item_id > 0 and len(name) > 0:
             try:
-                obj = Department.objects.get(pk=id)
+                obj = organization.departments.get(pk=item_id)
             except ObjectDoesNotExist:
-                obj = get_object_or_404(Vacancy, pk=id)
+                obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
-            obj.setAttributeValue({'NAME': name}, request.user)
+            obj.name = name
+            obj.save()
 
-            obj.reindexItem()
-
-        elif action == "remove" and id > 0:
+        elif action == "remove" and item_id > 0:
             try:
-                obj = Department.objects.get(pk=id)
-                Item.hierarchy.deleteTree(obj.pk)
+                obj = organization.departments.get(pk=item_id, organization=organization)
             except ObjectDoesNotExist:
-                obj = get_object_or_404(Vacancy, pk=id)
+                obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
             obj.delete()
 
-
-    departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
+    departments = organization.departments.all().order_by('name')
 
     paginator = Paginator(departments, 10)
-    departments = paginator.page(page)
-    paginator_range = func.getPaginatorRange(departments)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
     url_paginator = "tpp:tab_structure_paged"
-    departmentsDict = {}
-    departmentsList = []
 
-    for department in departments.object_list:
-        department.vacancyList = []
-        departmentsDict[int(department.pk)] = department
-        departmentsList.append(department.pk)
-
-    vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp, department__in=departmentsList).order_by('text')
-
-    for vacancy in vacancies:
-        departmentsDict[int(vacancy.department)].vacancyList.append(vacancy)
-
-
-    templateParams = {
-        'permissionsList': permissionsList,
+    template_params = {
+        'has_perm': organization.has_perm(request.user),
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': tpp,
-        'departments': departmentsDict,
         'item_pk': tpp
     }
 
-    return render_to_response('Tpp/tabStructure.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Tpp/tabStructure.html', template_params, context_instance=RequestContext(request))
 
-def _tabsStaff(request, tpp, page=1):
-    '''
-        Show content of the TPP-Staff panel
-    '''
-    organization = get_object_or_404(Tpp, pk=tpp)
-    permissionsList = organization.getItemInstPermList(request.user)
 
-    if request.is_ajax() and request.user.is_authenticated():
+def _tab_staff(request, tpp, page=1):
+    organization = get_object_or_404(Chamber, pk=tpp)
 
+    if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
         action = request.POST.get('action', False)
-
         action = action if action else request.GET.get('action', None)
 
-        if "add_cabinet" not in permissionsList and action is not None: # Error
+        if not organization.has_perm(request.user) and action is not None:
             return HttpResponseBadRequest()
 
         if action == "department":
             departments = [{'name': _("Select department"), "value": ""}]
 
-            for department in func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text'):
-                departments.append({"name": department.text, "value": department.pk})
+            for department in organization.departments.all().order_by('text'):
+                departments.append({"name": department.name, "value": department.pk})
 
             return HttpResponse(json.dumps(departments))
 
         elif action == "vacancy":
-
             department = int(request.GET.get("department", 0))
 
             if department <= 0:
                 return HttpResponseBadRequest()
 
             vacancies = [{'name': _("Select vacancy"), "value": ""}]
-            for vacancy in func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text'):
-                if vacancy.department == department:
-                    vacancies.append({"name": vacancy.text, "value": vacancy.pk})
+
+            for department in organization.departments.all():
+                for vacancy in department.vacancies.all().order_by('name'):
+                    vacancies.append({"name": vacancy.name, "value": vacancy.pk})
 
             return HttpResponse(json.dumps(vacancies))
 
         elif action == "add":
-
             user = request.POST.get('user', "").strip()
             department = int(request.POST.get('department', 0))
             vacancy = int(request.POST.get('vacancy', 0))
@@ -529,234 +428,126 @@ def _tabsStaff(request, tpp, page=1):
 
             try:
                 user = User.objects.get(email=user)
-                department = Department.objects.get(pk=department, c2p__parent=tpp)
-                vacancy = Vacancy.objects.get(pk=vacancy, c2p__parent=department)
+                vacancy = Vacancy.objects.get(pk=vacancy, department__organization=organization)
             except ObjectDoesNotExist:
                 return HttpResponseBadRequest(_('User not found'))
 
             # One user for vacancy
-            if Cabinet.objects.filter(c2p__parent=vacancy.pk).exists():
+            if vacancy.user:
                 return HttpResponseBadRequest(_("The vacancy already have employee attached"))
 
-            cab, res = Cabinet.objects.get_or_create(user=user, create_user=user)
-
-            if res: # user exists but never logged in
-                cab.setAttributeValue({
-                                          'USER_FIRST_NAME': user.first_name,
-                                          'USER_MIDDLE_NAME':'',
-                                          'USER_LAST_NAME': user.last_name,
-                                          'EMAIL': user.email
-                }, user)
-            elif Cabinet.objects.filter(pk=cab.pk, c2p__parent__c2p__parent__c2p__parent=tpp).exists():
+            if user.work_positions.filter(department__organization=organization).exists():
                 return HttpResponseBadRequest(_("The user already employed in your organization"))
 
-
-            admin = int(request.POST.get('admin', 0))
-            admin = True if admin != 0 else False
-
-            if admin:
-                user.is_manager = True
-                user.save()
-
-            Relationship.objects.get_or_create(parent=vacancy, child=cab, is_admin=admin, type='relation',
-                                                create_user=user)
-            cab.reindexItem()
-            vacancy.reindexItem()
+            admin = bool(int(request.POST.get('admin', 0)))
+            vacancy.assign_employee(user, admin)
 
         elif action == "remove":
             cabinet = int(request.POST.get('id', 0))
 
             if cabinet > 0:
+                user = get_object_or_404(User, pk=cabinet)
+                vacancy = get_object_or_404(Vacancy, user=user, department__organization=organization)
+                vacancy.remove_employee()
 
-                cabinet = get_object_or_404(Cabinet, pk=cabinet)
+    users = User.objects.filter(work_positions__department__organization=organization).distinct() \
+        .select_related('profile').prefetch_related('work_positions', 'work_positions__department')
 
-                vacancy = get_object_or_404(Vacancy, p2c__child=cabinet.pk, c2p__parent__c2p__parent=tpp)
-
-                Relationship.objects.filter(parent__c2p__parent__c2p__parent=tpp, child=cabinet,
-                                                type='relation').delete()
-
-                cabinet.reindexItem()
-                vacancy.reindexItem()
-
-    cabinets = Cabinet.objects.filter(c2p__parent__c2p__parent__c2p__parent=tpp).distinct()
-    attr = ('USER_FIRST_NAME', 'USER_MIDDLE_NAME', 'USER_LAST_NAME', 'EMAIL', 'IMAGE', 'SLUG')
-    workersList, page = func.setPaginationForItemsWithValues(cabinets, *attr, page_num=10, page=page)
-
-    dep_lst = tuple(Department.objects.filter(c2p__parent=tpp).values_list('pk', flat=True))
-    org_lst = Item.getItemsAttributesValues(('NAME',), dep_lst)
-    correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('pk', 'p2c__child__p2c__child'))
-
-    for cab_id, cab_att in workersList.items(): #get Cabinet instance
-        if not cab_att:
-            continue
-        for t in correlation: #lookup into corelation list
-            if t[1] == cab_id: #if Cabinet ID then...
-                dep_id = t[0] #...get Organization ID
-                for org_id, org_attr in org_lst.items(): #from OrderedDict...
-                    if org_id == dep_id:    #if found the same Organization ID then...
-                        #... set additional attributes for Users (Cabinets) before sending to web form
-                        cab_att['DEPARTMENT'] = org_attr['NAME']
-                        # check current User's activity
-                        for cab in cabinets:
-                            if cab.pk == cab_id:
-                                if cab.user.is_authenticated():
-                                    cab_att['STATUS'] = ['Active']
-                                else:
-                                    cab_att['STATUS'] = ['None']
-
-                                break
-                        break
-
+    paginator = Paginator(users, 10)
+    page = paginator.page(page)
     paginator_range = func.getPaginatorRange(page)
+
     url_paginator = "tpp:tab_staff_paged"
 
-    #create full list of TPP's Departments
-    departments = func.getActiveSQS().models(Department).filter(tpp=tpp).order_by('text')
-
-    dep_lst = [dep.pk for dep in departments]
-
-    if len(dep_lst) == 0:
-        departmentsList = []
-    else:
-        departmentsList = Item.getItemsAttributesValues(('NAME',), dep_lst)
-
-    #create list of TPP's Vacancies
-    vacancies = func.getActiveSQS().models(Vacancy).filter(tpp=tpp).order_by('text')
-
-    vac_lst = [vac.pk for vac in vacancies]
-
-    if len(vac_lst) == 0:
-        vacanciesList = []
-    else:
-        vacanciesList = Item.getItemsAttributesValues(('NAME',), vac_lst)
-        # correlation between Departments and Vacancies
-        correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('pk', 'p2c__child'))
-
-        # add into Vacancy's attribute a new key 'DEPARTMENT_ID' with Department ID
-        for vac_id, vac_att in vacanciesList.items(): #get Vacancy instance
-            for t in correlation: #lookup into correlation list
-                if t[1] == vac_id: #if Vacancy ID is equal then...
-                    #... add a new key into Vacancy attribute dictionary
-                    vac_att['DEPARTMENT_ID'] = [t[0]]
-                    break
-
-        correlation = list(Department.objects.filter(c2p__parent=tpp).values_list('p2c__child__p2c__child', 'p2c__child'))
-
-        # add into worker's list attribute a new key 'VACANCY' with Vacancy ID
-        for cab_id, cab_att in workersList.items(): #get Cabinet instance
-            for t in correlation: #lookup into correlation list
-                if t[0] == cab_id: #if Cabinet ID is equal then...
-                    for vac_id, vac_attr in vacanciesList.items():
-                        if t[1] == vac_id:
-                            #... add a new key into User (Cabinet) attribute dictionary
-                            cab_att['VACANCY'] = vac_attr['NAME']
-                            break
-
-    templateParams = {
-        'workersList': workersList,
-        'departmentsList': departmentsList, #list for adding user form
-        'vacanciesList': vacanciesList,     #list for adding user form
-        'permissionsList': permissionsList,
+    template_params = {
         'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
         'url_parameter': tpp,
-        'item_pk': tpp
+        'item_pk': tpp,
+        'has_perm': organization.has_perm(request.user)
     }
 
-    return render_to_response('Tpp/tabStaff.html', templateParams, context_instance=RequestContext(request))
+    return render_to_response('Tpp/tabStaff.html', template_params, context_instance=RequestContext(request))
 
-def _tabsGallery(request, item, page=1):
 
-    item = get_object_or_404(Tpp, pk=item)
+def _tab_gallery(request, tpp, page=1):
+    organization = get_object_or_404(Chamber, pk=tpp)
     file = request.FILES.get('Filedata', None)
-
-    permissionsList = item.getItemInstPermList(request.user)
 
     has_perm = False
 
-    if 'change_tpp' in permissionsList:
+    if organization.has_perm(request.user):
         has_perm = True
 
     if file is not None:
-
         if has_perm:
+            file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
 
-            try:
-                file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
-                instance = Gallery(photo=file, create_user=request.user)
-                instance.save()
+            if not organization.galleries.exists():
+                gallery = Gallery.create_default_gallery(organization, request.user)
+            else:
+                gallery = organization.galleries.first()
 
-                Relationship.setRelRelationship(parent=item, child=instance, user=request.user, type='dependence')
+            gallery.add_image(request.user, file)
 
-                return HttpResponse('')
-            except Exhibition:
-                return HttpResponseBadRequest()
+            return HttpResponse('')
         else:
             return HttpResponseBadRequest()
     else:
-        photos = Gallery.objects.filter(c2p__parent=item).all()
-
+        photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
         paginator = Paginator(photos, 10)
+        page = paginator.page(page)
 
-        try:
-            onPage = paginator.page(page)
-        except Exception:
-            onPage = paginator.page(1)
+        paginator_range = func.getPaginatorRange(page)
 
         url_paginator = "tpp:tabs_gallery_paged"
-        paginator_range = func.getPaginatorRange(onPage)
 
-        templateParams = {
-            'page': onPage,
+        template_params = {
+            'page': page,
             'paginator_range': paginator_range,
             'url_paginator': url_paginator,
-            'gallery': onPage.object_list,
+            'gallery': page.object_list,
             'has_perm': has_perm,
-            'item_id': item.pk,
-            'pageNum': page,
-            'url_parameter': item.pk
+            'item_id': tpp,
+            'pageNum': page.number,
+            'url_parameter': tpp
         }
 
+        return render_to_response('Tpp/tabGallery.html', template_params, context_instance=RequestContext(request))
 
-        return render_to_response('Tpp/tabGallery.html', templateParams, context_instance=RequestContext(request))
 
-
-def galleryStructure(request, item, page=1):
-
-    item = get_object_or_404(Tpp, pk=item)
-    photos = Gallery.objects.filter(c2p__parent=item).all()
-
+def gallery_structure(request, tpp, page=1):
+    organization = get_object_or_404(Chamber, pk=tpp)
+    photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
     paginator = Paginator(photos, 10)
-
-    try:
-        onPage = paginator.page(page)
-    except Exception:
-        onPage = paginator.page(1)
+    page = paginator.page(page)
+    paginator_range = func.getPaginatorRange(page)
 
     url_paginator = "tpp:tabs_gallery_paged"
-    paginator_range = func.getPaginatorRange(onPage)
 
-    templateParams = {
-        'page': onPage,
+    template_params = {
+        'page': page,
         'paginator_range': paginator_range,
         'url_paginator': url_paginator,
-        'gallery': onPage.object_list,
-        'pageNum': page,
-        'url_parameter': item.pk
+        'gallery': page.object_list,
+        'pageNum': page.number,
+        'url_parameter': tpp
     }
 
-    return render_to_response('Tpp/tab_gallery_structure.html', templateParams, context_instance=RequestContext(request))
-
-def galleryRemoveItem(request, item):
-    photo = get_object_or_404(Gallery, pk=item)
-
-    tpp = Tpp.objects.get(p2c__child=photo)
-
-    permissionsList = tpp.getItemInstPermList(request.user)
+    return render_to_response(
+        'Tpp/tab_gallery_structure.html',
+        template_params,
+        context_instance=RequestContext(request)
+    )
 
 
-    if 'change_tpp' in permissionsList:
+def gallery_remove_item(request, tpp):
+    photo = get_object_or_404(GalleryImage, pk=tpp)
+
+    if photo.has_perm(request.user):
         photo.delete()
+    else:
+        return HttpResponseBadRequest()
 
     return HttpResponse()

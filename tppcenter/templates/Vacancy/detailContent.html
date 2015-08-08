@@ -5,12 +5,9 @@
 {% load CustomFilters %}
 {% load inclusionTags %}
 
-
 {% block header %}
     {% include "login_header.html" %}
 {% endblock %}
-
-
 {% block styles %}
     {{ block.super }}
         <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
@@ -34,7 +31,7 @@ $(function() {
                     <ul class="inforesume">
                     	<li>
                         	<label>{% trans 'Date' %}:</label>
-                            <span class="right">{{ item.obj_create_date|date:'d M Y' }}</span>
+                            <span class="right">{{ item.created_at|date:'d M Y' }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Company' %}:</label>
@@ -42,12 +39,12 @@ $(function() {
                                 {% if item.is_anonymous %}
                                     {% trans 'Anonymous company' %}
                                 {% else %}
-                                <a href="{% url 'companies:detail' item.organization.slug %}">{{ item.organization.title }}</a>
+                                <a href="{{ item.vacancy.department.organization.detail_url }}">{{ item.vacancy.department.organization.name }}</a>
                                 {% endif %}
                             </span>
                         </li>
                     </ul>
-                    {% b2bSocialButtons "" item.title item.text %}
+                    {% b2bSocialButtons "" item.title item.description %}
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
@@ -61,12 +58,12 @@ $(function() {
 
                                     <li>
                                     	<label>{% trans 'Type of employments' %}</label>
-                                        <p>{{ item.type|default_if_none:"" }}</p>
+                                        <p>{{ item.type_of_employment|default_if_none:"" }}</p>
                                     </li>
 
                                     <li>
                                     	<label>{% trans 'Description' %}</label>
-                                       <p>{{ item.text|default_if_none:"" }}</p>
+                                       <p>{{ item.description|default_if_none:"" }}</p>
                                     </li>
                                     <li>
                                     	<label>{% trans 'Requirements' %}</label>
@@ -98,20 +95,20 @@ $(function() {
 
                 <li>
                 	<label>{% trans 'You send resume on position:' %} <font color="#FF0000">*</font></label>
-                   <div>{{ item.title }}</div>
-                    <input id="vacancy-id" value="{{ item.pk }}" hidden="hidden">
+                   <div>{{ item.vacancy.name }}</div>
+                    <input id="vacancy-id" value="{{ item.vacancy.pk }}" hidden="hidden">
                 </li>
 
                 <li>
                 	<label>{% trans 'Add new resume to profile' %} <font color="#FF0000">*</font></label>
-                   <a href="{% url 'resume:main'  %}">{% trans 'New resume' %}</a>
+                   <a href="{% url 'resume:main' %}">{% trans 'New resume' %}</a>
                 </li>
 
             	<li>
                 	<label>{% trans 'Send existing resume' %}:</label>
                     <select id="resume-id">
                         {% for resume in resumes %}
-                        <option value="{{ resume.pk }}"> {{ resume.text }}</option>
+                        <option value="{{ resume.pk }}"> {{ resume.title }}</option>
                          {% empty %}
                            <option disabled> {% trans 'No existing resumes' %}</option>
                         {% endfor %}
@@ -124,10 +121,7 @@ $(function() {
                         <a class="btntype1" id="cancel-vacancy" href="#">{% trans 'Cancel' %}</a>
                     </div>
                 </li>
-
-
             </ul>
-
         </div>
     </div>
 </div>

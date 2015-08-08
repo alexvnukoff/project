@@ -12,23 +12,22 @@
             {% for resume in object_list %}
             <li>
             {% setContextMenu resume %}
-
-
-
-
                 <div class="title">
-                    <font class="name">{% trans 'Publication date' %}: {{ resume.obj_create_date|date:"d M Y" }}</font>
+                    <font class="name">{% trans 'Publication date' %}: {{ resume.created_at|date:"d M Y" }}</font>
                         </div>
-                        <h2><a href="{% url "resume:detail" resume.slug %}" >{{ resume.text }}</a></h2>
+                        <h2><a href="{% url "resume:detail" resume.slug %}" >{{ resume.title }}</a></h2>
 
                         <a href="{% url "resume:detail" resume.slug %}" class="linkmore">{% trans 'More' %}...</a>
-                    <div class="line">{% if resume.cabinet.text %}{% trans 'User name' %}:<a href="#"> {{ resume.cabinet.text }}</a>{% endif %}</div>
-                    </li>
-                {% empty %}
-                    <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}
-
-            </ul>
+                    <div class="line">
+                        {% if resume.user.profile.full_name %}
+                            {% trans 'User name' %}:<a href="#"> {{ resume.user.profile.full_name }}</a>
+                        {% endif %}
+                    </div>
+            </li>
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
+        </ul>
         {% include "main/paginator.html" %}
     </div>
 </div>

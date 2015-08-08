@@ -53,7 +53,7 @@
 
                     {% if item.position|length > 3 %}
                       marker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ item.position }})
+                        position: new google.maps.LatLng({{ item.coordinates }})
                     });
                     {% endif %}
                   initialize(false);
@@ -73,27 +73,20 @@
 {% block content %}
     <div class="tender">
         <div class="tender-details-title">
-            {% if item.country.flag %}
-                <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.text }}"></i>
-            {% elif item.organization.flag %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" />
-            {% endif %}
-            <font class="name">
-                {% if item.country.text %}{{ item.country.text }}{% else %}{{ item.organization.title  }}{% endif %} {{ item.city }}
-                {{ item.start_event_date|date:"d M Y" }} - {{ item.end_event_date|date:"d M Y"  }}
-            </font>
+            <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
+            <font class="name">{{ item.country.name }}, {{ item.city }}, {{ item.start_date|date:"d M Y" }} - {{ item.end_date|date:"d M Y"  }}</font>
         </div>
         <div class="tender-info">
             <div class="tender-button"><a class="bigbuy" href="#" id="afisha">{% trans 'Sign Up' %}</a></div>
 			    <span class="title">{{ item.title }}</span>
                 <div class="tender-bottom">
                    	<div class="tender-bottom-left">
-                      	<img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.image }}{% endif %}" title="{{ item.organization.title }}" alt="{{ item.organization.title }}" class="thumb" />
-                        <a href="{% url item.organization.url item.organization.slug %}">{{ item.organization.title }}</a>
+                      	<img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                        <a href="{{ item.organization.detail_url }}">{{ item.organization.name }}</a>
                     </div>
                 </div>
                 <div class="innov-details">
-                  	<p>{{ item.text|cleanHtml|safe }}</p>
+                  	<p>{{ item.description|cleanHtml|safe }}</p>
                 </div>
                 <div class="goods-details-tab">
                     <div class="tab-cate">
@@ -102,8 +95,8 @@
                             <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
                             <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
                             <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
-                            {% for page in additionalPages %}
-                            <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.getTitle|truncatechars:10 }}</a></li>
+                            {% for page in item.additional_pages.all %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -114,36 +107,30 @@
                     </div>
                     <div id="goods-tabs-2">
                         <div class="content-goods-tab">
-                            {% if item.doc_1 %}
-                                <p><a href="{{ MEDIA_URL }}document/{{ item.doc_1 }}">{% trans 'Link to the File' %}</a> </p>
-                            {% endif %}
-                            {% if item.doc_2 %}
-                                <p><a href="{{ MEDIA_URL }}document/{{ item.doc_2 }}">{% trans 'Link to the File' %}</a> </p>
-                            {% endif %}
-
-                            {% if item.doc_3 %}
-                                <p><a href="{{ MEDIA_URL }}document/{{ item.doc_3 }}">{% trans 'Link to the File' %}</a> </p>
-                            {% endif %}
-
+                        {% for document in item.documents.all %}
+                            <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
+                        {% endfor %}
                         </div>
                     </div>
                     <div id="goods-tabs-3">
                         <div class="content-goods-tab">
                             <ul class="tpp-gallery">
-                                {% for photo in photos %}
-                                    <li>
-                                        <div class="b-img">
-                                            <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
-                                                <img src="{{ MEDIA_URL }}big/{{ photo.photo }}" />
-                                            </a>
-                                            <div class="viewimge">
-                                                        <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ photo.photo }}">
-                                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
-                                                        </a>
+                                {% for gallery in item.galleries.all %}
+                                    {% for gallery_item in gallery.gallery_items.all %}
+                                        <li>
+                                            <div class="b-img">
+                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" />
+                                                </a>
+                                                <div class="viewimge">
+                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="gray-img"></div>
                                             </div>
-                                            <div class="gray-img"></div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    {% endfor %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -176,10 +163,10 @@
                                                 <span class="right">{{ item.organization.email }}</span>
                                         </li>
                                     {% endif %}
-                                    {% if item.organization.site_name %}
+                                    {% if item.organization.site %}
                                         <li>
                                             <span class="left">{% trans 'WWW' %}: </span>
-                                            <span class="right">{{ item.organization.site_name }}</span>
+                                            <span class="right">{{ item.organization.site }}</span>
                                         </li>
                                     {% endif %}
                                 </ul>
@@ -187,9 +174,9 @@
                             <div class="org-map"><div id="map-canvas"></div></div>
                         </div>
                     </div>
-                    {% for page in additionalPages %}
+                    {% for page in item.additional_pages.all %}
                         <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                              <div class="content-goods-tab">{{ page.getContent|cleanHtml|safe }}</div>
+                              <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
                          </div>
                     {% endfor %}
                 </div>

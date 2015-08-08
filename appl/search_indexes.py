@@ -604,7 +604,7 @@ class CompanyIndex(BaseSearchIndex, indexes.Indexable):
 class TppIndex(BaseSearchIndex, indexes.Indexable):
     anons = indexes.CharField(null=True)
     title = indexes.CharField()
-    country = indexes.MultiValueIntegerField(null=True)
+    country = indexes.IntegerField(null=True)
 
     title_auto = indexes.NgramField()
     title_sort = indexes.CharField(indexed=False, faceted=True, stored=True)

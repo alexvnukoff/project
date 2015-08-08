@@ -1,3 +1,9 @@
+from collections import OrderedDict
+from random import randint
+import warnings
+import datetime
+import hashlib
+
 from django.db import IntegrityError, transaction, models
 from django.db.models import Q
 from django.db.models.signals import pre_delete, post_delete, pre_save
@@ -12,30 +18,24 @@ from django.utils import timezone
 from django.utils.timezone import now
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from copy import copy
-from collections import OrderedDict
-from core.hierarchy import hierarchyManager
-from random import randint
-from tpp.SiteUrlMiddleWare import get_request
+from guardian.shortcuts import get_objects_for_user
 from unidecode import unidecode
-from django.core.cache import cache
-from django.utils.translation import trans_real
 
-import warnings
-import datetime
-import hashlib
 from django.core.cache import cache
+
+from core.hierarchy import hierarchyManager
+from tpp.SiteUrlMiddleWare import get_request
+
 
 def createHash(string):
     return hashlib.sha1(str(string).encode()).hexdigest()
 
 
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 #             Class UserManager defines manager for user
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
-
         request = get_request()
 
         if request:
@@ -47,19 +47,20 @@ class UserManager(BaseUserManager):
                 pass
 
             ip = request.META['REMOTE_ADDR']
-        else: # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
-            ip = '0.'+str(randint(0, 255))+'.'+str(randint(0, 255))+'.'+str(randint(0, 255))
+        else:  # for data migration as batch process generate random IP address 0.rand().rand().rand() for avoiding bot checking
+            ip = '0.' + str(randint(0, 255)) + '.' + str(randint(0, 255)) + '.' + str(randint(0, 255))
 
         time = now() - datetime.timedelta(minutes=1)
         users = User.objects.filter(ip=ip, date_joined__gt=time)
+
         if users:
             raise ValueError("Bot")
         if not email:
             raise ValueError('Users must have an email address')
 
-        user = self.model(
-            email=UserManager.normalize_email(email),
-            username=username, ip=ip)
+        email = self.normalize_email(email).lower()
+
+        user = self.model(email=email, ip=ip)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -73,61 +74,61 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class User define a new user for Django system
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class SiteProfileNotAvailable(Exception):
     pass
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
-    username = models.CharField(verbose_name='Login',  max_length=255, unique=True)
-    avatar = models.ImageField(verbose_name='Avatar',  upload_to='images/%Y/%m/%d', blank=True, null=True)
-    first_name = models.CharField(verbose_name='Name',  max_length=255, blank=True)
-    last_name = models.CharField(verbose_name='Surname',  max_length=255, blank=True)
-    date_of_birth = models.DateField(verbose_name='Birth day',  blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    is_manager = models.BooleanField(default=False) #for enterprise content management
-    is_commando = models.BooleanField(default=False) #for special purposes
+    is_manager = models.BooleanField(default=False)  # for enterprise content management
+    is_commando = models.BooleanField(default=False)  # for special purposes
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    ip = models.GenericIPAddressField()
+    ip = models.GenericIPAddressField(null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
     def get_full_name(self):
         return '%s %s' % (self.first_name, self.last_name,)
 
     def get_short_name(self):
-        return self.username
+        return self.email
 
     def __str__(self):
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        return True
+    # def has_perm(self, perm, obj=None):
+    #     return True
 
-    def has_perms(self, perm_list, obj):
-        """
-        Returns True if the User has all specified permissions perm_list for this object obj.
-        """
-
-        if self.is_superuser or self.is_commando:
-            return True
-        else:
-            if obj:
-                p_list = obj.getItemInstPermList(self)
-                for i in perm_list:
-                    if i not in p_list:
-                        return False
-
-                return True
-
-            else:
-                return False
+    # def has_perm(self, perm, obj=None):
+    #     return True
+    #
+    # def has_perms(self, perm_list, obj):
+    #     """
+    #     Returns True if the User has all specified permissions perm_list for this object obj.
+    #     """
+    #
+    #     if self.is_superuser or self.is_commando:
+    #         return True
+    #     else:
+    #         if obj:
+    #             p_list = obj.getItemInstPermList(self)
+    #             for i in perm_list:
+    #                 if i not in p_list:
+    #                     return False
+    #
+    #             return True
+    #
+    #         else:
+    #             return False
 
     def has_module_perms(self, app_label):
         return True
@@ -148,7 +149,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         SiteProfileNotAvailable if this site does not allow profiles.
         """
         warnings.warn("The use of AUTH_PROFILE_MODULE to define user profiles has been deprecated.",
-            DeprecationWarning, stacklevel=2)
+                      DeprecationWarning, stacklevel=2)
         if not hasattr(self, '_profile_cache'):
             from django.conf import settings
             if not getattr(settings, 'AUTH_PROFILE_MODULE', False):
@@ -168,15 +169,27 @@ class User(AbstractBaseUser, PermissionsMixin):
                         'Unable to load the profile model, check '
                         'AUTH_PROFILE_MODULE in your project settings')
                 self._profile_cache = model._default_manager.using(
-                                   self._state.db).get(user__id__exact=self.id)
+                    self._state.db).get(user__id__exact=self.id)
                 self._profile_cache.user = self
             except (ImportError, ImproperlyConfigured):
                 raise SiteProfileNotAvailable
         return self._profile_cache
 
-#----------------------------------------------------------------------------------------------------------
+    def manageable_organizations(self):
+        from b24online.models import Organization
+        key = "user:%s:manageable_organizations" % self.pk
+        organization_ids = cache.get(key)
+
+        if organization_ids is None:
+            organization_ids = [org.pk for org in
+                                get_objects_for_user(self, 'b24online.manage_organization', Organization)]
+            cache.set(key, organization_ids,  60 * 10)
+
+        return organization_ids or []
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Dictionary defines dictionary for attributes in application
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Dictionary(models.Model):
     title = models.CharField(max_length=128, unique=True)
 
@@ -215,9 +228,10 @@ class Dictionary(models.Model):
         slot = Slot.objects.get(dict=self.id, title=slotTitle)
         slot.delete()
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Slot defines row in dictionary for attributes in application
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Slot(models.Model):
     title = models.CharField(max_length=128)
     dict = models.ForeignKey(Dictionary, related_name='slot')
@@ -228,9 +242,10 @@ class Slot(models.Model):
     class Meta:
         unique_together = ("title", "dict")
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Attribute defines attributes for Item in application
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Attribute(models.Model):
     title = models.CharField(max_length=128)
     TYPE_OF_ATTRIBUTES = (
@@ -250,9 +265,9 @@ class Attribute(models.Model):
         ("Sdt", "SplitDateTimeField"))
     type = models.CharField(max_length=3, choices=TYPE_OF_ATTRIBUTES)
     dict = models.ForeignKey(Dictionary, related_name='attr', null=True, blank=True)
-    #f_order = models.BooleanField(default=False)# set in True if attribute participate in sort list of the fields in
-                                                # setup view form in User's Cabinet
-    #f_cache = models.BooleanField(default=False)# reserved field for fast access to item's main attributes
+    # f_order = models.BooleanField(default=False)# set in True if attribute participate in sort list of the fields in
+    # setup view form in User's Cabinet
+    # f_cache = models.BooleanField(default=False)# reserved field for fast access to item's main attributes
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
@@ -261,13 +276,13 @@ class Attribute(models.Model):
     class Meta:
         unique_together = ("title", "type")
 
-
     def __str__(self):
         return self.title
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class AttrTemplate defines default attributes for specific Item class
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class AttrTemplate(models.Model):
     required = models.BooleanField(default=False)
     classId = models.ForeignKey(ContentType)
@@ -279,9 +294,10 @@ class AttrTemplate(models.Model):
     class Meta:
         unique_together = ("classId", "attrId")
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class State defines current state for particular item instance
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class State(models.Model):
     title = models.CharField(max_length=128, unique=True)
     perm = models.ForeignKey(Group, related_name='state', null=True)
@@ -289,29 +305,32 @@ class State(models.Model):
     def __str__(self):
         return self.title
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Process defines process which is attached to particular Item
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Process(models.Model):
     title = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.title
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Action defines member of the process, which is attached to particular Item
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Action(models.Model):
     title = models.CharField(max_length=128, unique=True)
     papa = models.ForeignKey(Process, related_name='action')
-    child_proc = models.ForeignKey(Process, related_name='start_node', default=0) #handle to child process
+    child_proc = models.ForeignKey(Process, related_name='start_node', default=0)  # handle to child process
 
     def __str__(self):
         return self.title
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class ActionPath defines connection between two Actions in Process
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class ActionPath(models.Model):
     title = models.CharField(max_length=128, unique=True)
     source = models.ForeignKey(Action, related_name='act2path')
@@ -320,9 +339,10 @@ class ActionPath(models.Model):
     def __str__(self):
         return self.title
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Item defines basic primitive for application objects
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class ItemManager(models.Manager):
     def get_active_related(self):
         '''
@@ -338,8 +358,9 @@ class ItemManager(models.Manager):
         Example of usage:
         item = Item.active.get_active()
         '''
-        return self.filter(Q(Q(end_date__gt=timezone.now()) | Q(end_date__isnull=True)), start_date__lte=timezone.now())\
-            .exclude(Q(c2p__end_date__lte=timezone.now(), c2p__end_date__isnull=False) | Q(c2p__start_date__gt=now()), c2p__type='dependence')
+        return self.filter(Q(Q(end_date__gt=timezone.now()) | Q(end_date__isnull=True)), start_date__lte=timezone.now()) \
+            .exclude(Q(c2p__end_date__lte=timezone.now(), c2p__end_date__isnull=False) | Q(c2p__start_date__gt=now()),
+                     c2p__type='dependence')
 
 
 class Item(models.Model):
@@ -368,7 +389,7 @@ class Item(models.Model):
             ("read_item", "Can read item"),
         )
 
-    #def __init__(self, name):
+    # def __init__(self, name):
     #   title = name
 
     @staticmethod
@@ -406,7 +427,6 @@ class Item(models.Model):
 
         Item._activationRelated(parents, eDate, sDate)
 
-
     def activation(self, eDate, sDate=None):
         '''
             Change start_date and end_date of the item and depended items
@@ -420,8 +440,6 @@ class Item(models.Model):
         Item.objects.filter(pk=self.pk).update(**fields)
         self._activationRelated(self.pk, eDate, sDate)
 
-
-
     def reindexItem(self):
         '''
             Send reindex signal from item instance
@@ -432,10 +450,9 @@ class Item(models.Model):
         if self.__class__.__name__ is 'Item':
             raise ValueError('Should be subclass of Item')
 
-        #send signal to search frontend
+        # send signal to search frontend
         from core.signals import setAttValSignal
         setAttValSignal.send(self._meta.model, instance=self)
-
 
     def __str__(self):
         return self.getName()
@@ -462,7 +479,8 @@ class Item(models.Model):
         if not isinstance(child, list):
             child = list(child)
 
-        num = Item.objects.filter(~Q(c2p__parent_id=parent, c2p__type="hierarchy", p2c__child_id=parent), pk__in=child).count()
+        num = Item.objects.filter(~Q(c2p__parent_id=parent, c2p__type="hierarchy", p2c__child_id=parent),
+                                  pk__in=child).count()
 
         if num != len(child):
             raise ValueError('Wrong child count')
@@ -470,7 +488,7 @@ class Item(models.Model):
         bulkInsert = []
 
         for item in child:
-            title = [str(parent.pk),'hierarchy',str(item)]
+            title = [str(parent.pk), 'hierarchy', str(item)]
             bulkInsert.append(Relationship(title='-'.join(title), parent_id=parent.pk,
                                            child_id=item, type="hierarchy", create_user_id=1))
 
@@ -491,64 +509,64 @@ class Item(models.Model):
                 list = comp.getItemInstPermList(usr)    # get list of permissions for usr-comp pair
         '''
         group_list = []
-        is_commando = getattr(user, 'is_commando', False) #Anonymous User has not attribute 'is_commando'
+        is_commando = getattr(user, 'is_commando', False)  # Anonymous User has not attribute 'is_commando'
 
         if user.is_superuser or is_commando or self.create_user == user:
             group_list.append('Owner')
             group_list.append('Admin')
             group_list.append('Staff')
         else:
-            #whether there is a User Cabinet
-            cabinet = getattr(user, 'cabinet', False) #Anonymous User has not attribute 'cabinet'
+            # whether there is a User Cabinet
+            cabinet = getattr(user, 'cabinet', False)  # Anonymous User has not attribute 'cabinet'
             if cabinet:
-                #get Cabinet ID
+                # get Cabinet ID
                 cab_pk = user.cabinet.filter(user=user).values('pk')
-                #check is Cabinet belongs to any Organization
+                # check is Cabinet belongs to any Organization
                 if Item.objects.filter(c2p__parent__c2p__parent__organization__isnull=False, pk=cab_pk).exists():
-                    #get Organization ID
+                    # get Organization ID
                     org_lst = Item.objects.filter(p2c__child__p2c__child__p2c__child=cab_pk).values('pk')
 
                     for org_pk in org_lst:
                         # if object SELF belongs to the same Company or it is Company itself or belongs to User's TPP or to TPP's parent TPP...
                         if org_pk['pk'] == self.pk or \
-                          Item.objects.filter(c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
-                          Item.objects.filter(c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
-                          Item.objects.filter(c2p__parent__c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists():
+                                Item.objects.filter(c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                                Item.objects.filter(c2p__parent__c2p__parent=org_pk['pk'], pk=self.pk).exists() or \
+                                Item.objects.filter(c2p__parent__c2p__parent__c2p__parent=org_pk['pk'],
+                                                    pk=self.pk).exists():
 
                             rs = Relationship.objects.filter(parent__c2p__parent__c2p__parent=org_pk['pk'], \
-                                                                child=cab_pk, type='relation')
+                                                             child=cab_pk, type='relation')
                             for r in rs:
                                 if r.is_admin:
                                     group_list.append('Admin')
                                     group_list.append('Staff')
                                 else:
                                     if self.status:
-                                        if self.status.perm: # is there permissions group for current object's state?
+                                        if self.status.perm:  # is there permissions group for current object's state?
                                             group_list.append(self.status.perm.name)
-                                        else: # no permissions group for current state, attach Staff group
+                                        else:  # no permissions group for current state, attach Staff group
                                             group_list.append('Staff')
 
-                        else: #User and SELF belongs to different Organization without any correlation
+                        else:  # User and SELF belongs to different Organization without any correlation
                             pass
 
-                else: # Cabinet still do not attach to any Organization
+                else:  # Cabinet still do not attach to any Organization
                     pass
-            else: # if User without Cabinet (before first login or unregistered)
+            else:  # if User without Cabinet (before first login or unregistered)
                 pass
 
         # get all permissions from all related groups for current type of item
-        group_list = list(set(group_list)) # remove duplicated keys in groups list
+        group_list = list(set(group_list))  # remove duplicated keys in groups list
         perm_list = Group.objects.filter(name__in=group_list).values_list('permissions__codename', flat=True)
 
         perm_list = list(perm_list)
 
         # attach user's private permissions
-        #perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
+        # perm_list += list(user.user_permissions.filter(codename__contains=obj_type).values_list('codename', flat=True))
         perm_list += list(user.user_permissions.all().values_list('codename', flat=True))
-        perm_list = list(set(perm_list)) # remove duplicated keys in permissions list
+        perm_list = list(set(perm_list))  # remove duplicated keys in permissions list
 
         return perm_list
-
 
     @staticmethod
     def getItemsAttributesValues(attr, items, fullAttrVal=False):
@@ -579,13 +597,9 @@ class Item(models.Model):
         if not isinstance(items, tuple):
             items = tuple(items)
 
-
-
-
-
         valuesObj = Value.objects.filter(Q(end_date__gt=now()) | Q(end_date__isnull=True),
                                          Q(start_date__lte=now()) | Q(start_date__isnull=True),
-                                         attr__title__in=attr, item__in=items)\
+                                         attr__title__in=attr, item__in=items) \
             .select_related('attr__title', 'item__create_date', 'item__title')
 
         valuesAttribute = {}
@@ -594,7 +608,7 @@ class Item(models.Model):
             if items[key] in valuesAttribute:
                 continue
 
-            #if item[key] not int, skip
+            # if item[key] not int, skip
             try:
                 valuesAttribute[int(items[key])] = key
             except ValueError:
@@ -615,14 +629,14 @@ class Item(models.Model):
                 valuesAttribute[itemPk] = {}
 
                 if fullAttrVal:
-                     valuesAttribute[itemPk]['CREATE_DATE'] = [{
+                    valuesAttribute[itemPk]['CREATE_DATE'] = [{
                         'start_date': None,
                         'end_date': None,
                         'title': valuesObj.item.create_date
                     }]
 
                 else:
-                     valuesAttribute[itemPk]['CREATE_DATE'] = [valuesObj.item.create_date]
+                    valuesAttribute[itemPk]['CREATE_DATE'] = [valuesObj.item.create_date]
 
             if valuesObj.attr.title not in valuesAttribute[itemPk]:
                 valuesAttribute[itemPk][valuesObj.attr.title] = []
@@ -654,7 +668,7 @@ class Item(models.Model):
 
         values = Value.objects.filter(Q(end_date__gt=ctime) | Q(end_date__isnull=True),
                                       Q(start_date__lte=ctime) | Q(start_date__isnull=True),
-                                      attr__title__in=attr, item=self.id)\
+                                      attr__title__in=attr, item=self.id) \
             .select_related('attr__title', 'item__create_date', 'item__title')
 
         valuesAttribute = {}
@@ -670,7 +684,6 @@ class Item(models.Model):
                     valuesAttribute['CREATE_DATE'] = [attrValDict]
                 else:
                     valuesAttribute['CREATE_DATE'] = [valuesObj.item.create_date]
-
 
             if valuesObj.attr.title not in valuesAttribute:
                 valuesAttribute[valuesObj.attr.title] = []
@@ -688,7 +701,7 @@ class Item(models.Model):
         if len(valuesAttribute) == 0:
             return []
 
-        if(len(attr) > 1):
+        if (len(attr) > 1):
             return valuesAttribute
         else:
             return valuesAttribute[attr[0]]
@@ -701,12 +714,12 @@ class Item(models.Model):
             str string - unicode string to convert to slug
             int pk - item pk to append to the slug
         '''
-        #nonDig = ''.join([i for i in string if not i.isdigit()])
+        # nonDig = ''.join([i for i in string if not i.isdigit()])
 
-        #slug = slugify(nonDig)
+        # slug = slugify(nonDig)
         slug = ''
         if slug == '':
-            #TODO: Artur remove that hack
+            # TODO: Artur remove that hack
             if get_language() == 'ru' or True:
                 string = unidecode(string)
             else:
@@ -756,12 +769,10 @@ class Item(models.Model):
         if len(existsAttributes) != len(attrWithValues):
             raise ValueError("Attribute does not exists")
 
-
         itemExistsAttribute = {}
 
-        #Select existing values for given attributes
+        # Select existing values for given attributes
         for value in Value.objects.filter(item=self, attr__in=existsAttributes).select_related('attr'):
-
             itemExistsAttribute[value.attr.title] = {
                 value.pk: value
             }
@@ -819,9 +830,10 @@ class Item(models.Model):
             else:
                 return self._meta.model.hierarchy.getChild(parent).exclude(pk=self.pk)
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Relationship defines relationships between two Items
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Relationship(models.Model):
     title = models.CharField(max_length=128, unique=True)
     parent = models.ForeignKey(Item, related_name='p2c')
@@ -868,7 +880,7 @@ class Relationship(models.Model):
         if not isinstance(child, Item):
             raise ValueError('Child should be an Item instance')
 
-        #if parent.__class__.__name__ == 'Item' or child.__class__.__name__ == 'Item':
+        # if parent.__class__.__name__ == 'Item' or child.__class__.__name__ == 'Item':
         #    raise ValueError('Child and Parent should be subclass of Item')
 
         params = {
@@ -881,9 +893,9 @@ class Relationship(models.Model):
         params.update(additionParams)
 
         if type == 'dependence' and ('end_date' not in params or 'start_date' not in params):
-            #set activation date for dependence relation
+            # set activation date for dependence relation
 
-            try:  #Getting parent start date and end date
+            try:  # Getting parent start date and end date
                 parentRel = Relationship.objects.get(child=parent.pk, type='dependence')
                 parentRelEnd = parentRel.end_date
                 parendStart = parentRel.start_date
@@ -891,7 +903,7 @@ class Relationship(models.Model):
                 parentRelEnd = None
                 parendStart = None
 
-            if 'end_date' not in params: #Getting proper end date
+            if 'end_date' not in params:  # Getting proper end date
                 if not parent.end_date and parentRelEnd:
                     params['end_date'] = parentRelEnd
                 elif not parentRelEnd and parent.end_date:
@@ -903,7 +915,7 @@ class Relationship(models.Model):
                     else:
                         params['end_date'] = parentRelEnd
 
-            if 'start_date' not in params: #Getting proper start date
+            if 'start_date' not in params:  # Getting proper start date
 
                 if not parendStart and parent.start_date:
                     params['start_date'] = parent.start_date
@@ -917,24 +929,25 @@ class Relationship(models.Model):
 
         Relationship.objects.create(**params)
 
-#----------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------
 #             Class Value defines value for particular Attribute-Item relationship
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 class Value(models.Model):
     title = models.TextField()
     attr = models.ForeignKey(Attribute, related_name='attr2value')
     item = models.ForeignKey(Item, related_name='item2value')
-    #The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
-    #sha1_code = models.CharField(max_length=40, blank=True)
+    # The length of SHA-1 code is always 20x2 (2 bytes for symbol in Unicode)
+    # sha1_code = models.CharField(max_length=40, blank=True)
 
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     create_user = models.ForeignKey(User, related_name='creator')
 
-    #class Meta:
-        #unique_together = ("sha1_code", "attr", "item")
-        #db_tablespace = 'TPP_CORE_VALUES'
+    # class Meta:
+    # unique_together = ("sha1_code", "attr", "item")
+    # db_tablespace = 'TPP_CORE_VALUES'
 
     def __str__(self):
         return self.title
@@ -983,15 +996,12 @@ class Value(models.Model):
         return True
 
 
-
-
-#----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 #             Signal receivers
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 @receiver(pre_delete, sender=Item)
 def itemPreDelete(instance, **kwargs):
-
     Item.hierarchy.deleteTree(instance.pk)
 
     dependedChilds = Item.objects.filter(c2p__parent_id=instance.pk, c2p__type="dependence")
@@ -999,10 +1009,8 @@ def itemPreDelete(instance, **kwargs):
     for inst in dependedChilds:
         inst.delete()
 
-
     Relationship.objects.filter(Q(child=instance.pk) | Q(parent=instance.pk)).delete()
     Value.objects.filter(item=instance.pk).delete()
-
 
 
 @receiver(post_delete, sender=Item)
@@ -1010,16 +1018,20 @@ def itemPostDelete(instance, **kwargs):
     if instance.community:
         Group.objects.get(pk=instance.community.pk).delete()
 
+
 '''
 @receiver(pre_save, sender=Value)
 def valueSaveHashCode(instance, **kwargs):
     instance.sha1_code = createHash(instance.title)
 '''
 
+
 @receiver(pre_save, sender=Relationship)
 def generateTitleField(instance, **kwargs):
     assert instance.parent.pk != instance.child.pk, 'You cannot create an relationship for class instance with itself!'
-    instance.title = 'RS_' + str(instance.type).upper() + '_PARENT:' + str(instance.parent.pk) + '_CHILD:'+ str(instance.child.pk)
+    instance.title = 'RS_' + str(instance.type).upper() + '_PARENT:' + str(instance.parent.pk) + '_CHILD:' + str(
+        instance.child.pk)
+
 
 @receiver(pre_save, sender=Slot)
 def slotUpdateAttr(instance, **kwargs):
@@ -1036,7 +1048,7 @@ def slotUpdateAttr(instance, **kwargs):
 
                 valueFileds = {}
 
-                #get value for all languages
+                # get value for all languages
                 for lang in settings.LANGUAGES:
                     valueFileds.update({key + '_' + lang[0]: getattr(instance, key + '_' + lang[0], '')})
 

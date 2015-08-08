@@ -4,51 +4,47 @@
 {% load inclusionTags %}
 <div class="container">
     <div class="companies">
-            {% include "Innov/popupFilter.html" %}
-           {% include "main/paginator.html" %}
-          {% include "main/local_menu_script.html" %}
-           <ul class="tender-list" id="afisha-list">
-                {% for innov in object_list %}
-                    <li>
-                    {% setContextMenu innov %}
-
-
-                        <div class="title">
-                        {% if innov.country.flag %}
-                             <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.text }}"></i>
-                        {% elif innov.organization.flag %}
-                           <img src="{{ MEDIA_URL }}small/{{ innov.organization.flag }}" class="flag" title="{{ innov.organization.title }}" alt="{{ innov.organization.title }}"/>
+        {% include "Innov/popupFilter.html" %}
+        {% include "main/paginator.html" %}
+        {% include "main/local_menu_script.html" %}
+        <ul class="tender-list" id="afisha-list">
+            {% for innov in object_list %}
+                <li>
+                {% setContextMenu innov %}
+                    <div class="title">
+                    {% if innovation_project.country %}
+                        <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.name }}"></i>
+                    {% elif innov.organization.flag %}
+                        <img src="{{ MEDIA_URL }}small/{{ innov.organization.flag }}" class="flag" title="{{ innov.organization.name }}" alt="{{ innov.organization.name }}"/>
+                    {% else %}
+                        <i class="flag sprite {{ innov.created_by.profile.country.flag }}" title="{{ innov.created_by.profile.country.name }}"></i>
+                    {% endif %}
+                        <font class="name">{% trans 'Publication date' %}: {{ innov.created_at|date:'d M Y' }}</font>
+                    </div>
+                    <h2><a href="{% url "innov:detail" innov.slug %}">{{ innov.name|truncatewords:14 }}</a></h2>
+                    <div class="desc">
+                        {% trans 'Project cost' %}: <b class="num">{{ innov.currency|getSymbol }} {{ innov.cost|formatPrice }}</b>
+                    </div>
+                    <div class="line">
+                        {% if innov.branches.count > 0 %}
+                            {% for branch in innov.branches.all %}
+                                <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch.name }}</font></span>
+                            {% endfor %}
                         {% endif %}
-                            <font class="name">{% trans 'Publication date' %}: {{ innov.obj_create_date|date:'d M Y' }}</font>
-                        </div>
-                        <h2><a href="{% url "innov:detail" innov.slug %}">{{ innov.title|truncatewords:14 }}</a></h2>
-                        <div class="desc">
-                            {% trans 'Project cost' %}: <b class="num">{{ innov.currency|getSymbol }} {{ innov.price|formatPrice }}</b>
-                        </div>
-                        <div class="line">
-                            {% if innov.branch.count != 0  %}
-                                {% for branch in innov.branch %}
-                        	        <span class="clumn">{%  trans "Branch" %}: <font class="gray">{{ branch.text }}</font></span>
-                                {% endfor %}
+                        <span class="clumn">{% trans 'Organizer' %}:
+                            {% if innov.organization.name %}
+                                <a href="{{ innov.organization.detail_url }}">  {{ innov.organization.name }} </a>
+                            {% elif innov.created_by.profile.full_name %}
+                               <a href=""> {{ innov.created_by.profile.full_name }}</a>
                             {% endif %}
-                        	<span class="clumn">{% trans 'Organizer' %}:
-
-                                    {% if  innov.cabinet.text  %}
-                                        <a href=""> {{ innov.cabinet.text }}</a>
-
-                                    {% elif innov.organization.title %}
-                                       <a href="{% url innov.organization.url innov.organization.slug %}">  {{ innov.organization.title }} </a>
-                                    {% endif %}
-
-                            </span>
-                        </div>
-                        <a href="{% url "innov:detail" innov.slug %}" class="linkmore">{% trans 'More' %}...</a>
-                    </li>
-                {% empty %}
-                    <div class="no-results">{% trans "No results found" %}</div>
-                {% endfor %}
-
-            </ul>
-           {% include "main/paginator.html" %}
+                        </span>
+                    </div>
+                    <a href="{% url "innov:detail" innov.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                </li>
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
+        </ul>
+        {% include "main/paginator.html" %}
     </div>
 </div>

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from haystack.query import SearchQuerySet
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -17,21 +16,21 @@ import pytz
 from django.conf import settings
 
 from appl import func
-from appl.models import News, Organization, NewsCategories, Gallery, Country
+from appl.models import Organization, Gallery, Country, NewsCategories
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import News
 from core.models import Group
-from tppcenter.cbv import ItemDetail, ItemsList
-from tppcenter.forms import ItemForm ,BasePhotoGallery
+from tppcenter.forms import ItemForm, BasePhotoGallery
 from core.tasks import addNewsAttrubute
 
 
-class get_news_list(ItemsList):
-
-    #pagination url
+class NewsList(ItemsList):
+    # pagination url
     url_paginator = "news:paginator"
     url_my_paginator = "news:my_main_paginator"
     addUrl = 'news:add'
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -40,7 +39,7 @@ class get_news_list(ItemsList):
     current_section = _("News")
 
 
-    #allowed filter list
+    # allowed filter list
     filterList = ['tpp', 'country', 'company']
 
     model = News
@@ -58,7 +57,7 @@ class get_news_list(ItemsList):
         return False
 
     def get_context_data(self, **kwargs):
-        context = super(get_news_list, self).get_context_data(**kwargs)
+        context = super(NewsList, self).get_context_data(**kwargs)
 
         context['redactor'] = False
 
@@ -68,57 +67,54 @@ class get_news_list(ItemsList):
         return context
 
     def get_queryset(self):
-        sqs = super(get_news_list, self).get_queryset()
+        queryset = super(NewsList, self).get_queryset().filter(is_tv=False)
 
-        category = self.kwargs.get('category', None)
+        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+            current_org = self._current_organization
 
-        if category:
-            sqs = sqs.filter(categories=category)
+            if current_org is not None:
+                queryset = queryset.filter(organization_id=current_org)
+            else:
+                queryset = queryset.filter(created_by=self.request.user, organization__is_null=True)
 
-        return sqs
+        return queryset.select_related('country').prefetch_related('organization', 'organization__countries')
 
-class get_news_detail(ItemDetail):
 
+class NewsDetail(ItemDetail):
     model = News
     template_name = 'News/detailContent.html'
 
     current_section = _("News")
     addUrl = 'news:add'
 
-    def _get_similar_news(self):
-        categories = [category.pk for category in self.object.categories]
-        return func.getActiveSQS().models(News).filter(categories__in=categories)[:4]
+    def get_queryset(self):
+        return super().get_queryset().filter(is_tv=False).prefetch_related('galleries', 'galleries__gallery_items')
 
-    def _get_categories_for_object(self):
-        return SearchQuerySet().filter(django_id__in=self.object.categories)
+    def _get_similar_news(self):
+        return News.objects.filter(is_tv=False, categories__in=self.object.categories.all())[:4]
 
     def get_context_data(self, **kwargs):
-        context = super(get_news_detail, self).get_context_data(**kwargs)
-        context[self.context_object_name].__setattr__('categories', self._get_categories_for_object())
-
-        context.update({
-            'photos': self._get_gallery(),
-            'similarNews': self._get_similar_news()
-        })
+        context = super(NewsDetail, self).get_context_data(**kwargs)
+        context['similarNews'] = self._get_similar_news()
 
         return context
 
 
 @login_required(login_url='/login/')
-def newsForm(request, action, item_id=None):
+def news_form(request, action, item_id=None):
     if item_id:
-       if not News.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+        if not News.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     newsPage = ''
     current_section = _("News")
 
     if action == 'delete':
-       newsPage = deleteNews(request, item_id)
+        newsPage = delete_news(request, item_id)
     elif action == 'add':
-        newsPage = addNews(request)
+        newsPage = add_news(request)
     elif action == 'update':
-        newsPage = updateNew(request, item_id)
+        newsPage = update_news(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
         return newsPage
@@ -131,7 +127,7 @@ def newsForm(request, action, item_id=None):
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
 
-def addNews(request):
+def add_news(request):
     if 'Redactor' in request.user.groups.values_list('name', flat=True):
         redactor = True
     else:
@@ -144,13 +140,12 @@ def addNews(request):
         perm_list = item.getItemInstPermList(request.user)
 
         if 'add_news' not in perm_list:
-             return func.permissionDenied()
+            return func.permissionDenied()
     else:
         perm = request.user.get_all_permissions()
 
         if not {'appl.add_news'}.issubset(perm):
             return func.permissionDenied()
-
 
     form = None
 
@@ -166,7 +161,6 @@ def addNews(request):
         values.update(request.POST)
         values.update(request.FILES)
 
-
         form = ItemForm('News', values=values)
         form.clean()
 
@@ -177,19 +171,17 @@ def addNews(request):
 
             return HttpResponseRedirect(reverse('news:main'))
 
-
-
     template = loader.get_template('News/addForm.html')
 
-    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries, 'redactor': redactor})
+    context = RequestContext(request,
+                             {'form': form, 'categories': categories, 'countries': countries, 'redactor': redactor})
 
     newsPage = template.render(context)
-
 
     return newsPage
 
 
-def updateNew(request, item_id):
+def update_news(request, item_id):
     if 'Redactor' in request.user.groups.values_list('name', flat=True):
         redactor = True
     else:
@@ -203,10 +195,11 @@ def updateNew(request, item_id):
             raise PermissionError('permission denied')
 
     except Exception:
-         perm = request.user.get_all_permissions()
+        perm = request.user.get_all_permissions()
 
-         if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name', flat=True):
-             return func.permissionDenied()
+        if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name',
+                                                                                                        flat=True):
+            return func.permissionDenied()
 
     create_date = News.objects.get(pk=item_id).create_date
 
@@ -227,8 +220,7 @@ def updateNew(request, item_id):
     photos = ""
 
     if gallery.queryset:
-       photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
+        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
 
     form = ItemForm('News', id=item_id)
 
@@ -252,8 +244,6 @@ def updateNew(request, item_id):
 
             return HttpResponseRedirect(reverse('news:main'))
 
-
-
     template = loader.get_template('News/addForm.html')
 
     templateParams = {
@@ -273,7 +263,8 @@ def updateNew(request, item_id):
 
     return newsPage
 
-def deleteNews(request, item_id):
+
+def delete_news(request, item_id):
     if not 'Redactor' in request.user.groups.values_list('name', flat=True):
 
         item = Organization.objects.get(p2c__child=item_id)
@@ -288,12 +279,7 @@ def deleteNews(request, item_id):
     instance.end_date = now()
     instance.reindexItem()
 
-
-
-
     return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
-
-
 
 
 class CustomFeedGenerator(Rss201rev2Feed):
@@ -302,7 +288,6 @@ class CustomFeedGenerator(Rss201rev2Feed):
         return {"version": self._version,
                 'xmlns:media': "http://search.yahoo.com/mrss/",
                 "xmlns:yandex": "http://news.yandex.ru"}
-
 
     def add_root_elements(self, handler):
         handler.addQuickElement("title", self.feed['title'])
@@ -314,26 +299,17 @@ class CustomFeedGenerator(Rss201rev2Feed):
         handler.addQuickElement("link", 'http://www.tppcenter.com')
         handler.endElement('image')
 
-
         return False
 
-
-
-
     def add_item_elements(self, handler, item):
-            super(CustomFeedGenerator, self).add_item_elements(handler, item)
-            # Добавление кастомного тега в RSS-ленту
-            handler.addQuickElement("yandex:full-text", item["content"])
-            if item.get('video_url', False):
-                handler.addQuickElement("enclosure", "", {'type': "video/x-ms-asf",'url':'http://tppcenter.com' +  item['video_url']})
-            if item.get('image'):
-
-                handler.addQuickElement("enclosure", "", {'type': "image/png", 'url':item['image']})
-
-
-
-
-
+        super(CustomFeedGenerator, self).add_item_elements(handler, item)
+        # Добавление кастомного тега в RSS-ленту
+        handler.addQuickElement("yandex:full-text", item["content"])
+        if item.get('video_url', False):
+            handler.addQuickElement("enclosure", "",
+                                    {'type': "video/x-ms-asf", 'url': 'http://tppcenter.com' + item['video_url']})
+        if item.get('image'):
+            handler.addQuickElement("enclosure", "", {'type': "image/png", 'url': item['image']})
 
 
 class NewsFeed(Feed):
@@ -346,16 +322,15 @@ class NewsFeed(Feed):
 
     feed_type = CustomFeedGenerator
 
-
     def items(self):
         group = Group.objects.get(name='Redactor')
         users = group.user_set.all()
-        return News.active.get_active().filter(create_user__in=users, c2p__parent__in=NewsCategories.objects.all()).order_by("-create_date")[:20]
-
+        return News.active.get_active() \
+                   .filter(create_user__in=users, c2p__parent__in=NewsCategories.objects.all()) \
+                   .order_by("-create_date")[:20]
 
     def item_title(self, item):
         return item.getName()
-
 
     def item_description(self, item):
         pass
@@ -363,11 +338,9 @@ class NewsFeed(Feed):
     def item_guid(self, obj):
         pass
 
-
     def item_link(self, item):
         slug = item.getAttributeValues('SLUG')[0]
         return reverse('news:detail', args=[slug])
-
 
     def item_pubdate(self, item):
         moscow = timezone("Europe/Moscow")
@@ -379,13 +352,9 @@ class NewsFeed(Feed):
         return mos_dt
 
     def item_extra_kwargs(self, item):
-        video_url = reverse('news:detail', args=[item.getAttributeValues('SLUG')[0]]) if item.getAttributeValues('YOUTUBE_CODE') else False
-        image = (settings.MEDIA_URL + 'original/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues('IMAGE') else False
+        video_url = reverse('news:detail', args=[item.getAttributeValues('SLUG')[0]]) if item.getAttributeValues(
+            'YOUTUBE_CODE') else False
+        image = (settings.MEDIA_URL + 'original/' + item.getAttributeValues('IMAGE')[0]) if item.getAttributeValues(
+            'IMAGE') else False
 
         return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
-
-
-
-
-
-

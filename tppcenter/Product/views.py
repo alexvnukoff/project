@@ -12,19 +12,20 @@ from django.utils.timezone import now
 from haystack.query import SearchQuerySet
 from appl import func
 from appl.models import Product, Gallery, AdditionalPages, Company, Category, Organization
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import B2BProduct
+from centerpokupok.models import B2CProduct
 from core.models import Item, Dictionary
 from core.tasks import addProductAttrubute
-from tppcenter.cbv import ItemsList, ItemDetail
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
-class get_products_list(ItemsList):
-
-    #pagination url
+class B2BProductList(ItemsList):
+    # Pagination url
     url_paginator = "products:paginator"
     url_my_paginator = "products:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     scripts = []
     styles = []
 
@@ -33,14 +34,13 @@ class get_products_list(ItemsList):
     current_section = _("Products")
     addUrl = 'products:add'
 
-    #allowed filter list
+    # Allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch']
 
-    model = Product
+    model = B2BProduct
 
     def get_context_data(self, **kwargs):
-        context = super(get_products_list, self).get_context_data(**kwargs)
-
+        context = super(B2BProductList, self).get_context_data(**kwargs)
         context['update_url'] = 'update'
 
         return context
@@ -52,16 +52,24 @@ class get_products_list(ItemsList):
         self.template_name = 'Products/index.html'
 
     def get_queryset(self):
-        sqs = super(get_products_list, self).get_queryset()
+        queryset = super(B2BProductList, self).get_queryset()
 
-        return sqs.exclude(sites=Site.objects.get(name="centerpokupok").pk)
+        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+            current_org = self._current_organization
 
-class get_products_b2c_list(ItemsList):
+            if current_org is not None:
+                queryset = queryset.filter(company_id=current_org)
+            else:
+                queryset = queryset.none()
 
-    #pagination url
+        return queryset.prefetch_related('company__countries')
+
+
+class B2CProductList(ItemsList):
+    # pagination url
     url_my_paginator = "products:my_main_b2c_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     scripts = []
     styles = []
 
@@ -70,14 +78,13 @@ class get_products_b2c_list(ItemsList):
     current_section = _("Products B2C")
     addUrl = 'products:addB2C'
 
-    #allowed filter list
+    # allowed filter list
     filterList = ['tpp', 'country', 'company', 'branch']
 
-    model = Product
+    model = B2CProduct
 
     def get_context_data(self, **kwargs):
-        context = super(get_products_b2c_list, self).get_context_data(**kwargs)
-
+        context = super(B2CProductList, self).get_context_data(**kwargs)
         context['update_url'] = 'updateB2C'
 
         return context
@@ -89,35 +96,35 @@ class get_products_b2c_list(ItemsList):
         self.template_name = 'Products/index.html'
 
     def get_queryset(self):
-        sqs = super(get_products_b2c_list, self).get_queryset()
+        queryset = super(B2CProductList, self).get_queryset()
 
-        return sqs.filter(sites=Site.objects.get(name="centerpokupok").pk)
+        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = queryset.filter(company_id=current_org)
+            else:
+                queryset = queryset.none()
+
+        return queryset.prefetch_related('company__countries')
 
 
-class get_product_detail(ItemDetail):
-
-    model = Product
+class ProductDetail(ItemDetail):
+    model = B2BProduct
     template_name = 'Products/detailContent.html'
 
     current_section = _("Products")
     addUrl = 'products:add'
 
-    def get_context_data(self, **kwargs):
-        context = super(get_product_detail, self).get_context_data(**kwargs)
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('company', 'company__countries')
 
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
 
 @login_required(login_url='/login/')
 def productForm(request, action, item_id=None):
     if item_id:
         if not Product.active.get_active().filter(pk=item_id).exists():
             return HttpResponseNotFound()
-
 
     current_section = _("Products")
     productsPage = ''
@@ -136,14 +143,13 @@ def productForm(request, action, item_id=None):
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
         return productsPage
 
-    templateParams = {
+    template_params = {
         'formContent': productsPage,
         'current_section': current_section,
         'item_id': item_id
     }
 
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
+    return render_to_response('forms.html', template_params, context_instance=RequestContext(request))
 
 
 def addProductsB2C(request):
@@ -152,18 +158,17 @@ def addProductsB2C(request):
     categorySite = Site.objects.get(name="centerpokupok").pk
 
     if not request.session.get('current_company', False):
-         return func.emptyCompany()
+        return func.emptyCompany()
 
     try:
         item = Company.objects.get(pk=current_company)
     except ObjectDoesNotExist:
         return func.emptyCompany()
 
-
     perm_list = item.getItemInstPermList(request.user)
 
     if 'add_product' not in perm_list:
-         return func.permissionDenied()
+        return func.permissionDenied()
 
     form = None
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
@@ -186,7 +191,7 @@ def addProductsB2C(request):
         pages = Page(request.POST, request.FILES, prefix="pages")
 
         if getattr(pages, 'new_objects', False):
-           pages = pages.new_objects
+            pages = pages.new_objects
 
         values = {}
         values.update(request.POST)
@@ -209,7 +214,6 @@ def addProductsB2C(request):
             choosen_category = Item.getItemsAttributesValues('NAME', cats)
 
         if gallery.is_valid() and form.is_valid():
-
             func.notify("item_creating", 'notification', user=request.user)
 
             site = Site.objects.get(name="centerpokupok")
@@ -218,7 +222,6 @@ def addProductsB2C(request):
                                       current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
-
 
     template = loader.get_template('Products/addFormB2C.html')
 
@@ -242,20 +245,18 @@ def addProducts(request):
 
     categorySite = Site.objects.get(name="tppcenter").pk
 
-
     if not request.session.get('current_company', False):
-         return func.emptyCompany()
+        return func.emptyCompany()
 
     try:
         item = Company.objects.get(pk=current_company)
     except ObjectDoesNotExist:
         return func.emptyCompany()
 
-
     perm_list = item.getItemInstPermList(request.user)
 
     if 'add_product' not in perm_list:
-         return func.permissionDenied()
+        return func.permissionDenied()
 
     form = None
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
@@ -278,7 +279,7 @@ def addProducts(request):
         pages = Page(request.POST, request.FILES, prefix="pages")
 
         if getattr(pages, 'new_objects', False):
-           pages = pages.new_objects
+            pages = pages.new_objects
 
         values = {}
         values.update(request.POST)
@@ -301,14 +302,12 @@ def addProducts(request):
             choosen_category = Item.getItemsAttributesValues('NAME', cats)
 
         if gallery.is_valid() and form.is_valid():
-
             func.notify("item_creating", 'notification', user=request.user)
 
             addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
                                       current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
-
 
     template = loader.get_template('Products/addForm.html')
 
@@ -328,12 +327,10 @@ def addProducts(request):
 
 
 def updateProduct(request, item_id):
-
     try:
         item = Company.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         return func.emptyCompany()
-
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -348,8 +345,6 @@ def updateProduct(request, item_id):
 
     categories = Item.getItemsAttributesValues('NAME', categories_ids)
 
-
-
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
 
@@ -357,7 +352,6 @@ def updateProduct(request, item_id):
     currency_slots = currency.getSlotsList()
 
     product = Product.objects.get(pk=item_id)
-
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
@@ -377,19 +371,13 @@ def updateProduct(request, item_id):
     coupon_date = Product.objects.get(pk=item_id).getAttributeValues("COUPON_DISCOUNT", fullAttrVal=True)
     coupon_date = coupon_date[0] if len(coupon_date) > 0 else ""
 
-
     form = ItemForm('Product', id=item_id)
 
     if request.POST:
 
-
-
-
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-
 
         values = {}
         values.update(request.POST)
@@ -409,7 +397,6 @@ def updateProduct(request, item_id):
                                       lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
-
 
     template = loader.get_template('Products/addForm.html')
 
@@ -434,12 +421,10 @@ def updateProduct(request, item_id):
 
 
 def updateProductB2C(request, item_id):
-
     try:
         item = Company.objects.get(p2c__child=item_id)
     except ObjectDoesNotExist:
         return func.emptyCompany()
-
 
     perm_list = item.getItemInstPermList(request.user)
 
@@ -454,8 +439,6 @@ def updateProductB2C(request, item_id):
 
     categories = Item.getItemsAttributesValues('NAME', categories_ids)
 
-
-
     measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
     measurement_slots = measurement.getSlotsList()
 
@@ -463,7 +446,6 @@ def updateProductB2C(request, item_id):
     currency_slots = currency.getSlotsList()
 
     product = Product.objects.get(pk=item_id)
-
 
     Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
     pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
@@ -483,17 +465,13 @@ def updateProductB2C(request, item_id):
     coupon_date = Product.objects.get(pk=item_id).getAttributeValues("COUPON_DISCOUNT", fullAttrVal=True)
     coupon_date = coupon_date[0] if len(coupon_date) > 0 else ""
 
-
     form = ItemForm('Product', id=item_id)
 
     if request.POST:
 
-
         user = request.user
         Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
         gallery = Photo(request.POST, request.FILES)
-
-
 
         values = {}
         values.update(request.POST)
@@ -513,7 +491,6 @@ def updateProductB2C(request, item_id):
                                       lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
-
 
     template = loader.get_template('Products/addFormB2C.html')
 
@@ -537,7 +514,6 @@ def updateProductB2C(request, item_id):
     return productsPage
 
 
-
 def deleteProduct(request, item_id):
     item = Organization.objects.get(p2c__child=item_id)
 
@@ -551,13 +527,10 @@ def deleteProduct(request, item_id):
     instance.end_date = now()
     instance.reindexItem()
 
-
-
-
     return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
-def categoryList(request, site):
 
+def categoryList(request, site):
     parent = request.GET.get('parent', 0)
 
     try:
@@ -582,8 +555,6 @@ def categoryList(request, site):
         obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, sites=site).count()
         new_obj_list.append(obj)
 
-
-
     templateParams = {
         'object_list': new_obj_list[::-1],
         'bread_crumbs': bread_crumbs
@@ -593,7 +564,6 @@ def categoryList(request, site):
 
 
 def _get_parents(parentList):
-
     if not isinstance(parentList, list):
         obj = parentList[0]
         parentList = [obj]

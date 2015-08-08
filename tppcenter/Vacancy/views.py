@@ -1,5 +1,3 @@
-import logging
-
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -10,20 +8,18 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.utils.translation import trans_real
 from haystack.backends import SQ
-from haystack.query import SearchQuerySet
 
 from appl import func
-from appl.models import Tpp, Organization, Company, Department, \
-    Vacancy, Requirement, Resume, Cabinet
+from appl.models import Tpp, Organization, Company
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import Vacancy, Department
 from core.models import Item, Relationship, Dictionary
 from core.tasks import addNewRequirement
-from tppcenter.cbv import ItemDetail, ItemsList
+from jobs.models import Requirement, Resume
 from tppcenter.forms import ItemForm
 
-logger = logging.getLogger('django.request')
 
-
-class get_vacancy_list(ItemsList):
+class RequirementList(ItemsList):
 
     #pagination url
     url_paginator = "vacancy:paginator"
@@ -49,30 +45,11 @@ class get_vacancy_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Vacancy/index.html'
 
-    def _get_organization_for_objects(self, object_list):
-
-        new_object_list = []
-
-        for obj in object_list:
-
-            organization = SearchQuerySet().models(Company, Tpp).filter(django_id=obj.organization)
-
-            if organization.count() == 1:
-                organization = organization[0]
-
-                if organization.model == Company:
-                    organization.__setattr__('url', 'companies:detail')
-                else:
-                    organization.__setattr__('url', 'tpp:detail')
-
-            obj.__setattr__('organization', organization)
-
-            new_object_list.append(obj)
-
-        return new_object_list
+    def get_queryset(self):
+        return super().get_queryset().select_related('country')
 
 
-class get_vacancy_detail(ItemDetail):
+class RequirementDetail(ItemDetail):
 
     model = Requirement
     template_name = 'Vacancy/detailContent.html'
@@ -80,33 +57,17 @@ class get_vacancy_detail(ItemDetail):
     current_section = _("Vacancy")
     addUrl = 'vacancy:add'
 
-    def _get_organization_for_object(self):
-
-        organization = SearchQuerySet().models(Tpp, Company).filter(django_id=self.object.organization)
-
-        if organization.count() != 1:
-            return organization
-
-        organization = organization[0]
-
-        if organization.model == Company:
-            organization.__setattr__('url', 'companies:detail')
-        else:
-            organization.__setattr__('url', 'tpp:detail')
-
-        return organization
-
     def _get_user_resume_list(self):
-        cabinet = Cabinet.objects.get(user=self.request.user.pk).pk
-        return SearchQuerySet().models(Resume).filter(cabinet=cabinet)
+        return Resume.objects.filter(created_by=self.request.user)
 
     def get_context_data(self, **kwargs):
-        context = super(get_vacancy_detail, self).get_context_data(**kwargs)
+        context = super(RequirementDetail, self).get_context_data(**kwargs)
 
         if self.request.user.is_authenticated():
             context['resumes'] = self._get_user_resume_list()
 
         return context
+
 
 @login_required(login_url='/login/')
 def vacancyForm(request, action, item_id=None):

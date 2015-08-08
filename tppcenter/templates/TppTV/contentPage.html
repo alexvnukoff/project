@@ -12,15 +12,15 @@
             {% setContextMenu news %}
 
                 <div class="title-tv">
-                        {% if news.country.flag %}
-                            <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.text }}"></i>
+                        {% if news.country %}
+                            <i class="flag sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
                         {% endif %}
-                        {{ news.obj_create_date|date:'d M Y' }}</div>
+                        {{ news.created_at|date:'d M Y' }}</div>
                 	<div class="video">
                         {% if news.image %}
                             <img width="165" height="125" src="{{ MEDIA_URL }}small/{{ news.image }}" title="{{ news.title }}" alt="{{ news.title }}"/>
                         {% else %}
-                            <img width="165" height="125" src="http://img.youtube.com/vi/{{ news.youtube_code }}/0.jpg" />
+                            <img width="165" height="125" src="http://img.youtube.com/vi/{{ news.video_code }}/0.jpg" />
                         {% endif %}
                 	</div>
                     <div class="link">

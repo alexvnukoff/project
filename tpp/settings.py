@@ -31,7 +31,7 @@ ADMINS = (
     ('Iliya', 'afend@tppcenter.com'),
 )
 
-
+ANONYMOUS_USER_ID = -1
 
 MANAGERS = ADMINS
 
@@ -81,28 +81,34 @@ LOGGING = {
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+    'django.contrib.postgres',
     'haystack',
-    'django.contrib.auth',
+    'polymorphic_tree',
+    'polymorphic',
+    'mptt',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     #'django.contrib.sitemaps',
-    'registration',
     'modeltranslation',
-    'south',
     'core',
     'appl',
+    'b24online',
     'legacy_data',
     'djcelery',
     'loginas',
     'tppcenter',
+    'jobs',
     'centerpokupok',
     'usersites',
     #'paypal.standard.ipn'
-    'debug_toolbar'
+    'debug_toolbar',
+    'guardian',
+    'registration',
+    'django.contrib.admin',
+    'django.contrib.auth',
 )
 
 # For installations on which you want to use the sandbox,
@@ -116,16 +122,18 @@ CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.use
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
+REGISTRATION_AUTO_LOGIN = True
 
 MIDDLEWARE_CLASSES = (
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
     'tpp.SiteUrlMiddleWare.SiteLangRedirect',
     'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
@@ -138,9 +146,6 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
 }
 
-
-
-
 WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
@@ -149,21 +154,21 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
-        'TIMEOUT': 300,
-        'OPTIONS': {
-            'MAX_ENTRIES': 10000,
-            'CULL_FREQUENCY:': 2
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
+#         'TIMEOUT': 300,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 10000,
+#             'CULL_FREQUENCY:': 2
+#
+#         }
+#     }
+# }
 
-        }
-    }
-}
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_COOKIE_DOMAIN=".stackoverflow.com"
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+#SESSION_COOKIE_DOMAIN=".stackoverflow.com"
 
 DATABASES = {
     'default': {
@@ -213,7 +218,9 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'tppcenter', 'templates').replace('\\', '/'))
+TEMPLATE_DIRS = (
+    (os.path.join(os.path.dirname(__file__), '..', 'tppcenter', 'templates').replace('\\', '/')),
+)
 ROOT_URLCONF = 'tppcenter.urls'
 #SITE_ID = 143
 
@@ -231,7 +238,8 @@ MEDIA_URL = 'http://static.tppcenter.com/'
 MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
-    ('django.contrib.auth.backends.ModelBackend'),
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend'
 )
 
 
@@ -324,7 +332,7 @@ for lang in LANGUAGES:
     }
 
 HAYSTACK_ROUTERS = ['tpp.backend.DefaultRouter']
-HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
+#HAYSTACK_SIGNAL_PROCESSOR = 'core.signals.ItemIndexSignal'
 HAYSTACK_ID_FIELD = 'id'
 
 ############################# AWS settings ################################

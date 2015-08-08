@@ -1,25 +1,24 @@
 from django.conf import settings
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils.translation import trans_real, ugettext as _
 from django.utils.timezone import now
 
-from appl.models import Exhibition, AdditionalPages, Gallery, Organization, Branch, Country
+from appl.models import AdditionalPages, Gallery, Organization, Branch, Country
 from appl import func
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import Exhibition
 from core.models import Item
 from core.tasks import addNewExhibition
-from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
-class get_exhibitions_list(ItemsList):
-
+class ExhibitionList(ItemsList):
     #pagination url
     url_paginator = "exhibitions:paginator"
     url_my_paginator = "exhibitions:my_main_paginator"
@@ -44,24 +43,18 @@ class get_exhibitions_list(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Exhibitions/index.html'
 
+    def get_queryset(self):
+        queryset = super(ExhibitionList, self).get_queryset()
+        return queryset.select_related('country').prefetch_related('organization')
 
-class get_exhibition_detail(ItemDetail):
 
+class ExhibitionDetail(ItemDetail):
     model = Exhibition
     template_name = 'Exhibitions/detailContent.html'
 
     current_section = _("Exhibitions")
     addUrl = 'exhibitions:add'
 
-    def get_context_data(self, **kwargs):
-        context = super(get_exhibition_detail, self).get_context_data(**kwargs)
-
-        context.update({
-            'photos': self._get_gallery(),
-            'additionalPages': self._get_additional_pages(),
-        })
-
-        return context
 
 @login_required(login_url='/login/')
 def exhibitionForm(request, action, item_id=None):

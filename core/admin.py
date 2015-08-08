@@ -12,10 +12,10 @@ class TPPUserAdmin(UserAdmin):
     change_form_template = 'loginas/change_form.html'
 
 
-    list_display = ('email', 'username', 'is_admin',)
+    list_display = ('email', 'is_admin',)
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'username', 'password')}),
+        (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'avatar', 'date_of_birth',)}),
         ('Permissions', {'fields': ('is_manager', 'is_admin', 'is_active', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),

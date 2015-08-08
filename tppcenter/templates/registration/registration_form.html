@@ -1,37 +1,23 @@
-{% extends 'main_page.html' %}
-{% load static from staticfiles %}
+{% extends "registration/registration_base.html" %}
 {% load i18n %}
+{% load static from staticfiles %}
 
-{% block keywords %}{% endblock %}
+{% block title %}{% trans 'Sign Up' %}{% endblock %}
+{% block header %}
+    {% include "login_header.html" %}
+{% endblock %}
+{% block styles %}
+     {{ block.super }}
+     <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
 
+{% endblock %}
 
-   {% block title %}{% trans 'Sign Up' %}{% endblock %}
-
-
-
-    {% block header %}
-        {% include "login_header.html" %}
-    {% endblock %}
-
-    {% block styles %}
-         {{ block.super }}
-         <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/login.css" %}" />
-        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-
-    {% endblock %}
-
-
-
-
-
-            {% block content %}
-            <div class="blogin">
-				<h3>{% trans 'Sign Up' %}</h3>
-                <form method='post' action=''>
-                     {% csrf_token %}
-
-                <ul class="formlogin" id="register">
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+<ul class="formlogin" id="register">
                      <div>
                          {% for key, value in form.errors.items %}
                              {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
@@ -61,9 +47,5 @@
                     <li><input type="submit" name="Register" class="btnlogin" value="{% trans "Sign up" %}"></li>
 
                 </ul>
-                </form>
-            </div>
-          {% endblock %}
-
-
-
+</form>
+{% endblock %}

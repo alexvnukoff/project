@@ -3,28 +3,23 @@ import os
 from django import template
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
-
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery,\
-    BusinessProposal, Product, InnovationProject, Tender, Exhibition, Requirement, Resume, Company, Tpp, TppTV, Category
-from centerpokupok.views import _sortMenu
-from core.models import Item
-
 from haystack.query import SearchQuerySet
-from django.db.models import Q
 from django.core.cache import cache
 from django.utils.translation import get_language
 
+from appl.models import BusinessProposal, InnovationProject, Tender, Exhibition, Requirement, Resume, Category
+from b24online.models import Chamber, B2BProduct, Organization
+from centerpokupok.views import _sortMenu
 from appl import func
-from appl.models import Cabinet, Organization, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
+from appl.models import Cabinet, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
     Company, Tpp
 from core.models import Item
 
 register = template.Library()
 
+
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
 def userSitegetTopOnPage(context):
-
-
     request = context.get('request')
     SITE_ID = get_current_site(request).pk
     MEDIA_URL = context.get('MEDIA_URL', '')
@@ -36,175 +31,154 @@ def userSitegetTopOnPage(context):
     cached = cache.get(cache_name)
 
     if not cached:
-        tops, models = func.getTops([organization])
+        tops, models = func.get_tops([organization])
 
         cache.set(cache_name, (tops, models), 60 * 10)
     else:
         tops, models = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops, 'models': models}
+    return {'MEDIA_URL': MEDIA_URL, 'modelTop': tops, 'models': models}
+
 
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
 def getTopOnPage(context, item_id=None):
-
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
     if item_id:
-        filterAdv = func.getDeatailAdv(item_id)
+        filterAdv = func.get_detail_adv_filter(item_id)
     else:
-        filterAdv = func.getListAdv(request)
+        filterAdv = func.get_list_adv_filter(request)
 
-
-    cached = False
+    cached = None
     cache_name = "%s_adv_top_cache" % get_language()
 
     if filterAdv is None:
         cached = cache.get(cache_name)
 
-    if not cached:
-        tops, models = func.getTops(filterAdv)
+    if cached is None:
+        models = func.get_tops(filterAdv)
 
         if filterAdv is None:
-            cache.set(cache_name, (tops, models), 60 * 10)
+            cache.set(cache_name,  models, 60 * 10)
     else:
-        tops, models = cache.get(cache_name)
+        models = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL,  'modelTop': tops, 'models': models}
+    return {'MEDIA_URL': MEDIA_URL, 'models': models}
+
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
-def getBanners(context, item_id=None, *places):
-
+def get_banner(context, block, item_id=None):
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
     if item_id:
-        filterAdv = func.getDeatailAdv(item_id)
+        advertisement_filter = func.get_detail_adv_filter(item_id)
     else:
-        filterAdv = func.getListAdv(request)
+        advertisement_filter = func.get_list_adv_filter(request)
 
     cached = False
-    cache_name = "%s_adv_banner_cache" % get_language()
+    cache_name = "banner:%s:%s" % (block, settings.SITE_ID)
 
-    if filterAdv is None:
+    if advertisement_filter is None:
         cached = cache.get(cache_name)
 
     if not cached:
-        banners = func.getBanners(places, settings.SITE_ID, filterAdv)
+        banner = func.get_banner(block, settings.SITE_ID, advertisement_filter)
 
-        if filterAdv is None:
-            cache.set(cache_name, banners, 60 * 10)
+        if advertisement_filter is None:
+            cache.set(cache_name, banner, 60 * 10)
     else:
-        banners = cache.get(cache_name)
+        banner = cache.get(cache_name)
 
+    return {'MEDIA_URL': MEDIA_URL, 'banner': banner}
 
-    return {'MEDIA_URL': MEDIA_URL, 'banners': banners}
 
 @register.inclusion_tag('main/currentCompany.html', takes_context=True)
 def getMyCompaniesList(context):
-
     request = context.get('request')
 
-    current_company = request.session.get('current_company', False)
+    if not request.user or request.user.is_anonymous() or not request.user.is_authenticated():
+        return { 'current_company': None }
 
-
+    current_company = request.session.get('current_company', None)
 
     if current_company:
+        item = Organization.objects.get(pk=current_company)
 
-        try:
-            item = Organization.objects.get(pk=current_company)
-            perm_list = item.getItemInstPermList(request.user)
+        if not item.has_perm(request.user):
+            request.session['current_company'] = None
+            current_company = None
 
-            if 'change_company' in perm_list or 'change_tpp' in perm_list:
-                current_company = SearchQuerySet().models(Company, Tpp).filter(django_id=current_company)[0].title
-        except:
-            current_company = False
-
-    if current_company is False:
-        cab = Cabinet.objects.get(user=request.user)
-        cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cab.pk)[0]
-
-        if not cabinet.text:
-            current_company = request.user.email
+    if current_company is None:
+        if request.user.profile:
+            current_company = request.user.profile
         else:
-            current_company = cabinet.text
+            current_company = request.user.email
 
     return {
         'current_company': current_company
     }
 
+
 @register.inclusion_tag('main/contextMenu.html', takes_context=True)
 def setContextMenu(context, obj, **kwargs):
-
-    items_perms = context.get('items_perms')
     current_path = context.get('current_path')
     model_name = context.get('model', None)
+    request = context.get('request')
     update_url = None
 
-
-    delete_perm = "delete_" + model_name.lower()
-    change_perm = "change_" + model_name.lower()
-    top_perm = ""
-    url_namespace = ""
+    url_namespace = None
     set_current = False
+    delete = True
 
     if model_name == BusinessProposal.__name__:
-        top_perm = "add_advtop"
         url_namespace = "proposal"
-    elif model_name == Product.__name__:
-        top_perm = "add_advtop"
+    elif model_name == B2BProduct.__name__:
         url_namespace = "products"
-
     elif model_name == InnovationProject.__name__:
-        top_perm = "add_advtop"
         url_namespace = "innov"
     elif model_name == Tender.__name__:
         url_namespace = "tenders"
     elif model_name == Exhibition.__name__:
-        top_perm = "add_advtop"
         url_namespace = "exhibitions"
     elif model_name == Requirement.__name__:
-       top_perm = "add_advtop"
-       url_namespace = "vacancy"
+        url_namespace = "vacancy"
     elif model_name == Resume.__name__:
-       url_namespace = "resume"
+        url_namespace = "resume"
     elif model_name == News.__name__:
-       url_namespace = "news"
-       top_perm = "add_advtop"
+        url_namespace = "news"
     elif model_name == Company.__name__:
-       top_perm = "add_advtop"
-       set_current = True
-       url_namespace = "companies"
-    elif model_name == Tpp.__name__:
-       top_perm = "add_advtop"
-       set_current = True
-       url_namespace = "tpp"
-       delete_perm = False
-    elif model_name == TppTV.__name__:
-       url_namespace = "tv"
-
+        set_current = True
+        url_namespace = "companies"
+    elif model_name == Chamber.__name__:
+        set_current = True
+        url_namespace = "tpp"
+        delete = False
 
     vars = {
-        "delete_perm": delete_perm,
-        'change_perm': change_perm,
-        "top_perm": top_perm,
         'obj': obj,
         'url_namespace': url_namespace,
-        "items_perms": items_perms,
-        'current_path':current_path,
+        'current_path': current_path,
         'set_current': set_current,
-        'update_url': update_url
+        'update_url': update_url,
+        'delete': delete
     }
+
+    has_perm = getattr(obj, 'has_perm', None)
+
+    if has_perm is None or url_namespace is None:
+        vars['has_perm'] = None
+    else:
+        vars['has_perm'] = has_perm(request.user)
 
     vars.update(kwargs)
 
     return vars
 
 
-
 @register.inclusion_tag('main/user_profile.html', takes_context=True)
 def userProfile(context):
-
     request = context.get('request')
     cabinetValues = func.getB2BcabinetValues(request)
     MEDIA_URL = context.get('MEDIA_URL', '')
@@ -214,27 +188,26 @@ def userProfile(context):
         'cabinetValues': cabinetValues
     }
 
+
 @register.inclusion_tag('News/last.html', takes_context=True)
 def getLastNews(context):
-
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
-    news = list(News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).order_by('-pk').values_list('pk', flat=True)[:3])
+    news = list(
+        News.active.get_active().filter(c2p__parent__in=NewsCategories.objects.all()).order_by('-pk').values_list('pk',
+                                                                                                                  flat=True)[
+        :3])
     newsValues = Item.getItemsAttributesValues(('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG'), news)
 
-
-
-    return {'MEDIA_URL': MEDIA_URL,  'newsValues': newsValues }
+    return {'MEDIA_URL': MEDIA_URL, 'newsValues': newsValues}
 
 
 @register.inclusion_tag('slider.html', takes_context=True)
 def getUserSiteSlider(context):
-
     request = context.get('request')
 
     import glob
-
 
     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
     photos = Gallery.objects.filter(c2p__parent=user_site)
@@ -242,24 +215,19 @@ def getUserSiteSlider(context):
         user_site_slider = user_site.getAttributeValues("TEMPLATE")
         file_count = 0
         if len(user_site_slider) > 0:
-
-
             user_site_slider = user_site_slider[0]
 
             slider_dir = 'tppcenter/img/templates/' + user_site_slider
 
             dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
 
-            file_count = len(glob.glob(dir+"/*.jpg"))
+            file_count = len(glob.glob(dir + "/*.jpg"))
 
-
-
-
-        return {'file_count':file_count ,  'user_site_slider': user_site_slider, 'custom_slider': False}
+        return {'file_count': file_count, 'user_site_slider': user_site_slider, 'custom_slider': False}
 
     else:
-         media_url = settings.MEDIA_URL
-         return {'photos':photos , 'media_url': media_url, 'custom_slider': True}
+        media_url = settings.MEDIA_URL
+        return {'photos': photos, 'media_url': media_url, 'custom_slider': True}
 
 
 @register.inclusion_tag('header.html', takes_context=True)
@@ -271,16 +239,13 @@ def getUserSitTopMenu(context):
     additionalPages_url = 'additionalPage'
     about_us_url = 'about_us'
     if len(path) > 0:
-       if path[1] in languages:
-          url_parameter = path[1]
+        if path[1] in languages:
+            url_parameter = path[1]
 
-          additionalPages_url = 'additionalPage_lang'
-          about_us_url = 'about_us_lang'
-
-
+            additionalPages_url = 'additionalPage_lang'
+            about_us_url = 'about_us_lang'
 
     midea_url = settings.MEDIA_URL
-
 
     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
     organization = user_site.organization.pk
@@ -288,14 +253,12 @@ def getUserSitTopMenu(context):
     additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
     addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
 
-    return {'addPagesValues': addPagesValues, 'midea_url': midea_url, 'url_parameter':  url_parameter,
+    return {'addPagesValues': addPagesValues, 'midea_url': midea_url, 'url_parameter': url_parameter,
             'additionalPages_url': additionalPages_url, 'about_us_url': about_us_url}
-
 
 
 @register.inclusion_tag('site_sidebar.html', takes_context=True)
 def getUserSiteMenu(context):
-
     path = context['request'].path.split('/')
     languages = [lan[0] for lan in settings.LANGUAGES]
     url_parameter = []
@@ -307,26 +270,25 @@ def getUserSiteMenu(context):
     structure_url = 'structure:main'
 
     if len(path) > 0:
-       if path[1] in languages:
-          url_parameter = path[1]
-          news_url = "news_lang:main"
-          main_url = 'main_lang'
-          proposal_url = 'proposal_lang:main'
-          products_url = 'products_lang:main'
-          contact_url = 'contact_lang:main'
-          structure_url = 'structure_lang:main'
+        if path[1] in languages:
+            url_parameter = path[1]
+            news_url = "news_lang:main"
+            main_url = 'main_lang'
+            proposal_url = 'proposal_lang:main'
+            products_url = 'products_lang:main'
+            contact_url = 'contact_lang:main'
+            structure_url = 'structure_lang:main'
 
     midea_url = settings.MEDIA_URL
 
-    return { 'midea_url': midea_url, 'url_parameter':  url_parameter,
+    return {'midea_url': midea_url, 'url_parameter': url_parameter,
             "news_url": news_url, 'main_url': main_url, 'proposal_url': proposal_url, 'products_url': products_url,
-            "contact_url": contact_url,'structure_url': structure_url}
+            "contact_url": contact_url, 'structure_url': structure_url}
+
 
 @register.inclusion_tag('main/staticPages.html')
 def showStaticPages():
-
     cache_name = "%s_static_pages_all_bottom" % get_language()
-
 
     cached = cache.get(cache_name)
 
@@ -352,13 +314,11 @@ def showStaticPages():
     else:
         pages = cache.get(cache_name)
 
-
     return {'pagesDict': pages}
 
 
 @register.inclusion_tag('main/topStaticPages.html')
 def showTopStaticPages():
-
     cache_name = "%s_static_pages_all_top" % get_language()
     cached = cache.get(cache_name)
 
@@ -374,19 +334,17 @@ def showTopStaticPages():
 
     return {'pagesDict': pageWithAttr}
 
+
 @register.inclusion_tag('main/socialShare.html', takes_context=True)
 def b2bSocialButtons(context, image, title, text):
-
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
-
 
     return {'MEDIA_URL': MEDIA_URL, 'image': image, 'title': title, 'text': text}
 
 
 @register.inclusion_tag("main/main_menu.html", takes_context=True)
 def mainMenuB2C(context):
-
     lang = settings.LANGUAGE_CODE
     cache_name = "b2c_menu_%s" % lang
 
@@ -394,11 +352,10 @@ def mainMenuB2C(context):
 
     if not sortedHierarchyStructure:
 
-        #----MAIN MENU AND CATEGORIES IN HEADER ------#
+        # ----MAIN MENU AND CATEGORIES IN HEADER ------#
         hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
         categories_id = [cat['ID'] for cat in hierarchyStructure]
         categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
 
         sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
         level = 0
@@ -413,9 +370,9 @@ def mainMenuB2C(context):
 
     return {'sortedHierarchyStructure': sortedHierarchyStructure}
 
+
 @register.inclusion_tag("Company/header.html", takes_context=True)
 def companyMenuB2C(context, company, menu):
-
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 

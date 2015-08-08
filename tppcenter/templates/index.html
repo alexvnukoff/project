@@ -3,60 +3,53 @@
 {% load CustomFilters %}
 {% load i18n %}
 
+{% block title %}{% trans 'Tppcenter' %}{% endblock %}
 
-        {% block title %}{% trans 'Tppcenter' %}{% endblock %}
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/jquery.bxslider.css' %}" >
+{% endblock %}
 
-         {% block styles %}
-             {{ block.super }}
-             <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/jquery.bxslider.css" %}" >
+{% block js %}
+    {{  block.super }}
 
-
-
-         {% endblock %}
-
-        {% block js %}
-             {{  block.super }}
-
-            <script type="text/javascript" src="{% static "tppcenter/js/jquery.bxslider.js"%}"></script>
-            <script type="text/javascript">
-                $(document).ready(function(){
-                  $('.bxslider').bxSlider();
-                  $('.homeslide').bxSlider({
-                        pager: true,
-                        controls: false,
-                        auto: true
-                  });
-                  $('.greetings').bxSlider();
-                });
-            $(document).ready(function() {
-                $(".various").fancybox({
-                    maxWidth	: 800,
-                    maxHeight	: 600,
-                    fitToView	: false,
-                    width		: '70%',
-                    height		: '70%',
-                    autoSize	: false,
-                    closeClick	: false,
-                    openEffect	: 'none',
-                    closeEffect	: 'none'
-                });
+    <script type="text/javascript" src="{% static 'tppcenter/js/jquery.bxslider.js'%}" ></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $('.bxslider').bxSlider();
+          $('.homeslide').bxSlider({
+                pager: true,
+                controls: false,
+                auto: true
+          });
+          $('.greetings').bxSlider();
+        });
+        $(document).ready(function() {
+            $(".various").fancybox({
+                maxWidth	: 800,
+                maxHeight	: 600,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none'
             });
-            </script>
-        {% endblock %}
+        });
+    </script>
+{% endblock %}
 
 
-    {% block header %}
-        {% include "main_header.html" %}
-    {% endblock %}
+{% block header %}
+    {% include "main_header.html" %}
+{% endblock %}
 
 {% block body %}
 <div class="header">
 <div class="wrapper">
 	<a href="#"><i class="logo-main" id="logo"></i></a>
     <ul class="header-r">
-
-
-
         	<li>
             	<a href="http://centerpokupok.ru">
                 	<div class="icon-l"><i class="iconsv1 imgmain"></i></div>
@@ -161,8 +154,8 @@
                                  {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
-                                 <a title="{{ org.title }}" href="{% url 'tpp:detail' org.slug %}" class="items">
-                                     <img src="{{ MEDIA_URL }}small/{{ org.flag }}" alt="{% trans 'Work with' %}{{ org.title }}" title="{{ org.title }}" />
+                                 <a title="{{ org.name }}" href="{% url 'tpp:detail' org.slug %}" class="items">
+                                     <img src="{{ MEDIA_URL }}small/{{ org.flag }}" alt="{% trans 'Work with' %}{{ org.name }}" title="{{ org.name }}" />
                                  </a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
                                     </li>
@@ -289,7 +282,7 @@
                     	<a href="{% url 'products:detail' prod.slug %}">
                             <div class="thumb">
                                 {% if prod.image %}
-                                     <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.title }}" title="{{ prod.title }}" />
+                                     <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
                                 {% else %}
                                      <img src="{% static 'tppcenter/img/item.jpg' %}"  />
                                 {% endif %}
@@ -297,11 +290,11 @@
                         </a>
                         <div class="location">
                          {% if prod.country.flag %}
-                             <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.text }}"></i>
-                         {% elif prod.organization.flag %}
-                             <img src="{{ MEDIA_URL }}small/{{ prod.organization.flag }}" width="18" height="12" class="flag" alt="{{ prod.organization.title }}" title="{{ prod.organization.title }}" />
+                             <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.name }}"></i>
+                         {% elif prod.flag %}
+                             <img src="{{ MEDIA_URL }}small/{{ prod.flag }}" width="18" height="12" class="flag" alt="{{ prod.name }}" title="{{ prod.name }}" />
                          {% endif %}
-                            <a style="width: 75%;" href="{% url 'products:detail' prod.slug %}">{{ prod.title }}</a>
+                            <a style="width: 75%;" href="{% url 'products:detail' prod.slug %}">{{ prod.name }}</a>
                         </div>
                     </li>
                     {% endfor %}
@@ -315,16 +308,14 @@
                         	<li>
                             	<div class="topcm">
                                      {% if exh.country.flag %}
-                                         <i class="flag sprite {{ exh.country.flag }}" title="{{ exh.country.text }}"></i>
-                                     {% elif exh.organization.flag %}
-                                         <img src="{{ MEDIA_URL }}small/{{ exh.organization.flag }}" width="18" height="12" class="flag" alt="{{ exh.organization.title }}" title="{{ exh.organization.title }}" />
+                                         <i class="flag sprite {{ exh.country.flag }}" title="{{ exh.country.name }}"></i>
                                      {% endif %}
                                     <div class="date">
-                                        <p><b>{{ exh.start_event_date|date:"d M Y"}}</b></p>
-                                        <p>{{ exh.country.text }}  {{ exh.city }}</p>
+                                        <p><b>{{ exh.start_date|date:"d M Y"}}</b></p>
+                                        <p>{{ exh.country.name }}  {{ exh.city }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="{% url 'exhibitions:detail' exh.slug %}">{{ exh.country.text }}</a></p>
+                                <p class="linkcm"><a href="{% url 'exhibitions:detail' exh.slug %}">{{ exh.country.name }}</a></p>
                             </li>
                       {% endfor %}
 
@@ -335,18 +326,15 @@
                     	<h3>{% trans "Business offers" %}</h3>
                         <ul class="listcm">
                         {% for srvc in serviceList %}
-
                         	<li>
                             	<div class="topcm">
                                      {% if srvc.country.flag %}
-                                         <i class="flag sprite {{ srvc.country.flag }}" title="{{ srvc.country.text }}"></i>
-                                     {% elif srvc.organization.flag %}
-                                         <img src="{{ MEDIA_URL }}small/{{ srvc.organization.flag }}" width="18" height="12" class="flag" alt="{{ srvc.organization.title }}" title="{{ srvc.organization.title }}" />
+                                         <i class="flag sprite {{ srvc.country.flag }}" title="{{ srvc.country.name }}"></i>
                                      {% endif %}
-                                        <p><b>{{ srvc.country.text }}</b></p>
+                                        <p><b>{{ srvc.country.name }}</b></p>
                                     <div class="date">
 
-                                        <p>{{ srvc.organization.title }}</p>
+                                        <p>{{ srvc.organization.name }}</p>
                                     </div>
                                 </div>
                                 <p class="linkcm"><a href="{% url 'proposal:detail' srvc.slug %}">{{ srvc.title }}</a></p>
@@ -407,13 +395,13 @@
 
                     <div class="items">
                     	<div class="bgtitle">
-                        	<div class="textin">{{ greet.tpp_name }}</div>
+                        	<div class="textin">{{ greet.organization }}</div>
                         </div>
                     	<a href="{% url "greetings:detail" greet.slug %}">
-                            <img src="{{ MEDIA_URL }}big/{{ greet.image }}" alt="{{ greet.title }}" class="avatar" title="{{ greet.title }}" />
+                            <img src="{{ MEDIA_URL }}big/{{ greet.photo }}" alt="{{ greet.name }}" class="avatar" title="{{ greet.name }}" />
                         </a>
                         <div class="name">
-                        	<a href="{% url "greetings:detail" greet.slug %}">{{ greet.title }}</a>
+                        	<a href="{% url "greetings:detail" greet.slug %}">{{ greet.name }}</a>
                             {{ greet.position }}
                         </div>
                     </div>

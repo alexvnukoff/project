@@ -8,33 +8,21 @@
             <td>{% trans "Name" %}</td>
             <td>{% trans 'Project cost' %}</td>
             <td>{% trans "Date" %}</td>
-
-
         </tr>
 
-       {% for id, attr in innovList.items %}
-            {% with attr.NAME|first as name %}
-            {% with attr.SLUG|first as slug %}
-            {% with attr.COST|first as cost %}
-            {% with attr.CURRENCY|first as currency %}
-            {% with attr.CREATE_DATE|first as date %}
+       {% for project in page.object_list %}
             <tr>
-                <td>{{ id }}</td>
+                <td>{{ project.pk }}</td>
                 <td>
-                    <a href="{% url 'innov:detail' slug %}" title="{{ name }}">
-                        {{ name|truncatewords:4 }}
+                    <a href="{% url 'innov:detail' project.slug %}" title="{{ project.name }}">
+                        {{ project.name|truncatewords:4 }}
                     </a>
                 </td>
-                <td>{{ currency|getSymbol }} {{ cost }}</td>
+                <td>{{ project.currency|getSymbol }} {{ project.cost|formatPrice }}</td>
                 <td>
                     {{ date|date:'d M Y' }}
                 </td>
             </tr>
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>
         {% endfor %}

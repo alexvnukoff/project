@@ -25,33 +25,33 @@
     {{ block.super }}
 
 
-<script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
+    <script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
-<script type="text/javascript">
-    var marker;
-        $(document).ready(function($) {
-            var tabs = $( '#tpp-details-tab' )
-            tabs.tabs();
-            var href = tabs.find('a[href="#cpn-tabs-contacts"]');
-            (href).on('click',function(){
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+    <script type="text/javascript">
+        var marker;
+            $(document).ready(function($) {
+                var tabs = $( '#tpp-details-tab' )
+                tabs.tabs();
+                var href = tabs.find('a[href="#cpn-tabs-contacts"]');
+                (href).on('click',function(){
 
-                {% if position %}
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ item.position }})
-                });
-                {% endif %}
+                    {% if position %}
+                      marker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ item.location }})
+                    });
+                    {% endif %}
 
-             initialize(false);
+                 initialize(false);
 
-            })});
-</script>
+                })});
+    </script>
 
-<script>
-    ga('set', 'dimension3', {{ item_id }});
-    ga('set', 'dimension2', 'tpp');
-</script>
+    <script>
+        ga('set', 'dimension3', {{ item_id }});
+        ga('set', 'dimension2', 'tpp');
+    </script>
 
     <!-- script for Company-Structure right buttons menu -->
     <script type="text/javascript">
@@ -81,25 +81,25 @@
     <div class="companies">
         <div class="deal-details">
             <h3>
-                {% if item.country.flag %}
-                     <i class="flag sprite  {{ item.country.flag }}" title="{{ item.country.text }}"></i>
-                {% elif item.flag %}
-                     <img src="{{ MEDIA_URL }}small/{{ item.flag }}" class="flag" title="{{ item.title }}" alt="{{ item.title }}" />
+                {% if item.flag %}
+                    <img src="{{ MEDIA_URL }}small/{{ item.flag }}" class="flag" title="{{ item.name }}" alt="{{ item.name }}" />
+                {% elif item.country.flag %}
+                     <i class="flag sprite  {{ item.country.flag }}" title="{{ item.country.name }}"></i>
                 {% endif %}
-                {{ item.title }}
+                {{ item.name }}
             </h3>
-            {% if item.image %}
-                <img src="{{ MEDIA_URL }}big/{{ item.image }}" class="thumb-deal" alt="{{ item.title }}" title="{{ item.title }}"  />
+            {% if item.logo %}
+                <img src="{{ MEDIA_URL }}big/{{ item.logo }}" class="thumb-deal" alt="{{ item.name }}" title="{{ item.name }}"  />
             {% else %}
                 <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="thumb-deal" alt="" />
             {% endif %}
             <p>
                 {% autoescape off %}
-                    {{ item.anons|force_escape|linebreaks }}
+                    {{ item.short_description|force_escape|linebreaks }}
                 {% endautoescape %}
             </p>
         </div>
-        {% b2bSocialButtons  tpp.image tpp.title tp.text %}
+        {% b2bSocialButtons  tpp.logo tpp.name tp.description %}
         <div class="cpn-details-tab" id="tpp-details-tab">
             <div class="tab-cate">
             <ul>
@@ -175,7 +175,7 @@
         </div>
         <div id="cpn-tabs-about">
             <div class="tpp-dt-content">
-                {{ item.text|cleanHtml|safe }}
+                {{ item.description|cleanHtml|safe }}
             </div>
         </div>
         <div id="cpn-tabs-recvisits">

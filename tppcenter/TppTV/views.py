@@ -7,16 +7,16 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
-from haystack.query import SearchQuerySet
 
 from appl import func
 from appl.models import TppTV, NewsCategories, Country
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import News
 from core.tasks import addTppAttrubute
-from tppcenter.cbv import ItemDetail, ItemsList
 from tppcenter.forms import ItemForm
 
 
-class get_news_list(ItemsList):
+class TVNewsLIst(ItemsList):
 
     #pagination url
     url_paginator = "tv:paginator"
@@ -33,7 +33,7 @@ class get_news_list(ItemsList):
     #allowed filter list
     filterList = ['tpp', 'country', 'company']
 
-    model = TppTV
+    model = News
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -57,7 +57,7 @@ class get_news_list(ItemsList):
         return False
 
     def get_context_data(self, **kwargs):
-        context = super(get_news_list, self).get_context_data(**kwargs)
+        context = super(TVNewsLIst, self).get_context_data(**kwargs)
 
         context['redactor'] = False
 
@@ -66,33 +66,31 @@ class get_news_list(ItemsList):
 
         return context
 
+    def get_queryset(self):
+        queryset = super(TVNewsLIst, self).get_queryset()
+        queryset = queryset.filter(is_tv=True)\
+            .select_related('country').prefetch_related('organization', 'organization__countries')
+
+        return queryset
 
 
-class get_news_detail(ItemDetail):
-
-    model = TppTV
+class TVNewsDetail(ItemDetail):
+    model = News
     template_name = 'TppTV/detailContent.html'
 
     current_section = _("TPP-TV")
 
-    def _get_similar_news(self):
-        categories = [category.pk for category in self.object.categories][:4]
-        return SearchQuerySet().models(TppTV).filter(categories__in=categories)
+    def get_queryset(self):
+        return super().get_queryset().filter(is_tv=True)
 
-    def _get_categories_for_object(self):
-        return SearchQuerySet().filter(django_id__in=self.object.categories)
+    def _get_similar_news(self):
+        return News.objects.filter(is_tv=True, categories__in=self.object.categories.all())[:4]
 
     def get_context_data(self, **kwargs):
-        context = super(get_news_detail, self).get_context_data(**kwargs)
-        context[self.context_object_name].__setattr__('categories', self._get_categories_for_object())
-
-        context.update({
-            'photos': self._get_gallery(),
-            'similarNews': self._get_similar_news()
-        })
+        context = super(TVNewsDetail, self).get_context_data(**kwargs)
+        context['similarNews'] = self._get_similar_news()
 
         return context
-
 
 
 @login_required(login_url='/login/')
