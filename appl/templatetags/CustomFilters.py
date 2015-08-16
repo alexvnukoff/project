@@ -28,6 +28,8 @@ def getSide(value):
 
     return is_right
 
+
+
 @register.filter(name='sort')
 def sort(value):
     if value:
@@ -390,7 +392,15 @@ def right_banner(context):
   return ""
 
 
+@register.filter(name='hasBanner')
+def hasBanner(value):
 
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    right_banner = user_site.getAttributeValues('SITE_BANNER_2')
+    if len(right_banner) > 0:
+      return True
+
+    return False
 
 @register.simple_tag(name='categories', takes_context=True)
 def setCategories(context):
