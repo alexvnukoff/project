@@ -371,6 +371,68 @@ def setLogo(context):
   return ""
 
 
+@register.simple_tag(name='url_banner_1', takes_context=True)
+def url_banner_1(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_1')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='url_banner_2', takes_context=True)
+def url_banner_2(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_2')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='url_banner_3', takes_context=True)
+def url_banner_3(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_3')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='url_banner_4', takes_context=True)
+def url_banner_4(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_4')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='url_banner_5', takes_context=True)
+def url_banner_5(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_5')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+
+@register.simple_tag(name='url_banner_6', takes_context=True)
+def url_banner_6(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  left_banner = user_site.getAttributeValues('URL_BANNER_6')
+  if len(left_banner) > 0:
+      return left_banner[0]
+
+
+  return ""
+
+
 @register.simple_tag(name='left_banner', takes_context=True)
 def left_banner(context):
   user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
@@ -381,8 +443,8 @@ def left_banner(context):
 
   return ""
 
-@register.simple_tag(name='right_banner', takes_context=True)
-def right_banner(context):
+@register.simple_tag(name='right_banner_1', takes_context=True)
+def right_banner_1(context):
   user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
   right_banner = user_site.getAttributeValues('SITE_BANNER_2')
   if len(right_banner) > 0:
@@ -391,12 +453,55 @@ def right_banner(context):
 
   return ""
 
+@register.simple_tag(name='right_banner_2', takes_context=True)
+def right_banner_2(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  right_banner = user_site.getAttributeValues('SITE_BANNER_3')
+  if len(right_banner) > 0:
+      return right_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='right_banner_3', takes_context=True)
+def right_banner_3(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  right_banner = user_site.getAttributeValues('SITE_BANNER_4')
+  if len(right_banner) > 0:
+      return right_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='right_banner_4', takes_context=True)
+def right_banner_4(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  right_banner = user_site.getAttributeValues('SITE_BANNER_5')
+  if len(right_banner) > 0:
+      return right_banner[0]
+
+
+  return ""
+
+@register.simple_tag(name='right_banner_5', takes_context=True)
+def right_banner_5(context):
+  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+  right_banner = user_site.getAttributeValues('SITE_BANNER_6')
+  if len(right_banner) > 0:
+      return right_banner[0]
+
+
+  return ""
+
+
+
 
 @register.filter(name='hasBanner')
 def hasBanner(value):
 
     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-    right_banner = user_site.getAttributeValues('SITE_BANNER_2')
+    right_banner = user_site.getAttributeValues('SITE_BANNER_2', 'SITE_BANNER_3', 'SITE_BANNER_4', 'SITE_BANNER_5',
+                                                'SITE_BANNER_6')
     if len(right_banner) > 0:
       return True
 
