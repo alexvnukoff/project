@@ -41,25 +41,25 @@ def userSitegetTopOnPage(context):
 
 
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
-def getTopOnPage(context, item_id=None):
+def get_top_on_page(context, item_id=None):
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
     if item_id:
-        filterAdv = func.get_detail_adv_filter(item_id)
+        filter_adv = func.get_detail_adv_filter(item_id)
     else:
-        filterAdv = func.get_list_adv_filter(request)
+        filter_adv = func.get_list_adv_filter(request)
 
     cached = None
     cache_name = "%s_adv_top_cache" % get_language()
 
-    if filterAdv is None:
+    if filter_adv is None:
         cached = cache.get(cache_name)
 
     if cached is None:
-        models = func.get_tops(filterAdv)
+        models = func.get_tops(filter_adv)
 
-        if filterAdv is None:
+        if filter_adv is None:
             cache.set(cache_name,  models, 60 * 10)
     else:
         models = cache.get(cache_name)
@@ -95,11 +95,11 @@ def get_banner(context, block, item_id=None):
 
 
 @register.inclusion_tag('main/currentCompany.html', takes_context=True)
-def getMyCompaniesList(context):
+def get_my_companies_list(context):
     request = context.get('request')
 
     if not request.user or request.user.is_anonymous() or not request.user.is_authenticated():
-        return { 'current_company': None }
+        return {'current_company': None}
 
     current_company = request.session.get('current_company', None)
 
@@ -107,18 +107,14 @@ def getMyCompaniesList(context):
         item = Organization.objects.get(pk=current_company)
 
         if not item.has_perm(request.user):
-            request.session['current_company'] = None
-            current_company = None
-
-    if current_company is None:
-        if request.user.profile:
-            current_company = request.user.profile
+            del request.session['current_company']
         else:
-            current_company = request.user.email
+            return {'current_company': item.name}
 
-    return {
-        'current_company': current_company
-    }
+    if request.user.profile.full_name:
+        return {'current_company': request.user.profile.full_name}
+
+    return {'current_company': request.user.email}
 
 
 @register.inclusion_tag('main/contextMenu.html', takes_context=True)

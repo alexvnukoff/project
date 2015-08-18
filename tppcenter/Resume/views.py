@@ -8,8 +8,6 @@ from django.shortcuts import render_to_response
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _, trans_real
-from haystack.backends import SQ
-from haystack.query import SearchQuerySet
 
 from appl.models import Cabinet
 from appl import func
@@ -40,27 +38,9 @@ class ResumeList(ItemsList):
     addUrl = 'resume:add'
 
     #allowed filter list
-    filterList = []
+    filter_list = []
 
     model = Resume
-
-    def _get_my(self):
-        cabinet = Cabinet.objects.get(user=self.request.user.pk).pk
-        return SQ(cabinet=cabinet)
-
-    def _get_cabinet_for_objects(self, object_list):
-
-        new_object_list = []
-
-        for obj in object_list:
-            cabinet = SearchQuerySet().filter(django_id=obj.cabinet)
-
-            if cabinet.count() == 1:
-                obj.__setattr__('cabinet', cabinet[0])
-
-            new_object_list.append(obj)
-
-        return new_object_list
 
     def ajax(self, request, *args, **kwargs):
         self.template_name = 'Resume/contentPage.html'
@@ -68,10 +48,21 @@ class ResumeList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Resume/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('user__profile')
 
     def get_queryset(self):
         queryset = super(ResumeList, self).get_queryset()
-        return queryset.select_related('user__profile')
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = queryset.none()
+            else:
+                queryset = self.model.objects.filter(created_by=self.request.user)
+
+        return queryset
 
 
 class ResumeDetail(ItemDetail):

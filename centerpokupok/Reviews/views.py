@@ -13,7 +13,7 @@ def reviewList(request):
     result = func.getItemsListWithPagination("Review", "NAME", "ACTIVE_FROM", "DETAIL_TEXT", "IMAGE", page=page)
     reviewList = result[0]
     page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     user = request.user
     return render_to_response("Reviews/index.html", locals())

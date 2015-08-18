@@ -339,7 +339,7 @@ def getAllNewProducts(request, page=1):
 
 
     page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "products:products_paginator"
 
@@ -373,7 +373,7 @@ def _getComment(parent_id, page):
     page = result[1]
 
 
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
     commentsList = OrderedDict(sorted(commentsList.items(), reverse=True))
 
     return commentsList, paginator_range, page

@@ -38,6 +38,11 @@ class Requirement(models.Model):
     def organization(self):
         return self.vacancy.department.organization
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import RequirementIndex
+        return RequirementIndex
+
     def __str__(self):
         return self.title
 
@@ -92,3 +97,8 @@ class Resume(models.Model):
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import ResumeIndex
+        return ResumeIndex

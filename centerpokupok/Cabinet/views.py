@@ -96,7 +96,7 @@ def get_order_history(request, page=1):
     orderList = result[0]
     #Paginator
     page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
     url_paginator = "profile:paginator"
 
     return render_to_response("Cabinet/orderHistory.html", {"user": user, 'curr_url': curr_url,
@@ -128,7 +128,7 @@ def get_favorite(request, page=1):
         favorite.update({'AFTER_DISCOUNT': real_cost})
 
     page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
     url_paginator = "profile:favorite_paginator"
 
 

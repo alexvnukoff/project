@@ -1,6 +1,5 @@
 from django.core.cache import cache
 from django.http import HttpResponse
-from django.shortcuts import render
 
 # Create your views here.
 from django.template import RequestContext, loader
@@ -8,7 +7,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.translation import get_language
 from appl import func
 from appl.func import getActiveSQS
-from appl.models import Resume, Country, Requirement
+from appl.models import Resume, Requirement
 from core.models import Item
 
 

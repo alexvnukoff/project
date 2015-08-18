@@ -1,17 +1,7 @@
 {% extends "baseFilter.html" %}
 {% load i18n %}
 {% block filterTopContent %}
-    {% for name, ids in filters.items %}
-        {% if ids %}
-            {% for dict in ids %}
-                {% with dict.id as id %}
-                {% with dict.text as text %}
-                    <input type="hidden" class="filter-item" name="filter[{{ name }}][]" value="{{ id }}" data-text="{{ text }}">
-                {% endwith %}
-                {% endwith %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
+{% include 'main/filter_items.html' %}
 
     <div class="tabfilter">
         <div class="tab-cate">

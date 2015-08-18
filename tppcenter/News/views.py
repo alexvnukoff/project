@@ -37,10 +37,15 @@ class NewsList(ItemsList):
     ]
 
     current_section = _("News")
+    project_news = False
 
+    sortFields = {
+        'date': 'created_at',
+        'name': 'title'
+    }
 
     # allowed filter list
-    filterList = ['tpp', 'country', 'company']
+    filter_list = ['tpp', 'country', 'company']
 
     model = News
 
@@ -66,18 +71,30 @@ class NewsList(ItemsList):
 
         return context
 
-    def get_queryset(self):
-        queryset = super(NewsList, self).get_queryset().filter(is_tv=False)
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('country').prefetch_related('organization', 'organization__countries')
 
-        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+    def filter_search_object(self, s):
+        return super().filter_search_object(s).query('match', is_tv=False)
+
+    def get_queryset(self):
+        if self.is_my():
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = queryset.filter(organization_id=current_org)
+                queryset = self.model.objects.filter(organization_id=current_org)
             else:
-                queryset = queryset.filter(created_by=self.request.user, organization__is_null=True)
+                queryset = self.model.objects.filter(created_by=self.request.user, organization__isnull=True)
+        elif self.is_filtered():
+            return super().get_queryset()
+        else:
+            queryset = super().get_queryset().filter(is_tv=False)
 
-        return queryset.select_related('country').prefetch_related('organization', 'organization__countries')
+            if self.project_news:
+                #TODO
+                pass
+
+        return queryset
 
 
 class NewsDetail(ItemDetail):

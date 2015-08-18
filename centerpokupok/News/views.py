@@ -16,7 +16,7 @@ def newsList(request, page=1):
     result = func.getItemsListWithPagination("News", "NAME", "Active_From", "DETAIL_TEXT", "IMAGE", page=page)
     newsList = result[0]
     page = result[1]
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "news:paginator"
 

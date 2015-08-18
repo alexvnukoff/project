@@ -18,15 +18,17 @@ from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
 
-from appl.models import BpCategories, Category, Tpp, Cabinet, TppTV, AdvBanner, SystemMessages
+from appl.models import Category, Tpp, Cabinet, TppTV, SystemMessages
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
-    Organization, Notification, B2BProduct, Banner
+    Organization, Notification, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
+from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
+    BusinessProposalCategoryIndex, SearchEngine
 from core.models import Item
 from jobs.models import Requirement
 from tpp.SiteUrlMiddleWare import get_request
 
 
-def getPaginatorRange(page):
+def get_paginator_range(page):
     '''
     Method that get page object and return paginatorRange ,
     help to  display properly pagination
@@ -774,12 +776,12 @@ def organizationIsCompany(item_id):
     return False
 
 
-def filterLive(request, model_name=None):
-    '''
-        Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
+def filter_live(request, model_name=None):
+    """
+        Converting GET request filter parameters (from popup window) to filter parameter for SearchQuerySet filter
 
         obj request - request context
-    '''
+    """
 
     if model_name:
         if request.GET and not request.session.get(model_name, False):
@@ -1042,7 +1044,7 @@ def get_list_adv_filter(request):
         if name == Chamber.__name__ and len(filter_items) > 0:
             countries + Country.objects.filter(organizations__pk__in=filter_items).values_list('pk', flat=True)
 
-    filter_by_model[Country.__name__] = countries
+    filter_by_model[Country.__name__] += countries
 
     return filter_by_model
 
@@ -1072,166 +1074,7 @@ def permissionDenied(message=_('Sorry but you cannot modify this item ')):
     return page
 
 
-def setContent(request, model, attr, url, template_page, page_num, page=1, my=None, **kwargs):
-    if 'category' in kwargs:
-        category = kwargs['category']
-    else:
-        category = None
-
-    cached = False
-    lang = settings.LANGUAGE_CODE
-    url_parameter = []
-
-    if category:
-        cache_name = "category_%s_list_result_page_%s" % (model.__name__, page)
-        url_parameter = category
-    else:
-        cache_name = "%s_%s_list_result_page_%s" % (lang, model.__name__, page)
-
-    q = request.GET.get('q', '')
-
-    if not my and cachePisibility(request):
-        cached = cache.get(cache_name)
-
-    if not cached:
-
-        if not my:
-            filters, searchFilter = filterLive(request, model_name=model.__name__)
-
-            sqs = getActiveSQS().models(model).order_by('-obj_create_date')
-
-            if model is News:
-                if category:
-                    sqs = sqs.filter(categories=category)
-                else:
-                    sqs = sqs.filter(categories__gt=0)
-
-            if len(searchFilter) > 0:  # Got filter values
-                sqs = sqs.filter(searchFilter)
-
-            if q != '':  # Search for content
-                sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-            sortFields = {
-                'date': 'obj_create_date',
-                'name': 'title_sort'
-            }
-
-            order = []
-
-            sortField1 = request.GET.get('sortField1', 'date')
-            sortField2 = request.GET.get('sortField2', None)
-            order1 = request.GET.get('order1', 'desc')
-            order2 = request.GET.get('order2', None)
-
-            if sortField1 and sortField1 in sortFields:
-                if order1 == 'desc':
-                    order.append('-' + sortFields[sortField1])
-                else:
-                    order.append(sortFields[sortField1])
-            else:
-                order.append('-obj_create_date')
-
-            if sortField2 and sortField2 in sortFields:
-                if order2 == 'desc':
-                    order.append('-' + sortFields[sortField2])
-                else:
-                    order.append(sortFields[sortField2])
-
-            proposal = sqs.order_by(*order)
-
-            if category:
-                url_paginator = "news:news_categories_paginator"
-            else:
-                url_paginator = "%s:paginator" % (url)
-
-            params = {
-                'filters': filters,
-                'sortField1': sortField1,
-                'sortField2': sortField2,
-                'order1': order1,
-                'order2': order2
-            }
-
-        else:
-            current_organization = request.session.get('current_company', False)
-
-            if current_organization:
-                if model == Company:
-                    cab = Cabinet.objects.get(user=request.user.pk)
-
-                    # read all Organizations which hasn't foreign key
-                    # from Department and current User is create user or worker
-                    proposal = Company.active.get_active().filter(Q(create_user=request.user) |
-                                                                  Q(
-                                                                      p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
-                elif model != Tpp:
-                    proposal = getActiveSQS().models(model). \
-                        filter(SQ(tpp=current_organization) | SQ(company=current_organization))
-                else:
-                    proposal = getActiveSQS().models(model). \
-                        filter(SQ(django_id=current_organization) | SQ(company=current_organization))
-
-                # TODO: Fix search
-                # if q != '': #Search for content
-                #    proposal = proposal.filter(SQ(title=q) | SQ(text=q))
-
-                proposal.order_by('-obj_create_date')
-
-                url_paginator = "%s:my_main_paginator" % url
-                params = {}
-            else:
-                raise ObjectDoesNotExist('you need check company')
-
-        result = setPaginationForSearchWithValues(proposal, *attr, page_num=page_num, page=page)
-
-        proposalList = result[0]
-        proposal_ids = [id for id in proposalList.keys()]
-        redactor = False
-
-        if request.user.is_authenticated():
-            items_perms = getUserPermsForObjectsList(request.user, proposal_ids, model.__name__)
-        else:
-            items_perms = ""
-
-        if model is News or model is TppTV:
-            if 'Redactor' in request.user.groups.values_list('name', flat=True):
-                redactor = True
-
-        if model == Company:
-            addDictinoryWithCountryToCompany(proposal_ids, proposalList, add_organization=True)
-        else:
-            addDictinoryWithCountryAndOrganization(proposal_ids, proposalList)
-
-        page = result[1]
-        paginator_range = getPaginatorRange(page)
-
-        template = loader.get_template(template_page)
-
-        templateParams = {
-            'proposalList': proposalList,
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_parameter': url_parameter,
-            'url_paginator': url_paginator,
-            'items_perms': items_perms,
-            'current_path': request.get_full_path(),
-            'redactor': redactor
-        }
-        templateParams.update(params)
-
-        context = RequestContext(request, templateParams)
-        rendered = template.render(context)
-
-        if not my and cachePisibility(request):
-            cache.set(cache_name, rendered)
-
-    else:
-        rendered = cache.get(cache_name)
-    return rendered
-
-
-def cleanFromHtml(value):
+def clean_from_html(value):
     if len(value) > 0:
         document = lxml.html.document_fromstring(value)
         raw_text = document.text_content()
@@ -1307,42 +1150,50 @@ def make_object_dates_aware(obj):
     return obj
 
 
-def autocompleteFilter(filter, q, page):
-    if (len(q) == 0 or len(q) > 2) and page > 0:
+def autocomplete_filter(filter_key, q, page):
+    filters = {
+        'country': {
+            'model': Country,
+            'index_model': CountryIndex,
+        },
+        'chamber': {
+            'model': Chamber,
+            'index_model': ChamberIndex,
+        },
+        'branch': {
+            'model': Branch,
+            'index_model': BranchIndex,
+        },
+        'b2b_category': {
+            'model': B2BProductCategory,
+            'index_model': B2bProductCategoryIndex,
+        },
+        'bp_category': {
+            'model': BusinessProposalCategory,
+            'index_model': BusinessProposalCategoryIndex,
+        }
+    }
 
-        model = None
+    model_dict = filters.get(filter_key, None)
 
-        if filter == 'tpp':
-            model = Tpp
-        elif filter == "company":
-            model = Company
-        elif filter == "category":
-            model = Category
-        elif filter == "branch":
-            model = Branch
-        elif filter == 'country':
-            model = Country
-        elif filter == 'bp_category':
-            model = BpCategories
+    if model_dict is None:
+        return None
 
-        if model:
+    if (len(q) != 0 and len(q) <= 2) or page < 0:
+        return None
 
-            if not q:
-                sqs = SearchQuerySet().models(model).order_by('title_sort')
-            else:
-                sqs = SearchQuerySet().models(model).filter(title_auto=q).order_by('title_sort')
+    if len(q) > 2:
+        s = SearchEngine(doc_type=model_dict['index_model']).query('match', name_auto=q)
+        paginator = Paginator(s, 10)
+        hits = paginator.page(page).object_list.execute().hits
+        object_ids = [obj.django_id for obj in hits]
 
-            paginator = Paginator(sqs, 10)
-            total = paginator.count
+        return model_dict['model'].objects.filter(pk__in=object_ids), hits.total
+    else:
+        objects = model_dict['model'].objects.all()
+        paginator = Paginator(objects, 10)
 
-            try:
-                onPage = paginator.page(page)
-            except Exception:
-                onPage = paginator.page(1)
-
-            return (onPage, total)
-
-    return False
+        return paginator.page(page).object_list, paginator.count
 
 
 def getItemMeta(request, itemAttributes):

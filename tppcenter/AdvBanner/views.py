@@ -78,7 +78,7 @@ def advJsonFilter(request):
 
     if request.is_ajax() and type:
 
-        result = func.autocompleteFilter(filter, q, page)
+        result = func.autocomplete_filter(filter, q, page)
 
         if result:
             onPage, total = result

@@ -77,7 +77,7 @@ def basket(request, page=1):
     templatePatams = {
         'adv': adv,
         'page': page,
-        'paginator_range': func.getPaginatorRange(advOnPage),
+        'paginator_range': func.get_paginator_range(advOnPage),
         'url_paginator': "Adv:basket_paginator",
     }
 

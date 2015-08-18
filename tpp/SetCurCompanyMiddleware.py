@@ -1,42 +1,36 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from appl.models import Organization
+from b24online.models import Organization
 
-__author__ = 'user'
+'''
+    Set current company in B2B for user when company selected for manging
+'''
+
 
 class SetCurCompany:
-    '''
-        Set current company in B2B for user when company selected for manging
-    '''
-
-
     def process_request(self, request):
-        compID = request.GET.get('set', False)
+        organization_id = request.GET.get('set', None)
 
-        if compID is not False:
-
+        if organization_id is not None:
             try:
-                compID = int(compID)
+                organization_id = int(organization_id)
             except ValueError:
-                compID = 0
+                organization_id = None
 
-            if request.user.is_authenticated():
+            current_company = request.session.get('current_company', None)
 
-                current_company = request.session.get('current_company', False)
-
-                if compID == 0:
-                    request.session['current_company'] = False
-                elif compID != current_company:
-
+            if request.user and request.user.is_authenticated() and not request.user.is_anonymous():
+                if organization_id is None or organization_id == 0:
+                    if current_company is not None:
+                        del request.session['current_company']
+                elif organization_id != current_company:
                     try:
-                        item = Organization.objects.get(pk=compID)
+                        organization = Organization.objects.get(pk=organization_id)
                     except ObjectDoesNotExist:
                         return HttpResponseRedirect(reverse('denied'))
 
-                    perm_list = item.getItemInstPermList(request.user)
-
-                    if 'change_company' not in perm_list and 'change_tpp' not in perm_list:
+                    if not organization.has_perm(request.user):
                         return HttpResponseRedirect(reverse('denied'))
 
-                    request.session['current_company'] = compID
+                    request.session['current_company'] = organization_id

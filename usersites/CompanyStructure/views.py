@@ -1,4 +1,4 @@
-from appl.func import setPaginationForItemsWithValues, getPaginatorRange
+from appl.func import setPaginationForItemsWithValues, get_paginator_range
 from appl.models import Department, UserSites, Cabinet, Vacancy
 from core.models import Item
 from django.template import RequestContext, loader
@@ -78,7 +78,7 @@ def _get_content(request, page, language):
 
      page = result[1]
 
-     paginator_range = getPaginatorRange(page)
+     paginator_range = get_paginator_range(page)
 
      templateParams = {
          'url_paginator': url_paginator,

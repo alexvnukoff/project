@@ -1,6 +1,6 @@
 from haystack.backends import SQ
 from appl import func
-from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginatorRange
+from appl.func import getActiveSQS, setPaginationForSearchWithValues, get_paginator_range
 from appl.models import BusinessProposal,  UserSites, Gallery, AdditionalPages
 from core.models import Item
 from django.core.exceptions import ObjectDoesNotExist
@@ -81,7 +81,7 @@ def _get_content(request, page, language):
 
      page = result[1]
 
-     paginator_range = getPaginatorRange(page)
+     paginator_range = get_paginator_range(page)
 
      templateParams = {
          'url_parameter': language if language else [],
@@ -115,7 +115,7 @@ def _getdetailcontent(request, item_id, slug):
      proposal = get_object_or_404(BusinessProposal, pk=item_id)
      proposalValues = proposal.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'DOCUMENT_1', 'DOCUMENT_2', 'DOCUMENT_3', 'SLUG'))
      description = proposalValues.get('DETAIL_TEXT', False)[0] if proposalValues.get('DETAIL_TEXT', False) else ""
-     description = func.cleanFromHtml(description)
+     description = func.clean_from_html(description)
      title = proposalValues.get('NAME', False)[0] if proposalValues.get('NAME', False) else ""
 
      photos = Gallery.objects.filter(c2p__parent=item_id)

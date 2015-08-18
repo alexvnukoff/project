@@ -1,11 +1,10 @@
-from haystack.query import SearchQuerySet
 from django.utils.translation import ugettext as _
+
 from b24online.cbv import ItemsList
 from b24online.models import Profile
 
 
 class UserList(ItemsList):
-
     paginate_by = 12
 
     #pagination url
@@ -14,7 +13,7 @@ class UserList(ItemsList):
     current_section = _("Users")
 
     #allowed filter list
-    filterList = ['country']
+    filter_list = ['country']
 
     model = Profile
 

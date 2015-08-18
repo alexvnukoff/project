@@ -8,23 +8,23 @@ from django.core.paginator import Paginator
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from django.db.models import Q
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from haystack.query import SearchQuerySet
+from guardian.shortcuts import get_objects_for_user
 from registration.backends.default.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
-
 from django.core.mail import send_mail
 
-from appl.models import Organization, Tpp, Cabinet, Notification, \
-    Company
-from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition
+from appl.models import Cabinet, Notification
+from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Country, Branch, \
+    B2BProductCategory, BusinessProposalCategory
 from appl import func
+from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
+    BusinessProposalCategoryIndex
 from core.models import Item
 
 
@@ -36,7 +36,7 @@ def home(request):
     if request.POST.get('Register', None):
         return registration(request)
 
-    organizations_list = Chamber.objects.filter(is_active=True, type='international')
+    organizations_list = Chamber.objects.filter(is_active=True, org_type='international')
 
     product_list = B2BProduct.objects.filter(is_active=True).select_related('company').prefetch_related('company__countries') \
                        .order_by('-created_at')[:3]
@@ -348,63 +348,53 @@ def my_companies(request):
     except ValueError:
         return HttpResponse(json.dumps(result))
 
+    if not request.user or not request.user.is_authenticated() or request.user.is_anonymous():
+        return HttpResponse(json.dumps(result))
+
     if request.is_ajax():
-        cab = Cabinet.objects.get(user=request.user)
-
-        current_company = request.session.get('current_company', False)
-
-        # read all Organizations which hasn't foreign key from Department and current User is create user or worker
-        companies = Organization.objects.filter(Q(create_user=request.user, department=None) |
-                                                Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
-
+        current_company = request.session.get('current_company', None)
         paginate_by = 10
 
-        if current_company is not False:
+        organizations = get_objects_for_user(request.user, ['manage_organization'], Organization)
 
-            cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cab.pk)[0]
+        if current_company is not None:
+            organizations = organizations.exclude(pk=current_company)
 
-            if not cabinet.text:
-                user_name = request.user.email
-            else:
-                user_name = cabinet.text
-
-            # -1 because the last element is selected org
-            paginate_by = 9
-
+        if current_company is not None:
+            user_name = request.user.profile.full_name or request.user.email
             result['content'] = [{'title': user_name, 'id': 0}]
-            companies.exclude(pk=current_company)
 
-        paginator = Paginator(companies, paginate_by)
+        paginator = Paginator(organizations, paginate_by)
         result['total'] = paginator.count
-        onPage = paginator.page(page)
+        on_page = paginator.page(page)
 
-        ids = [obj.pk for obj in onPage.object_list]
-
-        sqs = SearchQuerySet().models(Tpp, Company).filter(django_id__in=ids)
-
-        result['content'] += [{'title': item.title, 'id': item.pk} for item in sqs]
-
+        result['content'] += [{'title': organization.name, 'id': organization.pk}
+                              for organization in on_page.object_list]
         return HttpResponse(json.dumps(result))
 
     return HttpResponse(json.dumps(result))
 
 
 def json_filter(request):
-    filter = request.GET.get('type', None)
+    filter_key = request.GET.get('type', None)
+
+    if filter_key is None:
+        return HttpResponseBadRequest()
+
     q = request.GET.get('q', '').strip()
 
     try:
         page = int(request.GET.get('page', 1))
     except ValueError:
-        return HttpResponse(json.dumps({'content': [], 'total': 0}))
+        return HttpResponseBadRequest()
 
-    if request.is_ajax() and type:
-        result = func.autocompleteFilter(filter, q, page)
+    if request.is_ajax():
+        result = func.autocomplete_filter(filter_key, q, page)
 
-        if result:
-            onPage, total = result
+        if result is not None:
+            object_list, total = result
 
-            items = [{'title': item.title_auto, 'id': item.pk} for item in onPage.object_list]
+            items = [{'title': item.name, 'id': item.pk} for item in object_list]
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
@@ -412,9 +402,11 @@ def json_filter(request):
 
 
 # def test(request):
-#     a = func.getAnalytic({'dimensions': 'ga:dimension2'})
+#     from elasticsearch_dsl import Search
+#     from b24online.search_indexes import index_name, ChamberIndex
+#     result = Search(index=index_name, doc_type=ChamberIndex).query('match', name_auto='nat').execute()
 #
-#     return HttpResponse(a)
+#     return HttpResponse(result)
 
 
 def get_live_top(request):
@@ -479,16 +471,12 @@ def set_current(request, item_id):
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('denied'))
 
-        perm_list = item.getItemInstPermList(request.user)
-
-        if 'change_company' not in perm_list and 'change_tpp' not in perm_list:
+        if not item.has_perm(request.user):
             return HttpResponseRedirect(reverse('denied'))
 
-        current_company = int(item_id)
+        request.session['current_company'] = item.pk
     else:
-        current_company = False
-
-    request.session['current_company'] = current_company
+        del request.session['current_company']
 
     return HttpResponseRedirect(request.GET.get('next'), '/')
 

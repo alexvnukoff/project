@@ -148,6 +148,11 @@ class Branch(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import BranchIndex
+        return BranchIndex
+
     def __str__(self):
         return self.name
 
@@ -156,6 +161,11 @@ class Country(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
     flag = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import CountryIndex
+        return CountryIndex
 
     def __str__(self):
         return self.name
@@ -206,7 +216,7 @@ class Chamber(Organization):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
-    type = models.CharField(max_length=30, choices=CHAMBER_TYPES, blank=False, null=False)
+    org_type = models.CharField(max_length=30, choices=CHAMBER_TYPES, blank=False, null=False)
     metadata = HStoreField()
     additional_pages = GenericRelation(AdditionalPages)
     galleries = GenericRelation(Gallery)
@@ -221,11 +231,11 @@ class Chamber(Organization):
         # cache_name = "%s:%s" % (Chamber.cache_prefix(), 'country')
         # cached = cache.get(cache_name)
 
-        if self.type == 'international':
+        if self.org_type == 'international':
             return None
-            #raise ValueError('International organization')
+            # raise ValueError('International organization')
 
-        chamber = self.get_root() if self.type == 'affiliate' else self
+        chamber = self.get_root() if self.org_type == 'affiliate' else self
         countries = chamber.countries.all()
 
         if len(countries) > 1:
@@ -267,6 +277,11 @@ class Chamber(Organization):
     @classmethod
     def cache_prefix(cls):
         return cls.__name__
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import ChamberIndex
+        return ChamberIndex
 
     def __str__(self):
         return self.name
@@ -327,6 +342,11 @@ class Company(Organization):
     @property
     def email(self):
         return self.metadata.get('email', '')
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import CompanyIndex
+        return CompanyIndex
 
     def __str__(self):
         return self.name
@@ -396,8 +416,13 @@ class BusinessProposalCategory(models.Model):
     slug = models.SlugField()
     is_active = models.BooleanField(default=True, db_index=True)
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import BusinessProposalCategoryIndex
+        return BusinessProposalCategoryIndex
+
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class BusinessProposal(models.Model):
@@ -423,6 +448,11 @@ class BusinessProposal(models.Model):
 
     def has_perm(self, user):
         return self.organization.has_perm(user)
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import BusinessProposalIndex
+        return BusinessProposalIndex
 
     def __str__(self):
         return self.title
@@ -469,6 +499,11 @@ class InnovationProject(models.Model):
     def release_date(self):
         return self.metadata.get('release_date', '')
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import InnovationProjectIndex
+        return InnovationProjectIndex
+
     def __str__(self):
         return self.name
 
@@ -480,6 +515,10 @@ class B2BProductCategory(MPTTModel):
     image = models.ImageField(blank=True, null=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import B2bProductCategoryIndex
+        return B2bProductCategoryIndex
 
     def __str__(self):
         return self.name
@@ -521,6 +560,11 @@ class B2BProduct(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import B2BProductIndex
+        return B2BProductIndex
+
     def has_perm(self, user):
         return self.company.has_perm(user)
 
@@ -547,6 +591,12 @@ class NewsCategory(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import NewsCategoryIndex
+        return NewsCategoryIndex
+
+
     def __str__(self):
         return self.name
 
@@ -560,6 +610,11 @@ class Greeting(models.Model):
     content = models.TextField(blank=False, null=False)
     is_active = models.BooleanField(default=True, db_index=True)
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import GreetingIndex
+        return GreetingIndex
+
     def __str__(self):
         return self.name
 
@@ -569,7 +624,7 @@ class Greeting(models.Model):
 
 class News(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    image= models.CharField(max_length=255, blank=True, null=False)
+    image = models.CharField(max_length=255, blank=True, null=False)
     slug = models.SlugField()
     content = models.TextField()
     is_tv = models.BooleanField(default=False)
@@ -586,6 +641,11 @@ class News(models.Model):
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import NewsIndex
+        return NewsIndex
 
     def __str__(self):
         return self.title
@@ -634,6 +694,11 @@ class Tender(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import TenderIndex
+        return TenderIndex
+
     def has_perm(self, user):
         return self.organization.has_perm(user)
 
@@ -659,6 +724,11 @@ class Profile(models.Model):
     @property
     def full_name(self):
         return "%s %s %s" % (self.first_name, self.middle_name, self.last_name)
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import ProfileIndex
+        return ProfileIndex
 
     def __str__(self):
         return self.full_name
@@ -702,6 +772,11 @@ class Exhibition(models.Model):
             return self.dates[1]
 
         return None
+
+    @staticmethod
+    def get_index_model():
+        from b24online.search_indexes import ExhibitionIndex
+        return ExhibitionIndex
 
     def __str__(self):
         return self.title

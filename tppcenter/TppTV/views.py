@@ -31,9 +31,14 @@ class TVNewsLIst(ItemsList):
     current_section = _("TPP-TV")
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'company']
+    filter_list = ['tpp', 'country', 'company']
 
     model = News
+
+    sortFields = {
+        'date': 'created_at',
+        'name': 'title'
+    }
 
     def dispatch(self, request, *args, **kwargs):
 
@@ -66,12 +71,19 @@ class TVNewsLIst(ItemsList):
 
         return context
 
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('country').prefetch_related('organization', 'organization__countries')
+
+    def filter_search_object(self, s):
+        return super().filter_search_object(s).query('match', is_tv=True)
+
     def get_queryset(self):
         queryset = super(TVNewsLIst, self).get_queryset()
-        queryset = queryset.filter(is_tv=True)\
-            .select_related('country').prefetch_related('organization', 'organization__countries')
 
-        return queryset
+        if self.is_filtered():
+            return queryset
+
+        return queryset.filter(is_tv=True)
 
 
 class TVNewsDetail(ItemDetail):

@@ -1,6 +1,6 @@
 from haystack.backends import SQ
 from appl import func
-from appl.func import getActiveSQS, setPaginationForSearchWithValues, getPaginatorRange
+from appl.func import getActiveSQS, setPaginationForSearchWithValues, get_paginator_range
 from appl.models import Product, UserSites, AdditionalPages, Company, Country, Gallery
 from core.models import Item
 from django.core.exceptions import ObjectDoesNotExist
@@ -63,7 +63,7 @@ def _get_content(request, page, language):
 
     page = result[1]
 
-    paginator_range = getPaginatorRange(page)
+    paginator_range = get_paginator_range(page)
 
     templateParams = {
         'url_parameter': language if language else [],

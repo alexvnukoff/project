@@ -33,7 +33,7 @@ class InnovationProjectList(ItemsList):
     addUrl = 'innov:add'
 
     # allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = InnovationProject
 
@@ -43,9 +43,21 @@ class InnovationProjectList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Innov/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.prefetch_related('organization', 'organization__countries')
+
     def get_queryset(self):
         queryset = super(InnovationProjectList, self).get_queryset()
-        return queryset.prefetch_related('organization', 'organization__countries')
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(organization=current_org)
+            else:
+                queryset = self.model.objects.filter(created_by=self.request.user, organization__isnull=True)
+
+        return queryset
 
 
 class InnovationProjectDetail(ItemDetail):

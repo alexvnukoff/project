@@ -35,7 +35,7 @@ class B2BProductList(ItemsList):
     addUrl = 'products:add'
 
     # Allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = B2BProduct
 
@@ -51,10 +51,13 @@ class B2BProductList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Products/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.prefetch_related('company__countries')
+
     def get_queryset(self):
         queryset = super(B2BProductList, self).get_queryset()
 
-        if self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my:
+        if self.is_my():
             current_org = self._current_organization
 
             if current_org is not None:
@@ -62,7 +65,7 @@ class B2BProductList(ItemsList):
             else:
                 queryset = queryset.none()
 
-        return queryset.prefetch_related('company__countries')
+        return queryset
 
 
 class B2CProductList(ItemsList):
@@ -79,7 +82,7 @@ class B2CProductList(ItemsList):
     addUrl = 'products:addB2C'
 
     # allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = B2CProduct
 
@@ -102,9 +105,9 @@ class B2CProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = queryset.filter(company_id=current_org)
+                queryset = self.model.objects.filter(company_id=current_org)
             else:
-                queryset = queryset.none()
+                return queryset.none()
 
         return queryset.prefetch_related('company__countries')
 

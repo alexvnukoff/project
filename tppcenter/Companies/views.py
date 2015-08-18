@@ -2,7 +2,6 @@ import json
 
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -14,14 +13,13 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.utils.translation import trans_real
-
-from haystack.backends import SQ
+from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from appl.models import Country, Organization, Branch, Tpp, Cabinet
+from appl.models import Country, Branch, Tpp, Cabinet
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Department, Vacancy, AdditionalPages, Gallery, GalleryImage
+    Department, Vacancy, AdditionalPages, Gallery, GalleryImage, Organization
 from core.models import Item, User
 from core.tasks import addNewCompany
 from core.amazonMethods import add
@@ -45,7 +43,7 @@ class CompanyList(ItemsList):
     ]
 
     # allowed filter list
-    filterList = ['tpp', 'country', 'branch']
+    filter_list = ['tpp', 'country', 'branch']
 
     model = Company
 
@@ -55,18 +53,22 @@ class CompanyList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Companies/index.html'
 
-    def _get_my(self):
-        return SQ(django_id__gt=0)
+    def optimize_queryset(self, queryset):
+        return queryset.prefetch_related('countries', 'parent')
 
     def get_queryset(self):
-        if self.request.user.is_authenticated() and self.is_my():
-            cab = Cabinet.objects.get(user=self.request.user.pk)
-            self.querysetDB = True
-            return Company.active.get_active().filter(Q(create_user=self.request.user) |
-                                                      Q(p2c__child__p2c__child__p2c__child=cab.pk)).distinct()
-        else:
-            queryset = super(CompanyList, self).get_queryset()
-            return queryset.prefetch_related('countries', 'parent')
+        queryset = super(CompanyList, self).get_queryset()
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(parent_id=current_org)
+            else:
+                queryset = get_objects_for_user(self.request.user, ['manage_organization'], Organization)\
+                    .instance_of(Company)
+
+        return queryset
 
 
 class CompanyDetail(ItemDetail):
@@ -85,7 +87,7 @@ def _tab_news(request, company, page=1):
     news = News.objects.filter(organization=company)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_news_paged"
 
@@ -103,7 +105,7 @@ def _tab_tenders(request, company, page=1):
     tenders = Tender.objects.filter(organization=company)
     paginator = Paginator(tenders, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_tenders_paged"
 
@@ -122,7 +124,7 @@ def _tabs_exhibitions(request, company, page=1):
     exhibitions = Exhibition.objects.filter(organization=company)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_exhibitions_paged"
 
@@ -141,7 +143,7 @@ def _tab_products(request, company, page=1):
     products = B2BProduct.objects.filter(company=company)
     paginator = Paginator(products, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_products_paged"
 
@@ -159,7 +161,7 @@ def _tab_proposals(request, company, page=1):
     proposals = BusinessProposal.objects.filter(organization=company)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_proposal_paged"
 
@@ -177,7 +179,7 @@ def _tab_innovation_projects(request, company, page=1):
     projects = InnovationProject.objects.filter(organization=company)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_innov_paged"
 
@@ -244,7 +246,7 @@ def _tab_structure(request, company, page=1):
 
     paginator = Paginator(departments, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
     url_paginator = "companies:tab_structure_paged"
 
     template_params = {
@@ -328,7 +330,7 @@ def _tab_staff(request, company, page=1):
 
     paginator = Paginator(users, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tab_staff_paged"
 
@@ -582,7 +584,7 @@ def _tab_gallery(request, item, page=1):
         photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
         paginator = Paginator(photos, 10)
         page = paginator.page(page)
-        paginator_range = func.getPaginatorRange(page)
+        paginator_range = func.get_paginator_range(page)
 
         url_paginator = "companies:tabs_gallery_paged"
 
@@ -609,7 +611,7 @@ def gallery_structure(request, organization, page=1):
     photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
     paginator = Paginator(photos, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "companies:tabs_gallery_paged"
 

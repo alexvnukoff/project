@@ -201,7 +201,7 @@ class ItemsList(HybridListView):
             'order1': self.order1,
             'order2': self.order2,
             'page': context['page_obj'],
-            'paginator_range': func.getPaginatorRange(context['page_obj']),
+            'paginator_range': func.get_paginator_range(context['page_obj']),
             'url_parameter': self.url_parameter,
             'url_paginator': self.url_my_paginator if self.is_my() else self.url_paginator,
             'items_perms': self._get_items_perms(context['object_list']),

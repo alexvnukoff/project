@@ -176,7 +176,7 @@
                     </ul>
                 </div>
                 {% if user.is_authenticated %}
-                   {% getMyCompaniesList %}
+                   {% get_my_companies_list %}
                 {% endif %}
                 <div id="tabs-1">
                     <ul class="tab1-cate">
@@ -300,7 +300,7 @@
                 <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
                 <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>
             </div>
-                {% getTopOnPage item_id %}
+                {% get_top_on_page item_id %}
                  <div class="banner-wrapper-right">
                  {% get_banner "Right 1" item_id %}
                  {% get_banner "Right 2" item_id  %}

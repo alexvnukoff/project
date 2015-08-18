@@ -32,7 +32,12 @@ class TenderList(ItemsList):
     addUrl = 'tenders:add'
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
+
+    sortFields = {
+        'date': 'created_at',
+        'name': 'title'
+    }
 
     model = Tender
 
@@ -42,9 +47,21 @@ class TenderList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Tenders/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('country').prefetch_related('organization')
+
     def get_queryset(self):
         queryset = super(TenderList, self).get_queryset()
-        return queryset.select_related('country').prefetch_related('organization')
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(organization_id=current_org)
+            else:
+                queryset = queryset.none()
+
+        return queryset
 
 
 class TenderDetail(ItemDetail):

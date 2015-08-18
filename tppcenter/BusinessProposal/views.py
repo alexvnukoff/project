@@ -12,7 +12,7 @@ from django.utils.translation import trans_real
 from appl import func
 from appl.models import AdditionalPages, Organization, Branch, BpCategories
 from b24online.cbv import ItemsList, ItemDetail
-from b24online.models import BusinessProposal, Gallery
+from b24online.models import BusinessProposal, Gallery, Chamber, Country
 from core.models import Item
 from core.tasks import addBusinessPRoposal
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
@@ -33,7 +33,16 @@ class BusinessProposalList(ItemsList):
     addUrl = 'proposal:add'
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = {
+        'chamber': Chamber,
+        'country': Country,
+        'branch': Branch,
+    }
+
+    sortFields = {
+        'date': 'created_at',
+        'name': 'title'
+    }
 
     model = BusinessProposal
 
@@ -43,9 +52,21 @@ class BusinessProposalList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'BusinessProposal/index.html'
 
-    def get_queryset(self):
-        queryset = super(BusinessProposalList, self).get_queryset()
+    def optimize_queryset(self, queryset):
         return queryset.prefetch_related('branches', 'organization', 'organization__countries')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(organization_id=current_org)
+            else:
+                queryset = queryset.none()
+
+        return queryset
 
 
 class BusinessProposalDetail(ItemDetail):

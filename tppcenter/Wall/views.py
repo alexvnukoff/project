@@ -5,14 +5,16 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
+from appl import func
 
-from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News
+from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
+from b24online.search_indexes import SearchEngine
 
 
 def get_wall_list(request):
     current_section = _("Wall")
 
-    wallPage = _wallContent(request)
+    wallPage = _wall_content(request)
 
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
@@ -22,7 +24,6 @@ def get_wall_list(request):
     scripts = []
 
     if not request.is_ajax():
-
         templateParams = {
             'current_section': current_section,
             'wallPage': wallPage
@@ -40,65 +41,94 @@ def get_wall_list(request):
         return HttpResponse(json.dumps(serialize))
 
 
-def _wallContent(request):
-    # filters, searchFilter = func.filterLive(request, model_name='Wall')
-    filters = {}
-    # innovation_projects = func.getActiveSQS().models(InnovationProject)
-    # products = func.getActiveSQS().models(Product)
-    # proposals = func.getActiveSQS().models(BusinessProposal)
-    # exhibitions = func.getActiveSQS().models(Exhibition)
-    #
-    # if len(searchFilter) > 0:
-    #     innovation_projects = innovation_projects.filter(searchFilter)
-    #     products = products.filter(searchFilter)
-    #     proposals = proposals.filter(searchFilter)
-    #     exhibitions = exhibitions.filter(searchFilter)
-    #
-    # q = request.GET.get('q', '')
-    #
-    # if q != '':
-    #     innovation_projects = innovation_projects.filter(title=q)
-    #     products = products.filter(title=q)
-    #     proposals = proposals.filter(title=q)
-    #     exhibitions = exhibitions.filter(title=q)
-
-    sortFields = {
-        'date': 'created_at',
-        'name': 'name'
+def _wall_content(request):
+    valid_filters = {
+        'country': Country,
+        'chamber': Chamber,
+        'branch': Branch
     }
 
-    order = ['created_at']
+    q = request.GET.get('q', '').strip()
+    filters = {}
 
-    sortField1 = request.GET.get('sortField1', 'date')
-    sortField2 = request.GET.get('sortField2', None)
-    order1 = request.GET.get('order1', 'desc')
-    order2 = request.GET.get('order2', None)
-    #
-    # if sortField1 and sortField1 in sortFields:
-    #     if order1 == 'desc':
-    #         order.append('-' + sortFields[sortField1])
-    #     else:
-    #         order.append(sortFields[sortField1])
-    # else:
-    #     order.append('created_at')
+    for f, model in valid_filters.items():
+        key = "filter[%s][]" % f
+        values = request.GET.getlist(key)
 
-    innovation_project = InnovationProject.objects.prefetch_related('organization', 'organization__countries').latest(*order)
-    products = B2BProduct.objects.prefetch_related('company__countries').order_by(*order)[:4]
-    proposal = BusinessProposal.objects.prefetch_related('organization', 'organization__countries') \
-        .latest(*order)
-    exhibition = Exhibition.objects.select_related('country')\
-        .prefetch_related('organization','organization__countries').latest(*order)
-    news = News.objects.select_related('country').prefetch_related('organization', 'organization__countries') \
-        .latest(*order)  # TODO, show only specific news
+        if values:
+            filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
+
+    innovation_project = InnovationProject.objects.all()
+    products = B2BProduct.objects.all().prefetch_related('company__countries')
+    proposal = BusinessProposal.objects.all()
+    exhibition = Exhibition.objects.all()
+    # TODO, show only specific news
+    news = News.objects.all()
+
+    if filters or q:
+        filter_list = list(valid_filters.keys())
+        #####################
+        sort = get_sorting(request)
+        hits = apply_filters(request, InnovationProject, q, filter_list).sort(*sort)[:1].execute().hits
+
+        if hits.total > 0:
+            innovation_project = innovation_project.get(pk=hits[0].django_id)
+        else:
+            innovation_project = None
+
+        #####################
+        sort = get_sorting(request)
+        hits = apply_filters(request, B2BProduct, q, filter_list).sort(*sort)[:4].execute().hits
+        obj_ids = [hit.django_id for hit in hits]
+        products = products.filter(pk__in=obj_ids)
+
+        #####################
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        hits = apply_filters(request, BusinessProposal, q, filter_list).sort(*sort)[:1].execute().hits
+
+        if hits.total > 0:
+            proposal = proposal.get(pk=hits[0].django_id)
+        else:
+            proposal = None
+
+        #####################
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        hits = apply_filters(request, Exhibition, q, filter_list).sort(*sort)[:1].execute().hits
+
+        if hits.total > 0:
+            exhibition = innovation_project.get(pk=hits[0].django_id)
+        else:
+            exhibition = None
+
+        #####################
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        hits = apply_filters(request, News, q, filter_list).sort(*sort)[:1].execute().hits
+
+        if hits.total > 0:
+            news = innovation_project.get(pk=hits[0].django_id)
+        else:
+            news = None
+    else:
+        sort = get_sorting(request)
+        innovation_project = innovation_project.order_by(*sort).first()
+        sort = get_sorting(request)
+        products = products.order_by(*sort)[:4]
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        proposal = proposal.order_by(*sort).first()
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        exhibition = exhibition.order_by(*sort).first()
+        sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
+        news = news.order_by(*sort).first()
+
 
     template = loader.get_template('Wall/contentPage.html')
 
     template_params = {
         'filters': filters,
-        'sortField1': sortField1,
-        'sortField2': sortField2,
-        'order1': order1,
-        'order2': order2,
+        'sortField1': request.GET.get('sortField1', 'date'),
+        'sortField2': request.GET.get('sortField1', None),
+        'order1': request.GET.get('sortField1', 'desc'),
+        'order2': request.GET.get('sortField1', None),
         'news': news,
         'exhibition': exhibition,
         'products': products,
@@ -109,3 +139,50 @@ def _wallContent(request):
     context = RequestContext(request, template_params)
 
     return template.render(context)
+
+
+def apply_filters(request, model, q, valid_filters):
+    s = SearchEngine(doc_type=model.get_index_model())
+
+    for filter_key in valid_filters:
+        filter_lookup = "filter[%s][]" % filter_key
+        values = request.GET.getlist(filter_lookup)
+
+        if values:
+            s = s.filter('terms', **{filter_key: values})
+
+    if q:
+        s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
+
+    return s
+
+
+def get_sorting(request, sort_fields=None):
+    if sort_fields is None:
+        sort_fields = {
+            'date': 'created_at',
+            'name': 'name'
+        }
+
+    order = []
+
+    sort_field1 = request.GET.get('sortField1', 'date')
+    sort_field2 = request.GET.get('sortField2', None)
+    order1 = request.GET.get('order1', 'desc')
+    order2 = request.GET.get('order2', None)
+
+    if sort_field1 and sort_field1 in sort_fields:
+        if order1 == 'desc':
+            order.append('-' + sort_fields[sort_field1])
+        else:
+            order.append(sort_fields[sort_field1])
+    else:
+        order.append(sort_fields['date'])
+
+    if sort_field2 and sort_field1 in sort_fields:
+        if order2 == 'desc':
+            order.append('-' + sort_fields[sort_field2])
+        else:
+            order.append(sort_fields[sort_field2])
+
+    return order

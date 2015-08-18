@@ -1,14 +1,18 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from appl.models import Greeting
-from tppcenter.cbv import ItemDetail, ItemsList
-from haystack.backends import SQ
-from haystack.query import SearchQuerySet
 
-class get_greetings_list(ItemsList):
+from b24online.cbv import ItemsList, ItemDetail
+from b24online.models import Greeting
 
+
+class GreetingList(ItemsList):
     #pagination url
     url_paginator = "greetings:paginator"
+
+     # Fields to sort by
+    sortFields = {
+        'name': 'name'
+    }
  
     #Lists of required scripts and styles for ajax request
     styles = [
@@ -22,27 +26,11 @@ class get_greetings_list(ItemsList):
     filterList = []
 
     model = Greeting
-
     template_name = 'Greetings/index.html'
 
-    def get_queryset(self):
 
-        sqs = SearchQuerySet().models(self.model)
-
-        q = self.request.GET.get('q', '')
-
-        if q != '': #Search for content
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-            
-        return sqs
-
-
-class get_greeting_detail(ItemDetail):
-
+class GreetingDetail(ItemDetail):
     model = Greeting
     template_name = 'Greetings/detailContent.html'
 
     current_section = _("Greetings")
-
-    def get_queryset(self):
-        return SearchQuerySet().models(self.model)

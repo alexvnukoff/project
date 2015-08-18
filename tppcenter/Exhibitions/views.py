@@ -29,11 +29,16 @@ class ExhibitionList(ItemsList):
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
+    sortFields = {
+        'date': 'created_at',
+        'name': 'title'
+    }
+
     current_section = _("Exhibitions")
     addUrl = 'exhibitions:add'
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = Exhibition
 
@@ -43,9 +48,21 @@ class ExhibitionList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Exhibitions/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('country').prefetch_related('organization')
+
     def get_queryset(self):
         queryset = super(ExhibitionList, self).get_queryset()
-        return queryset.select_related('country').prefetch_related('organization')
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(organization_id=current_org)
+            else:
+                queryset = queryset.none()
+
+        return queryset
 
 
 class ExhibitionDetail(ItemDetail):

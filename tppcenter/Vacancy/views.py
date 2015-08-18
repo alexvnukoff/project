@@ -31,11 +31,11 @@ class RequirementList(ItemsList):
         settings.STATIC_URL + 'tppcenter/css/company.css'
     ]
 
-    current_section = _("Vacancy")
+    current_section = _("Job requirements")
     addUrl = 'vacancy:add'
 
     #allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch']
+    filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = Requirement
 
@@ -45,8 +45,21 @@ class RequirementList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Vacancy/index.html'
 
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('country')
+
     def get_queryset(self):
-        return super().get_queryset().select_related('country')
+        queryset = super().get_queryset()
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                queryset = self.model.objects.filter(vacancy__department__organization_id=current_org)
+            else:
+                queryset = queryset.objects.none()
+
+        return queryset
 
 
 class RequirementDetail(ItemDetail):

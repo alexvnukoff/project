@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.utils.translation import trans_real
-from haystack.backends import SQ
+from guardian.shortcuts import get_objects_for_user
 
 from appl import func
 from appl.models import Tpp, Country, AdditionalPages
@@ -39,18 +39,7 @@ class ChamberList(ItemsList):
     current_section = _("Tpp")
 
     # allowed filter list
-    filterList = ['country']
-
-    def dispatch(self, request, *args, **kwargs):
-
-        if request.user.is_authenticated():
-
-            user_groups = request.user.groups.values_list('name', flat=True)
-
-            if request.user.is_manager and 'TPP Creator' in user_groups:
-                self.addUrl = 'tpp:add'
-
-        return super().dispatch(request, *args, **kwargs)
+    filter_list = ['country']
 
     model = Chamber
 
@@ -60,22 +49,22 @@ class ChamberList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Tpp/index.html'
 
-    def _get_my(self):
-        current_organization = self.request.session.get('current_company', False)
-
-        if current_organization is False:
-            if self.request.is_ajax():
-                self.template_name = 'permissionDen.html'
-            else:
-                self.template_name = 'main/denied.html'
-
-            return SQ(django_id=0)
-
-        return SQ(django_id=current_organization) | SQ(company=current_organization)
+    def optimize_queryset(self, queryset):
+        return queryset.select_related('parent').prefetch_related('countries')
 
     def get_queryset(self):
         queryset = super(ChamberList, self).get_queryset()
-        return queryset.select_related('parent').prefetch_related('countries')
+
+        if self.is_my():
+            current_org = self._current_organization
+
+            if current_org is not None:
+                return queryset.none()
+            else:
+                queryset = get_objects_for_user(self.request.user, ['manage_organization'], Organization)\
+                    .instance_of(Chamber)
+
+        return queryset
 
 
 class ChamberDetail(ItemDetail):
@@ -216,7 +205,7 @@ def _tab_companies(request, tpp, page=1):
     paginator = Paginator(companies, 10)
 
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_companies_paged"
 
@@ -234,7 +223,7 @@ def _tab_news(request, tpp, page=1):
     news = News.objects.filter(organization=tpp)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_news_paged"
 
@@ -252,7 +241,7 @@ def _tab_tenders(request, tpp, page=1):
     tenders = Tender.objects.filter(organization=tpp)
     paginator = Paginator(tenders, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_tenders_paged"
 
@@ -270,7 +259,7 @@ def _tab_exhibitions(request, tpp, page=1):
     exhibitions = Exhibition.objects.filter(organization=tpp)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_exhibitions_paged"
 
@@ -288,7 +277,7 @@ def _tab_proposals(request, tpp, page=1):
     proposals = BusinessProposal.objects.filter(organization=tpp)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_proposal_paged"
 
@@ -306,7 +295,7 @@ def _tab_innovation_projects(request, tpp, page=1):
     projects = InnovationProject.objects.filter(organization=tpp)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_innov_paged"
 
@@ -371,7 +360,7 @@ def _tab_structure(request, tpp, page=1):
 
     paginator = Paginator(departments, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
     url_paginator = "tpp:tab_structure_paged"
 
     template_params = {
@@ -455,7 +444,7 @@ def _tab_staff(request, tpp, page=1):
 
     paginator = Paginator(users, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tab_staff_paged"
 
@@ -499,7 +488,7 @@ def _tab_gallery(request, tpp, page=1):
         paginator = Paginator(photos, 10)
         page = paginator.page(page)
 
-        paginator_range = func.getPaginatorRange(page)
+        paginator_range = func.get_paginator_range(page)
 
         url_paginator = "tpp:tabs_gallery_paged"
 
@@ -522,7 +511,7 @@ def gallery_structure(request, tpp, page=1):
     photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
     paginator = Paginator(photos, 10)
     page = paginator.page(page)
-    paginator_range = func.getPaginatorRange(page)
+    paginator_range = func.get_paginator_range(page)
 
     url_paginator = "tpp:tabs_gallery_paged"
 
