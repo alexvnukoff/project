@@ -1,0 +1,77 @@
+{% extends "baseFilter.html" %}
+{% load i18n %}
+{% block filterTopContent %}
+    {% for filter_name, filter_items in applied_filters.items %}
+        {% if filter_items %}
+            {% for item in filter_items %}
+                <input type="hidden" class="filter-item" name="filter[{{ filter_name }}][]" value="{{ item.pk }}" data-text="{{ item.name }}">
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="tabfilter">
+        <div class="tab-cate">
+            <ul>
+                {% if 'country' in available_filters or 'countries' in available_filters %}
+                    <li><a href="#tabfil-1">{% trans "Country" %}</a></li>
+                {% endif %}
+                {% if 'chamber' in available_filters %}
+                    <li><a href="#tabfil-2">{% trans "Organization" %}</a></li>
+                {% endif %}
+                {% if 'branches' in available_filters %}
+                    <li><a href="#tabfil-3">{% trans "Branch" %}</a></li>
+                {% endif %}
+                {% if 'bp_categories' in available_filters %}
+                    <li><a href="#tabfil-4">{% trans "Category" %}</a></li>
+                {% endif %}
+                {% if 'b2b_categories' in available_filters %}
+                    <li><a href="#tabfil-5">{% trans "Category" %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if 'country' in available_filters or 'countries' in available_filters %}
+            <div id="tabfil-1">
+                <div class="tabfilter-content">
+                    {% if 'country' in available_filters %}
+                        <input id="filter-country" type="hidden" class="big-selector">
+                    {% else %}
+                        <input id="filter-countries" type="hidden" class="big-selector">
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if 'chamber' in available_filters %}
+            <div id="tabfil-2">
+                <div class="tabfilter-content">
+                    <input id="filter-chamber" type="hidden" class="big-selector">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if 'branches' in available_filters %}
+            <div id="tabfil-3">
+                <div class="tabfilter-content">
+                    <input id="filter-branches" type="hidden" class="big-selector">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if 'bp_categories' in available_filters %}
+            <div id="tabfil-4">
+                <div class="tabfilter-content">
+                    <input id="filter-bp_categories" type="hidden" class="big-selector">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if 'b2b_categories' in available_filters %}
+            <div id="tabfil-5">
+                <div class="tabfilter-content">
+                    <input id="filter-b2b_categories" type="hidden" class="big-selector">
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

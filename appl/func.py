@@ -880,11 +880,12 @@ def getB2BcabinetValues(request):
     return None
 
 
-def get_banner(block, site_id, filterAdv=None):
+def get_banner(block, site_id, filter_adv=None):
+    # TODO optimize the function for batch
     banner_queryset = Banner.objects.filter(block__code=block, is_active=True, site=site_id)
     targeting_filter = None
 
-    for target_model, target_items in filterAdv.items():
+    for target_model, target_items in filter_adv.items():
         if not target_items:
             continue
 
@@ -1011,13 +1012,19 @@ def get_detail_adv_filter(obj):
     filter_by_model = {}
 
     org = getattr(obj, 'organization', None)
+    company = getattr(obj, 'company', None)
     branches = getattr(obj, 'branches', None)
 
     if org is not None:
-        filter_by_model[Chamber.__name__] = [org]
+        if isinstance(org, Chamber):
+            filter_by_model[Chamber.__name__] = [org.id]
+        elif org.parent_id:
+            filter_by_model[Chamber.__name__] = [org.parent_id]
+    elif company and company.parent_id:
+        filter_by_model[Chamber.__name__] = [company.parent_id]
 
     if branches is not None:
-        filter_by_model[Branch.__name__] = branches.all().values_lis('pk', flat=True)
+        filter_by_model[Branch.__name__] = branches.all().values_list('pk', flat=True)
 
     return filter_by_model
 
@@ -1160,15 +1167,15 @@ def autocomplete_filter(filter_key, q, page):
             'model': Chamber,
             'index_model': ChamberIndex,
         },
-        'branch': {
+        'branches': {
             'model': Branch,
             'index_model': BranchIndex,
         },
-        'b2b_category': {
+        'b2b_categories': {
             'model': B2BProductCategory,
             'index_model': B2bProductCategoryIndex,
         },
-        'bp_category': {
+        'bp_categories': {
             'model': BusinessProposalCategory,
             'index_model': BusinessProposalCategoryIndex,
         }

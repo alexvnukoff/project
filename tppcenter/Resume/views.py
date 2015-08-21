@@ -38,7 +38,7 @@ class ResumeList(ItemsList):
     addUrl = 'resume:add'
 
     #allowed filter list
-    filter_list = []
+    # filter_list = []
 
     model = Resume
 

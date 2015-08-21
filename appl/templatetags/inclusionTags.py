@@ -8,11 +8,11 @@ from django.core.cache import cache
 from django.utils.translation import get_language
 
 from appl.models import BusinessProposal, InnovationProject, Tender, Exhibition, Requirement, Resume, Category
-from b24online.models import Chamber, B2BProduct, Organization
+from b24online.models import Chamber, B2BProduct, Organization, StaticPage
 from centerpokupok.views import _sortMenu
 from appl import func
-from appl.models import Cabinet, News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
-    Company, Tpp
+from appl.models import News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
+    Company
 from core.models import Item
 
 register = template.Library()
@@ -41,12 +41,12 @@ def userSitegetTopOnPage(context):
 
 
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
-def get_top_on_page(context, item_id=None):
+def get_top_on_page(context, item=None):
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
-    if item_id:
-        filter_adv = func.get_detail_adv_filter(item_id)
+    if item:
+        filter_adv = func.get_detail_adv_filter(item)
     else:
         filter_adv = func.get_list_adv_filter(request)
 
@@ -68,12 +68,12 @@ def get_top_on_page(context, item_id=None):
 
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
-def get_banner(context, block, item_id=None):
+def get_banner(context, block, item):
     request = context.get('request')
     MEDIA_URL = context.get('MEDIA_URL', '')
 
-    if item_id:
-        advertisement_filter = func.get_detail_adv_filter(item_id)
+    if item:
+        advertisement_filter = func.get_detail_adv_filter(item)
     else:
         advertisement_filter = func.get_list_adv_filter(request)
 
@@ -283,30 +283,18 @@ def getUserSiteMenu(context):
 
 
 @register.inclusion_tag('main/staticPages.html')
-def showStaticPages():
+def show_static_pages(site_type='b2b'):
     cache_name = "%s_static_pages_all_bottom" % get_language()
 
     cached = cache.get(cache_name)
 
     if not cached:
-
-        pages = [page.pk for page in staticPages.objects.all()]
-
-        pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
-
         pages = {}
 
-        for page in staticPages.objects.all():
+        for page in StaticPage.objects.filter(site_type=site_type).values('page_type', 'slug', 'title'):
+            pages[page['page_type']] = pages.get(page['page_type'], []) + [page]
 
-            name = pageWithAttr[page.pk].get('NAME', [""])[0]
-            slug = pageWithAttr[page.pk].get('SLUG', [""])[0]
-
-            if page.pageType not in pages:
-                pages[page.pageType] = []
-
-            pages[page.pageType].append((slug, name))
-
-            cache.set(cache_name, pages, 60 * 60 * 24 * 7)
+        cache.set(cache_name, pages, 60 * 60 * 24 * 7)
     else:
         pages = cache.get(cache_name)
 
@@ -314,29 +302,27 @@ def showStaticPages():
 
 
 @register.inclusion_tag('main/topStaticPages.html')
-def showTopStaticPages():
+def show_top_static_pages(site_type='b2b'):
     cache_name = "%s_static_pages_all_top" % get_language()
     cached = cache.get(cache_name)
 
     if not cached:
-
-        pages = [page.pk for page in staticPages.objects.filter(onTop=True)]
-
-        pageWithAttr = Item.getItemsAttributesValues(('SLUG', 'NAME'), pages)
-        cache.set(cache_name, pageWithAttr, 60 * 60 * 24 * 7)
-
+        pages = StaticPage.objects.filter(is_on_top=True, site_type=site_type).values('slug', 'title')
+        cache.set(cache_name, pages, 60 * 60 * 24 * 7)
     else:
-        pageWithAttr = cache.get(cache_name)
+        pages = cache.get(cache_name)
 
-    return {'pagesDict': pageWithAttr}
+    return {'pages': pages}
 
 
 @register.inclusion_tag('main/socialShare.html', takes_context=True)
-def b2bSocialButtons(context, image, title, text):
-    request = context.get('request')
-    MEDIA_URL = context.get('MEDIA_URL', '')
-
-    return {'MEDIA_URL': MEDIA_URL, 'image': image, 'title': title, 'text': text}
+def b2b_social_buttons(context, image, title, text):
+    return {
+        'MEDIA_URL': context.get('MEDIA_URL', ''),
+        'image': image,
+        'title': title,
+        'text': text
+    }
 
 
 @register.inclusion_tag("main/main_menu.html", takes_context=True)

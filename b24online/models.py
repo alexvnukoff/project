@@ -785,12 +785,20 @@ class Exhibition(models.Model):
         return self.organization.has_perm(user)
 
 
-class StaticPages(models.Model):
+class StaticPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     content = models.TextField(blank=False, null=False)
-    onTop = models.BooleanField(default=False)
+    is_on_top = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True, db_index=True)
+
+    SITE_TYPES = [
+        ('b2b', _('B2B')),
+        ('b2c', _('B2C')),
+        ('user_site', _('User sites'))
+    ]
+
+    site_type = models.CharField(max_length=10, choices=SITE_TYPES)
 
     PAGE_TYPES = (
         ('about', 'About'),
@@ -800,7 +808,7 @@ class StaticPages(models.Model):
         ('seller', 'To seller'),
     )
 
-    pageType = models.CharField(max_length=200, choices=PAGE_TYPES)
+    page_type = models.CharField(max_length=200, choices=PAGE_TYPES)
 
     def __str__(self):
         return self.title

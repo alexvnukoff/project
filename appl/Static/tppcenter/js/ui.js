@@ -29,26 +29,35 @@ var ui =
             selector: '#filter-country',
             name: 'filter[country]'
         },
-
-        tpp:
+        countries:
         {
-            selector: '#filter-tpp',
-            name: 'filter[tpp]'
+            selector: '#filter-countries',
+            name: 'filter[countries]'
+        },
+        chamber:
+        {
+            selector: '#filter-chamber',
+            name: 'filter[chamber]'
         },
         company:
         {
             selector: '#filter-company',
             name: 'filter[company]'
         },
-        bp_category:
+        bp_categories:
         {
-            selector: '#filter-bp_category',
-            name: 'filter[bp_category]'
+            selector: '#filter-bp_categories',
+            name: 'filter[bp_categories]'
         },
-        branch:
+        b2b_categories:
         {
-            selector: '#filter-branch',
-            name: 'filter[branch]'
+            selector: '#filter-b2b_categories',
+            name: 'filter[b2b_categories]'
+        },
+        branches:
+        {
+            selector: '#filter-branches',
+            name: 'filter[branches]'
         }
     },
 
@@ -169,9 +178,10 @@ var ui =
 
         link = $(this).parent();
         id = link.data('id');
+        filter_key = link.data('type')
 
         //remove the filter from the form
-        ui.filter_form.find('input[value="' + id + '"].filter-item').remove();
+        ui.filter_form.find('input[value="' + id + '"][name="filter[' + filter_key + '][]"].filter-item').remove();
 
         link.parent().remove();
 
@@ -198,7 +208,7 @@ var ui =
             var data = []
 
             $('input[name="filter[' + filter + '][]"].filter-item').each(function() {
-                data.push({id: $(this).val(), title: $(this).data('text')});
+                data.push({id: $(this).val(), title: $(this).data('text'), filter_key: filter});
                 filter_keys.push(data[data.length - 1]);
             });
 
@@ -241,7 +251,7 @@ var ui =
         {
             for(i=0, len = data.length - 1; i < 5; i++)
             {//Set 5 random selected filters to filter bar / search bar
-                keys += '<li>' + data[i].title + '<a href="#" data-id="' + data[i].id + '">' +
+                keys += '<li>' + data[i].title + '<a href="#" data-id="' + data[i].id + '" data-type="' + data[i].filter_key + '">' +
                             '<i class="i-close filter-remove imgnews"></i></a></li>';
 
                 if (len == i) // if there is less then 5 filters selected

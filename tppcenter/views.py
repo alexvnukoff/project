@@ -20,11 +20,8 @@ from registration.forms import RegistrationFormUniqueEmail
 from django.core.mail import send_mail
 
 from appl.models import Cabinet, Notification
-from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Country, Branch, \
-    B2BProductCategory, BusinessProposalCategory
+from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization
 from appl import func
-from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
-    BusinessProposalCategoryIndex
 from core.models import Item
 
 
@@ -427,12 +424,12 @@ def get_live_banner(request):
 
     places = request.POST.getlist('places[]', [])
 
-    templateParams = {
+    template_params = {
         'MEDIA_URL': settings.MEDIA_URL,
-        'banners': func.get_banner(places, settings.SITE_ID, filterAdv)
+        'banners': [func.get_banner(place, settings.SITE_ID, filterAdv) for place in places]
     }
 
-    return render_to_response("AdvBanner/banners.html", templateParams)
+    return render_to_response("AdvBanner/banners.html", template_params)
 
 
 def ping(request):

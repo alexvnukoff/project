@@ -1,20 +1,18 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from appl.models import staticPages
+
+from b24online.models import StaticPage
 
 
 def project(request, template, section):
-
-    templateParams = {
+    template_params = {
         'current_section': section,
     }
 
-    return render_to_response("Project/" + template, templateParams, context_instance=RequestContext(request))
+    return render_to_response("Project/" + template, template_params, context_instance=RequestContext(request))
 
-def showPage(request, item_id=None, slug=None):
 
-    page = get_object_or_404(staticPages, pk=item_id)
+def show_page(request, item_id=None, slug=None):
+    page = get_object_or_404(StaticPage, pk=item_id)
 
-    attr = page.getAttributeValues('NAME', 'DETAIL_TEXT')
-
-    return render_to_response("Project/detail.html", {'page': attr}, context_instance=RequestContext(request))
+    return render_to_response("Project/detail.html", {'page': page}, context_instance=RequestContext(request))

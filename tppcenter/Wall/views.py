@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from appl import func
 
 from b24online.models import InnovationProject, B2BProduct, BusinessProposal, Exhibition, News, Branch, Chamber, Country
 from b24online.search_indexes import SearchEngine
@@ -45,18 +44,18 @@ def _wall_content(request):
     valid_filters = {
         'country': Country,
         'chamber': Chamber,
-        'branch': Branch
+        'branches': Branch
     }
 
     q = request.GET.get('q', '').strip()
-    filters = {}
+    applied_filters = {}
 
     for f, model in valid_filters.items():
         key = "filter[%s][]" % f
         values = request.GET.getlist(key)
 
         if values:
-            filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
+            applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
 
     innovation_project = InnovationProject.objects.all()
     products = B2BProduct.objects.all().prefetch_related('company__countries')
@@ -65,7 +64,7 @@ def _wall_content(request):
     # TODO, show only specific news
     news = News.objects.all()
 
-    if filters or q:
+    if applied_filters or q:
         filter_list = list(valid_filters.keys())
         #####################
         sort = get_sorting(request)
@@ -96,7 +95,7 @@ def _wall_content(request):
         hits = apply_filters(request, Exhibition, q, filter_list).sort(*sort)[:1].execute().hits
 
         if hits.total > 0:
-            exhibition = innovation_project.get(pk=hits[0].django_id)
+            exhibition = exhibition.get(pk=hits[0].django_id)
         else:
             exhibition = None
 
@@ -105,7 +104,7 @@ def _wall_content(request):
         hits = apply_filters(request, News, q, filter_list).sort(*sort)[:1].execute().hits
 
         if hits.total > 0:
-            news = innovation_project.get(pk=hits[0].django_id)
+            news = news.get(pk=hits[0].django_id)
         else:
             news = None
     else:
@@ -124,7 +123,7 @@ def _wall_content(request):
     template = loader.get_template('Wall/contentPage.html')
 
     template_params = {
-        'filters': filters,
+        'applied_filters': applied_filters,
         'sortField1': request.GET.get('sortField1', 'date'),
         'sortField2': request.GET.get('sortField1', None),
         'order1': request.GET.get('sortField1', 'desc'),
@@ -133,7 +132,8 @@ def _wall_content(request):
         'exhibition': exhibition,
         'products': products,
         'innovation_project': innovation_project,
-        'proposal': proposal
+        'proposal': proposal,
+        'available_filters': list(valid_filters.keys())
     }
 
     context = RequestContext(request, template_params)

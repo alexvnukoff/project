@@ -43,7 +43,7 @@ class CompanyList(ItemsList):
     ]
 
     # allowed filter list
-    filter_list = ['tpp', 'country', 'branch']
+    # filter_list = ['tpp', 'country', 'branch']
 
     model = Company
 

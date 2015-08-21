@@ -9,24 +9,15 @@
     <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/company.css"%}" />
 {% endblock %}
 
-{% block keywords %}{% endblock %}
-
-    {% block title %} {{ page.NAME|first }} {% endblock %}
+{% block title %} {{ page.title }} {% endblock %}
 
 
 {% block content %}
-    {% with page.NAME|first as name %}
-    {% with page.DETAIL_TEXT|first as text %}
-        <div class="companies">
-            <div class="deal-details">
-
-                        <h1>{{ name }}</h1>
-                        <p></p>
-                        {{ text|cleanHtml|safe }}
-
-                </div>
-
+    <div class="companies">
+        <div class="deal-details">
+            <h1>{{ page.title }}</h1>
+            <p></p>
+            {{ page.content|cleanHtml|safe }}
+        </div>
     </div>
-    {% endwith %}
-    {% endwith %}
 {% endblock %}

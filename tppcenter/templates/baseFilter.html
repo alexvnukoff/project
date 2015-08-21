@@ -47,18 +47,20 @@
     };
 
     options = {
-        tpp: baseOptions,
-        branch: baseOptions,
-        bp_category: baseOptions,
-        country: baseOptions,
-        company: baseOptions
+        chamber: jQuery.extend(true, {}, baseOptions),
+        branches: jQuery.extend(true, {}, baseOptions),
+        b2b_categories: jQuery.extend(true, {}, baseOptions),
+        bp_categories: jQuery.extend(true, {}, baseOptions),
+        country: jQuery.extend(true, {}, baseOptions),
+        countries: jQuery.extend(true, {}, baseOptions),
     };
 
-    options['tpp']['placeholder'] = LANG['live-filter']['selectOrg'];
-    options['branch']['placeholder'] = LANG['live-filter']['selectBranch'];
-    options['company']['placeholder'] = LANG['live-filter']['selectCompany'];
-    options['bp_category']['placeholder'] = LANG['live-filter']['selectCategory'];
-    options['country']['placeholder'] = LANG['live-filter']['selectCountry'];
+    options.chamber.placeholder = LANG['live-filter']['selectOrg'];
+    options.b2b_categories.placeholder = LANG['live-filter']['selectCategory'];
+    options.bp_categories.placeholder = LANG['live-filter']['selectCategory'];
+    options.country.placeholder = LANG['live-filter']['selectCountry'];
+    options.countries.placeholder = LANG['live-filter']['selectCountry'];
+    options.branches.placeholder = LANG['live-filter']['selectBranch'];
 </script>
 
 <div class="popuplifter">

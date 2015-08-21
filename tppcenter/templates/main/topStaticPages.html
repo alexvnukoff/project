@@ -1,7 +1,3 @@
-{% for pk, attr in pagesDict.items %}
-    {% with attr.NAME|first as name %}
-    {% with attr.SLUG|first as slug %}
-        <a href="{% url "project:detail" slug %}" title="">{{ name }}</a>{% if not forloop.last %} |{% endif %}
-    {% endwith %}
-    {% endwith %}
+{% for dict in pages %}
+        <a href="{% url "project:detail" dict.slug %}" title="">{{ dict.title }}</a>{% if not forloop.last %} |{% endif %}
 {% endfor %}

@@ -35,7 +35,7 @@ class RequirementList(ItemsList):
     addUrl = 'vacancy:add'
 
     #allowed filter list
-    filter_list = ['tpp', 'country', 'company', 'branch']
+    # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = Requirement
 

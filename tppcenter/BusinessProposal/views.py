@@ -33,11 +33,11 @@ class BusinessProposalList(ItemsList):
     addUrl = 'proposal:add'
 
     #allowed filter list
-    filter_list = {
-        'chamber': Chamber,
-        'country': Country,
-        'branch': Branch,
-    }
+    # filter_list = {
+    #     'chamber': Chamber,
+    #     'country': Country,
+    #     'branch': Branch,
+    # }
 
     sortFields = {
         'date': 'created_at',

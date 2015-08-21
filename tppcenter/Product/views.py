@@ -35,7 +35,7 @@ class B2BProductList(ItemsList):
     addUrl = 'products:add'
 
     # Allowed filter list
-    filter_list = ['tpp', 'country', 'company', 'branch']
+    # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = B2BProduct
 
@@ -82,7 +82,7 @@ class B2CProductList(ItemsList):
     addUrl = 'products:addB2C'
 
     # allowed filter list
-    filter_list = ['tpp', 'country', 'company', 'branch']
+    # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = B2CProduct
 

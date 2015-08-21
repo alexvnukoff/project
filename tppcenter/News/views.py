@@ -45,7 +45,7 @@ class NewsList(ItemsList):
     }
 
     # allowed filter list
-    filter_list = ['tpp', 'country', 'company']
+    # filter_list = ['tpp', 'country', 'company']
 
     model = News
 

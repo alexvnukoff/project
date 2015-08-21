@@ -33,7 +33,7 @@ class InnovationProjectList(ItemsList):
     addUrl = 'innov:add'
 
     # allowed filter list
-    filter_list = ['tpp', 'country', 'company', 'branch']
+    # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = InnovationProject
 

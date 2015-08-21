@@ -13,7 +13,7 @@ class UserList(ItemsList):
     current_section = _("Users")
 
     #allowed filter list
-    filter_list = ['country']
+    # filter_list = ['country']
 
     model = Profile
 

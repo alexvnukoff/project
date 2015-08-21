@@ -3,7 +3,7 @@ from modeltranslation.translator import TranslationOptions
 
 from b24online.models import Country, Branch, Chamber, Company, Department, Vacancy, BusinessProposalCategory, \
     InnovationProject, B2BProductCategory, B2BProduct, NewsCategory, Greeting, News, Tender, \
-    Profile, Exhibition, StaticPages, BusinessProposal
+    Profile, Exhibition, StaticPage, BusinessProposal
 
 
 @register(Branch)
@@ -91,7 +91,7 @@ class ExhibitionTranslationOptions(TranslationOptions):
     fields = ('title', 'slug', 'description', 'short_description', 'keywords', 'route', )
 
 
-@register(StaticPages)
+@register(StaticPage)
 class ExhibitionTranslationOptions(TranslationOptions):
     fields = ('title', 'slug', 'content', )
 

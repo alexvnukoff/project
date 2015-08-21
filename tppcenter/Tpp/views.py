@@ -39,7 +39,7 @@ class ChamberList(ItemsList):
     current_section = _("Tpp")
 
     # allowed filter list
-    filter_list = ['country']
+    # filter_list = ['country']
 
     model = Chamber
 

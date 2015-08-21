@@ -31,7 +31,7 @@ class TVNewsLIst(ItemsList):
     current_section = _("TPP-TV")
 
     #allowed filter list
-    filter_list = ['tpp', 'country', 'company']
+    # filter_list = ['tpp', 'country', 'company']
 
     model = News
 

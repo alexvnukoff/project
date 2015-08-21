@@ -32,7 +32,7 @@ class TenderList(ItemsList):
     addUrl = 'tenders:add'
 
     #allowed filter list
-    filter_list = ['tpp', 'country', 'company', 'branch']
+    # filter_list = ['tpp', 'country', 'company', 'branch']
 
     sortFields = {
         'date': 'created_at',

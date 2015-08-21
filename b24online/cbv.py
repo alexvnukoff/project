@@ -10,7 +10,7 @@ from django.views.generic import DetailView
 from elasticsearch_dsl import F
 
 from appl import func
-from b24online.models import Chamber, BusinessProposalCategory, Branch, B2BProductCategory
+from b24online.models import Chamber, BusinessProposalCategory, Branch, B2BProductCategory, Organization
 from b24online.models import Country
 from b24online.search_indexes import SearchEngine
 from core.cbv import HybridListView
@@ -55,24 +55,43 @@ class ItemsList(HybridListView):
         'name': 'name'
     }
 
-    # Applied filters
-    filters = {}
-
     # My tab selected
     my = False
 
     # Allowed filter list
     filter_list = {
-        'chamber': Chamber,
+        'organization': Organization,
         'country': Country,
-        'b2b_category': B2BProductCategory,
-        'branch': Branch,
-        'bp_category': BusinessProposalCategory,
+        'countries': Country,
+        'b2b_categories': B2BProductCategory,
+        'branches': Branch,
+        'bp_categories': BusinessProposalCategory,
     }
+
+    @classmethod
+    def as_view(cls, **initkwargs):
+        method = getattr(cls.model, 'get_index_model', None)
+
+        if method is None:
+            cls.filter_list = {}
+        else:
+            intersec = method()._doc_type.mapping.properties._params['properties'].keys() & cls.filter_list.keys()
+
+            if not intersec:
+                cls.filter_list = {}
+            else:
+                cls.filter_list = {k: cls.filter_list.get(k, None) for k in intersec}
+
+        return super().as_view(**initkwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.applied_filters = {}
+
+        return super().dispatch(request, *args, **kwargs)
 
     def is_filtered(self):
         q = self.request.GET.get('q', '').strip()
-        return bool(self.filters or q)
+        return bool(self.applied_filters or q)
 
     def get_filtered_items(self):
         s = SearchEngine(doc_type=self.model.get_index_model())
@@ -83,10 +102,7 @@ class ItemsList(HybridListView):
             values = self.request.GET.getlist(filter_lookup)
 
             if values:
-                if filter_key == 'country':
-                    s.filter = F('terms', country=values) | F('terms', countries=values)
-                else:
-                    s = s.filter('terms', {filter_key: values})
+                s = s.filter('terms', {filter_key: values})
 
         if q:
             s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
@@ -109,7 +125,7 @@ class ItemsList(HybridListView):
         context = super(ItemsList, self).get_context_data(**kwargs)
 
         context.update({
-            'filters': self.filters,
+            'applied_filters': self.applied_filters,
             'sortField1': self.sortField1,
             'sortField2': self.sortField2,
             'order1': self.order1,
@@ -124,6 +140,7 @@ class ItemsList(HybridListView):
             'current_section': self.current_section,
             'styles': self.styles,
             'scripts': self.scripts,
+            'available_filters': list(self.filter_list.keys()),
             'model': self.model.__name__
         })
 
@@ -145,7 +162,7 @@ class ItemsList(HybridListView):
             values = request.GET.getlist(key)
 
             if values:
-                self.filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
+                self.applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
