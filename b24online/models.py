@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import HStoreField, DateTimeRangeField, Date
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
@@ -160,8 +160,7 @@ class Branch(MPTTModel):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('branch:detail', kwargs={'slug': full_slug})
+        return reverse('branch:detail', args=[self.slug, self.pk])
 
 
 class Country(models.Model):
@@ -178,8 +177,7 @@ class Country(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('country:detail', kwargs={'slug': full_slug})
+        return reverse('country:detail', args=[self.slug, self.pk])
 
 
 class Organization(PolymorphicMPTTModel):
@@ -278,8 +276,7 @@ class Chamber(Organization):
         return self.get_absolute_url()
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('tpp:detail', kwargs={'slug': full_slug})
+        return reverse('tpp:detail', args=[self.slug, self.pk])
 
     @property
     def location(self):
@@ -335,8 +332,7 @@ class Company(Organization):
         return countries[0]
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('companies:detail', kwargs={'slug': full_slug})
+        return reverse('companies:detail', args=[self.slug, self.pk])
 
     @property
     def detail_url(self):
@@ -389,8 +385,7 @@ class Department(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('department:detail', kwargs={'slug': full_slug})
+        return reverse('department:detail', args=[self.slug, self.pk])
 
 
 class Vacancy(models.Model):
@@ -434,8 +429,7 @@ class Vacancy(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('vacancy:detail', kwargs={'slug': full_slug})
+        return reverse('vacancy:detail', args=[self.slug, self.pk])
 
 
 class BusinessProposalCategory(models.Model):
@@ -452,8 +446,7 @@ class BusinessProposalCategory(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('bp_category:detail', kwargs={'slug': full_slug})
+        return reverse('bp_category:detail', args=[self.slug, self.pk])
 
 
 class BusinessProposal(models.Model):
@@ -489,8 +482,7 @@ class BusinessProposal(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('proposal:detail', kwargs={'slug': full_slug})
+        return reverse('proposal:detail', args=[self.slug, self.pk])
 
 
 class InnovationProject(models.Model):
@@ -543,8 +535,7 @@ class InnovationProject(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('innov:detail', kwargs={'slug': full_slug})
+        return reverse('innov:detail', args=[self.slug, self.pk])
 
 
 class B2BProductCategory(MPTTModel):
@@ -563,8 +554,7 @@ class B2BProductCategory(MPTTModel):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('b2b_category:detail', kwargs={'slug': full_slug})
+        return reverse('b2b_category:detail', args=[self.slug, self.pk])
 
 
 class B2BProduct(models.Model):
@@ -612,8 +602,7 @@ class B2BProduct(models.Model):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('products:detail', kwargs={'slug': full_slug})
+        return reverse('products:detail', args=[self.slug, self.pk])
 
 
 class B2BProductComment(MPTTModel):
@@ -647,8 +636,7 @@ class NewsCategory(MPTTModel):
         return self.name
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('news_category:detail', kwargs={'slug': full_slug})
+        return reverse('news_category:detail', args=[self.slug, self.pk])
 
 
 class Greeting(models.Model):
@@ -672,8 +660,7 @@ class Greeting(models.Model):
         return user.is_superuser or user.is_commando
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('greetings:detail', kwargs={'slug': full_slug})
+        return reverse('greetings:detail', args=[self.slug, self.pk])
 
 
 class News(models.Model):
@@ -712,8 +699,7 @@ class News(models.Model):
         return user.is_commando or user.is_superuser
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('news:detail', kwargs={'slug': full_slug})
+        return reverse('news:detail', args=[self.slug, self.pk])
 
 
 class Tender(models.Model):
@@ -762,8 +748,7 @@ class Tender(models.Model):
         return self.organization.has_perm(user)
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('tenders:detail', kwargs={'slug': full_slug})
+        return reverse('tenders:detail', args=[self.slug, self.pk])
 
 
 class Profile(models.Model):
@@ -848,8 +833,7 @@ class Exhibition(models.Model):
         return self.organization.has_perm(user)
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('exhibitions:detail', kwargs={'slug': full_slug})
+        return reverse('exhibitions:detail', args=[self.slug, self.pk])
 
 
 class StaticPage(models.Model):
@@ -884,8 +868,7 @@ class StaticPage(models.Model):
         return user.is_commando or user.is_superuser
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('project:detail', kwargs={'slug': full_slug})
+        return reverse('project:detail', args=[self.slug, self.pk])
 
     class Meta:
         index_together = [
@@ -999,13 +982,14 @@ class BannerTarget(models.Model):
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
     fields = [field.name for field in sender._meta.get_fields()]
+    update_fields = kwargs.get('update_fields', []) or []
 
     if 'slug' in fields:
-        if 'title' in fields:
+        if 'title' in fields and 'title' in update_fields:
             string = instance.title
-        elif 'name' in fields:
+        elif 'name' in fields and 'name' in update_fields:
             string = instance.name
         else:
             raise NotImplementedError('Unknown source field for slug')
 
-        instance.slug = create_slug(string, instance.pk)
+        instance.slug = create_slug(string)

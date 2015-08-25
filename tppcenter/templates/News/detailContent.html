@@ -166,10 +166,10 @@
                                         {% endif %}
                                     </div>
 
-                                    <a href="{% url 'news:detail' news.slug %}">{{ news.title|truncatechars:23 }}</a>
+                                    <a href="{{ news.get_absolute_url }}">{{ news.title|truncatechars:23 }}</a>
                                     <span class="date">{{ news.created_at|date:'d M Y' }}</span>
                                     <div class="description">{{ news.content|cleanHtml|safe|truncatewords_html:12 }}</div>
-                                    <a href="{% url 'news:detail' news.slug %}" class="more">{% trans 'More' %}...</a>
+                                    <a href="{{ news.get_absolute_url }}" class="more">{% trans 'More' %}...</a>
                                 </li>
                             {% endfor %}
                         </ul>

@@ -154,7 +154,7 @@
                                  {% if forloop.counter|add:-1|divisibleby:"4" or forloop.counter0 == 0 %}
                                     <li>
                                  {% endif %}
-                                 <a title="{{ org.name }}" href="{% url 'tpp:detail' org.slug %}" class="items">
+                                 <a title="{{ org.name }}" href="{{ org.get_absolute_url }}" class="items">
                                      <img src="{{ MEDIA_URL }}small/{{ org.flag }}" alt="{% trans 'Work with' %}{{ org.name }}" title="{{ org.name }}" />
                                  </a>
                             	 {% if forloop.counter|divisibleby:"4" or forloop.counter == organizationsList|length %}
@@ -279,7 +279,7 @@
                 <ul class="pr-best-price">
                 	{% for prod in productsList %}
                     <li>
-                    	<a href="{% url 'products:detail' prod.slug %}">
+                    	<a href="{{ prod.get_absolute_url }}">
                             <div class="thumb">
                                 {% if prod.image %}
                                      <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
@@ -294,7 +294,7 @@
                          {% elif prod.flag %}
                              <img src="{{ MEDIA_URL }}small/{{ prod.flag }}" width="18" height="12" class="flag" alt="{{ prod.name }}" title="{{ prod.name }}" />
                          {% endif %}
-                            <a style="width: 75%;" href="{% url 'products:detail' prod.slug %}">{{ prod.name }}</a>
+                            <a style="width: 75%;" href="{{ prod.get_absolute_url }}">{{ prod.name }}</a>
                         </div>
                     </li>
                     {% endfor %}
@@ -315,7 +315,7 @@
                                         <p>{{ exh.country.name }}  {{ exh.city }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="{% url 'exhibitions:detail' exh.slug %}">{{ exh.country.name }}</a></p>
+                                <p class="linkcm"><a href="{{ exh.get_absolute_url }}">{{ exh.country.name }}</a></p>
                             </li>
                       {% endfor %}
 
@@ -337,7 +337,7 @@
                                         <p>{{ srvc.organization.name }}</p>
                                     </div>
                                 </div>
-                                <p class="linkcm"><a href="{% url 'proposal:detail' srvc.slug %}">{{ srvc.title }}</a></p>
+                                <p class="linkcm"><a href="{{ srvc.get_absolute_url }}">{{ srvc.title }}</a></p>
                             </li>
                         {% endfor %}
 
@@ -397,11 +397,11 @@
                     	<div class="bgtitle">
                         	<div class="textin">{{ greet.organization }}</div>
                         </div>
-                    	<a href="{% url "greetings:detail" greet.slug %}">
+                    	<a href="{{ greet.get_absolute_url }}">
                             <img src="{{ MEDIA_URL }}big/{{ greet.photo }}" alt="{{ greet.name }}" class="avatar" title="{{ greet.name }}" />
                         </a>
                         <div class="name">
-                        	<a href="{% url "greetings:detail" greet.slug %}">{{ greet.name }}</a>
+                        	<a href="{{ greet.get_absolute_url }}">{{ greet.name }}</a>
                             {{ greet.position }}
                         </div>
                     </div>

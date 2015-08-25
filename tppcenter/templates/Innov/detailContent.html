@@ -59,7 +59,7 @@
                     {% endif %}
 
                     {% if item.organization %}
-                        <a href="{{ item.organization.detail_url }} "> {{ item.organization.name }}</a>
+                        <a href="{{ item.organization.get_absolute_url }} "> {{ item.organization.name }}</a>
                     {% else %}
                         {{ item.created_by.profile.full_name }}
                     {% endif %}

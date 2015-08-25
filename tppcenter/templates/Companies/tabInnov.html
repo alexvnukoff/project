@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ innov.pk }}</td>
                 <td>
-                    <a href="{% url 'innov:detail' innov.slug %}" title="{{ innov.name }}">
+                    <a href="{{ innov.get_absolute_url }}" title="{{ innov.name }}">
                         {{ innov.name|truncatewords:4 }}
                     </a>
                 </td>

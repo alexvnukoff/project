@@ -6,14 +6,14 @@
         {% for news in page.object_list %}
             <tr>
                 <td colspan="2">
-                    <a href="{% url 'news:detail' news.slug %}" title="{{ news.title }}">
+                    <a href="{{ news.get_absolute_url }}" title="{{ news.title }}">
                         {{ news.title|truncatewords:10 }}
                     </a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="{% url 'news:detail' news.slug %}" title="{{ news.title }}">
+                    <a href="{{ news.get_absolute_url }}" title="{{ news.title }}">
                         {% if news.image %}
                              <img src="{{ MEDIA_URL }}small/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}"/>
                         {% else %}

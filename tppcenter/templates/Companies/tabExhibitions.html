@@ -15,7 +15,7 @@
             <tr>
                 <td>{{ exhibition.pk }}</td>
                 <td>
-                    <a href="{% url 'exhibitions:detail' exhibition.slug %}" title="{{ exhibition.title }}">
+                    <a href="{{ exhibition.get_absolute_url }}" title="{{ exhibition.title }}">
                        {{ exhibition.title|truncatewords:10 }}
                     </a>
                 </td>

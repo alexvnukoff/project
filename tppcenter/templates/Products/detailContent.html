@@ -100,7 +100,7 @@
     <ul class="goods-info">
        <li class="top">
             <div class="iconinfo"><i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i> </div>
-            <div class="nameinfo"><b><a href="{% url 'companies:detail' item.company.slug %}">{{ item.company.name }}</a></b></div>
+            <div class="nameinfo"><b><a href="{{ item.company.get_absolute_url }}">{{ item.company.name }}</a></b></div>
        </li>
        {% if item.company.address %}
            <li>

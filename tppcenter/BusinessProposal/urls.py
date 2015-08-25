@@ -18,7 +18,7 @@ urlpatterns = patterns('',
      url(r'^add/$', tppcenter.BusinessProposal.views.proposalForm,{'action': "add"}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.BusinessProposal.views.proposalForm,{'action': "update"}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.BusinessProposal.views.proposalForm,{'action': "delete"}, name="delete"),
-     url(r'^(?P<slug>[a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.BusinessProposal.views.BusinessProposalDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.BusinessProposal.views.BusinessProposalDetail.as_view(), name="detail"),
 
 
 

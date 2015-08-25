@@ -24,16 +24,16 @@
                                 {% endif %}
 
                                 {% if top.title %}
-                                    <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.title }}</a>
+                                    <a title="{{ top.title }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.title }}</a>
                                 {% else %}
-                                    <a title="{{ top.name }}" href="{% url modelDict.detailUrl top.slug %}" class="linkads">{{ top.name }}</a>
+                                    <a title="{{ top.name }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.name }}</a>
                                 {% endif %}
                             </div>
                             <div class="infoads">
                                 {% if top.title %}
-                                    <a title="{{ top.title }}" href="{% url modelDict.detailUrl top.slug %}">
+                                    <a title="{{ top.title }}" href="{{ top.get_absolute_url }}">
                                 {% else %}
-                                    <a title="{{ top.name }}" href="{% url modelDict.detailUrl top.slug %}">
+                                    <a title="{{ top.name }}" href="{{ top.get_absolute_url }}">
                                 {% endif %}
                                 {% if top.image %}
                                     {% if top.title %}

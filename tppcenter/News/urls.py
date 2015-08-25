@@ -19,6 +19,6 @@ urlpatterns = patterns('',
      url(r'^category/(?P<category>[0-9]+)/page(?P<page>[0-9]+)?/$', tppcenter.News.views.NewsList.as_view(), name="news_categories_paginator"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.News.views.news_form,{'action': 'update'}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.News.views.news_form,{'action': 'delete'}, name="delete"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.News.views.NewsDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.News.views.NewsDetail.as_view(), name="detail"),
 
 )

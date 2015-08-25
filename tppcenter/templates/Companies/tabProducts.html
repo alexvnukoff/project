@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ product.pk }}</td>
                 <td>
-                    <a href="{% url 'products:detail' product.slug %}" title="{{ product.name }}">
+                    <a href="{{ product.get_absolute_url }}" title="{{ product.name }}">
                         {% if product.image %}
                              <img src="{{ MEDIA_URL }}small/{{ product.image }}" alt="{{ product.name }}" title="{{ product.name }}"/>
                         {% else %}
@@ -23,7 +23,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'products:detail' product.slug %}" title="{{ product.name }}">
+                    <a href="{{ product.get_absolute_url }}" title="{{ product.name }}">
                         {{ product.name|truncatewords:2 }}
                     </a>
                 </td>

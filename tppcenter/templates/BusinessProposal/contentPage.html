@@ -19,14 +19,14 @@
                     <font class="name">{{ proposal.organization.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
                 {% endif %}
             </div>
-            <h2><a href="{% url "proposal:detail" proposal.slug %}"> {{ proposal.title }} </a></h2>
+            <h2><a href="{{ proposal.get_absolute_url }}"> {{ proposal.title }} </a></h2>
             <div class="line">
                 {% trans 'Organization' %}:
                     {% if proposal.organization %}
-                        <a href="{{ proposal.organization.detail_url }}">{{ proposal.organization.name }}</a>
+                        <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a>
                     {% endif %}
             </div>
-            <a href="{% url "proposal:detail" proposal.slug %}" class="linkmore">{% trans 'More' %}...</a>
+            <a href="{{ proposal.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>

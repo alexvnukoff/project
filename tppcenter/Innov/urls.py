@@ -19,7 +19,7 @@ urlpatterns = patterns('',
      url(r'^add/$', tppcenter.Innov.views.innovForm,{'action': 'add'}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Innov.views.innovForm, {'action': 'update'}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Innov.views.innovForm, {'action': 'delete'}, name="delete"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Innov.views.InnovationProjectDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Innov.views.InnovationProjectDetail.as_view(), name="detail"),
 
 
 

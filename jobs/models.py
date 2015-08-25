@@ -45,8 +45,7 @@ class Requirement(models.Model):
         return RequirementIndex
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('vacancy:detail', kwargs={'slug': full_slug})
+        return reverse('vacancy:detail', args=[self.slug, self.pk])
 
     def __str__(self):
         return self.title

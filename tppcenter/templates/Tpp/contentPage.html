@@ -17,7 +17,7 @@
                         {% else %}
                                <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.name }}" ></i>
                         {% endif %}
-                        <a href="{% url 'tpp:detail' tpp.slug %}">{{ tpp.name }}</a>
+                        <a href="{{ tpp.get_absolute_url }}">{{ tpp.name }}</a>
                     </div>
 
                     <div class="company-infor">
@@ -32,7 +32,7 @@
                             {% else %}
                                 {{ tpp.description|cleanHtml|safe|truncatewords_html:"30" }}
                             {% endif %}
-                            <a href="{% url 'tpp:detail' tpp.slug %}">{% trans "More" %}...</a>
+                            <a href="{{ tpp.get_absolute_url }}">{% trans "More" %}...</a>
                         </div>
                         <div class="companycontact">
                             {% if tpp.address %}

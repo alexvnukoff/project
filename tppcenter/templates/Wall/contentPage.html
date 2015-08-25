@@ -10,7 +10,7 @@
             {% for prod in products %}
                 <li>
                     <div class="thumb">
-                        <a href="{% url "products:detail" prod.slug %}">
+                        <a href="{{ prod.get_absolute_url }}">
                             {% if prod.image %}
                                 <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
                             {% else %}
@@ -20,7 +20,7 @@
                     </div>
                     <div class="link">
                         <i class="flag sprite {{ prod.country.flag }}" title="{{ prod.country.name }}"></i>
-                        <a href="{% url "products:detail" prod.slug %}" class="name">{{ prod.name|truncatechars:40 }}</a>
+                        <a href="{{ prod.get_absolute_url }}" class="name">{{ prod.name|truncatechars:40 }}</a>
                     </div>
                     <div class="price">
                         {% if prod.cost %}
@@ -29,7 +29,7 @@
                             {% trans 'Get the price' %}
                         {% endif %}
                     </div>
-                    <a href="{% url "products:detail" prod.slug %}" class="btnbuy">{% trans 'Buy' %}</a>
+                    <a href="{{ prod.get_absolute_url }}" class="btnbuy">{% trans 'Buy' %}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -48,7 +48,7 @@
                     {% endif %}
                     <font class="name">{% trans 'Publication date' %}: {{ innovation_project.created_at|date:'d M Y' }}</font>
                 </div>
-                <h2><a href="{% url "innov:detail" innovation_project.slug %}">{{ innovation_project.name|truncatewords:14 }}</a></h2>
+                <h2><a href="{{ innovation_project.get_absolute_url }}">{{ innovation_project.name|truncatewords:14 }}</a></h2>
                 <div class="desc">{% trans 'Project cost' %}: <b class="num">{{ innovation_project.currency|getSymbol }} {{ innovation_project.cost|formatPrice }}</b></div>
                 <div class="line">
                 {% if innovation_project.branches.all|length > 0 %}
@@ -62,13 +62,13 @@
                 {% endif %}
                     <span class="clumn">{% trans 'Organizer' %}:
                         {% if  innovation_project.organization  %}
-                            <a href="{{ innovation_project.organization.detail_url }}"> {{ innovation_project.organization.name }}</a>
+                            <a href="{{ innovation_project.organization.get_absolute_url }}"> {{ innovation_project.organization.name }}</a>
                         {% else %}
                             {{ innovation_project.created_by.profile.full_name }}
                         {% endif %}
                     </span>
                 </div>
-                <a href="{% url "innov:detail" innovation_project.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                <a href="{{ innovation_project.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         </ul>
     {% endif %}
@@ -82,11 +82,11 @@
                     {% endif %}
                     <font class="name">{{ exhibition.country.name }}  {{ exhibition.city }},  {{ exhibition.start_date|date:"d M Y" }} - {{ exhibition.end_date|date:"d M Y"  }}</font>
                 </div>
-                <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
+                <h2><a href="{{ exhibition.get_absolute_url }}">{{ exhibition.title }}</a></h2>
                 <div class="line">{% trans 'Organizer' %}:
-                    <a href="{{ exhibition.organization.detail_url }}">{{ exhibition.organization.name }}</a>
+                    <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a>
                 </div>
-                <a href="{% url 'exhibitions:detail' exhibition.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                <a href="{{ exhibition.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         </ul>
     {% endif %}
@@ -104,11 +104,11 @@
                     {% endif %}
                     <font class="name">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
                 </div>
-                <h2><a href="{% url "proposal:detail" proposal.slug %}"> {{ proposal.title }} </a></h2>
+                <h2><a href="{{ proposal.get_absolute_url }}"> {{ proposal.title }} </a></h2>
                 <div class="line">{% trans 'Organization' %}:
-                    <a href="{{ proposal.organization.detail_url }}">{{ proposal.organization.name }}</a>
+                    <a href="{{ proposal.organization.get_absolute_url }}">{{ proposal.organization.name }}</a>
                 </div>
-                <a href="{% url "proposal:detail" proposal.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                <a href="{{ proposal.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         </ul>
     {% endif %}
@@ -117,7 +117,7 @@
         <ul class="listnews">
             <li>
                 <div class="thumb shadow">
-                    <a href="{% url "news:detail" news.slug %}">
+                    <a href="{{ news.get_absolute_url }}">
                         {% if news.image %}
                             <img src="{{ MEDIA_URL }}small/{{ news.image }} " alt="{{ news.title }}" title="{{ news.title }}"/>
                         {% else %}
@@ -126,7 +126,7 @@
                     </a>
                 </div>
                 <div class="infoprd">
-                    <a href="{% url "news:detail" news.slug %}" class="name">{{ news.title }}</a>
+                    <a href="{{ news.get_absolute_url }}" class="name">{{ news.title }}</a>
                     <p class="date">
                         {% if news.organization %}
                             {% if news.organization.flag %}
@@ -140,7 +140,7 @@
                         {{ news.obj_create_date|date:'d M Y' }}
                     </p>
                     <p>{{ news.content|cleanHtml|safe|truncatewords_html:"30" }} </p>
-                    <!--noindex--><a href="{% url "news:detail" news.slug %}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                    <!--noindex--><a href="{{ news.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
                 </div>
             </li>
         </ul>

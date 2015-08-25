@@ -139,7 +139,7 @@
                 {% if item.parent %}
                      <p>
                         <b>{% trans 'Member of' %}</b>
-                        <a href="{% url 'tpp:detail' item.parent.slug %}">{{ item.parent.name }}</a>
+                        <a href="{{ item.parent.get_absolute_url }}">{{ item.parent.name }}</a>
                      </p>
                 {% endif %}
                 </div>

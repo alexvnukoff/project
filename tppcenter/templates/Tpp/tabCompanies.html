@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ company.pk }}</td>
                 <td>
-                    <a href="{% url 'companies:detail' company.slug %}" title="{{ company.name }}">
+                    <a href="{{ company.get_absolute_url }}" title="{{ company.name }}">
                         {% if logo %}
                             <img src="{{ MEDIA_URL }}small/{{ company.logo }}" alt="{{ company.name }}" title="{{ company.name }}" />
                         {% else %}
@@ -23,7 +23,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'companies:detail' company.slug %}" title="{{ company.name }}">
+                    <a href="{{ company.get_absolute_url }}" title="{{ company.name }}">
                         {{ company.name|truncatewords:2 }}
                     </a>
                 </td>

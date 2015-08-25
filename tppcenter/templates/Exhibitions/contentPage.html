@@ -17,9 +17,9 @@
                         {% endif %}
                         <font class="name">{{ exhibition.country.name }}  {{ exhibition.city }},  {{ exhibition.start_date|date:"d M Y" }} - {{ exhibition.end_date|date:"d M Y"  }}</font>
                     </div>
-                    <h2><a href="{% url 'exhibitions:detail' exhibition.slug %}">{{ exhibition.title }}</a></h2>
-                        <div class="line">{% trans 'Organizer' %}: <a href="{{ exhibition.organization.detail_url }}">{{ exhibition.organization.name }}</a></div>
-                        <a href="{% url 'exhibitions:detail' exhibition.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <h2><a href="{{ exhibition.get_absolute_url }}">{{ exhibition.title }}</a></h2>
+                        <div class="line">{% trans 'Organizer' %}: <a href="{{ exhibition.organization.get_absolute_url }}">{{ exhibition.organization.name }}</a></div>
+                        <a href="{{ exhibition.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
                     </li>
             {% empty %}
                 <div class="no-results">{% trans "No results found" %}</div>

@@ -25,14 +25,14 @@
                         {% endif %}, {% trans 'Publication date' %}: {{ tender.created_at|date:"d M Y" }}
                     </font>
                 </div>
-                <h2><a href="{% url "tenders:detail" tender.slug %}" >{{ tender.title }}</a></h2>
+                <h2><a href="{{ tender.get_absolute_url }}" >{{ tender.title }}</a></h2>
                 <div class="line">
                     {% trans 'Starting price' %}: <font class="number">{{ tender.currency|default_if_none:""|getSymbol }} {{ tender.cost|default_if_none:""|formatPrice }}</font>
                 </div>
                 <div class="line">
-                    {% trans 'Organizer' %}: <a href="{{ tender.organization.detail_url }}">{{ tender.organization.name }}</a>
+                    {% trans 'Organizer' %}: <a href="{{ tender.organization.get_absolute_url }}">{{ tender.organization.name }}</a>
                 </div>
-                <a href="{% url "tenders:detail" tender.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                <a href="{{ tender.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
             </li>
         {% empty %}
             <div class="no-results">{% trans "No results found" %}</div>

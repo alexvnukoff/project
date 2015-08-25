@@ -18,5 +18,5 @@ urlpatterns = patterns('',
      url(r'^add/$', tppcenter.Tenders.views.tenderForm,{'action': 'add'} , name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Tenders.views.tenderForm,{'action': 'update'}, name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Tenders.views.tenderForm ,{'action': "delete"}, name="delete"),
-     url(r'^(?P<slug>[a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Tenders.views.TenderDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Tenders.views.TenderDetail.as_view(), name="detail"),
 )

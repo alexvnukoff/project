@@ -15,9 +15,9 @@
                 <div class="title">
                     <font class="name">{% trans 'Publication date' %}: {{ resume.created_at|date:"d M Y" }}</font>
                         </div>
-                        <h2><a href="{% url "resume:detail" resume.slug %}" >{{ resume.title }}</a></h2>
+                        <h2><a href="{{ resume.get_absolute_url }}" >{{ resume.title }}</a></h2>
 
-                        <a href="{% url "resume:detail" resume.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                        <a href="{{ resume.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
                     <div class="line">
                         {% if resume.user.profile.full_name %}
                             {% trans 'User name' %}:<a href="#"> {{ resume.user.profile.full_name }}</a>

@@ -12,6 +12,6 @@ urlpatterns = patterns('',
     # Examples:
      url(r'^$', tppcenter.Greetings.views.GreetingList.as_view(), name='main'),
      url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Greetings.views.GreetingList.as_view(), name="paginator"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Greetings.views.GreetingDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Greetings.views.GreetingDetail.as_view(), name="detail"),
 
 )

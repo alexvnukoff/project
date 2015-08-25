@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^(?P<slug>[a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Project.views.show_page, name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Project.views.show_page, name="detail"),
      url(r'^about/$', tppcenter.Project.views.project, {'template': "about.html", 'section': _('About')}, name='about'),
      url(r'^adv/$', tppcenter.Project.views.project, {'template': "adv.html", 'section': _('Advertise with us')}, name='adv'),
      url(r'^payment/$', tppcenter.Project.views.project, {'template': "payment.html", 'section': _('Payment System')}, name='pay'),

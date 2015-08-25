@@ -21,8 +21,7 @@ class B2CProductCategory(MPTTModel):
         return B2cProductCategoryIndex
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('b2c_category:detail', kwargs={'slug': full_slug})
+        return reverse('b2c_category:detail', args=[self.slug, self.pk])
 
     def __str__(self):
         return self.name
@@ -69,8 +68,7 @@ class B2CProduct(models.Model):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        full_slug = "%s-%s" % (self.slug, self.pk)
-        return reverse('products:detail', kwargs={'slug': full_slug})
+        return reverse('products:detail', args=[self.slug, self.pk])
 
 
 class B2CProductComment(MPTTModel):

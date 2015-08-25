@@ -41,7 +41,7 @@ def reindex_instance(instance):
             hits[0].delete()
 
 
-def create_slug(string, pk):
+def create_slug(string):
     """
         Creating url slug from some string using unicode to acii decoder( unidecode library)
 
@@ -51,4 +51,4 @@ def create_slug(string, pk):
     # TODO: Create map for each lang
     string = unidecode(string)
 
-    return slugify(string) + '-' + str(pk)
+    return slugify(string)

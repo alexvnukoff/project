@@ -53,7 +53,7 @@
             <div class="tender-bottom">
                	<div class="tender-bottom-left">
                     <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" class="thumb" />
-                    <a href="{{ item.organization.detail_url }}">{{ item.organization.name }}</a>
+                    <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
                 </div>
             </div>
             <div class="innov-details">

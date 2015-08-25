@@ -18,7 +18,7 @@
                         {% if company.country.flag %}
                             <i class="flag sprite {{ company.country.flag }}"></i>
                         {% endif %}
-                        <a href="{% url 'companies:detail' company.slug %}">{{ company.name }}</a>
+                        <a href="{{ company.get_absolute_url }}">{{ company.name }}</a>
                     </div>
                     <div class="company-infor">
                         {% if company.logo %}
@@ -30,7 +30,7 @@
                             {% if company.parent %}
                                 <p class="link">
                                     <b>{% trans 'Member of' %}</b>
-                                    <a href="{{ company.parent.detail_url }}">{{ company.parent.name|truncatechars:30 }}</a>
+                                    <a href="{{ company.parent.get_absolute_url }}">{{ company.parent.name|truncatechars:30 }}</a>
                                 </p>
                             {% endif %}
 
@@ -39,7 +39,7 @@
                             {% else %}
                                 {{ company.description|cleanHtml|safe|truncatewords_html:200 }}
                             {% endif %}
-                            <a href="{% url 'companies:detail' company.slug %}">{% trans "More" %}...</a>
+                            <a href="{{ company.get_absolute_url }}">{% trans "More" %}...</a>
 
                         </div>
                         <div class="companycontact">

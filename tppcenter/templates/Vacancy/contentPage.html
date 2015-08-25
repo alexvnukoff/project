@@ -12,7 +12,7 @@
             {% for vacancy in object_list %}
                 <li>
                 {% setContextMenu vacancy %}
-                <h2><a href="{% url 'vacancy:detail' vacancy.slug %}">{{ vacancy.title }}</a></h2>
+                <h2><a href="{{ vacancy.get_absolute_url }}">{{ vacancy.title }}</a></h2>
                     <div class="vacancy-desc">
                          {% if vacancy.country %}
                             <i class="flag sprite {{ vacancy.country.flag }}" title="{{ vacancy.country.name }}" ></i>
@@ -20,7 +20,7 @@
                         <font class="date">{{ vacancy.country.name }}, {{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.created_at|date:'d M Y' }}</font>
 
                        <p>{{ vacancy.description|truncatewords:30 }} </p>
-                       <a href="{% url 'vacancy:detail' vacancy.slug %}" class="more">{% trans "More" %}...</a>
+                       <a href="{{ vacancy.get_absolute_url }}" class="more">{% trans "More" %}...</a>
                     </div>
                 </li>
             {% empty %}

@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ tender.pk }}</td>
                 <td>
-                    <a href="{% url 'tenders:detail' tender.slug %}" title="{{ tender.title }}">
+                    <a href="{{ tender.get_absolute_url }}" title="{{ tender.title }}">
                        {{ tender.title|truncatewords:10 }}
                     </a>
                 </td>

@@ -25,7 +25,7 @@ urlpatterns = patterns('',
      url(r'^addVacancy/$', tppcenter.Vacancy.views.addVacancyAjax,  name="addVacancy"),
 
 
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Vacancy.views.RequirementDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Vacancy.views.RequirementDetail.as_view(), name="detail"),
 
 
 )

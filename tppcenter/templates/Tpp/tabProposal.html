@@ -13,7 +13,7 @@
             <tr>
                 <td>{{ proposal.pk }}</td>
                 <td>
-                    <a href="{% url 'proposal:detail' proposal.slug %}" title="{{ proposal.title }}">
+                    <a href="{{ proposal.get_absolute_url }}" title="{{ proposal.title }}">
                         {{ proposal.title|truncatewords:10 }}
                     </a>
                 </td>

@@ -1,3 +1,3 @@
 {% for dict in pages %}
-        <a href="{% url "project:detail" dict.slug %}" title="">{{ dict.title }}</a>{% if not forloop.last %} |{% endif %}
+        <a href="{% url "project:detail" dict.slug dict.pk %}" title="">{{ dict.title }}</a>{% if not forloop.last %} |{% endif %}
 {% endfor %}

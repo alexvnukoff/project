@@ -24,7 +24,7 @@
                         {% endif %}
                 	</div>
                     <div class="link">
-                        <a href="{%  url 'tv:detail' news.slug %}" class="name">{{ news.title|truncatechars:50 }} </a>
+                        <a href="{{ news.get_absolute_url }}" class="name">{{ news.title|truncatechars:50 }} </a>
                     </div>
                 </li>
                 {% empty %}

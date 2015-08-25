@@ -20,7 +20,7 @@ urlpatterns = patterns('',
      url(r'^add/$', tppcenter.Tpp.views.tpp_form,{'action': 'add'}, name="add"),
      url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Tpp.views.tpp_form, {'action': 'update'}, name="update"),
 
-     url(r'^(?P<slug>[0-9a-zA-z-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Tpp.views.ChamberDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Tpp.views.ChamberDetail.as_view(), name="detail"),
 
 
      url(r'^tabs/companies/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tab_companies, name="tab_companies"),

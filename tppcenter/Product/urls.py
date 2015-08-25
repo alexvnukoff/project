@@ -23,5 +23,5 @@ urlpatterns = patterns('',
      url(r'^update-b2c/(?P<item_id>[0-9]+)/$', tppcenter.Product.views.productForm, {'action': 'update_b2c'}, name="updateB2C"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Product.views.productForm, {'action': 'delete'}, name="delete"),
      url(r'^category-list/([0-9]+)/$', tppcenter.Product.views.categoryList, name="categoryList"),
-     url(r'^(?P<slug>[a-zA-z0-9-]+-(?P<item_id>[0-9]+))\.html$', tppcenter.Product.views.ProductDetail.as_view(), name="detail"),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Product.views.ProductDetail.as_view(), name="detail"),
 )

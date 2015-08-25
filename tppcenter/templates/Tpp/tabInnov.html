@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ project.pk }}</td>
                 <td>
-                    <a href="{% url 'innov:detail' project.slug %}" title="{{ project.name }}">
+                    <a href="{{ project.get_absolute_url }}" title="{{ project.name }}">
                         {{ project.name|truncatewords:4 }}
                     </a>
                 </td>

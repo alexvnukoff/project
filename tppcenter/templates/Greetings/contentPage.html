@@ -8,19 +8,19 @@
         {% for greeting in object_list %}
             <li>
                 <div class="thumb shadow">
-                    <a href="{% url "greetings:detail" greeting.slug %}">
+                    <a href="{{ greeting.get_absolute_url }}">
                         <img src="{{ MEDIA_URL }}big/{{ greeting.image }}" alt="{{ greeting.title }}" title="{{ greeting.title }}" />
                     </a>
                 </div>
                 <div class="infoprd">
-                    <a href="{% url "greetings:detail" greeting.slug %}" class="name">{{ greeting.title }}</a>
+                    <a href="{{ greeting.get_absolute_url }}" class="name">{{ greeting.title }}</a>
                     {{ greeting.text|truncatewords_html:"30"|cleanHtml|safe }}
                 <br />
                 <p><strong>{% trans "Organization" %}:</strong> {{ greeting.tpp_name }}</p>
                 <p><strong>{% trans "Position" %}:</strong> {{ greeting.position }}</p>
 
                     <!--noindex-->
-                        <a href="{% url "greetings:detail" greeting.slug %}" class="more">{% trans 'Read more' %}...</a>
+                        <a href="{{ greeting.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a>
                     <!--/noindex-->
                 </div>
             </li>

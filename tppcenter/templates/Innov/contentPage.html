@@ -21,7 +21,7 @@
                     {% endif %}
                         <font class="name">{% trans 'Publication date' %}: {{ innov.created_at|date:'d M Y' }}</font>
                     </div>
-                    <h2><a href="{% url "innov:detail" innov.slug %}">{{ innov.name|truncatewords:14 }}</a></h2>
+                    <h2><a href="{{ innov.get_absolute_url }}">{{ innov.name|truncatewords:14 }}</a></h2>
                     <div class="desc">
                         {% trans 'Project cost' %}: <b class="num">{{ innov.currency|getSymbol }} {{ innov.cost|formatPrice }}</b>
                     </div>
@@ -33,13 +33,13 @@
                         {% endif %}
                         <span class="clumn">{% trans 'Organizer' %}:
                             {% if innov.organization.name %}
-                                <a href="{{ innov.organization.detail_url }}">  {{ innov.organization.name }} </a>
+                                <a href="{{ innov.organization.get_absolute_url }}">  {{ innov.organization.name }} </a>
                             {% elif innov.created_by.profile.full_name %}
                                <a href=""> {{ innov.created_by.profile.full_name }}</a>
                             {% endif %}
                         </span>
                     </div>
-                    <a href="{% url "innov:detail" innov.slug %}" class="linkmore">{% trans 'More' %}...</a>
+                    <a href="{{ innov.get_absolute_url }}" class="linkmore">{% trans 'More' %}...</a>
                 </li>
             {% empty %}
                 <div class="no-results">{% trans "No results found" %}</div>

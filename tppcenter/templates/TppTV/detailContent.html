@@ -59,7 +59,7 @@
                         <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
                     {% endif %}
 
-                    <a href="{% url  "tv:detail" news.slug %}" class="more">{{ news.title }} </a>
+                    <a href="{{ news.get_absolute_url }}" class="more">{{ news.title }} </a>
                 </li>
             {% endfor %}
             </ul>

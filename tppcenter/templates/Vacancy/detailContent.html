@@ -39,7 +39,7 @@ $(function() {
                                 {% if item.is_anonymous %}
                                     {% trans 'Anonymous company' %}
                                 {% else %}
-                                <a href="{{ item.vacancy.department.organization.detail_url }}">{{ item.vacancy.department.organization.name }}</a>
+                                <a href="{{ item.vacancy.department.organization.get_absolute_url }}">{{ item.vacancy.department.organization.name }}</a>
                                 {% endif %}
                             </span>
                         </li>
