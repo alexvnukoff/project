@@ -78,7 +78,7 @@ class ResumeDetail(ItemDetail):
         return super(ResumeDetail, self).dispatch(*args, **kwargs)
 
 
-@login_required(login_url='/login/')
+@login_required
 def resumeForm(request, action, item_id=None):
     if item_id:
        if not Resume.active.get_active().filter(pk=item_id).exists():

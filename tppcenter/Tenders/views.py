@@ -72,7 +72,7 @@ class TenderDetail(ItemDetail):
     addUrl = 'tenders:add'
 
 
-@login_required(login_url='/login/')
+@login_required
 def tenderForm(request, action, item_id=None):
     if item_id:
        if not Tender.active.get_active().filter(pk=item_id).exists():

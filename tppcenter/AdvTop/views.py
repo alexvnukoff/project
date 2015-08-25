@@ -18,7 +18,7 @@ from tppcenter.forms import ItemForm
 #from paypal.standard.forms import PayPalPaymentsForm
 import datetime
 
-@login_required(login_url='/login/')
+@login_required
 def advJsonFilter(request):
     '''
         Getting filters for advertisement
@@ -65,7 +65,7 @@ def advJsonFilter(request):
 
 
 
-@login_required(login_url='/login/')
+@login_required
 def addTop(request, item):
     '''
         View for a form of adding new context adv
@@ -221,7 +221,7 @@ def addTop(request, item):
 
     return render_to_response('AdvTop/addForm.html', templateParams, context_instance=RequestContext(request))
 
-@login_required(login_url='/login/')
+@login_required
 def resultOrder(request, orderID):
 
     order = get_object_or_404(AdvOrder, pk=orderID)

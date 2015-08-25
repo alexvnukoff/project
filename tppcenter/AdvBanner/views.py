@@ -14,7 +14,7 @@ from tppcenter.forms import ItemForm
 from dateutil.parser import parse
 import datetime
 
-@login_required(login_url='/login/')
+@login_required
 def gatPositions(request):
     '''
         Show possible advertisement position as a first page and show them by site
@@ -60,7 +60,7 @@ def gatPositions(request):
 
     return render_to_response("AdvBanner/index.html", templateParams, context_instance=RequestContext(request))
 
-@login_required(login_url='/login/')
+@login_required
 def advJsonFilter(request):
     '''
         Getting filters for advertisement
@@ -104,7 +104,7 @@ def advJsonFilter(request):
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-@login_required(login_url='/login/')
+@login_required
 def addBanner(request, bannerType):
     '''
         View for a form of adding new banners
@@ -277,7 +277,7 @@ def addBanner(request, bannerType):
 
     return render_to_response('AdvBanner/addForm.html', templateParams, context_instance=RequestContext(request))
 
-@login_required(login_url='/login/')
+@login_required
 def resultOrder(request, orderID):
 
 

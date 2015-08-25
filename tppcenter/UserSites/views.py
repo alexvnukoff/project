@@ -79,7 +79,7 @@ def _siteList(request):
 
     return rendered
 
-@login_required(login_url='/login/')
+@login_required
 def resumeForm(request, action, item_id=None):
     if item_id:
        if not UserSites.active.get_active().filter(pk=item_id).exists():

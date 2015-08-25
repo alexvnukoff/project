@@ -4,6 +4,8 @@ from django.contrib.postgres.fields import HStoreField, DateTimeRangeField, Date
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
@@ -13,6 +15,7 @@ from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from b24online.utils import create_slug
 from core.models import User
 
 CURRENCY = [
@@ -67,7 +70,7 @@ class ContextAdvertisementTarget(models.Model):
 
 class Gallery(models.Model):
     title = models.CharField(max_length=266, blank=False, null=False)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
@@ -97,7 +100,7 @@ class Gallery(models.Model):
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
     image = models.ImageField()
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
@@ -114,7 +117,7 @@ class Document(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
@@ -131,7 +134,7 @@ class AdditionalPages(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
@@ -143,10 +146,10 @@ class AdditionalPages(models.Model):
 
 
 class Branch(MPTTModel):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     @staticmethod
     def get_index_model():
@@ -156,9 +159,13 @@ class Branch(MPTTModel):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('branch:detail', kwargs={'slug': full_slug})
+
 
 class Country(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     flag = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
 
@@ -170,13 +177,17 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('country:detail', kwargs={'slug': full_slug})
+
 
 class Organization(PolymorphicMPTTModel):
     countries = models.ManyToManyField(Country, related_name='organizations')
     parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children',
                                        verbose_name=_('parent'), db_index=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     def has_perm(self, user):
         if user is None or not user.is_authenticated() or user.is_anonymous():
@@ -208,7 +219,7 @@ class Chamber(Organization):
         ('affiliate', _('Affiliate')),
     ]
 
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
@@ -223,7 +234,7 @@ class Chamber(Organization):
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -263,8 +274,12 @@ class Chamber(Organization):
         return self.metadata.get('site', '')
 
     @property
-    def detail_url(self):
-        return reverse('tpp:detail', args=[self.slug])
+    def detail_url(self): # Deprecated
+        return self.get_absolute_url()
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('tpp:detail', kwargs={'slug': full_slug})
 
     @property
     def location(self):
@@ -303,7 +318,7 @@ class Company(Organization):
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -319,9 +334,13 @@ class Company(Organization):
 
         return countries[0]
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('companies:detail', kwargs={'slug': full_slug})
+
     @property
     def detail_url(self):
-        return reverse('companies:detail', args=[self.slug])
+        return self.get_absolute_url()
 
     @property
     def phone(self):
@@ -353,10 +372,10 @@ class Company(Organization):
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     organization = models.ForeignKey(Organization, db_index=True, related_name='departments')
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
@@ -369,17 +388,21 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('department:detail', kwargs={'slug': full_slug})
+
 
 class Vacancy(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=True, related_name='work_positions')
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
@@ -389,7 +412,7 @@ class Vacancy(models.Model):
         if self.user:
             raise ValueError('Employee already exists')
 
-        if user.work_positions.filter(department__organization=self.organization).exists():
+        if user.work_positions.filter(department__organization=self.department.organization).exists():
             raise ValueError('Employee already exists in organization')
 
         with transaction.atomic():
@@ -397,24 +420,28 @@ class Vacancy(models.Model):
             self.save()
 
             if is_admin:
-                assign_perm('manage_chamber', user, self)
+                assign_perm('manage_organization', user, self.department.organization)
 
     def remove_employee(self):
         with transaction.atomic():
+            if self.has_perm(self.user):
+                remove_perm('manage_organization', self.user, self.department.organization)
+
             self.user = None
             self.save()
-
-            if self.has_perm(self.user):
-                remove_perm('manage_chamber', self.user, self)
 
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('vacancy:detail', kwargs={'slug': full_slug})
+
 
 class BusinessProposalCategory(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     @staticmethod
     def get_index_model():
@@ -423,6 +450,10 @@ class BusinessProposalCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('bp_category:detail', kwargs={'slug': full_slug})
 
 
 class BusinessProposal(models.Model):
@@ -436,14 +467,14 @@ class BusinessProposal(models.Model):
     branches = models.ManyToManyField(Branch)
     galleries = GenericRelation(Gallery)
     country = models.ForeignKey(Country)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     categories = models.ManyToManyField(BusinessProposalCategory)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
@@ -456,6 +487,10 @@ class BusinessProposal(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('proposal:detail', kwargs={'slug': full_slug})
 
 
 class InnovationProject(models.Model):
@@ -473,13 +508,13 @@ class InnovationProject(models.Model):
     metadata = HStoreField()
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     galleries = GenericRelation(Gallery)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     additional_pages = GenericRelation(AdditionalPages)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
@@ -507,13 +542,17 @@ class InnovationProject(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('innov:detail', kwargs={'slug': full_slug})
+
 
 class B2BProductCategory(MPTTModel):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = models.ImageField(blank=True, null=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     @staticmethod
     def get_index_model():
@@ -522,6 +561,10 @@ class B2BProductCategory(MPTTModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('b2b_category:detail', kwargs={'slug': full_slug})
 
 
 class B2BProduct(models.Model):
@@ -539,14 +582,14 @@ class B2BProduct(models.Model):
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
     branches = models.ManyToManyField(Branch)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     additional_pages = GenericRelation(AdditionalPages)
     metadata = HStoreField()
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -568,16 +611,20 @@ class B2BProduct(models.Model):
     def has_perm(self, user):
         return self.company.has_perm(user)
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('products:detail', kwargs={'slug': full_slug})
+
 
 class B2BProductComment(MPTTModel):
     content = models.TextField()
     product = models.ForeignKey(B2BProduct, on_delete=models.CASCADE)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
@@ -585,20 +632,23 @@ class B2BProductComment(MPTTModel):
 
 
 class NewsCategory(MPTTModel):
-    name = models.CharField(max_length=255, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     image = models.ImageField(blank=True, null=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     @staticmethod
     def get_index_model():
         from b24online.search_indexes import NewsCategoryIndex
         return NewsCategoryIndex
 
-
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('news_category:detail', kwargs={'slug': full_slug})
 
 
 class Greeting(models.Model):
@@ -608,7 +658,7 @@ class Greeting(models.Model):
     slug = models.SlugField()
     position = models.CharField(max_length=255, blank=False, null=False)
     content = models.TextField(blank=False, null=False)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     @staticmethod
     def get_index_model():
@@ -621,25 +671,30 @@ class Greeting(models.Model):
     def has_perm(self, user):
         return user.is_superuser or user.is_commando
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('greetings:detail', kwargs={'slug': full_slug})
+
 
 class News(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    image = models.CharField(max_length=255, blank=True, null=False)
+    image = models.ImageField(max_length=255, blank=True, null=False)
     slug = models.SlugField()
+    short_description = models.TextField()
     content = models.TextField()
     is_tv = models.BooleanField(default=False)
     categories = models.ManyToManyField(NewsCategory)
     galleries = GenericRelation(Gallery)
     video_code = models.CharField(max_length=255, blank=True, null=False)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
     country = models.ForeignKey(Country, null=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
@@ -656,6 +711,10 @@ class News(models.Model):
 
         return user.is_commando or user.is_superuser
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('news:detail', kwargs={'slug': full_slug})
+
 
 class Tender(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
@@ -667,14 +726,14 @@ class Tender(models.Model):
     documents = GenericRelation(Document)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     dates = DateRangeField(null=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     additional_pages = GenericRelation(AdditionalPages)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -701,6 +760,10 @@ class Tender(models.Model):
 
     def has_perm(self, user):
         return self.organization.has_perm(user)
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('tenders:detail', kwargs={'slug': full_slug})
 
 
 class Profile(models.Model):
@@ -748,7 +811,7 @@ class Exhibition(models.Model):
     city = models.CharField(max_length=255, blank=True, null=False)
     coordinates = models.CharField(max_length=255, blank=True, null=False)
     route = models.CharField(blank=True, null=False, max_length=1024)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     additional_pages = GenericRelation(AdditionalPages)
@@ -756,7 +819,7 @@ class Exhibition(models.Model):
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -784,13 +847,17 @@ class Exhibition(models.Model):
     def has_perm(self, user):
         return self.organization.has_perm(user)
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('exhibitions:detail', kwargs={'slug': full_slug})
+
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     content = models.TextField(blank=False, null=False)
     is_on_top = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
 
     SITE_TYPES = [
         ('b2b', _('B2B')),
@@ -816,6 +883,15 @@ class StaticPage(models.Model):
     def has_perm(self, user):
         return user.is_commando or user.is_superuser
 
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('project:detail', kwargs={'slug': full_slug})
+
+    class Meta:
+        index_together = [
+            ['page_type', 'site_type'],
+        ]
+
 
 class Notification(models.Model):
     user = models.ForeignKey(User, related_name="notifications")
@@ -835,12 +911,27 @@ class Notification(models.Model):
         return self.message
 
 
-class Messages(models.Model):
+class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent')
     recipient = models.ForeignKey(User, related_name='received')
     is_read = models.BooleanField(default=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
-    message = models.TextField(blank=False, null=False)
+    content = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        index_together = [
+            ['recipient', 'sender'],
+        ]
+
+    @classmethod
+    def add_message(cls, content, sender, recipient_id, notify=True):
+        with transaction.atomic():
+            recipient = User.objects.get(pk=recipient_id)
+            cls.objects.create(sender=sender, content=content, recipient=recipient)
+
+        if notify:
+            from appl import func
+            func.publish_realtime('private_massage', recipient=recipient_id, fromUser=sender.pk)
 
     def __str__(self):
         return "From %s to %s at %s" % (self.sender.profile, self.recipient.profile, self.sent_at)
@@ -862,6 +953,11 @@ class BannerBlock(models.Model):
 
     block_type = models.CharField(max_length=10, choices=BLOCK_TYPES)
 
+    class Meta:
+        index_together = [
+            ['code', 'block_type'],
+        ]
+
 
 class Banner(models.Model):
     title = models.CharField(max_length=255)
@@ -870,7 +966,7 @@ class Banner(models.Model):
     block = models.ForeignKey(BannerBlock)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
     dates = DateTimeRangeField()
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
     site = models.ForeignKey(Site)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -898,3 +994,18 @@ class BannerTarget(models.Model):
 
     def has_perm(self, user):
         return self.banner.has_perm(user)
+
+
+@receiver(pre_save)
+def slugify(sender, instance, **kwargs):
+    fields = [field.name for field in sender._meta.get_fields()]
+
+    if 'slug' in fields:
+        if 'title' in fields:
+            string = instance.title
+        elif 'name' in fields:
+            string = instance.name
+        else:
+            raise NotImplementedError('Unknown source field for slug')
+
+        instance.slug = create_slug(string, instance.pk)

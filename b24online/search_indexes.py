@@ -1,7 +1,8 @@
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from elasticsearch_dsl import DocType, analyzer, String, Boolean, Integer, Date, Double, token_filter, Search
 from elasticsearch_dsl.connections import connections
 
-from b24online.utils import get_index_name
 from local_settings import ELASTIC_SEARCH_HOSTS
 
 html_strip = analyzer('html_strip',
@@ -602,6 +603,7 @@ class SearchEngine(Search):
     _cached_connection = None
 
     def __init__(self, lang=None, doc_type=None, extra=None, **kwargs):
+        from b24online.utils import get_index_name
         index_name = get_index_name(lang)
         using = SearchEngine.get_connection()
 
@@ -613,3 +615,14 @@ class SearchEngine(Search):
             SearchEngine._cached_connection = connections.create_connection(hosts=ELASTIC_SEARCH_HOSTS)
 
         return SearchEngine._cached_connection
+
+
+@receiver(post_delete)
+def remove_index(sender, instance, **kwargs):
+    get_index_model = getattr(instance, "get_index_model", None)
+
+    if get_index_model is not None:
+        hits = SearchEngine(doc_type=get_index_model()).query("match", django_id=instance.pk).execute().hits
+
+        if hits.total:
+            hits[0].delete()

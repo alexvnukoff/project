@@ -1174,10 +1174,11 @@ var companyStructure =
         if(this.item && confirm(this.LANG['confirm'])) {
             this.hidePanel();
             var id = this.item.data('item-id');
+            var item_type = this.item.data('type');
             delete this.item;
             contentHolder.html(this.loader);
 
-            $.post(this.structureURL, {id: id, "action": "remove"}, function(data){
+            $.post(this.structureURL, {id: id, "action": "remove", type: item_type}, function(data){
                 contentHolder.replaceWith(data);
             }, 'html');
         }
@@ -1186,15 +1187,13 @@ var companyStructure =
     },
 
     setDepValues: function(action) {
-
-
         var self = this;
 
         var form = $(self.forms.departments);
         var input = form.find('#dep-name');
 
         if (action == 'edit') {//edit
-            input.val(self.item.text().trim());
+            input.val(self.item.find('a').text().trim());
         }
 
         // press Add button
@@ -1213,7 +1212,7 @@ var companyStructure =
             contentHolder.html(self.loader);
 
 
-            $.post(self.structureURL,{ name: name, id: id, action: action}, function(data) {
+            $.post(self.structureURL,{ name: name, id: id, action: action, type: 'department'}, function(data) {
                 contentHolder.replaceWith(data);
             }, 'html');
 
@@ -1232,26 +1231,16 @@ var companyStructure =
     },
 
     setVacValues: function(action) {
-
         var self = this;
 
         if (!self.item)
             return false;
 
         var form = $(self.forms.vacancy);
-
         var input = form.find('#vac-name');
-
-        var id = null;
 
         if (action == 'edit') {//edit
             input.val(self.item.text().trim());
-        } else if (action == "add") {
-            if (this.item.parent().hasClass('department'))
-                id = this.item.data('item-id');
-            else
-                id = this.item.parents('li').data('item-id');
-
         }
 
         form.on('click','#btn-add-vacancy', function() {
@@ -1260,12 +1249,17 @@ var companyStructure =
             if (!name)
                 return false;
 
+            if (action == 'add')
+                id = self.item.parents('li').data('item-id');
+            else
+                id = self.item.data('item-id');
+
             var contentHolder = $('#structure-tab .tpp-dt-content');
 
             contentHolder.html(self.loader);
             self.hideOverlay();
 
-            $.post(self.structureURL, {name: name, id: id, action: action}, function(data) {
+            $.post(self.structureURL, {name: name, id: id, action: action, type: 'vacancy'}, function(data) {
                     contentHolder.replaceWith(data);
             } , 'html');
 

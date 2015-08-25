@@ -62,7 +62,7 @@ def home(request):
 
 
 @ensure_csrf_cookie
-@login_required(login_url='/login/')
+@login_required
 def get_notification_list(request):
     if request.is_ajax():
 
@@ -336,7 +336,7 @@ def registration(request):
 #     return False
 
 
-@login_required(login_url='/login/')
+@login_required
 def my_companies(request):
     result = {'content': [], 'total': 0}
 

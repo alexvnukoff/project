@@ -77,7 +77,7 @@ class BusinessProposalDetail(ItemDetail):
     addUrl = 'proposal:add'
 
 
-@login_required(login_url='/login/')
+@login_required
 def proposalForm(request, action, item_id=None):
     if item_id:
        if not BusinessProposal.active.get_active().filter(pk=item_id).exists():

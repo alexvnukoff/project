@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
@@ -8,9 +8,11 @@ from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
+from django.utils.decorators import method_decorator
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
+from django.views.generic import CreateView
 from pytz import timezone
 import pytz
 from django.conf import settings
@@ -117,7 +119,7 @@ class NewsDetail(ItemDetail):
         return context
 
 
-@login_required(login_url='/login/')
+@login_required
 def news_form(request, action, item_id=None):
     if item_id:
         if not News.active.get_active().filter(pk=item_id).exists():
@@ -375,3 +377,32 @@ class NewsFeed(Feed):
             'IMAGE') else False
 
         return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
+
+
+class NewsCreate(CreateView):
+    model = News
+    fields = ['title', 'image', 'content', 'keywords']
+    template_name = 'News/addForm.html'
+    success_url = reverse_lazy('news:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        return super().form_valid(form)
+
+

@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import HStoreField
+from django.core.urlresolvers import reverse
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -18,6 +19,10 @@ class B2CProductCategory(MPTTModel):
     def get_index_model():
         from b24online.search_indexes import B2cProductCategoryIndex
         return B2cProductCategoryIndex
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('b2c_category:detail', kwargs={'slug': full_slug})
 
     def __str__(self):
         return self.name
@@ -62,6 +67,10 @@ class B2CProduct(models.Model):
 
     def has_perm(self, user):
         return self.company.has_perm(user)
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('products:detail', kwargs={'slug': full_slug})
 
 
 class B2CProductComment(MPTTModel):

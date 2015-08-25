@@ -24,7 +24,7 @@ from core.models import Item, User
 from core.tasks import addNewCompany
 from core.amazonMethods import add
 from tppcenter.forms import ItemForm, BasePages
-from tppcenter.Messages.views import addMessages
+from tppcenter.Messages.views import add_message
 
 
 class CompanyList(ItemsList):
@@ -197,52 +197,53 @@ def _tab_structure(request, company, page=1):
     organization = get_object_or_404(Company, pk=company)
 
     if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
-
-        try:
-            item_id = int(request.POST.get("id", 0))
-        except ValueError:
-            item_id = 0
+        item_id = request.POST.get("id", None)
 
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
+        request_type = request.POST.get("type", None)
+
+        if not (request_type in ('department', 'vacancy')) and action is not None:
+            return HttpResponseBadRequest()
 
         if not organization.has_perm(request.user) and action is not None:
             return HttpResponseBadRequest()
 
         if action == "add" and len(name) > 0:
-            if item_id == 0:  # new department
+            if request_type == 'department':
                 Department.objects.create(
-                    name=name, created_by=request.user,
+                    name=name,
+                    created_by=request.user,
                     updated_by=request.user,
                     organization=organization
                 )
-            else:  # new vacancy
-                department = get_object_or_404(Department, pk=item_id, organization=organization)
+            elif item_id is not None:  # new vacancy
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+
                 Vacancy.objects.create(
                     name=name,
                     created_by=request.user,
                     updated_by=request.user,
-                    department=department
+                    department=obj
                 )
 
-        elif action == "edit" and item_id > 0 and len(name) > 0:
-            try:
-                obj = organization.departments.get(pk=item_id)
-            except ObjectDoesNotExist:
+        elif action == "edit" and item_id is not None and len(name) > 0:
+            if request_type == 'department':
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+            else:
                 obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
             obj.name = name
             obj.save()
-
-        elif action == "remove" and item_id > 0:
-            try:
-                obj = organization.departments.get(pk=item_id, organization=organization)
-            except ObjectDoesNotExist:
+        elif action == "remove" and item_id is not None:
+            if request_type == 'department':
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+            else:
                 obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
             obj.delete()
 
-    departments = organization.departments.all().order_by('name')
+    departments = organization.departments.all().prefetch_related('vacancies').order_by('name')
 
     paginator = Paginator(departments, 10)
     page = paginator.page(page)
@@ -274,7 +275,7 @@ def _tab_staff(request, company, page=1):
         if action == "department":
             departments = [{'name': _("Select department"), "value": ""}]
 
-            for department in organization.departments.all().order_by('text'):
+            for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
             return HttpResponse(json.dumps(departments))
@@ -346,7 +347,7 @@ def _tab_staff(request, company, page=1):
     return render_to_response('Companies/tabStaff.html', template_params, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/login/')
+@login_required
 def companyForm(request, action, item_id=None):
     if item_id:
         if not Company.active.get_active().filter(pk=item_id).exists():
@@ -632,7 +633,7 @@ def gallery_structure(request, organization, page=1):
 
 
 def gallery_remove_item(request, item):
-    photo = get_object_or_404(GalleryImage, pk=tpp)
+    photo = get_object_or_404(GalleryImage, pk=item)
 
     if photo.has_perm(request.user):
         photo.delete()
@@ -650,7 +651,7 @@ def send_message(request):
 
                 # this condition as temporary design for separation Users and Organizations
                 if Cabinet.objects.filter(pk=int(company_pk)).exists():
-                    addMessages(request, text=request.POST.get('message', ""), recipient=int(company_pk))
+                    add_message(request, content=request.POST.get('message', ""), recipient_id=int(company_pk))
                     response = _('You have successfully sent the message.')
                 # /temporary condition for separation Users and Companies
 

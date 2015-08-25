@@ -2,16 +2,12 @@ from django.http import HttpResponseNotFound
 from django.utils.timezone import now
 from haystack.backends import SQ
 from haystack.query import SearchQuerySet
-from centerpokupok.Product.views import getProductList
+
 from centerpokupok.cbv import ItemsList
 
-__author__ = 'user'
-from core.models import Item
-from appl.models import Company, Category, Product, Comment, Favorite
-from django.shortcuts import render_to_response, get_object_or_404
-from appl import func
+from appl.models import Company, Product
+from django.shortcuts import render_to_response
 from django.conf import settings
-from django.db.models import Count
 from django.template import RequestContext
 
 

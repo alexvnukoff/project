@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response, HttpResponse
 
 import json
 
-@login_required(login_url='/login/')
+@login_required
 def main(request):
     '''
         Main analytic page
@@ -29,7 +29,7 @@ def main(request):
 
     return render_to_response("Analytic/main.html", templateParams, context_instance=RequestContext(request))
 
-@login_required(login_url='/login/')
+@login_required
 def getAnalytic(request):
     '''
         Get analytic of current organization

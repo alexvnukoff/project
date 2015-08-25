@@ -74,7 +74,7 @@ class ChamberDetail(ItemDetail):
     current_section = _("Tpp")
 
 
-@login_required(login_url='/login/')
+@login_required
 def tpp_form(request, action, item_id=None):
     if item_id:
         if not Tpp.active.get_active().filter(pk=item_id).exists():
@@ -313,50 +313,52 @@ def _tab_structure(request, tpp, page=1):
     organization = get_object_or_404(Chamber, pk=tpp)
 
     if request.is_ajax() and not request.user.is_anonymous() and request.user.is_authenticated():
-        try:
-            item_id = int(request.POST.get("id", 0))
-        except ValueError:
-            item_id = 0
-
+        item_id = request.POST.get("id", None)
         name = request.POST.get('name', '').strip()
         action = request.POST.get("action", None)
+        request_type = request.POST.get("type", None)
+
+        if not (request_type in ('department', 'vacancy')) and action is not None:
+            return HttpResponseBadRequest()
 
         if not organization.has_perm(request.user) and action is not None:
             return HttpResponseBadRequest()
 
         if action == "add" and len(name) > 0:
-            if item_id == 0:  # new department
+            if request_type == 'department':
                 Department.objects.create(
-                    name=name, created_by=request.user,
+                    name=name,
+                    created_by=request.user,
                     updated_by=request.user,
                     organization=organization
                 )
-            else:  # new vacancy
-                department = get_object_or_404(Department, pk=item_id, organization=organization)
+            elif item_id is not None:  # new vacancy
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+
                 Vacancy.objects.create(
                     name=name,
                     created_by=request.user,
                     updated_by=request.user,
-                    department=department
+                    department=obj
                 )
-        elif action == "edit" and item_id > 0 and len(name) > 0:
-            try:
-                obj = organization.departments.get(pk=item_id)
-            except ObjectDoesNotExist:
+
+        elif action == "edit" and item_id is not None and len(name) > 0:
+            if request_type == 'department':
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+            else:
                 obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
             obj.name = name
             obj.save()
-
-        elif action == "remove" and item_id > 0:
-            try:
-                obj = organization.departments.get(pk=item_id, organization=organization)
-            except ObjectDoesNotExist:
+        elif action == "remove" and item_id is not None:
+            if request_type == 'department':
+                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+            else:
                 obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
 
             obj.delete()
 
-    departments = organization.departments.all().order_by('name')
+    departments = organization.departments.all().prefetch_related('vacancies').order_by('name')
 
     paginator = Paginator(departments, 10)
     page = paginator.page(page)
@@ -388,7 +390,7 @@ def _tab_staff(request, tpp, page=1):
         if action == "department":
             departments = [{'name': _("Select department"), "value": ""}]
 
-            for department in organization.departments.all().order_by('text'):
+            for department in organization.departments.all().order_by('name'):
                 departments.append({"name": department.name, "value": department.pk})
 
             return HttpResponse(json.dumps(departments))

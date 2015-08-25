@@ -105,7 +105,7 @@ class TVNewsDetail(ItemDetail):
         return context
 
 
-@login_required(login_url='/login/')
+@login_required
 def tvForm(request, action, item_id=None):
     if item_id:
        if not TppTV.active.get_active().filter(pk=item_id).exists():
@@ -132,7 +132,7 @@ def tvForm(request, action, item_id=None):
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
-@login_required(login_url='/login/')
+@login_required
 def addNews(request):
 
     perm = request.user.get_all_permissions()
@@ -171,7 +171,7 @@ def addNews(request):
     return newsPage
 
 
-@login_required(login_url='/login/')
+@login_required
 def updateNew(request, item_id):
 
     if not request.user.has_perm('appl.change_tpptv') or not request.user.groups.filter(name="Redactor").exists():
@@ -233,7 +233,7 @@ def updateNew(request, item_id):
     return newsPage
 
 
-@login_required(login_url='/login/')
+@login_required
 def deleteTppTv(request, item_id):
 
     if not 'Redactor' in request.user.groups.values_list('name', flat=True):

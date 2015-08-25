@@ -4,10 +4,10 @@
 <div class="tophead">
 	<div class="wrapper">
     	<div class="tophead-l">
-        	{% showTopStaticPages %}
+        	{% show_top_static_pages %}
         </div>
         <div class="tophead-r">
-        	<a href="{% url 'login' %}" title=""><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'register' %}" title=""><font>{% trans 'Sign up' %}</font></a>
+        	<a href="{% url 'auth_login' %}" title=""><i class="icons i-lock"></i><font>{% trans 'Sign in' %}</font></a> | <a href="{% url 'registration_register' %}" title=""><font>{% trans 'Sign up' %}</font></a>
         </div>
     </div>
 </div>

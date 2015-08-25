@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -42,6 +43,10 @@ class Requirement(models.Model):
     def get_index_model():
         from b24online.search_indexes import RequirementIndex
         return RequirementIndex
+
+    def get_absolute_url(self):
+        full_slug = "%s-%s" % (self.slug, self.pk)
+        return reverse('vacancy:detail', kwargs={'slug': full_slug})
 
     def __str__(self):
         return self.title

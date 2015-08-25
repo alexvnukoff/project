@@ -15,7 +15,7 @@ from core.models import Item, Dictionary, Relationship
 from tppcenter.views import user_logout
 
 
-@login_required(login_url='/login/')
+@login_required
 def getProfileForm(request):
 
     current_section = _("Profile")

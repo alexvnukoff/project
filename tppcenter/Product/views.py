@@ -123,7 +123,7 @@ class ProductDetail(ItemDetail):
         return super().get_queryset().prefetch_related('company', 'company__countries')
 
 
-@login_required(login_url='/login/')
+@login_required
 def productForm(request, action, item_id=None):
     if item_id:
         if not Product.active.get_active().filter(pk=item_id).exists():

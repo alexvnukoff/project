@@ -5,7 +5,7 @@ import tppcenter.Messages.views
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', tppcenter.Messages.views.viewMessages, name='main'),
-     url(r'^(?P<recipient>[0-9]+)/$', tppcenter.Messages.views.viewMessages, name="message_item"),
-     url(r'^add/$', tppcenter.Messages.views.addMessages, name="add"),
+     url(r'^$', tppcenter.Messages.views.view_messages, name='main'),
+     url(r'^(?P<recipient_id>[0-9]+)/$', tppcenter.Messages.views.view_messages, name="message_item"),
+     url(r'^add/$', tppcenter.Messages.views.add_message, name="add"),
 )

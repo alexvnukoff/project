@@ -3,8 +3,6 @@ from urllib.parse import urlparse
 import datetime
 
 from django.conf import settings
-from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import QueryDict
 from django.utils import timezone
 from django.utils.text import Truncator
@@ -18,7 +16,7 @@ from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
 
-from appl.models import Category, Tpp, Cabinet, TppTV, SystemMessages
+from appl.models import Category, Tpp, Cabinet, SystemMessages
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, Notification, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
 from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
@@ -468,10 +466,10 @@ def notify(message_type, notificationtype, **params):
     notif = Notification(user=user, message=message, create_user=user)
     notif.save()
 
-    sendTask(notificationtype, **params)
+    publish_realtime(notificationtype, **params)
 
 
-def sendTask(type, **params):
+def publish_realtime(publication_type, **params):
     import redis
     from django.conf import settings
     import json
@@ -490,7 +488,7 @@ def sendTask(type, **params):
         password=ORDERS_REDIS_PASSWORD
     ).publish
 
-    service_queue(type, json.dumps(params))
+    service_queue(publication_type, json.dumps(params))
 
 
 def getAnalytic(params=None):

@@ -73,7 +73,7 @@ class ExhibitionDetail(ItemDetail):
     addUrl = 'exhibitions:add'
 
 
-@login_required(login_url='/login/')
+@login_required
 def exhibitionForm(request, action, item_id=None):
     if item_id:
        if not Exhibition.active.get_active().filter(pk=item_id).exists():

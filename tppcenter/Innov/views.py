@@ -72,7 +72,7 @@ class InnovationProjectDetail(ItemDetail):
             .prefetch_related('galleries', 'galleries__gallery_items')
 
 
-@login_required(login_url='/login/')
+@login_required
 def innovForm(request, action, item_id=None):
     if item_id:
         if not InnovationProject.active.get_active().filter(pk=item_id).exists():

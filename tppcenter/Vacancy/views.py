@@ -82,7 +82,7 @@ class RequirementDetail(ItemDetail):
         return context
 
 
-@login_required(login_url='/login/')
+@login_required
 def vacancyForm(request, action, item_id=None):
     if item_id:
        if not Requirement.active.get_active().filter(pk=item_id).exists():

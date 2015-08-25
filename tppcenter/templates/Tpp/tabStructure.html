@@ -14,11 +14,11 @@
             {% if page.object_list|length > 0 %}
                 <ul class="sitemap department">
                     {% for department in page.object_list %}
-                        <li data-item-id="{{ department.pk }}">
+                        <li data-item-id="{{ department.pk }}" data-type="department">
                             <a href="#" title="{{ department.name }}">{{ department.name }}</a>
                             <ul class="sub vacancy">
-                                {% for vacancy in department.vacancies %}
-                                    <li  data-item-id="{{ vacancy.pk }}"><span>{{ vacancy.name }}</span></li>
+                                {% for vacancy in department.vacancies.all %}
+                                    <li data-type="vacancy" data-item-id="{{ vacancy.pk }}"><span>{{ vacancy.name }}</span></li>
                                 {% endfor %}
                             </ul>
                         </li>

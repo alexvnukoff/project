@@ -1,87 +1,49 @@
 {% load static %}
 {% load i18n %}
 
-{% if messagesList|length < 10 %}
+{% if message_queryset|length < 10 %}
     <div class="last"></div>
 {% endif %}
 
-{% for id, attr in messagesList.items %}
-
-    {% with attr.CREATE_DATE|first as date %}
-    {% with attr.DETAIL_TEXT|first as message %}
-    {% with attr.OWNER as owner %}
-
+{% for message in message_queryset %}
     {% if lastDate and forloop.first %}
-
-        {% if lastDate.day != date.day or lastDate.month != date.month or lastDate.year != date.year %}
-             <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
+        {% if lastDate.day != message.created_at.day or lastDate.month != message.created_at.month or lastDate.year != message.created_at.year %}
+             <div class="dateline"><span>{{ message.created_at|date:"d M Y" }}</span></div>
         {% endif %}
-
     {% else %}
-
-        {% ifchanged date.day date.month date.year %}
-            <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
+        {% ifchanged message.created_at.day message.created_at.month message.created_at.year %}
+            <div class="dateline"><span>{{ message.created_at|date:"d M Y" }}</span></div>
         {% endifchanged %}
-
     {% endif %}
+    <div class="customline" data-message="{{ message.pk }}" data-date="{{ message.created_at|date:"Y-n-d H:m:s.u" }}">
+        <label class="time">
+            {% if message.sender.profile.full_name %}
+                {{ message.sender.profile.full_name }}
+            {% else %}
+                {{ message.sender.email }}
+            {% endif %}
+            {% comment %}
+                Date output here was made so, because standard output and filters draw UTC time, not local
+            {% endcomment %}
+            {{ message.created_at.hour }}:{{ message.created_at.minute|stringformat:"02d" }}
+        </label>
 
-    {% with owner.USER_FIRST_NAME|first as fname %}
-    {% with owner.USER_LAST_NAME|first as lname %}
-    {% with owner.NAME|first as name %}
-    {% with owner.IMAGE|first as image %}
-
-        <div class="customline" data-message="{{ id }}" data-date="{{ date|date:"Y-n-d H:m:s.u" }}">
-
-            <label class="time">
-
-                {% if name %}
-
-                    {{ name}}
-
-                {% elif fname or lname %}
-
-                    {{ fname }} {{ lname }}
-
-                {% endif %}
-                {% comment %}
-                    Date output here was made so, because standard output and filters draw UTC time, not local
-                {% endcomment %}
-                {{ date.hour }}:{{ date.minute|stringformat:"02d" }}
-            </label>
-
-            <div class="clumnleft">
-                <span class="thumb">
-                    <img src="{{ MEDIA_URL }}th/{{ image }}"/>
-                </span>
-            </div>
-
-            <div class="clumnright">
-                <p>{{ message }}</p>
-            </div>
-
+        <div class="clumnleft">
+            <span class="thumb">
+                <img src="{{ MEDIA_URL }}th/{{ message.sender.profile.avatar }}"/>
+            </span>
         </div>
-
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-
+        <div class="clumnright">
+            <p>{{ message.content }}</p>
+        </div>
+    </div>
     {% if forloop.last and startDate %}
-
-        {% if startDate.day != date.day or startDate.month != date.month or startDate.year != date.year %}
-             <div class="dateline"><span>{{ date|date:"d M Y" }}</span></div>
+        {% if startDate.day != message.created_at.day or startDate.month != message.created_at.month or startDate.year != message.created_at.year %}
+             <div class="dateline"><span>{{ message.created_at|date:"d M Y" }}</span></div>
         {% endif %}
-
     {% endif %}
-
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-
 {% empty %}
-
-        {% if startDate %}
-             <div class="dateline"><span>{{ startDate|date:"d M Y" }}</span></div>
-        {% endif %}
-
+    {% if startDate %}
+         <div class="dateline"><span>{{ startDate|date:"d M Y" }}</span></div>
+    {% endif %}
 {% endfor %}
