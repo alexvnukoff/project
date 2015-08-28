@@ -21,7 +21,7 @@ from b24online.models import Chamber, Company, News, Tender, Exhibition, Busines
 from core.amazonMethods import add
 from core.models import User
 from tppcenter.forms import ItemForm, BasePages
-from core.tasks import addNewTpp
+#from core.tasks import addNewTpp
 
 
 class ChamberList(ItemsList):
@@ -130,7 +130,7 @@ def add_tpp(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
+            # addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('tpp:main'))
 
@@ -179,8 +179,8 @@ def update_tpp(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                            lang_code=trans_real.get_language())
+            # addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                 lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next', reverse('tpp:main')))
 

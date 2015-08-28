@@ -13,7 +13,7 @@ from appl import func
 from appl.models import Branch, AdditionalPages, Cabinet, Gallery, Organization
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import InnovationProject
-from core.tasks import addNewProject
+#from core.tasks import addNewProject
 from core.models import Item, Dictionary
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
@@ -144,8 +144,8 @@ def addProject(request):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                current_company=current_company, lang_code=trans_real.get_language())
+            # addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+            #                     current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('innov:main'))
 
@@ -211,8 +211,8 @@ def updateProject(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                branch=branch, lang_code=trans_real.get_language())
+            # addNewProject.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                     branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
 

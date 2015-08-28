@@ -1,6 +1,10 @@
+import uuid
+from PIL import Image
+
 from django.conf import settings
 from django.utils import translation
 from django.utils.text import slugify
+from django.utils.timezone import now
 from unidecode import unidecode
 
 
@@ -31,14 +35,19 @@ def deep_merge_dict(a, b, path=None):
 
 
 def reindex_instance(instance):
-    get_index_model = getattr(instance, "get_index_model", None)
+    from b24online.search_indexes import SearchEngine
+    conn = SearchEngine.get_connection()
+    languages = [lan[0] for lan in settings.LANGUAGES]
 
-    if get_index_model is not None:
-        from b24online.search_indexes import SearchEngine
-        hits = SearchEngine(doc_type=get_index_model()).query("match", django_id=instance.pk).execute().hits
+    for lang in languages:
+        search_results = SearchEngine(lang=lang).query('match', django_id=instance.pk).execute().hits
 
-        if hits.total:
-            hits[0].delete()
+        if search_results.total > 0:
+            pass
+        else:
+            index_name = get_index_name(lang)
+            instance.get_index_model().to_index(instance).save(using=conn, index=index_name)
+            instance.get_index_model()._doc_type.refresh(using=conn, index=index_name)
 
 
 def create_slug(string):
@@ -52,3 +61,53 @@ def create_slug(string):
     string = unidecode(string)
 
     return slugify(string)
+
+
+def generate_upload_path(instance, filename):
+    name = str(uuid.uuid4())
+    i = now()
+    folder = "%s/%s/%s" % (i.year, i.month, i.day)
+    ext = filename.split('.')[-1]
+
+    return '%s/%s.%s' % (folder, name, ext)
+
+
+def resize(img, box, fit, out):
+    '''Downsample the image.
+        @param img: Image -  an Image-object
+        @param box: tuple(x, y) - the bounding box of the result image
+        @param fit: boolean - crop the image to fill the box
+        @param out: file-like-object - save the image into the output stream
+        '''
+    # preresize image with factor 2, 4, 8 and fast algorithm
+
+    img = Image.open(img)
+
+    factor = 1
+    while img.size[0] / factor > 2 * box[0] and img.size[1] / factor > 2 * box[1]:
+        factor *= 2
+    if factor > 1:
+        img.thumbnail((img.size[0] / factor, img.size[1] / factor), Image.NEAREST)
+
+    # calculate the cropping box and get the cropped part
+    if fit:
+        x1 = y1 = 0
+        x2, y2 = img.size
+        wRatio = 1.0 * x2 / box[0]
+        hRatio = 1.0 * y2 / box[1]
+        if hRatio > wRatio:
+            y1 = int(y2 / 2 - box[1] * wRatio / 2)
+            y2 = int(y2 / 2 + box[1] * wRatio / 2)
+        else:
+            x1 = int(x2 / 2 - box[0] * hRatio / 2)
+            x2 = int(x2 / 2 + box[0] * hRatio / 2)
+        img = img.crop((x1, y1, x2, y2))
+
+    # Resize the image with best quality algorithm ANTI-ALIAS
+    img.thumbnail(box, Image.ANTIALIAS)
+
+    if img.mode == "CMYK":
+        img = img.convert("RGB")
+
+    # save it into a file-like object
+    img.save(out, "PNG", quality=95)

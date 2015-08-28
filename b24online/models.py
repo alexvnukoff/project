@@ -15,7 +15,9 @@ from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
-from b24online.utils import create_slug
+from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
+from b24online.utils import create_slug, generate_upload_path, reindex_instance
+from core import tasks
 from core.models import User
 
 CURRENCY = [
@@ -30,6 +32,9 @@ MEASUREMENT_UNITS = [
     ('kg', _('Kilogram')),
     ('pcs', _('Piece'))
 ]
+
+image_storage = S3ImageStorage()
+file_storage = S3FileStorage()
 
 
 class ContextAdvertisement(models.Model):
@@ -99,7 +104,7 @@ class Gallery(models.Model):
 
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
-    image = models.ImageField()
+    image = CustomImageField(storage=image_storage)
     is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -113,7 +118,7 @@ class GalleryImage(models.Model):
 
 class Document(models.Model):
     description = models.CharField(max_length=255, blank=False, null=False)
-    document_url = models.CharField(max_length=255, blank=False, null=False)
+    document = models.FileField(storage=file_storage)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
@@ -221,7 +226,7 @@ class Chamber(Organization):
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
-    logo = models.ImageField(blank=True, null=True)
+    logo = CustomImageField(storage=image_storage, blank=True, null=True)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
@@ -272,7 +277,7 @@ class Chamber(Organization):
         return self.metadata.get('site', '')
 
     @property
-    def detail_url(self): # Deprecated
+    def detail_url(self):  # Deprecated
         return self.get_absolute_url()
 
     def get_absolute_url(self):
@@ -304,7 +309,7 @@ class Company(Organization):
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
-    logo = models.ImageField(blank=True, null=True)
+    logo = CustomImageField(storage=image_storage, blank=True, null=True)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
@@ -542,7 +547,7 @@ class B2BProductCategory(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    image = models.ImageField(blank=True, null=True)
+    image = CustomImageField(storage=image_storage, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
     @staticmethod
@@ -562,7 +567,7 @@ class B2BProduct(models.Model):
     slug = models.SlugField()
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
-    image = models.ImageField(blank=True, null=True)
+    image = CustomImageField(storage=image_storage, blank=True, null=True)
     categories = models.ManyToManyField(B2BProductCategory)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
@@ -622,7 +627,7 @@ class B2BProductComment(MPTTModel):
 
 class NewsCategory(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    image = models.ImageField(blank=True, null=True)
+    image = CustomImageField(storage=image_storage, blank=True, null=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True)
@@ -665,7 +670,7 @@ class Greeting(models.Model):
 
 class News(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    image = models.ImageField(max_length=255, blank=True, null=False)
+    image = CustomImageField(upload_to=generate_upload_path, storage=S3ImageStorage, max_length=255, blank=True)
     slug = models.SlugField()
     short_description = models.TextField()
     content = models.TextField()
@@ -684,10 +689,25 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def upload_images(self):
+        params = {
+            'file': self.image.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
     @staticmethod
     def get_index_model():
         from b24online.search_indexes import NewsIndex
         return NewsIndex
+
+    def reindex(self):
+        reindex_instance(self)
 
     def __str__(self):
         return self.title
@@ -925,7 +945,7 @@ class BannerBlock(models.Model):
     name = models.CharField(max_length=255)
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
-    image = models.ImageField(null=True)
+    image = CustomImageField(storage=image_storage, null=True)
     description = models.CharField(max_length=1024)
 
     BLOCK_TYPES = [
@@ -945,7 +965,7 @@ class BannerBlock(models.Model):
 class Banner(models.Model):
     title = models.CharField(max_length=255)
     link = models.URLField()
-    image = models.ImageField()
+    image = CustomImageField(storage=image_storage)
     block = models.ForeignKey(BannerBlock)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
     dates = DateTimeRangeField()
@@ -982,12 +1002,11 @@ class BannerTarget(models.Model):
 @receiver(pre_save)
 def slugify(sender, instance, **kwargs):
     fields = [field.name for field in sender._meta.get_fields()]
-    update_fields = kwargs.get('update_fields', []) or []
 
     if 'slug' in fields:
-        if 'title' in fields and 'title' in update_fields:
+        if 'title' in fields:
             string = instance.title
-        elif 'name' in fields and 'name' in update_fields:
+        elif 'name' in fields:
             string = instance.name
         else:
             raise NotImplementedError('Unknown source field for slug')

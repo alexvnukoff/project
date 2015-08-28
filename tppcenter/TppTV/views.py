@@ -12,7 +12,7 @@ from appl import func
 from appl.models import TppTV, NewsCategories, Country
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import News
-from core.tasks import addTppAttrubute
+# from core.tasks import addTppAttrubute
 from tppcenter.forms import ItemForm
 
 
@@ -161,7 +161,7 @@ def addNews(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
+            # addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
             return HttpResponseRedirect(reverse('tv:main'))
 
     template = loader.get_template('TppTV/addForm.html')
@@ -210,8 +210,8 @@ def updateNew(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                  lang_code=trans_real.get_language())
+            # addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                       lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
 

@@ -14,7 +14,7 @@ from appl.models import Tpp, Organization, Company
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Vacancy, Department
 from core.models import Item, Relationship, Dictionary
-from core.tasks import addNewRequirement
+#from core.tasks import addNewRequirement
 from jobs.models import Requirement, Resume
 from tppcenter.forms import ItemForm
 
@@ -150,7 +150,7 @@ def addVacancy(request):
 
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
-            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
+            #addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('vacancy:main'))
         if not request.POST.get('VACANCY', False):
@@ -208,8 +208,8 @@ def updateVacancy(request, item_id):
 
         if form.is_valid() and request.POST.get('VACANCY', False):
             func.notify("item_creating", 'notification', user=request.user)
-            addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                            lang_code=trans_real.get_language())
+            # addNewRequirement.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                 lang_code=trans_real.get_language())
             return HttpResponseRedirect(request.GET.get('next', reverse('vacancy:main')))
         if not request.POST.get('VACANCY', False):
             vacancy_error = _('You have to choose vacancy')
@@ -363,7 +363,7 @@ def addVacancyAjax(request):
                     try:
                         vac.setAttributeValue({'NAME': vacancyName}, usr)
                     except Exception as e:
-                        logger.exception("Can not set attributes for Vacancy",  exc_info=True)
+                        # logger.exception("Can not set attributes for Vacancy",  exc_info=True)
                         res = False
 
                     if not res:

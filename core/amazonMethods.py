@@ -29,8 +29,6 @@ def add(imageFile=None, sizes=None):
     i = now()
     folder = "%s/%s/%s" % (i.year, i.month, i.day)
 
-
-
     #time.sleep(60)
 
     if imageFile:
@@ -118,6 +116,7 @@ def add(imageFile=None, sizes=None):
 
     return folder + '/' + name + '.png'
 
+
 def addFile(file=None):
     ext = file.split('.')[-1]
     name = "%s.%s" % (uuid.uuid4(), ext)
@@ -174,9 +173,8 @@ def delete(toDelete=None):
 
      return True
 
+
 def deleteFile(toDelete=None):
-
-
      pool = tinys3.Pool(settings.AWS_SID, settings.AWS_SECRET, default_bucket=settings.BUCKET,
                                                                 endpoint='s3.amazonaws.com')
      requests = []

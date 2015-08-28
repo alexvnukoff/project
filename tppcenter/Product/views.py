@@ -16,7 +16,7 @@ from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import B2BProduct
 from centerpokupok.models import B2CProduct
 from core.models import Item, Dictionary
-from core.tasks import addProductAttrubute
+#from core.tasks import addProductAttrubute
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 

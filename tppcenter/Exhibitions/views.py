@@ -14,7 +14,7 @@ from appl import func
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Exhibition
 from core.models import Item
-from core.tasks import addNewExhibition
+# from core.tasks import addNewExhibition
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
@@ -147,8 +147,8 @@ def addExhibition(request):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                   current_company=current_company, lang_code=trans_real.get_language())
+            # addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+            #                        current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('exhibitions:main'))
 
@@ -217,8 +217,8 @@ def updateExhibition(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                   branch=branch, lang_code=trans_real.get_language())
+            # addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                        branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 

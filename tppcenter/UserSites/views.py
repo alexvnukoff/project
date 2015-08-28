@@ -1,7 +1,7 @@
 import re
 from appl.models import UserSites, Resume,  Organization, ExternalSiteTemplate, Gallery, Company
 from appl import func
-from core.tasks import addNewSite
+# from core.tasks import addNewSite
 from core.models import Item
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -156,7 +156,7 @@ def addSite(request, template_values):
             if not site.exists():
 
                 func.notify("item_creating", 'notification', user=request.user)
-                addNewSite.delay(request.POST, request.FILES, user, current_organization,  lang_code=trans_real.get_language())
+                # addNewSite.delay(request.POST, request.FILES, user, current_organization,  lang_code=trans_real.get_language())
                 return HttpResponseRedirect(reverse('site:main'))
             else:
                   form.errors.update({"NAME": _("This domain is used, please try something else")})
@@ -216,8 +216,8 @@ def updateSite(request, template_values, item_id):
 
             if not site.exists() or UserSites.objects.filter(sites__id__in=site, organization=current_organization).exists():
                 func.notify("item_creating", 'notification', user=request.user)
-                addNewSite.delay(request.POST, request.FILES, user, current_organization,  item_id=item_id,
-                                   lang_code=trans_real.get_language())
+                # addNewSite.delay(request.POST, request.FILES, user, current_organization,  item_id=item_id,
+                #                    lang_code=trans_real.get_language())
 
                 return HttpResponseRedirect(reverse('site:main'))
             else:

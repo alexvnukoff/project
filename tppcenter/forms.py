@@ -1,24 +1,21 @@
-from django import forms
-import os
 import uuid
-from django.forms.models import BaseModelFormSet
-from django.contrib.contenttypes.models import ContentType
-from core.models import AttrTemplate, Dictionary, Item, Relationship, Attribute, Value
-from appl.models import *
+import logging
 
+from django import forms
+from django.forms.models import BaseModelFormSet
 from django.core.exceptions import ValidationError
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
-from django.forms.models import modelformset_factory
 from django.db import transaction
+from django.db.models import Q
+
+from core.models import AttrTemplate, Attribute, Value
+from appl.models import *
 from core.amazonMethods import add, delete, addFile, deleteFile
 from appl import func
-from django.db.models import Q
-from PIL import Image
-import logging
+
 logger = logging.getLogger('django.request')
 
 

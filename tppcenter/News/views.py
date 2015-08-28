@@ -23,7 +23,6 @@ from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import News
 from core.models import Group
 from tppcenter.forms import ItemForm, BasePhotoGallery
-from core.tasks import addNewsAttrubute
 
 
 class NewsList(ItemsList):
@@ -403,6 +402,10 @@ class NewsCreate(CreateView):
             form.instance.organization = organization
             form.instance.country = organization.country
 
-        return super().form_valid(form)
+        result = super().form_valid(form)
+        self.object.reindex()
+        self.object.upload_images()
+
+        return result
 
 

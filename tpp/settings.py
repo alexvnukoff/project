@@ -235,7 +235,7 @@ NOTIFICATION_BEFORE_END_DATE = 60
 AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = 'http://static.tppcenter.com/'
-MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static').replace('\\', '/'))
+MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static', 'upload').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -340,7 +340,7 @@ HAYSTACK_ID_FIELD = 'id'
 AWS_SID = 'AKIAI5PE5AH2TNVDXCQQ'
 AWS_SECRET = '7siq/AletsUZbTKnI8hasGQ1y/V8vDSSuY11TtSv'
 BUCKET = 'uploadstg'
-
+BUCKET_REGION = 'eu-west-1'
 
 ##################### Celery settings ####################################
 CELERY_RESULT_BACKEND ='djcelery.backends.database:DatabaseBackend'

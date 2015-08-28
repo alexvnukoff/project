@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _, trans_real
 from appl.models import Cabinet
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail
-from core.tasks import addNewResume
+#from core.tasks import addNewResume
 from core.models import Dictionary
 from jobs.models import Resume
 from tppcenter.forms import ItemForm
@@ -134,7 +134,7 @@ def addResume(request):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
+            #addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('resume:main'))
 
@@ -179,8 +179,8 @@ def updateResume(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                               lang_code=trans_real.get_language())
+            # addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                    lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('resume:main'))
 

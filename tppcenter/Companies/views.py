@@ -21,7 +21,7 @@ from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
     Department, Vacancy, AdditionalPages, Gallery, GalleryImage, Organization
 from core.models import Item, User
-from core.tasks import addNewCompany
+#from core.tasks import addNewCompany
 from core.amazonMethods import add
 from tppcenter.forms import ItemForm, BasePages
 from tppcenter.Messages.views import add_message
@@ -434,8 +434,8 @@ def addCompany(request):
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
 
-            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID,
-                                branch=branch, lang_code=trans_real.get_language())
+            # addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID,
+            #                     branch=branch, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('companies:main'))
 
@@ -518,8 +518,8 @@ def updateCompany(request, item_id):
 
         if form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
-                                lang_code=trans_real.get_language())
+            # addNewCompany.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
+            #                     lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
 

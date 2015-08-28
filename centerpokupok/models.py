@@ -4,14 +4,15 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from b24online.models import Company, CURRENCY, AdditionalPages, Gallery
+from b24online.custom import CustomImageField
+from b24online.models import Company, CURRENCY, AdditionalPages, Gallery, image_storage
 from core.models import User
 
 
 class B2CProductCategory(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
-    image = models.ImageField(blank=True, null=True)
+    image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
@@ -33,7 +34,7 @@ class B2CProduct(models.Model):
     slug = models.SlugField()
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
-    image = models.ImageField(blank=True, null=True)
+    image = CustomImageField(storage=image_storage,blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)

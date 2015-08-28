@@ -12,7 +12,7 @@ from appl.models import Gallery, AdditionalPages, Organization
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Tender
-from core.tasks import addNewTender
+# from core.tasks import addNewTender
 from core.models import Dictionary
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
@@ -139,8 +139,8 @@ def addTender(request):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
-                               lang_code=trans_real.get_language())
+            # addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
+            #                    lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('tenders:main'))
 
@@ -193,8 +193,8 @@ def updateTender(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                               lang_code=trans_real.get_language())
+            # addNewTender.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                    lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('tenders:main'))
 

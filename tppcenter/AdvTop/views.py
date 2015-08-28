@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from appl import func
 from appl.models import Organization, Branch, Tpp, Country, AdvOrder
 from core.models import Item
-from core.tasks import addTopAttr
+#from core.tasks import addTopAttr
 from tppcenter.forms import ItemForm
 
 #from paypal.standard.forms import PayPalPaymentsForm
@@ -190,7 +190,7 @@ def addTop(request, item):
 
         if form.is_valid():
             try:
-                order = addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org, factor)
+                order = None#addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org, factor)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 

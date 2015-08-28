@@ -2,7 +2,7 @@ import json
 from appl import func
 from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country, Order, Organization, AdvOrder
 from core.models import Item
-from core.tasks import addBannerAttr
+# from core.tasks import addBannerAttr
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.files.images import ImageFile
@@ -242,8 +242,8 @@ def addBanner(request, bannerType):
         if form.is_valid():
             try:
                 current_company = request.session.get('current_company', False)
-                order = addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype, current_company,
-                                      factor)
+                # order = addBannerAttr(request.POST, request.FILES, user, settings.SITE_ID, ids, btype, current_company,
+                #                       factor)
             except Exception as e:
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 

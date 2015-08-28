@@ -14,7 +14,7 @@ from appl.models import AdditionalPages, Organization, Branch, BpCategories
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import BusinessProposal, Gallery, Chamber, Country
 from core.models import Item
-from core.tasks import addBusinessPRoposal
+# from core.tasks import addBusinessPRoposal
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
@@ -153,8 +153,8 @@ def addBusinessProposal(request):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-                                current_company=current_company, lang_code=trans_real.get_language())
+            # addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
+            #                     current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('proposal:main'))
 
@@ -240,8 +240,8 @@ def updateBusinessProposal(request, item_id):
 
             func.notify("item_creating", 'notification', user=request.user)
 
-            addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
-                                lang_code=trans_real.get_language())
+            # addBusinessPRoposal.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id, branch=branch,
+            #                     lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
 
