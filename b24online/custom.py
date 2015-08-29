@@ -2,14 +2,29 @@ from urllib.parse import urljoin
 
 from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.utils.encoding import filepath_to_uri
+from django.db.models.fields.files import ImageFieldFile
+
+
+class CustomImageFieldFile(ImageFieldFile):
+
+    def original(self):
+        self._require_file()
+        return self.storage.url_by_size(self.name, 'original')
+
+    def __getattr__(self, item):
+        if self.field.valid_sizes is not None and item in self.field.valid_sizes:
+            self._require_file()
+            return self.storage.url_by_size(self.name, item)
+
+        return super().__getattr__(item)
 
 
 class CustomImageField(models.ImageField):
-    def _get_url_by_size(self):
-        self._require_file()
-        return self.storage.url_by_size(self.name)
-    url_by_size = property(_get_url_by_size)
+    attr_class = CustomImageFieldFile
+
+    def __init__(self, verbose_name=None, name=None, sizes=None, **kwargs):
+        self.valid_sizes = sizes
+        super().__init__(verbose_name, name, **kwargs)
 
 
 class S3FileStorage(FileSystemStorage):
@@ -19,22 +34,11 @@ class S3FileStorage(FileSystemStorage):
 class S3ImageStorage(S3FileStorage):
 
     def url(self, name):
+        return self.url_by_size(name, 'original')
+
+    def url_by_size(self, name, size):
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")
 
-        filepath = "/original/%s" % name
-        return urljoin(self.base_url, filepath_to_uri(filepath))
-
-    def url_by_size(self, name):
-        return self.ImageDimension(name)
-
-
-class ImageDimension:
-    def __init__(self, filepath):
-        self.filepath = filepath
-
-    def __getattr__(self, item):
-        return "%s/%s" % (str(item), self.filepath)
-
-    def __str__(self):
-        return "original/%s" % self.filepath
+        path = "%s/%s" % (str(size), name)
+        return urljoin(self.base_url, path)

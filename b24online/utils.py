@@ -40,14 +40,15 @@ def reindex_instance(instance):
     languages = [lan[0] for lan in settings.LANGUAGES]
 
     for lang in languages:
-        search_results = SearchEngine(lang=lang).query('match', django_id=instance.pk).execute().hits
+        search_results = SearchEngine(lang=lang, doc_type=instance.get_index_model())\
+            .query('match', django_id=instance.pk).execute().hits
+        index_representation = instance.get_index_model().to_index(instance)
 
         if search_results.total > 0:
-            pass
+            search_results[0].update(**index_representation.to_dict())
         else:
             index_name = get_index_name(lang)
-            instance.get_index_model().to_index(instance).save(using=conn, index=index_name)
-            instance.get_index_model()._doc_type.refresh(using=conn, index=index_name)
+            index_representation.save(using=conn, index=index_name)
 
 
 def create_slug(string):

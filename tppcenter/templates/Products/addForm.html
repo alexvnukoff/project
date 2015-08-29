@@ -1,7 +1,9 @@
+{% extends 'forms.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load set_var %}
+{% block content %}
 <script type="text/javascript">
     $(function() {
 
@@ -102,41 +104,21 @@ $.fn.onChangeSet = function(e) {
 
 <div class="newsform">
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-
-
         {% csrf_token %}
-        {% with form.fields.NAME.initial as name %}
-        {% with form.fields.IMAGE.initial as image %}
-        {% with form.fields.DETAIL_TEXT.initial as text %}
-        {% with form.fields.COST.initial as cost %}
-        {% with form.fields.ANONS.initial as anons %}
-        {% with form.fields.KEYWORD.initial as keyword %}
-        {% with form.fields.CURRENCY.initial as currnecy %}
-        {% with form.fields.COUPON_DISCOUNT.initial as coupon_discount %}
-        {% with form.fields.DISCOUNT.initial as discount %}
-        {% with form.fields.MEASUREMENT_UNIT.initial as meas_unit %}
-        {% with form.fields.DOCUMENT_1.initial as doc_1 %}
-        {% with form.fields.DOCUMENT_2.initial as doc_2 %}
-        {% with form.fields.DOCUMENT_3.initial as doc_3 %}
-
-        {% with form.fields.SKU.initial as sku %}
-
-
-
         <div class="uploadimgage">
             <div class="imgbig">
 
                 <label class="sapce">{% trans 'Image' %}</label>
 
-                {% if form.errors.IMAGE %}
+                {% if form.errors.image %}
                     <div class="error-handler">
-                        <div class="formserror">{{ form.errors.IMAGE }}</div>
+                        <div class="formserror">{{ form.errors.image.0 }}</div>
                     </div>
                 {% endif %}
 
                 {% if image %}
                     <div class="b-img">
-                        <div><img src="{{ MEDIA_URL }}th/{{ image.name }}"></div>
+                        <div><img src="{{ image.name }}"></div>
                         <div class="deleteimge">
                             <i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>
                         </div>
@@ -146,7 +128,7 @@ $.fn.onChangeSet = function(e) {
                 {% endif %}
 
                 <div class="fileinputs">
-                    <input name="IMAGE" type="file" style="width: 100%"  />
+                    <input name="image" type="file" style="width: 100%"  />
                 </div>
             </div>
 
@@ -154,108 +136,19 @@ $.fn.onChangeSet = function(e) {
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
             <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
             <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
-
-            {% for i in '012'|make_list %}
-
-                <div class="imgbig">
-                    {% if forloop.counter0 == 0 %}
-                        <label class="sapce">{% trans "Gallery" %}</label>
-                    {% endif %}
-
-                    {% resolve photos i as img %}
-
-                    {% if img %}
-                        <div class="b-img">
-                            <img src="{{ MEDIA_URL }}big/{{ img.photo.name }}">
-
-                            <div class="deleteimge">
-                                <i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>
-                            </div>
-                            <div class="gray-img"></div>
-                            <input id="delete" type="checkbox" name="del[]" value="{{ img.pk }}" hidden="hidden" />
-                            <div>
-                                <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <div class="fileinputs">
-                        <input name="form-{{ i }}-photo" type="file" style="width: 100%"  />
-                    </div>
-                </div>
-            {% endfor %}
-
-            <div>
-                <label class="sapce">{% trans 'Documents' %}</label>
-                {% if form.errors.DOCUMENT_1 %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_1 }}</div></div>
-                {% endif %}
-                {% if form.errors.DOCUMENT_2 %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_2 }}</div></div>
-                {% endif %}
-                {% if form.errors.DOCUMENT_3 %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_3 }}</div></div>
-                {% endif %}
-
-
-
-                {% if doc_1 %}
-                    <div class="line">
-                        <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">{% trans "Doc 1" %}</a>
-                    </div>
-                    <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}"  />{% trans 'delete' %}
-                {% endif %}
-                <input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/>
-
-                {% if doc_2 %}
-                    <div class="line">
-                        <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">{% trans "Doc 2" %}</a>
-                    </div>
-                    <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}"  />{% trans 'delete' %}
-                {% endif %}
-                <input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/>
-
-                {% if doc_3 %}
-                    <div class="line">
-                        <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">{% trans "Doc 3" %}</a>
-                    </div>
-                    <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}"  />{% trans 'delete' %}
-                {% endif %}
-
-                <input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{ doc_3 }}"/>
-            </div>
-
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
-                {% if form.errors.KEYWORD %}
+                {% if form.errors.keywords %}
                         <div class="error-handler">
-                            <div class="formserror">{{ form.errors.KEYWORD }}</div>
+                            <div class="formserror">{{ form.errors.keywords.0 }}</div>
                         </div>
                 {% endif %}
-                <textarea rows="5" name="KEYWORD">{{ keyword }}</textarea>
+                <textarea rows="5" name="keywords">{{ form.keywords.value|default_if_none:"" }}</textarea>
             </div>
-                    <div>
-                    <label class="sapce">{% trans 'Start date' %}</label>
-                    {% if form.errors.START_DATE %}
-                        <div class="error-handler">
-                            <div class="formserror">{{ form.errors.START_DATE }}</div>
-                        </div>
-                    {% endif %}
-                    <input type="datetime" name="START_DATE" placeholder="" class="date" value="{{ product.start_date|date:"m/d/Y" }}" />
-                </div>
-                <div>
-                    <label class="sapce">{% trans 'End date' %}</label>
-                    {% if form.errors.END_DATE %}
-                        <div class="error-handler">
-                            <div class="formserror">{{ form.errors.END_DATE }}</div>
-                        </div>
-                    {% endif %}
-                    <input type="datetime" name="END_DATE" placeholder="" class="date"  value="{{ product.end_date|date:"m/d/Y" }}" />
-                </div>
         <div>
-                    {% if form.errors.CATEGORY %}
+                    {% if form.errors.categories %}
                         <div class="error-handler">
-                            <div class="formserror">{{ form.errors.CATEGORY }}</div>
+                            <div class="formserror">{{ form.errors.categories.0 }}</div>
                         </div>
                     {% endif %}
                     <label class="sapce">{% trans 'Categories' %}</label>
@@ -295,7 +188,7 @@ $.fn.onChangeSet = function(e) {
 
                     {% endif %}
                     <a href="#" id="select-cat" class="buttonclear  add-advandce">{% trans "Add categories" %}</a>
-
+                    {% comment %}
                                     <script>
                     $('#select-cat').click(function() {
                         var url = "{% url "products:categoryList" categorySite %}";
@@ -315,6 +208,7 @@ $.fn.onChangeSet = function(e) {
                         return false;
                     });
                 </script>
+                {% endcomment %}
 
                 </div>
         </div>
@@ -330,7 +224,7 @@ $.fn.onChangeSet = function(e) {
                         </div>
                     {% endif %}
 
-                    <input type="text"  name="NAME"  placeholder="" class="text" value="{{ name }}" />
+                    <input type="text"  name="name"  placeholder="" class="text" value="{{ name }}" />
                 </div>
 
                 <div class="clumn2">
@@ -340,7 +234,7 @@ $.fn.onChangeSet = function(e) {
                             <div class="formserror">{{ form.errors.SKU }}</div>
                         </div>
                     {% endif %}
-                    <input type="text" name="SKU" value="{{sku }}" placeholder="" class="text" style="width:92%;" />
+                    <input type="text" name="sku" value="{{ sku }}" placeholder="" class="text" style="width:92%;" />
                 </div>
             </li>
             <li>
@@ -348,7 +242,7 @@ $.fn.onChangeSet = function(e) {
                 {% if form.errors.ANONS %}
                     <div class="error-handler"><div class="formserror">{{ form.errors.ANONS }}</div></div>
                 {% endif %}
-                <textarea rows="7" name="ANONS" >{{ anons }}</textarea>
+                <textarea rows="7" name="short_description" >{{ anons }}</textarea>
             </li>
             <li>
                 <label>{% trans 'Detail text' %}</label>
@@ -358,7 +252,7 @@ $.fn.onChangeSet = function(e) {
             </li>
             <li>
                 <div class="detail">
-                    <textarea class="tiny" name="DETAIL_TEXT" >{{ text }}</textarea>
+                    <textarea class="tiny" name="description" >{{ text }}</textarea>
                 </div>
             </li>
             <li>
@@ -371,7 +265,7 @@ $.fn.onChangeSet = function(e) {
                                 <div class="formserror">{{ form.errors.COST }}</div>
                             </div>
                         {% endif %}
-                        <input type="text"  name="COST" value="{{ cost }}" placeholder="" class="text"/>
+                        <input type="text"  name="cost" value="{{ cost }}" placeholder="" class="text"/>
                     </div>
                 </div>
 
@@ -379,20 +273,20 @@ $.fn.onChangeSet = function(e) {
                     <div class="clumn3">
                         <label class="sapce">{% trans 'Currency' %}  <font color="#FF0000">*</font></label>
 
-                        <select id="id_CURRENCY" name="CURRENCY">
-                            {% for curr in currency_slots %}
-                                <option value="{{ curr.pk }}"{% if currnecy == curr.pk %} selected="selected" {% endif %}>
-                                    {{ curr.title }}
+                        <select id="id_CURRENCY" name="currency">
+                            {% for choice in form.currency.field.choices %}
+                                <option value="{{ choice.0 }}"{% if choice.0 == form.currency.value %} selected="selected" {% endif %}>
+                                    {{ choice.1 }}
                                 </option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="clumn4">
                         <label class="sapce">{% trans 'Measurement unit' %} <font color="#FF0000">*</font></label>
-                        <select id="id_MEASUREMENT_UNIT" name="MEASUREMENT_UNIT">
-                            {% for meas in measurement_slots %}
-                                <option value="{{ meas.pk }}" {% if meas.pk == meas_unit %} selected="selected" {% endif %}>
-                                    {{ meas.title }}
+                        <select id="id_MEASUREMENT_UNIT" name="measurement_unit">
+                            {% for choice in form.measurement_unit.field.choices %}
+                                <option value="{{ choice.0 }}"{% if choice.0 == form.measurement_unit.value %} selected="selected" {% endif %}>
+                                    {{ choice.1 }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -421,25 +315,9 @@ $.fn.onChangeSet = function(e) {
             <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
             <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
         </div>
-
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-
-
     </form>
 </div>
+{% endblock %}
 
 
 

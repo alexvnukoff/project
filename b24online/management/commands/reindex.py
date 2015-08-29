@@ -49,5 +49,3 @@ class Command(NoArgsCommand):
 
                     bulk(conn, actions)
                     start_size = end_size
-
-                index_model._doc_type.mapping.update_from_es(index_name, using=conn)

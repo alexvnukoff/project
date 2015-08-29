@@ -1,5 +1,5 @@
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -7,8 +7,10 @@ from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _, trans_real
 from django.utils.timezone import now
+from django.views.generic import UpdateView, CreateView
 from haystack.query import SearchQuerySet
 from appl import func
 from appl.models import Product, Gallery, AdditionalPages, Company, Category, Organization
@@ -16,7 +18,6 @@ from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import B2BProduct
 from centerpokupok.models import B2CProduct
 from core.models import Item, Dictionary
-#from core.tasks import addProductAttrubute
 from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
 
 
@@ -221,8 +222,8 @@ def addProductsB2C(request):
 
             site = Site.objects.get(name="centerpokupok")
 
-            addProductAttrubute.delay(request.POST, request.FILES, user, site.pk,
-                                      current_company=current_company, lang_code=trans_real.get_language())
+            # addProductAttrubute.delay(request.POST, request.FILES, user, site.pk,
+            #                           current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
 
@@ -307,8 +308,8 @@ def addProducts(request):
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
 
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
-                                      current_company=current_company, lang_code=trans_real.get_language())
+            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
+            #                           current_company=current_company, lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(reverse('products:main'))
 
@@ -396,8 +397,8 @@ def updateProduct(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                      lang_code=trans_real.get_language())
+            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                           lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
@@ -490,8 +491,8 @@ def updateProductB2C(request, item_id):
 
         if gallery.is_valid() and form.is_valid():
             func.notify("item_creating", 'notification', user=request.user)
-            addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                      lang_code=trans_real.get_language())
+            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
+            #                           lang_code=trans_real.get_language())
 
             return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
@@ -578,3 +579,74 @@ def _get_parents(parentList):
         return _get_parents(parentList)
     else:
         return parentList
+
+
+class B2BProductCreate(CreateView):
+    model = B2BProduct
+    fields = ['name', 'image', 'description', 'keywords', 'short_description', 'currency', 'measurement_unit', 'cost']
+    template_name = 'Products/addForm.html'
+    success_url = reverse_lazy('news:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        a = super().get_context_data(**kwargs)
+        return a
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        result = super().form_valid(form)
+        self.object.reindex()
+        self.object.upload_images()
+
+        return result
+
+
+
+class B2BProductUpdate(UpdateView):
+    model = B2BProduct
+    fields = ['title', 'image', 'content', 'keywords', 'short_description']
+    template_name = 'Products/addForm.html'
+    success_url = reverse_lazy('news:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        result = super().form_valid(form)
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'image' in form.changed_data:
+                self.object.upload_images()
+
+        return result

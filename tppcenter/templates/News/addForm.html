@@ -24,17 +24,18 @@
 
                 {% if form.errors.image %}
                     <div class="error-handler">
-                    <div class="formserror">{{ form.errors.image }}</div></div>{% endif %}
+                    <div class="formserror">{{ form.errors.image.0 }}</div></div>
+                {% endif %}
 
-                {% if image %}
+                {% if form.initial.image %}
                     <div class="b-img">
-                        <img src="{{ MEDIA_URL }}big/{{ image }}">
+                        <img src="{{ form.initial.image.big }}">
                         <div class="deleteimge">
                             <i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>
                         </div>
 
                         <div class="gray-img"></div>
-                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden"/>
+                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ form.initial.image }}" hidden="hidden"/>
                         </div>
                 {% endif %}
 
@@ -52,9 +53,9 @@
             <div>
                 <label class="sapce">{% trans 'Keyword' %}</label>
                 {% if form.errors.keywords %}
-                    <div class="error-handler"><div class="formserror">{{ form.errors.keywords }}</div></div>
+                    <div class="error-handler"><div class="formserror">{{ form.errors.keywords.0 }}</div></div>
                 {% endif %}
-                <textarea name="KEYWORD" rows="5">{{ keywords }}</textarea>
+                <textarea name="keywords" rows="5">{{ form.keywords.value|default_if_none:"" }}</textarea>
             </div>
         </div>
 
@@ -63,36 +64,36 @@
                 <label>{% trans 'Title' %}</label>
 
                 {% if form.errors.title %}
-                    <div class="error-handler"><div class="formserror">{{ form.errors.title }}</div></div>
+                    <div class="error-handler"><div class="formserror">{{ form.errors.title.0 }}</div></div>
                 {% endif %}
-                <input type="text" id="id_name" name="title" value="{{ title }}" class="text"/>
+                <input type="text" id="id_name" name="title" value="{{ form.title.value|default_if_none:"" }}" class="text"/>
             </li>
             <li>
                 <label>{% trans 'Preview description' %}</label>
                 {% if form.errors.short_description %}
-                    <div class="error-handler"><div class="formserror">{{ form.errors.short_description }}</div></div>
+                    <div class="error-handler"><div class="formserror">{{ form.errors.short_description.0 }}</div></div>
                 {% endif %}
                 <div>
-                    <textarea rows="5" id="id_anons" name="short_description">{{ short_description }}</textarea>
+                    <textarea rows="5" id="id_anons" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
                 </div>
             </li>
             <li>
                 <label>{% trans 'Content' %}</label>
-                {% if form.errors.contet %}
-                    <div class="error-handler"><div class="formserror">{{ form.errors.content }}</div></div>
+                {% if form.errors.content %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.content.0 }}</div></div>
                 {% endif %}
             </li>
             <li>
                 <div>
-                    <textarea style="height: 300px;" class="tiny" id="id_detail_text" name="content">
-                        {{ content }}
+                    <textarea style="height: 300px;" class="tiny" id="id_content" name="content">
+                        {{ form.content.value|default_if_none:"" }}
                     </textarea>
                 </div>
             </li>
         </ul>
         <div class="newform-button">
-            <input class="btntype2" type="submit" name="submit" value="Сохранить">
-            <a href="#" class="btntype1">{% trans 'Content' %}</a>
+            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
         </div>
 
     </form>
