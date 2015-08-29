@@ -12,8 +12,9 @@
             {% if not isOrg %}
         	    <h3>{% trans "Member of" %} {% getTppName %}</h3>
             {% endif %}
-
-            ©2011 - 2014 Тпп-Центр - центр торгово0промышленных палат, ассоциаций, собзов и гильдий предпринимателей и промышленников.
+            {% blocktrans %}
+                Copyright © 2011 - 2015 Expert Center, All Rights Reserved.
+            {% endblocktrans %}
         </div>
         <div class="ads"><img style="width: 540px;height: 85px;" src="{% static "usersites/img/b24logo.jpg" %}"/></div>
     </div>
