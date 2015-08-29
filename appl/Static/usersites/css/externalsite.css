@@ -29,7 +29,7 @@ box-shadow:inset 0px 2px 2px #e8e8e8;}
 .country .flag{ padding-right:5px;}
 .country .name-c{ font-size:18px; font-weight:normal; color:#000;}
 
-.sidebar{ position:relative; float:left; width:220px; margin:18px 0 0 0;}
+.sidebar{ position:relative; float:left; width:220px; margin:18px 15px 15px 0;}
 #logo{ display:inline-block; text-align: center; width:220px; height:120px; background-position:0px 0px;}
 #logo img { max-height: 100%; max-width: 100%; }
 .bgcart{ position:relative; float:left; width:100%; padding:12px 0; background:#f4f3f3; border-radius:3px; margin:18px 0 0 0; color:#9b9b9b;}

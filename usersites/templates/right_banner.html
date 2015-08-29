@@ -1,0 +1,14 @@
+{% load CustomFilters %}
+
+{% load staticfiles %}
+{% load i18n %}
+{% if site|hasBanner %}
+    <div class="sidebar" style="margin-left: 15px; width:205px;">
+
+    <a target="_blank" href="//{% url_banner_2 %}"><i><img style="margin-bottom: 5px;width: 205px;" src="{{ MEDIA_URL }}big/{% right_banner_1 %}" onError="this.parentNode.style.display = 'none';"/></i></a>
+    <a target="_blank" href="//{% url_banner_3 %}"><i><img style="margin-bottom: 5px;width: 205px;" src="{{ MEDIA_URL }}big/{% right_banner_2 %}" onError="this.parentNode.style.display = 'none';"/></i></a>
+    <a target="_blank" href="//{% url_banner_4 %}"><i><img style="margin-bottom: 5px;width: 205px;" src="{{ MEDIA_URL }}big/{% right_banner_3 %}" onError="this.parentNode.style.display = 'none';"/></i></a>
+    <a target="_blank" href="//{% url_banner_5 %}"><i><img style="margin-bottom: 5px;width: 205px;" src="{{ MEDIA_URL }}big/{% right_banner_4 %}" onError="this.parentNode.style.display = 'none';"/></i></a>
+    <a target="_blank" href="//{% url_banner_6 %}"><i><img style="margin-bottom: 5px;width: 205px;" src="{{ MEDIA_URL }}big/{% right_banner_5 %}" onError="this.parentNode.style.display = 'none';"/></i></a>
+</div>
+{% endif %}

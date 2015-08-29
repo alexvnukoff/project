@@ -22,31 +22,18 @@
 
 
   {% block body %}
-
 <div class="main">
-	<div class="wrapper">
-    	<div class="menutop">
-        	<div class="linkleft">
-            	<a href="{% detail_page_to_tppcenter "project:about" %}">{% trans "About" %}</a>|<a href="{% detail_page_to_tppcenter "project:offer" %}">{% trans "Services" %}</a>|<a href="{% detail_page_to_tppcenter "project:faq" %}">{% trans "Help" %}</a>
-            </div>
-            <div class="signup">
-            	<i class="i-lock imgmain"></i>
-                <a href="#">{% trans "Sign in" %} </a>
-            </div>
-            <div class="notify none">
-                <span><i class="imgmain i-note"></i></span>
-                <span><i class="imgmain i-mail"></i></span>
-                <span>
-                    <i class="imgmain i-user" id="showevent"></i>
-                </span>
-                <span><i class="imgmain i-book"></i></span>
-            </div>
-        </div>
+
+	    <div class="wrapper" {% if site|hasBanner %} style="width:1200px;{% endif %}">
+
+
       {% block sidebar %}
            {% getUserSiteMenu %}
 
         {% endblock %}
-        <div class="mainright">
+
+             <div class="mainright" {% if site|hasBanner %} style="float: left; {% endif %} {% if site|getSide %} float: right;margin: 15px 15px 15px 15px; {% endif %}">
+
         {% block slider %}
            {% getUserSiteSlider %}
 
@@ -62,6 +49,10 @@
 
                    {% endblock %}
         </div>
+       {% block right_banner %}
+           {% include "right_banner.html" %}
+
+        {% endblock %}
         {% isSiteOrganizationTpp as isOrg %}
         {% if isOrg %}
             {% userSitegetTopOnPage %}
