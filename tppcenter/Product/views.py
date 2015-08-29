@@ -573,13 +573,15 @@ def categoryList(request, site):
         catList = [cat.pk for cat in categories]
         object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, sites=site)
     else:
-        object_list = SearchQuerySet().models(Category).filter(parent=parent, sites=site)
+        categories = Category.hierarchy.getChild(parent=parent).filter(sites=site)
+        catList = [cat.pk for cat in categories]
+        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, sites=site)
         bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent, sites=site))
 
     new_obj_list = []
 
     for obj in object_list:
-        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, sites=site).count()
+        obj.childs = Category.hierarchy.getChild(parent=obj.pk).filter(sites=site).count()
         new_obj_list.append(obj)
 
 
