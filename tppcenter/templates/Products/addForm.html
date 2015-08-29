@@ -1,7 +1,9 @@
+{% extends 'forms.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
 {% load set_var %}
+{% block content %}
 <script type="text/javascript">
     $(function() {
 
@@ -102,41 +104,21 @@ $.fn.onChangeSet = function(e) {
 
 <div class="newsform">
     <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-
-
         {% csrf_token %}
-        {% with form.fields.NAME.initial as name %}
-        {% with form.fields.IMAGE.initial as image %}
-        {% with form.fields.DETAIL_TEXT.initial as text %}
-        {% with form.fields.COST.initial as cost %}
-        {% with form.fields.ANONS.initial as anons %}
-        {% with form.fields.KEYWORD.initial as keyword %}
-        {% with form.fields.CURRENCY.initial as currnecy %}
-        {% with form.fields.COUPON_DISCOUNT.initial as coupon_discount %}
-        {% with form.fields.DISCOUNT.initial as discount %}
-        {% with form.fields.MEASUREMENT_UNIT.initial as meas_unit %}
-        {% with form.fields.DOCUMENT_1.initial as doc_1 %}
-        {% with form.fields.DOCUMENT_2.initial as doc_2 %}
-        {% with form.fields.DOCUMENT_3.initial as doc_3 %}
-
-        {% with form.fields.SKU.initial as sku %}
-
-
-
         <div class="uploadimgage">
             <div class="imgbig">
 
                 <label class="sapce">{% trans 'Image' %}</label>
 
-                {% if form.errors.IMAGE %}
+                {% if form.errors.image %}
                     <div class="error-handler">
-                        <div class="formserror">{{ form.errors.IMAGE }}</div>
+                        <div class="formserror">{{ form.errors.image.0 }}</div>
                     </div>
                 {% endif %}
 
                 {% if image %}
                     <div class="b-img">
-                        <div><img src="{{ MEDIA_URL }}th/{{ image.name }}"></div>
+                        <div><img src="{{ image.name }}"></div>
                         <div class="deleteimge">
                             <i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>
                         </div>
@@ -421,25 +403,9 @@ $.fn.onChangeSet = function(e) {
             <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
             <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
         </div>
-
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-
-
     </form>
 </div>
+{% endblock %}
 
 
 

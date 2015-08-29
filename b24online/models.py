@@ -147,7 +147,7 @@ class AdditionalPages(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
-        return self.item.has_perm(user)
+        return self.item.haxs_perm(user)
 
 
 class Branch(MPTTModel):
@@ -670,7 +670,8 @@ class Greeting(models.Model):
 
 class News(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    image = CustomImageField(upload_to=generate_upload_path, storage=S3ImageStorage, max_length=255, blank=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                             sizes=['big', 'small', 'th'], max_length=255)
     slug = models.SlugField()
     short_description = models.TextField()
     content = models.TextField()

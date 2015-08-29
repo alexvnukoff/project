@@ -3,7 +3,7 @@ anyjson==0.3.3
 app-version==0.2.1
 billiard==3.3.0.20
 boto3==1.1.2
-botocore==1.1.10
+botocore==1.1.11
 celery==3.1.18
 Django==1.8.4
 django-appconf==1.0.1
@@ -21,7 +21,7 @@ django-tag-parser==2.1
 django-tools==0.29.5
 docutils==0.12
 elasticsearch==1.6.0
-elasticsearch-dsl==0.0.4
+elasticsearch-dsl==0.0.5
 future==0.15.0
 futures==2.2.0
 jmespath==0.7.1
@@ -38,6 +38,7 @@ requests==2.7.0
 six==1.9.0
 sockjs-tornado==1.0.1
 sqlparse==0.1.16
+tinys3==0.1.11
 tolerance==0.1.2
 tornado==4.2.1
 tornado-redis==2.4.18

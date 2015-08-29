@@ -1,28 +1,23 @@
 from datetime import datetime
 
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
-from django.forms.models import modelformset_factory
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.utils.feedgenerator import Rss201rev2Feed
-from django.utils.translation import ugettext as _, trans_real
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from pytz import timezone
 import pytz
 from django.conf import settings
 
 from appl import func
-from appl.models import Organization, Gallery, Country, NewsCategories
+from appl.models import Organization, NewsCategories
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import News
 from core.models import Group
-from tppcenter.forms import ItemForm, BasePhotoGallery
 
 
 class NewsList(ItemsList):
@@ -116,170 +111,6 @@ class NewsDetail(ItemDetail):
         context['similarNews'] = self._get_similar_news()
 
         return context
-
-
-@login_required
-def news_form(request, action, item_id=None):
-    if item_id:
-        if not News.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
-
-    newsPage = ''
-    current_section = _("News")
-
-    if action == 'delete':
-        newsPage = delete_news(request, item_id)
-    elif action == 'add':
-        newsPage = add_news(request)
-    elif action == 'update':
-        newsPage = update_news(request, item_id)
-
-    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
-        return newsPage
-
-    templateParams = {
-        'formContent': newsPage,
-        'current_section': current_section,
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def add_news(request):
-    if 'Redactor' in request.user.groups.values_list('name', flat=True):
-        redactor = True
-    else:
-        redactor = False
-
-    current_company = request.session.get('current_company', None)
-
-    if current_company:
-        item = Organization.objects.get(pk=current_company)
-        perm_list = item.getItemInstPermList(request.user)
-
-        if 'add_news' not in perm_list:
-            return func.permissionDenied()
-    else:
-        perm = request.user.get_all_permissions()
-
-        if not {'appl.add_news'}.issubset(perm):
-            return func.permissionDenied()
-
-    form = None
-
-    categories = func.getItemsList('NewsCategories', 'NAME')
-    countries = func.getItemsList("Country", 'NAME')
-
-    if request.POST:
-        user = request.user
-
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('News', values=values)
-        form.clean()
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, current_company=current_company,
-                                   lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('news:main'))
-
-    template = loader.get_template('News/addForm.html')
-
-    context = RequestContext(request,
-                             {'form': form, 'categories': categories, 'countries': countries, 'redactor': redactor})
-
-    newsPage = template.render(context)
-
-    return newsPage
-
-
-def update_news(request, item_id):
-    if 'Redactor' in request.user.groups.values_list('name', flat=True):
-        redactor = True
-    else:
-        redactor = False
-
-    try:
-        item = Organization.objects.get(p2c__child=item_id)
-        perm_list = item.getItemInstPermList(request.user)
-
-        if 'change_news' not in perm_list:
-            raise PermissionError('permission denied')
-
-    except Exception:
-        perm = request.user.get_all_permissions()
-
-        if not {'appl.change_news'}.issubset(perm) or not 'Redactor' in request.user.groups.values_list('name',
-                                                                                                        flat=True):
-            return func.permissionDenied()
-
-    create_date = News.objects.get(pk=item_id).create_date
-
-    try:
-        choosen_category = NewsCategories.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        choosen_category = ''
-    try:
-        choosen_country = Country.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        choosen_country = ""
-
-    categories = func.getItemsList('NewsCategories', 'NAME')
-    countries = func.getItemsList("Country", 'NAME')
-
-    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-    gallery = Photo(parent_id=item_id)
-    photos = ""
-
-    if gallery.queryset:
-        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-    form = ItemForm('News', id=item_id)
-
-    if request.POST:
-
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-        form = ItemForm('News', values=values, id=item_id)
-        form.clean()
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-
-            addNewsAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-                                   lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('news:main'))
-
-    template = loader.get_template('News/addForm.html')
-
-    templateParams = {
-        'gallery': gallery,
-        'photos': photos,
-        'form': form,
-        'choosen_category': choosen_category,
-        'categories': categories,
-        'countries': countries,
-        'choosen_country': choosen_country,
-        'create_date': create_date,
-        'redactor': redactor
-    }
-
-    context = RequestContext(request, templateParams)
-    newsPage = template.render(context)
-
-    return newsPage
 
 
 def delete_news(request, item_id):
@@ -380,7 +211,7 @@ class NewsFeed(Feed):
 
 class NewsCreate(CreateView):
     model = News
-    fields = ['title', 'image', 'content', 'keywords']
+    fields = ['title', 'image', 'content', 'keywords', 'short_description']
     template_name = 'News/addForm.html'
     success_url = reverse_lazy('news:main')
 
@@ -409,3 +240,36 @@ class NewsCreate(CreateView):
         return result
 
 
+class NewsUpdate(UpdateView):
+    model = News
+    fields = ['title', 'image', 'content', 'keywords', 'short_description']
+    template_name = 'News/addForm.html'
+    success_url = reverse_lazy('news:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        result = super().form_valid(form)
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'image' in form.changed_data:
+                self.object.upload_images()
+
+        return result
