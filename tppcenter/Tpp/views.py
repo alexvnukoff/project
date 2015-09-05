@@ -4,13 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms.models import modelformset_factory
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.utils.translation import trans_real
+from django.views.generic import CreateView, UpdateView
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
@@ -20,6 +22,7 @@ from b24online.models import Chamber, Company, News, Tender, Exhibition, Busines
     Organization, Department, Vacancy, Gallery, GalleryImage
 from core.amazonMethods import add
 from core.models import User
+from tppcenter.Tpp.forms import AdditionalPageFormSet, ChamberForm
 from tppcenter.forms import ItemForm, BasePages
 #from core.tasks import addNewTpp
 
@@ -542,3 +545,153 @@ def gallery_remove_item(request, tpp):
         return HttpResponseBadRequest()
 
     return HttpResponse()
+
+
+class ChamberUpdate(UpdateView):
+    model = Chamber
+    form_class = ChamberForm
+    template_name = 'Tpp/addForm.html'
+    success_url = reverse_lazy('tpp:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(instance=self.object)
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        return context_data
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.updated_by = self.request.user
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
+
+        self.object = form.save()
+        additional_page_form.instance = self.object
+
+        for page_form in additional_page_form:
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'image' in form.changed_data:
+                self.object.upload_images()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+
+class ChamberCreate(CreateView):
+    model = Chamber
+    form_class = ChamberForm
+    template_name = 'Tpp/addForm.html'
+    success_url = reverse_lazy('tpp:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet()
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
+
+        self.object = form.save()
+        additional_page_form.instance = self.object
+
+        for page_form in additional_page_form:
+            page_form.instance.created_by = self.request.user
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
+
+        self.object.reindex()
+        self.object.upload_images()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        return self.render_to_response(context_data)

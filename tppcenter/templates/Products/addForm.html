@@ -2,7 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-{% load set_var %}
 {% block content %}
 <script type="text/javascript">
     $(function() {
@@ -10,96 +9,23 @@
         $( ".date" ).datepicker();
         setTiny('textarea[class="tiny"]');
     });
-</script>
 
+    function add_category(name, pk) {
+        $('.list-cat').append('<li data-pk="' + pk + '">' + name + '<a href="#"><i class="i-close category-remove imgnews"></i></a></li>');
+        $('form').append('<input type="hidden" class="category-' + pk + '" name="categories" value="' + pk + '" />');
+    }
 
-<script>
-$.fn.onChangeSet = function(e) {
+    var categories = [
+        {% if categories %}
+            {% for category in categories %}
+                {
+                    pk: {{ category.pk }},
+                    name: '{{ category.name }}'
+                },
 
-
-                if ( e.added ) {
-
-                     var input = $('<input />');
-                     var name = $(this).attr('name')
-
-                    input.attr({
-                        name: "filter[" + name + "][]",
-                        value: e.added.id,
-                        type: 'hidden'
-                    });
-
-                    input.data('cost', e.added.cost);
-
-                    e.added.cost = parseFloat(e.added.cost);
-                    cost = e.added.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                    html = $('<li></li>').addClass('basket-' + e.added.id);
-                    html.append('<span class="left">' + e.added.title + '</span>');
-                    html.append('<span class="right">' + cost + ' $/{% trans "day" %}</span>');
-
-                    priceList.append(html);
-                    totalCost += e.added.cost;
-
-                    setTotal();
-
-                    input.appendTo(advForm);
-                } else if ( e.removed ) {
-                    toRemove = advForm.find('input[value="' + e.removed.id + '"]');
-
-                    cost = toRemove.data('cost');
-                    toRemove.remove();
-                    priceList.find('li.basket-' + e.removed.id).remove();
-
-                    totalCost -= parseFloat(cost);
-                    setTotal();
-                }
-
-            };
-
-
-
-
-            $('.ads-details-center .filter input').select2({
-                    width: "100%",
-                    multiple:true,
-                    formatNoMatches: noMatches,
-                    ajax: {
-                        url: "/advbanner/filter/",
-                        dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
-                        return {
-                            page: page, // page number
-                            type: $(this).attr('name')
-                            };
-                        },
-                        results: function (data, page) {
-                            var more = (page * 10) < data.total; // whether or not there are more results available
-                            // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.content, more: more};
-                        }
-
-                    },
-                    initSelection : function (element, callback) {
-                        var name = element.attr('name');
-
-                        if ( name in initial )
-                        {
-                            e = {'added': {}, removed: {}};
-
-                            for ( data in initial[name] )
-                            {
-                                e.added = initial[name][data];
-                                 element.onChangeSet(e);
-                            }
-
-                            callback(initial[name]);
-                        }
-                    },
-                    formatResult: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    formatSelection: function (m) { return m.title; }, // omitted for brevity, see the source of this page
-                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-            }).on("change", function(e) { $(this).onChangeSet(e) });
+            {% endfor %}
+        {% endif %}
+    ];
 </script>
 
 <div class="newsform">
@@ -116,14 +42,13 @@ $.fn.onChangeSet = function(e) {
                     </div>
                 {% endif %}
 
-                {% if image %}
-                    <div class="b-img">
-                        <div><img src="{{ image.name }}"></div>
-                        <div class="deleteimge">
-                            <i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>
-                        </div>
-                        <div class="gray-img"></div>
-                        <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />
+                {% if form.initial.image %}
+                    <div>
+                        <div><img src="{{ form.initial.image.small }}"></div>
+                        <!--<div class="deleteimge">-->
+                            <!--<i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>-->
+                        <!--</div>-->
+                        <!--<input id="delete" type="checkbox" name="image-clear" hidden="hidden" />-->
                     </div>
                 {% endif %}
 
@@ -132,10 +57,6 @@ $.fn.onChangeSet = function(e) {
                 </div>
             </div>
 
-
-            <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3" />
-            <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
-            <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3" />
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
                 {% if form.errors.keywords %}
@@ -175,30 +96,17 @@ $.fn.onChangeSet = function(e) {
                         }
                 </style>
                     <ul class="list-cat">
-                        {% if choosen_category %}
-                            {% for pk, name in choosen_category.items %}
-                                <li data-id="{{ pk }}'">{{ name.NAME|first }}<a href="#"><i class="i-close category-remove imgnews"></i></a></li>
-                            {% endfor %}
-                        {% endif %}
                     </ul>
-                    {% if choosen_category %}
-                        {% for pk, name in choosen_category.items %}
-                            <input type="hidden" class="category-{{ pk }}" name="category[]" value="{{ pk }}" />
-                        {% endfor %}
-
-                    {% endif %}
                     <a href="#" id="select-cat" class="buttonclear  add-advandce">{% trans "Add categories" %}</a>
-                    {% comment %}
-                                    <script>
+                    <script>
                     $('#select-cat').click(function() {
-                        var url = "{% url "products:categoryList" categorySite %}";
-                        window.open(url, "", "width=600, height=600, directories=no, channelmode=no, location=no, resizable=no, scrollbars=no, status=no, titlebar=no, toolbar=no");
+                        var url = "{% url "products:B2BCategoryList" %}";
+                        window.open(url, "test", "width=600,height=600");
 
                         return false;
                     });
                     $(document).bind('categorySelected', function(event, pk, name) {
-                        $('.list-cat').append('<li data-id="' + pk + '">' + name + '<a href="#"><i class="i-close category-remove imgnews"></i></a></li>');
-                        $('form').append('<input type="hidden" class="category-' + pk + '" name="category[]" value="' + pk + '" />');
+                        add_category(name, pk);
                     });
                     $(document).on('click', '.category-remove', function() {
                         var li = $(this).parents('li')
@@ -207,8 +115,11 @@ $.fn.onChangeSet = function(e) {
                         $('input.category-' + pk).remove();
                         return false;
                     });
+
+                    for(i in categories) {
+                        add_category(categories[i].name, categories[i].pk)
+                    }
                 </script>
-                {% endcomment %}
 
                 </div>
         </div>
@@ -218,41 +129,41 @@ $.fn.onChangeSet = function(e) {
                 <div class="clumn1">
                     <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
 
-                    {% if form.errors.NAME %}
+                    {% if form.errors.name %}
                         <div class="error-handler">
-                            <div class="formserror">{{ form.errors.NAME }}</div>
+                            <div class="formserror">{{ form.errors.name.0 }}</div>
                         </div>
                     {% endif %}
 
-                    <input type="text"  name="name"  placeholder="" class="text" value="{{ name }}" />
+                    <input type="text"  name="name"  placeholder="" class="text" value="{{ form.name.value|default_if_none:"" }}" />
                 </div>
 
                 <div class="clumn2">
                     <label>{% trans 'Part number' %}</label>
-                    {% if form.errors.SKU %}
+                    {% if form.errors.sku %}
                         <div class="error-handler">
-                            <div class="formserror">{{ form.errors.SKU }}</div>
+                            <div class="formserror">{{ form.errors.sku.0 }}</div>
                         </div>
                     {% endif %}
-                    <input type="text" name="sku" value="{{ sku }}" placeholder="" class="text" style="width:92%;" />
+                    <input type="text" name="sku" value="{{ form.sku.value|default_if_none:"" }}" placeholder="" class="text" style="width:92%;" />
                 </div>
             </li>
             <li>
                 <label>{% trans 'Preview description' %}</label>
-                {% if form.errors.ANONS %}
-                    <div class="error-handler"><div class="formserror">{{ form.errors.ANONS }}</div></div>
+                {% if form.errors.short_description %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.short_description.0 }}</div></div>
                 {% endif %}
-                <textarea rows="7" name="short_description" >{{ anons }}</textarea>
+                <textarea rows="7" name="short_description" >{{ form.short_description.value|default_if_none:"" }}</textarea>
             </li>
             <li>
                 <label>{% trans 'Detail text' %}</label>
-                {% if form.errors.DETAIL_TEXT %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
+                {% if form.errors.description %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.description.0 }}</div></div>
                 {% endif %}
             </li>
             <li>
                 <div class="detail">
-                    <textarea class="tiny" name="description" >{{ text }}</textarea>
+                    <textarea class="tiny" name="description" >{{ form.description.value|default_if_none:"" }}</textarea>
                 </div>
             </li>
             <li>
@@ -260,20 +171,25 @@ $.fn.onChangeSet = function(e) {
                     <div class="clumn3">
                         <label class="sapce">{% trans 'Cost' %}</label>
 
-                        {% if form.errors.COST %}
+                        {% if form.errors.cost %}
                             <div class="error-handler">
-                                <div class="formserror">{{ form.errors.COST }}</div>
+                                <div class="formserror">{{ form.errors.cost.0 }}</div>
                             </div>
                         {% endif %}
-                        <input type="text"  name="cost" value="{{ cost }}" placeholder="" class="text"/>
+                        <input type="text"  name="cost" value="{{ form.cost.value|default_if_none:"" }}" placeholder="" class="text"/>
                     </div>
                 </div>
 
                 <div class="clumn2">
                     <div class="clumn3">
-                        <label class="sapce">{% trans 'Currency' %}  <font color="#FF0000">*</font></label>
+                        <label class="sapce">{% trans 'Currency' %}</label>
+                        {% if form.errors.currency %}
+                            <div class="error-handler">
+                                <div class="formserror">{{ form.errors.currency.0 }}</div>
+                            </div>
+                        {% endif %}
 
-                        <select id="id_CURRENCY" name="currency">
+                        <select id="id_currency" name="currency">
                             {% for choice in form.currency.field.choices %}
                                 <option value="{{ choice.0 }}"{% if choice.0 == form.currency.value %} selected="selected" {% endif %}>
                                     {{ choice.1 }}
@@ -282,8 +198,13 @@ $.fn.onChangeSet = function(e) {
                         </select>
                     </div>
                     <div class="clumn4">
-                        <label class="sapce">{% trans 'Measurement unit' %} <font color="#FF0000">*</font></label>
-                        <select id="id_MEASUREMENT_UNIT" name="measurement_unit">
+                        <label class="sapce">{% trans 'Measurement unit' %}</label>
+                        {% if form.errors.measurement_unit %}
+                            <div class="error-handler">
+                                <div class="formserror">{{ form.errors.measurement_unit.0 }}</div>
+                            </div>
+                        {% endif %}
+                        <select id="id_measurement_unit" name="measurement_unit">
                             {% for choice in form.measurement_unit.field.choices %}
                                 <option value="{{ choice.0 }}"{% if choice.0 == form.measurement_unit.value %} selected="selected" {% endif %}>
                                     {{ choice.1 }}
@@ -294,22 +215,16 @@ $.fn.onChangeSet = function(e) {
                 </div>
             </li>
         </ul>
-        <div class="append-formin">
+        <div class="append-formin" data-prefix="{{ additional_page_form.prefix }}">
                     <div class="addpage-title">{% trans 'Additional pages' %}</div>
-                    <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
-                    <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
-                    <input id="count" value="{% if pages|length > 0 %}{{ pages|length }}{% else %}1{% endif %}" type="hidden" />
-                    <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
-
-                    {% if  pages|length >  0 %}
-                        {% for page in  pages %}
-                            {% set i = forloop.counter0 %}
+                    {{ additional_page_form.management_form }}
+                    {{ additional_page_form.non_form_errors }}
+                    {% for form in additional_page_form %}
+                        {{ form.id }}
+                        {% with prefix=form.prefix num=forloop.counter0 %}
                             {% include "additionalPage.html" %}
-                        {% endfor %}
-                    {% else %}
-                        {% set i = 0 %}
-                        {% include "additionalPage.html" %}
-                    {% endif %}
+                        {% endwith %}
+                    {% endfor %}
         </div>
         <div class="newform-button">
             <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">

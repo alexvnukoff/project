@@ -13,7 +13,7 @@
           <div class="thumb">
               <a href="{{ product.get_absolute_url }}">
                   {% if product.image %}
-                      <img src="{{ MEDIA_URL }}big/{{ product.image }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                      <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                   {% else %}
                       <img src="{% static 'tppcenter/img/item.jpg' %}" alt="{{ product.name|truncatechars:40 }}" />
                   {% endif %}

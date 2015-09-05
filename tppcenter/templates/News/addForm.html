@@ -28,26 +28,20 @@
                 {% endif %}
 
                 {% if form.initial.image %}
-                    <div class="b-img">
-                        <img src="{{ form.initial.image.big }}">
-                        <div class="deleteimge">
-                            <i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>
-                        </div>
+                    <div>
+                        <img src="{{ form.initial.image.small }}">
+                        <!--<div class="deleteimge">-->
+                            <!--<i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>-->
+                        <!--</div>-->
 
-                        <div class="gray-img"></div>
-                            <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ form.initial.image }}" hidden="hidden"/>
-                        </div>
+                        <!--<div class="gray-img"></div>-->
+                        <!--<input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ form.initial.image }}" hidden="hidden"/>-->
+                    </div>
                 {% endif %}
 
                 <div class="fileinputs">
                     <input name="image" type="file" style="width: 100%">
                 </div>
-            </div>
-
-            <div class="imgother">
-                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="3"/>
-                <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0"/>
-                <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="3"/>
             </div>
 
             <div>

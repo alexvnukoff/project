@@ -318,7 +318,6 @@ def show_top_static_pages(site_type='b2b'):
 @register.inclusion_tag('main/socialShare.html', takes_context=True)
 def b2b_social_buttons(context, image, title, text):
     return {
-        'MEDIA_URL': context.get('MEDIA_URL', ''),
         'image': image,
         'title': title,
         'text': text

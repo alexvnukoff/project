@@ -1,24 +1,19 @@
-from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext as _, trans_real
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.views.generic import UpdateView, CreateView
-from haystack.query import SearchQuerySet
+
 from appl import func
-from appl.models import Product, Gallery, AdditionalPages, Company, Category, Organization
+from appl.models import Product
 from b24online.cbv import ItemsList, ItemDetail
-from b24online.models import B2BProduct
-from centerpokupok.models import B2CProduct
-from core.models import Item, Dictionary
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+from b24online.models import B2BProduct, Company, Organization, B2BProductCategory
+from centerpokupok.models import B2CProduct, B2CProductCategory
+from tppcenter.Product.froms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 
 
 class B2BProductList(ItemsList):
@@ -32,7 +27,7 @@ class B2BProductList(ItemsList):
 
     paginate_by = 12
 
-    current_section = _("Products")
+    current_section = _("Products B2B")
     addUrl = 'products:add'
 
     # Allowed filter list
@@ -113,12 +108,23 @@ class B2CProductList(ItemsList):
         return queryset.prefetch_related('company__countries')
 
 
-class ProductDetail(ItemDetail):
+class B2BProductDetail(ItemDetail):
     model = B2BProduct
     template_name = 'Products/detailContent.html'
 
-    current_section = _("Products")
+    current_section = _("Products B2B")
     addUrl = 'products:add'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('company', 'company__countries')
+
+
+class B2CProductDetail(ItemDetail):
+    model = B2CProduct
+    template_name = 'Products/detailContent.html'
+
+    current_section = _("Products B2C")
+    addUrl = 'products:addB2C'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('company', 'company__countries')
@@ -135,14 +141,6 @@ def productForm(request, action, item_id=None):
 
     if action == 'delete':
         productsPage = deleteProduct(request, item_id)
-    elif action == 'add':
-        productsPage = addProducts(request)
-    elif action == 'update':
-        productsPage = updateProduct(request, item_id)
-    elif action == 'update_b2c':
-        productsPage = updateProductB2C(request, item_id)
-    elif action == 'add_b2c':
-        productsPage = addProductsB2C(request)
 
     if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
         return productsPage
@@ -154,368 +152,6 @@ def productForm(request, action, item_id=None):
     }
 
     return render_to_response('forms.html', template_params, context_instance=RequestContext(request))
-
-
-def addProductsB2C(request):
-    current_company = request.session.get('current_company', False)
-
-    categorySite = Site.objects.get(name="centerpokupok").pk
-
-    if not request.session.get('current_company', False):
-        return func.emptyCompany()
-
-    try:
-        item = Company.objects.get(pk=current_company)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'add_product' not in perm_list:
-        return func.permissionDenied()
-
-    form = None
-    measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
-    measurement_slots = measurement.getSlotsList()
-
-    currency = Dictionary.objects.get(title='CURRENCY')
-    currency_slots = currency.getSlotsList()
-
-    pages = None
-    choosen_category = {}
-
-    if request.POST:
-
-        user = request.user
-
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-
-        if getattr(pages, 'new_objects', False):
-            pages = pages.new_objects
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Product', values=values)
-        form.clean()
-
-        categories = request.POST.getlist('category[]')
-
-        if not categories:
-            categories = []
-
-        choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
-
-        if not choosen_category.exists():
-            form.errors.update({"CATEGORY": _("You must choose one category at least")})
-        else:
-            cats = [cat.pk for cat in choosen_category]
-            choosen_category = Item.getItemsAttributesValues('NAME', cats)
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-
-            site = Site.objects.get(name="centerpokupok")
-
-            # addProductAttrubute.delay(request.POST, request.FILES, user, site.pk,
-            #                           current_company=current_company, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('products:main'))
-
-    template = loader.get_template('Products/addFormB2C.html')
-
-    templateParams = {
-        'form': form,
-        'measurement_slots': measurement_slots,
-        'currency_slots': currency_slots,
-        'pages': pages,
-        'choosen_category': choosen_category,
-        'categorySite': categorySite
-    }
-
-    context = RequestContext(request, templateParams)
-    productsPage = template.render(context)
-
-    return productsPage
-
-
-def addProducts(request):
-    current_company = request.session.get('current_company', False)
-
-    categorySite = Site.objects.get(name="tppcenter").pk
-
-    if not request.session.get('current_company', False):
-        return func.emptyCompany()
-
-    try:
-        item = Company.objects.get(pk=current_company)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'add_product' not in perm_list:
-        return func.permissionDenied()
-
-    form = None
-    measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
-    measurement_slots = measurement.getSlotsList()
-
-    currency = Dictionary.objects.get(title='CURRENCY')
-    currency_slots = currency.getSlotsList()
-
-    pages = None
-    choosen_category = {}
-
-    if request.POST:
-
-        user = request.user
-
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-
-        if getattr(pages, 'new_objects', False):
-            pages = pages.new_objects
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Product', values=values)
-        form.clean()
-
-        categories = request.POST.getlist('category[]')
-
-        if not categories:
-            categories = []
-
-        choosen_category = Category.objects.filter(pk__in=categories, sites=categorySite)
-
-        if not choosen_category.exists():
-            form.errors.update({"CATEGORY": _("You must choose one category at least")})
-        else:
-            cats = [cat.pk for cat in choosen_category]
-            choosen_category = Item.getItemsAttributesValues('NAME', cats)
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-
-            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID,
-            #                           current_company=current_company, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('products:main'))
-
-    template = loader.get_template('Products/addForm.html')
-
-    templateParams = {
-        'form': form,
-        'measurement_slots': measurement_slots,
-        'currency_slots': currency_slots,
-        'pages': pages,
-        'categorySite': categorySite,
-        'choosen_category': choosen_category
-    }
-
-    context = RequestContext(request, templateParams)
-    productsPage = template.render(context)
-
-    return productsPage
-
-
-def updateProduct(request, item_id):
-    try:
-        item = Company.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_product' not in perm_list:
-        return func.permissionDenied()
-
-    categorySite = Site.objects.get(name="tppcenter").pk
-
-    choosen_category = Category.objects.filter(p2c__child=item_id, sites=categorySite)
-
-    categories_ids = [cat.pk for cat in choosen_category]
-
-    categories = Item.getItemsAttributesValues('NAME', categories_ids)
-
-    measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
-    measurement_slots = measurement.getSlotsList()
-
-    currency = Dictionary.objects.get(title='CURRENCY')
-    currency_slots = currency.getSlotsList()
-
-    product = Product.objects.get(pk=item_id)
-
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-
-    if getattr(pages, 'new_objects', False):
-        pages = pages.new_objects
-    else:
-        pages = pages.queryset
-
-    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-    gallery = Photo(parent_id=item_id)
-    photos = ""
-
-    if gallery.queryset:
-        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-    coupon_date = Product.objects.get(pk=item_id).getAttributeValues("COUPON_DISCOUNT", fullAttrVal=True)
-    coupon_date = coupon_date[0] if len(coupon_date) > 0 else ""
-
-    form = ItemForm('Product', id=item_id)
-
-    if request.POST:
-
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Product', values=values, id=item_id)
-        form.clean()
-
-        categories = request.POST.getlist('category[]')
-
-        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
-            form.errors.update({"CATEGORY": _("You must choose one category at least")})
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                           lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
-
-    template = loader.get_template('Products/addForm.html')
-
-    templateParams = {
-        'gallery': gallery,
-        'photos': photos,
-        'form': form,
-        'coupon_date': coupon_date,
-        'measurement_slots': measurement_slots,
-        'currency_slots': currency_slots,
-        'pages': pages,
-        'product': product,
-        'choosen_category': categories,
-        'categorySite': categorySite
-    }
-
-    context = RequestContext(request, templateParams)
-
-    productsPage = template.render(context)
-
-    return productsPage
-
-
-def updateProductB2C(request, item_id):
-    try:
-        item = Company.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_product' not in perm_list:
-        return func.permissionDenied()
-
-    categorySite = Site.objects.get(name="centerpokupok").pk
-
-    choosen_category = Category.objects.filter(p2c__child=item_id)
-
-    categories_ids = [cat.pk for cat in choosen_category]
-
-    categories = Item.getItemsAttributesValues('NAME', categories_ids)
-
-    measurement = Dictionary.objects.get(title='MEASUREMENT_UNIT')
-    measurement_slots = measurement.getSlotsList()
-
-    currency = Dictionary.objects.get(title='CURRENCY')
-    currency_slots = currency.getSlotsList()
-
-    product = Product.objects.get(pk=item_id)
-
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-
-    if getattr(pages, 'new_objects', False):
-        pages = pages.new_objects
-    else:
-        pages = pages.queryset
-
-    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-    gallery = Photo(parent_id=item_id)
-    photos = ""
-
-    if gallery.queryset:
-        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-    coupon_date = Product.objects.get(pk=item_id).getAttributeValues("COUPON_DISCOUNT", fullAttrVal=True)
-    coupon_date = coupon_date[0] if len(coupon_date) > 0 else ""
-
-    form = ItemForm('Product', id=item_id)
-
-    if request.POST:
-
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=3, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Product', values=values, id=item_id)
-        form.clean()
-
-        categories = request.POST.getlist('category[]')
-
-        if not Category.objects.filter(pk__in=categories, sites=categorySite).exists():
-            form.errors.update({"CATEGORY": _("You must choose one category at least")})
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addProductAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                           lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
-
-    template = loader.get_template('Products/addFormB2C.html')
-
-    templateParams = {
-        'gallery': gallery,
-        'photos': photos,
-        'form': form,
-        'coupon_date': coupon_date,
-        'measurement_slots': measurement_slots,
-        'currency_slots': currency_slots,
-        'pages': pages,
-        'product': product,
-        'choosen_category': categories,
-        'categorySite': categorySite
-    }
-
-    context = RequestContext(request, templateParams)
-
-    productsPage = template.render(context)
-
-    return productsPage
 
 
 def deleteProduct(request, item_id):
@@ -534,114 +170,171 @@ def deleteProduct(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
 
 
-def categoryList(request, site):
-    parent = request.GET.get('parent', 0)
-
-    try:
-        parent = int(parent)
-    except:
-        parent = 0
-
-    object_list = []
+def categories_list(request, model):
+    parent = request.GET.get('parent', None)
     bread_crumbs = None
 
-    if parent == 0:
-        categories = Category.hierarchy.getRootParents(siteID=site)
-        catList = [cat.pk for cat in categories]
-        object_list = SearchQuerySet().models(Category).filter(django_id__in=catList, sites=site)
-    else:
-        object_list = SearchQuerySet().models(Category).filter(parent=parent, sites=site)
-        bread_crumbs = _get_parents(SearchQuerySet().models(Category).filter(django_id=parent, sites=site))
+    # TODO: paginate?
+    categories = model.objects.filter(parent=parent)
 
-    new_obj_list = []
+    if parent is not None:
+        bread_crumbs = model.objects.get(pk=parent).get_ancestors(ascending=False, include_self=True)
 
-    for obj in object_list:
-        obj.childs = SearchQuerySet().models(Category).filter(parent=obj.pk, sites=site).count()
-        new_obj_list.append(obj)
-
-    templateParams = {
-        'object_list': new_obj_list[::-1],
+    template_params = {
+        'object_list': categories,
         'bread_crumbs': bread_crumbs
     }
 
-    return render_to_response('Products/categoryList.html', templateParams, context_instance=RequestContext(request))
-
-
-def _get_parents(parentList):
-    if not isinstance(parentList, list):
-        obj = parentList[0]
-        parentList = [obj]
-    else:
-        obj = parentList[len(parentList) - 1]
-
-    if obj.parent != 0:
-        parentList.append(SearchQuerySet().filter(django_id=obj.parent))
-        return _get_parents(parentList)
-    else:
-        return parentList
+    return render_to_response('Products/categoryList.html', template_params, context_instance=RequestContext(request))
 
 
 class B2BProductCreate(CreateView):
     model = B2BProduct
-    fields = ['name', 'image', 'description', 'keywords', 'short_description', 'currency', 'measurement_unit', 'cost']
+    form_class = B2BProductForm
     template_name = 'Products/addForm.html'
-    success_url = reverse_lazy('news:main')
+    success_url = reverse_lazy('products:main')
 
     # TODO: check permission
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-    def form_invalid(self, form):
-        return super().form_invalid(form)
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet()
 
-    def get_context_data(self, **kwargs):
-        a = super().get_context_data(**kwargs)
-        return a
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         organization_id = self.request.session.get('current_company', None)
+        company = Company.objects.get(pk=organization_id)
+        form.instance.company = company
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        if organization_id is not None:
-            organization = Organization.objects.get(pk=organization_id)
-            form.instance.organization = organization
-            form.instance.country = organization.country
+        self.object = form.save()
+        additional_page_form.instance = self.object
 
-        result = super().form_valid(form)
+        for page_form in additional_page_form:
+            page_form.instance.created_by = self.request.user
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
+
         self.object.reindex()
         self.object.upload_images()
 
-        return result
+        return HttpResponseRedirect(self.get_success_url())
 
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        categories = form.cleaned_data.get('categories', None)
+
+        if categories is not None:
+            context_data['categories'] = B2BProductCategory.objects.filter(pk__in=categories)
+
+        return self.render_to_response(context_data)
 
 
 class B2BProductUpdate(UpdateView):
     model = B2BProduct
-    fields = ['title', 'image', 'content', 'keywords', 'short_description']
+    form_class = B2BProductForm
     template_name = 'Products/addForm.html'
-    success_url = reverse_lazy('news:main')
+    success_url = reverse_lazy('products:main')
 
     # TODO: check permission
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
-    def form_invalid(self, form):
-        return super().form_invalid(form)
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(instance=self.object)
 
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        categories = context_data['form']['categories'].value()
+
+        if categories:
+            context_data['categories'] = B2BProductCategory.objects.filter(pk__in=categories)
+
+        return context_data
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
         form.instance.updated_by = self.request.user
         organization_id = self.request.session.get('current_company', None)
+        company = Company.objects.get(pk=organization_id)
+        form.instance.company = company
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        if organization_id is not None:
-            organization = Organization.objects.get(pk=organization_id)
-            form.instance.organization = organization
-            form.instance.country = organization.country
+        self.object = form.save()
+        additional_page_form.instance = self.object
 
-        result = super().form_valid(form)
+        for page_form in additional_page_form:
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
 
         if form.changed_data:
             self.object.reindex()
@@ -649,4 +342,178 @@ class B2BProductUpdate(UpdateView):
             if 'image' in form.changed_data:
                 self.object.upload_images()
 
-        return result
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+
+class B2CProductCreate(CreateView):
+    model = B2CProduct
+    form_class = B2CProductForm
+    template_name = 'Products/addFormB2C.html'
+    success_url = reverse_lazy('products:my_main_b2c')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet()
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+        company = Company.objects.get(pk=organization_id)
+        form.instance.company = company
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
+
+        self.object = form.save()
+        additional_page_form.instance = self.object
+
+        for page_form in additional_page_form:
+            page_form.instance.created_by = self.request.user
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
+
+        self.object.reindex()
+        self.object.upload_images()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        categories = form.cleaned_data.get('categories', None)
+
+        if categories is not None:
+            context_data['categories'] = B2CProductCategory.objects.filter(pk__in=categories)
+
+        return self.render_to_response(context_data)
+
+
+class B2CProductUpdate(UpdateView):
+    model = B2CProduct
+    form_class = B2CProductForm
+    template_name = 'Products/addFormB2C.html'
+    success_url = reverse_lazy('products:my_main_b2c')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(instance=self.object)
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        categories = context_data['form']['categories'].value()
+
+        if categories:
+            context_data['categories'] = B2CProductCategory.objects.filter(pk__in=categories)
+
+        return context_data
+
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+        company = Company.objects.get(pk=organization_id)
+        form.instance.company = company
+        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
+
+        self.object = form.save()
+        additional_page_form.instance = self.object
+
+        for page_form in additional_page_form:
+            page_form.instance.updated_by = self.request.user
+
+        additional_page_form.save()
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'image' in form.changed_data:
+                self.object.upload_images()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))

@@ -1,3 +1,5 @@
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
+from centerpokupok.models import B2CProductCategory
 
-# Register your models here.
+admin.site.register(B2CProductCategory, MPTTModelAdmin)

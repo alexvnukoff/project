@@ -94,14 +94,6 @@ $(document).ready(function()
             }
         });
 
-        $(document).on("click", ".buttonremove", function() {
-            $(this).parents(".addpage-form").remove();
-            var formin = $('.append-formin');
-            var num =  parseInt(formin.find("#count").val())-1;
-            formin.find("#count").val(num);
-            return false
-        });
-
         $("#country").click(function(){
             if($(".country-list").is(":hidden")){
                 $(".country-list").slideDown(100);
@@ -110,12 +102,6 @@ $(document).ready(function()
                 $(".country-list").slideUp(100);
             }
         });
-
-        $(".deleteimge").click(function(){
-                $(this).parent().find(".gray-img").show();
-                $(this).parent().find("#delete").attr('checked', 'checked');
-
-            });
 
         $(document).mouseup(function(e) {
             // Check if the click is outside the popup

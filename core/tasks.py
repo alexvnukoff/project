@@ -850,6 +850,7 @@ def upload_file(*args):
 
     for file in args:
         transfer.upload_file(file['file'], settings.BUCKET, file['bucket_path'], extra_args={'ACL': 'public-read'})
+        os.remove(file['file'])
 
 
 @shared_task

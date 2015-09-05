@@ -255,7 +255,6 @@ class NewsUpdate(UpdateView):
         return super().form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         organization_id = self.request.session.get('current_company', None)
 

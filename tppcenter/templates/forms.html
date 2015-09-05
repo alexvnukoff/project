@@ -40,29 +40,38 @@
                         selector: selector,
                         plugins : " paste link lists print preview",
                         paste_as_text: true
-
                     });
             }
             $(document).on("click", ".add-advandce", function() {
                 var formin = $('.append-formin');
-                var num =  formin.find('textarea[class="tiny"]').length ;
-
+                var prefix = formin.data('prefix');
+                var num =  formin.find('textarea[class="tiny"]').length;
 
                 if (num >= 5)
                     return false;
 
-                var dataPost = {"NUMBER": num};
+                var dataPost = {"prefix": prefix, "num": num};
 
                 $.get('/addPage/get/',dataPost, function(data) {
                     formin.append(data);
-
                     num += 1;
                     setTiny('textarea[class="tiny"]:eq(' + num + ')');
-
-
+                    formin.find('input[name$="TOTAL_FORMS"]').val(num)
                 }, 'html');
 
                 return false
+            });
+
+            $(document).on("click", ".buttonremove", function() {
+                var page = $(this).parents(".addpage-form");
+                page.remove();
+                return false
+            });
+
+            $(document).on("click", ".deleteimge", function() {
+                var parent = $(this).parent();
+                parent.find('img').parent().remove();
+                parent.find("#delete").attr('checked', 'checked');
             });
         </script>
     {% endblock %}

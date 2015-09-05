@@ -5,7 +5,9 @@ from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from b24online.custom import CustomImageField
-from b24online.models import Company, CURRENCY, AdditionalPages, Gallery, image_storage
+from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage
+from b24online.utils import generate_upload_path, reindex_instance
+from core import tasks
 from core.models import User
 
 
@@ -34,14 +36,15 @@ class B2CProduct(models.Model):
     slug = models.SlugField()
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
-    image = CustomImageField(storage=image_storage,blank=True, null=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
+                             blank=True, null=True, max_length=255)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True, db_index=True)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -49,13 +52,31 @@ class B2CProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def upload_images(self):
+        params = {
+            'file': self.image.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
     @property
     def country(self):
         return self.company.country
 
     @property
     def sku(self):
-        return self.metadata.get('stock_keeping_unit', None)
+        if self.metadata:
+            return self.metadata.get('stock_keeping_unit', None)
+
+        return None
+
+    def reindex(self):
+        reindex_instance(self)
 
     @staticmethod
     def get_index_model():
@@ -69,7 +90,7 @@ class B2CProduct(models.Model):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        return reverse('products:detail', args=[self.slug, self.pk])
+        return reverse('products:B2CDetail', args=[self.slug, self.pk])
 
 
 class B2CProductComment(MPTTModel):

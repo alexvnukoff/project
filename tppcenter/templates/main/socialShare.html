@@ -9,7 +9,7 @@
                         var pimage = '';
 
                         {% if image %}
-                            pimage = '{{ MEDIA_URL }}small/{{ image }}';
+                            pimage = '{{ image.small }}';
                         {% endif %}
                     </script>
                     <div class="social">

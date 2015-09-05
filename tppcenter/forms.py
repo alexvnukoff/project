@@ -2,7 +2,7 @@ import uuid
 import logging
 
 from django import forms
-from django.forms.models import BaseModelFormSet
+from django.forms.models import BaseModelFormSet, ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -10,6 +10,7 @@ from django.db.models.fields.files import ImageFieldFile,  FieldFile, FileField
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.db import transaction
 from django.db.models import Q
+from b24online.models import AdditionalPage
 
 from core.models import AttrTemplate, Attribute, Value
 from appl.models import *
@@ -568,8 +569,6 @@ def custom_field_callback(field):
             return field.formfield(required=False)
         elif field.name == 'title':
             return field.formfield(required=True)
-
-
 
 
 

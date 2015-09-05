@@ -20,10 +20,10 @@
     <ul class="breadcrumb">
         <li><a href="{% query_string "" "parent" %}">{% trans "Main" %}</a></li>
         {% for crumb in bread_crumbs %}
-            {% if forloop.counter != bread_crumbs|length %}
-                <li> &rarr;  <a href="{% query_string "parent=crumb.pk" "parent" %}">{{ crumb.text }}</a></li>
+            {% if forloop.last %}
+                <li> &rarr; <strong>{{ crumb.name }}</strong></li>
             {% else %}
-                <li> &rarr; <strong>{{ crumb.text }}</strong></li>
+                <li> &rarr;  <a href="{% query_string "parent=crumb.pk" "parent" %}">{{ crumb.name }}</a></li>
             {% endif %}
         {% endfor %}
     </ul>
@@ -38,13 +38,13 @@
                     {% for cat in object_list %}
                         <tr>
                             <td><span class="thumb"></span></td>
-                            {% if cat.childs > 0 %}
-                                <td><a href="{% query_string "parent=cat.pk"  "" %}">{{ cat.text }}</a></td>
+                            {% if cat.is_leaf_node %}
+                                <td>{{ cat.name }}</td>
                             {% else %}
-                                <td>{{ cat.text }}</td>
+                                <td><a href="{% query_string "parent=cat.pk"  "" %}">{{ cat.name }}</a></td>
                             {% endif %}
                             <td class="end">
-                                <a href="#" class="stt-add"><input class="category" data-name="{{ cat.text }}" type="checkbox" value="{{ cat.pk }}" /></a>
+                                <a href="#" class="stt-add"><input class="category" data-name="{{ cat.name }}" type="checkbox" value="{{ cat.pk }}" /></a>
                             </td>
                         </tr>
                     {% endfor %}

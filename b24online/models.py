@@ -133,7 +133,7 @@ class Document(models.Model):
         return self.item.has_perm(user)
 
 
-class AdditionalPages(models.Model):
+class AdditionalPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     content = models.TextField(blank=False, null=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -232,7 +232,7 @@ class Chamber(Organization):
     address = models.CharField(max_length=2048, blank=True, null=False)
     org_type = models.CharField(max_length=30, choices=CHAMBER_TYPES, blank=False, null=False)
     metadata = HStoreField()
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -262,19 +262,31 @@ class Chamber(Organization):
 
     @property
     def flag(self):
-        return self.metadata.get('flag', '')
+        if self.metadata:
+            return self.metadata.get('flag', '')
+
+        return None
 
     @property
     def phone(self):
-        return self.metadata.get('phone', '')
+        if self.metadata:
+            return self.metadata.get('phone', '')
+
+        return None
 
     @property
     def fax(self):
-        return self.metadata.get('fax', '')
+        if self.metadata:
+            return self.metadata.get('fax', '')
+
+        return None
 
     @property
     def site(self):
-        return self.metadata.get('site', '')
+        if self.metadata:
+            return self.metadata.get('site', '')
+
+        return None
 
     @property
     def detail_url(self):  # Deprecated
@@ -285,11 +297,17 @@ class Chamber(Organization):
 
     @property
     def location(self):
-        return self.metadata.get('location', '')
+        if self.metadata:
+            return self.metadata.get('location', '')
+
+        return None
 
     @property
     def email(self):
-        return self.metadata.get('email', '')
+        if self.metadata:
+            return self.metadata.get('email', '')
+
+        return None
 
     @classmethod
     def cache_prefix(cls):
@@ -315,7 +333,7 @@ class Company(Organization):
     address = models.CharField(max_length=2048, blank=True, null=False)
     metadata = HStoreField()
     branches = models.ManyToManyField(Branch)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -345,23 +363,38 @@ class Company(Organization):
 
     @property
     def phone(self):
-        return self.metadata.get('phone', '')
+        if self.metadata:
+            return self.metadata.get('phone', '')
+
+        return None
 
     @property
     def fax(self):
-        return self.metadata.get('fax', '')
+        if self.metadata:
+            return self.metadata.get('fax', '')
+
+        return None
 
     @property
     def site(self):
-        return self.metadata.get('site', '')
+        if self.metadata:
+            return self.metadata.get('site', '')
+
+        return None
 
     @property
     def location(self):
-        return self.metadata.get('location', '')
+        if self.metadata:
+            return self.metadata.get('location', '')
+
+        return None
 
     @property
     def email(self):
-        return self.metadata.get('email', '')
+        if self.metadata:
+            return self.metadata.get('email', None)
+
+        return None
 
     @staticmethod
     def get_index_model():
@@ -460,7 +493,7 @@ class BusinessProposal(models.Model):
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(blank=False, null=False)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     documents = GenericRelation(Document)
     branches = models.ManyToManyField(Branch)
     galleries = GenericRelation(Gallery)
@@ -506,7 +539,7 @@ class InnovationProject(models.Model):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
@@ -529,7 +562,10 @@ class InnovationProject(models.Model):
 
     @property
     def release_date(self):
-        return self.metadata.get('release_date', '')
+        if self.metadata:
+            return self.metadata.get('release_date', None)
+
+        return None
 
     @staticmethod
     def get_index_model():
@@ -567,18 +603,19 @@ class B2BProduct(models.Model):
     slug = models.SlugField()
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
-    image = CustomImageField(storage=image_storage, blank=True, null=True)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
+                             blank=True, null=True, max_length=255)
     categories = models.ManyToManyField(B2BProductCategory)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
-    currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
+    currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
-    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
+    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
     branches = models.ManyToManyField(Branch)
     is_active = models.BooleanField(default=True)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
     context_advertisements = GenericRelation(ContextAdvertisement)
 
@@ -587,13 +624,31 @@ class B2BProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def upload_images(self):
+        params = {
+            'file': self.image.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
+    def reindex(self):
+        reindex_instance(self)
+
     @property
     def country(self):
         return self.company.country
 
     @property
     def sku(self):
-        return self.metadata.get('stock_keeping_unit', None)
+        if self.metadata:
+            return self.metadata.get('stock_keeping_unit', None)
+
+        return None
 
     def __str__(self):
         return self.name
@@ -734,7 +789,7 @@ class Tender(models.Model):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     dates = DateRangeField(null=True)
     is_active = models.BooleanField(default=True)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
@@ -820,7 +875,7 @@ class Exhibition(models.Model):
     is_active = models.BooleanField(default=True)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    additional_pages = GenericRelation(AdditionalPages)
+    additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')

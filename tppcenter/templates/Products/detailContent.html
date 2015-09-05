@@ -44,7 +44,7 @@
         <div class="gallery">
             <div id="panel">
                 {% if item.image %}
-                  <img id="largeImage" src="{{ MEDIA_URL }}big/{{ item.image }}" alt="{{ item.name }}" title="{{ item.name }}" />
+                  <img id="largeImage" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
                 {% else %}
                   <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                 {% endif %}
@@ -52,7 +52,7 @@
             <div id="thumbs">
                 {% for gallery in item.galleries.all %}
                     {% for gallery_item in gallery.gallery_items %}
-                        <img src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" alt="" />
+                        <img src="{{ gallery_item.image.big }}" alt="" />
                     {% endfor %}
                 {% endfor %}
             </div>

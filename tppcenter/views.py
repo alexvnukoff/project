@@ -439,13 +439,8 @@ def ping(request):
 
 
 def get_additional_page(request):
-    i = request.GET.get('NUMBER', "")
-
-    template = loader.get_template('additionalPage.html')
-    context = RequestContext(request, {'i': i})
-
-    return HttpResponse(template.render(context))
-
+    prefix = '-'.join((request.GET.get('prefix'), request.GET.get('num')))
+    return render_to_response("additionalPage.html", {'prefix': prefix, 'num': int(request.GET.get('num'))})
 
 def perm_denied(request):
     template = loader.get_template('permissionDen.html')

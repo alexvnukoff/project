@@ -12,14 +12,13 @@ from django.template import RequestContext, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.utils.translation import trans_real
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
 from appl.models import Country, Branch, Tpp, Cabinet
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Department, Vacancy, AdditionalPages, Gallery, GalleryImage, Organization
+    Department, Vacancy, Gallery, GalleryImage, Organization
 from core.models import Item, User
 #from core.tasks import addNewCompany
 from core.amazonMethods import add
