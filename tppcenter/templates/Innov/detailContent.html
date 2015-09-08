@@ -40,20 +40,20 @@
 {% block content %}
   <div class="tender">
        <div class="tender-details-title">
-       {% if item.organization.flag %}
-            <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" />
-            <font class="name">{{ item.organization.name }}</font>
-       {% elif item.country.flag  %}
+       {% if item.country %}
            <i class="flag sprite {{ item.country.flag }}"></i>
            <font class="name">{{ item.country.name }}</font>
+       {% elif item.organization.flag  %}
+            <img src="{{ item.organization.flag_url }}" class="flag" />
+            <font class="name">{{ item.organization.name }}</font>
        {% endif %}
        </div>
        <div class="tender-info">
             <span class="title">{{ item.name }}</span>
             <div class="tender-bottom">
                 <div class="tender-bottom-left">
-                    {% if item.organization.flag or item.organization.logo %}
-                        <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                    {% if item.organization.logo %}
+                        <img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
                     {% else %}
                         <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
                     {% endif %}
@@ -124,11 +124,11 @@
                                 {% for gallery_item in gallery.gallery_items.all %}
                                     <li>
                                         <div class="b-img">
-                                            <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
-                                                <img alt=""  src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" />
+                                            <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
+                                                <img alt=""  src="{{ gallery_item.image.big }}" />
                                             </a>
                                             <div class="viewimge">
-                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                <a class="fancybox" rel="gallery" href="{{ gallery_item.image.big }}">
                                                     <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
                                                 </a>
                                             </div>

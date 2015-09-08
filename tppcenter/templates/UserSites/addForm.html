@@ -103,7 +103,7 @@
                             <div class="viewimg">
                                {% if logo %}
                                 <div class="b-img">
-                                    <img src="{{ MEDIA_URL }}big/{{ logo.name }}">
+                                    <img src="{{ logo.name.big }}">
                                     <div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span></div>
                                     <div class="gray-img"></div>
                                     <input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ logo }}" hidden="hidden" />

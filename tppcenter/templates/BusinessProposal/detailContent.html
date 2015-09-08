@@ -43,8 +43,8 @@
         <div class="tender-details-title">
             {% if item.country %}
                 <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
-            {% elif item.organization.flag %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag"  title="{{ item.organization.name }}"/>
+            {% else %}
+                <img src="{{ item.organization.flag_url }}" class="flag"  title="{{ item.organization.name }}"/>
             {% endif %}
             <font class="name">{% if item.country %}{{ item.country.name }}{% else %}{{ item.organization.name }}{% endif %}</font>
         </div>
@@ -52,7 +52,11 @@
 			<span class="title">{{ item.title }}</span>
             <div class="tender-bottom">
                	<div class="tender-bottom-left">
-                    <img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" class="thumb" />
+                    {% if item.organization.logo %}
+                        <img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                    {% else %}
+                        <img src="{% static 'tppcenter/img/company.jpg' %}" class="thumb" />
+                    {% endif %}
                     <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
                 </div>
             </div>
@@ -67,7 +71,7 @@
                         <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
                         <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
                         {% for page in item.additional_pages.all %}
-                             <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                             <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -90,11 +94,11 @@
                                 {% for gallery_item in gallery.gallery_items.all %}
                                     <li>
                                         <div class="b-img">
-                                            <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
-                                                <img alt=""  src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" />
+                                            <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
+                                                <img alt=""  src="{{ gallery_item.image.big }}" />
                                             </a>
                                             <div class="viewimge">
-                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
                                                     <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
                                                 </a>
                                             </div>

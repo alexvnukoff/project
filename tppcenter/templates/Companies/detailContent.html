@@ -41,10 +41,13 @@
                 var href = tabs.find('a[href="#cpn-tabs-contacts"]');
                 (href).on('click',function(){
 
-                    {% if item.position %}
+                    {% if item.location %}
+                      {% with item.location|split:"," as LatLng %}
                       marker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ item.location }})
-                    });
+                        position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
+
+                        });
+                      {% endwith %}
                     {% endif %}
 
                  initialize(false);
@@ -87,7 +90,7 @@
                      {{ item.name }}
                     </h3>
                     {% if item.logo %}
-                        <img src="{{ MEDIA_URL }}big/{{ item.logo }}" class="thumb-deal" alt="{{ item.logo }}" title="{{ item.logo }}" />
+                        <img src="{{ item.logo.big }}" class="thumb-deal" alt="{{ item.logo }}" title="{{ item.logo }}" />
                     {% else %}
                         <img src="{% static "tppcenter/img/company.jpg" %}" class="thumb-deal" alt="" />
                     {% endif %}
@@ -153,9 +156,6 @@
                                     {% trans "About" %}
                                 </a>
                             </li>
-                            {% for page in item.additional_pages.all %}
-                                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
-                            {% endfor %}
                             <li>
                                 <a href="#cpn-tabs-recvisits">
                                     {% trans "Recvisits" %}
@@ -219,7 +219,9 @@
                                     {% trans "Contacts" %}
                                 </a>
                             </li>
-
+                            {% for page in item.additional_pages.all %}
+                                 <li><a href="#tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div id="cpn-tabs-about">
@@ -227,11 +229,6 @@
                         	{{ item.description|cleanHtml|safe }}
                         </div>
                     </div>
-                    {% for page in additionalPages %}
-                        <div id="tabs-{{ forloop.counter0|add:5 }}">
-                              <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
-                         </div>
-                    {% endfor %}
                     <div id="cpn-tabs-recvisits">
                         <div class="tpp-dt-content"></div>
                     </div>
@@ -276,6 +273,11 @@
 
                 </div>
             </div>
+            {% for page in item.additional_pages.all %}
+                <div id="tabs-{{ forloop.counter0|add:5 }}">
+                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                 </div>
+            {% endfor %}
         </div>
   </div>
 {% endblock %}

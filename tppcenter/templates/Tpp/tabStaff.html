@@ -27,7 +27,7 @@
                         <td>
                             <div class="avatar">
                                 {% if user.profile.avatar %}
-                                     <img src="{{ MEDIA_URL }}th/{{ user.profile.avatar }}" alt="{{ user.profile.full_name }}" />
+                                     <img src="{{ user.profile.avatar.th }}" alt="{{ user.profile.full_name }}" />
                                 {% else %}
                                      <img style="width: 24px;height: 24px;" src="{% static "tppcenter/img/profile.jpg"  %}" alt="{{ user.profile.full_name }}" />
                                 {% endif %}

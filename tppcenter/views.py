@@ -20,7 +20,7 @@ from registration.forms import RegistrationFormUniqueEmail
 from django.core.mail import send_mail
 
 from appl.models import Cabinet, Notification
-from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization
+from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
 from appl import func
 from core.models import Item
 
@@ -357,7 +357,7 @@ def my_companies(request):
         if current_company is not None:
             organizations = organizations.exclude(pk=current_company)
 
-        if current_company is not None:
+        if current_company is not None and page == 1:
             user_name = request.user.profile.full_name or request.user.email
             result['content'] = [{'title': user_name, 'id': 0}]
 
@@ -454,6 +454,23 @@ def perm_denied(request):
 #     from django.shortcuts import redirect
 #
 #     return redirect('http://archive.tppcenter.com/' + to, permanent=True)
+
+def branch_list(request):
+    parent = request.GET.get('parent', None)
+    bread_crumbs = None
+
+    # TODO: paginate?
+    branches = Branch.objects.filter(parent=parent)
+
+    if parent is not None:
+        bread_crumbs = Branch.objects.get(pk=parent).get_ancestors(ascending=False, include_self=True)
+
+    template_params = {
+        'object_list': branches,
+        'bread_crumbs': bread_crumbs
+    }
+
+    return render_to_response('branchList.html', template_params, context_instance=RequestContext(request))
 
 
 def set_current(request, item_id):

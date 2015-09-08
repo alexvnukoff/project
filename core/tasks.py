@@ -870,7 +870,8 @@ def upload_images(*args):
 
         if 'sizes' in image:
             for size_name, size_data in image['sizes'].items():
-                out = "%s%s_%s" % (filepath, size_name, filename)
+                resize_name = "%s_%s" % (size_name, filename)
+                out = (os.path.join(filepath, resize_name)).replace('\\', '/')
                 utils.resize(image['file'], out=out, **size_data)
                 images.append({
                     'file': out,

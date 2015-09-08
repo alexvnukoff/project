@@ -13,7 +13,7 @@
                 {% setContextMenu tpp %}
                     <div class="title">
                         {% if tpp.flag %}
-                                <img src="{{ MEDIA_URL }}small/{{ tpp.flag }}" class="flag" alt="{{ tpp.name }}" title="{{ tpp.name }}"/>
+                                <img src="{{ tpp.flag_url }}" class="flag" alt="{{ tpp.name }}" title="{{ tpp.name }}"/>
                         {% else %}
                                <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.name }}" ></i>
                         {% endif %}
@@ -22,7 +22,7 @@
 
                     <div class="company-infor">
                         {% if tpp.logo %}
-                            <img src="{{MEDIA_URL}}small/{{ tpp.logo }}" class="logocompany" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
+                            <img src="{{ tpp.logo.big }}" class="logocompany" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
                         {% else %}
                             <img src="{% static 'tppcenter/img/tpp.jpg' %}" class="logocompany" alt="" />
                         {% endif %}

@@ -2,28 +2,28 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.forms.models import modelformset_factory
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
-from django.template import RequestContext, loader
+from django.core.urlresolvers import reverse_lazy
+from django.db import transaction
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.utils.translation import trans_real
 from django.views.generic import CreateView, UpdateView
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from appl.models import Tpp, Country, AdditionalPages
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
     Organization, Department, Vacancy, Gallery, GalleryImage
+from b24online.utils import handle_uploaded_file
 from core.amazonMethods import add
 from core.models import User
 from tppcenter.Tpp.forms import AdditionalPageFormSet, ChamberForm
-from tppcenter.forms import ItemForm, BasePages
+
+
 #from core.tasks import addNewTpp
 
 
@@ -75,132 +75,6 @@ class ChamberDetail(ItemDetail):
     template_name = 'Tpp/detailContent.html'
 
     current_section = _("Tpp")
-
-
-@login_required
-def tpp_form(request, action, item_id=None):
-    if item_id:
-        if not Tpp.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
-
-    current_section = _("Tpp")
-
-    if action == 'add':
-        tpp_page = add_tpp(request)
-    else:
-        tpp_page = update_tpp(request, item_id)
-
-    if isinstance(tpp_page, HttpResponseRedirect) or isinstance(tpp_page, HttpResponse):
-        return tpp_page
-
-    template_params = {
-        'formContent': tpp_page,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', template_params, context_instance=RequestContext(request))
-
-
-def add_tpp(request):
-    form = None
-    countries = func.getItemsList("Country", 'NAME')
-    user = request.user
-
-    pages = None
-
-    user_groups = user.groups.values_list('name', flat=True)
-
-    if not user.is_manager or not 'TPP Creator' in user_groups:
-        return func.permissionDenied()
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-        values.update(request.POST)
-        values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
-        values.update(request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=5, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-        if getattr(pages, 'new_objects', False):
-            pages = pages.new_objects
-        else:
-            pages = ""
-
-        form = ItemForm('Tpp', values=values)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('tpp:main'))
-
-    template = loader.get_template('Tpp/addForm.html')
-    context = RequestContext(request, {'form': form, 'countries': countries, 'pages': pages})
-    tppPage = template.render(context)
-
-    return tppPage
-
-
-def update_tpp(request, item_id):
-    item = Organization.objects.get(pk=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_tpp' not in perm_list:
-        return func.permissionDenied()
-
-    try:
-        choosen_country = Country.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        choosen_country = ""
-
-    countries = func.getItemsList("Country", 'NAME')
-    tpp = Tpp.objects.get(pk=item_id)
-
-    form = ItemForm('Tpp', id=item_id)
-
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-    if getattr(pages, 'new_objects', False):
-        pages = pages.new_objects
-    else:
-        pages = pages.queryset
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-        values.update(request.POST)
-        values.update({'POSITION': request.POST.get('Lat', '') + ',' + request.POST.get('Lng')})
-        values.update(request.FILES)
-
-        form = ItemForm('Tpp', values=values, id=item_id)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addNewTpp.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                 lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(request.GET.get('next', reverse('tpp:main')))
-
-    template = loader.get_template('Tpp/addForm.html')
-
-    template_params = {
-        'form': form,
-        'choosen_country': choosen_country,
-        'countries': countries,
-        'tpp': tpp,
-        'pages': pages
-    }
-
-    context = RequestContext(request, template_params)
-    tpp_page = template.render(context)
-
-    return tpp_page
 
 
 def _tab_companies(request, tpp, page=1):
@@ -329,35 +203,24 @@ def _tab_structure(request, tpp, page=1):
 
         if action == "add" and len(name) > 0:
             if request_type == 'department':
-                Department.objects.create(
-                    name=name,
-                    created_by=request.user,
-                    updated_by=request.user,
-                    organization=organization
-                )
+                organization.create_department(name, request.user)
             elif item_id is not None:  # new vacancy
-                obj = get_object_or_404(Department, pk=item_id, organization=organization)
-
-                Vacancy.objects.create(
-                    name=name,
-                    created_by=request.user,
-                    updated_by=request.user,
-                    department=obj
-                )
+                obj = get_object_or_404(organization.departments, pk=item_id)
+                organization.create_vacancy(name, obj, request.user)
 
         elif action == "edit" and item_id is not None and len(name) > 0:
             if request_type == 'department':
-                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+                obj = get_object_or_404(organization.departments, pk=item_id)
             else:
-                obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
+                obj = get_object_or_404(organization.vacancies, pk=item_id)
 
             obj.name = name
             obj.save()
         elif action == "remove" and item_id is not None:
             if request_type == 'department':
-                obj = get_object_or_404(Department, pk=item_id, organization=organization)
+                obj = get_object_or_404(organization.departments, pk=item_id)
             else:
-                obj = get_object_or_404(Vacancy, pk=item_id, department__organization=organization)
+                obj = get_object_or_404(organization.vacancies, pk=item_id)
 
             obj.delete()
 
@@ -598,21 +461,46 @@ class ChamberUpdate(UpdateView):
         success page.
         """
         form.instance.updated_by = self.request.user
-        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        if form.changed_data:
+            if 'vatin' in form.changed_data:
+                form.instance.metadata['vat_identification_number'] = form.cleaned_data['vatin']
 
-        for page_form in additional_page_form:
-            page_form.instance.updated_by = self.request.user
+            if 'phone' in form.changed_data:
+                form.instance.metadata['phone'] = form.cleaned_data['phone']
 
-        additional_page_form.save()
+            if 'fax' in form.changed_data:
+                form.instance.metadata['fax'] = form.cleaned_data['fax']
+
+            if 'email' in form.changed_data:
+                form.instance.metadata['email'] = form.cleaned_data['email']
+
+            if 'site' in form.changed_data:
+                form.instance.metadata['site'] = form.cleaned_data['site']
+
+            if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
+                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+
+            if 'flag' in form.changed_data:
+                flag = form.cleaned_data.get('flag')
+                form.instance.metadata['flag'] = handle_uploaded_file(flag) if flag else None
+
+        form.instance.org_type = 'international' if len(form.cleaned_data.get('countries')) > 1 else 'national'
+
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
+
+            for page_form in additional_page_form:
+                if not page_form.instance.pk:
+                    page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
 
         if form.changed_data:
             self.object.reindex()
-
-            if 'image' in form.changed_data:
-                self.object.upload_images()
+            self.object.upload_images(form.changed_data)
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -672,16 +560,29 @@ class ChamberCreate(CreateView):
         """
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
-        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
+        flag = form.cleaned_data.get('flag')
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        form.instance.metadata = {
+            'vat_identification_number': form.cleaned_data['vatin'],
+            'phone': form.cleaned_data['phone'],
+            'fax': form.cleaned_data['fax'],
+            'email': form.cleaned_data['email'],
+            'site': form.cleaned_data['site'],
+            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+            'flag': handle_uploaded_file(flag) if flag else None
+        }
 
-        for page_form in additional_page_form:
-            page_form.instance.created_by = self.request.user
-            page_form.instance.updated_by = self.request.user
+        form.instance.org_type = 'international' if len(form.cleaned_data.get('countries')) > 1 else 'national'
 
-        additional_page_form.save()
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
+
+            for page_form in additional_page_form:
+                page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
 
         self.object.reindex()
         self.object.upload_images()

@@ -14,8 +14,8 @@
                {% if proposal.country %}
                     <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
                     <font class="name">{{ proposal.country.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
-               {% elif proposal.organization.flag %}
-                    <img src="{{ MEDIA_URL }}small/{{ proposal.organization.flag }}" class="flag" title="{{ proposal.organization.name }}" />
+               {% else %}
+                    <img src="{{ proposal.organization.flag_url }}" class="flag" title="{{ proposal.organization.name }}" />
                     <font class="name">{{ proposal.organization.name }}, {% trans 'Date' %}: {{ proposal.created_at|date:"d M Y" }}</font>
                 {% endif %}
             </div>

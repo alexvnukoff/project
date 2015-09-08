@@ -16,11 +16,11 @@
                         <li>
                             <div class="top">
                                 {% if top.flag %}
-                                    <img class="sprite flag" src="{{ MEDIA_URL}}th/{{top.flag }} " />
-                                {% elif top.country.flag %}
+                                    <img class="sprite flag" src="{{ top.flag_url }} " />
+                                {% elif top.country %}
                                     <i class="sprite {{ top.country.flag }}"></i>
                                 {% elif top.organizaion.flag %}
-                                    <img class="sprite  flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} " />
+                                    <img class="sprite flag" src="{{ top.organizaion.flag_url }} " />
                                 {% endif %}
 
                                 {% if top.title %}
@@ -37,15 +37,15 @@
                                 {% endif %}
                                 {% if top.image %}
                                     {% if top.title %}
-                                        <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.title }}" class="thumb" />
+                                        <img src="{{ top.image.small }}" alt="{{ top.title }}" class="thumb" />
                                     {% else %}
-                                        <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.name }}" class="thumb" />
+                                        <img src="{{ top.image.small }}" alt="{{ top.name }}" class="thumb" />
                                     {% endif %}
                                 {% elif top.logo %}
                                     {% if top.title %}
-                                        <img src="{{ MEDIA_URL }}small/{{ top.logo }}" alt="{{ top.title }}" class="thumb" />
+                                        <img src="{{ top.logo.small }}" alt="{{ top.title }}" class="thumb" />
                                     {% else %}
-                                        <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.name }}" class="thumb" />
+                                        <img src="{{ top.logo.small }}" alt="{{ top.name }}" class="thumb" />
                                     {% endif %}
                                 {% endif %}
                                 </a>

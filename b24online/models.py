@@ -1,11 +1,16 @@
+from argparse import ArgumentError
+import os
+from urllib.parse import urljoin
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField, DateTimeRangeField, DateRangeField
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from django.utils._os import abspathu
 from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
@@ -201,6 +206,24 @@ class Organization(PolymorphicMPTTModel):
 
         return self.pk in user.manageable_organizations()
 
+    def create_department(self, name, user):
+        return Department.objects.create(
+            name=name,
+            created_by=user,
+            updated_by=user,
+            organization=self
+        )
+
+    def create_vacancy(self, name, department, user):
+        if department.organization != self:
+            raise ArgumentError('department', 'Unknown department')
+
+        return department.create_vacancy(name, user)
+
+    @property
+    def vacancies(self):
+        return Vacancy.objects.filter(department__organization=self)
+
     class Meta:
         permissions = (
             ('manage_organization', 'Manage Organization'),
@@ -226,7 +249,8 @@ class Chamber(Organization):
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
-    logo = CustomImageField(storage=image_storage, blank=True, null=True)
+    logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                             sizes=['big', 'small', 'th'], max_length=255)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
@@ -239,6 +263,32 @@ class Chamber(Organization):
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def upload_images(self, changed_data=None):
+        params = []
+
+        if (changed_data is None or 'logo' in changed_data) and self.logo:
+            params.append({
+                'file': self.logo.path,
+                'sizes': {
+                    'big': {'box': (500, 500), 'fit': False},
+                    'small': {'box': (200, 200), 'fit': False},
+                    'th': {'box': (80, 80), 'fit': True}
+                }
+            })
+
+        if (changed_data is None or 'flag' in changed_data) and self.flag:
+            params.append({
+                'file': (os.path.join(abspathu(settings.MEDIA_ROOT), self.flag)).replace('\\', '/'),
+                'sizes': {
+                    'small': {'box': (20, 15), 'fit': True},
+                }
+            })
+
+        tasks.upload_images.delay(*params)
+
+    def reindex(self):
+        reindex_instance(self)
 
     @property
     def country(self):
@@ -266,6 +316,14 @@ class Chamber(Organization):
             return self.metadata.get('flag', '')
 
         return None
+
+    @property
+    def flag_url(self):
+        if self.flag:
+            path = "small/%s" % self.flag
+            return urljoin(settings.MEDIA_URL, path)
+
+        return self.flag
 
     @property
     def phone(self):
@@ -309,6 +367,13 @@ class Chamber(Organization):
 
         return None
 
+    @property
+    def vatin(self):
+        if self.metadata:
+            return self.metadata.get('vat_identification_number', '')
+
+        return None
+
     @classmethod
     def cache_prefix(cls):
         return cls.__name__
@@ -327,10 +392,12 @@ class Company(Organization):
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
-    logo = CustomImageField(storage=image_storage, blank=True, null=True)
+    logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                             sizes=['big', 'small', 'th'], max_length=255)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
+    slogan = models.CharField(max_length=2048, blank=True, null=False)
     metadata = HStoreField()
     branches = models.ManyToManyField(Branch)
     additional_pages = GenericRelation(AdditionalPage)
@@ -340,6 +407,21 @@ class Company(Organization):
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def upload_images(self):
+        params = {
+            'file': self.logo.path,
+            'sizes': {
+                'big': {'box': (500, 500), 'fit': False},
+                'small': {'box': (200, 200), 'fit': False},
+                'th': {'box': (80, 80), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
+    def reindex(self):
+        reindex_instance(self)
 
     @property
     def country(self):
@@ -396,6 +478,14 @@ class Company(Organization):
 
         return None
 
+    @property
+    def vatin(self):
+        if self.metadata:
+            return self.metadata.get('vat_identification_number', '')
+
+        return None
+
+
     @staticmethod
     def get_index_model():
         from b24online.search_indexes import CompanyIndex
@@ -424,6 +514,14 @@ class Department(models.Model):
 
     def get_absolute_url(self):
         return reverse('department:detail', args=[self.slug, self.pk])
+
+    def create_vacancy(self, name, user):
+        return Vacancy.objects.create(
+            name=name,
+            created_by=user,
+            updated_by=user,
+            department=self
+        )
 
 
 class Vacancy(models.Model):
@@ -470,10 +568,11 @@ class Vacancy(models.Model):
         return reverse('vacancy:detail', args=[self.slug, self.pk])
 
 
-class BusinessProposalCategory(models.Model):
+class BusinessProposalCategory(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     is_active = models.BooleanField(default=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     @staticmethod
     def get_index_model():
@@ -515,6 +614,9 @@ class BusinessProposal(models.Model):
     def get_index_model():
         from b24online.search_indexes import BusinessProposalIndex
         return BusinessProposalIndex
+
+    def reindex(self):
+        reindex_instance(self)
 
     def __str__(self):
         return self.title
@@ -567,6 +669,13 @@ class InnovationProject(models.Model):
 
         return None
 
+    @property
+    def site(self):
+        if self.metadata:
+            return self.metadata.get('site', None)
+
+        return None
+
     @staticmethod
     def get_index_model():
         from b24online.search_indexes import InnovationProjectIndex
@@ -577,6 +686,9 @@ class InnovationProject(models.Model):
 
     def get_absolute_url(self):
         return reverse('innov:detail', args=[self.slug, self.pk])
+
+    def reindex(self):
+        reindex_instance(self)
 
 
 class B2BProductCategory(MPTTModel):
@@ -1068,3 +1180,12 @@ def slugify(sender, instance, **kwargs):
             raise NotImplementedError('Unknown source field for slug')
 
         instance.slug = create_slug(string)
+
+
+@receiver(post_save, sender=Company)
+@receiver(post_save, sender=Chamber)
+def initial_department(sender, instance, created, **kwargs):
+    if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
+        department = instance.create_department(_('Administration'), instance.created_by)
+        vacancy = instance.create_vacancy(_('Admin'), department, instance.created_by)
+        vacancy.assign_employee(instance.created_by, True)

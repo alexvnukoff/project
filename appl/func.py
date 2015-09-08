@@ -1010,7 +1010,7 @@ def get_detail_adv_filter(obj):
     filter_by_model = {}
 
     org = getattr(obj, 'organization', None)
-    company = getattr(obj, 'company', None)
+    company = getattr(obj, 'company', None) if not isinstance(obj, Organization) else None
     branches = getattr(obj, 'branches', None)
 
     if org is not None:

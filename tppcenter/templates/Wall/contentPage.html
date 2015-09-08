@@ -12,7 +12,7 @@
                     <div class="thumb">
                         <a href="{{ prod.get_absolute_url }}">
                             {% if prod.image %}
-                                <img src="{{ MEDIA_URL }}big/{{ prod.image }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
+                                <img src="{{ prod.image.big }}" alt="{{ prod.name }}" title="{{ prod.name }}" />
                             {% else %}
                                 <img src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                             {% endif %}
@@ -42,7 +42,7 @@
                     {% if innovation_project.country %}
                         <i class="flag sprite {{ innovation_project.country.flag }}" title="{{ innovation_project.country.name }}"></i>
                     {% elif innovation_project.organization.flag %}
-                        <img src="{{ MEDIA_URL }}small/{{ innovation_project.organization.flag }}" class="flag" title="{{ innovation_project.organization.name }}" alt="{{ innovation_project.organization.name }}"/>
+                        <img src="{{ innovation_project.organization.flag_url }}" class="flag" title="{{ innovation_project.organization.name }}" alt="{{ innovation_project.organization.name }}"/>
                     {% else %}
                         <i class="flag sprite {{ innovation_project.created_by.profile.country.flag }}" title="{{ innovation_project.created_by.profile.country.name }}"></i>
                     {% endif %}
@@ -98,7 +98,7 @@
                     {% if proposal.country.flag %}
                         <i class="flag sprite {{ proposal.country.flag }}" title="{{ proposal.country.name }}"></i>
                     {% elif proposal.organization.flag %}
-                        <img src="{{ MEDIA_URL }}small/{{ proposal.organization.flag }}" class="flag" title="{{ proposal.organization.name }}" alt="{{ proposal.organization.name }}" />
+                        <img src="{{ proposal.organization.flag_url }}" class="flag" title="{{ proposal.organization.name }}" alt="{{ proposal.organization.name }}" />
                     {% else %}
                         <i class="flag sprite {{ proposal.organization.country.flag }}" title="{{ proposal.organization.country.name }}"></i>
                     {% endif %}
@@ -119,7 +119,7 @@
                 <div class="thumb shadow">
                     <a href="{{ news.get_absolute_url }}">
                         {% if news.image %}
-                            <img src="{{ MEDIA_URL }}small/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}"/>
+                            <img src="{{ news.image.big }}" alt="{{ news.title }}" title="{{ news.title }}"/>
                         {% else %}
                             <img src="{% static "tppcenter/img/news.jpg" %} " alt="" />
                         {% endif %}
@@ -130,7 +130,7 @@
                     <p class="date">
                         {% if news.organization %}
                             {% if news.organization.flag %}
-                                <img src="{{ MEDIA_URL }}small/{{ news.organization.flag }}" class="flag"  alt="{{ news.organization.title }}" title="{{ news.organization.title }}"/>
+                                <img src="{{ news.organization.flag_url }}" class="flag"  alt="{{ news.organization.title }}" title="{{ news.organization.title }}"/>
                             {% else %}
                                 <i class="flag sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
                             {% endif %}

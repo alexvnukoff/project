@@ -13,7 +13,7 @@
             <tr>
                 <td>
                     <a href="{{ news.get_absolute_url }}" title="{{ news.title }}">
-                        <img src="{{ MEDIA_URL }}small/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}"/>
+                        <img src="{{ news.image.small }}" alt="{{ news.title }}" title="{{ news.title }}"/>
                     </a>
                 </td>
                 <td>

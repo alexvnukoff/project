@@ -7,12 +7,9 @@
                     <div class="formserror">{{ form.errors.title.0 }}</div>
                 </div>
             {% endif %}
+
             <input class="text" style="width:89%;" id="{{ prefix }}-title"  name="{{ prefix }}-title" type="text" value="{{ form.title.value|default_if_none:"" }}" />
-                {% if num > 0 %}
-                  <a href="#" class="buttonclear  buttonremove">{% trans 'Remove' %}</a>
-                {% else %}
-                  <a href="#" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
-                {% endif %}
+            <div style="margin-bottom: 20px">{% trans 'Delete' %}: <input type="checkbox" name="{{ prefix }}-DELETE" {% if form and form.DELETE.value %} checked="checked" {% endif %}/> </div>
             </div>
                      {% if form.errors.content %}
                 <div class="error-handler">

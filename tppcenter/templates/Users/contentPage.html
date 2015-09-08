@@ -18,7 +18,7 @@
               <div class="thumb">
                   <a href="#">
                       {% if user.image %}
-                          <img src="{{ MEDIA_URL }}big/{{ user.image }}" alt="{{ user|truncatechars:40 }}" title="{{ user }}" />
+                          <img src="{{ user.image.big }}" alt="{{ user|truncatechars:40 }}" title="{{ user }}" />
                       {% else %}
                           <img src="{% static 'tppcenter/img/profile.jpg' %}" alt="{{ user|truncatechars:40 }}" />
                       {% endif %}

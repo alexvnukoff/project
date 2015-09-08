@@ -81,7 +81,7 @@
 			    <span class="title">{{ item.title }}</span>
                 <div class="tender-bottom">
                    	<div class="tender-bottom-left">
-                      	<img src="{{ MEDIA_URL }}small/{% if item.organization.flag %}{{ item.organization.flag }}{% else %}{{ item.organization.logo }}{% endif %}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                      	<img src="{% if item.organization.flag %}{{ item.organization.flag_url }}{% else %}{{ item.organization.logo.big }}{% endif %}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
                         <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
                     </div>
                 </div>
@@ -119,11 +119,11 @@
                                     {% for gallery_item in gallery.gallery_items.all %}
                                         <li>
                                             <div class="b-img">
-                                                <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
-                                                    <img alt=""  src="{{ MEDIA_URL }}big/{{ gallery_item.image }}" />
+                                                <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
+                                                    <img alt=""  src="{{ gallery_item.image.big }}" />
                                                 </a>
                                                 <div class="viewimge">
-                                                    <a class="fancybox" rel="gallery" href="{{ MEDIA_URL }}original/{{ gallery_item.image }}">
+                                                    <a class="fancybox" rel="gallery" href="/{{ gallery_item.image }}">
                                                         <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
                                                     </a>
                                                 </div>

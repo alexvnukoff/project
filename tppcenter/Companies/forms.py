@@ -2,10 +2,10 @@ from django import forms
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from django.utils.translation import gettext as _
 
-from b24online.models import AdditionalPage, Chamber
+from b24online.models import AdditionalPage, Company, Country, Chamber
 
 
-class ChamberForm(forms.ModelForm):
+class CompanyForm(forms.ModelForm):
     vatin = forms.CharField(required=False)
     flag = forms.ImageField(required=False)
     phone = forms.CharField(required=True)
@@ -14,6 +14,8 @@ class ChamberForm(forms.ModelForm):
     longitude = forms.DecimalField(required=True)
     latitude = forms.DecimalField(required=True)
     email = forms.EmailField(required=True)
+    country = forms.ModelChoiceField(required=True, queryset=Country.objects.all())
+    chamber = forms.ModelChoiceField(required=False, queryset=Chamber.objects.all())
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -30,7 +32,6 @@ class ChamberForm(forms.ModelForm):
             if self.instance.location:
                 latitude, longitude = self.instance.location.split(',')
 
-            self.initial['flag'] = self.instance.flag
             self.initial['phone'] = self.instance.phone
             self.initial['fax'] = self.instance.fax
             self.initial['site'] = self.instance.site
@@ -38,19 +39,13 @@ class ChamberForm(forms.ModelForm):
             self.initial['longitude'] = longitude
             self.initial['email'] = self.instance.email
             self.initial['vatin'] = self.instance.vatin
-
-    def clean(self):
-        cleaned_data = super().clean()
-        countries = cleaned_data.get("countries")
-        flag = cleaned_data.get("flag")
-
-        if len(countries) > 1 and not flag:
-            self.add_error('flag', _('International organization must have a flag'))
+            self.initial['country'] = self.instance.country
+            self.initial['chamber'] = self.instance.parent
 
     class Meta:
-        model = Chamber
+        model = Company
         fields = ('name', 'description', 'keywords', 'short_description', 'logo',
-                  'director', 'address', 'countries')
+                  'director', 'address', 'slogan', 'branches')
 
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,

@@ -168,7 +168,7 @@
                     {% resolve photos i as img %}
                     <div class="line">
                         {% if img %}
-                            <a href='{{ MEDIA_URL }}th/{{ img.photo.name }}'>Image {{ i }}</a>
+                            <a href='{{ img.photo.th }}'>Image {{ i }}</a>
                             <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete
                             <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
                         {% endif %}

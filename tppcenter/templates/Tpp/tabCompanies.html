@@ -16,7 +16,7 @@
                 <td>
                     <a href="{{ company.get_absolute_url }}" title="{{ company.name }}">
                         {% if logo %}
-                            <img src="{{ MEDIA_URL }}small/{{ company.logo }}" alt="{{ company.name }}" title="{{ company.name }}" />
+                            <img src="{{ company.logo.small }}" alt="{{ company.name }}" title="{{ company.name }}" />
                         {% else %}
                             <img src="{% static "tppcenter/img/company.jpg"  %}" alt="{{ company.name }}" />
                         {%endif %}

@@ -14,7 +14,7 @@ class B2BProductForm(forms.ModelForm):
         # there's a `fields` property now
         self.fields['image'].required = True
 
-        if self.instance:
+        if self.instance.pk:
             self.initial['sku'] = self.instance.sku
 
     class Meta:
@@ -34,7 +34,7 @@ class B2CProductForm(forms.ModelForm):
         self.fields['cost'].required = True
         self.fields['currency'].required = True
 
-        if self.instance:
+        if self.instance.pk:
             self.initial['sku'] = self.instance.sku
 
     class Meta:
@@ -43,4 +43,4 @@ class B2CProductForm(forms.ModelForm):
                   'currency', 'cost', 'categories')
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
-                                                      validate_max=True, extra=1)
+                                                      validate_max=True, extra=0)

@@ -20,7 +20,7 @@
               </a>
           </div>
             <div class="link">
-                {% if product.country.flag %}
+                {% if product.country %}
                      <i class="flag sprite {{ product.country.flag }}" title="{{ product.country.name }}"></i>
                 {% endif %}
             <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatechars:45 }}</a>

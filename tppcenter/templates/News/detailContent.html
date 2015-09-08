@@ -53,7 +53,7 @@
             {% if item.country %}
                 <i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
             {% elif item.organization %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.flag }}" alt="{{ item.organization.name }}" />
+                <img src="{{ item.organization.flag_url }}" class="flag" title="{{ item.organization.flag }}" alt="{{ item.organization.name }}" />
             {% endif %}
 
             {% if item.country %}{{ item.country.name }},{% endif %} {{ item.created_at|date:"d M Y" }},

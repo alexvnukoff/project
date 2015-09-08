@@ -134,6 +134,7 @@ urlpatterns = patterns('',
     url(r'^filter/', tppcenter.views.json_filter),
     url(r'^company-manage/', tppcenter.views.my_companies),
     url(r'^set/(?P<item_id>[0-9]+)/$', tppcenter.views.set_current, name="setCurrent"),
+    url(r'^branch-list$', tppcenter.views.branch_list, name="branch_list"),
 
 
 

@@ -1,11 +1,9 @@
-from django.conf.urls import patterns, include, url
-import appl.views
-import tppcenter.Companies.views
+from django.conf.urls import patterns, url
+from django.contrib import admin
 
+import tppcenter.Companies.views
 import tppcenter.views
 
-
-from django.contrib import admin
 admin.autodiscover()
 
 
@@ -16,12 +14,11 @@ urlpatterns = patterns('',
      url(r'^page(?P<page>[0-9]+)?/$', tppcenter.Companies.views.CompanyList.as_view(), name="paginator"),
      url(r'^my/$', tppcenter.Companies.views.CompanyList.as_view(my=True), name='my_main'),
      url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Companies.views.CompanyList.as_view(my=True), name="my_main_paginator"),
-     url(r'^add/$', tppcenter.Companies.views.companyForm,{'action': "add"}, name="add"),
-     url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "update"}, name="update"),
+     url(r'^add/$', tppcenter.Companies.views.CompanyCreate.as_view(), name="add"),
+     url(r'^update/(?P<pk>[0-9]+)/$', tppcenter.Companies.views.CompanyUpdate.as_view(), name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$', tppcenter.Companies.views.companyForm, {'action': "delete"}, name="delete"),
      url(r'^(?P<slug>[0-9a-zA-z-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Companies.views.CompanyDetail.as_view(), name="detail"),
      url(r'^send/$', tppcenter.Companies.views.send_message),
-
 
 
      url(r'^tabs/news/(?P<company>[0-9]+)/$', tppcenter.Companies.views._tab_news, name="tab_news"),

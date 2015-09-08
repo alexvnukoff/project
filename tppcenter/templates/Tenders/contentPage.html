@@ -13,7 +13,7 @@
                 {% setContextMenu tender %}
                 <div class="title">
                     {% if tender.organization.flag %}
-                        <img src="{{ MEDIA_URL }}small/{{ tender.organization.flag }}" class="flag" title="{{ tender.organization.name }}" alt="{{ tender.organization.name }}" />
+                        <img src="{{ tender.organization.flag_url }}" class="flag" title="{{ tender.organization.name }}" alt="{{ tender.organization.name }}" />
                     {% elif tender.country %}
                         <i class="flag sprite {{ tender.country.flag }}" title="{{ tender.country.name }}"></i>
                     {% endif %}

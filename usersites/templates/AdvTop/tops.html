@@ -22,7 +22,7 @@
                                         {% if top.country.flag %}
                                             <i class="sprite {{ top.country.flag }}"></i>
                                         {% elif top.organizaion.flag %}
-                                            <img class="sprite  flag" src="{{ MEDIA_URL}}th/{{top.organizaion.flag }} " />
+                                            <img class="sprite  flag" src="{{ top.organizaion.flag }} " />
                                         {% elif top.flag %}
                                             <img class="sprite flag" src="{{ MEDIA_URL}}th/{{top.flag }} " />
                                         {% endif %}
@@ -37,9 +37,9 @@
                                     <a title="{{ top.title }}" href="{% detail_page_to_tppcenter modelDict.detailUrl top.slug %}">
                                         {% if top.image %}
                                             {% if top.title %}
-                                                <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.title }}<" class="thumb" />
+                                                <img src="{{ top.image.small }}" alt="{{ top.title }}<" class="thumb" />
                                             {% else %}
-                                                <img src="{{ MEDIA_URL }}small/{{ top.image }}" alt="{{ top.text }}<" class="thumb" />
+                                                <img src="{{ top.image.small }}" alt="{{ top.text }}<" class="thumb" />
                                             {% endif %}
                                         {% endif %}
                                     </a>

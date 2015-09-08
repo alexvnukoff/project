@@ -29,7 +29,7 @@
                     <p class="date">
                     {% if news.organization %}
                         {% if news.organization.flag %}
-                            <img src="{{ MEDIA_URL }}small/{{ news.organization.flag }}" class="flag" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
+                            <img src="{{ news.organization.flag_url }}" class="flag" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
                         {% else %}
                             <i class="sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
                         {% endif %}

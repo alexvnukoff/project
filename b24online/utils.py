@@ -1,10 +1,14 @@
+import os
 import uuid
 from PIL import Image
 
 from django.conf import settings
+from django.core.files import File, locks
+from django.core.files.move import file_move_safe
 from django.utils import translation
 from django.utils.text import slugify
 from django.utils.timezone import now
+import errno
 from unidecode import unidecode
 
 
@@ -74,13 +78,14 @@ def generate_upload_path(instance, filename):
 
 
 def resize(img, box, fit, out):
-    '''Downsample the image.
+    """
+    Downsample the image.
         @param img: Image -  an Image-object
         @param box: tuple(x, y) - the bounding box of the result image
         @param fit: boolean - crop the image to fill the box
         @param out: file-like-object - save the image into the output stream
-        '''
-    # preresize image with factor 2, 4, 8 and fast algorithm
+        """
+    # pre resize image with factor 2, 4, 8 and fast algorithm
 
     img = Image.open(img)
 
@@ -94,14 +99,14 @@ def resize(img, box, fit, out):
     if fit:
         x1 = y1 = 0
         x2, y2 = img.size
-        wRatio = 1.0 * x2 / box[0]
-        hRatio = 1.0 * y2 / box[1]
-        if hRatio > wRatio:
-            y1 = int(y2 / 2 - box[1] * wRatio / 2)
-            y2 = int(y2 / 2 + box[1] * wRatio / 2)
+        width_ratio = 1.0 * x2 / box[0]
+        height_ratio = 1.0 * y2 / box[1]
+        if height_ratio > width_ratio:
+            y1 = int(y2 / 2 - box[1] * width_ratio / 2)
+            y2 = int(y2 / 2 + box[1] * width_ratio / 2)
         else:
-            x1 = int(x2 / 2 - box[0] * hRatio / 2)
-            x2 = int(x2 / 2 + box[0] * hRatio / 2)
+            x1 = int(x2 / 2 - box[0] * height_ratio / 2)
+            x2 = int(x2 / 2 + box[0] * height_ratio / 2)
         img = img.crop((x1, y1, x2, y2))
 
     # Resize the image with best quality algorithm ANTI-ALIAS
@@ -112,3 +117,71 @@ def resize(img, box, fit, out):
 
     # save it into a file-like object
     img.save(out, "PNG", quality=95)
+
+
+def handle_uploaded_file(content):
+    generated_path = generate_upload_path(None, content.name)
+    full_path = (os.path.join(settings.MEDIA_ROOT, generated_path)).replace('\\', '/')
+
+    if not hasattr(content, 'chunks'):
+        content = File(content)
+
+    # Create any intermediate directories that do not exist.
+    # Note that there is a race between os.path.exists and os.makedirs:
+    # if os.makedirs fails with EEXIST, the directory was created
+    # concurrently, and we can continue normally. Refs #16082.
+    directory = os.path.dirname(full_path)
+    if not os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
+    if not os.path.isdir(directory):
+        raise IOError("%s exists and is not a directory." % directory)
+
+    # There's a potential race condition between get_available_name and
+    # saving the file; it's possible that two threads might return the
+    # same name, at which point all sorts of fun happens. So we need to
+    # try to create the file, but if it already exists we have to go back
+    # to get_available_name() and try again.
+
+    while True:
+        try:
+            # This file has a file path that we can move.
+            if hasattr(content, 'temporary_file_path'):
+                file_move_safe(content.temporary_file_path(), full_path)
+
+            # This is a normal uploadedfile that we can stream.
+            else:
+                # This fun binary flag incantation makes os.open throw an
+                # OSError if the file already exists before we open it.
+                flags = (os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_BINARY', 0))
+                # The current umask value is masked out by os.open!
+                fd = os.open(full_path, flags, 0o666)
+                _file = None
+                try:
+                    locks.lock(fd, locks.LOCK_EX)
+                    for chunk in content.chunks():
+                        if _file is None:
+                            mode = 'wb' if isinstance(chunk, bytes) else 'wt'
+                            _file = os.fdopen(fd, mode)
+                        _file.write(chunk)
+                finally:
+                    locks.unlock(fd)
+                    if _file is not None:
+                        _file.close()
+                    else:
+                        os.close(fd)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                generated_path = generate_upload_path(None, content.name)
+                full_path = (os.path.join(settings.MEDIA_ROOT, generated_path)).replace('\\', '/')
+            else:
+                raise
+        else:
+            # OK, the file save worked. Break out of the loop.
+            break
+
+    return generated_path

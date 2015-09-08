@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -13,7 +14,7 @@ from appl.models import Product
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import B2BProduct, Company, Organization, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
-from tppcenter.Product.froms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
+from tppcenter.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 
 
 class B2BProductList(ItemsList):
@@ -240,14 +241,15 @@ class B2BProductCreate(CreateView):
         form.instance.company = company
         form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
 
-        for page_form in additional_page_form:
-            page_form.instance.created_by = self.request.user
-            page_form.instance.updated_by = self.request.user
+            for page_form in additional_page_form:
+                page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
 
-        additional_page_form.save()
+            additional_page_form.save()
 
         self.object.reindex()
         self.object.upload_images()
@@ -323,18 +325,20 @@ class B2BProductUpdate(UpdateView):
         success page.
         """
         form.instance.updated_by = self.request.user
-        organization_id = self.request.session.get('current_company', None)
-        company = Company.objects.get(pk=organization_id)
-        form.instance.company = company
-        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        if form.changed_data and 'sku' in form.changed_data:
+            form.instance.metadata['stock_keeping_unit'] = form.cleaned_data['sku']
 
-        for page_form in additional_page_form:
-            page_form.instance.updated_by = self.request.user
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
 
-        additional_page_form.save()
+            for page_form in additional_page_form:
+                if not page_form.instance.pk:
+                    page_form.instance.updated_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
 
         if form.changed_data:
             self.object.reindex()
@@ -401,18 +405,18 @@ class B2CProductCreate(CreateView):
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         organization_id = self.request.session.get('current_company', None)
-        company = Company.objects.get(pk=organization_id)
-        form.instance.company = company
+        form.instance.company = Company.objects.get(pk=organization_id)
         form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
 
-        for page_form in additional_page_form:
-            page_form.instance.created_by = self.request.user
-            page_form.instance.updated_by = self.request.user
+            for page_form in additional_page_form:
+                page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
 
-        additional_page_form.save()
+            additional_page_form.save()
 
         self.object.reindex()
         self.object.upload_images()
@@ -489,18 +493,20 @@ class B2CProductUpdate(UpdateView):
         success page.
         """
         form.instance.updated_by = self.request.user
-        organization_id = self.request.session.get('current_company', None)
-        company = Company.objects.get(pk=organization_id)
-        form.instance.company = company
-        form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
-        self.object = form.save()
-        additional_page_form.instance = self.object
+        if form.changed_data and 'sku' in form.changed_data:
+            form.instance.metadata['stock_keeping_unit'] = form.cleaned_data['sku']
 
-        for page_form in additional_page_form:
-            page_form.instance.updated_by = self.request.user
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
 
-        additional_page_form.save()
+            for page_form in additional_page_form:
+                if not page_form.instance.created_by:
+                    page_form.instance.updated_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
 
         if form.changed_data:
             self.object.reindex()

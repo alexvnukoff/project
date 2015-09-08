@@ -24,7 +24,7 @@
         <p class="date">
         {% if item.organization %}
             {% if item.organization.flag %}
-                <img src="{{ MEDIA_URL }}small/{{ item.organization.flag }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                <img src="{{ item.organization.flag_url }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
                 {{ item.organization.name }}
             {% else %}
                 <i class="sprite {{ item.organization.country.flag }}" title="{{ item.organization.country.name }}"></i>
@@ -54,7 +54,7 @@
                 <li>
                     <span class="date">{{ news.created_at|date:"d M y" }}</span>
                     {% if news.image %}
-                        <img src="{{ MEDIA_URL }}big/{{ news.image }}" alt="{{ news.title }}" title="{{ news.title }}" class="thumb" />
+                        <img src="{{ news.image.big }}" alt="{{ news.title }}" title="{{ news.title }}" class="thumb" />
                     {% else %}
                         <img src="{% static 'tppcenter/img/news.jpg' %}" alt="" class="thumb" />
                     {% endif %}

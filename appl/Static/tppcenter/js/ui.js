@@ -1249,10 +1249,7 @@ var companyStructure =
             if (!name)
                 return false;
 
-            if (action == 'add')
-                id = self.item.parents('li').data('item-id');
-            else
-                id = self.item.data('item-id');
+            id = self.item.data('item-id');
 
             var contentHolder = $('#structure-tab .tpp-dt-content');
 
