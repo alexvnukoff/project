@@ -1,11 +1,9 @@
-from django.conf.urls import patterns, include, url
-import appl.views
-import tppcenter.Exhibitions.views
+from django.conf.urls import patterns, url
+from django.contrib import admin
 
+import tppcenter.Exhibitions.views
 import tppcenter.views
 
-
-from django.contrib import admin
 admin.autodiscover()
 
 
@@ -14,10 +12,10 @@ urlpatterns = patterns('',
      url(r'^$', tppcenter.Exhibitions.views.ExhibitionList.as_view(), name='main'),
 
      url(r'^page/(?P<page>[0-9]+)?/$', tppcenter.Exhibitions.views.ExhibitionList.as_view(), name="paginator"),
-     url(r'^add/$', tppcenter.Exhibitions.views.exhibitionForm,{'action': 'add'}, name="add"),
+     url(r'^add/$', tppcenter.Exhibitions.views.ExhibitionCreate.as_view(), name="add"),
      url(r'^my/$', tppcenter.Exhibitions.views.ExhibitionList.as_view(my=True), name='my_main'),
      url(r'^my/page(?P<page>[0-9]+)?/$', tppcenter.Exhibitions.views.ExhibitionList.as_view(my=True), name="my_main_paginator"),
-     url(r'^update/(?P<item_id>[0-9]+)/$', tppcenter.Exhibitions.views.exhibitionForm,{'action': 'update'}, name="update"),
+     url(r'^update/(?P<pk>[0-9]+)/$', tppcenter.Exhibitions.views.ExhibitionUpdate.as_view(), name="update"),
      url(r'^delete/(?P<item_id>[0-9]+)/$',  tppcenter.Exhibitions.views.exhibitionForm,{'action': "delete"}, name="delete"),
      url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', tppcenter.Exhibitions.views.ExhibitionDetail.as_view(), name="detail"),
 )

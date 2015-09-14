@@ -75,7 +75,7 @@
             {% if item.measurement_unit %}
                 <li>
                     <label>{% trans 'Unit' %}:</label>
-                    <p>{{ item.measurement_unit }}</p>
+                    <p>{{ item.get_measurement_unit_display }}</p>
                 </li>
             {% endif %}
             <li>

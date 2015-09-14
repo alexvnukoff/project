@@ -380,6 +380,11 @@ border-style: solid; border-width: 5px 5px 0 5px; border-color: #ff0000 transpar
     border-style: solid; border-width: 5px 5px 0 5px; border-color: #ff0000 transparent transparent transparent;}
 
 .newsform{ position:relative; float:left; width:100%; background-color:#fafafa; padding-bottom:20px; margin:12px 0 0 0;}
+.uploadimgage > div:after {
+   content: "";
+   display: block;
+   clear: both;
+}
 .uploadimgage{ float:left; width:200px; margin:0 0 0 14px; display:inline; padding-top: 4px;}
 .uploadimgage .clumn1 { float: left;  width: 45%;}
 .uploadimgage .clumn2 { float: right; width: 45%;}

@@ -22,7 +22,7 @@
 
         google.maps.event.addDomListener(window, 'load', initialize);
 
-         $(document).bind('branchSelected', function(event, pk, name) {
+        $(document).bind('branchSelected', function(event, pk, name) {
             add_branch(name, pk);
         });
 
@@ -87,146 +87,149 @@
                 {% endif %}
                 {{ form.country }}
             </div>
-                        <div>
-                            <label class="sapce">{% trans 'Vatin' %}</label>
-                            {% if form.errors.vatin %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.vatin.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" name="INN" value="{{ form.vatin.value|default_if_none:"" }}"placeholder="" class="text" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
-                            {% if form.errors.phone %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.phone.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" class="text" placeholder="" name="phone" value="{{ form.phone.value|default_if_none:"" }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
-                            {% if form.errors.director %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.director.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" name="director" value="{{ form.director.value|default_if_none:"" }}" placeholder="" class="text" />
-                        </div>
-                        <div>
-                                <label>{% trans 'Slogan' %}</label>
-                                {% if form.errors.slogan %}
-                                    <div class="error-handler"> <div class="formserror">{{ form.errors.slogan.0 }}</div></div>
-                                {% endif %}
-                                <input type="text" name="slogan" value="{{ form.slogan.value|default_if_none:"" }}" placeholder="" class="text" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Fax' %}</label>
-                            {% if form.errors.fax %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.fax.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" class="text" placeholder="" name="fax" value="{{ form.fax.value|default_if_none:"" }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">E-mail <font color="#FF0000">*</font></label>
-                            {% if form.errors.email %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.email.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" class="text" placeholder="" name="email" value="{{ form.email.value|default_if_none:"" }}" />
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Site URL' %}</label>
-                            {% if form.errors.site %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.site.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" class="text" placeholder="" name="site" value="{{ form.site.value|default_if_none:"" }}"/>
-                        </div>
-                        <div>
-                            <label class="sapce">{% trans 'Keywords' %}</label>
-                            {% if form.errors.keywords %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
-                            {% endif %}
-                            <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
-                        </div>
-                        <div>
-                            {% if form.errors.branches %}
-                                <div class="error-handler">
-                                    <div class="formserror">{{ form.errors.branches.0 }}</div>
-                                </div>
-                            {% endif %}
-                            <label class="sapce">{% trans 'Branches' %}</label>
-                                <ul class="list-cat" id="list-branches">
-                                </ul>
-                                <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
-                                <script>
-                                for(i in branches) {
-                                    add_branch(branches[i].name, branches[i].pk)
-                                }
-                            </script>
-                        </div>
-                    </div>
-                  <ul class="uploadconfig">
-                        <li>
-                            <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.name %}
-                                  <div class="error-handler"> <div class="formserror">{{ form.errors.name.0 }}</div></div>
-                              {% endif %}
-                            <input type="text" class="text" placeholder="" name="name" value="{{ form.name.value|default_if_none:"" }}" />
-                        </li>
-
-                         <li>
-                            <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
-                              {% if form.errors.short_description %}
-                                  <div class="error-handler"> <div class="formserror">{{ form.errors.short_description.0 }}</div></div>
-                              {% endif %}
-                            <textarea rows="5" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
-                        </li>
-                        <li>
-                            <label>{% trans 'Detail description' %}</label>
-                            {% if form.errors.description %}
-                                <div class="error-handler">
-                                    <div class="formserror">{{ form.errors.description.0 }}</div>
-                                </div>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <div class="detail">
-                                <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
-                            </div>
-                        </li>
-                         <li>
-                            <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
-                             {% if form.errors.address %}
-                                  <div class="error-handler"> <div class="formserror">{{ form.errors.address.0 }}</div></div>
-                            {% endif %}
-                            <input type="text" name="address" value="{{ form.address.value|default_if_none:"" }}" placeholder="" class="text" />
-                        </li>
-                        <li>
-                            <label>{% trans 'Chamber of Commerce:' %}</label>
-                            {% if form.errors.chamber %}
-                                  <div class="error-handler"> <div class="formserror">{{ form.errors.chamber.0 }}</div></div>
-                            {% endif %}
-                            {{ form.chamber }}
-                        </li>
-                    </ul>
-                    <div style="padding: 0 10px;">
-                            <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
-                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                        <div id="map-canvas"></div>
-                   </div>
-                   <div class="append-formin">
-                       <div class="addpage-title">{% trans 'Additional pages' %}</div>
-                       <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
-                        {{ additional_page_form.management_form }}
-                        {{ additional_page_form.non_form_errors }}
-                        {% for form in additional_page_form %}
-                            {{ form.id }}
-                            {% with prefix=form.prefix num=forloop.counter0 %}
-                                {% include "additionalPage.html" %}
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
-            <div class="newform-button">
-                <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
-                <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+            <div>
+                <label class="sapce">{% trans 'Vatin' %}</label>
+                {% if form.errors.vatin %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.vatin.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="INN" value="{{ form.vatin.value|default_if_none:"" }}"placeholder="" class="text" />
             </div>
-         <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
-         <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
+            <div>
+                <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.phone %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.phone.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="phone" value="{{ form.phone.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.director %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.director.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="director" value="{{ form.director.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                    <label>{% trans 'Slogan' %}</label>
+                    {% if form.errors.slogan %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.slogan.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="slogan" value="{{ form.slogan.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Fax' %}</label>
+                {% if form.errors.fax %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.fax.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="fax" value="{{ form.fax.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                {% if form.errors.email %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.email.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="email" value="{{ form.email.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Site URL' %}</label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="site" value="{{ form.site.value|default_if_none:"" }}"/>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+            <div>
+                {% if form.errors.branches %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.branches.0 }}</div>
+                    </div>
+                {% endif %}
+                <label class="sapce">{% trans 'Branches' %}</label>
+                    <ul class="list-cat" id="list-branches">
+                    </ul>
+                    <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
+                    <script>
+                    for(i in branches) {
+                        add_branch(branches[i].name, branches[i].pk)
+                    }
+                </script>
+            </div>
+        </div>
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.name %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.name.0 }}</div></div>
+                  {% endif %}
+                <input type="text" class="text" placeholder="" name="name" value="{{ form.name.value|default_if_none:"" }}" />
+            </li>
+
+             <li>
+                <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.short_description %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.short_description.0 }}</div></div>
+                  {% endif %}
+                <textarea rows="5" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
+            </li>
+            <li>
+                <label>{% trans 'Detail description' %}</label>
+                {% if form.errors.description %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.description.0 }}</div>
+                    </div>
+                {% endif %}
+            </li>
+            <li>
+                <div class="detail">
+                    <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
+                </div>
+            </li>
+             <li>
+                <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
+                 {% if form.errors.address %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.address.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="address" value="{{ form.address.value|default_if_none:"" }}" placeholder="" class="text" />
+            </li>
+            <li>
+                <label>{% trans 'Chamber of Commerce:' %}</label>
+                {% if form.errors.chamber %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.chamber.0 }}</div></div>
+                {% endif %}
+                {{ form.chamber }}
+            </li>
+        </ul>
+        <div style="padding: 0 10px;">
+            <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
+            {% if form.errors.location %}
+                <div class="error-handler"> <div class="formserror">{{ form.errors.location.0 }}</div></div>
+            {% endif %}
+            <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+            <div id="map-canvas"></div>
+        </div>
+        <div class="append-formin">
+            <div class="addpage-title">{% trans 'Additional pages' %}</div>
+            <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+            {{ additional_page_form.management_form }}
+            {{ additional_page_form.non_form_errors }}
+            {% for form in additional_page_form %}
+                {{ form.id }}
+                {% with prefix=form.prefix num=forloop.counter0 %}
+                    {% include "additionalPage.html" %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+        <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
+        <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
     </form>
 </div>
 {% endblock %}

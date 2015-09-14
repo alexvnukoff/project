@@ -12,6 +12,8 @@
     {{ block.super }}
         <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/news.css' %}" />
         <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/company.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+
 {% endblock %}
 
 {% block js %}
@@ -32,41 +34,33 @@
     $(function() {
          $(".goods-details-tab").tabs();});
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+     <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+     <script type="text/javascript">
+
+            $(function() {
+                 $(".goods-details-tab").tabs();});
+
+          var marker;
+                $(document).ready(function($) {
+                    var tabs =  $( '.goods-details-tab' )
+                    tabs.tabs();
+
+                    var href = tabs.find('a[href="#goods-tabs-4"]');
+                    href.on('click',function(){
+
+                        {% if item.location %}
+                          {% with item.location|split:"," as LatLng %}
+                          marker = new google.maps.Marker({
+                            position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
+
+                            });
+                          {% endwith %}
+                        {% endif %}
+                      initialize(false);
+                    })});
+        </script>
 {% endblock %}
-
- <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
-
- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
- <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
- <script type="text/javascript">
-
-        $(function() {
-             $(".goods-details-tab").tabs();});
-
-      var marker;
-            $(document).ready(function($) {
-                var tabs =  $( '.goods-details-tab' )
-                tabs.tabs();
-
-                var href = tabs.find('a[href="#goods-tabs-4"]');
-                href.on('click',function(){
-
-                    {% if item.position|length > 3 %}
-                      marker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ item.coordinates }})
-                    });
-                    {% endif %}
-                  initialize(false);
-
-
-
-
-                })});
-
-
-
-
-    </script>
 
 {% block keywords %}{% endblock %}
 
@@ -81,7 +75,7 @@
 			    <span class="title">{{ item.title }}</span>
                 <div class="tender-bottom">
                    	<div class="tender-bottom-left">
-                      	<img src="{% if item.organization.flag %}{{ item.organization.flag_url }}{% else %}{{ item.organization.logo.big }}{% endif %}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                      	<img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
                         <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
                     </div>
                 </div>
@@ -96,13 +90,13 @@
                             <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
                             <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
                             {% for page in item.additional_pages.all %}
-                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div id="goods-tabs-1">
                         <div class="content-goods-tab">
-                            {{ item.route_description }}
+                            {{ item.route }}
                         </div>
                     </div>
                     <div id="goods-tabs-2">

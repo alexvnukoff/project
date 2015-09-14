@@ -19,7 +19,7 @@
                         {% endif %}
                         <font class="date">{{ vacancy.country.name }}, {{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.created_at|date:'d M Y' }}</font>
 
-                       <p>{{ vacancy.description|truncatewords:30 }} </p>
+                       <p>{{ vacancy.description|cleanHtml|safe|truncatewords_html:30 }} </p>
                        <a href="{{ vacancy.get_absolute_url }}" class="more">{% trans "More" %}...</a>
                     </div>
                 </li>

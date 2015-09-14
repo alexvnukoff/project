@@ -68,7 +68,7 @@ $(function() {
                 </ul>
                 <div class="tender-bottom">
                     <div class="tender-bottom-left">
-                        <img src="{% if item.organization.flag %}{{ item.organization.flag_url }}{% else %}{{ item.organization.logo.big }}{% endif %}" class="thumb" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                        <img src="{{ item.organization.logo.big }}" class="thumb" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
                         <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
                     </div>
                     <div class="tender-bottom-right">
@@ -87,7 +87,7 @@ $(function() {
                         </ul>
                     </div>
                     <div id="goods-tabs-1">
-                        <div class="content-goods-tab">{{ item.description|cleanHtml|safe }} </div>
+                        <div class="content-goods-tab">{{ item.content|cleanHtml|safe }} </div>
                     </div>
                     <div id="goods-tabs-2">
                         <div class="content-goods-tab">
@@ -120,7 +120,7 @@ $(function() {
                         </div>
                     </div>
                 {% for page in item.additional_pages.all %}
-                    <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                    <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
                           <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
                      </div>
                 {% endfor %}

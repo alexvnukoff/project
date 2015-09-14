@@ -43,38 +43,33 @@ $(function() {
                                 {% endif %}
                             </span>
                         </li>
+                        <li>
+                            <label>{% trans 'Type of employments' %}</label>
+                            <span class="right">
+                                {{ item.get_type_of_employment_display }}
+                            </span>
+                        </li>
                     </ul>
                     {% b2b_social_buttons "" item.title item.description %}
                     <div class="goods-details-tab">
                         <div class="tab-cate">
                             <ul>
                                 <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Requirements' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Terms' %}</a></li>
 
                             </ul>
                         </div>
                         <div id="goods-tabs-1">
                             <div class="content-goods-tab">
-                            	<ul class="innov-tab-content">
-
-                                    <li>
-                                    	<label>{% trans 'Type of employments' %}</label>
-                                        <p>{{ item.type_of_employment|default_if_none:"" }}</p>
-                                    </li>
-
-                                    <li>
-                                    	<label>{% trans 'Description' %}</label>
-                                       <p>{{ item.description|default_if_none:"" }}</p>
-                                    </li>
-                                    <li>
-                                    	<label>{% trans 'Requirements' %}</label>
-                                        <p>{{ item.requirements|default_if_none:"" }}</p>
-                                    </li>
-                                    <li>
-                                    	<label>{% trans 'Terms' %}</label>
-                                        <p>{{ item.terms|default_if_none:"" }}</p>
-                                    </li>
-                                </ul>
+                                <p>{{ item.description|cleanHtml|safe|default_if_none:"" }}</p>
                             </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab"><p>{{ item.requirements|cleanHtml|safe|default_if_none:"" }}</p></div>
+                        </div>
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab"><p>{{ item.terms|cleanHtml|safe|default_if_none:"" }}</p></div>
                         </div>
                    </div>
                </div>

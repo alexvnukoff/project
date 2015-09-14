@@ -7,13 +7,15 @@ from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language
 
-from appl.models import BusinessProposal, InnovationProject, Tender, Exhibition, Requirement, Resume, Category
-from b24online.models import Chamber, B2BProduct, Organization, StaticPage
+from appl.models import Category
+from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
+    BusinessProposal
 from centerpokupok.views import _sortMenu
 from appl import func
 from appl.models import News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
     Company
 from core.models import Item
+from jobs.models import Requirement, Resume
 
 register = template.Library()
 
@@ -143,7 +145,7 @@ def setContextMenu(context, obj, **kwargs):
     elif model_name == Resume.__name__:
         url_namespace = "resume"
     elif model_name == News.__name__:
-        url_namespace = "news"
+        url_namespace = "tv" if obj.is_tv else "news"
     elif model_name == Company.__name__:
         set_current = True
         url_namespace = "companies"

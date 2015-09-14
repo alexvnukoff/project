@@ -133,13 +133,6 @@
                         <input type="text" name="product_name" value="{{ form.product_name.value|default_if_none:"" }}" placeholder="" class="text" />
                     </li>
                     <li>
-                        <label>{% trans 'Preview description' %}</label>
-                        {% if form.errors.short_description %}
-                            <div class="error-handler"><div class="formserror">{{ form.errors.short_description.0 }}</div></div>
-                        {% endif %}
-                        <textarea rows="7" name="short_description" >{{ form.short_description.value|default_if_none:"" }}</textarea>
-                    </li>
-                    <li>
                         <label>{% trans 'Description' %}</label>
                         {% if form.errors.description %}
                             <div class="error-handler"> <div class="formserror">{{ form.errors.description.0 }}</div></div>

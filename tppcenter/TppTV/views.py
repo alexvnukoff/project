@@ -1,19 +1,21 @@
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.translation import ugettext as _, trans_real
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
+from django.views.generic import CreateView, UpdateView
 
 from appl import func
-from appl.models import TppTV, NewsCategories, Country
+from appl.models import TppTV
 from b24online.cbv import ItemsList, ItemDetail
-from b24online.models import News
+from b24online.models import News, Organization
+
+
 # from core.tasks import addTppAttrubute
-from tppcenter.forms import ItemForm
 
 
 class TVNewsLIst(ItemsList):
@@ -96,7 +98,12 @@ class TVNewsDetail(ItemDetail):
         return super().get_queryset().filter(is_tv=True)
 
     def _get_similar_news(self):
-        return News.objects.filter(is_tv=True, categories__in=self.object.categories.all())[:4]
+        if self.object.categories.exists():
+            return News.objects.filter(is_tv=True, categories__in=self.object.categories.all()) \
+                .order_by('-created_at')[:3]
+
+        return News.objects.filter(is_tv=True, categories=None).order_by('-created_at')[:3]
+
 
     def get_context_data(self, **kwargs):
         context = super(TVNewsDetail, self).get_context_data(**kwargs)
@@ -117,10 +124,6 @@ def tvForm(request, action, item_id=None):
 
     if action == 'delete':
         newsPage = deleteTppTv(request, item_id)
-    elif action == 'add':
-        newsPage = addNews(request)
-    elif action == 'update':
-        newsPage = updateNew(request, item_id)
 
     if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
         return newsPage
@@ -131,107 +134,6 @@ def tvForm(request, action, item_id=None):
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-@login_required
-def addNews(request):
-
-    perm = request.user.get_all_permissions()
-
-    if not {'appl.add_tpptv'}.issubset(perm):
-         return func.permissionDenied()
-
-    form = None
-
-    categories = func.getItemsList('NewsCategories', 'NAME')
-    countries = func.getItemsList("Country", 'NAME')
-
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['YOUTUBE_CODE'] = request.POST.get('YOUTUBE_CODE', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-
-
-        form = ItemForm('TppTV', values=values)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
-            return HttpResponseRedirect(reverse('tv:main'))
-
-    template = loader.get_template('TppTV/addForm.html')
-    context = RequestContext(request, {'form': form, 'categories': categories, 'countries': countries})
-    newsPage = template.render(context)
-
-    return newsPage
-
-
-@login_required
-def updateNew(request, item_id):
-
-    if not request.user.has_perm('appl.change_tpptv') or not request.user.groups.filter(name="Redactor").exists():
-          return func.permissionDenied()
-
-    create_date = TppTV.objects.get(pk=item_id).create_date
-
-    try:
-        choosen_category = NewsCategories.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        choosen_category = ''
-    try:
-        choosen_country = Country.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        choosen_country = ""
-
-    countries = func.getItemsList("Country", 'NAME')
-    categories = func.getItemsList('NewsCategories', 'NAME')
-
-    if request.method != 'POST':
-        form = ItemForm('TppTV', id=item_id)
-
-    if request.POST:
-        user = request.user
-
-
-        values = {}
-        values['NAME'] = request.POST.get('NAME', "")
-        values['DETAIL_TEXT'] = request.POST.get('DETAIL_TEXT', "")
-        values['YOUTUBE_CODE'] = request.POST.get('YOUTUBE_CODE', "")
-        values['IMAGE'] = request.FILES.get('IMAGE', "")
-        values['IMAGE-CLEAR'] = request.POST.get('IMAGE-CLEAR', " ")
-
-        form = ItemForm('TppTV', values=values, id=item_id)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addTppAttrubute.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                       lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
-
-
-    template = loader.get_template('TppTV/addForm.html')
-
-    templateParams = {
-        'form': form,
-        'choosen_category': choosen_category,
-        'categories': categories,
-        'create_date': create_date,
-        'choosen_country':choosen_country,
-        'countries': countries
-    }
-
-    context = RequestContext(request, templateParams)
-    newsPage = template.render(context)
-
-    return newsPage
-
 
 @login_required
 def deleteTppTv(request, item_id):
@@ -245,3 +147,69 @@ def deleteTppTv(request, item_id):
     instance.reindexItem()
 
     return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
+
+
+class TvCreate(CreateView):
+    model = News
+    fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
+    template_name = 'TppTV/addForm.html'
+    success_url = reverse_lazy('tv:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        form.instance.is_tv = True
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        result = super().form_valid(form)
+        self.object.reindex()
+        self.object.upload_images()
+
+        return result
+
+
+class TvUpdate(UpdateView):
+    model = News
+    fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
+    template_name = 'TppTV/addForm.html'
+    success_url = reverse_lazy('tv:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        organization_id = self.request.session.get('current_company', None)
+
+        if organization_id is not None:
+            organization = Organization.objects.get(pk=organization_id)
+            form.instance.organization = organization
+            form.instance.country = organization.country
+
+        result = super().form_valid(form)
+
+        if form.changed_data:
+            self.object.reindex()
+
+            if 'image' in form.changed_data:
+                self.object.upload_images()
+
+        return result

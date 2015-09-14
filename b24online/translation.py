@@ -43,12 +43,12 @@ class BusinessProposalCategoryTranslationOptions(TranslationOptions):
 
 @register(BusinessProposal)
 class BusinessProposalCategoryTranslationOptions(TranslationOptions):
-    fields = ('title', 'slug', 'description', 'short_description', 'keywords',)
+    fields = ('title', 'slug', 'description', 'keywords',)
 
 
 @register(InnovationProject)
 class InnovationProjectTranslationOptions(TranslationOptions):
-    fields = ('name', 'slug', 'description', 'short_description', 'keywords',)
+    fields = ('name', 'slug', 'description', 'keywords',)
 
 
 @register(B2BProductCategory)
@@ -88,7 +88,7 @@ class ProfileTranslationOptions(TranslationOptions):
 
 @register(Exhibition)
 class ExhibitionTranslationOptions(TranslationOptions):
-    fields = ('title', 'slug', 'description', 'short_description', 'keywords', 'route', )
+    fields = ('title', 'slug', 'description', 'keywords', 'route', )
 
 
 @register(StaticPage)

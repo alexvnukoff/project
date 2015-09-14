@@ -46,11 +46,11 @@
                         </li>
                         <li>
                         	<label>{% trans 'Birthday' %}:</label>
-                            <span class="right">{{ item.created_by.profile.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                            <span class="right">{{ item.user.profile.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Marital status' %}:</label>
-                            <span class="right">{{ item.marital_status|default_if_none:"" }}</span>
+                            <span class="right">{{ item.get_martial_status_display }}</span>
                         </li>
                         <li>
                         	<label>{% trans 'Citezenship' %}:</label>
@@ -91,7 +91,7 @@
                                     </li>
                                     <li>
                                         <label>{% trans 'Study period' %}:</label>
-                                        <span class="right">{{ item.study_start_date|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.study_end_date|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                                        <span class="right">{{ item.study_start_date|default_if_none:""|date:"d M Y" }} - {{ item.study_end_date|default_if_none:""|date:'d M Y' }}</span>
                                     </li>
                                     <li>
                                         <label>{% trans 'Profession' %}:</label>

@@ -1,34 +1,33 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _, trans_real
+from django.utils.translation import ugettext as _
+from django.views.generic import UpdateView, CreateView
 
-from appl.models import Cabinet
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail
-#from core.tasks import addNewResume
-from core.models import Dictionary
+
+# from core.tasks import addNewResume
 from jobs.models import Resume
-from tppcenter.forms import ItemForm
+from tppcenter.Resume.forms import ResumeForm, WorkPositionFormSet
 
 
 class ResumeList(ItemsList):
-
     @method_decorator(login_required(login_url='/login/'))
     def dispatch(self, *args, **kwargs):
         return super(ResumeList, self).dispatch(*args, **kwargs)
 
-    #pagination url
+    # pagination url
     url_paginator = "resume:paginator"
     url_my_paginator = "resume:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -37,7 +36,7 @@ class ResumeList(ItemsList):
     current_section = _('Resume')
     addUrl = 'resume:add'
 
-    #allowed filter list
+    # allowed filter list
     # filter_list = []
 
     model = Resume
@@ -60,13 +59,12 @@ class ResumeList(ItemsList):
             if current_org is not None:
                 queryset = queryset.none()
             else:
-                queryset = self.model.objects.filter(created_by=self.request.user)
+                queryset = self.model.objects.filter(user=self.request.user)
 
         return queryset
 
 
 class ResumeDetail(ItemDetail):
-
     model = Resume
     template_name = 'Resume/detailContent.html'
 
@@ -81,19 +79,14 @@ class ResumeDetail(ItemDetail):
 @login_required
 def resumeForm(request, action, item_id=None):
     if item_id:
-       if not Resume.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
+        if not Resume.active.get_active().filter(pk=item_id).exists():
+            return HttpResponseNotFound()
 
     current_section = _("Resume")
     resumePage = ''
 
     if action == 'delete':
         resumePage = deleteResume(request, item_id)
-    elif action == 'add':
-        resumePage = addResume(request)
-    elif action == 'update':
-        resumePage = updateResume(request, item_id)
 
     if isinstance(resumePage, HttpResponseRedirect) or isinstance(resumePage, HttpResponse):
         return resumePage
@@ -105,121 +98,215 @@ def resumeForm(request, action, item_id=None):
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
 
-def addResume(request):
-
-    resumes = Resume.active.get_active().filter(c2p__parent=Cabinet.objects.get(user=request.user.pk))
-
-
-
-    if resumes.count() == 5:
-         return func.permissionDenied()
-
-    form = None
-
-    marital = Dictionary.objects.get(title='MARITAL_STATUS')
-    marital_slots = marital.getSlotsList()
-
-    study = Dictionary.objects.get(title='STUDY_FORM')
-    study_slots = study.getSlotsList()
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Resume', values=values)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            #addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('resume:main'))
-
-    template = loader.get_template('Resume/addForm.html')
-    context = RequestContext(request, {'form': form, 'marital_slots': marital_slots, 'study_slots': study_slots})
-    tendersPage = template.render(context)
-
-    return tendersPage
-
-
-def updateResume(request, item_id):
-
-    try:
-        item = Resume.objects.get(pk=item_id)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_resume' not in perm_list:
-        return func.permissionDenied()
-
-
-    form = ItemForm('Resume', id=item_id)
-
-    marital = Dictionary.objects.get(title='MARITAL_STATUS')
-    marital_slots = marital.getSlotsList()
-
-    study = Dictionary.objects.get(title='STUDY_FORM')
-    study_slots = study.getSlotsList()
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        form = ItemForm('Resume', values=values, id=item_id)
-        form.clean()
-
-        if form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addNewResume.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                    lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('resume:main'))
-
-    template = loader.get_template('Resume/addForm.html')
-
-    templateParams = {
-        'marital_slots': marital_slots,
-        'study_slots': study_slots,
-        'form': form,
-
-    }
-
-    context = RequestContext(request, templateParams)
-    tendersPage = template.render(context)
-
-    return tendersPage
-
-
 
 def deleteResume(request, item_id):
-
     try:
         item = Resume.objects.get(pk=item_id)
     except ObjectDoesNotExist:
         return func.emptyCompany()
-    
+
     perm_list = item.getItemInstPermList(request.user)
 
     if 'delete_resume' not in perm_list:
         return func.permissionDenied()
-
 
     instance = Resume.objects.get(pk=item_id)
     instance.activation(eDate=now())
     instance.end_date = now()
     instance.reindexItem()
 
-
-
-
-
     return HttpResponseRedirect(reverse('resume:main'))
+
+
+class ResumeCreate(CreateView):
+    model = Resume
+    form_class = ResumeForm
+    template_name = 'Resume/addForm.html'
+    success_url = reverse_lazy('resume:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        work_position_form = WorkPositionFormSet()
+
+        return self.render_to_response(self.get_context_data(form=form, work_position_form=work_position_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        work_position_form = WorkPositionFormSet(self.request.POST)
+
+        if form.is_valid() and work_position_form.is_valid():
+            return self.form_valid(form, work_position_form)
+        else:
+            return self.form_invalid(form, work_position_form)
+
+    def form_valid(self, form, work_position_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.user = self.request.user
+        form.instance.updated_by = self.request.user
+
+        for i in range(1, 4):
+            company = "company_exp_%s" % i
+            position = "position_exp_%s" % i
+            start_date = "start_date_exp_%s" % i
+            end_date = "end_date_exp_%s" % i
+
+            setattr(form.instance, company, None)
+            setattr(form.instance, position, None)
+            setattr(form.instance, start_date, None)
+            setattr(form.instance, end_date, None)
+
+        for i, cleaned_data in enumerate(work_position_form.cleaned_data, start=1):
+            if not cleaned_data:
+                continue
+
+            company = "company_exp_%s" % i
+            position = "position_exp_%s" % i
+            start_date = "start_date_exp_%s" % i
+            end_date = "end_date_exp_%s" % i
+
+            setattr(form.instance, company, cleaned_data['company_name'])
+            setattr(form.instance, position, cleaned_data['position'])
+            setattr(form.instance, start_date, cleaned_data['start_work'])
+            setattr(form.instance, end_date, cleaned_data['end_work'])
+
+        self.object = form.save()
+        self.object.reindex()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, work_position_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        context_data = self.get_context_data(form=form, work_position_form=work_position_form)
+        return self.render_to_response(context_data)
+
+
+class ResumeUpdate(UpdateView):
+    model = Resume
+    form_class = ResumeForm
+    template_name = 'Resume/addForm.html'
+    success_url = reverse_lazy('resume:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        work_position_form = WorkPositionFormSet(initial=[
+            {
+                'company_name': self.object.company_exp_1,
+                'position': self.object.position_exp_1,
+                'start_work': self.object.start_date_exp_1,
+                'end_work': self.object.end_date_exp_1
+            },
+            {
+                'company_name': self.object.company_exp_2,
+                'position': self.object.position_exp_2,
+                'start_work': self.object.start_date_exp_2,
+                'end_work': self.object.end_date_exp_2
+            },
+            {
+                'company_name': self.object.company_exp_3,
+                'position': self.object.position_exp_3,
+                'start_work': self.object.start_date_exp_3,
+                'end_work': self.object.end_date_exp_3
+            }
+        ])
+
+        return self.render_to_response(self.get_context_data(form=form, work_position_form=work_position_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        work_position_form = WorkPositionFormSet(self.request.POST, instance=self.object)
+
+        if form.is_valid() and work_position_form.is_valid():
+            return self.form_valid(form, work_position_form)
+        else:
+            return self.form_invalid(form, work_position_form)
+
+    def form_valid(self, form, work_position_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.updated_by = self.request.user
+
+        for i in range(1, 4):
+            company = "company_exp_%s" % i
+            position = "position_exp_%s" % i
+            start_date = "start_date_exp_%s" % i
+            end_date = "end_date_exp_%s" % i
+
+            setattr(form.instance, company, None)
+            setattr(form.instance, position, None)
+            setattr(form.instance, start_date, None)
+            setattr(form.instance, end_date, None)
+
+        for i, cleaned_data in enumerate(work_position_form.cleaned_data, start=1):
+            if not cleaned_data:
+                continue
+
+            company = "company_exp_%s" % i
+            position = "position_exp_%s" % i
+            start_date = "start_date_exp_%s" % i
+            end_date = "end_date_exp_%s" % i
+
+            setattr(form.instance, company, cleaned_data['company_name'])
+            setattr(form.instance, position, cleaned_data['position'])
+            setattr(form.instance, start_date, cleaned_data['start_work'])
+            setattr(form.instance, end_date, cleaned_data['end_work'])
+
+        self.object = form.save()
+
+        if form.changed_data:
+            self.object.reindex()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, work_position_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+
+        return self.render_to_response(self.get_context_data(form=form, work_position_form=work_position_form))

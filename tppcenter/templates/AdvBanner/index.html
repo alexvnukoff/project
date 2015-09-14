@@ -7,29 +7,17 @@
 {% block title %}{% trans 'Banners' %}{% endblock %}
 
 {% block content %}
-            <div class="new-details">
+    <div class="new-details">
+        {% for site, types in sites.items %}
+            <ul class="ads-clumn">
+                <li><h3>{{ site }}</h3></li>
 
-                {% for site, types in sites.items %}
-
-                    <ul class="ads-clumn">
-                        <li><h3>{{ site }}</h3></li>
-
-                        {% for id, attr in types.items %}
-                            {% with attr.NAME|first as name %}
-                            {% with attr.WIDTH|first as width %}
-                            {% with attr.HEIGHT|first as height %}
-                                <li><a href="{% url "adv_banners:banner_form" id %}" class="btn-size">
-                                    <span>{{ name }}</span> | <span>{{ width }} X {{ height }}</span>
-                                </a></li>
-                            {% endwith %}
-                            {% endwith %}
-                            {% endwith %}
-                        {% endfor %}
-
-                    </ul>
-
+                {% for block in blocks %}
+                        <li><a href="{{ block.get_absolute_url }}" class="btn-size">
+                            <span>{{ block.name }}</span> | <span>{{ block.width }} X {{ block.height }}</span>
+                        </a></li>
                 {% endfor %}
-
-            </div>
-
+            </ul>
+        {% endfor %}
+    </div>
 {% endblock %}

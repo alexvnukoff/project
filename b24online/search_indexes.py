@@ -90,6 +90,7 @@ class ExhibitionIndex(DocType):
     country = Integer()
     created_at = Date()
     is_active = Boolean()
+    branches = Integer(multi=True)
 
     @staticmethod
     def get_model():
@@ -98,7 +99,7 @@ class ExhibitionIndex(DocType):
 
     @classmethod
     def get_queryset(cls):
-        return cls.get_model().objects.all().select_related('country', 'organization')
+        return cls.get_model().objects.all().select_related('country', 'organization').prefetch_realated('branches')
 
     @classmethod
     def to_index(cls, obj):
@@ -110,7 +111,8 @@ class ExhibitionIndex(DocType):
             organization=obj.organization.pk,
             is_active=obj.is_active,
             country=obj.country.pk,
-            created_at=obj.created_at
+            created_at=obj.created_at,
+            branches=list(obj.branches.all().values_list('pk', flat=True)),
         )
 
         return index_instance
@@ -468,9 +470,9 @@ class TenderIndex(DocType):
             created_at=obj.created_at
         )
 
-        if obj.dates:
-            index_instance.start_date = obj.dates[0]
-            index_instance.end_date = obj.dates[1]
+        if obj.start_date and obj.end_date:
+            index_instance.start_date = obj.start_date
+            index_instance.end_date = obj.end_date
 
         return index_instance
 
@@ -559,11 +561,13 @@ class ResumeIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name=getattr(obj.created_by.profile, 'full_name', None),
-            country=getattr(obj.created_by.profile, 'country', None),
+            name=getattr(obj.user.profile, 'full_name', None),
             is_active=obj.is_active,
             created_at=obj.created_at
         )
+
+        if obj.user.profile:
+            index_instance.country = getattr(obj.user.profile.country, 'pk', None)
 
         return index_instance
 

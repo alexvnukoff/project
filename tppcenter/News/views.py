@@ -14,9 +14,9 @@ import pytz
 from django.conf import settings
 
 from appl import func
-from appl.models import Organization, NewsCategories
+from appl.models import NewsCategories
 from b24online.cbv import ItemsList, ItemDetail
-from b24online.models import News
+from b24online.models import News, Organization
 from core.models import Group
 
 
@@ -104,7 +104,11 @@ class NewsDetail(ItemDetail):
         return super().get_queryset().filter(is_tv=False).prefetch_related('galleries', 'galleries__gallery_items')
 
     def _get_similar_news(self):
-        return News.objects.filter(is_tv=False, categories__in=self.object.categories.all())[:4]
+        if self.object.categories.exists():
+            return News.objects.filter(is_tv=False, categories__in=self.object.categories.all()) \
+                .order_by('-created_at')[:3]
+
+        return News.objects.filter(is_tv=False, categories=None).order_by('-created_at')[:3]
 
     def get_context_data(self, **kwargs):
         context = super(NewsDetail, self).get_context_data(**kwargs)
@@ -272,3 +276,4 @@ class NewsUpdate(UpdateView):
                 self.object.upload_images()
 
         return result
+

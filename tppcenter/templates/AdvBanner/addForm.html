@@ -2,8 +2,6 @@
 {% load static from staticfiles %}
 {% load i18n %}
 
-
-
 {% block styles %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'tppcenter/css/datepicker.css' %}">
@@ -76,26 +74,28 @@
 
 
             var initial = {
-                branch: [],
+                branches: [],
                 country: [],
-                tpp: []
+                chamber: []
             }
 
-            {% for id, attr in filterAttr.items %}
-                {% with attr.COST as cost %}
-                {% with attr.NAME as name %}
-                    {% if id in filters.tpp %}
-                        initial['tpp'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
-                    {% endif %}
-                    {% if id in filters.country %}
-                        initial['country'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
-                    {% endif %}
-                    {% if id in filters.branch %}
-                        initial['branch'].push({id: {{ id }}, title: "{{ name }}", cost: "{{ cost }}"});
-                    {% endif %}
-                {% endwith %}
-                {% endwith %}
-            {% endfor %}
+            {% if branches %}
+                {% for branch in branches %}
+                    initial['branches'].push({id: {{ branch.id }}, title: "{{ branch.name }}", cost: "{{ branch.cost }}"});
+                {% endfor %}
+            {% endif %}
+
+            {% if country %}
+                {% for c in country %}
+                    initial['country'].push({id: {{ c.id }}, title: "{{ c.name }}", cost: "{{ c.cost }}"});
+                {% endfor %}
+            {% endif %}
+
+            {% if chamber %}
+                {% for org in chamber %}
+                    initial['chamber'].push({id: {{ org.id }}, title: "{{ org.name }}", cost: "{{ org.cost }}"});
+                {% endfor %}
+            {% endif %}
 
             var advForm = $('form[name="advForm"]');
             var priceList = $('.ads-pricein ul');
@@ -107,37 +107,40 @@
             var edDate;
 
 
-            {% if edDate %}
-                edDate = '{{ edDate }}';
+            {% if form.end_date.value %}
+                edDate = '{{ form.end_date.value }}';
             {% endif %}
 
-            {% if stDate %}
-                stDate = '{{ stDate }}';
+            {% if form.start_date.value %}
+                stDate = '{{ form.start_date.value }}';
             {% endif %}
 
             $( "#date-start" ).datepicker({
-              changeMonth: true,
-              maxDate: edDate ? edDate : null,
-              minDate: 0,
-              onClose: function( selectedDate ) {
-                $( "#date-end" ).datepicker( "option", "minDate", selectedDate );
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                maxDate: edDate ? edDate : null,
+                minDate: 0,
+                onClose: function( selectedDate ) {
+                    $( "#date-end" ).datepicker( "option", "minDate", selectedDate );
 
-                stDate = selectedDate;
-                setDays();
-              }
+                    stDate = selectedDate;
+                    setDays();
+                }
             });
 
 
 
             $( "#date-end" ).datepicker({
-              defaultDate: "+1d",
-              minDate: stDate ? stDate : '+1d',
-              changeMonth: true,
-              onClose: function( selectedDate ) {
-                $( "#date-start" ).datepicker( "option", "maxDate", selectedDate );
-                edDate = selectedDate;
-                setDays();
-              }
+                dateFormat: "dd/mm/yy",
+                defaultDate: "+1d",
+                minDate: stDate ? stDate : '+1d',
+                changeMonth: true,
+                onClose: function( selectedDate ) {
+                    $( "#date-start" ).datepicker("option", "maxDate", selectedDate);
+
+                    edDate = selectedDate;
+                    setDays();
+                }
             });
 
 
@@ -171,7 +174,7 @@
 
             }
             $.fn.onChangeSet = function(e) {
-                var factor = {{ factor|stringformat:"f" }};
+                var factor = {{ banner_block.factor }};
 
                 if ( e.added ) {
 
@@ -274,75 +277,64 @@
 {% block center %}
 <div class="ads-details">
     <form enctype="multipart/form-data" method="post" action="" name="advForm">
-        {% with form.fields.NAME.initial as name %}
-        {% with form.fields.SITE_NAME.initial as url %}
-
         {% csrf_token %}
-
         <div class="ads-details-center">
-            {% if form.errors.DATE %}
-                <div class="error-handler"><div class="formserror2">{{ form.errors.DATE }}</div></div>
-            {% endif %}
-
-            {% if form.errors.ERROR %}
-                <div class="error-handler"><div class="formserror2">{{ form.errors.ERROR }}</div></div>
-            {% endif %}
-
             <ul class="ads-line">
                 <li>
                     <label>{% trans "Image file (Maximum 50KB)" %}</label>
-                    {% if form.errors.IMAGE %}
-                        <div class="error-handler"><div class="formserror">{{ form.errors.IMAGE }}</div></div>
+                    {% if form.errors.image %}
+                        <div class="error-handler"><div class="formserror">{{ form.errors.image.0 }}</div></div>
                     {% endif %}
                     <div class="img-ads">
-                        <input type="file" name="IMAGE" />
+                        <input type="file" name="image" />
                         <div class="gray-img"></div>
                     </div>
                 </li>
                 <li>
                     <div class="clumn1">
                         <label>{% trans "Link URL" %}</label>
-                        {% if form.errors.URL %}
-                            <div class="error-handler"><div class="formserror">{{ form.errors.URL }}</div></div>
+                        {% if form.errors.link %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.link.0 }}</div></div>
                         {% endif %}
-                        <input type="text" name="SITE_NAME" value="{{ url }}" placeholder="" class="text" />
+                        <input type="text" name="link" value="{{ form.link.value|default_if_none:"" }}" placeholder="" class="text" />
                     </div>
                     <div class="clumn2">
                         <label>{% trans "Start date" %}</label>
-                        <input value="{{ stDate }}" type="text" name="st_date" class="date" id="date-start" />
+                        {% if form.errors.start_date %}
+                            <div class="error-handler"><div class="formserror2">{{ form.errors.start_date.0 }}</div></div>
+                        {% endif %}
+                        <input value="{{ form.start_date.value|default_if_none:"" }}" type="text" name="start_date" class="date" id="date-start" />
                     </div>
                 </li>
                 <li>
                     <div class="clumn1">
                         <label>{% trans "Image title" %}</label>
-                        {% if form.errors.NAME %}
+                        {% if form.errors.title %}
                             <div class="error-handler">
-                                <div class="formserror">{{ form.errors.NAME }}</div>
+                                <div class="formserror">{{ form.errors.title.0 }}</div>
                             </div>
                         {% endif %}
 
-
-                        <textarea name="NAME" rows="3">{{ name }}</textarea>
+                         <input type="text" value="{{ form.title.value|default_if_none:"" }}" name="title" class="text" />
                     </div>
                     <div class="clumn2">
                         <label>{% trans "End date" %}</label>
-                        <input type="text" value="{{ edDate }}" name="ed_date" class="date"  id="date-end" />
+                        {% if form.errors.end_date %}
+                            <div class="error-handler"><div class="formserror2">{{ form.errors.end_date.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" value="{{ form.end_date.value|default_if_none:"" }}" name="end_date" class="date"  id="date-end" />
                     </div>
                 </li>
             </ul>
-
+            <div></div>
             <div class="filter">
                 <label>{% trans "Filter" %}</label>
-                {% if form.errors.FILTER %}
-                    <div class="error-handler">
-                        <div class="formserror">{{ form.errors.FILTER }}</div>
-                    </div>
+                {% if form.non_field_errors %}
+                    <div class="error-handler"><div class="formserror2">{{ form.non_field_errors.0 }}</div></div>
                 {% endif %}
-
-               {% for name, filterDict in enable.items %}
-
-                    <input {% if filterDict.init %}value="{{ filterDict.init }}"{% endif %}  name="{{ name }}" placeholder="{{ filterDict.placeholder }}" type="hidden" />
-                {% endfor %}
+                <input {% if form.branches.value.0 %} value="{{ form.branches.value|length }}" {% endif %}name="branches" placeholder="{% trans 'Filter by Branch' %}" type="hidden" />
+                <input {% if form.country.value.0 %} value="{{ form.country.value|length }}"{% endif %}  name="country" placeholder="{% trans 'Filter by Country' %}" type="hidden" />
+                <input {% if form.chamber.value.0 %} value="{{ form.chamber.value|length }}"{% endif %}  name="chamber" placeholder="{% trans 'Filter by Chamber' %}" type="hidden" />
             </div>
         <div class="screen"><img src="{% static 'tppcenter/img/demo.gif'%}"></div>
         </div>
@@ -369,8 +361,6 @@
 
                 <input type="submit" class="btnprice" value="{% trans "Pay" %}">
             </div>
-        {% endwith %}
-        {% endwith %}
     </form>
 </div>
 {% endblock %}

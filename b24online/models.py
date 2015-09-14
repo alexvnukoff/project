@@ -42,7 +42,11 @@ image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
 
-class ContextAdvertisement(models.Model):
+class Advertisement(models.Model):
+    pass
+
+
+class ContextAdvertisement(Advertisement):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
@@ -250,7 +254,7 @@ class Chamber(Organization):
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                             sizes=['big', 'small', 'th'], max_length=255)
+                            sizes=['big', 'small', 'th'], max_length=255)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
@@ -393,7 +397,7 @@ class Company(Organization):
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                             sizes=['big', 'small', 'th'], max_length=255)
+                            sizes=['big', 'small', 'th'], max_length=255)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
@@ -484,7 +488,6 @@ class Company(Organization):
             return self.metadata.get('vat_identification_number', '')
 
         return None
-
 
     @staticmethod
     def get_index_model():
@@ -589,7 +592,6 @@ class BusinessProposalCategory(MPTTModel):
 class BusinessProposal(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
-    short_description = models.TextField(null=False, blank=True)
     description = models.TextField(blank=False, null=False)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     additional_pages = GenericRelation(AdditionalPage)
@@ -628,7 +630,6 @@ class BusinessProposal(models.Model):
 class InnovationProject(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
-    short_description = models.TextField(null=False, blank=True)
     description = models.TextField(blank=False, null=False)
     product_name = models.CharField(max_length=255, blank=False, null=False)
     business_plan = models.TextField(blank=False, null=False)
@@ -838,7 +839,7 @@ class Greeting(models.Model):
 class News(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                             sizes=['big', 'small', 'th'], max_length=255)
+                             sizes=['big', 'small', 'th'], max_length=255, blank=True)
     slug = models.SlugField()
     short_description = models.TextField()
     content = models.TextField()
@@ -887,6 +888,9 @@ class News(models.Model):
         return user.is_commando or user.is_superuser
 
     def get_absolute_url(self):
+        if self.is_tv:
+            return reverse('tv:detail', args=[self.slug, self.pk])
+
         return reverse('news:detail', args=[self.slug, self.pk])
 
 
@@ -913,14 +917,14 @@ class Tender(models.Model):
     @property
     def start_date(self):
         if self.dates:
-            return self.dates[0]
+            return self.dates.lower
 
         return None
 
     @property
     def end_date(self):
         if self.dates:
-            return self.dates[1]
+            return self.dates.upper
 
         return None
 
@@ -937,6 +941,9 @@ class Tender(models.Model):
 
     def get_absolute_url(self):
         return reverse('tenders:detail', args=[self.slug, self.pk])
+
+    def reindex(self):
+        reindex_instance(self)
 
 
 class Profile(models.Model):
@@ -977,18 +984,18 @@ class Exhibition(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     description = models.TextField(blank=False, null=False)
-    short_description = models.TextField(null=False, blank=True)
     documents = GenericRelation(Document)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     dates = DateRangeField(null=True)
-    city = models.CharField(max_length=255, blank=True, null=False)
-    coordinates = models.CharField(max_length=255, blank=True, null=False)
+    city = models.CharField(max_length=255, blank=False, null=True)
     route = models.CharField(blank=True, null=False, max_length=1024)
     is_active = models.BooleanField(default=True)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
+    branches = models.ManyToManyField(Branch)
+    metadata = HStoreField()
 
     created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
@@ -998,16 +1005,26 @@ class Exhibition(models.Model):
     @property
     def start_date(self):
         if self.dates:
-            return self.dates[0]
+            return self.dates.lower
 
         return None
 
     @property
     def end_date(self):
         if self.dates:
-            return self.dates[1]
+            return self.dates.upper
 
         return None
+
+    @property
+    def location(self):
+        if self.metadata:
+            return self.metadata.get('location', '')
+
+        return None
+
+    def reindex(self):
+        reindex_instance(self)
 
     @staticmethod
     def get_index_model():
@@ -1115,6 +1132,7 @@ class BannerBlock(models.Model):
     height = models.PositiveIntegerField()
     image = CustomImageField(storage=image_storage, null=True)
     description = models.CharField(max_length=1024)
+    factor = models.FloatField(default=1)
 
     BLOCK_TYPES = [
         ('b2b', _('B2B')),
@@ -1124,13 +1142,16 @@ class BannerBlock(models.Model):
 
     block_type = models.CharField(max_length=10, choices=BLOCK_TYPES)
 
+    def get_absolute_url(self):
+        return reverse('adv_banners:banner_form', args=[self.pk])
+
     class Meta:
         index_together = [
             ['code', 'block_type'],
         ]
 
 
-class Banner(models.Model):
+class Banner(Advertisement):
     title = models.CharField(max_length=255)
     link = models.URLField()
     image = CustomImageField(storage=image_storage)
@@ -1165,6 +1186,27 @@ class BannerTarget(models.Model):
 
     def has_perm(self, user):
         return self.banner.has_perm(user)
+
+
+class AdvertisementPrices(models.Model):
+    ADVERTISEMENT_TYPES = [('banner', _('Banners')), ('context', _('Context Advertisement'))]
+
+    advertisement_type = models.CharField(max_length=10, choices=ADVERTISEMENT_TYPES)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    valid_from = models.DateTimeField(auto_now_add=True)
+    valid_to = models.DateTimeField()
+    price = models.DecimalField(max_digits=15, decimal_places=3, null=False, blank=False)
+
+    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        unique_together = ("content_type", "object_id")
 
 
 @receiver(pre_save)

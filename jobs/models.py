@@ -4,13 +4,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from b24online.models import Vacancy, Country, ContextAdvertisement
+from b24online.utils import reindex_instance
 from core.models import User
 
 
 class Requirement(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
-    vacancy = models.ForeignKey(Vacancy)
+    vacancy = models.ForeignKey(Vacancy, related_name='job_requirement')
     city = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(blank=False, null=False)
     requirements = models.TextField(blank=False, null=False)
@@ -35,6 +36,9 @@ class Requirement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def reindex(self):
+        reindex_instance(self)
+
     @property
     def organization(self):
         return self.vacancy.department.organization
@@ -46,6 +50,9 @@ class Requirement(models.Model):
 
     def get_absolute_url(self):
         return reverse('vacancy:detail', args=[self.slug, self.pk])
+
+    def has_perm(self, user):
+        return self.vacancy.has_perm(user)
 
     def __str__(self):
         return self.title
@@ -66,7 +73,8 @@ class Resume(models.Model):
     ]
 
     title = models.CharField(max_length=255, blank=False, null=False)
-    martial_status = models.CharField(max_length=10, blank=False, null=False, choices=MARTIAL_STATUSES)
+    slug = models.SlugField()
+    martial_status = models.CharField(max_length=10, blank=True, null=True, choices=MARTIAL_STATUSES)
     nationality = models.CharField(max_length=255, null=False, blank=True)
     telephone_number = models.CharField(max_length=255)
     address = models.CharField(max_length=255, null=True, blank=True)
@@ -76,7 +84,7 @@ class Resume(models.Model):
     is_active = models.BooleanField(default=True, db_index=True)
     study_start_date = models.DateField(blank=True, null=True)
     study_end_date = models.DateField(blank=True, null=True)
-    study_form = models.CharField(max_length=30, choices=STUDY_FORMS)
+    study_form = models.CharField(max_length=30, choices=STUDY_FORMS, null=True, blank=True)
     company_exp_1 = models.CharField(max_length=255, null=True, blank=True)
     company_exp_2 = models.CharField(max_length=255, null=True, blank=True)
     company_exp_3 = models.CharField(max_length=255, null=True, blank=True)
@@ -97,7 +105,6 @@ class Resume(models.Model):
     additional_information = models.TextField(max_length=100, null=True, blank=True)
     institution = models.CharField(max_length=100, null=True, blank=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -106,3 +113,12 @@ class Resume(models.Model):
     def get_index_model():
         from b24online.search_indexes import ResumeIndex
         return ResumeIndex
+
+    def reindex(self):
+        reindex_instance(self)
+
+    def get_absolute_url(self):
+        return reverse('resume:detail', args=[self.slug, self.pk])
+
+    def has_perm(self, user):
+        return user.is_commando or user.is_superuser or self.user == user

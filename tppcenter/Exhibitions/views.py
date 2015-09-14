@@ -1,21 +1,22 @@
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.forms.models import modelformset_factory
+from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.translation import trans_real, ugettext as _
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
+from django.views.generic import CreateView, UpdateView
 
-from appl.models import AdditionalPages, Gallery, Organization, Branch, Country
 from appl import func
 from b24online.cbv import ItemsList, ItemDetail
-from b24online.models import Exhibition
-from core.models import Item
+from b24online.models import Exhibition, Branch, Organization
+
+
 # from core.tasks import addNewExhibition
-from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages
+from tppcenter.Exhibitions.forms import AdditionalPageFormSet, ExhibitionForm
 
 
 class ExhibitionList(ItemsList):
@@ -85,10 +86,6 @@ def exhibitionForm(request, action, item_id=None):
 
     if action == 'delete':
         exhibitionPage = deleteExhibition(request, item_id)
-    elif action == 'add':
-        exhibitionPage = addExhibition(request)
-    elif action == 'update':
-        exhibitionPage = updateExhibition(request, item_id)
 
     if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):
         return exhibitionPage
@@ -99,147 +96,6 @@ def exhibitionForm(request, action, item_id=None):
     }
 
     return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def addExhibition(request):
-
-    form = None
-    current_company = request.session.get('current_company', False)
-
-    if not request.session.get('current_company', False):
-         return func.emptyCompany()
-
-    item = Organization.objects.get(pk=current_company)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'add_exhibition' not in perm_list:
-         return func.permissionDenied()
-
-    branches = Branch.objects.all()
-    branches_ids = [branch.pk for branch in branches]
-    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-    pages = None
-
-    countries = func.getItemsList("Country", 'NAME')
-    choosen_country = int(request.POST.get('COUNTRY', 0))
-
-    if request.POST:
-
-        user = request.user
-
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-        Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-        pages = Page(request.POST, request.FILES, prefix="pages")
-        if getattr(pages, 'new_objects', False):
-           pages = pages.new_objects
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        branch = request.POST.get('BRANCH', "")
-
-        form = ItemForm('Exhibition', values=values)
-        form.clean()
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, branch=branch,
-            #                        current_company=current_company, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(reverse('exhibitions:main'))
-
-    template = loader.get_template('Exhibitions/addForm.html')
-    context = RequestContext(request,  {'form': form, 'branches': branches, 'pages': pages, 'countries': countries, 'choosen_country': choosen_country})
-    exhibitionPage = template.render(context)
-
-    return exhibitionPage
-
-
-def updateExhibition(request, item_id):
-    item = Organization.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'change_exhibition' not in perm_list:
-        return func.permissionDenied()
-
-    branches = Branch.objects.all()
-    branches_ids = [branch.pk for branch in branches]
-    branches = Item.getItemsAttributesValues(("NAME",), branches_ids)
-
-    try:
-        currentBranch = Branch.objects.get(p2c__child=item_id)
-    except Exception:
-        currentBranch = ""
-
-    Page = modelformset_factory(AdditionalPages, formset=BasePages, extra=10, fields=("content", 'title'))
-    pages = Page(request.POST, request.FILES, prefix="pages", parent_id=item_id)
-
-    if getattr(pages, 'new_objects', False):
-        pages = pages.new_objects
-    else:
-        pages = pages.queryset
-
-    Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
-    gallery = Photo(parent_id=item_id)
-    photos = ""
-
-    if gallery.queryset:
-        photos = [{'photo': image.photo, 'pk': image.pk} for image in gallery.queryset]
-
-    countries = func.getItemsList("Country", 'NAME')
-    try:
-        choosen_country = Country.objects.get(p2c__child__id=item_id).pk
-    except ObjectDoesNotExist:
-        choosen_country = ""
-
-
-    form = ItemForm('Exhibition', id=item_id)
-
-    if request.POST:
-        user = request.user
-        Photo = modelformset_factory(Gallery, formset=BasePhotoGallery, extra=5, fields=("photo",))
-        gallery = Photo(request.POST, request.FILES)
-
-
-        values = {}
-        values.update(request.POST)
-        values.update(request.FILES)
-
-        branch = request.POST.get('BRANCH', "")
-
-        form = ItemForm('Exhibition', values=values, id=item_id)
-        form.clean()
-
-        if gallery.is_valid() and form.is_valid():
-            func.notify("item_creating", 'notification', user=request.user)
-            # addNewExhibition.delay(request.POST, request.FILES, user, settings.SITE_ID, item_id=item_id,
-            #                        branch=branch, lang_code=trans_real.get_language())
-
-            return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
-
-
-    template = loader.get_template('Exhibitions/addForm.html')
-
-    templateParams = {
-        'gallery': gallery,
-        'photos': photos,
-        'form': form,
-        'pages': pages,
-        'currentBranch': currentBranch,
-        'branches': branches,
-        'countries': countries,
-        'choosen_country': choosen_country
-    }
-
-    context = RequestContext(request, templateParams)
-    exhibitionPage = template.render(context)
-
-    return exhibitionPage
 
 
 def deleteExhibition(request, item_id):
@@ -258,4 +114,180 @@ def deleteExhibition(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 
 
+class ExhibitionUpdate(UpdateView):
+    model = Exhibition
+    form_class = ExhibitionForm
+    template_name = 'Exhibitions/addForm.html'
+    success_url = reverse_lazy('exhibitions:main')
 
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(instance=self.object)
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.updated_by = self.request.user
+
+        if form.changed_data:
+
+            if 'start_date' in form.changed_data or 'end_date' in form.changed_data:
+                form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
+
+            if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
+                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+
+
+        with transaction.atomic():
+            self.object = form.save()
+            additional_page_form.instance = self.object
+
+            for page_form in additional_page_form:
+                if not page_form.instance.pk:
+                    page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
+
+        if form.changed_data:
+            self.object.reindex()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        branches = context_data['form']['branches'].value()
+
+        if branches:
+            context_data['branches'] = Branch.objects.filter(pk__in=branches)
+
+        return context_data
+
+
+class ExhibitionCreate(CreateView):
+    model = Exhibition
+    form_class = ExhibitionForm
+    template_name = 'Exhibitions/addForm.html'
+    success_url = reverse_lazy('exhibitions:main')
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet()
+
+        return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+            Handles POST requests, instantiating a form instance and its inline
+            formsets with the passed POST variables and then checking them for
+            validity.
+            """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        additional_page_form = AdditionalPageFormSet(self.request.POST)
+
+        if form.is_valid() and additional_page_form.is_valid():
+            return self.form_valid(form, additional_page_form)
+        else:
+            return self.form_invalid(form, additional_page_form)
+
+    def form_valid(self, form, additional_page_form):
+        """
+        Called if all forms are valid. Creates a Recipe instance along with
+        associated Ingredients and Instructions and then redirects to a
+        success page.
+        """
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
+
+        form.instance.metadata = {
+            'location': '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude'])
+        }
+
+        with transaction.atomic():
+            organization_id = self.request.session.get('current_company', None)
+            form.instance.organization = Organization.objects.get(pk=organization_id)
+
+            self.object = form.save()
+
+            additional_page_form.instance = self.object
+
+            for page_form in additional_page_form:
+                page_form.instance.created_by = self.request.user
+                page_form.instance.updated_by = self.request.user
+
+            additional_page_form.save()
+
+        self.object.reindex()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, additional_page_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
+        return self.render_to_response(context_data)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        branches = context_data['form']['branches'].value()
+
+        if branches:
+            context_data['branches'] = Branch.objects.filter(pk__in=branches)
+
+        return context_data

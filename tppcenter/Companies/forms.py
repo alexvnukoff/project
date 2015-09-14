@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
-from django.utils.translation import gettext as _
 
 from b24online.models import AdditionalPage, Company, Country, Chamber
 

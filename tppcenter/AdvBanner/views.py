@@ -1,74 +1,107 @@
 import json
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView
+
 from appl import func
-from appl.models import Tpp, Company, Category, AdvBannerType, Branch, Country, Order, Organization, AdvOrder
+from appl.models import Tpp, AdvBannerType, Branch, Country, AdvOrder
+from b24online.models import BannerBlock, Banner, AdvertisementPrices
 from core.models import Item
+
 # from core.tasks import addBannerAttr
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.files.images import ImageFile
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from tppcenter.AdvBanner.forms import BannerForm
 from tppcenter.forms import ItemForm
 from dateutil.parser import parse
 import datetime
 
+
+class BannerBlockList(ListView):
+    template_name = 'AdvBanner/index.html'
+    context_object_name = 'blocks'
+    ordering = 'block_type, name'
+
+    def get_queryset(self):
+        return BannerBlock.objects.filter(block_type__in=['b2c', 'b2b'])
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        sites = {}
+
+        for block in context_data['blocks']:
+            site_name = block.get_block_type_display()
+
+            if site_name not in sites:
+                sites[site_name] = []
+
+            sites[site_name].append(block)
+
+            context_data['sites'] = sites
+
+        return context_data
+
+
+class CreateBanner(CreateView):
+    model = Banner
+    form_class = BannerForm
+    template_name = 'AdvBanner/addForm.html'
+    success_url = None
+
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        self.block_id = kwargs.pop('block_id')
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
+
+        
+
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['banner_block'] = BannerBlock.objects.get(pk=self.block_id, block_type__in=['b2c', 'b2b'])
+        cleaned_data = getattr(context_data['form'], 'cleaned_data', None)
+
+        if cleaned_data:
+            for valid_filter in ['branches', 'country', 'chamber']:
+                obj_list = cleaned_data.get(valid_filter, None)
+
+                if obj_list:
+                    model_type = ContentType.objects.get_for_model(obj_list[0])
+                    prices = AdvertisementPrices.objects.filter(content_type__pk=model_type.pk,
+                                                                object_id__in=obj_list,
+                                                                advertisement_type='banner')
+                    price_dict = dict((p.object_id, p.price) for p in prices)
+                    context_data[valid_filter] =[]
+
+                    for item in obj_list:
+                        cost = price_dict.get(item.pk, 0)
+
+                        context_data[valid_filter].append({
+                            'name': item.name,
+                            'id': item.pk,
+                            'cost': cost,
+                        })
+
+        return context_data
+
+
 @login_required
-def gatPositions(request):
-    '''
-        Show possible advertisement position as a first page and show them by site
-    '''
-    '''
-    current_company = request.session.get('current_company', False)
-
-    if not request.session.get('current_company', False):
-         return func.emptyCompany()
-
-    item = Organization.objects.get(pk=current_company)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'add_adv_banner' not in perm_list:
-        return HttpResponseRedirect(reverse('denied'))
-    '''
-
-    bannerType = AdvBannerType.objects.all().values('pk', 'sites__name')
-
-    bannerType_ids = [btype['pk'] for btype in bannerType]
-
-    attrs = ('NAME', 'WIDTH', 'HEIGHT')
-
-    bannerNames = Item.getItemsAttributesValues(attrs, bannerType_ids)
-    sites = {}
-
-    for btype in bannerType:
-
-        if btype['sites__name'] not in sites:
-            sites[btype['sites__name']] = {}
-
-        if btype['pk'] in bannerNames:
-            sites[btype['sites__name']][btype['pk']] = bannerNames[btype['pk']]
-
-    current_section = _('Banners')
-
-
-    templateParams = {
-        'sites': sites,
-        'current_section': current_section,
-    }
-
-    return render_to_response("AdvBanner/index.html", templateParams, context_instance=RequestContext(request))
-
-@login_required
-def advJsonFilter(request):
-    '''
+def adv_json_filter(request):
+    """
         Getting filters for advertisement
-    '''
-
-    import json
-
-    filter = request.GET.get('type', None)
+    """
+    filter_model = request.GET.get('type', None)
     q = request.GET.get('q', '').strip()
 
     try:
@@ -76,33 +109,32 @@ def advJsonFilter(request):
     except ValueError:
         return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type:
+    if filter_model and (len(q) >= 3 or len(q) == 0):
+        obj_list, total = func.autocomplete_filter(filter_model, q, page)
 
-        result = func.autocomplete_filter(filter, q, page)
-
-        if result:
-            onPage, total = result
-
-            obj_list = [item.pk for item in onPage.object_list]
-
-            itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
+        if total > 0:
+            model_type = ContentType.objects.get_for_model(obj_list[0])
+            prices = AdvertisementPrices.objects.filter(content_type__pk=model_type.pk,
+                                                        object_id__in=obj_list,
+                                                        advertisement_type='banner')
+            price_dict = dict((p.object_id, p.price) for p in prices)
             items = []
 
-            for item in onPage.object_list:
+            for item in obj_list:
+                cost = price_dict.get(item.pk, 0)
 
-                itemcost = itemsAttr.get(item.pk, [0])
-
-                resultDict = {
-                    'title': item.title_auto,
+                result_dict = {
+                    'title': item.name,
                     'id': item.pk,
-                    'cost': itemcost[0],
+                    'cost': cost,
                 }
 
-                items.append(resultDict)
+                items.append(result_dict)
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
+
 
 @login_required
 def addBanner(request, bannerType):
@@ -139,7 +171,6 @@ def addBanner(request, bannerType):
     filterAttr = {}
     filter = {'branch': [], 'country': [], 'tpp': []}
 
-
     if request.POST:
         user = request.user
 
@@ -155,11 +186,11 @@ def addBanner(request, bannerType):
         stDate = values['START_EVENT_DATE']
         edDate = values['END_EVENT_DATE']
 
-        #allowed filters
+        # allowed filters
         filterList = ['tpp', 'country', 'branch']
         ids = []
 
-        for name in filterList: # Get filters form request context
+        for name in filterList:  # Get filters form request context
 
             for pk in request.POST.getlist('filter[' + name + '][]', []):
                 try:
@@ -188,7 +219,7 @@ def addBanner(request, bannerType):
             filter['branch'] = branches.values_list('pk', flat=True)
             ids += filter['branch']
 
-        #Get name and cost of each filter for form initial values (if error occur on previous submit)
+        # Get name and cost of each filter for form initial values (if error occur on previous submit)
         filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
 
         for id in ids:
@@ -208,7 +239,7 @@ def addBanner(request, bannerType):
 
             if form.is_valid():
 
-                #50 KB file
+                # 50 KB file
                 if form.is_valid() and (not values['IMAGE'] or values['IMAGE'].size > 50 * 1024):
                     form.errors.update({"IMAGE": _("The image size cannot exceed 50 KB")})
 
@@ -248,8 +279,7 @@ def addBanner(request, bannerType):
                 form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
 
             if form.is_valid():
-                return HttpResponseRedirect(reverse('adv_banners:resultOrder', args=(order, )))
-
+                return HttpResponseRedirect(reverse('adv_banners:resultOrder', args=(order,)))
 
     enable = {}
 
@@ -277,10 +307,9 @@ def addBanner(request, bannerType):
 
     return render_to_response('AdvBanner/addForm.html', templateParams, context_instance=RequestContext(request))
 
+
 @login_required
 def resultOrder(request, orderID):
-
-
     current_company = request.session.get('current_company', False)
     '''
     if not request.session.get('current_company', False):
@@ -296,7 +325,8 @@ def resultOrder(request, orderID):
 
     order = get_object_or_404(AdvOrder, pk=orderID, c2p__parent=current_company)
 
-    ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE', 'END_EVENT_DATE', 'IMAGE')
+    ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE',
+                                             'END_EVENT_DATE', 'IMAGE')
 
     ordJson = ordWithValues.get('ORDER_HISTORY', [""])[0]
 
@@ -310,8 +340,6 @@ def resultOrder(request, orderID):
 
     for pid, cost in orderHistory.get('costs', {}).items():
 
-
-
         if int(pid) in placeNames:
             attrValues = placeNames[int(pid)]
         else:
@@ -321,7 +349,7 @@ def resultOrder(request, orderID):
             attrValues = {}
 
         nameCostDict.update({
-            attrValues.get('NAME', [""])[0] : cost
+            attrValues.get('NAME', [""])[0]: cost
         })
 
     startDate = parse(ordWithValues.get('START_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')

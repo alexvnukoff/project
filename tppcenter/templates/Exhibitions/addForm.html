@@ -1,251 +1,184 @@
+{% extends 'forms.html' %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-{% load set_var %}
 
+{% block content %}
 
+<link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
 
-{% with form.fields.POSITION.initial as position %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
 
-    <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/gmapCompany.css" %}" />
+    <script type="text/javascript">
+    $(function() {
+        $( ".date" ).datepicker({
+          dateFormat: "dd/mm/yy"
+        });
+        setTiny('textarea[class="tiny"]');
 
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-    <script src="{% static "tppcenter/js/gmapSearchMarker.js" %}"></script>
+    });
 
-        <script type="text/javascript">
-        $(function() {
+    var marker;
 
-            $( ".date" ).datepicker();
-            setTiny('textarea[class="tiny"]');
+    {% if form.latitude.value and form.longitude.value %}
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng({{ form.latitude.value  }}, {{ form.longitude.value }})
+    });
+    {% endif %}
+    google.maps.event.addDomListener(window, 'load', initialize);
 
+    $(document).bind('branchSelected', function(event, pk, name) {
+            add_branch(name, pk);
         });
 
-        var marker;
-
-        {% if position %}
-         marker = new google.maps.Marker({
-            position: new google.maps.LatLng({{ position }})
-        });
-        {% endif %}
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-
+    $(document).on('click', '.branch-remove', function() {
+        var li = $(this).parents('li')
+        var pk = li.data('pk');
+        li.remove();
+        $('input.brnach-' + pk).remove();
+        return false;
+    });
     </script>
+    <style>
+        .list-cat li {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #333;
+            color: #FFF;
+            padding-right: 25px;
+            position: relative;
+            float: left;
+            margin-bottom: 5px;
+            margin-right: 5px;
+        }
 
-
-
+        .list-cat li .i-close {
+            position: absolute;
+            width: 8px;
+            height: 7px;
+            background-position: -195px 0;
+            top: 8px;
+            right: 5px;
+        }
+    </style>
 
 <div class="newsform">
-
-<form onkeypress="return event.keyCode != 13;" enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-
-
-{% csrf_token %}
-    {% with form.fields.NAME.initial as name %}
-    {% with form.fields.CITY.initial as city %}
-    {% with form.fields.START_EVENT_DATE.initial as start_date %}
-    {% with form.fields.END_EVENT_DATE.initial as end_event %}
-    {% with form.fields.KEYWORD.initial as keyword %}
-    {% with form.fields.ROUTE_DESCRIPTION.initial as route %}
-    {% with form.fields.DETAIL_TEXT.initial as text %}
-
-    {% with form.fields.DOCUMENT_1.initial as doc_1 %}
-    {% with form.fields.DOCUMENT_2.initial as doc_2 %}
-    {% with form.fields.DOCUMENT_3.initial as doc_3 %}
-
+    <form onkeypress="return event.keyCode != 13;" enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
         <div class="uploadimgage">
             <div>
                 <label class="sapce">{% trans 'City' %} <font color="#FF0000">*</font></label>
-                {% if form.errors.CITY %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.CITY }}</div></div>
+                {% if form.errors.city %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.city.0 }}</div></div>
                 {% endif %}
-                <input type="text" name="CITY" value="{{ city }}" placeholder="" class="text" />
+                <input type="text" name="city" value="{{ form.city.value|default_if_none:"" }}" placeholder="" class="text" />
             </div>
             <div>
                 <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
-                <select name="COUNTRY">
-                    {% for id , atrr in countries.items %}
-                        {% with atrr.NAME|first as country  %}
-                        <option value="{{ id }}"{% if choosen_country == id %} selected="selected" {% endif %}>
-                            {{ country }}
-                        </option>
-                        {% endwith %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label class="sapce">{% trans 'Industry' %}  <font color="#FF0000">*</font></label>
-                <select id="id_BRANCH" name="BRANCH">
-                    {% for id, branch in branches.items %}
-                        <option value="{{ id }}" {% if currentBranch.pk == id %}selected{% endif %} >
-                            {{ branch.NAME|first }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label  class="sapce">{% trans 'Start event date' %}<font color="#FF0000">*</font></label>
-                {% if form.errors.START_EVENT_DATE %}
-                    <div class="error-handler">
-                        <div class="formserror">{{ form.errors.START_EVENT_DATE }}</div>
-                    </div>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.country.0 }}</div></div>
                 {% endif %}
-                <input type="text" name="START_EVENT_DATE" value="{{ start_date }}" placeholder="" class="date" />
+                {{ form.country }}
             </div>
             <div>
-                <label class="sapce">{% trans 'End event date' %} <font color="#FF0000">*</font></label>
-                {% if form.errors.END_EVENT_DATE %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.END_EVENT_DATE }}</div></div>
+                <label class="sapce">{% trans 'Start event date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.start_date %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.start_date.0 }}</div></div>
                 {% endif %}
-                <input type="text" name="END_EVENT_DATE" value="{{ end_event }}" placeholder="" class="date" />
-
+                <input type="text"  name="start_date" value="{{ form.start_date.value|default_if_none:"" }}"  placeholder="" class="date" />
+            </div>
+            <div>
+                <label class="sapce">  {% trans 'End event date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.end_date %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.end_date.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="end_date" value="{{ form.end_date.value|default_if_none:"" }}" placeholder="" class="date"  />
             </div>
             <div>
                 <label class="sapce">{% trans 'Keywords' %}</label>
-                {% if form.errors.KEYWORD %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.KEYWORD }}</div></div>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
                 {% endif %}
-                <textarea name="KEYWORD" rows="7">{{ keyword }}</textarea>
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
             </div>
             <div>
                 <div class="line">
                     <label class="sapce">{% trans 'Route description' %}</label>
-                    {% if form.errors.ROUTE_DESCRIPTION %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.ROUTE_DESCRIPTION }}</div></div>
+                    {% if form.errors.route %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.route.0 }}</div></div>
                     {% endif %}
-                    <textarea name="ROUTE_DESCRIPTION"  rows="7">{{ route }}</textarea>
+                    <textarea name="route"  rows="7">{{ form.route.value|default_if_none:"" }}</textarea>
                 </div>
             </div>
             <div>
-                <label class="sapce">{% trans 'Documents' %}</label>
-                {% if form.errors.DOCUMENT_1  %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_1 }}</div></div>
-                {% endif %}
-                {% if form.errors.DOCUMENT_2  %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_2 }}</div></div>
-                {% endif %}
-                {% if form.errors.DOCUMENT_3  %}
-                    <div class="error-handler"> <div class="formserror">{{ form.errors.DOCUMENT_3 }}</div></div>
-                {% endif %}
-
-                <div class="line">
-
-                    {% if doc_1 %}
-                        <a href="{{ MEDIA_URL }}document/{{ doc_1.name }}">Doc 1</a>
-                        <input type="checkbox" name="DOCUMENT_1-CLEAR" value="{{ doc_1 }}" />Delete
-                    {% endif %}
-
-                    <input type="file" id="id_DOCUMENT_1" name="DOCUMENT_1" value="{{doc_1  }}"/>
-                </div>
-
-                <div class="line">
-                    {% if doc_2 %}
-                        <a href="{{ MEDIA_URL }}document/{{ doc_2.name }}">Doc 1</a>
-                        <input type="checkbox" name="DOCUMENT_2-CLEAR" value="{{ doc_2 }}" />Delete
-                    {% endif %}
-                        <input type="file" id="id_DOCUMENT_2" name="DOCUMENT_2" value="{{doc_2  }}"/>
-                </div>
-
-                <div class="line">
-
-                    {% if doc_3 %}
-
-                        <a href="{{ MEDIA_URL }}document/{{ doc_3.name }}">Doc 1</a>
-                        <input type="checkbox" name="DOCUMENT_3-CLEAR" value="{{ doc_3 }}" />Delete
-
-                    {% endif %}
-                        <input type="file" id="id_DOCUMENT_3" name="DOCUMENT_3" value="{{doc_3 }}"/>
-                </div>
-
-                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="5" />
-                <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
-                <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="5" />
-
-                <label class="sapce">{% trans 'Image' %}</label>
-
-                {% for i in '01234'|make_list %}
-                    {% resolve photos i as img %}
-                    <div class="line">
-                        {% if img %}
-                            <a href='{{ img.photo.th }}'>Image {{ i }}</a>
-                            <input type="checkbox" name="del[]" value="{{ img.pk }}" />Delete
-                            <input id="id_form-{{ i }}-item_ptr" name="form-{{ i }}" value="{{ img.pk }}" type="hidden" value="" />
-                        {% endif %}
-                        <input id="id_form-{{ i }}-photo" name="form-{{ i }}-photo" type="file" />
+                {% if form.errors.branches %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.branches.0 }}</div>
                     </div>
-                {% endfor %}
+                {% endif %}
+                <label class="sapce">{% trans 'Branches' %}</label>
+                    <ul class="list-cat" id="list-branches">
+                    </ul>
+                    <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
+                    <script>
+                    for(i in branches) {
+                        add_branch(branches[i].name, branches[i].pk)
+                    }
+                </script>
             </div>
         </div>
-				<ul class="uploadconfig">
-                    <li>
-                        <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
-                          {% if form.errors.NAME %}
-                              <div class="error-handler"> <div class="formserror">{{ form.errors.NAME }}</div></div>
-                          {% endif %}
-                        <input type="text" name="NAME" value="{{ name }}" placeholder="" class="text" />
-                    </li>
-
-                    <li>
-                    	<div style="margin-bottom: 20px;">
-                            <label>{% trans "Description" %} <font color="#FF0000">*</font></label>
-                            {% if form.errors.DETAIL_TEXT %}
-                                <div class="error-handler"> <div class="formserror">{{ form.errors.DETAIL_TEXT }}</div></div>
-                            {% endif %}
-                        </div>
-
-                        <div class="detail"><textarea rows="10"  class="tiny"  name="DETAIL_TEXT" >{{ text }}</textarea></div>
-                    </li>
-                    <li>
-
-                            <div  class="line">
-                                <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
-                                  <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                                <div id="map-canvas"></div>
-
-
-
-                        </div>
-                    </li>
-                  </ul>
-            <div class="append-formin">
-                <div class="addpage-title">{% trans 'Additional pages' %}</div>
-                <input id="id_form-TOTAL_FORMS" name="pages-TOTAL_FORMS" type="hidden" value="5" />
-                <input id="id_form-INITIAL_FORMS" name="pages-INITIAL_FORMS" type="hidden" value="0" />
-                <input id="id_form-MAX_NUM_FORMS" name="pages-MAX_NUM_FORMS" type="hidden" value="10" />
-
-                {% if  pages|length >  0 %}
-                    {% for page in  pages %}
-                        {% set i = forloop.counter0 %}
-                        {% include "additionalPage.html" %}
-                    {% endfor %}
-                {% else %}
-                    {% set i = 0 %}
-                    {% include "additionalPage.html" %}
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Title' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.title %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.title.0 }}</div></div>
+                  {% endif %}
+                <input type="text" class="text" placeholder="" name="title" value="{{ form.title.value|default_if_none:"" }}" />
+            </li>
+            <li>
+                <label>{% trans 'Description' %}</label>
+                {% if form.errors.description %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.description.0 }}</div>
+                    </div>
                 {% endif %}
-           </div>
-           <div class="newform-button">
-                <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
-                <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+            </li>
+            <li>
+                <div class="detail">
+                    <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
                 </div>
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-   {% with  position|split:"," as LatLng %}
- <input type="hidden" id="latFld" name="Lat" value="{{ LatLng.0}}">
- <input type="hidden" id="lngFld" name="Lng" value="{{ LatLng.1 }}">
-{% endwith %}
+            </li>
+            <li>
+                <div  class="line">
+                    <label>{% trans 'Map' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.location %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.location.0 }}</div></div>
+                    {% endif %}
+                    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                    <div id="map-canvas"></div>
+                </div>
+            </li>
+        </ul>
+        <div class="append-formin">
+               <div class="addpage-title">{% trans 'Additional pages' %}</div>
+               <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+                {{ additional_page_form.management_form }}
+                {{ additional_page_form.non_form_errors }}
+                {% for form in additional_page_form %}
+                    {{ form.id }}
+                    {% with prefix=form.prefix num=forloop.counter0 %}
+                        {% include "additionalPage.html" %}
+                    {% endwith %}
+                {% endfor %}
+        </div>
+        <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
 
-
-</form>
- </div>
-{% endwith %}
-
-{% block right %}{% endblock %}
+        <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
+        <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
+    </form>
+</div>
+{% endblock %}

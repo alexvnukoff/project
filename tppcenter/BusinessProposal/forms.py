@@ -8,7 +8,7 @@ class BusinessProposalForm(forms.ModelForm):
 
     class Meta:
         model = BusinessProposal
-        fields = ('title', 'description', 'keywords', 'short_description', 'categories', 'country', 'branches')
+        fields = ('title', 'description', 'keywords', 'categories', 'country', 'branches')
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,
                                                       validate_max=True, extra=0)

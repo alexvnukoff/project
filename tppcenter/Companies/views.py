@@ -20,7 +20,7 @@ from appl import func
 from appl.models import Cabinet
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Department, Vacancy, Gallery, GalleryImage, Organization, Branch
+    Vacancy, Gallery, GalleryImage, Organization, Branch
 from core.models import User
 #from core.tasks import addNewCompany
 from core.amazonMethods import add
