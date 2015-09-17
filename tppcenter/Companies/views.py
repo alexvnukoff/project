@@ -1,4 +1,5 @@
 import json
+from django.contrib.auth import get_user_model
 
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
@@ -21,8 +22,7 @@ from appl.models import Cabinet
 from b24online.cbv import ItemsList, ItemDetail
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
     Vacancy, Gallery, GalleryImage, Organization, Branch
-from core.models import User
-#from core.tasks import addNewCompany
+
 from core.amazonMethods import add
 from tppcenter.Companies.forms import AdditionalPageFormSet, CompanyForm
 from tppcenter.Messages.views import add_message
@@ -294,7 +294,7 @@ def _tab_staff(request, company, page=1):
                 return HttpResponseBadRequest()
 
             try:
-                user = User.objects.get(email=user)
+                user = get_user_model().objects.get(email=user)
                 vacancy = Vacancy.objects.get(pk=vacancy, department__organization=organization)
             except ObjectDoesNotExist:
                 return HttpResponseBadRequest(_('User not found'))
@@ -313,11 +313,11 @@ def _tab_staff(request, company, page=1):
             cabinet = int(request.POST.get('id', 0))
 
             if cabinet > 0:
-                user = get_object_or_404(User, pk=cabinet)
+                user = get_object_or_404(get_user_model(), pk=cabinet)
                 vacancy = get_object_or_404(Vacancy, user=user, department__organization=organization)
                 vacancy.remove_employee()
 
-    users = User.objects.filter(work_positions__department__organization=organization).distinct() \
+    users = get_user_model().objects.filter(work_positions__department__organization=organization).distinct() \
         .select_related('profile').prefetch_related('work_positions', 'work_positions__department')
 
     paginator = Paginator(users, 10)

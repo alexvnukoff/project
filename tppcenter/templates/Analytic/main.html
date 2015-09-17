@@ -98,7 +98,7 @@
                 {% endif %}
                 </table>
 
-                {% if tpp %}
+                {% if chamber_events %}
 
                     <div class="title">{% trans "Chamber events" %}</div>
 
@@ -109,15 +109,15 @@
                       </tr>
                       <tr>
                         <td>{% trans "Business Proposals" %}</td>
-                        <td>{% modelCount "BusinessProposal" tpp|first %}</td>
+                        <td>{{ chamber_events.proposals }}</td>
                       </tr>
                       <tr>
                         <td>{% trans "Exhibitions" %}</td>
-                        <td>{% modelCount "Exhibition" tpp|first %}</td>
+                        <td>{{ chamber_events.exhibitions }}</td>
                       </tr>
                       <tr>
                         <td>{% trans "Tenders" %}</td>
-                        <td>{% modelCount "Tender" tpp|first %}</td>
+                        <td>{{ chamber_events.tenders }}</td>
                       </tr>
                      </table>
                 {% endif %}

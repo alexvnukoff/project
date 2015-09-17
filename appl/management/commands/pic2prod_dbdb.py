@@ -64,14 +64,14 @@ class Command(NoArgsCommand):
             rec.completed = True
             rec.save()
 
-            if len(rec.gallery): #create relationship with Gallery
+            if len(rec.get_gallery): #create relationship with Gallery
                 try:
                     gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
                 except:
                     i += 1
                     continue
 
-                gal.photo = add(img_root + rec.gallery)
+                gal.photo = add(img_root + rec.get_gallery)
                 # create relationship
                 try:
                     Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)

@@ -324,7 +324,7 @@ rgb(33,136,187) 100%);}
 .cpn-details-tab .content-tab-ads .clumn ul li{ position:relative; float:left; width:100%; padding:6px 0; font-size:11px;}
 .cpn-details-tab .content-tab-ads .clumn ul li input{ margin:0 5px 0 0; padding:0;}
 .cpn-details-tab .content-tab-ads .clumn ul li:nth-child(2n){ background:#FFF;}
-.ads-details-right{ position:relative; float:right; width:300px;}
+.ads-details-right{ position:relative; float:right; width:280px;}
 .ads-order-details{ position:relative; float: left; width:280px;}
 .ads-order-details form input[type="image"] {display: none}
 

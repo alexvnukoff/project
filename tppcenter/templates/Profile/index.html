@@ -19,7 +19,8 @@
                 $( ".date" ).datepicker({
                   changeMonth: true,
                   changeYear: true,
-                  yearRange: "1900:"
+                  yearRange: "1900:",
+                  dateFormat: "dd/mm/yy"
                 });
               });
             </script>
@@ -31,10 +32,10 @@
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/news.css" %}" />
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/company.css" %}"/>
          <link type="text/css" rel="stylesheet" href="{% static "tppcenter/css/datepicker.css" %}" />
-
-
     {% endblock %}
 
 {% block keywords %}{% endblock %}
 
-     {% block content %} {{ profilePage }}{% endblock %}
+     {% block content %}
+
+{% endblock %}

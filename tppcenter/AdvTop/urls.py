@@ -1,4 +1,3 @@
-__author__ = 'user'
 from django.conf.urls import patterns, url
 import tppcenter.AdvTop.views
 
@@ -7,8 +6,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    # Examples:
-     url(r'^add/([0-9]+)/$', tppcenter.AdvTop.views.addTop, name='top_form'),
-     url(r'^filter/$', tppcenter.AdvTop.views.advJsonFilter, name='filter'),
-     url(r'^order/([0-9]+)/$', tppcenter.AdvTop.views.resultOrder, name='resultOrder'),
+     url(r'^add/([0-9]+)/$', tppcenter.AdvTop.views.CreateContextAdvertisement.as_view(), name='top_form'),
+     url(r'^filter/$', tppcenter.AdvTop.views.adv_json_filter, name='filter'),
+     url(r'^order/(?P<pk>[0-9]+)/$', tppcenter.AdvTop.views.OrderDetail.as_view(), name='order'),
 )

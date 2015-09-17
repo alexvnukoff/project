@@ -203,8 +203,10 @@
                 {% if user.is_authenticated %}
                     <div id="tabs-2">
                         <ul class="tab1-cate">
-                            {% if user.is_commando or user.is_superuser %}
-                                <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}">{% trans 'Admin Panel' %}</a></li>
+                            {% if user.is_authenticated %}
+                                {% if user.is_commando or user.is_superuser %}
+                                    <li id="menu-admin"><a href="{% url "AdminTpp:adv" %}">{% trans 'Admin Panel' %}</a></li>
+                                {% endif %}
                             {% endif %}
                             <li><a class="single-page" href="{% url 'news:my_main' %}">{% trans 'News' %}</a></li>
                             <li><a class="single-page" href="{% url 'products:my_main' %}">{% trans 'Products B2B' %}</a></li>

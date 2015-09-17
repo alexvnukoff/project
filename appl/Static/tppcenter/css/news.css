@@ -263,7 +263,7 @@ rgb(33,136,187) 100%);}
 background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede)); background: -moz-linear-gradient(top, #f6f6f6, #dedede);}
 .profile-l .btnbb:hover{ text-decoration:none; opacity:0.9; filter:alpha(opacity=90);}
 .profile-clumn{ position:relative; float:left; width:230px; margin-left:9px; display:inline;}
-.profile-clumn li{ position:relative; float:left; width:100%; margin-bottom:10px;}
+.profile-clumn li{ position:relative; float:left; width:100%; margin-bottom:10px; min-height: 45px;}
 .profile-clumn li label{ float:left; width:100%; padding-bottom:6px; font-weight:bold;}
 .profile-clumn li label.small{ font-size:11px;}
 .profile-clumn li input.text, select{ float:left; width:95%; border:1px #bdbdbd solid; padding:5px;}
@@ -274,7 +274,6 @@ background: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#d
 .profile-clumn li .company li{ display:block; padding:6px 8px 7px 8px; color:#484848; margin-bottom:0; width:212px; cursor:pointer;}
 .profile-clumn li .company li.selected{ background-color:#4a4a4a; color:#FFF;}
 .profile-clumn li .radio{ float:left; width:100%; height:14px; margin-bottom: 18px;}
-.profile-clumn li .radio label {width:40%;}
 .profilebutton{ position:relative; float:right; width:470px; text-align:center; margin:25px 0 0 0;}
 .profilebutton .btntype1, .profilebutton .btntype2{ font-size:16px;}
 .listnews img {max-width: 100px; max-height: 120px;}

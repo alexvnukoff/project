@@ -1005,14 +1005,14 @@ def pic2prod_DB_DB(request):
         rec.completed = True
         rec.save()
 
-        if len(rec.gallery): #create relationship with Gallery
+        if len(rec.get_gallery): #create relationship with Gallery
             try:
                 gal = Gallery.objects.create(title='GALLERY_FOR_PROD_ID:'+rec.btx_id, create_user=create_usr)
             except:
                 i += 1
                 continue
 
-            gal.photo = add(img_root + rec.gallery)
+            gal.photo = add(img_root + rec.get_gallery)
             # create relationship
             try:
                 Relationship.objects.create(parent=prod, type='relation', child=gal, create_user=create_usr)
@@ -1149,10 +1149,10 @@ def pic2org_DB_DB(request):
                 i += 1
                 continue
 
-        if len(rec.gallery): #create relationship with Gallery
+        if len(rec.get_gallery): #create relationship with Gallery
             try:
                 gal = Gallery.objects.create(title='GALLERY_FOR_ORG_ID:'+rec.btx_id,\
-                                             photo = add(img_root + rec.gallery), create_user=create_usr)
+                                             photo = add(img_root + rec.get_gallery), create_user=create_usr)
                 attr = {
                     'GALLERY_TOPIC': rec.gallery_topic,
                     'NAME': rec.pic_title,

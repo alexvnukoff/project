@@ -98,11 +98,11 @@ class ItemsList(HybridListView):
         q = self.request.GET.get('q', '').strip()
 
         for filter_key in list(self.filter_list.keys()):
-            filter_lookup = "filter[%s]" % filter_key
+            filter_lookup = "filter[%s][]" % filter_key
             values = self.request.GET.getlist(filter_lookup)
 
             if values:
-                s = s.filter('terms', {filter_key: values})
+                s = s.filter('terms', **{filter_key: values})
 
         if q:
             s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])

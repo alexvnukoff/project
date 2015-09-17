@@ -1,10 +1,12 @@
 from argparse import ArgumentError
 import os
 from urllib.parse import urljoin
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField, DateTimeRangeField, DateRangeField
+from django.contrib.postgres.fields import HStoreField, DateRangeField, DateTimeRangeField
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -15,6 +17,8 @@ from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
 
+
+
 # Create your models here.
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
@@ -23,7 +27,6 @@ from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeign
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
 from b24online.utils import create_slug, generate_upload_path, reindex_instance
 from core import tasks
-from core.models import User
 
 CURRENCY = [
     ('NIS', _('Israeli New Sheqel')),
@@ -42,8 +45,88 @@ image_storage = S3ImageStorage()
 file_storage = S3FileStorage()
 
 
-class Advertisement(models.Model):
+# class UserManager(BaseUserManager):
+#     def create_user(self, email, password=None):
+#         email = self.normalize_email(email).lower()
+#         user = self.model(email=email)
+#
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         Profile.objects.create(user=user)
+#
+#         return user
+#
+#     def create_superuser(self, email, password):
+#         user = self.create_user(email, password=password)
+#         user.is_admin = True
+#         user.save(using=self._db)
+#         return user
+#
+#
+# class User(AbstractBaseUser, PermissionsMixin):
+#     email = models.EmailField(verbose_name='E-mail', max_length=255, unique=True, db_index=True)
+#     is_active = models.BooleanField(default=True)
+#     is_admin = models.BooleanField(default=False)
+#     is_manager = models.BooleanField(default=False)  # for enterprise content management
+#     is_commando = models.BooleanField(default=False)  # for special purposes
+#     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
+#
+#     objects = UserManager()
+#
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = []
+#
+#     def get_full_name(self):
+#         return '%s %s' % (self.first_name, self.last_name,)
+#
+#     def get_short_name(self):
+#         return self.email
+#
+#     def __str__(self):
+#         return self.email
+#
+#     def has_module_perms(self, app_label):
+#         return True
+#
+#     @property
+#     def is_staff(self):
+#         return self.is_admin
+#
+#     def email_user(self, subject, message, from_email=None):
+#         send_mail(subject, message, from_email, [self.email])
+#
+#     def manageable_organizations(self):
+#         key = "user:%s:manageable_organizations" % self.pk
+#         organization_ids = cache.get(key)
+#
+#         if organization_ids is None:
+#             organization_ids = [org.pk for org in
+#                                 get_objects_for_user(self, 'b24online.manage_organization', Organization)]
+#             cache.set(key, organization_ids,  60 * 10)
+#
+#         return organization_ids or []
+
+
+class Order(models.Model):
     pass
+
+
+class Advertisement(models.Model):
+    dates = DateRangeField()
+
+    @property
+    def start_date(self):
+        if self.dates:
+            return self.dates.lower
+
+        return None
+
+    @property
+    def end_date(self):
+        if self.dates:
+            return self.dates.upper
+
+        return None
 
 
 class ContextAdvertisement(Advertisement):
@@ -51,10 +134,9 @@ class ContextAdvertisement(Advertisement):
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
-    dates = DateTimeRangeField()
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,14 +149,14 @@ class ContextAdvertisement(Advertisement):
         ]
 
 
-class ContextAdvertisementTarget(models.Model):
+class AdvertisementTarget(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    advertisement_item = models.ForeignKey(ContextAdvertisement, related_name='targets', on_delete=models.CASCADE)
+    advertisement_item = models.ForeignKey(Advertisement, related_name='targets', on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -83,14 +165,14 @@ class ContextAdvertisementTarget(models.Model):
 
 
 class Gallery(models.Model):
-    title = models.CharField(max_length=266, blank=False, null=False)
+    title = models.CharField(max_length=266, blank=False, null=True)
     is_active = models.BooleanField(default=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    item = GenericForeignKey('content_type', 'object_id')
+    item = GenericForeignKey()
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -113,11 +195,12 @@ class Gallery(models.Model):
 
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
-    image = CustomImageField(storage=image_storage)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                            sizes=['big', 'small', 'th'], max_length=255)
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -133,8 +216,8 @@ class Document(models.Model):
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -150,8 +233,8 @@ class AdditionalPage(models.Model):
     item = GenericForeignKey('content_type', 'object_id')
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -263,8 +346,8 @@ class Chamber(Organization):
     additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -407,8 +490,8 @@ class Company(Organization):
     additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -504,8 +587,8 @@ class Department(models.Model):
     organization = models.ForeignKey(Organization, db_index=True, related_name='departments')
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -531,11 +614,11 @@ class Vacancy(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, related_name='work_positions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -604,8 +687,8 @@ class BusinessProposal(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -645,12 +728,15 @@ class InnovationProject(models.Model):
     additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         if self.organization:
             return self.organization.has_perm(user)
 
@@ -732,8 +818,8 @@ class B2BProduct(models.Model):
     metadata = HStoreField()
     context_advertisements = GenericRelation(ContextAdvertisement)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -784,12 +870,15 @@ class B2BProductComment(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         return user.is_commando or user.is_superuser or self.created_by == user
 
 
@@ -830,6 +919,9 @@ class Greeting(models.Model):
         return self.name
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         return user.is_superuser or user.is_commando
 
     def get_absolute_url(self):
@@ -853,8 +945,8 @@ class News(models.Model):
     country = models.ForeignKey(Country, null=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -882,6 +974,9 @@ class News(models.Model):
         return self.title
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         if self.organization:
             return self.organization.has_perm(user)
 
@@ -909,8 +1004,8 @@ class Tender(models.Model):
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -950,19 +1045,35 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=255, blank=False, null=False)
     middle_name = models.CharField(max_length=255, blank=True, null=False)
     last_name = models.CharField(max_length=255, blank=True, null=False)
-    avatar = models.CharField(max_length=255, blank=True, null=False)
+    avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
+                              sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
     mobile_number = models.CharField(max_length=255, blank=True, null=False)
-    site = models.CharField(max_length=255, blank=True, null=False)
+    site = models.URLField(max_length=255, blank=True, null=False)
     profession = models.CharField(max_length=255, blank=True, null=False)
     country = models.ForeignKey(Country)
-    birthday = models.DateField()
-    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
+    birthday = models.DateField(null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="profile", on_delete=models.CASCADE)
 
-    GENDERS = [('Male', _('Male')), ('Female', _('Female'))]
-    sex = models.CharField(max_length=255, blank=False, null=True, choices=GENDERS)
+    GENDERS = [('male', _('Male')), ('female', _('Female'))]
+    sex = models.CharField(max_length=255, default='male', choices=GENDERS)
 
-    TYPES = [('Businessman', _('Businessman')), ('Individual', _('Individual'))]
-    user_type = models.CharField(max_length=255, blank=False, null=False, choices=TYPES)
+    TYPES = [('businessman', _('Businessman')), ('individual', _('Individual'))]
+    user_type = models.CharField(max_length=255, default='individual', choices=TYPES)
+
+    def upload_images(self):
+        params = {
+            'file': self.avatar.path,
+            'sizes': {
+                'big': {'box': (150, 150), 'fit': False},
+                'small': {'box': (100, 100), 'fit': False},
+                'th': {'box': (30, 30), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.delay(params)
+
+    def reindex(self):
+        reindex_instance(self)
 
     @property
     def full_name(self):
@@ -977,6 +1088,9 @@ class Profile(models.Model):
         return self.full_name
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         return user.is_commando or user.is_superuser or self.user == user
 
 
@@ -997,8 +1111,8 @@ class Exhibition(models.Model):
     branches = models.ManyToManyField(Branch)
     metadata = HStoreField()
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -1070,6 +1184,9 @@ class StaticPage(models.Model):
         return self.title
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         return user.is_commando or user.is_superuser
 
     def get_absolute_url(self):
@@ -1082,7 +1199,7 @@ class StaticPage(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, related_name="notifications")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="notifications")
     read = models.BooleanField(default=False)
     message = models.CharField(max_length=1024, blank=False, null=False)
 
@@ -1100,8 +1217,8 @@ class Notification(models.Model):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, related_name='sent')
-    recipient = models.ForeignKey(User, related_name='received')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received')
     is_read = models.BooleanField(default=False)
     content = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -1114,7 +1231,7 @@ class Message(models.Model):
     @classmethod
     def add_message(cls, content, sender, recipient_id, notify=True):
         with transaction.atomic():
-            recipient = User.objects.get(pk=recipient_id)
+            recipient = get_user_model().objects.get(pk=recipient_id)
             cls.objects.create(sender=sender, content=content, recipient=recipient)
 
         if notify:
@@ -1128,8 +1245,8 @@ class Message(models.Model):
 class BannerBlock(models.Model):
     code = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    width = models.PositiveIntegerField()
-    height = models.PositiveIntegerField()
+    width = models.PositiveSmallIntegerField()
+    height = models.PositiveSmallIntegerField()
     image = CustomImageField(storage=image_storage, null=True)
     description = models.CharField(max_length=1024)
     factor = models.FloatField(default=1)
@@ -1145,6 +1262,9 @@ class BannerBlock(models.Model):
     def get_absolute_url(self):
         return reverse('adv_banners:banner_form', args=[self.pk])
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         index_together = [
             ['code', 'block_type'],
@@ -1154,38 +1274,23 @@ class BannerBlock(models.Model):
 class Banner(Advertisement):
     title = models.CharField(max_length=255)
     link = models.URLField()
-    image = CustomImageField(storage=image_storage)
+    image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, max_length=255)
     block = models.ForeignKey(BannerBlock)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
-    dates = DateTimeRangeField()
     is_active = models.BooleanField(default=True)
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site, null=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def has_perm(self, user):
-        if self.organization:
-            return self.organization.has_perm(user)
+    def upload_images(self):
+        params = {
+            'file': self.image.path,
+        }
 
-        return user.is_superuser or user.is_commando or self.created_by == user
-
-
-class BannerTarget(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    item = GenericForeignKey('content_type', 'object_id')
-    banner = models.ForeignKey(Banner, related_name='targets', on_delete=models.CASCADE)
-
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def has_perm(self, user):
-        return self.banner.has_perm(user)
+        tasks.upload_images.delay(params)
 
 
 class AdvertisementPrices(models.Model):
@@ -1195,18 +1300,60 @@ class AdvertisementPrices(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    valid_from = models.DateTimeField(auto_now_add=True)
-    valid_to = models.DateTimeField()
+    dates = DateTimeRangeField()
     price = models.DecimalField(max_digits=15, decimal_places=3, null=False, blank=False)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     class Meta:
         unique_together = ("content_type", "object_id")
+
+
+class AdvertisementOrder(Order):
+    advertisement = models.OneToOneField(Advertisement)
+    total_cost = models.DecimalField(max_digits=15, decimal_places=3, null=False, blank=False)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    purchaser = GenericForeignKey('content_type', 'object_id')
+    price_components = models.ManyToManyField(AdvertisementPrices)
+    paid = models.BooleanField(default=False)
+    price_factor = models.FloatField(default=1)
+    dates = DateRangeField()
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def start_date(self):
+        if self.dates:
+            return self.dates.lower
+
+        return None
+
+    @property
+    def end_date(self):
+        if self.dates:
+            return self.dates.upper
+
+        return None
+
+    @property
+    def days(self):
+        return (self.dates.upper - self.dates.lower).days
+
+    def has_perm(self, user):
+        if user is None or not user.is_authenticated() or user.is_anonymous():
+            return False
+
+        if user.is_superuser or user.is_commando:
+            return True
+
+        return self.purchaser.has_perm()
 
 
 @receiver(pre_save)

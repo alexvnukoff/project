@@ -5,15 +5,15 @@ from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from haystack.query import SearchQuerySet
 from django.core.cache import cache
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext as _
 
-from appl.models import Category
+from appl.models import Category, NewsCategories, AdditionalPages
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal
+    BusinessProposal, Company, News, Gallery
+from centerpokupok.models import B2CProduct
 from centerpokupok.views import _sortMenu
 from appl import func
-from appl.models import News, NewsCategories, UserSites, AdditionalPages, staticPages, Gallery, \
-    Company
+from appl.models import UserSites
 from core.models import Item
 from jobs.models import Requirement, Resume
 
@@ -86,14 +86,14 @@ def get_banner(context, block, item):
         cached = cache.get(cache_name)
 
     if not cached:
-        banner = func.get_banner(block, settings.SITE_ID, advertisement_filter)
+        banner = func.get_banner(block, None, advertisement_filter)
 
         if advertisement_filter is None:
             cache.set(cache_name, banner, 60 * 10)
     else:
         banner = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL, 'banner': banner}
+    return {'banner': banner}
 
 
 @register.inclusion_tag('main/currentCompany.html', takes_context=True)
@@ -119,6 +119,17 @@ def get_my_companies_list(context):
     return {'current_company': request.user.email}
 
 
+@register.inclusion_tag('main/statistic.html')
+def statistic(*args, **kwargs):
+    model_statistic = {
+        _('Products'): B2BProduct.objects.count(),
+        _('Companies'): Company.objects.count(),
+        _('Partners'): Chamber.objects.count()
+    }
+
+    return {'model_statistic': model_statistic}
+
+
 @register.inclusion_tag('main/contextMenu.html', takes_context=True)
 def setContextMenu(context, obj, **kwargs):
     current_path = context.get('current_path')
@@ -129,11 +140,15 @@ def setContextMenu(context, obj, **kwargs):
     url_namespace = None
     set_current = False
     delete = True
+    top_perm = True
 
     if model_name == BusinessProposal.__name__:
         url_namespace = "proposal"
     elif model_name == B2BProduct.__name__:
         url_namespace = "products"
+    elif model_name == B2CProduct.__name__:
+        url_namespace = "products"
+        top_perm = False
     elif model_name == InnovationProject.__name__:
         url_namespace = "innov"
     elif model_name == Tender.__name__:
@@ -155,6 +170,8 @@ def setContextMenu(context, obj, **kwargs):
         delete = False
 
     vars = {
+        'top_perm': top_perm,
+        'top_type': model_name.lower(),
         'obj': obj,
         'url_namespace': url_namespace,
         'current_path': current_path,

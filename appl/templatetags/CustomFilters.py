@@ -1,7 +1,10 @@
 from collections import OrderedDict
 from copy import copy
-from django.contrib.sites.models import get_current_site
+from decimal import Decimal
+import os
 
+from django.contrib.sites.models import get_current_site
+from django.template.defaultfilters import stringfilter
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
 from haystack.query import SQ, SearchQuerySet
@@ -15,28 +18,31 @@ from django import template
 from appl.func import currencySymbol
 from appl import func
 from appl.models import *
-import b24online
-import b24online.models
 import tppcenter.urls
-
 
 register = template.Library()
 
 
+@register.filter()
+def multiply(value, multiplier):
+    return Decimal(value) * Decimal(multiplier)
+
+
 @register.filter(name='getSide')
 def getSide(value):
-
     is_right = trans_real.get_language() == 'he' or trans_real.get_language() == 'ar'
 
     return is_right
 
+
 @register.filter(name='sort')
 def sort(value):
     if value:
-          sorted_dict = OrderedDict(sorted(value.items(), reverse=False))
-          return sorted_dict.items()
+        sorted_dict = OrderedDict(sorted(value.items(), reverse=False))
+        return sorted_dict.items()
     else:
         return ""
+
 
 @register.filter(name='discountDiff')
 def discountDiff(value, discount):
@@ -47,6 +53,7 @@ def discountDiff(value, discount):
         return '{0:,}'.format(float(price))
     except Exception:
         return 0
+
 
 @register.filter(name='discountPrice')
 def discountPrice(value, discount):
@@ -59,6 +66,7 @@ def discountPrice(value, discount):
     except Exception:
         return 0
 
+
 @register.filter(name='formatPrice')
 def formatPrice(value):
     try:
@@ -68,13 +76,10 @@ def formatPrice(value):
     except Exception:
         return 0
 
+
 @register.filter(name='getSymbol')
 def getSymbol(value):
-
     return currencySymbol(value)
-
-
-
 
 
 @register.filter(name='split')
@@ -82,23 +87,16 @@ def split(str, splitter):
     return str.split(splitter)
 
 
-
-
 @register.filter(name='cleanHtml')
 def cleanHtml(value):
-
     if value is not None and len(value) > 0:
         return clean_html(value)
     else:
         return ""
 
 
-
-
-
 @register.filter(name='makeDate')
 def makeDate(value):
-
     if value:
         try:
             date = datetime.datetime.strptime(value, "%Y-%m-%d")
@@ -119,7 +117,6 @@ class DynUrlNode(template.Node):
 
         if len(args) > 2:
             self.new_parametr = args[2]
-
 
     def render(self, context):
         name = template.Variable(self.name_var).resolve(context)
@@ -143,16 +140,14 @@ class DynUrlNode(template.Node):
         except Exception:
             pass
 
-
-
         request = get_request()
         query_set = None
         if len(request.GET) > 0:
             query_set = request.GET.urlencode()
 
-
-        url = reverse(name, args=parametrs) + '?'+ query_set if query_set else reverse(name, args=parametrs)
+        url = reverse(name, args=parametrs) + '?' + query_set if query_set else reverse(name, args=parametrs)
         return url
+
 
 @register.tag
 def dynurl(parser, token):
@@ -179,13 +174,13 @@ class RangeNode(Node):
         self.context_name = context_name
 
     def render(self, context):
-
         resolved_ranges = []
         for arg in self.range_args:
             compiled_arg = self.template_parser.compile_filter(arg)
             resolved_ranges.append(compiled_arg.resolve(context, ignore_failures=True))
         context[self.context_name] = range(*resolved_ranges)
         return ""
+
 
 @register.tag
 def mkrange(parser, token):
@@ -212,9 +207,10 @@ def mkrange(parser, token):
     fnctl = tokens.pop(0)
 
     def error():
-        raise TemplateSyntaxError( "%s accepts the syntax: {%% %s [start,] " +\
-                "stop[, step] as context_name %%}, where 'start', 'stop' " +\
-                "and 'step' must all be integers." %(fnctl, fnctl))
+        raise TemplateSyntaxError("%s accepts the syntax: {%% %s [start,] " +
+                                  "stop[, step] as context_name %%}, where 'start', 'stop' " +
+                                  "and 'step' must all be integers." % (fnctl, fnctl))
+
     range_args = []
     while True:
         if len(tokens) < 2:
@@ -234,12 +230,12 @@ def mkrange(parser, token):
 
     return RangeNode(parser, range_args, context_name)
 
+
 @register.simple_tag
 def modelCount(model, owner=None):
-
     klass = (globals()[model])
 
-    #sqs = klass.active.get_active().all()
+    # sqs = klass.active.get_active().all()
     sqs = func.getActiveSQS().models(klass)
 
     if isinstance(owner, int):
@@ -247,9 +243,9 @@ def modelCount(model, owner=None):
 
     return sqs.count()
 
+
 @register.assignment_tag
 def getOwner(item):
-
     if not item:
         return None
 
@@ -276,32 +272,30 @@ def getOwner(item):
 def getLang():
     return trans_real.get_language()
 
+
 @register.simple_tag()
 def getCountry(obj):
     return SearchQuerySet().filter(django_id=obj)[0].text
 
+
 @register.simple_tag(name='userName', takes_context=True)
-def setUserName(context):
+def set_user_name(context):
     request = context.get('request')
 
     user_name = ''
 
     if request.user.is_authenticated():
         try:
-            cabinet = Cabinet.objects.get(user=request.user)
-            cabinet = SearchQuerySet().models(Cabinet).filter(django_id=cabinet.pk)
-
-            if cabinet.count() > 0 and cabinet[0].text:
-                user_name = cabinet[0].text
+            if request.user.profile and request.user.profile.full_name:
+                user_name = request.user.profile.full_name
+            else:
+                user_name = request.user.email
 
         except ObjectDoesNotExist:
-            pass
-
-        if user_name == '':
             user_name = request.user.email
 
-
     return user_name
+
 
 @register.simple_tag(name='notif', takes_context=True)
 def setNotification(context):
@@ -319,8 +313,8 @@ def setMessage(context):
     request = context.get('request')
 
     if request.user.is_authenticated():
-        #cab_pk = request.user.objects.get(user=request.user)
-        message = 0#Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
+        # cab_pk = request.user.objects.get(user=request.user)
+        message = 0  # Messages.objects.filter(c2p__parent=cab_pk, c2p__type='relation', was_read=False).count()
     else:
         message = 0
 
@@ -329,101 +323,95 @@ def setMessage(context):
 
 @register.simple_tag(name='flags', takes_context=True)
 def setFlags(context, country, url_country, url_country_parametr):
+    request = context.get('request')
+    if len(url_country) > 0:
+        url_country = url_country
+    else:
+        url_country = 'home_country'
 
-  request = context.get('request')
-  if len(url_country) > 0:
-      url_country = url_country
-  else:
-      url_country  = 'home_country'
-
-  country = country
-  if len(url_country_parametr) > 0:
+    country = country
+    if len(url_country_parametr) > 0:
         url_country_parametr = url_country_parametr
-  else:
-      url_country_parametr = []
-  flagList = func.getItemsList("Country", "NAME", "FLAG")
+    else:
+        url_country_parametr = []
+    flagList = func.getItemsList("Country", "NAME", "FLAG")
 
-  template = loader.get_template('main/Flags.html')
-  context = RequestContext(request, {'flagList': flagList, 'url_country': url_country, 'country': country,
-                                     'url_country_parametr': url_country_parametr})
-  flags = template.render(context)
+    template = loader.get_template('main/Flags.html')
+    context = RequestContext(request, {'flagList': flagList, 'url_country': url_country, 'country': country,
+                                       'url_country_parametr': url_country_parametr})
+    flags = template.render(context)
 
-  return flags
+    return flags
 
 
 @register.simple_tag(name='logo', takes_context=True)
 def setLogo(context):
-  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-  user_logo = user_site.getAttributeValues('SITE_LOGO')
-  if len(user_logo) > 0:
-      return user_logo[0]
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    user_logo = user_site.getAttributeValues('SITE_LOGO')
+    if len(user_logo) > 0:
+        return user_logo[0]
 
+    return ""
 
-  return ""
 
 @register.simple_tag(name='footer_text', takes_context=True)
 def setLogo(context):
-  user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-  site_footer = user_site.getAttributeValues('DETAIL_TEXT')
-  if len(site_footer) > 0:
-      return site_footer[0]
+    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
+    site_footer = user_site.getAttributeValues('DETAIL_TEXT')
+    if len(site_footer) > 0:
+        return site_footer[0]
 
-
-  return ""
-
+    return ""
 
 
 @register.simple_tag(name='categories', takes_context=True)
 def setCategories(context):
+    request = context.get('request')
+    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
+    categories_id = [cat['ID'] for cat in hierarchyStructure]
+    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
+    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
 
-  request = context.get('request')
-  hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-  categories_id = [cat['ID'] for cat in hierarchyStructure]
-  categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-  categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
+    template = loader.get_template('main/Category.html')
+    context = RequestContext(request, {'categotySelect': categotySelect})
+    categories_select = template.render(context)
 
+    return categories_select
 
-  template = loader.get_template('main/Category.html')
-  context = RequestContext(request, {'categotySelect': categotySelect})
-  categories_select = template.render(context)
-
-  return categories_select
 
 @register.simple_tag(name='countries', takes_context=True)
 def setCountries(context):
+    request = context.get('request')
+    selectd = request.GET.get("country", None)
 
-  request = context.get('request')
-  selectd = request.GET.get("country", None)
+    countryList = SearchQuerySet().models(Country).order_by('title_sort')
 
-  countryList = SearchQuerySet().models(Country).order_by('title_sort')
+    template = loader.get_template('main/Country.html')
+    context = RequestContext(request, {'countryList': countryList, 'selectd': selectd})
+    categories_select = template.render(context)
 
-  template = loader.get_template('main/Country.html')
-  context = RequestContext(request, {'countryList': countryList, 'selectd': selectd})
-  categories_select = template.render(context)
-
-  return categories_select
+    return categories_select
 
 
 @register.simple_tag(name='right_tv', takes_context=True)
 def rightTv(context):
-
-  request = context.get('request')
-  if request.resolver_match.namespace == 'innov':
-      is_innov = True
-      tvValues  = ""
-  else:
-      sqs = func.getActiveSQS().models(TppTV)
-      if sqs.count() == 0:
-          return ''
-      else:
-          sqs = sqs.order_by('-obj_create_date')[0]
-          tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
-          tvValues = tvValues[sqs.pk]
-          is_innov = False
-  template = loader.get_template('main/tv.html')
-  context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov })
-  tv = template.render(context)
-  return tv
+    request = context.get('request')
+    if request.resolver_match.namespace == 'innov':
+        is_innov = True
+        tvValues = ""
+    else:
+        sqs = func.getActiveSQS().models(TppTV)
+        if sqs.count() == 0:
+            return ''
+        else:
+            sqs = sqs.order_by('-obj_create_date')[0]
+            tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
+            tvValues = tvValues[sqs.pk]
+            is_innov = False
+    template = loader.get_template('main/tv.html')
+    context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov})
+    tv = template.render(context)
+    return tv
 
 
 @register.simple_tag(takes_context=True)
@@ -434,18 +422,17 @@ def searchQuery(context):
 
 @register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
 def detail_page_to_tppcenter(context, url, slug=None):
-
     prefix = Site.objects.get(name='tppcenter').domain + '/'
     if slug:
-        url = (reverse(viewname=url, urlconf=tppcenter.urls,  args=[slug], prefix=prefix))
+        url = (reverse(viewname=url, urlconf=tppcenter.urls, args=[slug], prefix=prefix))
     else:
-        url = (reverse(viewname=url, urlconf=tppcenter.urls,   prefix=prefix))
+        url = (reverse(viewname=url, urlconf=tppcenter.urls, prefix=prefix))
 
     return 'http://' + url
 
+
 @register.simple_tag(takes_context=True)
 def getTppName(context):
-
     request = context.get('request', None)
     SITE_ID = get_current_site(request).pk
     organization = UserSites.objects.get(sites__id=SITE_ID).organization
@@ -459,9 +446,9 @@ def getTppName(context):
 
     return ""
 
+
 @register.assignment_tag(takes_context=True)
 def isSiteOrganizationTpp(context):
-
     request = context.get('request', None)
     SITE_ID = get_current_site(request).pk
     organization = UserSites.objects.get(sites__id=SITE_ID).organization
@@ -472,3 +459,9 @@ def isSiteOrganizationTpp(context):
         pass
 
     return False
+
+
+@register.filter(name='basename')
+@stringfilter
+def basename(value):
+    return os.path.basename(value)

@@ -1,121 +1,112 @@
+{% extends "Profile/index.html" %}
 {% load static %}
 {% load i18n %}
 {% load CustomFilters %}
-{% if saved == 1%}
-<div style="color: navy;margin-left: 200px;margin-top: 80px;font-size: 20px;">{% trans 'Your profile was updated' %}</div>
-{% endif %}
-
+{% block content %}
 <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
-
-
 {% csrf_token %}
-
-
     <div class="user-profile">
-
-            	<div class="profile-l">
-                {% if avatar %}
-                	<div class="avatar"><img style="max-width: 150px;max-height: 156px;" src="{{ MEDIA_URL }}big/{{ avatar }}" alt="" /></div>
+        <div class="profile-l">
+            <div class="avatar">
+                {% if form.initial.avatar %}
+                    <img style="max-width: 150px;max-height: 156px;" src="{{ form.initial.avatar.big }}" alt="" />
+                {% else %}
+                    <img src="{% static 'tppcenter/img/profile.jpg' %}" style="max-width: 150px;max-height: 156px;" />
                 {% endif %}
-                {% if form.personal_status.errors   %}<div style="color: #ff0000">{{ form.personal_status.errors.as_text }}</div>{% endif %}
-                    {% for choice in form.personal_status %}
-                               <div class="line">{{ choice }}</div>
-                            {% endfor %}
-
-                    <div class="line"><b>{% trans 'Change avatar' %}</b></div>
-
-                     <input type = "button" value = "Choose image"
-                     onclick ="javascript:document.getElementById('imagefile').click();">
-                    <input id = "imagefile" type="file" style='visibility: hidden;' name="image"/>
-
-                </div>
-                <ul class="profile-clumn">
-                	<li>
-                    	<label>{% trans 'Last name' %}</label>
-                        {{ form.last_name }}
-                         {% if form.last_name.errors   %}<div class="formerror">{{ form.last_name.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'Name' %}</label>
-                         {{ form.first_name }}
-                         {% if form.first_name.errors   %}<div class="formerror">{{ form.first_name.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'Middle name' %}</label>
-                        {{ form.middle_name }}
-                         {% if form.middle_name.errors   %}<div class="formerror">{{ form.middle_name.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li style="margin-bottom: 10px;">
-                    	<label>{% trans 'Email' %}</label>
-                        {{ form.email }}
-                         {% if form.email.errors %}<div class="formerror">{{ form.errors.email }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'WWW' %}</label>
-                         {{ form.site_name }}
-                         {% if form.site_name.errors   %}<div class="formerror">{{ form.site_name.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>ICQ</label>
-                         {{ form.icq }}
-                         {% if form.icq.errors   %}<div class="formerror">{{ form.icq.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>Skype</label>
-                         {{ form.skype }}
-                         {% if form.skype.errors   %}<div class="formerror">{{ form.skype.errors.as_text }}</div>{% endif %}
-                    </li>
-                </ul>
-                <ul class="profile-clumn">
-                	<li>
-                    	<label>{% trans 'Country' %}</label>
-                         {{ form.country }}
-                    </li>
-
-                    <li>
-                    	<label>{% trans 'Sex' %}</label>
-                        <div class="radio">
-                           {% for choice in form.sex %}
-                               {{ choice }}
-                            {% endfor %}
-                        {% if form.sex.errors   %}<div class="formerror">{{ form.sex.errors.as_text }}</div>{% endif %}
-                        </div>
-                    </li>
-                    <li>
-                    	<label>{% trans 'Birthday' %}</label>
-                        {{ form.birthday }}
-                         {% if form.birthday.errors   %}<div class="formerror">{{ form.birthday.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'Telephone Number' %}</label>
-                       {{ form.telephone_number }}
-                         {% if form.telephone_number.errors   %}<div class="formerror">{{ form.telephone_number.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'Mobile number' %}</label>
-                         {{ form.mobile_number }}
-                         {% if form.mobile_number.errors   %}<div class="formerror">{{ form.mobile_number.errors.as_text }}</div>{% endif %}
-                    </li>
-                    <li>
-                    	<label>{% trans 'Profession' %}</label>
-                         {{ form.profession }}
-                         {% if form.profession.errors   %}<div class="formerror">{{ form.profession.errors.as_text }}</div>{% endif %}
-                    </li>
-                </ul>
-
-                <div class="profilebutton">
-
-                	<input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
-                    <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
-                </div>
             </div>
+            <div class="line"><b>{% trans 'Change avatar' %}</b></div>
+            {% if form.errors.avatar %}
+                <div class="error-handler"> <div class="formserror2">{{ form.errors.avatar.0 }}</div></div>
+            {% endif %}
+            <input type = "button" value = "Choose image" onclick ="javascript:document.getElementById('imagefile').click();">
+            <input id = "imagefile" type="file" style='visibility: hidden;' name="avatar"/>
+        </div>
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Last name' %}</label>
+                {% if form.errors.last_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.last_name.0 }}</div></div>
+                {% endif %}
+                {{ form.last_name }}
+            </li>
+            <li>
+                <label>{% trans 'First Name' %}</label>
+                {% if form.errors.first_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.first_name.0 }}</div></div>
+                {% endif %}
+                {{ form.first_name }}
+            </li>
+            <li>
+                <label>{% trans 'Middle name' %}</label>
+                {% if form.errors.middle_name %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.middle_name.0 }}</div></div>
+                {% endif %}
+                {{ form.middle_name }}
+            </li>
+            <li>
+                <label>{% trans 'Profile type' %}</label>
+                {% if form.errors.user_type %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.user_type.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.user_type %}
+                    <div class="radio">{{ radio }}</div>
+                {% endfor %}
+            </li>
+            <li style="margin-bottom: 10px;">
+                <label>{% trans 'WWW' %}</label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                {{ form.site }}
+            </li>
+        </ul>
+        <ul class="profile-clumn">
+            <li>
+                <label>{% trans 'Country' %}</label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </li>
+            <li>
+                <label>{% trans 'Birthday' %}</label>
+                {% if form.errors.birthday %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.birthday.0 }}</div></div>
+                {% endif %}
+                {{ form.birthday }}
+            </li>
+            <li>
+                <label>{% trans 'Phone Number' %}</label>
+                {% if form.errors.mobile_number %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.mobile_number.0 }}</div></div>
+                {% endif %}
+                {{ form.mobile_number }}
+            </li>
+            <li>
+                <label>{% trans 'Sex' %}</label>
+                {% if form.errors.sex %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.sex.0 }}</div></div>
+                {% endif %}
+                {% for radio in form.sex %}
+                    <div class="radio">
+                        {{ radio }}
+                    </div>
+                {% endfor %}
+            </li>
+            <li>
+                <label>{% trans 'Profession' %}</label>
+                {% if form.errors.profession %}
+                    <div class="error-handler"> <div class="formserror2">{{ form.errors.profession.0 }}</div></div>
+                {% endif %}
+                {{ form.profession }}
+            </li>
+        </ul>
 
+        <div class="profilebutton">
 
-
+            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}"/>
+            <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+        </div>
+    </div>
 </form>
-
-
-
-
-
-
+{% endblock %}

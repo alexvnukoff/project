@@ -1,10 +1,10 @@
-from core.models import Action, ActionPath, Attribute, Item, Relationship, Dictionary, State, Slot, Process, Value, AttrTemplate
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.contenttypes.models import ContentType
-from core.models import User
+
+from core.models import Action, ActionPath, Attribute, Item, Relationship, Dictionary, State, Slot, Process, Value, AttrTemplate
 from core.forms import *
+
 
 class TPPUserAdmin(UserAdmin):
     form = UserChangeForm
@@ -16,14 +16,13 @@ class TPPUserAdmin(UserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'avatar', 'date_of_birth',)}),
         ('Permissions', {'fields': ('is_manager', 'is_admin', 'is_active', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'date_of_birth')}
+            'fields': ('email', 'password1', 'password2')}
         ),
     )
     search_fields = ('email',)

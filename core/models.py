@@ -22,6 +22,7 @@ from guardian.shortcuts import get_objects_for_user
 from unidecode import unidecode
 
 from django.core.cache import cache
+from b24online.models import Profile
 
 from core.hierarchy import hierarchyManager
 from tpp.SiteUrlMiddleWare import get_request
@@ -59,11 +60,12 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have an email address')
 
         email = self.normalize_email(email).lower()
-
         user = self.model(email=email, ip=ip)
 
         user.set_password(password)
         user.save(using=self._db)
+        Profile.objects.create(user=user)
+
         return user
 
     def create_superuser(self, email, username, password):

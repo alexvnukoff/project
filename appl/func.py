@@ -1,12 +1,14 @@
 from copy import copy
+import hashlib
 from urllib.parse import urlparse
 import datetime
 
 from django.conf import settings
+from django.core.cache import cache
 from django.http import QueryDict
 from django.utils import timezone
 from django.utils.text import Truncator
-from django.utils.timezone import make_aware, is_naive, get_current_timezone
+from django.utils.timezone import make_aware, is_naive, get_current_timezone, now
 from django.db.models import F, Q
 from django.core.paginator import Paginator
 from PIL import Image
@@ -15,6 +17,7 @@ from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
+from psycopg2.extras import DateRange
 
 from appl.models import Category, Tpp, Cabinet, SystemMessages
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
@@ -880,7 +883,12 @@ def getB2BcabinetValues(request):
 
 def get_banner(block, site_id, filter_adv=None):
     # TODO optimize the function for batch
-    banner_queryset = Banner.objects.filter(block__code=block, is_active=True, site=site_id)
+    banner_queryset = Banner.objects.filter(
+        block__code=block,
+        is_active=True,
+        site=site_id,
+        dates__contains=now().date()
+    )
     targeting_filter = None
 
     for target_model, target_items in filter_adv.items():
@@ -892,10 +900,10 @@ def get_banner(block, site_id, filter_adv=None):
             targets__object_id__in=target_items
         )
 
-        if targeting_filter is None:
-            targeting_filter = tmp_filter
-        else:
-            targeting_filter = targeting_filter.__or__(tmp_filter)
+        targeting_filter = tmp_filter if targeting_filter is None else targeting_filter | tmp_filter
+
+    if targeting_filter is not None:
+        banner_queryset = banner_queryset.filter(targeting_filter)
 
     return banner_queryset.order_by('?').first()
 
@@ -972,7 +980,8 @@ def get_tops(filterAdv=None):
         # Get all active context advertisement of some specific type
         queryset = model.objects.filter(
             context_advertisements__is_active=True,
-            context_advertisements__content_type__model=model.__name__.lower()
+            context_advertisements__content_type__model=model.__name__.lower(),
+            context_advertisements__dates__contains=now().date()
         )
 
         targeting_filter = None
@@ -987,10 +996,7 @@ def get_tops(filterAdv=None):
                 context_advertisements__targets__object_id__in=target_items
             )
 
-            if targeting_filter is None:
-                targeting_filter = tmp_filter
-            else:
-                targeting_filter = targeting_filter.__or__(tmp_filter)
+            targeting_filter = tmp_filter if targeting_filter is None else targeting_filter | tmp_filter
 
         if targeting_filter is not None:
             queryset = queryset.filter(targeting_filter)
@@ -1007,51 +1013,69 @@ def get_tops(filterAdv=None):
 
 
 def get_detail_adv_filter(obj):
-    filter_by_model = {}
+    cache_key = "adv_filter:detail:%s:%s" % (obj.__class__, obj.pk)
+    filter_by_model = cache.get(cache_key)
 
-    org = getattr(obj, 'organization', None)
-    company = getattr(obj, 'company', None) if not isinstance(obj, Organization) else None
-    branches = getattr(obj, 'branches', None)
+    if not filter_by_model:
+        filter_by_model = {}
 
-    if org is not None:
-        if isinstance(org, Chamber):
-            filter_by_model[Chamber.__name__] = [org.id]
-        elif org.parent_id:
-            filter_by_model[Chamber.__name__] = [org.parent_id]
-    elif company and company.parent_id:
-        filter_by_model[Chamber.__name__] = [company.parent_id]
+        org = getattr(obj, 'organization', None)
+        company = getattr(obj, 'company', None) if not isinstance(obj, Organization) else None
+        branches = getattr(obj, 'branches', None)
 
-    if branches is not None:
-        filter_by_model[Branch.__name__] = branches.all().values_list('pk', flat=True)
+        if org is not None:
+            if isinstance(org, Chamber):
+                filter_by_model[Chamber.__name__] = [org.id]
+            elif org.parent_id:
+                filter_by_model[Chamber.__name__] = [org.parent_id]
+        elif company:
+            filter_by_model[Branch.__name__] = list(company.branches.all().values_list('pk', flat=True))
+
+            if company.parent_id:
+                filter_by_model[Chamber.__name__] = [company.parent_id]
+
+
+        if branches is not None:
+            if Branch.__name__ in filter_by_model:
+                filter_by_model[Branch.__name__] += list(branches.all().values_list('pk', flat=True))
+            else:
+                filter_by_model[Branch.__name__] = list(branches.all().values_list('pk', flat=True))
+
+        cache.set(cache_key, filter_by_model, 60 * 1)
 
     return filter_by_model
 
 
 def get_list_adv_filter(request):
-    filter_by_model = {
-        Chamber.__name__: [],
-        Country.__name__: [],
-        Branch.__name__: []
-    }
+    cache_key = "adv_filter:list:%s" % hashlib.md5(request.META['QUERY_STRING'].encode('utf-8')).hexdigest()
+    list_filter = cache.get(cache_key)
 
-    countries = []
+    if not list_filter:
+        filter_by_model = {
+            'chamber': [Chamber.__name__, []],
+            'country': [Country.__name__, []],
+            'branches': [Branch.__name__, []],
+        }
 
-    for name, filter_items in filter_by_model.items():
-        filter_key = 'tpp' if name == Chamber.__name__ else name.lower()
+        countries = []
 
-        for pk in request.GET.getlist('filter[' + filter_key + '][]', []):
-            try:
-                filter_items.append(int(pk))
-            except ValueError:
-                continue
+        for filter_key, filter_items in filter_by_model.items():
+            for pk in request.GET.getlist('filter[' + filter_key + '][]', []):
+                try:
+                    filter_items[1].append(int(pk))
+                except ValueError:
+                    continue
 
-        # Add filter of countries of each tpp
-        if name == Chamber.__name__ and len(filter_items) > 0:
-            countries + Country.objects.filter(organizations__pk__in=filter_items).values_list('pk', flat=True)
+            # Add filter of countries of each tpp
+            if filter_items[0] == Chamber.__name__ and len(filter_items[1]) > 0:
+                countries + list(Country.objects \
+                                 .filter(organizations__pk__in=filter_items[1]).values_list('pk', flat=True))
 
-    filter_by_model[Country.__name__] += countries
+        filter_by_model['country'][1] += countries
+        list_filter = dict(filter_by_model.values())
+        cache.set(cache_key, filter_by_model, 60 * 5)
 
-    return filter_by_model
+    return list_filter
 
 
 def getActiveSQS():

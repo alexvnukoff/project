@@ -102,18 +102,10 @@
             var totalCost = 0;
             var total = $('.total-price.white .right b:first');
             var totalDays = $('.total-price.brown .right');
+            var factor = {{ banner_block.factor }};
             var days = 0;
             var stDate;
             var edDate;
-
-
-            {% if form.end_date.value %}
-                edDate = '{{ form.end_date.value }}';
-            {% endif %}
-
-            {% if form.start_date.value %}
-                stDate = '{{ form.start_date.value }}';
-            {% endif %}
 
             $( "#date-start" ).datepicker({
                 dateFormat: "dd/mm/yy",
@@ -123,7 +115,7 @@
                 onClose: function( selectedDate ) {
                     $( "#date-end" ).datepicker( "option", "minDate", selectedDate );
 
-                    stDate = selectedDate;
+                    stDate = $(this).datepicker( "getDate" )
                     setDays();
                 }
             });
@@ -138,21 +130,20 @@
                 onClose: function( selectedDate ) {
                     $( "#date-start" ).datepicker("option", "maxDate", selectedDate);
 
-                    edDate = selectedDate;
+                    edDate = $(this).datepicker( "getDate" )
                     setDays();
                 }
             });
 
 
+            var stDate = $('#date-start').datepicker( "getDate" )
+            var edDate = $('#date-end').datepicker( "getDate" )
 
 
             function setDays() {
 
                 if (stDate && edDate)
                 {
-                    edDate = new Date(edDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
-                    stDate = new Date(stDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$1-$2'));
-
                     var mSec = Math.abs(edDate - stDate);
 
                     if ( !mSec || mSec <= 0 )
@@ -162,6 +153,7 @@
 
                     totalDays.html(days)
                     setTotal();
+
                 }
             }
 
@@ -174,30 +166,28 @@
 
             }
             $.fn.onChangeSet = function(e) {
-                var factor = {{ banner_block.factor }};
-
                 if ( e.added ) {
 
                      var input = $('<input />');
-                     var name = $(this).attr('name')
+                     var name = $(this).data('type')
 
                     input.attr({
-                        name: "filter[" + name + "][]",
+                        name: name,
                         value: e.added.id,
                         type: 'hidden'
                     });
 
                     input.data('cost', e.added.cost);
 
-                    e.added.cost = parseFloat(e.added.cost) * factor;
-                    cost = e.added.cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var cost = parseFloat(e.added.cost) * factor;
+                    cost = cost.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                     html = $('<li></li>').addClass('basket-' + e.added.id);
                     html.append('<span class="left">' + e.added.title + '</span>');
                     html.append('<span class="right">' + cost + ' $/{% trans "day" %}</span>');
 
                     priceList.append(html);
-                    totalCost += e.added.cost;
+                    totalCost += cost * days;
 
                     setTotal();
 
@@ -209,14 +199,11 @@
                     toRemove.remove();
                     priceList.find('li.basket-' + e.removed.id).remove();
 
-                    totalCost -= parseFloat(cost) * factor;
+                    totalCost -= parseFloat(cost) * factor * days;
                     setTotal();
                 }
 
             };
-
-
-
 
             $('.ads-details-center .filter input').select2({
                     width: "100%",
@@ -234,7 +221,7 @@
                         data: function (term, page) { // page is the one-based page number tracked by Select2
                         return {
                             page: page, // page number
-                            type: $(this).attr('name'),
+                            type: $(this).data('type'),
                             q: term //search term
                             };
                         },
@@ -246,7 +233,7 @@
 
                     },
                     initSelection : function (element, callback) {
-                        var name = element.attr('name');
+                        var name = element.data('type');
 
                         if ( name in initial )
                         {
@@ -332,9 +319,9 @@
                 {% if form.non_field_errors %}
                     <div class="error-handler"><div class="formserror2">{{ form.non_field_errors.0 }}</div></div>
                 {% endif %}
-                <input {% if form.branches.value.0 %} value="{{ form.branches.value|length }}" {% endif %}name="branches" placeholder="{% trans 'Filter by Branch' %}" type="hidden" />
-                <input {% if form.country.value.0 %} value="{{ form.country.value|length }}"{% endif %}  name="country" placeholder="{% trans 'Filter by Country' %}" type="hidden" />
-                <input {% if form.chamber.value.0 %} value="{{ form.chamber.value|length }}"{% endif %}  name="chamber" placeholder="{% trans 'Filter by Chamber' %}" type="hidden" />
+                <input {% if form.branches.value.0 %} value="{{ form.branches.value|join:"," }}" {% endif %} data-type="branches" placeholder="{% trans 'Filter by Branch' %}" type="hidden" />
+                <input {% if form.country.value.0 %} value="{{ form.country.value|join:"," }}"{% endif %}  data-type="country" placeholder="{% trans 'Filter by Country' %}" type="hidden" />
+                <input {% if form.chamber.value.0 %} value="{{ form.chamber.value|join:"," }}"{% endif %}  data-type="chamber" placeholder="{% trans 'Filter by Chamber' %}" type="hidden" />
             </div>
         <div class="screen"><img src="{% static 'tppcenter/img/demo.gif'%}"></div>
         </div>

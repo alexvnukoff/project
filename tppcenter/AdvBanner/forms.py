@@ -10,6 +10,10 @@ class BannerForm(forms.ModelForm):
     chamber = forms.ModelMultipleChoiceField(queryset=Chamber.objects.all(), required=False)
     country = forms.ModelMultipleChoiceField(queryset=Country.objects.all(), required=False)
 
+    def __init__(self, *args, **kwargs):
+        self.block = kwargs.pop("block")
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get("start_date", None)
@@ -19,8 +23,11 @@ class BannerForm(forms.ModelForm):
         countries = cleaned_data.get("country", None)
         image = self.cleaned_data.get('image', None)
 
-        if image and image._size > 50 * 1024:
+        if image and image.size > 50 * 1024:
             self.add_error('image', "Image file too large")
+
+        if image and (image.image.width != self.block.width or image.image.height != self.block.height):
+            self.add_error('image', "Required dimensions are: %s x %s" % (self.block.width, self.block.height))
 
         if start_date and end_date and start_date >= end_date:
             self.add_error('start_date', _('Starting date should be earlier than ending date'))

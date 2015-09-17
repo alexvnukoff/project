@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load CustomFilters %}
-
+{% load cache %}
 {% load inclusionTags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -167,10 +167,9 @@
                     <a href="https://www.facebook.com/tppcentercom"><i class="imgmain iconsocial i-face"></i></a>
                     <a href="https://www.youtube.com/channel/UCoQtkd1hIT62K3dXGizgRaQ"><i class="imgmain iconsocial i-video"></i></a>
                 </li>
-                    <li>{% trans 'Products' %}: {% modelCount "Product" %}</li>
-                    <li>{% trans 'Companies' %}: {% modelCount "Company" %}</li>
-                    <li>{% trans 'Partners' %}: {% modelCount "Tpp" %}</li>
-
+                {% cache 3600 statistic %}
+                    {% statistic %}
+                {% endcache %}
             </ul>
         </div>
     </div>

@@ -17,8 +17,8 @@
             <li>
               <div class="thumb">
                   <a href="#">
-                      {% if user.image %}
-                          <img src="{{ user.image.big }}" alt="{{ user|truncatechars:40 }}" title="{{ user }}" />
+                      {% if user.avatar %}
+                          <img src="{{ user.avatar.big }}" alt="{{ user|truncatechars:40 }}" title="{{ user }}" />
                       {% else %}
                           <img src="{% static 'tppcenter/img/profile.jpg' %}" alt="{{ user|truncatechars:40 }}" />
                       {% endif %}

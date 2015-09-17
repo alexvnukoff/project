@@ -1,14 +1,15 @@
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import HStoreField
 from django.core.urlresolvers import reverse
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+
 from b24online.custom import CustomImageField
 from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage
 from b24online.utils import generate_upload_path, reindex_instance
 from core import tasks
-from core.models import User
 
 
 class B2CProductCategory(MPTTModel):
@@ -47,8 +48,8 @@ class B2CProduct(models.Model):
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -99,7 +100,7 @@ class B2CProductComment(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     is_active = models.BooleanField(default=True, db_index=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

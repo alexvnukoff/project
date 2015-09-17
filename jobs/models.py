@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -5,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from b24online.models import Vacancy, Country, ContextAdvertisement
 from b24online.utils import reindex_instance
-from core.models import User
 
 
 class Requirement(models.Model):
@@ -31,8 +31,8 @@ class Requirement(models.Model):
     type_of_employment = models.CharField(max_length=10, null=False, blank=False, choices=TYPES_OF_EMPLOYMENT)
     is_active = models.BooleanField(default=True, db_index=True)
 
-    created_by = models.ForeignKey(User, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -80,7 +80,7 @@ class Resume(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     faculty = models.CharField(max_length=255, null=True, blank=True)
     profession = models.CharField(max_length=255, null=True, blank=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     is_active = models.BooleanField(default=True, db_index=True)
     study_start_date = models.DateField(blank=True, null=True)
     study_end_date = models.DateField(blank=True, null=True)
@@ -105,7 +105,7 @@ class Resume(models.Model):
     additional_information = models.TextField(max_length=100, null=True, blank=True)
     institution = models.CharField(max_length=100, null=True, blank=True)
 
-    updated_by = models.ForeignKey(User, related_name='%(class)s_update_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -121,4 +121,7 @@ class Resume(models.Model):
         return reverse('resume:detail', args=[self.slug, self.pk])
 
     def has_perm(self, user):
+        if not user.is_authenticated() or user.is_anonymous():
+            return False
+
         return user.is_commando or user.is_superuser or self.user == user

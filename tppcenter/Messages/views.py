@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, CharField, Max, Count
 from django.template import RequestContext, loader
@@ -9,7 +10,6 @@ from django.utils.dateparse import parse_datetime
 
 from b24online.models import Message
 from b24online.utils import deep_merge_dict
-from core.models import User
 
 
 @login_required
@@ -17,7 +17,7 @@ def view_messages(request, recipient_id=None):
     if recipient_id is not None:
         if recipient_id == request.user.pk:
             recipient_id = None
-        elif not User.objects.filter(pk=recipient_id).exists():
+        elif not get_user_model().objects.filter(pk=recipient_id).exists():
             recipient_id = None
         else:
             recipient_id = int(recipient_id)
@@ -142,7 +142,7 @@ def _get_last_message_by_contact(sender, recipient):
     unread = dict((user["sender_id"], user) for user in unread)
 
     # Get contacts data
-    users = User.objects.filter(pk__in=chats.keys()).values('pk', 'profile__last_name', 'profile__first_name', 'email')
+    users = get_user_model().objects.filter(pk__in=chats.keys()).values('pk', 'profile__last_name', 'profile__first_name', 'email')
     users = dict((user["pk"], user) for user in users)
 
     # Merge all results to one dict

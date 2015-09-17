@@ -352,14 +352,14 @@ def my_companies(request):
         current_company = request.session.get('current_company', None)
         paginate_by = 10
 
-        organizations = get_objects_for_user(request.user, ['manage_organization'], Organization)
+        organizations = get_objects_for_user(request.user, ['b24online.manage_organization'], Organization)
 
         if current_company is not None:
             organizations = organizations.exclude(pk=current_company)
 
-        if current_company is not None and page == 1:
-            user_name = request.user.profile.full_name or request.user.email
-            result['content'] = [{'title': user_name, 'id': 0}]
+            if page == 1:
+                user_name = request.user.profile.full_name or request.user.email
+                result['content'] = [{'title': user_name, 'id': 0}]
 
         paginator = Paginator(organizations, paginate_by)
         result['total'] = paginator.count
@@ -425,11 +425,10 @@ def get_live_banner(request):
     places = request.POST.getlist('places[]', [])
 
     template_params = {
-        'MEDIA_URL': settings.MEDIA_URL,
-        'banners': [func.get_banner(place, settings.SITE_ID, filterAdv) for place in places]
+        'banners': [func.get_banner(place, None, filterAdv) for place in places]
     }
 
-    return render_to_response("AdvBanner/banners.html", template_params)
+    return render_to_response("AdvBanner/banners_live.html", template_params)
 
 
 def ping(request):

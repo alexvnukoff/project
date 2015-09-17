@@ -1,32 +1,27 @@
 import json
+from decimal import Decimal
 
-from dateutil.parser import parse
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-from django.shortcuts import HttpResponse, render_to_response, get_object_or_404, HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.db import transaction
+from django.db.models import Q
+from django.http import HttpResponseNotFound
+from django.shortcuts import HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.generic import DetailView, CreateView
 
 from appl import func
-from appl.models import Organization, Branch, Tpp, Country, AdvOrder
-from core.models import Item
-#from core.tasks import addTopAttr
-from tppcenter.forms import ItemForm
+from b24online.models import AdvertisementPrices, AdvertisementOrder, ContextAdvertisement, Organization, \
+    AdvertisementTarget, Chamber, B2BProduct, BusinessProposal, InnovationProject, Tender, Exhibition, Company, News
+from jobs.models import Requirement, Resume
+from tppcenter.AdvTop.forms import ContextAdvertisementForm
 
-#from paypal.standard.forms import PayPalPaymentsForm
-import datetime
 
 @login_required
-def advJsonFilter(request):
-    '''
-        Getting filters for advertisement
-    '''
-
-    import json
-
-    filter = request.GET.get('type', None)
+def adv_json_filter(request):
+    filter_model = request.GET.get('type', None)
     q = request.GET.get('q', '').strip()
 
     try:
@@ -34,265 +29,170 @@ def advJsonFilter(request):
     except ValueError:
         return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
-    if request.is_ajax() and type:
+    if filter_model and (len(q) >= 3 or len(q) == 0):
+        obj_list, total = func.autocomplete_filter(filter_model, q, page)
 
-        result = func.autocomplete_filter(filter, q, page)
-
-        if result:
-            onPage, total = result
-
-            obj_list = [item.pk for item in onPage.object_list]
-
-            itemsAttr = Item.getItemsAttributesValues('COST', obj_list)
+        if total > 0:
+            model_type = ContentType.objects.get_for_model(obj_list[0])
+            prices = AdvertisementPrices.objects.filter(content_type__pk=model_type.pk,
+                                                        object_id__in=obj_list,
+                                                        advertisement_type='context',
+                                                        dates__contains=now())
+            price_dict = dict((p.object_id, p.price) for p in prices)
             items = []
 
-            for item in onPage.object_list:
+            for item in obj_list:
+                cost = price_dict.get(item.pk, 0)
 
-                itemcost = itemsAttr.get(item.pk, [0])
-
-                resultDict = {
-                    'title': item.title_auto,
+                result_dict = {
+                    'title': item.name,
                     'id': item.pk,
-                    'cost': itemcost[0],
+                    'cost': float(cost),
                 }
 
-                items.append(resultDict)
+                items.append(result_dict)
 
             return HttpResponse(json.dumps({'content': items, 'total': total}))
 
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
 
-
-
-@login_required
-def addTop(request, item):
-    '''
-        View for a form of adding new context adv
-    '''
-
-    object = get_object_or_404(Item, pk=item)
-    factor = float(object.contentType.top.getAttributeValues('COST')[0])
-
-    try:
-        org = Organization.objects.get(p2c__child=item)
-    except ObjectDoesNotExist:
-        try:
-            org = Organization.objects.get(pk=item)
-        except ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('denied'))
-
-    perm_list = org.getItemInstPermList(request.user)
-
-    if 'add_advtop' not in perm_list:
-        return HttpResponseRedirect(reverse('denied'))
-
-    #org = Organization.objects.get(pk=114)
-    '''
-    perm_list = org.getItemInstPermList(request.user)
-
-    if 'add_advtop' not in perm_list:
-         return HttpResponseRedirect(reverse('denied'))
-    '''
-
-    itemName = object.getAttributeValues('NAME')[0]
-
-    form = None
-    stDate = ''
-    edDate = ''
-    filterAttr = {}
-    filter = {'branch': [], 'country': [], 'tpp': []}
-
-
-    if request.POST:
-        user = request.user
-
-        values = {}
-
-        values['START_EVENT_DATE'] = request.POST.get('st_date', '')
-        values['END_EVENT_DATE'] = request.POST.get('ed_date', '')
-        values['COST'] = 0
-
-        stDate = values['START_EVENT_DATE']
-        edDate = values['END_EVENT_DATE']
-
-        #Allowed filters
-        filterList = ['tpp', 'country', 'branch']
-        ids = []
-
-        for name in filterList: #Get filters from the request context
-
-            for pk in request.POST.getlist('filter[' + name + '][]', []):
-                try:
-                    ids.append(int(pk))
-                except ValueError:
-                    continue
-
-
-        #Get filter objects
-        tpps = Tpp.objects.filter(pk__in=ids)
-        countries = Country.objects.filter(pk__in=ids)
-        branches = Branch.objects.filter(pk__in=ids)
-
-        ids = []
-        filter = {}
-
-        if tpps.exists():
-            filter['tpp'] = tpps.values_list('pk', flat=True)
-            ids += filter['tpp']
-
-        if countries.exists():
-            filter['country'] = countries.values_list('pk', flat=True)
-            ids += filter['country']
-
-        if branches.exists():
-            filter['branch'] = branches.values_list('pk', flat=True)
-            ids += filter['branch']
-
-        #Get name and cost of each filter for form initial values (if error occur on previous submit)
-        filterAttr = Item.getItemsAttributesValues(('COST', 'NAME'), ids)
-
-        for itemID in ids:
-            if not isinstance(filterAttr[itemID], dict):
-                filterAttr[itemID] = {}
-
-            filterAttr[itemID]['NAME'] = filterAttr[itemID].get('NAME', [''])[0]
-            filterAttr[itemID]['COST'] = filterAttr[itemID].get('COST', [0])[0]
-
-        form = ItemForm('AdvTop', values=values)
-        form.clean()
-
-        if form.is_valid():
-
-            if len(ids) == 0:
-                form.errors.update({"FILTER": _("You must choose one filter al least")})
-
-            if form.is_valid():
-
-                try:
-                    startDate = datetime.datetime.strptime(stDate, "%m/%d/%Y")
-                    endDate = datetime.datetime.strptime(edDate, "%m/%d/%Y")
-                except ValueError:
-                    form.errors.update({"DATE": _("You should choose a valid date range")})
-                    startDate = None
-                    endDate = None
-
-                if form.is_valid():
-                    if not startDate or not endDate:
-                        form.errors.update({"DATE": _("You should choose a date range")})
-
-                    delta = endDate - startDate
-
-                    if delta.days <= 0:
-                        form.errors.update({"DATE": _("You should choose a valid date range")})
-
-        order = None
-
-        if form.is_valid():
-            try:
-                order = None#addTopAttr(request.POST, object, user, settings.SITE_ID, ids, org, factor)
-            except Exception as e:
-                form.errors.update({"ERROR": _("Error occurred while trying to proceed your request")})
-
-            if form.is_valid():
-                return HttpResponseRedirect(reverse('adv_top:resultOrder', args=(order, )))
-
-
-
-    enable = {
-        'branch': {'placeholder': _('Select branch'), 'init': len(filter.get('branch', []))},
-        'country': {'placeholder': _('Select country'), 'init': len(filter.get('country', []))},
-        'tpp': {'placeholder': _('Select organization'), 'init': len(filter.get('tpp', []))}
+class CreateContextAdvertisement(CreateView):
+    model = ContextAdvertisement
+    form_class = ContextAdvertisementForm
+    template_name = 'AdvTop/addForm.html'
+    success_url = None
+    allowed_types = {
+        Chamber.__name__.lower(): Chamber,
+        B2BProduct.__name__.lower(): B2BProduct,
+        Requirement.__name__.lower(): Requirement,
+        BusinessProposal.__name__.lower(): BusinessProposal,
+        InnovationProject.__name__.lower(): InnovationProject,
+        Tender.__name__.lower(): Tender,
+        Exhibition.__name__.lower(): Exhibition,
+        Resume.__name__.lower(): Resume,
+        News.__name__.lower(): News,
+        Company.__name__.lower(): Company
     }
 
-    current_section = _('Banners')
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        class_name = self.request.GET.get('type', None)
+        pk = self.request.GET.get('id', None)
 
-    templateParams = {
-        'current_section': current_section,
-        'enable': enable,
-        'form': form,
-        'stDate': stDate,
-        'edDate': edDate,
-        'filterAttr': filterAttr,
-        'filters': filter,
-        'itemName': itemName,
-        'factor': factor
-    }
+        if not class_name or not pk:
+            return HttpResponseNotFound()
 
-    return render_to_response('AdvTop/addForm.html', templateParams, context_instance=RequestContext(request))
+        if class_name not in self.allowed_types:
+            return HttpResponseNotFound()
 
-@login_required
-def resultOrder(request, orderID):
+        self.adv_model = self.allowed_types.get(class_name)
+        self.adv_item = self.adv_model.objects.get(pk=pk)
 
-    order = get_object_or_404(AdvOrder, pk=orderID)
+        return super().dispatch(*args, **kwargs)
 
-    perm_list = order.getItemInstPermList(request.user)
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        form.instance.site = None
+        form.instance.is_active = False
+        form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
+        form.instance.item = self.adv_item
 
-    if 'add_advtop' not in perm_list:
-        return HttpResponseRedirect(reverse('denied'))
+        organization_id = self.request.session.get('current_company', None)
+        organization = Organization.objects.get(pk=organization_id)
 
-    ordWithValues = order.getAttributeValues('ORDER_HISTORY', 'ORDER_DAYS', 'COST', 'START_EVENT_DATE', 'END_EVENT_DATE', 'IMAGE')
+        with transaction.atomic():
+            self.object = form.save()
+            price_filter = None
+            targets = []
 
-    ordJson = ordWithValues.get('ORDER_HISTORY', [""])[0]
+            for valid_filter in ['branches', 'country', 'chamber']:
+                obj_list = form.cleaned_data.get(valid_filter, None)
 
-    orderHistory = json.loads(ordJson)
+                if obj_list:
+                    model_type = ContentType.objects.get_for_model(obj_list[0])
 
-    ids = orderHistory.get('ids', [])
+                    if price_filter is not None:
+                        price_filter = price_filter | Q(content_type__pk=model_type.pk, object_id__in=obj_list)
+                    else:
+                        price_filter = Q(content_type__pk=model_type.pk, object_id__in=obj_list)
 
-    placeNames = Item.getItemsAttributesValues('NAME', ids)
+                    targets += [
+                        AdvertisementTarget(
+                            advertisement_item=self.object,
+                            item=obj,
+                            created_by=self.request.user,
+                            updated_by=self.request.user) for obj in obj_list
+                        ]
 
-    nameCostDict = {}
+            AdvertisementTarget.objects.bulk_create(targets)
 
-    for pid, cost in orderHistory.get('costs', {}).items():
+            prices = AdvertisementPrices.objects.filter(price_filter, advertisement_type='context', dates__contains=now())
+            days = (form.cleaned_data['end_date'] - form.cleaned_data['start_date']).days
+            total_cost = sum([target.price for target in prices]) * Decimal(days)
+            order = AdvertisementOrder.objects.create(advertisement=self.object,
+                                                      total_cost=total_cost,
+                                                      purchaser=organization,
+                                                      dates=(form.cleaned_data['start_date'], form.cleaned_data['end_date']),
+                                                      created_by=self.request.user,
+                                                      updated_by=self.request.user)
+            order.price_components.add(*prices)
+
+        success_url = reverse('adv_top:order', args=[order.pk])
+
+        return HttpResponseRedirect(success_url)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['adv_item'] = self.adv_item
+        cleaned_data = getattr(context_data['form'], 'cleaned_data', None)
+
+        if cleaned_data:
+            for valid_filter in ['branches', 'country', 'chamber']:
+                obj_list = cleaned_data.get(valid_filter, None)
+
+                if obj_list:
+                    model_type = ContentType.objects.get_for_model(obj_list[0])
+                    prices = AdvertisementPrices.objects.filter(content_type__pk=model_type.pk,
+                                                                object_id__in=obj_list,
+                                                                advertisement_type='context',
+                                                                dates__contains=now())
+                    price_dict = dict((p.object_id, p.price) for p in prices)
+                    context_data[valid_filter] =[]
+
+                    for item in obj_list:
+                        cost = price_dict.get(item.pk, 0)
+
+                        context_data[valid_filter].append({
+                            'name': item.name,
+                            'id': item.pk,
+                            'cost': cost,
+                        })
+
+        return context_data
 
 
+class OrderDetail(DetailView):
+    model = AdvertisementOrder
+    template_name = 'AdvTop/order.html'
+    context_object_name = 'item'
 
-        if int(pid) in placeNames:
-            attrValues = placeNames[int(pid)]
-        else:
-            attrValues = {}
+    # TODO: check permission
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-        if isinstance(attrValues, int):
-            attrValues = {}
+    def get_queryset(self):
+        organization_id = self.request.session.get('current_company', None)
+        organization = Organization.objects.get(pk=organization_id)
+        model_type = ContentType.objects.get_for_model(organization)
 
-        nameCostDict.update({
-            attrValues.get('NAME', [""])[0] : cost
-        })
+        return super().get_queryset().filter(content_type__pk=model_type.pk, object_id=organization.pk)
 
-    startDate = parse(ordWithValues.get('START_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
-    endDate = parse(ordWithValues.get('END_EVENT_DATE', [""])[0]).strftime('%d/%m/%Y')
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['price_components'] = context_data['item'].price_components.all().prefetch_related('item')
 
-    current_section = _('Tops')
-    cost = '{0:.2f}'.format(float(ordWithValues.get('COST', [0])[0]))
-    '''
-    domain = Site.objects.get(pk=1).domain
-
-
-        # What you want the button to do.
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": cost,
-        "item_name": _('Advertisement'),
-        "invoice": orderID,
-        "notify_url": "http://www." + domain + '/' + reverse('paypal-ipn'),
-        "return_url": "http://www." + domain + '/',
-        "cancel_return": "http://www." + domain + '/',
-
-    }
-
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    '''
-
-    templateParams = {
-        'current_section': current_section,
-        'nameCost': nameCostDict,
-        'totalCost': cost,
-        'startDate': startDate,
-        'endDate': endDate,
-        'totalDays': ordWithValues.get('ORDER_DAYS', [0])[0],
-        'order': orderID
-        #"form": form
-    }
-
-    return render_to_response('AdvTop/order.html', templateParams, context_instance=RequestContext(request))
+        return context_data
