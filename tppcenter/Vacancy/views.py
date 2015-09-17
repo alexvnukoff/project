@@ -1,5 +1,4 @@
 from django.utils.decorators import method_decorator
-
 from django.utils.timezone import now
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -8,14 +7,11 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.views.generic import CreateView, UpdateView
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import Organization
 from core.models import Relationship
-
-#from core.tasks import addNewRequirement
 from jobs.models import Requirement, Resume
 from tppcenter.Vacancy.forms import RequirementForm
 
@@ -144,16 +140,12 @@ def sendResume(request):
         return HttpResponse(response)
 
 
-class RequirementCreate(CreateView):
+class RequirementCreate(ItemCreate):
+    org_required = False
     model = Requirement
     form_class = RequirementForm
     template_name = 'Vacancy/addForm.html'
     success_url = reverse_lazy('vacancy:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -175,16 +167,11 @@ class RequirementCreate(CreateView):
         return result
 
 
-class RequirementUpdate(UpdateView):
+class RequirementUpdate(ItemUpdate):
     model = Requirement
     form_class = RequirementForm
     template_name = 'Vacancy/addForm.html'
     success_url = reverse_lazy('vacancy:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

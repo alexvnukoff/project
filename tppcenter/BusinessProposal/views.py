@@ -5,18 +5,13 @@ from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView, UpdateView
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
-
-
-# from core.tasks import addBusinessPRoposal
 from b24online.models import Branch, BusinessProposal, Organization, BusinessProposalCategory
 from tppcenter.BusinessProposal.forms import BusinessProposalForm, AdditionalPageFormSet
+from tppcenter.cbv import ItemUpdate, ItemsList, ItemDetail, ItemCreate
 
 
 class BusinessProposalList(ItemsList):
@@ -136,16 +131,11 @@ def bp_categories_list(request):
     return render_to_response('BusinessProposal/BpCategoryList.html', template_params, context_instance=RequestContext(request))
 
 
-class BusinessProposalUpdate(UpdateView):
+class BusinessProposalUpdate(ItemUpdate):
     model = BusinessProposal
     form_class = BusinessProposalForm
     template_name = 'BusinessProposal/addForm.html'
     success_url = reverse_lazy('proposal:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -221,16 +211,11 @@ class BusinessProposalUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class BusinessProposalCreate(CreateView):
+class BusinessProposalCreate(ItemCreate):
     model = BusinessProposal
     form_class = BusinessProposalForm
     template_name = 'BusinessProposal/addForm.html'
     success_url = reverse_lazy('proposal:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

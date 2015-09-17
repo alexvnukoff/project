@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail
 from b24online.models import Greeting
 
 

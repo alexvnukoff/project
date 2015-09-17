@@ -1,6 +1,6 @@
 import json
-from django.contrib.auth import get_user_model
 
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.db import transaction
@@ -11,18 +11,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import UpdateView, CreateView
+
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
 from appl.models import Cabinet
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Vacancy, Gallery, GalleryImage, Organization, Branch
-
+    Vacancy, Gallery, GalleryImage, Organization, Branch, Chamber
 from core.amazonMethods import add
 from tppcenter.Companies.forms import AdditionalPageFormSet, CompanyForm
 from tppcenter.Messages.views import add_message
@@ -54,6 +52,12 @@ class CompanyList(ItemsList):
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'Companies/index.html'
 
+    def get_add_url(self):
+        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+            return self.addUrl
+
+        return None
+
     def optimize_queryset(self, queryset):
         return queryset.prefetch_related('countries', 'parent')
 
@@ -66,7 +70,7 @@ class CompanyList(ItemsList):
             if current_org is not None:
                 queryset = self.model.objects.filter(parent_id=current_org)
             else:
-                queryset = get_objects_for_user(self.request.user, ['manage_organization'], Organization)\
+                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'], Organization)\
                     .instance_of(Company)
 
         return queryset
@@ -78,6 +82,12 @@ class CompanyDetail(ItemDetail):
 
     current_section = _("Companies")
     addUrl = 'companies:add'
+
+    def get_add_url(self):
+        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+            return self.addUrl
+
+        return None
 
     def _get_payed_status(self):
         # TODO
@@ -507,16 +517,11 @@ def send_message(request):
     return HttpResponseBadRequest()
 
 
-class CompanyUpdate(UpdateView):
+class CompanyUpdate(ItemUpdate):
     model = Company
     form_class = CompanyForm
     template_name = 'Companies/addForm.html'
     success_url = reverse_lazy('companies:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -617,16 +622,19 @@ class CompanyUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class CompanyCreate(CreateView):
+class CompanyCreate(ItemCreate):
     model = Company
     form_class = CompanyForm
     template_name = 'Companies/addForm.html'
     success_url = reverse_lazy('companies:main')
+    org_required = False
+    org_model = Chamber
 
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated() or not (request.user.is_commando or request.user.is_superuser):
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

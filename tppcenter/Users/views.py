@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext as _
 
-from b24online.cbv import ItemsList
+from tppcenter.cbv import ItemsList
 from b24online.models import Profile
 
 

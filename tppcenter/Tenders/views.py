@@ -8,14 +8,11 @@ from django.shortcuts import render_to_response
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import CreateView
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import Tender, Organization, Branch
-
-
-# from core.tasks import addNewTender
 from tppcenter.Tenders.forms import TenderForm, AdditionalPageFormSet
 
 
@@ -117,16 +114,11 @@ def deleteTender(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('tenders:main'))
 
 
-class TenderUpdate(UpdateView):
+class TenderUpdate(ItemUpdate):
     model = Tender
     form_class = TenderForm
     template_name = 'Tenders/addForm.html'
     success_url = reverse_lazy('tenders:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -198,16 +190,11 @@ class TenderUpdate(UpdateView):
         return context_data
 
 
-class TenderCreate(CreateView):
+class TenderCreate(ItemCreate):
     model = Tender
     form_class = TenderForm
     template_name = 'Tenders/addForm.html'
     success_url = reverse_lazy('proposal:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

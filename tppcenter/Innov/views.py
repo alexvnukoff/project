@@ -9,15 +9,11 @@ from django.template import RequestContext
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import CreateView, UpdateView
 
 from appl import func
 from appl.models import Cabinet
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import InnovationProject, Branch, Organization
-
-
-#from core.tasks import addNewProject
 from tppcenter.Innov.forms import InnovationProjectForm, AdditionalPageFormSet
 
 
@@ -117,16 +113,11 @@ def deleteInnov(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
 
 
-class InnovationProjectUpdate(UpdateView):
+class InnovationProjectUpdate(ItemUpdate):
     model = InnovationProject
     form_class = InnovationProjectForm
     template_name = 'Innov/addForm.html'
     success_url = reverse_lazy('innov:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -205,16 +196,11 @@ class InnovationProjectUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class InnovationProjectCreate(CreateView):
+class InnovationProjectCreate(ItemCreate):
     model = InnovationProject
     form_class = InnovationProjectForm
     template_name = 'Innov/addForm.html'
     success_url = reverse_lazy('innov:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

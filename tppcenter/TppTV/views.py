@@ -4,18 +4,13 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView, UpdateView
 
 from appl import func
 from appl.models import TppTV
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import News, Organization
-
-
-# from core.tasks import addTppAttrubute
 
 
 class TVNewsLIst(ItemsList):
@@ -149,16 +144,12 @@ def deleteTppTv(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
 
 
-class TvCreate(CreateView):
+class TvCreate(ItemCreate):
+    org_required = False
     model = News
     fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
     template_name = 'TppTV/addForm.html'
     success_url = reverse_lazy('tv:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -181,16 +172,11 @@ class TvCreate(CreateView):
         return result
 
 
-class TvUpdate(UpdateView):
+class TvUpdate(ItemUpdate):
     model = News
     fields = ['title', 'image', 'content', 'keywords', 'short_description', 'video_code']
     template_name = 'TppTV/addForm.html'
     success_url = reverse_lazy('tv:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

@@ -4,14 +4,12 @@ from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import UpdateView, CreateView
 
 from appl import func
 from appl.models import Product
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import B2BProduct, Company, Organization, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tppcenter.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
@@ -189,16 +187,12 @@ def categories_list(request, model):
     return render_to_response('Products/categoryList.html', template_params, context_instance=RequestContext(request))
 
 
-class B2BProductCreate(CreateView):
+class B2BProductCreate(ItemCreate):
+    org_model = Company
     model = B2BProduct
     form_class = B2BProductForm
     template_name = 'Products/addForm.html'
     success_url = reverse_lazy('products:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -270,16 +264,11 @@ class B2BProductCreate(CreateView):
         return self.render_to_response(context_data)
 
 
-class B2BProductUpdate(UpdateView):
+class B2BProductUpdate(ItemUpdate):
     model = B2BProduct
     form_class = B2BProductForm
     template_name = 'Products/addForm.html'
     success_url = reverse_lazy('products:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -357,16 +346,12 @@ class B2BProductUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class B2CProductCreate(CreateView):
+class B2CProductCreate(ItemCreate):
+    org_model = Company
     model = B2CProduct
     form_class = B2CProductForm
     template_name = 'Products/addFormB2C.html'
     success_url = reverse_lazy('products:my_main_b2c')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -437,16 +422,11 @@ class B2CProductCreate(CreateView):
         return self.render_to_response(context_data)
 
 
-class B2CProductUpdate(UpdateView):
+class B2CProductUpdate(ItemUpdate):
     model = B2CProduct
     form_class = B2CProductForm
     template_name = 'Products/addFormB2C.html'
     success_url = reverse_lazy('products:my_main_b2c')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

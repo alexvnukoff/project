@@ -31,7 +31,6 @@ class SiteCreate(CreateView):
     template_name = 'UserSites/addForm.html'
     success_url = reverse_lazy('site:main')
 
-    # TODO: check permission
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -130,7 +129,6 @@ class SiteUpdate(UpdateView):
     template_name = 'UserSites/addForm.html'
     success_url = reverse_lazy('site:main')
 
-    # TODO: check permission
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         self.site = kwargs.pop('site')

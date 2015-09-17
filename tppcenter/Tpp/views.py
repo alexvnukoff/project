@@ -1,30 +1,25 @@
 import json
-from django.contrib.auth import get_user_model
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from django.views.generic import CreateView, UpdateView
+
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
     Organization, Vacancy, Gallery, GalleryImage
 from b24online.utils import handle_uploaded_file
 from core.amazonMethods import add
 from tppcenter.Tpp.forms import AdditionalPageFormSet, ChamberForm
-
-
-#from core.tasks import addNewTpp
 
 
 class ChamberList(ItemsList):
@@ -55,6 +50,12 @@ class ChamberList(ItemsList):
     def optimize_queryset(self, queryset):
         return queryset.select_related('parent').prefetch_related('countries')
 
+    def get_add_url(self):
+        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+            return self.addUrl
+
+        return None
+
     def get_queryset(self):
         queryset = super(ChamberList, self).get_queryset()
 
@@ -64,7 +65,7 @@ class ChamberList(ItemsList):
             if current_org is not None:
                 return queryset.none()
             else:
-                queryset = get_objects_for_user(self.request.user, ['manage_organization'], Organization)\
+                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'], Organization)\
                     .instance_of(Chamber)
 
         return queryset
@@ -75,6 +76,12 @@ class ChamberDetail(ItemDetail):
     template_name = 'Tpp/detailContent.html'
 
     current_section = _("Tpp")
+
+    def get_add_url(self):
+        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+            return self.addUrl
+
+        return None
 
 
 def _tab_companies(request, tpp, page=1):
@@ -410,16 +417,11 @@ def gallery_remove_item(request, tpp):
     return HttpResponse()
 
 
-class ChamberUpdate(UpdateView):
+class ChamberUpdate(ItemUpdate):
     model = Chamber
     form_class = ChamberForm
     template_name = 'Tpp/addForm.html'
     success_url = reverse_lazy('tpp:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -513,16 +515,18 @@ class ChamberUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
 
-class ChamberCreate(CreateView):
+class ChamberCreate(ItemCreate):
+    org_required = False
     model = Chamber
     form_class = ChamberForm
     template_name = 'Tpp/addForm.html'
     success_url = reverse_lazy('tpp:main')
 
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated() or not (request.user.is_commando or request.user.is_superuser):
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

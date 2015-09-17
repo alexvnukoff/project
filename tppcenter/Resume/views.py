@@ -8,12 +8,9 @@ from django.shortcuts import render_to_response
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from django.views.generic import UpdateView, CreateView
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
-
-# from core.tasks import addNewResume
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from jobs.models import Resume
 from tppcenter.Resume.forms import ResumeForm, WorkPositionFormSet
 
@@ -118,16 +115,12 @@ def deleteResume(request, item_id):
     return HttpResponseRedirect(reverse('resume:main'))
 
 
-class ResumeCreate(CreateView):
+class ResumeCreate(ItemCreate):
+    org_required = False
     model = Resume
     form_class = ResumeForm
     template_name = 'Resume/addForm.html'
     success_url = reverse_lazy('resume:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -205,16 +198,11 @@ class ResumeCreate(CreateView):
         return self.render_to_response(context_data)
 
 
-class ResumeUpdate(UpdateView):
+class ResumeUpdate(ItemUpdate):
     model = Resume
     form_class = ResumeForm
     template_name = 'Resume/addForm.html'
     success_url = reverse_lazy('resume:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

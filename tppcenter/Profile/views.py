@@ -2,22 +2,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views.generic import UpdateView
 
 from b24online.models import Profile
 from tppcenter.Profile.forms import ProfileForm
+from tppcenter.cbv import ItemUpdate
 
 
-class ProfileUpdate(UpdateView):
+class ProfileUpdate(ItemUpdate):
     model = Profile
     form_class = ProfileForm
     template_name = 'Profile/addForm.html'
     success_url = reverse_lazy('profile:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

@@ -1,17 +1,22 @@
 from urllib.parse import urlparse
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import Http404
-from django.utils.text import Truncator
-from django.utils.translation import gettext as _
-from django.template import loader, RequestContext
-from django.views.generic import DetailView
-from haystack.backends import SQ
-from haystack.query import SearchQuerySet
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, Http404
+from django.template import RequestContext
+from django.template.loader import get_template
+from django.utils.decorators import method_decorator
+from django.utils.text import Truncator
+from django.views.generic import UpdateView, DetailView, CreateView
+from guardian.shortcuts import get_objects_for_user
 from appl import func
-from appl.models import Country, AdditionalPages, Gallery, Company, Tpp
+from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory
+from b24online.search_indexes import SearchEngine
+
 from core.cbv import HybridListView
+
 
 class TabItemList(HybridListView):
     paginate_by = 10
@@ -20,182 +25,153 @@ class TabItemList(HybridListView):
     #pagination url
     url_paginator = None
 
-class ItemsList(HybridListView):
 
+class ItemUpdate(UpdateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if not obj.has_perm(request.user):
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class ItemCreate(CreateView):
+    org_required = True
+    org_model = Organization
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        organization_id = self.request.session.get('current_company', None)
+
+        if not organization_id and self.org_required:
+            return HttpResponseRedirect(reverse('denied'))
+        elif organization_id:
+            try:
+                organizations = self.org_model.objects.get(pk=organization_id)
+
+                if not organizations.has_perm(request.user):
+                    return HttpResponseRedirect(reverse('denied'))
+            except ObjectDoesNotExist:
+                if self.org_required:
+                    return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class ItemsList(HybridListView):
     paginate_by = 10
-    #context_object_name = 'items'
     allow_empty = True
 
-    #sorting fields
+    # Sorting fields
     sortField1 = 'date'
     sortField2 = None
     order1 = 'desc'
     order2 = None
 
-    #Queryset taken from db not indexes
+    # Queryset taken from db not indexes
     querysetDB = False
 
-    #current page
+    # Current page
     page = 1
 
-    #Add namespace
+    # Add namespace
     addUrl = ''
 
-    #Section name
+    # Section name
     current_section = ''
 
-    #pagination url
+    # Pagination url
     url_paginator = None
     url_my_paginator = None
 
     url_parameter = []
 
-
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     scripts = []
     styles = []
 
-    #Fields to sort by
+    # Fields to sort by
     sortFields = {
-        'date': 'obj_create_date',
-        'name': 'title_sort'
+        'date': 'created_at',
+        'name': 'name'
     }
 
-    #Applied filters
-    filters = {}
-
-    #My tab selected
+    # My tab selected
     my = False
 
-    #allowed filter list
-    filterList = ['tpp', 'country', 'company', 'branch', 'bp_category']
+    # Allowed filter list
+    filter_list = {
+        'organization': Organization,
+        'country': Country,
+        'countries': Country,
+        'b2b_categories': B2BProductCategory,
+        'branches': Branch,
+        'bp_categories': BusinessProposalCategory,
+    }
 
-    def _get_countrys_for_objects(self, object_list):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        method = getattr(cls.model, 'get_index_model', None)
 
-        countries = []
+        if method is None:
+            cls.filter_list = {}
+        else:
+            intersec = method()._doc_type.mapping.properties._params['properties'].keys() & cls.filter_list.keys()
 
-        for obj in object_list:
-            country = getattr(obj, 'country', False)
+            if not intersec:
+                cls.filter_list = {}
+            else:
+                cls.filter_list = {k: cls.filter_list.get(k, None) for k in intersec}
 
-            if not country:
-                continue
+        return super().as_view(**initkwargs)
 
-            if isinstance(country, list):
-                if len(country) != 1:
-                    continue
-                else:
-                    country = country[0]
+    def dispatch(self, request, *args, **kwargs):
+        self.applied_filters = {}
 
-            countries.append(country)
+        return super().dispatch(request, *args, **kwargs)
 
-        if len(countries) > 0:
-            countryDict = {}
-            new_object_list = []
+    def is_filtered(self):
+        q = self.request.GET.get('q', '').strip()
+        return bool(self.applied_filters or q)
 
-            for country in SearchQuerySet().models(Country).filter(django_id__in=countries):
-                countryDict[int(country.pk)] = country
+    def get_filtered_items(self):
+        s = SearchEngine(doc_type=self.model.get_index_model())
+        q = self.request.GET.get('q', '').strip()
 
-            if len(countryDict) > 0:
-                for obj in object_list:
-                    country = getattr(obj, 'country', None)
+        for filter_key in list(self.filter_list.keys()):
+            filter_lookup = "filter[%s][]" % filter_key
+            values = self.request.GET.getlist(filter_lookup)
 
-                    if not country:
-                        new_object_list.append(obj)
-                        continue
+            if values:
+                s = s.filter('terms', **{filter_key: values})
 
-                    if isinstance(country, list):
-                        if len(country) == 1:
-                            country = int(country[0])
-                        else:
-                            new_object_list.append(obj)
-                            continue
+        if q:
+            s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
 
-                    if country not in countryDict:
-                        new_object_list.append(obj)
-                        continue
+        return self.filter_search_object(s)
 
-                    obj.country = countryDict[int(country)]
-                    new_object_list.append(obj)
-
-                return new_object_list
-
-        return object_list
-
-
-    def _get_organization_for_objects(self, object_list):
-
-        orgs = []
-
-        for obj in object_list:
-
-            company = getattr(obj, 'company', False)
-            tpp = getattr(obj, 'tpp', False)
-
-            if company:
-                orgs.append(company)
-            elif tpp:
-                orgs.append(tpp)
-
-        if len(orgs) > 0:
-            orgDict = {}
-
-            for org in SearchQuerySet().models(Company, Tpp).filter(django_id__in=orgs):
-                orgDict[int(org.pk)] = org
-
-            if len(orgDict) > 0:
-                new_object_list = []
-
-                for obj in object_list:
-                    company = getattr(obj, 'company', False)
-                    tpp = getattr(obj, 'tpp', False)
-
-                    if company:
-                        if company in orgDict:
-                            orgDict[company].__setattr__('url', 'companies:detail')
-                            obj.__setattr__('organization', orgDict[company])
-                    elif tpp:
-                        if tpp in orgDict:
-                            orgDict[tpp].__setattr__('url', 'tpp:detail')
-                            obj.__setattr__('organization', orgDict[tpp])
-
-                    new_object_list.append(obj)
-
-                return new_object_list
-
-        return object_list
-
-    def _get_items_perms(self, object_list):
-        if self.request.user.is_authenticated():
-            item_ids = [obj.pk for obj in object_list]
-            return func.getUserPermsForObjectsList(self.request.user, item_ids, self.model.__name__)
-
-        return None
+    def get_add_url(self):
+        return self.addUrl
 
     def get_data(self, context):
-        #For JSON response
-        template = loader.get_template(self.template_name)
+        # For JSON response
+        template = get_template(self.template_name)
         context = RequestContext(self.request, context)
 
         return {
             'styles': self.styles,
             'scripts': self.scripts,
             'content': template.render(context),
-            'addNew': '' if not self.addUrl else reverse(self.addUrl),
-            'current_section': self.current_section
+            'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
         }
 
     def get_context_data(self, **kwargs):
         context = super(ItemsList, self).get_context_data(**kwargs)
 
-        if self.querysetDB:
-            ids = [obj.pk for obj in context['object_list']]
-            context['object_list'] = SearchQuerySet().models(self.model).filter(django_id__in=ids)
-
-        context['object_list'] = self._get_countrys_for_objects(context['object_list'])
-        context['object_list'] = self._get_organization_for_objects(context['object_list'])
-
         context.update({
-            'filters': self.filters,
+            'applied_filters': self.applied_filters,
             'sortField1': self.sortField1,
             'sortField2': self.sortField2,
             'order1': self.order1,
@@ -204,19 +180,21 @@ class ItemsList(HybridListView):
             'paginator_range': func.get_paginator_range(context['page_obj']),
             'url_parameter': self.url_parameter,
             'url_paginator': self.url_my_paginator if self.is_my() else self.url_paginator,
-            'items_perms': self._get_items_perms(context['object_list']),
+            'items_perms': None,  # Deprecated
             'current_path': self.request.get_full_path(),
-            'addNew': '' if not self.addUrl else reverse(self.addUrl),
+            'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
             'current_section': self.current_section,
             'styles': self.styles,
             'scripts': self.scripts,
+            'available_filters': list(self.filter_list.keys()),
             'model': self.model.__name__
         })
 
-        return context
+        if isinstance(context['object_list'], SearchEngine):
+            object_ids = [hit.django_id for hit in context['object_list'].execute().hits]
+            context['object_list'] = self.optimize_queryset(self.model.objects.filter(pk__in=object_ids))
 
-    def is_my(self):
-        return self.my
+        return context
 
     def ajax(self, request, *args, **kwargs):
         pass
@@ -225,6 +203,12 @@ class ItemsList(HybridListView):
         pass
 
     def get(self, request, *args, **kwargs):
+        for f, model in self.filter_list.items():
+            key = "filter[%s][]" % f
+            values = request.GET.getlist(key)
+
+            if values:
+                self.applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
@@ -233,83 +217,10 @@ class ItemsList(HybridListView):
 
         return super(ItemsList, self).get(request, *args, **kwargs)
 
-
-    def filterLive(self):
-        '''
-            Converting request GET filter parameters (from popup window) to filter parameter for SearchQuerySet filter
-
-            obj request - request context
-        '''
-
-        #session_key_model_name = 'filter_' + self.model.__name__.lower()
-
-        filtersIDs = {}
-        ids = []
-
-        #get all filter parameters from request GET
-        for name in self.filterList:
-            filtersIDs[name] = []
-            self.filters[name] = []
-
-            for pk in self.request.GET.getlist('filter[' + name + '][]', []):
-                try:
-                    filtersIDs[name].append(int(pk))
-                except ValueError:
-                    continue
-
-            ids += filtersIDs[name]
-
-        #Do we have any valid filter ?
-        if len(ids) > 0:
-            items = SearchQuerySet().filter(django_id__in=ids)
-
-            for item in items:
-                #Creating a list of filter parameters
-
-                for name, id in filtersIDs.items():
-
-                    if int(item.pk) in id:
-                        self.filters[name].append({'id': item.pk, 'text': item.title_auto})
-
-
-        searchFilter = self._create_sqs_filter()
-
-        if len(searchFilter) > 0: #Converting a list of filter parameters to big "OR" filter
-
-            #self.request.session[session_key_model_name] = self.filters
-            return eval(' | '.join(searchFilter))
-        '''
-        elif len(self.request.session.get(session_key_model_name, {})) > 0:
-            self.filters = self.request.session.get(session_key_model_name, {})
-            searchFilter = self._create_sqs_filter()
-
-            return eval(' | '.join(searchFilter))
-        '''
-        return None
-
-    def _create_sqs_filter(self):
-
-        newIDs = []
-        searchFilter = []
-
-        for name, filterList in self.filters.items():
-
-            for filter in filterList:
-                try:
-                    #Security
-                    newIDs.append(str(int(filter['id'])))
-                except ValueError:
-                    continue
-
-            if len(newIDs) > 0:
-                searchFilter.append('SQ(' + name + '__in =[' + ','.join(newIDs) + '])')
-
-        return searchFilter
-
     def _get_sorting_params(self):
         order = []
 
-        self.sortField1 = self.request.GET.get('sortField1', 'obj_create_date')
+        self.sortField1 = self.request.GET.get('sortField1', 'date')
         self.sortField2 = self.request.GET.get('sortField2', None)
         self.order1 = self.request.GET.get('order1', 'desc')
         self.order2 = self.request.GET.get('order2', None)
@@ -320,7 +231,7 @@ class ItemsList(HybridListView):
             else:
                 order.append(self.sortFields[self.sortField1])
         else:
-            order.append('-obj_create_date')
+            order.append(self.sortFields['date'])
 
         if self.sortField2 and self.sortField2 in self.sortFields:
             if self.order2 == 'desc':
@@ -330,152 +241,81 @@ class ItemsList(HybridListView):
 
         return order
 
-    def _get_my(self):
-        current_organization = self.request.session.get('current_company', False)
+    @property
+    def _current_organization(self):
+        return self.request.session.get('current_company', None)
 
-        if current_organization is False:
-            if self.request.is_ajax():
-                self.template_name = 'permissionDen.html'
-            else:
-                self.template_name = 'main/denied.html'
+    def is_my(self):
+        return self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my
 
-            return SQ(django_id=0)
+    def filter_search_object(self, s):
+        return s
 
-        return SQ(tpp=current_organization) | SQ(company=current_organization)
-
+    def optimize_queryset(self, queryset):
+        return queryset
 
     def get_queryset(self):
+        if self.is_filtered() and not self.is_my():
+            return self.get_filtered_items().sort(*self._get_sorting_params())
 
-        sqs = func.getActiveSQS().models(self.model)
-
-        if self.request.user.is_authenticated() and self.is_my():
-            sqs = sqs.filter(self._get_my())
-        else:
-            searchFilter = self.filterLive()
-
-            if searchFilter:
-                sqs = sqs.filter(searchFilter)
-
-
-        q = self.request.GET.get('q', '').strip()
-
-        if q != '': #Search for content
-            sqs = sqs.filter(SQ(title=q) | SQ(text=q))
-
-        return sqs.order_by(*self._get_sorting_params())
+        return self.optimize_queryset(self.model.objects.filter(is_active=True).order_by(*self._get_sorting_params()))
 
 
 class ItemDetail(DetailView):
     context_object_name = 'item'
     item_id = None
 
-
-    #Add namespace
+    # Add namespace
     addUrl = ''
 
-    #Section name
+    # Section name
     current_section = ''
 
+    def get_add_url(self):
+        return self.addUrl
+
     def get_queryset(self):
-        return func.getActiveSQS().models(self.model)
+        return self.model.objects.filter(is_active=True)
 
     def get_object(self, queryset=None):
-
-        queryset = self.get_queryset()
-
         self.item_id = self.kwargs.get('item_id', None)
-        slug = self.kwargs.get('slug', None)
+        # TODO: get by slug?
 
-        if self.item_id is not None:
-            queryset = queryset.filter(django_id=self.item_id)
-        elif slug is not None:
-            queryset = queryset.filter(slug=slug)
-
-        # If none of those are defined, it's an error.
+        if self.item_id:
+            try:
+                return self.get_queryset().get(pk=self.item_id)
+            except ObjectDoesNotExist:
+                raise Http404()
         else:
             raise AttributeError("Generic detail view %s must be called with "
                                  "either an object pk or a slug."
                                  % self.__class__.__name__)
 
-        if queryset.count() == 0:
-            raise Http404(_("No %(verbose_name)s found matching the query") %
-                          {'verbose_name': self.model._meta.verbose_name})
-
-        return queryset[0]
-
-    def _get_additional_pages(self):
-        return AdditionalPages.objects.filter(c2p__parent=self.object.pk)
-
-    def _get_country_for_object(self):
-
-        country = getattr(self.object, 'country', None)
-
-        if not country:
-            return country
-
-        if isinstance(country, list):
-            if len(country) != 1:
-                return country
-            else:
-                country = country[0]
-
-
-        country = SearchQuerySet().models(Country).filter(django_id=country)
-
-        if country.count() != 1:
-            return None
-
-        return country[0]
-
-    def _get_organization_for_object(self):
-
-        tpp = getattr(self.object, 'tpp', None)
-        company = getattr(self.object, 'company', None)
-
-        if company:
-
-            company = SearchQuerySet().filter(django_id=company)[0]
-            company.__setattr__('url', 'companies:detail')
-            return company
-        elif tpp:
-            tpp = SearchQuerySet().filter(django_id=tpp)[0]
-            tpp.__setattr__('url', 'tpp:detail')
-            return tpp
-
-        return None
-
-    def _get_gallery(self):
-        return Gallery.objects.filter(c2p__parent=self.object.pk)
-
     def _get_item_meta(self):
+        title = getattr(self.object, 'title', '') or getattr(self.object, 'name', '')
+        image = settings.MEDIA_URL + 'original/' + self.object.image
 
-        image = ''
-
-        if getattr(self.object, 'image', False):
-            image = settings.MEDIA_URL + 'original/' + self.object.image
+        if image:
+            getattr(self.object, 'logo', '') or getattr(self.object, 'image', '')
 
         url = urlparse(self.request.build_absolute_uri())
 
-        title = self.object.title if getattr(self.object, 'title', False) else getattr(self.object, 'text', "")
-
         return {
             'title': Truncator(title).chars("80", truncate='...'),
-            'image': image,
+            'image': getattr(self.object, 'logo', '') or getattr(self.object, 'image', ''),
             'url': url.scheme + "://" + url.netloc + url.path,
-            'text': getattr(self.object, 'text', "")
+            'text': getattr(self.object, 'description', "") or getattr(self.object, 'content', "")
         }
+        pass
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
 
-        context[self.context_object_name].__setattr__('country', self._get_country_for_object())
-        context[self.context_object_name].__setattr__('organization', self._get_organization_for_object())
-
         context.update({
             'item_id': self.item_id,
-            'addNew': '' if not self.addUrl else reverse(self.addUrl),
+            'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
             'current_section': self.current_section,
-            'meta': self._get_item_meta()
+            'meta': {}
         })
 
         return context

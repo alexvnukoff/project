@@ -5,14 +5,14 @@ from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView, UpdateView
 
 from appl import func
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import Exhibition, Branch, Organization
+
+
 
 
 # from core.tasks import addNewExhibition
@@ -114,16 +114,11 @@ def deleteExhibition(request, item_id):
     return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
 
 
-class ExhibitionUpdate(UpdateView):
+class ExhibitionUpdate(ItemUpdate):
     model = Exhibition
     form_class = ExhibitionForm
     template_name = 'Exhibitions/addForm.html'
     success_url = reverse_lazy('exhibitions:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -204,16 +199,11 @@ class ExhibitionUpdate(UpdateView):
         return context_data
 
 
-class ExhibitionCreate(CreateView):
+class ExhibitionCreate(ItemCreate):
     model = Exhibition
     form_class = ExhibitionForm
     template_name = 'Exhibitions/addForm.html'
     success_url = reverse_lazy('exhibitions:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """

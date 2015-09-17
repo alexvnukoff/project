@@ -6,17 +6,18 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView
 
 from appl import func
 from b24online.models import AdvertisementPrices, AdvertisementOrder, ContextAdvertisement, Organization, \
     AdvertisementTarget, Chamber, B2BProduct, BusinessProposal, InnovationProject, Tender, Exhibition, Company, News
 from jobs.models import Requirement, Resume
 from tppcenter.AdvTop.forms import ContextAdvertisementForm
+from tppcenter.cbv import ItemCreate
 
 
 @login_required
@@ -57,7 +58,7 @@ def adv_json_filter(request):
     return HttpResponse(json.dumps({'content': [], 'total': 0}))
 
 
-class CreateContextAdvertisement(CreateView):
+class CreateContextAdvertisement(ItemCreate):
     model = ContextAdvertisement
     form_class = ContextAdvertisementForm
     template_name = 'AdvTop/addForm.html'
@@ -75,11 +76,10 @@ class CreateContextAdvertisement(CreateView):
         Company.__name__.lower(): Company
     }
 
-    # TODO: check permission
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        class_name = self.request.GET.get('type', None)
-        pk = self.request.GET.get('id', None)
+    def dispatch(self, request, *args, **kwargs):
+        class_name = request.GET.get('type', None)
+        pk = request.GET.get('id', None)
 
         if not class_name or not pk:
             return HttpResponseNotFound()
@@ -90,7 +90,10 @@ class CreateContextAdvertisement(CreateView):
         self.adv_model = self.allowed_types.get(class_name)
         self.adv_item = self.adv_model.objects.get(pk=pk)
 
-        return super().dispatch(*args, **kwargs)
+        if not self.adv_item.has_perm(request.user):
+            return HttpResponseBadRequest()
+
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -179,10 +182,14 @@ class OrderDetail(DetailView):
     template_name = 'AdvTop/order.html'
     context_object_name = 'item'
 
-    # TODO: check permission
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = AdvertisementOrder.objects.get(pk=kwargs.get('pk'))
+
+        if not self.object.has_perm(request.user):
+            return HttpResponseBadRequest()
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         organization_id = self.request.session.get('current_company', None)

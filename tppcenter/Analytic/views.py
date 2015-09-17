@@ -40,10 +40,10 @@ def main(request):
 
 
 @login_required
-def getAnalytic(request):
-    '''
+def get_analytic(request):
+    """
         Get analytic of current organization
-    '''
+    """
 
     current_company = request.session.get('current_company', False)
 

@@ -1,21 +1,18 @@
 from datetime import datetime
 
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.contrib.syndication.views import Feed
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView, UpdateView
 from pytz import timezone
 import pytz
 from django.conf import settings
 
 from appl import func
 from appl.models import NewsCategories
-from b24online.cbv import ItemsList, ItemDetail
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
 from b24online.models import News, Organization
 from core.models import Group
 
@@ -213,16 +210,12 @@ class NewsFeed(Feed):
         return {"content": item.getAttributeValues('DETAIL_TEXT')[0], 'video_url': video_url, 'image': image}
 
 
-class NewsCreate(CreateView):
+class NewsCreate(ItemCreate):
     model = News
     fields = ['title', 'image', 'content', 'keywords', 'short_description']
     template_name = 'News/addForm.html'
     success_url = reverse_lazy('news:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    org_required = False
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -244,16 +237,11 @@ class NewsCreate(CreateView):
         return result
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(ItemUpdate):
     model = News
     fields = ['title', 'image', 'content', 'keywords', 'short_description']
     template_name = 'News/addForm.html'
     success_url = reverse_lazy('news:main')
-
-    # TODO: check permission
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

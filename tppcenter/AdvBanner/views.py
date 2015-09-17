@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
+from django.http import HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, DetailView
@@ -12,18 +13,21 @@ from appl import func
 from b24online.models import BannerBlock, Banner, AdvertisementPrices, AdvertisementOrder, Organization, \
     AdvertisementTarget
 
-
-# from core.tasks import addBannerAttr
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse, HttpResponseRedirect
 from tppcenter.AdvBanner.forms import BannerForm
+from tppcenter.cbv import ItemCreate
 
 
 class BannerBlockList(ListView):
     template_name = 'AdvBanner/index.html'
     context_object_name = 'blocks'
     ordering = 'block_type, name'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         return BannerBlock.objects.filter(block_type__in=['b2c', 'b2b'])
@@ -45,17 +49,18 @@ class BannerBlockList(ListView):
         return context_data
 
 
-class CreateBanner(CreateView):
+class CreateBanner(ItemCreate):
     model = Banner
     form_class = BannerForm
     template_name = 'AdvBanner/addForm.html'
     success_url = None
 
-    # TODO: check permission
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.block = BannerBlock.objects.get(pk=kwargs.pop('block_id'), block_type__in=['b2c', 'b2b'])
-        return super().dispatch(*args, **kwargs)
+        self.organization = Organization.objects.get(pk=request.session.get('current_company', None))
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -70,9 +75,6 @@ class CreateBanner(CreateView):
         form.instance.is_active = False
         form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
         form.instance.block = self.block
-
-        organization_id = self.request.session.get('current_company', None)
-        organization = Organization.objects.get(pk=organization_id)
 
         with transaction.atomic():
             self.object = form.save()
@@ -105,7 +107,7 @@ class CreateBanner(CreateView):
             total_cost = sum([target.price for target in prices]) * Decimal(days) * Decimal(self.block.factor)
             order = AdvertisementOrder.objects.create(advertisement=self.object,
                                                       total_cost=total_cost,
-                                                      purchaser=organization,
+                                                      purchaser=self.organization,
                                                       dates=(form.cleaned_data['start_date'], form.cleaned_data['end_date']),
                                                       price_factor=self.block.factor,
                                                       created_by=self.request.user,
@@ -193,10 +195,9 @@ class OrderDetail(DetailView):
     template_name = 'AdvBanner/order.html'
     context_object_name = 'item'
 
-    # TODO: check permission
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         model_type = ContentType.objects.get_for_model(self.request.user)
