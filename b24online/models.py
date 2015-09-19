@@ -25,8 +25,8 @@ from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
-from b24online.utils import create_slug, generate_upload_path, reindex_instance
-from core import tasks
+from b24online.utils import create_slug, generate_upload_path, reindex_instance, document_upload_path
+from tpp.celery import app
 
 CURRENCY = [
     ('NIS', _('Israeli New Sheqel')),
@@ -106,6 +106,47 @@ file_storage = S3FileStorage()
 #
 #         return organization_ids or []
 
+class ActiveManager(models.Manager):
+    fields_cache = {}
+
+    def get_queryset(self):
+        fields = self.fields_cache.get(self.model, None)
+
+        if not fields:
+            fields = [field.name for field in self.model._meta.get_fields()]
+            self.fields_cache[self.model] = fields
+
+        filter_args = {}
+
+        if 'is_active' in fields:
+            filter_args['is_active'] = True
+
+        if 'is_deleted' in fields:
+            filter_args['is_deleted'] = False
+
+        if filter_args:
+            return super().get_queryset().filter(**filter_args)
+
+        return super().get_queryset()
+
+
+class ActiveModelMixing(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveManager()
+
+    class Meta:
+        abstract = True
+
+
+
+class IndexedModelMixin:
+    def reindex(self, is_active_changed=False, *args, **kwargs):
+        reindex_instance(self)
+
+    @staticmethod
+    def get_index_model(*args, **kwargs):
+        raise NotImplementedError('Reindex not implemented')
+
 
 class Order(models.Model):
     pass
@@ -129,7 +170,7 @@ class Advertisement(models.Model):
         return None
 
 
-class ContextAdvertisement(Advertisement):
+class ContextAdvertisement(ActiveModelMixing, Advertisement):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
@@ -164,9 +205,9 @@ class AdvertisementTarget(models.Model):
         return self.advertisement_item.has_perm(user)
 
 
-class Gallery(models.Model):
+class Gallery(ActiveModelMixing, models.Model):
     title = models.CharField(max_length=266, blank=False, null=True)
-    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey()
@@ -197,7 +238,6 @@ class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                             sizes=['big', 'small', 'th'], max_length=255)
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -209,12 +249,12 @@ class GalleryImage(models.Model):
 
 
 class Document(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
     description = models.CharField(max_length=255, blank=False, null=False)
-    document = models.FileField(storage=file_storage)
+    document = models.FileField(upload_to=document_upload_path)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -231,7 +271,6 @@ class AdditionalPage(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -242,14 +281,13 @@ class AdditionalPage(models.Model):
         return self.item.haxs_perm(user)
 
 
-class Branch(MPTTModel):
+class Branch(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import BranchIndex
         return BranchIndex
 
@@ -260,13 +298,13 @@ class Branch(MPTTModel):
         return reverse('branch:detail', args=[self.slug, self.pk])
 
 
-class Country(models.Model):
+class Country(models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     flag = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import CountryIndex
         return CountryIndex
 
@@ -277,12 +315,18 @@ class Country(models.Model):
         return reverse('country:detail', args=[self.slug, self.pk])
 
 
-class Organization(PolymorphicMPTTModel):
+class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     countries = models.ManyToManyField(Country, related_name='organizations')
     parent = PolymorphicTreeForeignKey('self', blank=True, null=True, related_name='children',
                                        verbose_name=_('parent'), db_index=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def has_perm(self, user):
         if user is None or not user.is_authenticated() or user.is_anonymous():
@@ -316,6 +360,10 @@ class Organization(PolymorphicMPTTModel):
             ('manage_organization', 'Manage Organization'),
         )
 
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
+
 
 class ProjectUserObjectPermission(UserObjectPermissionBase):
     content_object = models.ForeignKey(Organization)
@@ -325,7 +373,7 @@ class ProjectGroupObjectPermission(GroupObjectPermissionBase):
     content_object = models.ForeignKey(Organization)
 
 
-class Chamber(Organization):
+class Chamber(Organization, IndexedModelMixin):
     CHAMBER_TYPES = [
         ('international', _('International')),
         ('national', _('National')),
@@ -345,13 +393,10 @@ class Chamber(Organization):
     metadata = HStoreField()
     additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
-
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    documents = GenericRelation(Document)
 
     def upload_images(self, changed_data=None):
+        from core import tasks
         params = []
 
         if (changed_data is None or 'logo' in changed_data) and self.logo:
@@ -374,8 +419,14 @@ class Chamber(Organization):
 
         tasks.upload_images.delay(*params)
 
-    def reindex(self):
+    def reindex(self, is_active_changed=False, **kwargs):
+        from core import tasks
         reindex_instance(self)
+
+        if is_active_changed:
+            task_id = 'chamber:on_company_active_changed:%s' % self.pk
+            app.control.revoke(task_id)
+            tasks.on_chamber_active_changed.apply_async((self.pk,), tasks_id=task_id)
 
     @property
     def country(self):
@@ -466,7 +517,7 @@ class Chamber(Organization):
         return cls.__name__
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import ChamberIndex
         return ChamberIndex
 
@@ -474,7 +525,7 @@ class Chamber(Organization):
         return self.name
 
 
-class Company(Organization):
+class Company(Organization, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     short_description = models.TextField(null=False, blank=True)
@@ -489,13 +540,10 @@ class Company(Organization):
     branches = models.ManyToManyField(Branch)
     additional_pages = GenericRelation(AdditionalPage)
     galleries = GenericRelation(Gallery)
-
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
-    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    documents = GenericRelation(Document)
 
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.logo.path,
             'sizes': {
@@ -507,8 +555,14 @@ class Company(Organization):
 
         tasks.upload_images.delay(params)
 
-    def reindex(self):
+    def reindex(self, is_active_changed=False, **kwargs):
+        from core import tasks
         reindex_instance(self)
+
+        if is_active_changed:
+            task_id = 'company:on_company_active_changed:%s' % self.pk
+            app.control.revoke(task_id)
+            tasks.on_company_active_changed.apply_async((self.pk,), tasks_id=task_id)
 
     @property
     def country(self):
@@ -573,7 +627,7 @@ class Company(Organization):
         return None
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import CompanyIndex
         return CompanyIndex
 
@@ -585,7 +639,6 @@ class Department(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     organization = models.ForeignKey(Organization, db_index=True, related_name='departments')
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -615,7 +668,6 @@ class Vacancy(models.Model):
     slug = models.SlugField()
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -654,14 +706,13 @@ class Vacancy(models.Model):
         return reverse('vacancy:detail', args=[self.slug, self.pk])
 
 
-class BusinessProposalCategory(MPTTModel):
+class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
-    is_active = models.BooleanField(default=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import BusinessProposalCategoryIndex
         return BusinessProposalCategoryIndex
 
@@ -672,7 +723,7 @@ class BusinessProposalCategory(MPTTModel):
         return reverse('bp_category:detail', args=[self.slug, self.pk])
 
 
-class BusinessProposal(models.Model):
+class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     description = models.TextField(blank=False, null=False)
@@ -683,6 +734,7 @@ class BusinessProposal(models.Model):
     galleries = GenericRelation(Gallery)
     country = models.ForeignKey(Country)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     categories = models.ManyToManyField(BusinessProposalCategory)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     context_advertisements = GenericRelation(ContextAdvertisement)
@@ -696,12 +748,9 @@ class BusinessProposal(models.Model):
         return self.organization.has_perm(user)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import BusinessProposalIndex
         return BusinessProposalIndex
-
-    def reindex(self):
-        reindex_instance(self)
 
     def __str__(self):
         return self.title
@@ -709,8 +758,13 @@ class BusinessProposal(models.Model):
     def get_absolute_url(self):
         return reverse('proposal:detail', args=[self.slug, self.pk])
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
 
-class InnovationProject(models.Model):
+
+class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     description = models.TextField(blank=False, null=False)
@@ -725,6 +779,7 @@ class InnovationProject(models.Model):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
@@ -764,7 +819,7 @@ class InnovationProject(models.Model):
         return None
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import InnovationProjectIndex
         return InnovationProjectIndex
 
@@ -774,19 +829,20 @@ class InnovationProject(models.Model):
     def get_absolute_url(self):
         return reverse('innov:detail', args=[self.slug, self.pk])
 
-    def reindex(self):
-        reindex_instance(self)
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
 
 
-class B2BProductCategory(MPTTModel):
+class B2BProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import B2bProductCategoryIndex
         return B2bProductCategoryIndex
 
@@ -797,7 +853,7 @@ class B2BProductCategory(MPTTModel):
         return reverse('b2b_category:detail', args=[self.slug, self.pk])
 
 
-class B2BProduct(models.Model):
+class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, name=False)
     slug = models.SlugField()
     short_description = models.TextField(null=False)
@@ -814,6 +870,7 @@ class B2BProduct(models.Model):
     galleries = GenericRelation(Gallery)
     branches = models.ManyToManyField(Branch)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
     context_advertisements = GenericRelation(ContextAdvertisement)
@@ -824,6 +881,7 @@ class B2BProduct(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.image.path,
             'sizes': {
@@ -835,7 +893,7 @@ class B2BProduct(models.Model):
 
         tasks.upload_images.delay(params)
 
-    def reindex(self):
+    def reindex(self, **kwargs):
         reindex_instance(self)
 
     @property
@@ -853,7 +911,7 @@ class B2BProduct(models.Model):
         return self.name
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import B2BProductIndex
         return B2BProductIndex
 
@@ -863,12 +921,16 @@ class B2BProduct(models.Model):
     def get_absolute_url(self):
         return reverse('products:detail', args=[self.slug, self.pk])
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at', 'company'],
+        ]
+
 
 class B2BProductComment(MPTTModel):
     content = models.TextField()
     product = models.ForeignKey(B2BProduct, on_delete=models.CASCADE)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -882,15 +944,14 @@ class B2BProductComment(MPTTModel):
         return user.is_commando or user.is_superuser or self.created_by == user
 
 
-class NewsCategory(MPTTModel):
+class NewsCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import NewsCategoryIndex
         return NewsCategoryIndex
 
@@ -901,17 +962,16 @@ class NewsCategory(MPTTModel):
         return reverse('news_category:detail', args=[self.slug, self.pk])
 
 
-class Greeting(models.Model):
+class Greeting(models.Model, IndexedModelMixin):
     photo = models.CharField(max_length=255, blank=False, null=False)
     organization = models.CharField(max_length=255, blank=False, null=False)
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     position = models.CharField(max_length=255, blank=False, null=False)
     content = models.TextField(blank=False, null=False)
-    is_active = models.BooleanField(default=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import GreetingIndex
         return GreetingIndex
 
@@ -928,7 +988,7 @@ class Greeting(models.Model):
         return reverse('greetings:detail', args=[self.slug, self.pk])
 
 
-class News(models.Model):
+class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255, blank=True)
@@ -941,6 +1001,7 @@ class News(models.Model):
     video_code = models.CharField(max_length=255, blank=True, null=False)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
     country = models.ForeignKey(Country, null=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
@@ -951,6 +1012,7 @@ class News(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.image.path,
             'sizes': {
@@ -963,12 +1025,9 @@ class News(models.Model):
         tasks.upload_images.delay(params)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import NewsIndex
         return NewsIndex
-
-    def reindex(self):
-        reindex_instance(self)
 
     def __str__(self):
         return self.title
@@ -988,8 +1047,13 @@ class News(models.Model):
 
         return reverse('news:detail', args=[self.slug, self.pk])
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
 
-class Tender(models.Model):
+
+class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     content = models.TextField(blank=False, null=False)
@@ -1000,9 +1064,11 @@ class Tender(models.Model):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     dates = DateRangeField(null=True)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    galleries = GenericRelation(Gallery)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1027,7 +1093,7 @@ class Tender(models.Model):
         return self.title
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import TenderIndex
         return TenderIndex
 
@@ -1037,11 +1103,13 @@ class Tender(models.Model):
     def get_absolute_url(self):
         return reverse('tenders:detail', args=[self.slug, self.pk])
 
-    def reindex(self):
-        reindex_instance(self)
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
 
 
-class Profile(models.Model):
+class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
     first_name = models.CharField(max_length=255, blank=False, null=False)
     middle_name = models.CharField(max_length=255, blank=True, null=False)
     last_name = models.CharField(max_length=255, blank=True, null=False)
@@ -1061,6 +1129,7 @@ class Profile(models.Model):
     user_type = models.CharField(max_length=255, default='individual', choices=TYPES)
 
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.avatar.path,
             'sizes': {
@@ -1072,7 +1141,7 @@ class Profile(models.Model):
 
         tasks.upload_images.delay(params)
 
-    def reindex(self):
+    def reindex(self, **kwargs):
         reindex_instance(self)
 
     @property
@@ -1080,7 +1149,7 @@ class Profile(models.Model):
         return "%s %s %s" % (self.first_name, self.middle_name, self.last_name)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import ProfileIndex
         return ProfileIndex
 
@@ -1094,7 +1163,7 @@ class Profile(models.Model):
         return user.is_commando or user.is_superuser or self.user == user
 
 
-class Exhibition(models.Model):
+class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     description = models.TextField(blank=False, null=False)
@@ -1104,12 +1173,14 @@ class Exhibition(models.Model):
     city = models.CharField(max_length=255, blank=False, null=True)
     route = models.CharField(blank=True, null=False, max_length=1024)
     is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     country = models.ForeignKey(Country)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     additional_pages = GenericRelation(AdditionalPage)
     context_advertisements = GenericRelation(ContextAdvertisement)
     branches = models.ManyToManyField(Branch)
     metadata = HStoreField()
+    galleries = GenericRelation(Gallery)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -1137,11 +1208,11 @@ class Exhibition(models.Model):
 
         return None
 
-    def reindex(self):
+    def reindex(self, **kwargs):
         reindex_instance(self)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import ExhibitionIndex
         return ExhibitionIndex
 
@@ -1154,13 +1225,17 @@ class Exhibition(models.Model):
     def get_absolute_url(self):
         return reverse('exhibitions:detail', args=[self.slug, self.pk])
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
+
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     content = models.TextField(blank=False, null=False)
     is_on_top = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
 
     SITE_TYPES = [
         ('b2b', _('B2B')),
@@ -1271,7 +1346,7 @@ class BannerBlock(models.Model):
         ]
 
 
-class Banner(Advertisement):
+class Banner(ActiveModelMixing, Advertisement):
     title = models.CharField(max_length=255)
     link = models.URLField()
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, max_length=255)
@@ -1286,6 +1361,7 @@ class Banner(Advertisement):
     updated_at = models.DateTimeField(auto_now=True)
 
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.image.path,
         }
@@ -1378,3 +1454,12 @@ def initial_department(sender, instance, created, **kwargs):
         department = instance.create_department(_('Administration'), instance.created_by)
         vacancy = instance.create_vacancy(_('Admin'), department, instance.created_by)
         vacancy.assign_employee(instance.created_by, True)
+
+
+@receiver(post_save, sender=Country)
+@receiver(post_save, sender=Branch)
+@receiver(post_save, sender=B2BProductCategory)
+@receiver(post_save, sender=BusinessProposalCategory)
+@receiver(post_save, sender=NewsCategory)
+def initial_department(sender, instance, created, **kwargs):
+    instance.reindex()

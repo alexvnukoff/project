@@ -72,9 +72,13 @@ def generate_upload_path(instance, filename):
     name = str(uuid.uuid4())
     i = now()
     folder = "%s/%s/%s" % (i.year, i.month, i.day)
-    ext = filename.split('.')[-1]
+    ext = os.path.splitext(filename)[1]
 
-    return '%s/%s.%s' % (folder, name, ext)
+    return '%s/%s%s' % (folder, name, ext)
+
+
+def document_upload_path(instance, filename):
+    return "document/%s" % generate_upload_path(instance, filename)
 
 
 def resize(img, box, fit, out):

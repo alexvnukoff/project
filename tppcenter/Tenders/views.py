@@ -1,17 +1,11 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.utils.decorators import method_decorator
-from django.utils.timezone import now
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.views.generic import CreateView
 
-from appl import func
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
+    DeleteGalleryImage, DeleteDocument, DocumentList
 from b24online.models import Tender, Organization, Branch
 from tppcenter.Tenders.forms import TenderForm, AdditionalPageFormSet
 
@@ -56,7 +50,7 @@ class TenderList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(organization_id=current_org)
+                queryset = self.model.active_objects.filter(organization_id=current_org)
             else:
                 queryset = queryset.none()
 
@@ -71,47 +65,8 @@ class TenderDetail(ItemDetail):
     addUrl = 'tenders:add'
 
 
-@login_required
-def tenderForm(request, action, item_id=None):
-    if item_id:
-       if not Tender.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
-
-    current_section = _("Tenders")
-    tendersPage = ''
-
-    if action == 'delete':
-        tendersPage = deleteTender(request, item_id)
-
-    if isinstance(tendersPage, HttpResponseRedirect) or isinstance(tendersPage, HttpResponse):
-        return tendersPage
-
-    templateParams = {
-        'formContent': tendersPage,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteTender(request, item_id):
-    item = Organization.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_tender' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Tender.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-
-
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('tenders:main'))
+class TenderDelete(ItemDeactivate):
+    model = Tender
 
 
 class TenderUpdate(ItemUpdate):
@@ -268,3 +223,22 @@ class TenderCreate(ItemCreate):
             context_data['branches'] = Branch.objects.filter(pk__in=branches)
 
         return context_data
+
+
+class TenderGalleryImageList(GalleryImageList):
+    owner_model = Tender
+    namespace = 'tenders'
+
+
+class DeleteTenderGalleryImage(DeleteGalleryImage):
+    owner_model = Tender
+
+
+class TenderDocumentList(DocumentList):
+    owner_model = Tender
+    namespace = 'tenders'
+
+
+class DeleteTenderDocument(DeleteDocument):
+    owner_model = Tender
+

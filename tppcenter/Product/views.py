@@ -1,16 +1,13 @@
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
 
-from appl import func
-from appl.models import Product
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
-from b24online.models import B2BProduct, Company, Organization, B2BProductCategory
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
+    DeleteGalleryImage, DeleteDocument, DocumentList
+from b24online.models import B2BProduct, Company, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from tppcenter.Product.forms import B2BProductForm, AdditionalPageFormSet, B2CProductForm
 
@@ -56,7 +53,7 @@ class B2BProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = queryset.filter(company_id=current_org)
+                queryset = self.model.active_objects.filter(company_id=current_org)
             else:
                 queryset = queryset.none()
 
@@ -100,7 +97,7 @@ class B2CProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(company_id=current_org)
+                queryset = self.model.active_objects.filter(company_id=current_org)
             else:
                 return queryset.none()
 
@@ -120,7 +117,7 @@ class B2BProductDetail(ItemDetail):
 
 class B2CProductDetail(ItemDetail):
     model = B2CProduct
-    template_name = 'Products/detailContent.html'
+    template_name = 'Products/detailContentB2C.html'
 
     current_section = _("Products B2C")
     addUrl = 'products:addB2C'
@@ -129,44 +126,12 @@ class B2CProductDetail(ItemDetail):
         return super().get_queryset().prefetch_related('company', 'company__countries')
 
 
-@login_required
-def productForm(request, action, item_id=None):
-    if item_id:
-        if not Product.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
-
-    current_section = _("Products")
-    productsPage = ''
-
-    if action == 'delete':
-        productsPage = deleteProduct(request, item_id)
-
-    if isinstance(productsPage, HttpResponseRedirect) or isinstance(productsPage, HttpResponse):
-        return productsPage
-
-    template_params = {
-        'formContent': productsPage,
-        'current_section': current_section,
-        'item_id': item_id
-    }
-
-    return render_to_response('forms.html', template_params, context_instance=RequestContext(request))
+class B2BProductDelete(ItemDeactivate):
+    model = B2BProduct
 
 
-def deleteProduct(request, item_id):
-    item = Organization.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_product' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Product.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('products:main'))
+class B2CProductDelete(ItemDeactivate):
+    model = B2CProduct
 
 
 def categories_list(request, model):
@@ -503,3 +468,21 @@ class B2CProductUpdate(ItemUpdate):
         """
 
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
+
+
+class B2BProductGalleryImageList(GalleryImageList):
+    owner_model = B2BProduct
+    namespace = 'products'
+
+
+class DeleteB2BProductGalleryImage(DeleteGalleryImage):
+    owner_model = B2BProduct
+
+
+class B2BProductDocumentList(DocumentList):
+    owner_model = B2BProduct
+    namespace = 'products'
+
+
+class DeleteB2BProductDocument(DeleteDocument):
+    owner_model = B2BProduct

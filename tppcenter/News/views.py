@@ -2,17 +2,15 @@ from datetime import datetime
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.syndication.views import Feed
-from django.http import HttpResponseRedirect
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
 from pytz import timezone
 import pytz
 from django.conf import settings
 
-from appl import func
 from appl.models import NewsCategories
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, DeleteGalleryImage, \
+    GalleryImageList
 from b24online.models import News, Organization
 from core.models import Group
 
@@ -75,9 +73,9 @@ class NewsList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(organization_id=current_org)
+                queryset = self.model.active_objects.filter(organization_id=current_org)
             else:
-                queryset = self.model.objects.filter(created_by=self.request.user, organization__isnull=True)
+                queryset = self.model.active_objects.filter(created_by=self.request.user, organization__isnull=True)
         elif self.is_filtered():
             return super().get_queryset()
         else:
@@ -114,22 +112,17 @@ class NewsDetail(ItemDetail):
         return context
 
 
-def delete_news(request, item_id):
-    if not 'Redactor' in request.user.groups.values_list('name', flat=True):
+class DeleteNews(ItemDeactivate):
+    model = News
 
-        item = Organization.objects.get(p2c__child=item_id)
 
-        perm_list = item.getItemInstPermList(request.user)
+class NewsGalleryImageList(GalleryImageList):
+    owner_model = News
+    namespace = 'news'
 
-        if 'delete_news' not in perm_list:
-            return func.permissionDenied()
 
-    instance = News.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
+class DeleteNewsGalleryImage(DeleteGalleryImage):
+    owner_model = News
 
 
 class CustomFeedGenerator(Rss201rev2Feed):

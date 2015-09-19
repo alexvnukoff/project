@@ -28,7 +28,6 @@ class GreetingIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
     organization_name = String(analyzer='snowball')
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -40,8 +39,7 @@ class GreetingIndex(DocType):
         return cls(
             django_id=obj.pk,
             name=obj.name,
-            organization_name=obj.organization,
-            is_active=obj.is_active
+            organization_name=obj.organization
         )
 
 
@@ -50,6 +48,7 @@ class CompanyIndex(DocType):
     name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
     description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
     is_active = Boolean()
+    is_deleted = Boolean()
     country = Integer()
     organization = Integer()
     branches = Integer(multi=True)
@@ -71,6 +70,7 @@ class CompanyIndex(DocType):
             name=obj.name,
             description=obj.description,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             country=obj.countries.all().values_list('pk', flat=True)[0],
             branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
@@ -90,6 +90,7 @@ class ExhibitionIndex(DocType):
     country = Integer()
     created_at = Date()
     is_active = Boolean()
+    is_deleted = Boolean()
     branches = Integer(multi=True)
 
     @staticmethod
@@ -99,7 +100,7 @@ class ExhibitionIndex(DocType):
 
     @classmethod
     def get_queryset(cls):
-        return cls.get_model().objects.all().select_related('country', 'organization').prefetch_realated('branches')
+        return cls.get_model().objects.all().select_related('country', 'organization').prefetch_related('branches')
 
     @classmethod
     def to_index(cls, obj):
@@ -110,6 +111,7 @@ class ExhibitionIndex(DocType):
             city=obj.city,
             organization=obj.organization.pk,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             country=obj.country.pk,
             created_at=obj.created_at,
             branches=list(obj.branches.all().values_list('pk', flat=True)),
@@ -128,6 +130,7 @@ class BusinessProposalIndex(DocType):
     bp_categories = Integer(multi=True)
     created_at = Date()
     is_active = Boolean()
+    is_deleted = Boolean()
 
     @staticmethod
     def get_model():
@@ -147,6 +150,7 @@ class BusinessProposalIndex(DocType):
             description=obj.description,
             organization=obj.organization.pk,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             country=obj.country.pk,
             branches=list(obj.branches.all().values_list('pk', flat=True)),
             bp_categories=list(obj.categories.all().values_list('pk', flat=True)),
@@ -178,7 +182,6 @@ class CountryIndex(DocType):
 class NewsCategoryIndex(DocType):
     django_id = Integer()
     name_auto = String(analyzer=autocomplete)
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -189,8 +192,7 @@ class NewsCategoryIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name_auto=obj.name,
-            is_active=obj.is_active
+            name_auto=obj.name
         )
 
         return index_instance
@@ -199,7 +201,6 @@ class NewsCategoryIndex(DocType):
 class B2bProductCategoryIndex(DocType):
     django_id = Integer()
     name_auto = String(analyzer=autocomplete)
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -210,8 +211,7 @@ class B2bProductCategoryIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name_auto=obj.name,
-            is_active=obj.is_active
+            name_auto=obj.name
         )
 
         return index_instance
@@ -220,7 +220,6 @@ class B2bProductCategoryIndex(DocType):
 class B2cProductCategoryIndex(DocType):
     django_id = Integer()
     name_auto = String(analyzer=autocomplete)
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -231,8 +230,7 @@ class B2cProductCategoryIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name_auto=obj.name,
-            is_active=obj.is_active
+            name_auto=obj.name
         )
 
         return index_instance
@@ -241,7 +239,6 @@ class B2cProductCategoryIndex(DocType):
 class BusinessProposalCategoryIndex(DocType):
     django_id = Integer()
     name_auto = String(analyzer=autocomplete)
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -252,8 +249,7 @@ class BusinessProposalCategoryIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name_auto=obj.name,
-            is_active=obj.is_active
+            name_auto=obj.name
         )
 
         return index_instance
@@ -262,7 +258,6 @@ class BusinessProposalCategoryIndex(DocType):
 class BranchIndex(DocType):
     django_id = Integer()
     name_auto = String(analyzer=autocomplete)
-    is_active = Boolean()
 
     @staticmethod
     def get_model():
@@ -273,8 +268,7 @@ class BranchIndex(DocType):
     def to_index(cls, obj):
         index_instance = cls(
             django_id=obj.pk,
-            name_auto=obj.name,
-            is_active=obj.is_active
+            name_auto=obj.name
         )
 
         return index_instance
@@ -287,6 +281,7 @@ class ChamberIndex(DocType):
     description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
     countries = Integer(multi=True)
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -306,6 +301,7 @@ class ChamberIndex(DocType):
             name_auto=obj.name,
             description=obj.description,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             created_at=obj.created_at
         )
 
@@ -332,6 +328,7 @@ class B2BProductIndex(DocType):
     organization = Integer()
     price = Double()
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -351,6 +348,7 @@ class B2BProductIndex(DocType):
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             country=obj.company.country.pk,
             branches=list(obj.branches.all().values_list('pk', flat=True)),
             b2b_categories=list(obj.categories.all().values_list('pk', flat=True)),
@@ -370,6 +368,7 @@ class B2cProductIndex(DocType):
     organization = Integer()
     price = Double()
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -389,6 +388,7 @@ class B2cProductIndex(DocType):
             description=obj.description,
             organization=obj.company.pk,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             country=obj.company.country.pk,
             b2c_categories=list(obj.categories.all().values_list('pk', flat=True)),
             price=obj.cost,
@@ -407,6 +407,7 @@ class NewsIndex(DocType):
     country = Integer()
     is_tv = Boolean()
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -426,6 +427,7 @@ class NewsIndex(DocType):
             content=obj.content,
             organization=getattr(obj.organization, 'pk', None),
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             news_categories=list(obj.categories.all().values_list('pk', flat=True)),
             is_tv=obj.is_tv,
             created_at=obj.created_at
@@ -446,6 +448,7 @@ class TenderIndex(DocType):
     start_date = Date()
     end_date = Date()
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -466,6 +469,7 @@ class TenderIndex(DocType):
             organization=obj.organization.pk,
             country=obj.country.pk,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
@@ -485,6 +489,7 @@ class InnovationProjectIndex(DocType):
     organization = Integer()
     branches = Integer(multi=True)
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -506,6 +511,7 @@ class InnovationProjectIndex(DocType):
             organization=obj.organization.pk if obj.organization else None,
             country=obj.country.pk if obj.country else None,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
@@ -545,6 +551,7 @@ class ResumeIndex(DocType):
     name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
     country = Integer()
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -555,7 +562,7 @@ class ResumeIndex(DocType):
     @classmethod
     def get_queryset(cls):
         return cls.get_model().objects.all() \
-            .select_related('created_by', 'created_by__profile', 'created_by__profile__country')
+            .select_related('user', 'user__profile', 'user__profile__country')
 
     @classmethod
     def to_index(cls, obj):
@@ -563,6 +570,7 @@ class ResumeIndex(DocType):
             django_id=obj.pk,
             name=getattr(obj.user.profile, 'full_name', None),
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             created_at=obj.created_at
         )
 
@@ -580,6 +588,7 @@ class RequirementIndex(DocType):
     is_anonymous = Boolean()
     type_of_employment = String(index='not_analyzed')
     is_active = Boolean()
+    is_deleted = Boolean()
     created_at = Date()
 
     @staticmethod
@@ -597,6 +606,7 @@ class RequirementIndex(DocType):
             is_anonymous=obj.is_anonymous,
             type_of_employment=obj.type_of_employment,
             is_active=obj.is_active,
+            is_deleted=obj.is_deleted,
             created_at=obj.created_at
         )
 

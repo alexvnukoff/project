@@ -17,6 +17,8 @@
 
 {% block js %}
     {{ block.super }}
+
+    <script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
     <script>
         {% getOwner item.pk as owner %}
 
@@ -75,12 +77,20 @@ $(function() {
                         {% b2b_social_buttons  item.logo item.title item.description %}
                     </div>
                 </div>
-                <div class="goods-details-tab">
+                <div class="goods-details-tab cpn-details-tab">
                     <div class="tab-cate">
                         <ul>
                         <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
-                        <li><a href="#goods-tabs-2">{% trans 'Gallery' %}</a></li>
-                        <li><a href="#goods-tabs-3">{% trans 'Documents' %}</a></li>
+                        <li>
+                            <a data-id="gallery-tabs" href="{% url "tenders:tabs_gallery" item.pk %}">
+                                {% trans "Gallery" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="document-tabs" href="{% url "tenders:tabs_documents" item.pk %}">
+                                {% trans "Documents" %}
+                            </a>
+                        </li>
                         {% for page in item.additional_pages.all %}
                              <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
                         {% endfor %}
@@ -88,36 +98,6 @@ $(function() {
                     </div>
                     <div id="goods-tabs-1">
                         <div class="content-goods-tab">{{ item.content|cleanHtml|safe }} </div>
-                    </div>
-                    <div id="goods-tabs-2">
-                        <div class="content-goods-tab">
-                            <ul class="tpp-gallery">
-                                {% for gallery in item.galleries.all %}
-                                    {% for gallery_item in gallery.gallery_items.all %}
-                                        <li>
-                                            <div class="b-img">
-                                                <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
-                                                    <img alt=""  src="{{ gallery_item.image.big }}" />
-                                                </a>
-                                                <div class="viewimge">
-                                                    <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
-                                                        <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
-                                                    </a>
-                                                </div>
-                                                <div class="gray-img"></div>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div id="goods-tabs-3">
-                        <div class="content-goods-tab">
-                        {% for document in item.documents.all %}
-                            <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
-                        {% endfor %}
-                        </div>
                     </div>
                 {% for page in item.additional_pages.all %}
                     <div id="goods-tabs-{{ forloop.counter0|add:4 }}">

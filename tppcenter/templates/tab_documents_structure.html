@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load staticfiles %}
+<ul class="tpp-gallery">
+    {% for item in documents %}
+        <li>
+            <div class="b-img">
+                <img src="{% static "tppcenter/img/file_icon.png" %}" />
+
+                {% if has_perm %}
+                <div class="deleteimge">
+                    <a class="removePhoto" href="{% url removeURL url_parameter item.pk %}">
+                        <i class="imgnews delete"></i>
+                        <span class="deletext">{% trans "Remove" %}</span>
+                    </a>
+                </div>
+                {% endif %}
+                <div class="viewimge">
+                    <a target="_blank" href="{{ item.document.url }}">
+                        <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
+                    </a>
+                </div>
+                <div class="gray-img"></div>
+            </div>
+            <div>{{ item.name }}</div>
+        </li>
+    {% endfor %}
+</ul>
+{% include "main/paginator.html" %}

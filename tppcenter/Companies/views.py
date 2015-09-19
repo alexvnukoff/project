@@ -7,23 +7,19 @@ from django.db import transaction
 from django.conf import settings
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
-
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from appl.models import Cabinet
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
+    DeleteGalleryImage, DeleteDocument, DocumentList
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
-    Vacancy, Gallery, GalleryImage, Organization, Branch, Chamber
-from core.amazonMethods import add
+    Vacancy, Organization, Branch, Chamber
 from tppcenter.Companies.forms import AdditionalPageFormSet, CompanyForm
-from tppcenter.Messages.views import add_message
 
 
 class CompanyList(ItemsList):
@@ -68,9 +64,10 @@ class CompanyList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(parent_id=current_org)
+                queryset = self.model.active_objects.filter(Q(parent_id=current_org) | Q(pk=current_org))
             else:
-                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'], Organization)\
+                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
+                                                Organization.active_objects.all()) \
                     .instance_of(Company)
 
         return queryset
@@ -95,7 +92,7 @@ class CompanyDetail(ItemDetail):
 
 
 def _tab_news(request, company, page=1):
-    news = News.objects.filter(organization=company)
+    news = News.active_objects.filter(organization=company)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -113,7 +110,7 @@ def _tab_news(request, company, page=1):
 
 
 def _tab_tenders(request, company, page=1):
-    tenders = Tender.objects.filter(organization=company)
+    tenders = Tender.active_objects.filter(organization=company)
     paginator = Paginator(tenders, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -132,7 +129,7 @@ def _tab_tenders(request, company, page=1):
 
 
 def _tabs_exhibitions(request, company, page=1):
-    exhibitions = Exhibition.objects.filter(organization=company)
+    exhibitions = Exhibition.active_objects.filter(organization=company)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -151,7 +148,7 @@ def _tabs_exhibitions(request, company, page=1):
 
 
 def _tab_products(request, company, page=1):
-    products = B2BProduct.objects.filter(company=company)
+    products = B2BProduct.active_objects.filter(company=company)
     paginator = Paginator(products, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -169,7 +166,7 @@ def _tab_products(request, company, page=1):
 
 
 def _tab_proposals(request, company, page=1):
-    proposals = BusinessProposal.objects.filter(organization=company)
+    proposals = BusinessProposal.active_objects.filter(organization=company)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -187,7 +184,7 @@ def _tab_proposals(request, company, page=1):
 
 
 def _tab_innovation_projects(request, company, page=1):
-    projects = InnovationProject.objects.filter(organization=company)
+    projects = InnovationProject.active_objects.filter(organization=company)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -304,7 +301,7 @@ def _tab_staff(request, company, page=1):
                 return HttpResponseBadRequest()
 
             try:
-                user = get_user_model().objects.get(email=user)
+                user = get_user_model().objects.get(email=user, is_active=True)
                 vacancy = Vacancy.objects.get(pk=vacancy, department__organization=organization)
             except ObjectDoesNotExist:
                 return HttpResponseBadRequest(_('User not found'))
@@ -327,7 +324,8 @@ def _tab_staff(request, company, page=1):
                 vacancy = get_object_or_404(Vacancy, user=user, department__organization=organization)
                 vacancy.remove_employee()
 
-    users = get_user_model().objects.filter(work_positions__department__organization=organization).distinct() \
+    users = get_user_model().objects.filter(is_active=True,
+                                            work_positions__department__organization=organization).distinct() \
         .select_related('profile').prefetch_related('work_positions', 'work_positions__department')
 
     paginator = Paginator(users, 10)
@@ -348,128 +346,32 @@ def _tab_staff(request, company, page=1):
     return render_to_response('Companies/tabStaff.html', template_params, context_instance=RequestContext(request))
 
 
-@login_required
-def companyForm(request, action, item_id=None):
-    if item_id:
-        if not Company.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
+class DeleteCompany(ItemDeactivate):
+    model = Company
 
-    current_section = _("Companies")
+    def reindex_kwargs(self):
+        kwargs = super().reindex_kwargs()
+        kwargs['is_active_changed'] = True
 
-    newsPage = ''
-
-    if action == 'delete':
-        newsPage = deleteCompany(request, item_id)
-
-    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
-        return newsPage
-
-    templatePrarams = {
-        'formContent': newsPage,
-        'current_section': current_section,
-    }
-
-    return render_to_response('forms.html', templatePrarams, context_instance=RequestContext(request))
+        return kwargs
 
 
-def deleteCompany(request, item_id):
-    item = Organization.objects.get(pk=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_company' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Company.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('companies:main'))
+class CompanyGalleryImageList(GalleryImageList):
+    owner_model = Company
+    namespace = 'companies'
 
 
-def _tab_gallery(request, item, page=1):
-    organization = get_object_or_404(Company, pk=item)
-    file = request.FILES.get('Filedata', None)
-    has_perm = False
-
-    if organization.has_perm(request.user):
-        has_perm = True
-
-    if file is not None:
-        if has_perm:
-            file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
-
-            if not organization.galleries.exists():
-                gallery = Gallery.create_default_gallery(organization, request.user)
-            else:
-                gallery = organization.galleries.first()
-
-            gallery.add_image(request.user, file)
-
-            return HttpResponse('')
-        else:
-            return HttpResponseBadRequest()
-    else:
-        photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
-        paginator = Paginator(photos, 10)
-        page = paginator.page(page)
-        paginator_range = func.get_paginator_range(page)
-
-        url_paginator = "companies:tabs_gallery_paged"
-
-        template_params = {
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'gallery': page.object_list,
-            'has_perm': has_perm,
-            'item_id': item,
-            'pageNum': page.number,
-            'url_parameter': item
-        }
-
-        return render_to_response(
-            'Companies/tabGallery.html',
-            template_params,
-            context_instance=RequestContext(request)
-        )
+class DeleteCompanyGalleryImage(DeleteGalleryImage):
+    owner_model = Company
 
 
-def gallery_structure(request, organization, page=1):
-    organization = get_object_or_404(Company, pk=organization)
-    photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
-    paginator = Paginator(photos, 10)
-    page = paginator.page(page)
-    paginator_range = func.get_paginator_range(page)
-
-    url_paginator = "companies:tabs_gallery_paged"
-
-    template_params = {
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'gallery': page.object_list,
-        'pageNum': page.number,
-        'url_parameter': organization.pk
-    }
-
-    return render_to_response(
-        'Companies/tab_gallery_structure.html',
-        template_params,
-        context_instance=RequestContext(request)
-    )
+class CompanyDocumentList(DocumentList):
+    owner_model = Company
+    namespace = 'companies'
 
 
-def gallery_remove_item(request, item):
-    photo = get_object_or_404(GalleryImage, pk=item)
-
-    if photo.has_perm(request.user):
-        photo.delete()
-    else:
-        return HttpResponseBadRequest()
-
-    return HttpResponse()
+class DeleteCompanyDocument(DeleteDocument):
+    owner_model = Company
 
 
 def send_message(request):
@@ -479,33 +381,27 @@ def send_message(request):
                 company_pk = request.POST.get('company')
 
                 # this condition as temporary design for separation Users and Organizations
-                if Cabinet.objects.filter(pk=int(company_pk)).exists():
-                    add_message(request, content=request.POST.get('message', ""), recipient_id=int(company_pk))
-                    response = _('You have successfully sent the message.')
-                # /temporary condition for separation Users and Companies
+                organization = Company.active_objects.get(pk=company_pk)
 
+                if not organization.email:
+                    email = 'admin@tppcenter.com'
+                    subject = _('This message was sent to company with id: ') + str(organization.pk)
                 else:
-                    organization = Company.objects.get(pk=company_pk)
+                    subject = _('New message')
+                mail = EmailMessage(
+                    subject,
+                    request.POST.get('message', ""),
+                    'noreply@tppcenter.com',
+                    [organization.email]
+                )
 
-                    if not organization.email:
-                        email = 'admin@tppcenter.com'
-                        subject = _('This message was sent to company with id: ') + str(organization.pk)
-                    else:
-                        subject = _('New message')
-                    mail = EmailMessage(
-                        subject,
-                        request.POST.get('message', ""),
-                        'noreply@tppcenter.com',
-                        [organization.email]
-                    )
+                attachment = request.FILES.get('file', False)
 
-                    attachment = request.FILES.get('file', False)
+                if attachment:
+                    mail.attach(attachment.name, attachment.read(), attachment.content_type)
+                mail.send()
 
-                    if attachment:
-                        mail.attach(attachment.name, attachment.read(), attachment.content_type)
-                    mail.send()
-
-                    response = _('You have successfully sent the message.')
+                response = _('You have successfully sent the message.')
 
             else:
                 response = _('Message or file are required')
@@ -585,7 +481,8 @@ class CompanyUpdate(ItemUpdate):
                 form.instance.metadata['site'] = form.cleaned_data['site']
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
+                form.instance.metadata['location'] = '%s,%s' % (
+                form.cleaned_data['latitude'], form.cleaned_data['longitude']),
 
         with transaction.atomic():
             self.object = form.save()

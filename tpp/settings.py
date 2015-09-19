@@ -123,6 +123,7 @@ CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.use
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open
 REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = 'profile:main'
 
 MIDDLEWARE_CLASSES = (
     'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',

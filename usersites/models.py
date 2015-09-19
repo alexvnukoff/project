@@ -7,9 +7,8 @@ from django.contrib.sites.models import Site
 from django.db import models
 from b24online.custom import CustomImageField
 
-from b24online.models import Organization, image_storage, Gallery
+from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing
 from b24online.utils import generate_upload_path
-from core import tasks
 
 templates_root = "%s/../templates" % settings.MEDIA_ROOT
 
@@ -25,11 +24,12 @@ class ExternalSiteTemplate(models.Model):
         return self.name
 
 
-class UserSite(models.Model):
+class UserSite(ActiveModelMixing, models.Model):
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     organization = models.ForeignKey(Organization)
     slogan = models.CharField(max_length=255, blank=True, null=True)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)
     footer_text = models.TextField(null=True, blank=True)
     site = models.OneToOneField(Site, null=True, blank=True, related_name='user_site')
@@ -42,6 +42,7 @@ class UserSite(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def upload_images(self, is_new_logo, changed_galleries=None):
+        from core import tasks
         params = []
 
         if is_new_logo:
@@ -82,3 +83,8 @@ class UserSite(models.Model):
         })
 
         return gallery
+
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted'],
+        ]

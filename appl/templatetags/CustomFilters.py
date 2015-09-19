@@ -246,24 +246,26 @@ def modelCount(model, owner=None):
 
 @register.assignment_tag
 def getOwner(item):
-    if not item:
-        return None
+    # TODO
 
-    obj = func.getActiveSQS().filter(django_id=item)
-
-    if obj.count() == 0:
-        return None
-    else:
-        obj = obj[0]
-
-    company = getattr(obj, "company", False)
-    tpp = getattr(obj, "tpp", False)
-
-    if company:
-        return {'type': 'company', 'pk': company}
-
-    if tpp:
-        return {'type': 'tpp', 'pk': tpp}
+    # if not item:
+    #     return None
+    #
+    # obj = func.getActiveSQS().filter(django_id=item)
+    #
+    # if obj.count() == 0:
+    #     return None
+    # else:
+    #     obj = obj[0]
+    #
+    # company = getattr(obj, "company", False)
+    # tpp = getattr(obj, "tpp", False)
+    #
+    # if company:
+    #     return {'type': 'company', 'pk': company}
+    #
+    # if tpp:
+    #     return {'type': 'tpp', 'pk': tpp}
 
     return None
 

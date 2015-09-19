@@ -1,17 +1,15 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
 
-from appl import func
 from b24online.models import Branch, BusinessProposal, Organization, BusinessProposalCategory
 from tppcenter.BusinessProposal.forms import BusinessProposalForm, AdditionalPageFormSet
-from tppcenter.cbv import ItemUpdate, ItemsList, ItemDetail, ItemCreate
+from tppcenter.cbv import ItemUpdate, ItemsList, ItemDetail, ItemCreate, ItemDeactivate, GalleryImageList, \
+    DeleteGalleryImage, DocumentList, DeleteDocument
 
 
 class BusinessProposalList(ItemsList):
@@ -58,7 +56,7 @@ class BusinessProposalList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(organization_id=current_org)
+                queryset = self.model.active_objects.filter(organization_id=current_org)
             else:
                 queryset = queryset.none()
 
@@ -73,44 +71,8 @@ class BusinessProposalDetail(ItemDetail):
     addUrl = 'proposal:add'
 
 
-@login_required
-def proposalForm(request, action, item_id=None):
-    if item_id:
-       if not BusinessProposal.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
-
-    current_section = _("Business Proposal")
-
-    if action == 'delete':
-        proposalsPage = deleteProposal(request,item_id)
-
-    if isinstance(proposalsPage, HttpResponseRedirect) or isinstance(proposalsPage, HttpResponse):
-        return proposalsPage
-
-
-    templateParams = {
-        'formContent': proposalsPage,
-        'current_section': current_section,
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteProposal(request, item_id):
-    item = Organization.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_businessproposal' not in perm_list:
-        return func.permissionDenied()
-
-    instance = BusinessProposal.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('proposal:main'))
+class BusinessProposalDelete(ItemDeactivate):
+    model = BusinessProposal
 
 
 def bp_categories_list(request):
@@ -292,3 +254,22 @@ class BusinessProposalCreate(ItemCreate):
         """
         context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
         return self.render_to_response(context_data)
+
+
+class BPGalleryImageList(GalleryImageList):
+    owner_model = BusinessProposal
+    namespace = 'proposal'
+
+
+class DeleteBPGalleryImage(DeleteGalleryImage):
+    owner_model = BusinessProposal
+
+
+class BPDocumentList(DocumentList):
+    owner_model = BusinessProposal
+    namespace = 'proposal'
+
+
+class DeleteBPDocument(DeleteDocument):
+    owner_model = BusinessProposal
+

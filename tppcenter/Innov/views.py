@@ -1,18 +1,11 @@
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.utils.decorators import method_decorator
-from django.utils.timezone import now
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 
-from appl import func
-from appl.models import Cabinet
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, DeleteGalleryImage, \
+    GalleryImageList, DocumentList, DeleteDocument
 from b24online.models import InnovationProject, Branch, Organization
 from tppcenter.Innov.forms import InnovationProjectForm, AdditionalPageFormSet
 
@@ -52,9 +45,9 @@ class InnovationProjectList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(organization=current_org)
+                queryset = self.model.active_objects.filter(organization=current_org)
             else:
-                queryset = self.model.objects.filter(created_by=self.request.user, organization__isnull=True)
+                queryset = self.model.active_objects.filter(created_by=self.request.user, organization__isnull=True)
 
         return queryset
 
@@ -71,46 +64,8 @@ class InnovationProjectDetail(ItemDetail):
             .prefetch_related('galleries', 'galleries__gallery_items')
 
 
-@login_required
-def innovForm(request, action, item_id=None):
-    if item_id:
-        if not InnovationProject.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
-
-    current_section = _("Innovation Project")
-    newsPage = ''
-
-    if action == 'delete':
-        newsPage = deleteInnov(request, item_id)
-
-    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
-        return newsPage
-
-    templateParams = {
-        'formContent': newsPage,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteInnov(request, item_id):
-    try:
-        item = Organization.objects.get(p2c__child=item_id)
-    except ObjectDoesNotExist:
-        item = Cabinet.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_innovationproject' not in perm_list:
-        return func.permissionDenied()
-
-    instance = InnovationProject.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('innov:main'))
+class InnovationProjectDelete(ItemDeactivate):
+    model = InnovationProject
 
 
 class InnovationProjectUpdate(ItemUpdate):
@@ -278,3 +233,22 @@ class InnovationProjectCreate(ItemCreate):
         """
         context_data = self.get_context_data(form=form, additional_page_form=additional_page_form)
         return self.render_to_response(context_data)
+
+
+class InnovGalleryImageList(GalleryImageList):
+    owner_model = InnovationProject
+    namespace = 'innov'
+
+
+class DeleteInnovGalleryImage(DeleteGalleryImage):
+    owner_model = InnovationProject
+
+
+class InnovDocumentList(DocumentList):
+    owner_model = InnovationProject
+    namespace = 'innov'
+
+
+class DeleteInnovDocument(DeleteDocument):
+    owner_model = InnovationProject
+

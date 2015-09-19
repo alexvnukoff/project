@@ -3,24 +3,25 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import HStoreField
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
 from b24online.custom import CustomImageField
-from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage
+from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage, IndexedModelMixin, \
+    ActiveModelMixing
 from b24online.utils import generate_upload_path, reindex_instance
-from core import tasks
 
 
-class B2CProductCategory(MPTTModel):
+class B2CProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import B2cProductCategoryIndex
         return B2cProductCategoryIndex
 
@@ -31,7 +32,7 @@ class B2CProductCategory(MPTTModel):
         return self.name
 
 
-class B2CProduct(models.Model):
+class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, name=False)
     categories = models.ManyToManyField(B2CProductCategory)
     slug = models.SlugField()
@@ -44,7 +45,8 @@ class B2CProduct(models.Model):
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
     galleries = GenericRelation(Gallery)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
 
@@ -53,7 +55,13 @@ class B2CProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at', 'company'],
+        ]
+
     def upload_images(self):
+        from core import tasks
         params = {
             'file': self.image.path,
             'sizes': {
@@ -76,11 +84,8 @@ class B2CProduct(models.Model):
 
         return None
 
-    def reindex(self):
-        reindex_instance(self)
-
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import B2cProductIndex
         return B2cProductIndex
 
@@ -98,9 +103,13 @@ class B2CProductComment(MPTTModel):
     content = models.TextField()
     product = models.ForeignKey(B2CProduct)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-    is_active = models.BooleanField(default=True, db_index=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+@receiver(post_save, sender=B2CProductCategory)
+def initial_department(sender, instance, created, **kwargs):
+    instance.reindex()

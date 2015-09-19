@@ -4,13 +4,13 @@
     {% if has_perm %}
         <div class="uploader">
                 <form>
-                    <input id="file_upload" name="file_upload" type="file" multiple="true">
-                    <div id="queue"></div>
+                    <input id="file-upload" name="image" type="file" multiple="true">
+                    <div id="file-upload-queue"></div>
                 </form>
         </div>
     {% endif %}
-    <div class="galleryHolder">
-        {% include "Companies/tab_gallery_structure.html" %}
+    <div class="files_holder">
+        {% include "tab_documents_structure.html" %}
     </div>
 </div>
 
@@ -21,7 +21,7 @@
             max-height: 130px;
             overflow-y: hidden;
         }
-        #queue, #file_upload {
+        #file-upload-queue, #file-upload {
             float: left;
             margin-left: 11px;
         }
@@ -40,12 +40,20 @@
             'wasUploaded': '{% trans "The following files were not uploaded" %}'
         };
 
-        var swf = '{% static "tppcenter/uploadify.swf" %}';
-        var uploader = '{% url "companies:tabs_gallery" item_id %}';
-        var structureURL = '{% url "companies:gallery_structure" item_id pageNum %}';
-        var buttonImage= '{% static "tppcenter/img/addimage.jpg" %}';
+        var buttonImage= '{% static "tppcenter/img/folder-blue-upload.png" %}';
 
-        galleryUpload.init(LANG['UPLOAD'], swf, buttonImage , uploader, buttonImage, structureURL);
+        options = {
+            fileSizeLimit: '2MB',
+            fileTypeExts: '*.pdf; *.doc; *.docx; *.zip; *.rar; *.xls',
+            fileObjName: 'document',
+            swf: '{% static "tppcenter/uploadify.swf" %}',
+            uploader: '{{ uploaderURL }}',
+            buttonImage: buttonImage,
+            queueID: 'file-upload-queue'
+        }
+
+
+        FileUploader.init($('#file-upload'), LANG['UPLOAD'], buttonImage, '{{ structureURL }}', options);
     </script>
     <!-- /Gallery uploader -->
 {% endif %}

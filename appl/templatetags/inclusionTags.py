@@ -130,8 +130,8 @@ def statistic(*args, **kwargs):
     return {'model_statistic': model_statistic}
 
 
-@register.inclusion_tag('main/contextMenu.html', takes_context=True)
-def setContextMenu(context, obj, **kwargs):
+@register.inclusion_tag(name='setContextMenu', file_name='main/contextMenu.html', takes_context=True)
+def set_context_menu(context, obj, **kwargs):
     current_path = context.get('current_path')
     model_name = context.get('model', None)
     request = context.get('request')
@@ -149,6 +149,7 @@ def setContextMenu(context, obj, **kwargs):
     elif model_name == B2CProduct.__name__:
         url_namespace = "products"
         top_perm = False
+        delete = False
     elif model_name == InnovationProject.__name__:
         url_namespace = "innov"
     elif model_name == Tender.__name__:

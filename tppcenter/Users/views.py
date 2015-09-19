@@ -24,4 +24,4 @@ class UserList(ItemsList):
         self.template_name = 'Users/index.html'
 
     def get_queryset(self):
-        return Profile.objects.all()
+        return Profile.active_objects.all()

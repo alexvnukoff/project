@@ -1,30 +1,21 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
 
-from appl import func
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate, GalleryImageList, \
+    DeleteGalleryImage, DocumentList, DeleteDocument
 from b24online.models import Exhibition, Branch, Organization
-
-
-
-
-# from core.tasks import addNewExhibition
 from tppcenter.Exhibitions.forms import AdditionalPageFormSet, ExhibitionForm
 
 
 class ExhibitionList(ItemsList):
-    #pagination url
+    # pagination url
     url_paginator = "exhibitions:paginator"
     url_my_paginator = "exhibitions:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -38,7 +29,7 @@ class ExhibitionList(ItemsList):
     current_section = _("Exhibitions")
     addUrl = 'exhibitions:add'
 
-    #allowed filter list
+    # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = Exhibition
@@ -59,7 +50,7 @@ class ExhibitionList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(organization_id=current_org)
+                queryset = self.model.active_objects.filter(organization_id=current_org)
             else:
                 queryset = queryset.none()
 
@@ -74,44 +65,8 @@ class ExhibitionDetail(ItemDetail):
     addUrl = 'exhibitions:add'
 
 
-@login_required
-def exhibitionForm(request, action, item_id=None):
-    if item_id:
-       if not Exhibition.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
-    current_section = _("Exhibitions")
-
-    exhibitionPage = None
-
-    if action == 'delete':
-        exhibitionPage = deleteExhibition(request, item_id)
-
-    if isinstance(exhibitionPage, HttpResponseRedirect) or isinstance(exhibitionPage, HttpResponse):
-        return exhibitionPage
-
-    templateParams = {
-        'formContent': exhibitionPage,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteExhibition(request, item_id):
-    item = Organization.objects.get(p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_exhibition' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Exhibition.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('exhibitions:main'))
+class ExhibitionDelete(ItemDeactivate):
+    model = Exhibition
 
 
 class ExhibitionUpdate(ItemUpdate):
@@ -162,8 +117,8 @@ class ExhibitionUpdate(ItemUpdate):
                 form.instance.dates = (form.cleaned_data['start_date'], form.cleaned_data['end_date'])
 
             if 'longitude' in form.changed_data or 'latitude' in form.changed_data:
-                form.instance.metadata['location'] = '%s,%s' % (form.cleaned_data['latitude'], form.cleaned_data['longitude']),
-
+                form.instance.metadata['location'] = '%s,%s' % (
+                form.cleaned_data['latitude'], form.cleaned_data['longitude']),
 
         with transaction.atomic():
             self.object = form.save()
@@ -281,3 +236,22 @@ class ExhibitionCreate(ItemCreate):
             context_data['branches'] = Branch.objects.filter(pk__in=branches)
 
         return context_data
+
+
+class ExhibitionGalleryImageList(GalleryImageList):
+    owner_model = Exhibition
+    namespace = 'exhibitions'
+
+
+class DeleteExhibitionGalleryImage(DeleteGalleryImage):
+    owner_model = Exhibition
+
+
+class ExhibitionDocumentList(DocumentList):
+    owner_model = Exhibition
+    namespace = 'exhibitions'
+
+
+class DeleteExhibitionDocument(DeleteDocument):
+    owner_model = Exhibition
+

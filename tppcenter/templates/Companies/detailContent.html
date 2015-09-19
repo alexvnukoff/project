@@ -179,6 +179,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a data-id="document-tabs" href="{% url "companies:tabs_documents" item.pk %}">
+                                    {% trans "Documents" %}
+                                </a>
+                            </li>
+                            <li>
                                 <a data-id="tenders-tenders" href="{% url "companies:tab_tenders" item.pk %}">
                                     {% trans "Tenders" %}
                                 </a>

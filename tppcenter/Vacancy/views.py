@@ -1,28 +1,20 @@
-from django.utils.decorators import method_decorator
-from django.utils.timezone import now
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse
 from django.utils.translation import ugettext as _
+
 from django.conf import settings
 
-from appl import func
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
-from b24online.models import Organization
-from core.models import Relationship
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate
 from jobs.models import Requirement, Resume
 from tppcenter.Vacancy.forms import RequirementForm
 
 
 class RequirementList(ItemsList):
-
-    #pagination url
+    # pagination url
     url_paginator = "vacancy:paginator"
     url_my_paginator = "vacancy:my_main_paginator"
 
-    #Lists of required scripts and styles for ajax request
+    # Lists of required scripts and styles for ajax request
     styles = [
         settings.STATIC_URL + 'tppcenter/css/news.css',
         settings.STATIC_URL + 'tppcenter/css/company.css'
@@ -31,7 +23,7 @@ class RequirementList(ItemsList):
     current_section = _("Job requirements")
     addUrl = 'vacancy:add'
 
-    #allowed filter list
+    # allowed filter list
     # filter_list = ['tpp', 'country', 'company', 'branch']
 
     model = Requirement
@@ -52,7 +44,7 @@ class RequirementList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.objects.filter(vacancy__department__organization_id=current_org)
+                queryset = self.model.active_objects.filter(vacancy__department__organization_id=current_org)
             else:
                 queryset = queryset.objects.none()
 
@@ -60,7 +52,6 @@ class RequirementList(ItemsList):
 
 
 class RequirementDetail(ItemDetail):
-
     model = Requirement
     template_name = 'Vacancy/detailContent.html'
 
@@ -79,63 +70,29 @@ class RequirementDetail(ItemDetail):
         return context
 
 
-@login_required
-def vacancyForm(request, action, item_id=None):
-    if item_id:
-       if not Requirement.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+class RequirementDelete(ItemDeactivate):
+    model = Requirement
 
 
-    current_section = _("Vacancy")
-
-    vacancyPage = deleteVacancy(request, item_id)
-
-
-    if isinstance(vacancyPage, HttpResponseRedirect) or isinstance(vacancyPage, HttpResponse):
-        return vacancyPage
-
-    templateParams = {
-        'formContent': vacancyPage,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteVacancy(request, item_id):
-    item = Organization.objects.get(p2c__child__p2c__child__p2c__child=item_id)
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_requirement' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Requirement.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('vacancy:main'))
-
-
-def sendResume(request):
+def send_resume(request):
     response = ""
     if request.is_ajax():
         if request.user.is_authenticated() and request.POST.get('VACANCY', False):
             if request.POST.get('RESUME', False):
                 requirement = request.POST.get('VACANCY', "")
                 resume = request.POST.get('RESUME', '')
-                if Relationship.objects.filter(parent=Requirement.objects.get(pk=int(requirement)), child=Resume.objects.get(pk=int(resume))).exists():
-                      response = _('You cannot send more than one resume at the same job position.')
-                else:
-                    Relationship.setRelRelationship(parent=Requirement.objects.get(pk=int(requirement)), child=Resume.objects.get(pk=int(resume)), user=request.user)
-                    response = _('You have successfully sent the resume.')
+                # if Relationship.objects.filter(parent=Requirement.objects.get(pk=int(requirement)),
+                #                                child=Resume.objects.get(pk=int(resume))).exists():
+                #     response = _('You cannot send more than one resume at the same job position.')
+                # else:
+                # Resume.setRelRelationship(parent=Requirement.objects.get(pk=int(requirement)),
+                #                                 child=Resume.objects.get(pk=int(resume)), user=request.user)
+                # response = _('You have successfully sent the resume.')
 
             else:
                 response = _('Resume  are required')
         else:
-             response = _('Only registred users can send resume')
+            response = _('Only registred users can send resume')
 
         return HttpResponse(response)
 

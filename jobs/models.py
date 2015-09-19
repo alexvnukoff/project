@@ -4,11 +4,10 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from b24online.models import Vacancy, Country, ContextAdvertisement
-from b24online.utils import reindex_instance
+from b24online.models import Vacancy, Country, ContextAdvertisement, IndexedModelMixin, ActiveModelMixing
 
 
-class Requirement(models.Model):
+class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField()
     vacancy = models.ForeignKey(Vacancy, related_name='job_requirement')
@@ -29,22 +28,20 @@ class Requirement(models.Model):
     ]
 
     type_of_employment = models.CharField(max_length=10, null=False, blank=False, choices=TYPES_OF_EMPLOYMENT)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def reindex(self):
-        reindex_instance(self)
-
     @property
     def organization(self):
         return self.vacancy.department.organization
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import RequirementIndex
         return RequirementIndex
 
@@ -57,8 +54,13 @@ class Requirement(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at'],
+        ]
 
-class Resume(models.Model):
+
+class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
     MARTIAL_STATUSES = [
         ('married', _('Married')),
         ('widowed', _('Widowed')),
@@ -81,7 +83,8 @@ class Resume(models.Model):
     faculty = models.CharField(max_length=255, null=True, blank=True)
     profession = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    is_active = models.BooleanField(default=True, db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     study_start_date = models.DateField(blank=True, null=True)
     study_end_date = models.DateField(blank=True, null=True)
     study_form = models.CharField(max_length=30, choices=STUDY_FORMS, null=True, blank=True)
@@ -110,12 +113,9 @@ class Resume(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
-    def get_index_model():
+    def get_index_model(**kwargs):
         from b24online.search_indexes import ResumeIndex
         return ResumeIndex
-
-    def reindex(self):
-        reindex_instance(self)
 
     def get_absolute_url(self):
         return reverse('resume:detail', args=[self.slug, self.pk])
@@ -125,3 +125,8 @@ class Resume(models.Model):
             return False
 
         return user.is_commando or user.is_superuser or self.user == user
+
+    class Meta:
+        index_together = [
+            ['is_active', 'is_deleted', 'created_at', 'user'],
+        ]

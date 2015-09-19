@@ -3,7 +3,8 @@ from django.contrib.admin import ModelAdmin
 from mptt.admin import MPTTModelAdmin
 from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, PolymorphicMPTTParentModelAdmin
 
-from b24online.models import B2BProductCategory, Country, Branch, Company, Organization, Chamber, BannerBlock
+from b24online.models import B2BProductCategory, Country, Branch, Company, Organization, Chamber, BannerBlock, \
+    B2BProduct
 
 
 class BaseChildAdmin(PolymorphicMPTTChildModelAdmin):
@@ -39,3 +40,4 @@ admin.site.register(Organization, TreeNodeParentAdmin)
 admin.site.register(Company, ModelAdmin)
 admin.site.register(Chamber, ModelAdmin)
 admin.site.register(BannerBlock, ModelAdmin)
+admin.site.register(B2BProduct, ModelAdmin)

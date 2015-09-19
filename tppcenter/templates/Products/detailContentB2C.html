@@ -135,16 +135,14 @@
         <div class="tab-cate">
             <ul>
                 <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
+                {% comment %}
                 <li>
                     <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
                         {% trans "Gallery" %}
                     </a>
                 </li>
-                <li>
-                    <a data-id="document-tabs" href="{% url "products:tabs_documents" item.pk %}">
-                        {% trans "Documents" %}
-                    </a>
-                </li>
+                {% endcomment %}
+                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
                 <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
                 {% for page in item.additional_pages.all %}
                      <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
@@ -153,6 +151,13 @@
         </div>
         <div id="goods-tabs-1">
             <div class="content-goods-tab">{{ item.description|cleanHtml|safe }}</div>
+        </div>
+        <div id="goods-tabs-2">
+            <div class="content-goods-tab">
+                {% for document in item.documents.all %}
+                    <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
+                {% endfor %}
+            </div>
         </div>
         <div id="goods-tabs-3">
             <div class="content-goods-tab">

@@ -102,7 +102,7 @@
                 {% endautoescape %}
             </p>
         </div>
-        {% b2b_social_buttons  tpp.logo tpp.name tp.description %}
+        {% b2b_social_buttons  item.logo item.name item.description %}
         <div class="cpn-details-tab" id="tpp-details-tab">
             <div class="tab-cate">
             <ul>
@@ -133,7 +133,11 @@
                         {% trans "Gallery" %}
                     </a>
                 </li>
-
+                <li>
+                    <a data-id="document-tabs" href="{% url "tpp:tabs_documents" item.pk %}">
+                        {% trans "Documents" %}
+                    </a>
+                </li>
                 <li>
                     <a data-id="tenders-tenders" href="{% url "tpp:tab_tenders" item_id %}">
                         {% trans "Tenders" %}

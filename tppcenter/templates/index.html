@@ -257,7 +257,7 @@
                         {% trans 'right now' %}
                     </div>
 
-                    <form method='post' action=''>
+                    <form method='post' action='{% url "registration_register" %}'>
                      {% csrf_token %}
                      <ul class="formregister">
                     	<li><input id="id_email"  class="text"  name="email" type="email" placeholder="E-mail"/></li>

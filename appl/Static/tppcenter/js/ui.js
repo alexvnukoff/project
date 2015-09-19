@@ -890,20 +890,23 @@ uiEvents = {
     }
 };
 
-var galleryUpload = { //Async gallery uploader (uploadify)
+var FileUploader = { //Async uploader (uploadify)
 
     options : {
-        uploadLimit: 20,
+        fileSizeLimit: '100KB',
+        uploadLimit: 5,
+        // Button size
         height   : 105,
         width    : 110,
         auto     : true,
+        successTimeout: 60,
         queueID  : 'queue'
     },
 
     loadURL: '/',
     structureURL: '/',
     loader: '<div class="loader"><img class="loader-img" src="' + statciPath + 'img/ajax-loader.gif"/></div>',
-
+    parent: null,
     fail_upload : '',
 
     lang : {
@@ -913,42 +916,42 @@ var galleryUpload = { //Async gallery uploader (uploadify)
         wasUploaded: ''
     },
 
-    init : function(lang, swf, image, upload_url, loadURL, structureURL)
+    init : function(input, lang, loadURL, structureURL, options)
     {
-        galleryUpload.lang = lang;
+        FileUploader.lang = lang;
 
-        galleryUpload.options['formData'] = {
+        FileUploader.options['formData'] = {
             csrfmiddlewaretoken : getCookie('csrftoken')
         };
-        galleryUpload.options['swf'] = swf;
-        galleryUpload.options['uploader'] = upload_url;
-        galleryUpload.options['buttonImage'] = image;
-        galleryUpload.options['itemTemplate'] = galleryUpload.getQueueTemplate();
-        galleryUpload.options['onUploadError'] = galleryUpload.onUploadError;
-        galleryUpload.options['onQueueComplete'] = galleryUpload.onQueueComplete;
-        galleryUpload.options['onUploadSuccess'] = galleryUpload.onUploadSuccess;
-        galleryUpload.options['onUploadStart'] = galleryUpload.onUploadStart;
 
-        galleryUpload.loadURL = loadURL;
-        galleryUpload.structureURL = structureURL;
+        jQuery.extend(FileUploader.options, options);
 
-        $(document).on("click", ".removePhoto", galleryUpload.removePhoto);
+        FileUploader.options['itemTemplate'] = FileUploader.getQueueTemplate();
+        FileUploader.options['onUploadError'] = FileUploader.onUploadError;
+        FileUploader.options['onQueueComplete'] = FileUploader.onQueueComplete;
+        FileUploader.options['onUploadSuccess'] = FileUploader.onUploadSuccess;
+        FileUploader.options['onUploadStart'] = FileUploader.onUploadStart;
 
+        FileUploader.loadURL = loadURL;
+        FileUploader.structureURL = structureURL;
 
-        $('#file_upload').uploadify(galleryUpload.options);
+        FileUploader.parent = input.parents('.tpp-dt-content');
+        FileUploader.parent.on("click", ".removePhoto", FileUploader.removePhoto);
+
+        input.uploadify(FileUploader.options);
 
     },
 
     getQueueTemplate : function() {
         return '<div id="${fileID}" class="uploadify-queue-item">' +
-                '<span class="fileName"><strong>' + galleryUpload.lang.uploading + '</strong>: ${fileName} (${fileSize})...' +
+                '<span class="fileName"><strong>' + FileUploader.lang.uploading + '</strong>: ${fileName} (${fileSize})...' +
                 '</span></div>';
     },
 
     onUploadSuccess : function(file, data) {
         var queue = $('#' + file.id);
 
-        queue.find('span').append( ' - ' + galleryUpload.lang.success );
+        queue.find('span').append( ' - ' + FileUploader.lang.success );
         queue.css('color', 'green');
 
         //$('.tpp-gallery').prepend(data);
@@ -957,9 +960,9 @@ var galleryUpload = { //Async gallery uploader (uploadify)
     onUploadError : function(file) {
         var queue = $('#' + file.id);
 
-        galleryUpload.fail_upload += file.name + "\r\n";
+        FileUploader.fail_upload += file.name + "\r\n";
 
-        queue.find('span').append(' - ' + galleryUpload.lang.fail );
+        queue.find('span').append(' - ' + FileUploader.lang.fail );
         queue.css({color: 'red', fontWeight: 'bold'});
     },
 
@@ -967,24 +970,24 @@ var galleryUpload = { //Async gallery uploader (uploadify)
 
         if ( queueData.uploadsErrored > 0 )
         {
-            alert( galleryUpload.lang.wasUploaded + ":\r\n" + galleryUpload.fail_upload );
+            alert( FileUploader.lang.wasUploaded + ":\r\n" + FileUploader.fail_upload );
         }
 
-        $('.galleryHolder').load(galleryUpload.structureURL);
+        FileUploader.parent.find('.files_holder').load(FileUploader.structureURL);
 
-        galleryUpload.fail_upload = '';
+        FileUploader.fail_upload = '';
     },
 
     onUploadStart: function() {
-        $('.galleryHolder').html(galleryUpload.loader);
+        FileUploader.parent.find('.files_holder').html(FileUploader.loader);
     },
 
     removePhoto: function() {
         var link = $(this).attr("href");
-        $('.galleryHolder').html(galleryUpload.loader);
+        FileUploader.parent.find('.files_holder').html(FileUploader.loader);
 
         $.get(link, function(data) {
-            $('.galleryHolder').load(galleryUpload.structureURL);
+            FileUploader.parent.find('.files_holder').load(FileUploader.structureURL);
         });
         
         return false;

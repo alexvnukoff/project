@@ -1,28 +1,20 @@
-from collections import OrderedDict
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from guardian.shortcuts import get_objects_for_user
-from registration.backends.default.views import RegistrationView
-from registration.forms import RegistrationFormUniqueEmail
 from django.core.mail import send_mail
 
-from appl.models import Cabinet, Notification
 from b24online.models import Chamber, B2BProduct, Greeting, BusinessProposal, Exhibition, Organization, Branch
 from appl import func
-from core.models import Item
 
 
 @csrf_protect
@@ -33,15 +25,15 @@ def home(request):
     if request.POST.get('Register', None):
         return registration(request)
 
-    organizations_list = Chamber.objects.filter(is_active=True, org_type='international')
+    organizations_list = Chamber.active_objects.filter(org_type='international')
 
-    product_list = B2BProduct.objects.filter(is_active=True).select_related('company').prefetch_related('company__countries') \
+    product_list = B2BProduct.active_objects.select_related('company').prefetch_related('company__countries') \
                        .order_by('-created_at')[:3]
-    service_list = BusinessProposal.objects.filter(is_active=True) \
-                       .prefetch_related('country', 'organization', 'organization__countries') \
-                       .order_by('-created_at')[:3]
-    greetings_list = Greeting.objects.filter(is_active=True)
-    exhibitions_list = Exhibition.objects.filter(is_active=True).select_related('country').order_by('-created_at')[:3]
+    service_list = BusinessProposal.active_objects \
+                        .prefetch_related('country', 'organization', 'organization__countries') \
+                        .order_by('-created_at')[:3]
+    greetings_list = Greeting.objects.all()
+    exhibitions_list = Exhibition.active_objects.select_related('country').order_by('-created_at')[:3]
 
     template_params = {
         'organizationsList': organizations_list,
@@ -86,25 +78,11 @@ def get_notification_list(request):
         else:
             notifications = notifications.order_by("-pk")[:3]
 
-        messages_id = [notification.message.pk for notification in notifications]
-        notifications_id = [notification.pk for notification in notifications]
-
-        notification_values = Item.getItemsAttributesValues(('DETAIL_TEXT',), messages_id)
-        notif_dict = OrderedDict()
-
-        for notification in notifications:
-            notif_dict[notification.pk] = notification_values[notification.message]
-
-        unread = Notification.objects.filter(pk__in=notifications_id, read=False)
-
-        unread_count = unread.count()
-        unread.update(read=True)
-
         template = loader.get_template('main/notoficationlist.html')
-        context = RequestContext(request, {'notifDict': notif_dict, 'lastLine': last_line})
+        context = RequestContext(request, {'notifications': notifications, 'last_line': last_line})
         data = template.render(context)
 
-        return HttpResponse(json.dumps({'data': data, 'count': unread_count}))
+        return HttpResponse(json.dumps({'data': data, 'count': request.user.notifications.filter(read=False).count()}))
     else:
         return HttpResponseBadRequest()
 
@@ -137,64 +115,64 @@ def register_to_exhibition(request):
     return HttpResponse("")
 
 
-def user_login(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('news:main'))
-
-    form = None
-
-    if request.POST.get('Login', None):
-        form = AuthenticationForm(request, data=request.POST)
-
-        if form.is_valid():
-            user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
-            login(request, user)
-            if user.is_authenticated():
-                cabinet, created = Cabinet.objects.get_or_create(user=user, create_user=user)
-
-                if created:
-                    group = Group.objects.get(name='Company Creator')
-                    user.is_manager = True
-                    user.save()
-                    group.user_set.add(user)
-                    cabinet.reindexItem()
-                    return HttpResponseRedirect(reverse('profile:main'))
-
-                else:
-                    return HttpResponseRedirect(reverse('wall:main'))
-
-    return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
-
-
-def user_logout(request):
-    logout(request)
-
-    return HttpResponseRedirect("/")
+# def user_login(request):
+#     if request.user.is_authenticated():
+#         return HttpResponseRedirect(reverse('news:main'))
+#
+#     form = None
+#
+#     if request.POST.get('Login', None):
+#         form = AuthenticationForm(request, data=request.POST)
+#
+#         if form.is_valid():
+#             user = authenticate(email=request.POST.get("username", ""), password=request.POST.get("password", ""))
+#             login(request, user)
+#             if user.is_authenticated():
+#                 cabinet, created = Cabinet.objects.get_or_create(user=user, create_user=user)
+#
+#                 if created:
+#                     group = Group.objects.get(name='Company Creator')
+#                     user.is_manager = True
+#                     user.save()
+#                     group.user_set.add(user)
+#                     cabinet.reindexItem()
+#                     return HttpResponseRedirect(reverse('profile:main'))
+#
+#                 else:
+#                     return HttpResponseRedirect(reverse('wall:main'))
+#
+#     return render_to_response("registration/login.html", {'form': form}, context_instance=RequestContext(request))
 
 
-def registration(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('news:main'))
+# def user_logout(request):
+#     logout(request)
+#
+#     return HttpResponseRedirect("/")
 
-    if request.POST.get('Register', None):
-        form = RegistrationFormUniqueEmail(request.POST)
-
-        if form.is_valid() and request.POST.get('tos', None):
-            cleaned = form.cleaned_data
-            reg_view = RegistrationView()
-            try:
-                reg_view.register(request, **cleaned)
-                return render_to_response("registration/registration_complete.html", locals())
-            except ValueError:
-                return render_to_response("registration/registration_closed.html")
-        else:
-            if not request.POST.get('tos', None):
-                form.errors.update({"rules": _("Agreement with terms is required")})
-            return render_to_response('registration/registration.html', {'form': form, 'user': request.user},
-                                      context_instance=RequestContext(request))
-
-    return render_to_response('registration/registration.html', {'user': request.user},
-                              context_instance=RequestContext(request))
+#
+# def registration(request):
+#     if request.user.is_authenticated():
+#         return HttpResponseRedirect(reverse('news:main'))
+#
+#     if request.POST.get('Register', None):
+#         form = RegistrationFormUniqueEmail(request.POST)
+#
+#         if form.is_valid() and request.POST.get('tos', None):
+#             cleaned = form.cleaned_data
+#             reg_view = RegistrationView()
+#             try:
+#                 reg_view.register(request, **cleaned)
+#                 return render_to_response("registration/registration_complete.html", locals())
+#             except ValueError:
+#                 return render_to_response("registration/registration_closed.html")
+#         else:
+#             if not request.POST.get('tos', None):
+#                 form.errors.update({"rules": _("Agreement with terms is required")})
+#             return render_to_response('registration/registration.html', {'form': form, 'user': request.user},
+#                                       context_instance=RequestContext(request))
+#
+#     return render_to_response('registration/registration.html', {'user': request.user},
+#                               context_instance=RequestContext(request))
 
 
 # def set_news_list(request):
@@ -352,10 +330,11 @@ def my_companies(request):
         current_company = request.session.get('current_company', None)
         paginate_by = 10
 
-        organizations = get_objects_for_user(request.user, ['b24online.manage_organization'], Organization)
+        organizations = get_objects_for_user(request.user, ['b24online.manage_organization'],
+                                             Organization.active_objects.all(), with_superuser=False)
 
         if current_company is not None:
-            organizations = organizations.exclude(pk=current_company)
+            organizations = Organization.objects.filter(pk__in=organizations).exclude(pk=current_company)
 
             if page == 1:
                 user_name = request.user.profile.full_name or request.user.email
@@ -440,6 +419,7 @@ def ping(request):
 def get_additional_page(request):
     prefix = '-'.join((request.GET.get('prefix'), request.GET.get('num')))
     return render_to_response("additionalPage.html", {'prefix': prefix, 'num': int(request.GET.get('num'))})
+
 
 def perm_denied(request):
     template = loader.get_template('permissionDen.html')

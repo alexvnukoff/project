@@ -7,7 +7,8 @@ from django.conf import settings
 from django.utils._os import abspathu
 
 from b24online import utils
-
+from b24online.models import B2BProduct, BusinessProposal, InnovationProject, News, Tender, Exhibition, \
+    Organization
 
 #from tppcenter.forms import ItemForm, BasePhotoGallery, BasePages, custom_field_callback
 #from appl import func
@@ -841,6 +842,10 @@ from b24online import utils
 #     trans_real.deactivate()
 #     return True
 #
+from centerpokupok.models import B2CProduct
+from jobs.models import Requirement
+from usersites.models import UserSite
+
 
 @shared_task
 def upload_file(*args):
@@ -854,7 +859,7 @@ def upload_file(*args):
 
 
 @shared_task
-def upload_images(*args):
+def upload_images(*args, async=True):
     images = []
 
     for image in args:
@@ -883,4 +888,58 @@ def upload_images(*args):
             'bucket_path': "original%s" % bucket_path
         })
 
-    upload_file.delay(*images)
+    if async:
+        upload_file.delay(*images)
+    else:
+        upload_file.apply(*images)
+
+
+@shared_task
+def on_company_active_changed(org_id):
+    org = Organization.objects.get(pk=org_id)
+    querysets = (
+        B2BProduct.objects.filter(company=org).exclude(is_active=not org.is_deleted),
+        B2CProduct.objects.filter(company=org).exclude(is_active=not org.is_deleted),
+        UserSite.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        BusinessProposal.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        InnovationProject.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        News.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Tender.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Exhibition.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Requirement.objects.filter(vacancy__department__organization=org).exclude(is_active=not org.is_deleted)
+    )
+
+    for queryset in querysets:
+        objects_to_reindex = list(queryset)
+        updated = queryset.update(is_active=not org.is_deleted)
+
+        if updated > 0:
+            for obj in objects_to_reindex:
+                reindex_method = getattr(obj, 'reindex', None)
+
+                if reindex_method is not None:
+                    reindex_method(is_active_changed=True)
+
+
+@shared_task
+def on_chamber_active_changed(org_id):
+    org = Organization.objects.get(pk=org_id)
+    querysets = (
+        UserSite.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        BusinessProposal.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        InnovationProject.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        News.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Tender.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Exhibition.objects.filter(organization=org).exclude(is_active=not org.is_deleted),
+        Requirement.objects.filter(organization=org).exclude(is_active=not org.is_deleted)
+    )
+
+    for queryset in querysets:
+        updated = queryset.update(is_active=not org.is_deleted)
+
+        if updated > 0:
+            for obj in queryset:
+                reindex_method = getattr(obj, 'reindex', None)
+
+                if reindex_method is not None:
+                    reindex_method(is_active_changed=True)

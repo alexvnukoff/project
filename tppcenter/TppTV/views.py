@@ -1,15 +1,8 @@
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
-from django.utils.timezone import now
 
-from appl import func
-from appl.models import TppTV
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate
 from b24online.models import News, Organization
 
 
@@ -107,42 +100,8 @@ class TVNewsDetail(ItemDetail):
         return context
 
 
-@login_required
-def tvForm(request, action, item_id=None):
-    if item_id:
-       if not TppTV.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
-
-
-    current_section = _("TppTv")
-    newsPage = ''
-
-    if action == 'delete':
-        newsPage = deleteTppTv(request, item_id)
-
-    if isinstance(newsPage, HttpResponseRedirect) or isinstance(newsPage, HttpResponse):
-        return newsPage
-
-    templateParams = {
-        'formContent': newsPage,
-        'current_section': current_section,
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-@login_required
-def deleteTppTv(request, item_id):
-
-    if not 'Redactor' in request.user.groups.values_list('name', flat=True):
-        return func.permissionDenied()
-
-    instance = TppTV.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(request.GET.get('next'), reverse('tv:main'))
-
+class NewsDelete(ItemDeactivate):
+    model = News
 
 class TvCreate(ItemCreate):
     org_required = False

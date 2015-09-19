@@ -1,21 +1,30 @@
+import os
 from urllib.parse import urlparse
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.db import transaction
+from django.http import HttpResponseRedirect, Http404, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.loader import get_template
+from django.utils._os import abspathu
 from django.utils.decorators import method_decorator
 from django.utils.text import Truncator
-from django.views.generic import UpdateView, DetailView, CreateView
-from guardian.shortcuts import get_objects_for_user
+from django.views.generic import UpdateView, DetailView, CreateView, DeleteView, ListView
+
 from appl import func
-from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory
+from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
+    GalleryImage, Document
 from b24online.search_indexes import SearchEngine
+from core import tasks
 
 from core.cbv import HybridListView
+from tppcenter.forms import GalleryImageForm, DocumentForm
 
 
 class TabItemList(HybridListView):
@@ -35,6 +44,35 @@ class ItemUpdate(UpdateView):
             return HttpResponseRedirect(reverse('denied'))
 
         return super().dispatch(request, *args, **kwargs)
+
+
+class ItemDeactivate(DeleteView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if not obj.has_perm(request.user):
+            return HttpResponseRedirect(reverse('denied'))
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def reindex_kwargs(self):
+        return {}
+
+    def get_success_url(self):
+        return self.request.GET.get('next')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.is_deleted = True
+        self.object.save()
+        self.object.reindex(is_active_changed=True)
+
+        return HttpResponseRedirect(success_url)
 
 
 class ItemCreate(CreateView):
@@ -249,7 +287,7 @@ class ItemsList(HybridListView):
         return self.request.user.is_authenticated() and not self.request.user.is_anonymous() and self.my
 
     def filter_search_object(self, s):
-        return s
+        return s.query('match', is_active=True).query('match', is_deleted=False)
 
     def optimize_queryset(self, queryset):
         return queryset
@@ -258,7 +296,8 @@ class ItemsList(HybridListView):
         if self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
 
-        return self.optimize_queryset(self.model.objects.filter(is_active=True).order_by(*self._get_sorting_params()))
+        queryset = self.model.active_objects.filter(is_active=True).order_by(*self._get_sorting_params())
+        return self.optimize_queryset(queryset)
 
 
 class ItemDetail(DetailView):
@@ -275,7 +314,7 @@ class ItemDetail(DetailView):
         return self.addUrl
 
     def get_queryset(self):
-        return self.model.objects.filter(is_active=True)
+        return self.model.active_objects.all()
 
     def get_object(self, queryset=None):
         self.item_id = self.kwargs.get('item_id', None)
@@ -319,3 +358,228 @@ class ItemDetail(DetailView):
         })
 
         return context
+
+
+class GalleryImageList(ListView):
+    model = GalleryImage
+    owner_model = None
+    context_object_name = 'gallery'
+    paginate_by = 10
+    is_structure = False
+    page = 1
+    namespace = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if self.owner.galleries.exists():
+            return self.owner.galleries.first().gallery_items.all()
+
+        return self.model.objects.none()
+
+    def get_uploader_url(self):
+        return reverse("%s:tabs_gallery" % self.namespace, args=[self.owner.pk])
+
+    def get_structure_url(self):
+        return reverse("%s:gallery_structure" % self.namespace, args=[self.owner.pk, self.page])
+
+    def get_remove_url(self):
+        return "%s:gallery_remove_item" % self.namespace
+
+    def get_paginator_url(self):
+        return "%s:tabs_gallery_paged" % self.namespace
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data.update({
+            'page': context_data['page_obj'],
+            'paginator_range': func.get_paginator_range(context_data['page_obj']),
+            'url_paginator': self.get_paginator_url(),
+            'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
+            'item_id': self.owner.pk,
+            'pageNum': self.page,
+            'url_parameter': self.owner.pk,
+            'uploaderURL': self.get_uploader_url(),
+            'structureURL': self.get_structure_url(),
+            'removeURL': self.get_remove_url()
+        })
+
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        return UploadGalleryImage.as_view()(request, self.owner)
+
+    def get_template_names(self):
+        if self.is_structure:
+            return ['tab_gallery_structure.html']
+
+        return ['tabGallery.html']
+
+
+class UploadGalleryImage(CreateView):
+    form_class = GalleryImageForm
+    template_name = None
+
+    def dispatch(self, request, owner, *args, **kwargs):
+        self.owner = owner
+
+        if not self.request.user.is_authenticated() or not self.owner.has_perm(self.request.user):
+            return HttpResponseBadRequest()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        with transaction.atomic():
+            model_type = ContentType.objects.get_for_model(self.owner)
+            gallery, _ = Gallery.objects.get_or_create(content_type=model_type, object_id=self.owner.pk, defaults={
+                'created_by': self.request.user,
+                'updated_by': self.request.user
+            })
+
+            form.instance.created_by = self.request.user
+            form.instance.updated_by = self.request.user
+            form.instance.gallery = gallery
+            self.object = form.save()
+
+        params = {
+            'file': self.object.image.path,
+            'sizes': {
+                'big': {'box': (130, 120), 'fit': True}
+            }
+        }
+
+        tasks.upload_images.apply((params,), {'async': True})
+
+        return HttpResponse('')
+
+    def form_invalid(self, form):
+        return HttpResponseBadRequest()
+
+
+class DeleteGalleryImage(ItemDeactivate):
+    owner_model = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.owner.galleries.all().first().gallery_items.all()
+
+    def delete(self, request, *args, **kwargs):
+        self.get_object().delete()
+        return HttpResponse('')
+
+
+class DocumentList(ListView):
+    model = Document
+    owner_model = None
+    context_object_name = 'documents'
+    paginate_by = 10
+    is_structure = False
+    page = 1
+    namespace = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.owner.documents.all()
+
+    def get_uploader_url(self):
+        return reverse("%s:tabs_documents" % self.namespace, args=[self.owner.pk])
+
+    def get_structure_url(self):
+        return reverse("%s:documents_structure" % self.namespace, args=[self.owner.pk, self.page])
+
+    def get_remove_url(self):
+        return "%s:documents_remove_item" % self.namespace
+
+    def get_paginator_url(self):
+        return "%s:tabs_documents_paged" % self.namespace
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data.update({
+            'page': context_data['page_obj'],
+            'paginator_range': func.get_paginator_range(context_data['page_obj']),
+            'url_paginator': self.get_paginator_url(),
+            'has_perm': self.request.user.is_authenticated() and self.owner.has_perm(self.request.user),
+            'item_id': self.owner.pk,
+            'pageNum': self.page,
+            'url_parameter': self.owner.pk,
+            'uploaderURL': self.get_uploader_url(),
+            'structureURL': self.get_structure_url(),
+            'removeURL': self.get_remove_url()
+        })
+
+        return context_data
+
+    def post(self, request, *args, **kwargs):
+        return UploadDocument.as_view()(request, self.owner)
+
+    def get_template_names(self):
+        if self.is_structure:
+            return ['tab_documents_structure.html']
+
+        return ['documents.html']
+
+
+class UploadDocument(CreateView):
+    form_class = DocumentForm
+    template_name = None
+
+    def dispatch(self, request, owner, *args, **kwargs):
+        self.owner = owner
+
+        if not self.request.user.is_authenticated() or not self.owner.has_perm(self.request.user):
+            return HttpResponseBadRequest()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        with transaction.atomic():
+
+            form.instance.created_by = self.request.user
+            form.instance.updated_by = self.request.user
+
+            name = os.path.splitext(self.request.FILES['document'].name)[0]
+            form.instance.name = name
+            form.instance.item = self.owner
+            self.object = form.save()
+
+        abs_path = abspathu(settings.MEDIA_ROOT)
+        path = self.object.document.path
+        bucket_path = path[len(abs_path) + 1:] if abs_path in path else path
+
+        params = {
+            'file': path,
+            'bucket_path': bucket_path
+        }
+
+        tasks.upload_file.apply((params,))
+
+        return HttpResponse('')
+
+    def form_invalid(self, form):
+        return HttpResponseBadRequest()
+
+
+class DeleteDocument(ItemDeactivate):
+    owner_model = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.owner = get_object_or_404(self.owner_model, pk=kwargs['item'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.owner.documents.all()
+
+    def delete(self, request, *args, **kwargs):
+        self.get_object().delete()
+        return HttpResponse('')

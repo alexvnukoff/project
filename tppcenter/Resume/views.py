@@ -1,16 +1,11 @@
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
-from appl import func
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDeactivate
 from jobs.models import Resume
 from tppcenter.Resume.forms import ResumeForm, WorkPositionFormSet
 
@@ -56,7 +51,7 @@ class ResumeList(ItemsList):
             if current_org is not None:
                 queryset = queryset.none()
             else:
-                queryset = self.model.objects.filter(user=self.request.user)
+                queryset = self.model.active_objects.filter(user=self.request.user)
 
         return queryset
 
@@ -73,46 +68,8 @@ class ResumeDetail(ItemDetail):
         return super(ResumeDetail, self).dispatch(*args, **kwargs)
 
 
-@login_required
-def resumeForm(request, action, item_id=None):
-    if item_id:
-        if not Resume.active.get_active().filter(pk=item_id).exists():
-            return HttpResponseNotFound()
-
-    current_section = _("Resume")
-    resumePage = ''
-
-    if action == 'delete':
-        resumePage = deleteResume(request, item_id)
-
-    if isinstance(resumePage, HttpResponseRedirect) or isinstance(resumePage, HttpResponse):
-        return resumePage
-
-    templateParams = {
-        'formContent': resumePage,
-        'current_section': current_section
-    }
-
-    return render_to_response('forms.html', templateParams, context_instance=RequestContext(request))
-
-
-def deleteResume(request, item_id):
-    try:
-        item = Resume.objects.get(pk=item_id)
-    except ObjectDoesNotExist:
-        return func.emptyCompany()
-
-    perm_list = item.getItemInstPermList(request.user)
-
-    if 'delete_resume' not in perm_list:
-        return func.permissionDenied()
-
-    instance = Resume.objects.get(pk=item_id)
-    instance.activation(eDate=now())
-    instance.end_date = now()
-    instance.reindexItem()
-
-    return HttpResponseRedirect(reverse('resume:main'))
+class ResumeDelete(ItemDeactivate):
+    model = Resume
 
 
 class ResumeCreate(ItemCreate):

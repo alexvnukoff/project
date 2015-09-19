@@ -14,7 +14,8 @@ from django.conf import settings
 from guardian.shortcuts import get_objects_for_user
 
 from appl import func
-from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate
+from tppcenter.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, DeleteGalleryImage, GalleryImageList, \
+    DocumentList, DeleteDocument
 from b24online.models import Chamber, Company, News, Tender, Exhibition, BusinessProposal, InnovationProject, \
     Organization, Vacancy, Gallery, GalleryImage
 from b24online.utils import handle_uploaded_file
@@ -63,10 +64,10 @@ class ChamberList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                return queryset.none()
+                return queryset.filter(pk=current_org)
             else:
-                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'], Organization)\
-                    .instance_of(Chamber)
+                queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
+                                                Organization.active_objects.all()).instance_of(Chamber)
 
         return queryset
 
@@ -85,7 +86,7 @@ class ChamberDetail(ItemDetail):
 
 
 def _tab_companies(request, tpp, page=1):
-    companies = Company.objects.filter(parent=tpp)
+    companies = Company.active_objects.filter(parent=tpp)
     paginator = Paginator(companies, 10)
 
     page = paginator.page(page)
@@ -104,7 +105,7 @@ def _tab_companies(request, tpp, page=1):
 
 
 def _tab_news(request, tpp, page=1):
-    news = News.objects.filter(organization=tpp)
+    news = News.active_objects.filter(organization=tpp)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -140,7 +141,7 @@ def _tab_tenders(request, tpp, page=1):
 
 
 def _tab_exhibitions(request, tpp, page=1):
-    exhibitions = Exhibition.objects.filter(organization=tpp)
+    exhibitions = Exhibition.active_objects.filter(organization=tpp)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -158,7 +159,7 @@ def _tab_exhibitions(request, tpp, page=1):
 
 
 def _tab_proposals(request, tpp, page=1):
-    proposals = BusinessProposal.objects.filter(organization=tpp)
+    proposals = BusinessProposal.active_objects.filter(organization=tpp)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -176,7 +177,7 @@ def _tab_proposals(request, tpp, page=1):
 
 
 def _tab_innovation_projects(request, tpp, page=1):
-    projects = InnovationProject.objects.filter(organization=tpp)
+    projects = InnovationProject.active_objects.filter(organization=tpp)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -291,7 +292,7 @@ def _tab_staff(request, tpp, page=1):
                 return HttpResponseBadRequest()
 
             try:
-                user = get_user_model().objects.get(email=user)
+                user = get_user_model().objects.get(email=user, is_active=True)
                 vacancy = Vacancy.objects.get(pk=vacancy, department__organization=organization)
             except ObjectDoesNotExist:
                 return HttpResponseBadRequest(_('User not found'))
@@ -314,7 +315,7 @@ def _tab_staff(request, tpp, page=1):
                 vacancy = get_object_or_404(Vacancy, user=user, department__organization=organization)
                 vacancy.remove_employee()
 
-    users = get_user_model().objects.filter(work_positions__department__organization=organization).distinct() \
+    users = get_user_model().objects.filter(is_active=True, work_positions__department__organization=organization).distinct() \
         .select_related('profile').prefetch_related('work_positions', 'work_positions__department')
 
     paginator = Paginator(users, 10)
@@ -335,86 +336,22 @@ def _tab_staff(request, tpp, page=1):
     return render_to_response('Tpp/tabStaff.html', template_params, context_instance=RequestContext(request))
 
 
-def _tab_gallery(request, tpp, page=1):
-    organization = get_object_or_404(Chamber, pk=tpp)
-    file = request.FILES.get('Filedata', None)
-
-    has_perm = False
-
-    if organization.has_perm(request.user):
-        has_perm = True
-
-    if file is not None:
-        if has_perm:
-            file = add(request.FILES['Filedata'], {'big': {'box': (130, 120), 'fit': True}})
-
-            if not organization.galleries.exists():
-                gallery = Gallery.create_default_gallery(organization, request.user)
-            else:
-                gallery = organization.galleries.first()
-
-            gallery.add_image(request.user, file)
-
-            return HttpResponse('')
-        else:
-            return HttpResponseBadRequest()
-    else:
-        photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
-        paginator = Paginator(photos, 10)
-        page = paginator.page(page)
-
-        paginator_range = func.get_paginator_range(page)
-
-        url_paginator = "tpp:tabs_gallery_paged"
-
-        template_params = {
-            'page': page,
-            'paginator_range': paginator_range,
-            'url_paginator': url_paginator,
-            'gallery': page.object_list,
-            'has_perm': has_perm,
-            'item_id': tpp,
-            'pageNum': page.number,
-            'url_parameter': tpp
-        }
-
-        return render_to_response('Tpp/tabGallery.html', template_params, context_instance=RequestContext(request))
+class ChamberGalleryImageList(GalleryImageList):
+    owner_model = Chamber
+    namespace = 'tpp'
 
 
-def gallery_structure(request, tpp, page=1):
-    organization = get_object_or_404(Chamber, pk=tpp)
-    photos = GalleryImage.objects.filter(gallery__in=organization.galleries.all())
-    paginator = Paginator(photos, 10)
-    page = paginator.page(page)
-    paginator_range = func.get_paginator_range(page)
-
-    url_paginator = "tpp:tabs_gallery_paged"
-
-    template_params = {
-        'page': page,
-        'paginator_range': paginator_range,
-        'url_paginator': url_paginator,
-        'gallery': page.object_list,
-        'pageNum': page.number,
-        'url_parameter': tpp
-    }
-
-    return render_to_response(
-        'Tpp/tab_gallery_structure.html',
-        template_params,
-        context_instance=RequestContext(request)
-    )
+class DeleteChamberGalleryImage(DeleteGalleryImage):
+    owner_model = Chamber
 
 
-def gallery_remove_item(request, tpp):
-    photo = get_object_or_404(GalleryImage, pk=tpp)
+class ChamberDocumentList(DocumentList):
+    owner_model = Chamber
+    namespace = 'tpp'
 
-    if photo.has_perm(request.user):
-        photo.delete()
-    else:
-        return HttpResponseBadRequest()
 
-    return HttpResponse()
+class DeleteChamberDocument(DeleteDocument):
+    owner_model = Chamber
 
 
 class ChamberUpdate(ItemUpdate):

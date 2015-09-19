@@ -1,25 +1,20 @@
 {% load staticfiles %}
 {% load i18n %}
 
-    {% for id, attr in notifDict.items %}
-        {% with attr.DETAIL_TEXT|first as message  %}
+{% for notification in notifications %}
+    <li data-id="{{ notification.pk }}">
 
-        <li data-id="{{ id }}">
+        <img src="{% static 'tppcenter/img/imgnone.png' %}" class="image" alt="" />
+        <div class="info">{{ notification.message }}</div>
+    </li>
+{% empty %}
+    <li class="no-results">
+        {% trans "No results found" %}
+    </li>
+{% endfor %}
 
-            <img src="{% static 'tppcenter/img/imgnone.png' %}" class="image" alt="" />
-            <div class="info">{{ message }}</div>
-        </li>
-
-
-        {% endwith %}
-    {% empty %}
-        <li class="no-results">
-            {% trans "No results found" %}
-        </li>
-    {% endfor %}
-
-    {% if lastLine %}
-        <li class="last"></li>
-    {% endif %}
+{% if last_line %}
+    <li class="last"></li>
+{% endif %}
 
 

@@ -41,8 +41,14 @@ urlpatterns = patterns('',
      url(r'^tabs/structure/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tab_structure, name="tab_structure_paged"),
      url(r'^tabs/staff/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tab_staff, name="tab_staff"),
      url(r'^tabs/staff/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tab_staff, name="tab_staff_paged"),
-     url(r'^tabs/gallery/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views._tab_gallery, name="tabs_gallery"),
-     url(r'^tabs/gallery/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views._tab_gallery, name="tabs_gallery_paged"),
-     url(r'^tabs/gallery_structure/(?P<tpp>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.gallery_structure, name="gallery_structure"),
-     url(r'^tabs/gallery/remove/(?P<tpp>[0-9]+)/$', tppcenter.Tpp.views.gallery_remove_item, name="gallery_remove_item"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/$', tppcenter.Tpp.views.ChamberGalleryImageList.as_view(), name="tabs_gallery"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.ChamberGalleryImageList.as_view(), name="tabs_gallery_paged"),
+     url(r'^tabs/gallery_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.ChamberGalleryImageList.as_view(is_structure=True), name="gallery_structure"),
+     url(r'^tabs/gallery/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$', tppcenter.Tpp.views.DeleteChamberGalleryImage.as_view(), name="gallery_remove_item"),
+
+     url(r'^tabs/documents/(?P<item>[0-9]+)/$', tppcenter.Tpp.views.ChamberDocumentList.as_view(), name="tabs_documents"),
+     url(r'^tabs/documents/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.ChamberDocumentList.as_view(), name="tabs_documents_paged"),
+     url(r'^tabs/documents_structure/(?P<item>[0-9]+)/page(?P<page>[0-9]+)/$', tppcenter.Tpp.views.ChamberDocumentList.as_view(is_structure=True), name="documents_structure"),
+     url(r'^tabs/documents/(?P<item>[0-9]+)/remove/(?P<pk>[0-9]+)/$', tppcenter.Tpp.views.DeleteChamberDocument.as_view(), name="documents_remove_item"),
+
 )

@@ -15,6 +15,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static "tppcenter/js/jquery.uploadify.min.js" %}"></script>
     <script>
         {% getOwner item.pk as owner %}
 
@@ -68,12 +69,21 @@
             <div class="innov-details">
                 <p>{{ item.description|cleanHtml|safe }}</p>
             </div>
-            <div class="goods-details-tab">
+            <div class="goods-details-tab cpn-details-tab">
                 <div class="tab-cate">
                     <ul>
                         <li><a href="#goods-tabs-1">{% trans 'Main' %}</a></li>
                         <li><a href="#goods-tabs-2">{% trans 'Business plan' %}</a></li>
-                        <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                        <li>
+                            <a data-id="gallery-tabs" href="{% url "innov:tabs_gallery" item.pk %}">
+                                {% trans "Gallery" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="document-tabs" href="{% url "innov:tabs_documents" item.pk %}">
+                                {% trans "Documents" %}
+                            </a>
+                        </li>
                         <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
                     {% for page in item.additional_pages.all %}
                          <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
@@ -108,36 +118,7 @@
                 </div>
                 <div id="goods-tabs-2">
                     <div class="content-goods-tab">
-                        {% comment %}
-                            {% if item.doc_1 %}
-                               <p><a href="{{ MEDIA_URL }}document/{{ item.doc_1 }}">{% trans 'Link to Business Plan File' %}</a> </p>
-                            {% endif %}
-                        {% endcomment %}
                         <p>{{ item.business_plan|cleanHtml|safe }}</p>
-
-                    </div>
-                </div>
-                <div id="goods-tabs-3">
-                    <div class="content-goods-tab">
-                        <ul class="tpp-gallery">
-                            {% for gallery in item.galleries.all %}
-                                {% for gallery_item in gallery.gallery_items.all %}
-                                    <li>
-                                        <div class="b-img">
-                                            <a class="fancybox" rel="gallery" href="{{ gallery_item.image }}">
-                                                <img alt=""  src="{{ gallery_item.image.big }}" />
-                                            </a>
-                                            <div class="viewimge">
-                                                <a class="fancybox" rel="gallery" href="{{ gallery_item.image.big }}">
-                                                    <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
-                                                </a>
-                                            </div>
-                                            <div class="gray-img"></div>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
                     </div>
                 </div>
                 <div id="goods-tabs-4">

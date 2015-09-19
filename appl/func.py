@@ -1213,6 +1213,14 @@ def autocomplete_filter(filter_key, q, page):
 
     if len(q) > 2:
         s = SearchEngine(doc_type=model_dict['index_model']).query('match', name_auto=q)
+        fields = [field.name for field in model_dict['model']._meta.get_fields()]
+
+        if 'is_active' in fields:
+            s = s.query('match', is_active=True)
+
+        if 'is_deleted' in fields:
+            s = s.query('match', is_deleted=False)
+
         paginator = Paginator(s, 10)
         hits = paginator.page(page).object_list.execute().hits
         object_ids = [obj.django_id for obj in hits]

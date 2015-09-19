@@ -14,25 +14,16 @@
         <div class="tophead-center">
         </div>
         <div class="tophead-r">
-        {% if user.email %}
-            {% trans 'Profile' %}:
-             <a href="#" class="barca">{% userName %}</a>
-        {% endif %}
-
-
-
-        	{% if user.is_authenticated %}
-                <a style="margin-left: 20px;" href="{% url "logout" %}" title=""> {% trans 'Sign out'  %}</a>
-            {% else %}
-                <a style="margin-left: 20px;" href="{% url "login" %}" title="">{% trans 'Sign in' %}</a>
+            {% if user.email %}
+                {% trans 'Profile' %}:
+                 <a href="#" class="barca">{% userName %}</a>
             {% endif %}
 
-
-
-
-
-
-
+        	{% if user.is_authenticated %}
+                <a style="margin-left: 20px;" href="{% url 'auth_logout' %}" title=""> {% trans 'Sign out'  %}</a>
+            {% else %}
+                <a style="margin-left: 20px;" href="{% url 'auth_login' %}" title="">{% trans 'Sign in' %}</a>
+            {% endif %}
         </div>
     </div>
 </div>
