@@ -6,16 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     {% block head %}
-
         {% block  meta%}
-
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-
-            {% block description %}
-
-           {% endblock %}
-
+            {% block description %}{% endblock %}
         {% endblock %}
 
         <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
@@ -26,9 +19,6 @@
             <link type="text/css" href="{% static 'usersites/css/externalsite.css'%}" rel="stylesheet" />
             <link type="text/css" href="{% static 'usersites/css/flags.css'%}" rel="stylesheet" />
             <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery.bxslider.css'%}" />
-
-
-
         {% endblock %}
 
         {% block js %}
@@ -45,35 +35,21 @@
                 });
             });
             </script>
-
-
         {% endblock %}
-
     {% endblock %}
-
-
-
 </head>
 
 <body>
-    {% block header %}
+    {% block header %}{% endblock %}
 
-    {% endblock %}
-
-    {% block body %}
-
-    {% endblock %}
+    {% block body %}{% endblock %}
 
     {% block rtl %}
-        {% if site|getSide %}
+        {% if LANGUAGE_BIDI %}
             <link type="text/css" href="{% static 'usersites/css/rtl.css'%}" rel="stylesheet" />
         {% endif %}
     {% endblock %}
 
-
-{% block footer %}
-
-
- {% endblock %}
+    {% block footer %}{% endblock %}
 </body>
 

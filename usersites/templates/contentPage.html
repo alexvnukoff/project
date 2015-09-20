@@ -1,118 +1,97 @@
+{% extends 'index.html' %}
 {% load i18n %}
 {% load CustomFilters %}
-
-
-
-            <ul class="walllist">
-             <h2 class="titlepage">{% trans "Business proposals" %}</h2>
-                 {% for id ,attr in proposalValues.items %}
-                     {% with attr.NAME.0 as name %}
-                     {% with attr.ANONS.0 as anons %}
-                     {% with attr.DETAIL_TEXT.0 as detail_text %}
-                     {% with attr.SLUG.0 as slug %}
-                     {% with attr.CREATE_DATE.0 as create_date %}
-
-            	<li>
-                	<h3><a href="{% dynurl proposal_url url_parameter slug %}">{{ name }}</a></h3>
-                    <div class="desc">
-                    	<p class="date">
-
-                             {% trans 'Date' %}:  {{ create_date|date:'d M Y' }}
-                        </p>
-                        <p>
-                            {% if anons %}
-                                 {{ anons|force_escape|linebreaks }}
-                            {% else %}
-                                 {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
-                            {% endif %}
-                        </p>
-                        <p class="linkmore"><a href="{% dynurl proposal_url url_parameter slug %}">{% trans "more" %}...</a></p>
-                    </div>
-                </li>
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-
-                {% endfor %}
-            </ul>
-
-
-            <ul class="walllist">
-             <h2 class="titlepage">{% trans "News" %}</h2>
-
-                 {% for id ,attr in newsValues.items %}
-                     {% with attr.NAME.0 as name %}
-                     {% with attr.ANONS.0 as anons %}
-                     {% with attr.DETAIL_TEXT.0 as detail_text %}
-                     {% with attr.IMAGE.0 as image %}
-                     {% with attr.SLUG.0 as slug %}
-                     {% with attr.CREATE_DATE.0 as create_date %}
-
-            	<li>
-                	<h3><a href="{% dynurl news_url url_parameter slug %}">{{ name }}</a></h3>
-                    <div class="thumb"><img style="max-width: 70px;" src="{{ MEDIA_URL }}small/{{ image }} " alt="" /></div>
-                    <div class="desc">
-                    	<p class="date">
-
-                             {% trans 'Date' %}:  {{ create_date|date:'d M Y' }}
-                        </p>
-                        <p>
-                            {% if anons %}
-                                 {{ anons|force_escape|linebreaks }}
-                            {% else %}
-                                 {{ detail_text|cleanHtml|safe|truncatewords_html:"30" }}
-                            {% endif %}
-                        </p>
-                        <p class="linkmore"><a href="{% dynurl news_url url_parameter slug %}">{% trans "more" %}...</a></p>
-                    </div>
-                </li>
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-
-                {% endfor %}
-            </ul>
-
-
-
-
-
-            <ul class="listprd">
-             <h2 class="titlepage">{% trans "Products" %}</h2>
-                 {% for id ,attr in productValues.items %}
-                     {% with attr.NAME.0 as name %}
-                     {% with attr.COST.0 as cost %}
-                     {% with attr.CURRENCY.0 as currency %}
-                     {% with attr.IMAGE.0 as image %}
-                     {% with attr.SLUG.0 as slug %}
-
-
-
-            	<li>
-                	<div class="thumb"><a href="#"><img style="max-width: 120px;" src="{{ MEDIA_URL }}big/{{ image }}" alt="" /></a></div>
-                    <div class="link">
-
-                        <a href="{% dynurl products_url url_parameter slug %}" class="name">{{ name|truncatewords:8 }}</a>
-                    </div>
-                    <div class="price">{{ cost }} {{ currency|getSymbol }}</div>
-                    <a href="{% dynurl products_url url_parameter slug %}" class="btnbuy">{% trans "Buy" %}</a>
-                </li>
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-                     {% endwith %}
-
-
-                {% endfor %}
-            </ul>
-
-
-
-
-
+{% if proposals %}
+{% block content %}
+    {{ block.super }}
+    <ul class="walllist">
+        <h2 class="titlepage">{% trans "Business proposals" %}</h2>
+        {% for proposal in site.user_site.organization.proposals.all|slice:3 %}
+        <li>
+            <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
+            <div class="desc">
+                <p class="date">{% trans 'Date' %}:  {{ proposal.created_at|date:'d M Y' }}</p>
+                <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"30" }}</p>
+                <p class="linkmore"><a href="{% dynurl proposal_url url_parameter slug %}">{% trans "more" %}...</a></p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if news %}
+    <ul class="walllist">
+        <h2 class="titlepage">{% trans "News" %}</h2>
+        {% for article in site.user_site.organization.news.all|slice:3 %}
+        <li>
+            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+            <div class="thumb">
+                {% if article.image %}
+                    <img style="max-width: 70px;" src="{{ article.image.big }} " alt="{{ article.title }}" title="{{ article.title }}"/>
+                {% else %}
+                    <img style="max-width: 70px;" src="{% static "tppcenter/img/news.jpg" %}" alt="" />
+                {% endif %}
+            </div>
+            <div class="desc">
+                <p class="date">{% trans 'Date' %}:  {{ article.created_at|date:'d M Y' }}</p>
+                <p>
+                    {% if article.short_description %}
+                         {{ article.short_description|force_escape|linebreaks }}
+                    {% else %}
+                         {{ article.content|cleanHtml|safe|truncatewords_html:"30" }}
+                    {% endif %}
+                </p>
+                <p class="linkmore"><a href="{{ article.get_absolute_url }}">{% trans "More" %}...</a></p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if b2c_products %}
+    <ul class="listprd">
+        <h2 class="titlepage">{% trans "Products" %}</h2>
+        {% for product in site.user_site.organization.b2c_products.all|slice:4 %}
+        <li>
+            <div class="thumb">
+                {% if product.image %}
+                    <img style="max-width: 120px;" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                {% else %}
+                    <img style="max-width: 120px;" src="{% static 'tppcenter/img/item.jpg' %}" />
+                {% endif %}
+            </div>
+            <div class="link">
+                <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatewords:8 }}</a>
+            </div>
+            <div class="price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</div>
+            <a href="{{ product.get_absolute_url }}" class="btnbuy">{% trans "Buy" %}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if b2b_products %}
+    <ul class="listprd">
+        <h2 class="titlepage">{% trans "Products" %}</h2>
+        {% for product in site.user_site.organization.b2b_products.all|slice:4 %}
+        <li>
+            <div class="thumb">
+                {% if product.image %}
+                    <img style="max-width: 120px;" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                {% else %}
+                    <img style="max-width: 120px;" src="{% static 'tppcenter/img/item.jpg' %}" />
+                {% endif %}
+            </div>
+            <div class="link">
+                <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatewords:8 }}</a>
+            </div>
+            <div class="price">
+                {% if product.cost %}
+                    {{ product.currency|getSymbol }} {{ product.cost|formatPrice }}
+                {% else %}
+                    {% trans 'Contact to price' %}
+                {% endif %}
+            </div>
+            <a href="{{ product.get_absolute_url }}" class="btnbuy">{% trans "Buy" %}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

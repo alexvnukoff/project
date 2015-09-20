@@ -18,6 +18,7 @@ from django import template
 from appl.func import currencySymbol
 from appl import func
 from appl.models import *
+from b24online.models import Chamber
 import tppcenter.urls
 
 register = template.Library()
@@ -26,14 +27,6 @@ register = template.Library()
 @register.filter()
 def multiply(value, multiplier):
     return Decimal(value) * Decimal(multiplier)
-
-
-@register.filter(name='getSide')
-def getSide(value):
-    is_right = trans_real.get_language() == 'he' or trans_real.get_language() == 'ar'
-
-    return is_right
-
 
 @register.filter(name='sort')
 def sort(value):
@@ -449,18 +442,10 @@ def getTppName(context):
     return ""
 
 
-@register.assignment_tag(takes_context=True)
-def isSiteOrganizationTpp(context):
-    request = context.get('request', None)
-    SITE_ID = get_current_site(request).pk
-    organization = UserSites.objects.get(sites__id=SITE_ID).organization
-
-    try:
-        return hasattr(organization, "tpp")
-    except:
-        pass
-
-    return False
+@register.assignment_tag
+def is_chamber_site(context):
+    organization = Site.objects.get_current().user_site.organization
+    return isinstance(organization, Chamber)
 
 
 @register.filter(name='basename')

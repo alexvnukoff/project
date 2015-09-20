@@ -123,7 +123,7 @@ class DynamicSiteMiddleware(object):
         request.urlconf = "%s.urls" % str(site.name)
 
         settings.TEMPLATE_DIRS = [
-            os.path.join(os.path.dirname(__file__), '..', str(site.name), 'templates').replace('\\', '/')
+            os.path.join(settings.BASE_DIR, '..', str(site.name), 'templates').replace('\\', '/')
         ]
         SITE_THREAD_LOCAL.TEMPLATE_DIRS = settings.TEMPLATE_DIRS
         SITE_THREAD_LOCAL.ROOT_URLCONF = "%s.urls" % str(site.name)
@@ -145,7 +145,7 @@ class DynamicSiteMiddleware(object):
 #        test()
 
     def _get_site_id_from_host(self, request):
-        host = request.get_host().lower()
+        host = request.get_host().lower().split(':')[0]
         languages = [lan[0] for lan in settings.LANGUAGES]
 
         if not host:
@@ -180,6 +180,6 @@ class DynamicSiteMiddleware(object):
         try:
             site = Site.objects.get(domain__iexact=host)
         except Site.DoesNotExist:
-            return HttpResponseBadRequest()
+            return None
 
         return site

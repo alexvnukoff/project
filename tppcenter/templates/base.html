@@ -3,12 +3,10 @@
 {% load CustomFilters %}
 {% load cache %}
 {% load inclusionTags %}
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head lang="{% getLang %}">
     {% block head %}
-
         <link rel="shortcut icon" href="{% static  "tppcenter/favicon.ico" %}" type="image/x-icon">
         <link rel="icon" href="{% static  "tppcenter/favicon.ico" %}" type="image/x-icon">
 
@@ -141,7 +139,7 @@
 
     {% endblock %}
     {% block rtl %}
-         {% if site|getSide %}
+         {% if LANGUAGE_BIDI %}
               <link type="text/css" rel="stylesheet" href="{% static  "tppcenter/css/rtl.css"%}" />
           {% endif %}
     {% endblock %}

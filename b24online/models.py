@@ -24,6 +24,8 @@ from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from uuslug import uuslug
+
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
 from b24online.utils import create_slug, generate_upload_path, reindex_instance, document_upload_path
 from tpp.celery import app
@@ -267,6 +269,7 @@ class Document(models.Model):
 
 class AdditionalPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
+    slug = models.SlugField()
     content = models.TextField(blank=False, null=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -279,6 +282,9 @@ class AdditionalPage(models.Model):
 
     def has_perm(self, user):
         return self.item.haxs_perm(user)
+
+    def get_absolute_url(self):
+        return reverse('pages:detail', args=[self.slug, self.pk])
 
 
 class Branch(MPTTModel, IndexedModelMixin):
@@ -736,7 +742,7 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     categories = models.ManyToManyField(BusinessProposalCategory)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='proposals')
     context_advertisements = GenericRelation(ContextAdvertisement)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
@@ -861,7 +867,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
                              blank=True, null=True, max_length=255)
     categories = models.ManyToManyField(B2BProductCategory)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='b2b_products')
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
@@ -1002,7 +1008,7 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE, related_name='news')
     country = models.ForeignKey(Country, null=True)
     context_advertisements = GenericRelation(ContextAdvertisement)
 
@@ -1444,7 +1450,7 @@ def slugify(sender, instance, **kwargs):
         else:
             raise NotImplementedError('Unknown source field for slug')
 
-        instance.slug = create_slug(string)
+        instance.slug = uuslug(string, instance=instance)#create_slug(string)
 
 
 @receiver(post_save, sender=Company)

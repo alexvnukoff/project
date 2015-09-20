@@ -289,7 +289,7 @@ class B2BProductUpdate(ItemUpdate):
 
             for page_form in additional_page_form:
                 if not page_form.instance.pk:
-                    page_form.instance.updated_by = self.request.user
+                    page_form.instance.created_by = self.request.user
                 page_form.instance.updated_by = self.request.user
 
             additional_page_form.save()
@@ -448,7 +448,7 @@ class B2CProductUpdate(ItemUpdate):
 
             for page_form in additional_page_form:
                 if not page_form.instance.created_by:
-                    page_form.instance.updated_by = self.request.user
+                    page_form.instance.created_by = self.request.user
                 page_form.instance.updated_by = self.request.user
 
             additional_page_form.save()

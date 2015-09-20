@@ -1,15 +1,14 @@
 import os
-
 from django import template
 from django.conf import settings
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.models import get_current_site, Site
 from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 
 from appl.models import Category, NewsCategories, AdditionalPages
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal, Company, News, Gallery
+    BusinessProposal, Company, News
 from centerpokupok.models import B2CProduct
 from centerpokupok.views import _sortMenu
 from appl import func
@@ -219,87 +218,19 @@ def getLastNews(context):
     return {'MEDIA_URL': MEDIA_URL, 'newsValues': newsValues}
 
 
-@register.inclusion_tag('slider.html', takes_context=True)
-def getUserSiteSlider(context):
-    request = context.get('request')
-
+@register.inclusion_tag('slider.html')
+def site_slider():
     import glob
+    user_site = Site.objects.get_current().user_site
 
-    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-    photos = Gallery.objects.filter(c2p__parent=user_site)
-    if not photos.exists():
-        user_site_slider = user_site.getAttributeValues("TEMPLATE")
-        file_count = 0
-        if len(user_site_slider) > 0:
-            user_site_slider = user_site_slider[0]
-
-            slider_dir = 'tppcenter/img/templates/' + user_site_slider
-
-            dir = os.path.join(settings.MEDIA_ROOT, slider_dir).replace('\\', '/')
-
-            file_count = len(glob.glob(dir + "/*.jpg"))
-
-        return {'file_count': file_count, 'user_site_slider': user_site_slider, 'custom_slider': False}
-
+    if user_site.galleries.exists() and user_site.galleries.first().gallery_items.exists():
+        images = [image.original for image in user_site.galleries.first().gallery_items.all().only('image')]
     else:
-        media_url = settings.MEDIA_URL
-        return {'photos': photos, 'media_url': media_url, 'custom_slider': True}
+        dir = user_site.template.folder_name
+        images = ["%s%s/%s" % (settings.MEDIA_URL, os.path.basename(dir), os.path.basename(image))
+                  for image in glob.glob(dir + "/*.jpg")]
 
-
-@register.inclusion_tag('header.html', takes_context=True)
-def getUserSitTopMenu(context):
-    path = context['request'].path.split('/')
-    languages = [lan[0] for lan in settings.LANGUAGES]
-    url_parameter = []
-
-    additionalPages_url = 'additionalPage'
-    about_us_url = 'about_us'
-    if len(path) > 0:
-        if path[1] in languages:
-            url_parameter = path[1]
-
-            additionalPages_url = 'additionalPage_lang'
-            about_us_url = 'about_us_lang'
-
-    midea_url = settings.MEDIA_URL
-
-    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-    organization = user_site.organization.pk
-
-    additionalPages = AdditionalPages.objects.filter(c2p__parent=organization).values_list('pk', flat=True)
-    addPagesValues = Item.getItemsAttributesValues(('NAME',), additionalPages)
-
-    return {'addPagesValues': addPagesValues, 'midea_url': midea_url, 'url_parameter': url_parameter,
-            'additionalPages_url': additionalPages_url, 'about_us_url': about_us_url}
-
-
-@register.inclusion_tag('site_sidebar.html', takes_context=True)
-def getUserSiteMenu(context):
-    path = context['request'].path.split('/')
-    languages = [lan[0] for lan in settings.LANGUAGES]
-    url_parameter = []
-    news_url = 'news:main'
-    main_url = 'main'
-    proposal_url = 'proposal:main'
-    products_url = 'products:main'
-    contact_url = 'contact:main'
-    structure_url = 'structure:main'
-
-    if len(path) > 0:
-        if path[1] in languages:
-            url_parameter = path[1]
-            news_url = "news_lang:main"
-            main_url = 'main_lang'
-            proposal_url = 'proposal_lang:main'
-            products_url = 'products_lang:main'
-            contact_url = 'contact_lang:main'
-            structure_url = 'structure_lang:main'
-
-    midea_url = settings.MEDIA_URL
-
-    return {'midea_url': midea_url, 'url_parameter': url_parameter,
-            "news_url": news_url, 'main_url': main_url, 'proposal_url': proposal_url, 'products_url': products_url,
-            "contact_url": contact_url, 'structure_url': structure_url}
+    return {'images': images}
 
 
 @register.inclusion_tag('main/staticPages.html')

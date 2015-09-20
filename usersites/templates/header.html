@@ -1,8 +1,8 @@
 {% load i18n %}
 {% load CustomFilters %}
 <div class="tophead">
-     <a href="{% dynurl about_us_url url_parameter %}">{% trans 'About us' %}</a>
-    {% for id,  page in addPagesValues.items %}
-          <a href="{% dynurl additionalPages_url url_parameter id %}">{{ page.NAME|first }}</a>
+     <a href="{% url pages:about %}">{% trans 'About us' %}</a>
+    {% for page in site.user_site.organization.additional_pages %}
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
     {% endfor %}
 </div>

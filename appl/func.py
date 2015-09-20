@@ -17,7 +17,6 @@ from django.utils.translation import ugettext as _
 from haystack.query import SearchQuerySet, SQ
 import lxml
 from lxml.html.clean import clean_html
-from psycopg2.extras import DateRange
 
 from appl.models import Category, Tpp, Cabinet, SystemMessages
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \

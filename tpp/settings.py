@@ -135,12 +135,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
     'tpp.SiteUrlMiddleWare.SiteLangRedirect',
     'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'tpp.SetCurCompanyMiddleware.SetCurCompany'
+        'tpp.SetCurCompanyMiddleware.SetCurCompany'
 )
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -206,7 +207,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = ("/var/www/html/tpp/locale", "locale")
+LOCALE_PATHS = (
+    (os.path.join(BASE_DIR, 'locale').replace('\\', '/')),
+    "locale"
+)
 
 
 # Static files (CSS, JavaScript, Images)
@@ -220,7 +224,7 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (
-    (os.path.join(os.path.dirname(__file__), '..', 'tppcenter', 'templates').replace('\\', '/')),
+    (os.path.join(BASE_DIR, 'tppcenter', 'templates').replace('\\', '/')),
 )
 ROOT_URLCONF = 'tppcenter.urls'
 #SITE_ID = 143
@@ -236,7 +240,7 @@ NOTIFICATION_BEFORE_END_DATE = 60
 AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = 'http://static.tppcenter.com/'
-MEDIA_ROOT = (os.path.join(os.path.dirname(__file__), '..', 'appl', 'Static', 'upload').replace('\\', '/'))
+MEDIA_ROOT = (os.path.join(BASE_DIR, 'appl', 'Static', 'upload').replace('\\', '/'))
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

@@ -17,7 +17,6 @@ class ChangeCsrfCookieDomainMiddleware:
         else:
             current_domain = [""] + current_domain
 
-
         current_domain = ".".join(current_domain)
 
         allowed = settings.ALLOWED_HOSTS
