@@ -261,7 +261,7 @@
                         </ul>
                         <div class="search-key">
                         <form action="" method="get" name="search">
-                            <input type="text" name="q" value="{% searchQuery %}" placeholder="{% trans "Find.." %}" class="text" />
+                            <input type="text" name="q" value="{% search_query %}" placeholder="{% trans "Find.." %}" class="text" />
                             <input type="submit" name="" value="" class="i-search imgnews" />
                         </form>
                         </div>
@@ -279,7 +279,7 @@
 
             <div class="newsright">
             <div class="b-notyfi event-holder">
-            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% notif %}</a>
+            	<i id="showevent" class="imgnews icon-notyfi icon-nt1 showevent {% if not notif and not user.is_authenticated  %} disable {% endif %}"></i><a href="#" class="showevent num">{% set_notification_count %}</a>
 
                     <div class="formevent">
                         	<i class="close-event imgnews" ></i>
@@ -294,7 +294,7 @@
 
                    <i class="imgnews icon-notyfi icon-nt2  {% if not mail and not user.is_authenticated  %} disable {% endif %}"></i>
 
-                <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% mail %} </a>
+                <a href="{% url 'messages:main' %}" class="num" id="mailcounter">{% set_message_count %} </a>
 
                 <a href="#"><i class="imgnews icon-notyfi icon-nt3 disable"></i></a>
                 <a href="#"><i class="imgnews icon-notyfi icon-nt4 disable"></i></a>

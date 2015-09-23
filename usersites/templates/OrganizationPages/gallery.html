@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+    <h1 class="titlepage">{% trans 'Gallery' %}</h1>
+    <div class="goods-details">
+        <div class="prj-details-tab">
+            <ul class="tpp-gallery gallery" >
+                {% for gallery_obj in site.user_site.organization.gallery_images %}
+                    <li>
+                        <div class="b-img">
+                            <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
+                                <img alt=""  src="{{ gallery_obj.image.big }}" />
+                            </a>
+                            <div class="viewimge">
+                                <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
+                                    <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                </a>
+                            </div>
+                            <div class="gray-img"></div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

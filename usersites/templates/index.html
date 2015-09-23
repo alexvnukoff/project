@@ -3,6 +3,8 @@
 {% load inclusionTags %}
 {% load staticfiles %}
 {% load i18n %}
+{% load cache %}
+{% is_chamber_site as is_chamber %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block header %}
@@ -13,16 +15,11 @@
 
 {% block styles %}
     {{ block.super }}
-
-    {% if is_chamber %}
-        <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
-    {% endif %}
+    <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
 {% endblock %}
 
 
 {% block body %}
-    {% is_chamber_site as is_chamber %}
-
     <div class="main">
         <div class="wrapper">
             {% block sidebar %}
@@ -43,9 +40,20 @@
                     <h1 class="titlepage">{{ current_section }}</h1>
                 {% endblock %}
             </div>
-            {% if is_chamber %}
-                {% userSitegetTopOnPage %}
-            {% endif %}
+            <div class="sidebar adv">
+                {% if is_chamber %}
+                    <div class="news-ads">
+                        {% site_context_adv %}
+
+                    </div>
+                {% else %}
+                        {% site_banner "SITES RIGHT 1" %}
+                        {% site_banner "SITES RIGHT 2" %}
+                        {% site_banner "SITES RIGHT 3" %}
+                        {% site_banner "SITES RIGHT 4" %}
+                        {% site_banner "SITES RIGHT 5" %}
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

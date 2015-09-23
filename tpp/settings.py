@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     #'paypal.standard.ipn'
     'debug_toolbar',
     'guardian',
+    'captcha',
     'django.contrib.admin',
 )
 
@@ -141,7 +142,7 @@ MIDDLEWARE_CLASSES = (
     'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-        'tpp.SetCurCompanyMiddleware.SetCurCompany'
+    'tpp.SetCurCompanyMiddleware.SetCurCompany'
 )
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -312,8 +313,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-
-######################## Haystack settings ###############################
 
 ######################## Haystack settings ###############################
 

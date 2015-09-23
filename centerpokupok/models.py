@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -10,7 +11,7 @@ from mptt.models import MPTTModel
 
 from b24online.custom import CustomImageField
 from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage, IndexedModelMixin, \
-    ActiveModelMixing
+    ActiveModelMixing, GalleryImage
 from b24online.utils import generate_upload_path, reindex_instance
 
 
@@ -34,7 +35,7 @@ class B2CProductCategory(MPTTModel, IndexedModelMixin):
 
 class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, name=False)
-    categories = models.ManyToManyField(B2CProductCategory)
+    categories = models.ManyToManyField(B2CProductCategory, related_name='products')
     slug = models.SlugField()
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
@@ -96,7 +97,12 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         return self.company.has_perm(user)
 
     def get_absolute_url(self):
-        return reverse('products:B2CDetail', args=[self.slug, self.pk])
+        return reverse('products:detail', args=[self.slug, self.pk])
+
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
 
 class B2CProductComment(MPTTModel):

@@ -1,15 +1,12 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-
-import usersites.Proposals.views
-import usersites.views
+from usersites.Proposals.views import BusinessProposalList, BusinessProposalDetail
 
 admin.autodiscover()
 
-
 urlpatterns = patterns('',
-    # Examples:
-     url(r'^$', usersites.Proposals.views.get_proposals_list, name='main'),
-     url(r'^page(?P<page>[0-9]+)?/$', usersites.Proposals.views.get_proposals_list, name="paginator"),
-     url(r'^(?P<slug>[0-9a-zA-z-]+)-(?P<item_id>[0-9]+)\.html$', usersites.Proposals.views.get_proposals_list, name='detail'),
-)
+                       url(r'^$', BusinessProposalList.as_view(), name='main'),
+                       url(r'^page(?P<page>[0-9]+)?/$', BusinessProposalList.as_view(), name="paginator"),
+                       url(r'^(?P<slug>[0-9a-zA-z-]+)-(?P<pk>[0-9]+)\.html$', BusinessProposalDetail.as_view(),
+                           name='detail'),
+                       )

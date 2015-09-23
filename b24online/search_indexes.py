@@ -22,7 +22,7 @@ autocomplete = analyzer('autocomplete',
                         tokenizer="standard",
                         filter=["standard", "lowercase", "lowercase", autocomplete_filter]
                         )
-    
+
 
 class GreetingIndex(DocType):
     django_id = Integer()
@@ -72,9 +72,12 @@ class CompanyIndex(DocType):
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
             country=obj.countries.all().values_list('pk', flat=True)[0],
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         index_instance.organization = obj.parent.pk if obj.parent else None
 
@@ -113,9 +116,12 @@ class ExhibitionIndex(DocType):
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
             country=obj.country.pk,
-            created_at=obj.created_at,
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
+            created_at=obj.created_at
         )
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 
@@ -152,10 +158,16 @@ class BusinessProposalIndex(DocType):
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
             country=obj.country.pk,
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
-            bp_categories=list(obj.categories.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
+
+        index_instance.bp_categories = list(set([item for category in obj.categories.all()
+                                            for item in
+                                            category.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 
@@ -350,11 +362,17 @@ class B2BProductIndex(DocType):
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
             country=obj.company.country.pk,
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
-            b2b_categories=list(obj.categories.all().values_list('pk', flat=True)),
             price=obj.cost,
             created_at=obj.created_at
         )
+
+        index_instance.b2b_categories = list(set([item for category in obj.categories.all()
+                                             for item in
+                                             category.get_ancestors(include_self=True).values_list('pk', flat=True)]))
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 
@@ -390,10 +408,13 @@ class B2cProductIndex(DocType):
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
             country=obj.company.country.pk,
-            b2c_categories=list(obj.categories.all().values_list('pk', flat=True)),
             price=obj.cost,
             created_at=obj.created_at
         )
+
+        index_instance.b2c_categories = list(set([item for category in obj.categories.all()
+                                             for item in
+                                             category.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 
@@ -428,12 +449,15 @@ class NewsIndex(DocType):
             organization=getattr(obj.organization, 'pk', None),
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
-            news_categories=list(obj.categories.all().values_list('pk', flat=True)),
             is_tv=obj.is_tv,
             created_at=obj.created_at
         )
         country = obj.country if obj.country else getattr(obj.organization, 'country', None)
         index_instance.country = getattr(country, 'pk', None)
+
+        index_instance.news_categories = list(set([item for category in obj.categories.all()
+                                              for item in
+                                              category.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 
@@ -470,9 +494,12 @@ class TenderIndex(DocType):
             country=obj.country.pk,
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         if obj.start_date and obj.end_date:
             index_instance.start_date = obj.start_date
@@ -512,9 +539,12 @@ class InnovationProjectIndex(DocType):
             country=obj.country.pk if obj.country else None,
             is_active=obj.is_active,
             is_deleted=obj.is_deleted,
-            branches=list(obj.branches.all().values_list('pk', flat=True)),
             created_at=obj.created_at
         )
+
+        index_instance.branches = list(set([item for branch in obj.branches.all()
+                                       for item in
+                                       branch.get_ancestors(include_self=True).values_list('pk', flat=True)]))
 
         return index_instance
 

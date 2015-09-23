@@ -7,6 +7,7 @@ from django.db.models.fields.files import ImageFieldFile
 
 class CustomImageFieldFile(ImageFieldFile):
 
+    @property
     def original(self):
         self._require_file()
         return self.storage.url_by_size(self.name, 'original')

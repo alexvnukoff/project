@@ -4,24 +4,21 @@ import usersites.views
 import usersites.OrganizationPages.urls
 import usersites.News.urls
 import usersites.Proposals.urls
-import usersites.Products.urls
-import usersites.Contact.urls
-import usersites.CompanyStructure.urls
+import usersites.B2BProducts.urls
+import usersites.B2CProducts.urls
 
 from django.contrib import admin
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-                       url(r'^$', usersites.views.get_wall, name='main'),
+                       url(r'^$', usersites.views.wall, name='main'),
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^(?P<language>[a-zA-Z]{2})/news/', include(usersites.News.urls, namespace='news_lang')),
                        url(r'^news/', include(usersites.News.urls, namespace='news')),
                        url(r'^proposal/', include(usersites.Proposals.urls, namespace='proposal')),
-                       url(r'^products/', include(usersites.Products.urls, namespace='products')),
-                       url(r'^contact/', include(usersites.Contact.urls, namespace='contact')),
-                       url(r'^structure/', include(usersites.CompanyStructure.urls, namespace='structure')),
-                       url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='additionalPage')),
+                       url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
+                       url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
+                       url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
                        )
 
 import debug_toolbar

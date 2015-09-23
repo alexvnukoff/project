@@ -22,6 +22,7 @@ from django.db import transaction
 # Create your models here.
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
+from mptt.managers import TreeManager
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from uuslug import uuslug
@@ -140,7 +141,6 @@ class ActiveModelMixing(models.Model):
         abstract = True
 
 
-
 class IndexedModelMixin:
     def reindex(self, is_active_changed=False, *args, **kwargs):
         reindex_instance(self)
@@ -239,7 +239,7 @@ class Gallery(ActiveModelMixing, models.Model):
 class GalleryImage(models.Model):
     gallery = models.ForeignKey(Gallery, related_name='gallery_items')
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                            sizes=['big', 'small', 'th'], max_length=255)
+                             sizes=['big', 'small', 'th'], max_length=255)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -527,6 +527,11 @@ class Chamber(Organization, IndexedModelMixin):
         from b24online.search_indexes import ChamberIndex
         return ChamberIndex
 
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
     def __str__(self):
         return self.name
 
@@ -636,6 +641,11 @@ class Company(Organization, IndexedModelMixin):
     def get_index_model(**kwargs):
         from b24online.search_indexes import CompanyIndex
         return CompanyIndex
+
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
     def __str__(self):
         return self.name
@@ -769,6 +779,11 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
             ['is_active', 'is_deleted', 'created_at'],
         ]
 
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
 
 class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
@@ -847,6 +862,8 @@ class B2BProductCategory(MPTTModel, IndexedModelMixin):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
 
+    m = TreeManager()
+
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import B2bProductCategoryIndex
@@ -866,7 +883,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
                              blank=True, null=True, max_length=255)
-    categories = models.ManyToManyField(B2BProductCategory)
+    categories = models.ManyToManyField(B2BProductCategory, related_name='products')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='b2b_products')
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
@@ -932,6 +949,10 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
             ['is_active', 'is_deleted', 'created_at', 'company'],
         ]
 
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
 class B2BProductComment(MPTTModel):
     content = models.TextField()
@@ -1016,6 +1037,11 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def gallery_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
 
     def upload_images(self):
         from core import tasks

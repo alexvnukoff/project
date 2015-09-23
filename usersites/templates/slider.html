@@ -3,7 +3,7 @@
 {% load CustomFilters %}
 <div class="slidehome">
     <ul class="slide">
-        {% if images|len == 0 %}
+        {% if images|length == 0 %}
             <li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
             <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
             <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>

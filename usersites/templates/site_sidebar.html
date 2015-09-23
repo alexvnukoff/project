@@ -1,7 +1,8 @@
 {% load i18n %}
 {% load CustomFilters %}
-{% is_chamber_site as is_chamber %}
 {% load cache %}
+{% load inclusionTags %}
+{% is_chamber_site as is_chamber %}
 <div class="sidebar">
     <a href="/"><i class="" id="logo"><img src="{{ site.user_site.logo.big }}"/></i></a>
     <select id="lang_select" style="height: 29px;width: 220px;" >
@@ -79,34 +80,38 @@
             */
         });
         </script>
-
+    {% comment %}
     <div class="search">
         <input type="text" name="" placeholder="{% trans 'Search' %}…" class="text" />
         <input type="button" name="" class="btns imgmain" />
     </div>
-
+    {% endcomment %}
     <ul class="categories">
-        <li><a href="{% url main %}">{% trans 'Main' %}</a></li>
-        <li><a href="{% url news:main %}">{% trans 'Company news' %}</a></li>
-        <li><a href="{% url proposal:main %}">{% trans 'Business proposals' %}</a></li>
+        <li><a href="{% url 'main' %}">{% trans 'Main' %}</a></li>
+        <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>
+        <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
         {% if not is_chamber %}
             {% if site.user_site.organization.b2c_products.exists %}
-                <li><a href="{% ulr products:main %}">{% trans 'B2C Products' %}</a></li>
+                <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
             {% endif %}
 
             {% if site.user_site.organization.b2c_products.exists %}
-                <li><a href="{% url products:main %}">{% trans 'B2B Products' %}</a></li>
+                <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
             {% endif %}
         {% endif %}
         {% comment %}
             {% for page in site.user_site.organization.additional_pages %}
-                <li><a href="{% url page:detail page.slug page.pk %}">{{ page.title }}</a></li>
+                <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
             {% endfor %}
-        {% endcomment
+        {% endcomment %}
         {% if site.user_site.organization.galleries.exists %}
-            <li><a href="{% url gallery:main %}">{% trans 'Gallery' %}</a></li>
+            <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>
         {% endif %}
-        <li><a href="{% url pages:structure %}">{% trans 'Company structure' %}</a></li>
-        <li><a href="{% url pages:contacts %}">{% trans 'Contact us' %}</a></li>
+        <li><a href="{% url 'pages:structure' %}">{% trans 'Company structure' %}</a></li>
+        <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
     </ul>
+    <div class="banners left">
+        {% site_banner "SITES LEFT 1" %}
+        {% site_banner "SITES LEFT 2" %}
+    </div>
 </div>

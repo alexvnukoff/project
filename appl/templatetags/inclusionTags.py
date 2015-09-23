@@ -1,50 +1,61 @@
 import os
+
 from django import template
 from django.conf import settings
-from django.contrib.sites.models import get_current_site, Site
+from django.contrib.sites.models import Site
 from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 
-from appl.models import Category, NewsCategories, AdditionalPages
+from appl.models import Category, NewsCategories
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
-    BusinessProposal, Company, News
+    BusinessProposal, Company, News, Banner
 from centerpokupok.models import B2CProduct
 from centerpokupok.views import _sortMenu
 from appl import func
-from appl.models import UserSites
 from core.models import Item
 from jobs.models import Requirement, Resume
 
 register = template.Library()
 
 
-@register.inclusion_tag('AdvTop/tops.html', takes_context=True)
-def userSitegetTopOnPage(context):
-    request = context.get('request')
-    SITE_ID = get_current_site(request).pk
-    MEDIA_URL = context.get('MEDIA_URL', '')
-
-    organization = UserSites.objects.get(sites__id=SITE_ID).organization.pk
-
-    cache_name = "%s_adv_top_cache_site_%d" % (get_language(), SITE_ID)
-
+@register.inclusion_tag('banner.html')
+def site_banner(block):
+    site_pk = Site.objects.get_current().pk
+    cache_name = "banner:usersite:%s:%s" % (block, site_pk)
     cached = cache.get(cache_name)
 
     if not cached:
-        tops, models = func.get_tops([organization])
+        banner = Banner.objects.filter(block__code=block, block__block_type='user_site').order_by('?').first()
 
-        cache.set(cache_name, (tops, models), 60 * 10)
+        if banner:
+            cache.set(cache_name, banner, 60 * 60)
     else:
-        tops, models = cache.get(cache_name)
+        banner = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL, 'modelTop': tops, 'models': models}
+    return {'banner': banner}
+
+
+@register.inclusion_tag('tops.html')
+def site_context_adv():
+    organization_id = Site.objects.get_current().organization.pk
+    cache_name = "adv:context:%s:%s" % (get_language(), organization_id)
+    cached = cache.get(cache_name)
+
+    if not cached:
+        models = func.get_tops({Chamber: [organization_id]})
+
+        if models is not None:
+            cache.set(cache_name, models, 60 * 10)
+    else:
+        models = cache.get(cache_name)
+
+    return {'MEDIA_URL': settings.MEDIA_URL, 'models': models}
 
 
 @register.inclusion_tag('AdvTop/tops.html', takes_context=True)
 def get_top_on_page(context, item=None):
     request = context.get('request')
-    MEDIA_URL = context.get('MEDIA_URL', '')
 
     if item:
         filter_adv = func.get_detail_adv_filter(item)
@@ -60,18 +71,17 @@ def get_top_on_page(context, item=None):
     if cached is None:
         models = func.get_tops(filter_adv)
 
-        if filter_adv is None:
-            cache.set(cache_name,  models, 60 * 10)
+        if filter_adv is None and models is not None:
+            cache.set(cache_name, models, 60 * 10)
     else:
         models = cache.get(cache_name)
 
-    return {'MEDIA_URL': MEDIA_URL, 'models': models}
+    return {'MEDIA_URL': settings.MEDIA_URL, 'models': models}
 
 
 @register.inclusion_tag('AdvBanner/banners.html', takes_context=True)
 def get_banner(context, block, item):
     request = context.get('request')
-    MEDIA_URL = context.get('MEDIA_URL', '')
 
     if item:
         advertisement_filter = func.get_detail_adv_filter(item)
@@ -222,9 +232,10 @@ def getLastNews(context):
 def site_slider():
     import glob
     user_site = Site.objects.get_current().user_site
+    custom_images = user_site.slider_images
 
-    if user_site.galleries.exists() and user_site.galleries.first().gallery_items.exists():
-        images = [image.original for image in user_site.galleries.first().gallery_items.all().only('image')]
+    if custom_images:
+        images = [obj.image.original for obj in custom_images.only('image')]
     else:
         dir = user_site.template.folder_name
         images = ["%s%s/%s" % (settings.MEDIA_URL, os.path.basename(dir), os.path.basename(image))

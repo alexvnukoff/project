@@ -1,0 +1,139 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block content %}
+    {{ block.super }}
+    <script>
+    $(function() {
+         $(".prj-details-tab").tabs();});
+    </script>
+
+    <div class="goods-details">
+        <div class="country">
+            <label class="name-c">{{ object.name }}  {{ object.sku }}</label>
+        </div>
+        <div class="prd-details-left">
+            <div class="gallery">
+                <div id="panel">
+                    {% if object.image %}
+                      <img id="largeImage" style="max-width: 150px; max-height: 138px;" src="{{ object.image.small }}" alt="{{ object.name }}" title="{{ object.name }}" />
+                    {% else %}
+                      <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
+                    {% endif %}
+                </div>
+                <div id="thumbs">
+                    {% for gallery_obj in object.gallery_images|slice:":3" %}
+                       <img src="{{ gallery_obj.image.big }}" />
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <ul class="prd-info">
+            <li>
+                <label>{% trans "Price" %}:</label>
+                <div class="rightinfo">
+                    {% if object.cost %}
+                        <font class="num">  {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}</font>
+                    {% else %}
+                         {% trans 'Contact to price' %}
+                    {% endif %}
+              </div>
+            </li>
+            <li>
+                <label>{% trans 'Unit' %}:</label>
+                <div class="rightinfo">
+                    <font class="num"> {{ object.get_measurement_unit_display }}</font>
+                </div>
+            </li>
+            <li>
+                <label>{% trans 'Amount' %}:</label>
+                 <div class="rightinfo">
+                      <input id="item-amount" type="text" name="" value="1" class="text" style="width:60%;"/>
+                </div>
+            </li>
+            <li>
+                <label>{% trans 'Deleviry method' %}:</label>
+                 <div class="rightinfo">
+                        <span class="trans-services"><i class="imgmain transport trans-1"></i></span>
+                        <span class="trans-services"><i class="imgmain transport trans-2"></i></span>
+                        <span class="trans-services"><i class="imgmain transport trans-3"></i></span>
+                        <span class="trans-services"><i class="imgmain transport trans-4"></i></span>
+                        <span class="trans-services"><i class="imgmain transport trans-5"></i></span>
+                 </div>
+            </li>
+            <li>
+                {% if cost %}
+
+                {% else %}
+                    <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                {% endif %}
+           </li>
+        </ul>
+        <div class="prj-details-tab">
+            <div class="tab-cate">
+                <ul>
+                    <li><a href="#goods-tabs-1">{% trans 'About company' %}</a></li>
+                    <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                    <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
+                    {% for page in object.additional_pages.all %}
+                        <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div id="goods-tabs-1">
+                <div class="content-goods-tab">{{ object.description|cleanHtml|safe }}</div>
+            </div>
+            <div id="goods-tabs-2">
+                <div class="content-goods-tab">
+                    <ul class="tpp-gallery gallery">
+                        {% for document_obj in object.documents.all %}
+                        <li>
+                            <div class="b-img">
+                                <a target="_blank" href="{{ document_obj.document.url }}">
+                                    <img src="{% static "tppcenter/img/file_icon.png" %}" />
+                                </a>
+                                <div class="viewimge">
+                                    <a target="_blank" href="{{ document_obj.document.url }}">
+                                        <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
+                                    </a>
+                                </div>
+                                <div class="gray-img"></div>
+                            </div>
+                            <div>{{ document_obj.name }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div id="goods-tabs-3">
+                <div class="content-goods-tab">
+                    <ul class="tpp-gallery gallery">
+                        {% for gallery_obj in object.gallery_images %}
+                            <li>
+                                <div class="b-img">
+                                    <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
+                                        <img alt=""  src="{{ gallery_obj.image.big }}" />
+                                    </a>
+                                    <div class="viewimge">
+                                        <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
+                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
+                                        </a>
+                                    </div>
+                                    <div class="gray-img"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% for page in object.additional_pages.all %}
+            <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                  <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+             </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

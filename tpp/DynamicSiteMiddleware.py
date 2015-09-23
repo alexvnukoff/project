@@ -119,14 +119,14 @@ class DynamicSiteMiddleware(object):
 
         # Save the current site
         SITE_THREAD_LOCAL.SITE_ID = site.pk
-        settings.ROOT_URLCONF = "%s.urls" % str(site.name)
-        request.urlconf = "%s.urls" % str(site.name)
-
-        settings.TEMPLATE_DIRS = [
-            os.path.join(settings.BASE_DIR, '..', str(site.name), 'templates').replace('\\', '/')
-        ]
-        SITE_THREAD_LOCAL.TEMPLATE_DIRS = settings.TEMPLATE_DIRS
-        SITE_THREAD_LOCAL.ROOT_URLCONF = "%s.urls" % str(site.name)
+        # settings.ROOT_URLCONF = "%s.urls" % str(site.name)
+        # request.urlconf = "%s.urls" % str(site.name)
+        #
+        # settings.TEMPLATE_DIRS = [
+        #     os.path.join(settings.BASE_DIR, '..', str(site.name), 'templates').replace('\\', '/')
+        # ]
+        # SITE_THREAD_LOCAL.TEMPLATE_DIRS = settings.TEMPLATE_DIRS
+        # SITE_THREAD_LOCAL.ROOT_URLCONF = "%s.urls" % str(site.name)
 
 
         # Put site in cache for django.contrib.sites.models.SiteManager.get_current():

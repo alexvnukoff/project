@@ -1,16 +1,4 @@
-.wrapper {
-    width: 1145px;
-}
-
-.sidebar {
-    margin-right: 13px;
-}
-
-.mainright {
-    float: left;
-}
-
-.news-ads{  margin-top: 11px; position:relative; float: right; width: 198px; background-color:#e6e6e6; border-radius:3px; border:1px solid #d9d9d9; box-shadow:inset 0 0 3px #CCC; margin-top: 11px;}
+.news-ads {  margin-top: 11px; position:relative; float: right; width: 198px; background-color:#e6e6e6; border-radius:3px; border:1px solid #d9d9d9; box-shadow:inset 0 0 3px #CCC; margin-top: 11px;}
 .news-ads .title{ float:left; width:198px; height:35px; background-color:#4a4a4a; border-radius:2px 2px 0px 0px; line-height:35px; font-size:18px; font-weight:normal; color:#FFF; text-align:center;}
 .news-ads .titlesub{ float:left; width:178px; background-color:#f5f5f5; padding:10px; font-size:13px; font-weight:bold; color:#484848;}
 .list-ads{ position:relative; float:left; width:178px; margin:0 10px; display:inline;}
@@ -22,3 +10,4 @@
 .list-ads li .infoads .thumb{ float:left; max-width:60px; max-height:52px; background:url(../img/shadow-ads.png) no-repeat bottom left; padding-bottom:2px; margin-right:8px; display:inline;}
 .list-ads li:first-child{ border-top:0;}
 .list-ads li:last-child{ border-bottom:0;}
+.banners.right { margin-top: 11px; position:relative; float: right; }

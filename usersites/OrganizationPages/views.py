@@ -1,151 +1,76 @@
-from haystack.backends import SQ
-from appl import func
-from appl.func import getActiveSQS, setPaginationForSearchWithValues, get_paginator_range
-from appl.models import News, UserSites, Gallery
-from core.models import Item
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import  HttpResponse, HttpResponseNotFound
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404
+from collections import OrderedDict
+from django.contrib.sites.models import Site
+from django.core.mail import EmailMessage
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.views.generic import DetailView, ListView
 from django.utils.translation import ugettext as _
-from django.conf import settings
 
-def get_news_list(request, page=1, item_id=None, my=None, slug=None, language=None):
+from b24online.models import AdditionalPage, Profile, Department, GalleryImage
+from usersites.OrganizationPages.forms import ContactForm
+from usersites.cbv import ItemDetail
 
 
-    if item_id:
-       if not Item.active.get_active().filter(pk=item_id).exists():
-         return HttpResponseNotFound()
+class PageDetail(ItemDetail):
+    model = AdditionalPage
+    template_name = 'OrganizationPages/page.html'
 
+    def get_queryset(self):
+        Site.objects.get_current().user_site.organization.additional_pages.all()
 
 
+class Contacts(DetailView):
+    template_name = 'OrganizationPages/contact.html'
 
-    try:
-        if not item_id:
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context_data = self.get_context_data(object=self.object)
 
-            contentPage = _get_content(request, page, language)
+        form = ContactForm(request.POST)
 
-        else:
-            contentPage = _getdetailcontent(request, item_id, slug)
-            if isinstance(contentPage, HttpResponse):
-                return contentPage
+        if form.is_valid():
+            if not self.object.email:
+                email = 'admin@tppcenter.com'
+                subject = _('This message was sent to company:')
+            else:
+                email = self.object.email
+                subject = "New message from %s" % form.cleaned_data.get('name')
 
+            mail = EmailMessage(subject, form.cleaned_data.get('message'), form.cleaned_data.get('email'), [email])
+            mail.send()
 
-    except ObjectDoesNotExist:
-        contentPage = func.emptyCompany()
+            return HttpResponseRedirect(reverse('pages:contacts'))
 
+        context_data['form'] = form
+        return self.render_to_response(context_data)
 
+    def get_object(self, queryset=None):
+        return Site.objects.get_current().user_site.organization
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['form'] = ContactForm()
 
+        return context_data
 
-    current_section = _("News")
-    title = _("News")
 
-    templateParams = {
-    'current_section': current_section,
-    'contentPage': contentPage,
-    'title': title
-    }
+class Structure(ListView):
+    template_name = 'OrganizationPages/structure.html'
+    model = Department
+    ordering = ['name']
 
-    return render_to_response("index.html", templateParams, context_instance=RequestContext(request))
+    def get_queryset(self):
+        return Site.objects.get_current().user_site.organization.departments.all()
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        departments = OrderedDict()
 
+        for department in context_data['object_list']:
+            vacancies = department.vacancies.filter(user__isnull=False).select_related('user', 'user__profile')
+            departments[department.name] = [vacancy for vacancy in vacancies]
 
+        context_data['current_section'] = _('Structure')
+        context_data['departments'] = departments
 
-
-
-
-
-def _get_content(request, page, language):
-     user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-     organization = user_site.organization.pk
-
-     sqs = getActiveSQS().models(News).filter(SQ(tpp=organization) |
-                                              SQ(company=organization)).order_by('-obj_create_date')
-     if not language:
-         url_paginator = 'news:paginator'
-         news_url = 'news:detail'
-     else:
-         url_paginator ="news_lang:paginator"
-         news_url = 'news_lang:detail'
-
-     attr = ('NAME', 'IMAGE', 'DETAIL_TEXT', 'SLUG', 'ANONS')
-
-     result = setPaginationForSearchWithValues(sqs, *attr, page_num=10, page=page)
-
-     content = result[0]
-
-     page = result[1]
-
-     paginator_range = get_paginator_range(page)
-
-     templateParams = {
-         'url_parameter': language if language else [],
-         'url_paginator': url_paginator,
-         'content': content,
-         'page': page,
-         'paginator_range': paginator_range,
-         'news_url': news_url
-
-     }
-
-     template = loader.get_template('News/contentPage.html')
-     context = RequestContext(request, templateParams)
-     rendered = template.render(context)
-
-     return rendered
-
-
-
-
-
-
-
-
-
-
-
-
-
-def _getdetailcontent(request, item_id, slug):
-     new = get_object_or_404(News, pk=item_id)
-     newValues = new.getAttributeValues(*('NAME', 'DETAIL_TEXT', 'YOUTUBE_CODE', 'IMAGE'))
-     description = newValues.get('DETAIL_TEXT', False)[0] if newValues.get('DETAIL_TEXT', False) else ""
-     photos = Gallery.objects.filter(c2p__parent=new)
-
-
-
-
-
-
-     template = loader.get_template('News/detailContent.html')
-
-     templateParams = {
-       'newValues': newValues,
-       'photos': photos,
-       'item_id': item_id,
-     }
-
-     context = RequestContext(request, templateParams)
-     rendered = template.render(context)
-
-
-
-
-     return rendered
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return context_data

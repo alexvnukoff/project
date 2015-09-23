@@ -3,7 +3,7 @@
 .menutop .linkleft{ float:right;}
 .notify{ float:left;}
 .sidebar{ float:right;}
-.mainright{ float:left;}
+.mainright{ float: right;margin: 15px 15px 15px 15px; }
 .search input.text{text-align:right; width:80%;}
 .iconcart{ float:right;}
 .register{ right:auto; left:44px;}

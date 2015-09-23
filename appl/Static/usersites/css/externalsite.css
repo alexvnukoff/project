@@ -1,7 +1,7 @@
 @charset "utf-8";
 body{ margin:0; padding:0; font:12px Arial, Helvetica, sans-serif;}
 .imgmain{ background:url(../img/imgmain.png);}
-.wrapper{ width:940px; margin:0 auto;}
+.wrapper{ width:1200px; margin:0 auto;}
 .tophead{ position:relative; float:left; width:100%; text-align:center; height:42px; line-height:42px; background:#434343;}
 .tophead a{ font-weight:bold; color:#FFF; text-transform:uppercase; padding:0 20px;}
 .main{ position:relative; float:left; width:100%; margin:14px 0 0 0;}
@@ -29,7 +29,8 @@ box-shadow:inset 0px 2px 2px #e8e8e8;}
 .country .flag{ padding-right:5px;}
 .country .name-c{ font-size:18px; font-weight:normal; color:#000;}
 
-.sidebar{ position:relative; float:left; width:220px; margin:18px 0 0 0;}
+.sidebar{ position:relative; float:left; width:220px; margin:18px 15px 15px 0;}
+.sidebar.adv {margin-left: 15px; width:205px;}
 #logo{ display:inline-block; text-align: center; width:220px; height:120px; background-position:0px 0px;}
 #logo img { max-height: 100%; max-width: 100%; }
 .bgcart{ position:relative; float:left; width:100%; padding:12px 0; background:#f4f3f3; border-radius:3px; margin:18px 0 0 0; color:#9b9b9b;}
@@ -43,7 +44,7 @@ box-shadow:inset 0 0 3px #CCC; padding-bottom:12px;}
 .categories li{ float:left; width:100%;}
 .categories li a{ display:block; padding:7px 0px 7px 10px;}
 .categories li.current a{ background:#434343; color:#FFF;}
-.mainright{ position:relative; float:right; width:700px;}
+.mainright{ position:relative; float:left; width:700px; }
 .slidehome{ position:relative; float:left; width:100%; height:183px; margin:18px 0 0 0;}
 
 .register{ position:absolute; width:202px; height:202px; right:44px; top:-9px; z-index:99; background-color:#0b96ca; font-family: 'Roboto', sans-serif;}
@@ -82,7 +83,7 @@ h2.titlemodule{ position:relative; float:left; width:100%; font-size:21px; font-
 .footer .logofooter{ float:left; width:69px; height:77px; background-position:0px -104px; margin-right:15px; display:inline;}
 .footer .adress{ float:left; width:300px; font-size:11px; color:#b6b6b6;}
 .footer .adress h3{ font-size:16px; font-weight:normal; padding:5px 0 8px 0; color:#FFF;}
-.footer .ads{ float:left; width:540px; height:70px; background:#e6e6e6; border-radius:5px; margin-left:15px; display:inline;}
+.footer .ads{ float:left; width:540px; height:70px; border-radius:5px; margin-left:15px; display:inline;}
 .default{ color:#595959;}
 .list-cart{ position:relative; float:left; margin:15px 0 0 0; width:100%;}
 .list-cart td{ padding:5px 10px; color:#484848; font-size:11px;}
@@ -134,7 +135,7 @@ background: -webkit-gradient(linear, left top, left bottom, from(#3095c1), to(#1
 .listprd li .link{ position:relative; float:left; width:100%; margin:5px 0 0 0 ;}
 .listprd li .link .flag{ float:left; width:18px; height:12px; margin-top:4px;}
 .listprd li .link .name{ display:inline-block; margin-left:6px; max-width:125px; height:48px; vertical-align:top;}
-.listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:15px; font-weight:bold; color:#000;}
+.listprd li .price{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold; color:#000;}
 .listprd li .call{ float:left; width:100%; margin:12px 0 0 0; font-size:12px; font-weight:bold;}
 .listprd li .btnbuy{ float:left; width:100%; margin:10px 0 0 0; font-size:12px; background:#369bcd; line-height:21px; text-align:center; color:#FFF; text-shadow:-1px -1px 1px #317ca1; border-radius:3px;
  box-shadow:0px 1px 2px #DDD;}
@@ -304,3 +305,8 @@ form .fakeupload input {
     width:160px;
     height: 120px;
 }
+
+.viewimge{ position:absolute; height:20px; line-height:20px; bottom:8px; right:0; cursor:pointer; display:none;}
+.viewimge .zoom{ float:left; width:20px; height:20px; background-position:-178px -60px;}
+.viewimge .zoomtext{ float:left; font-size:11px; color:#FFF; line-height:20px; width:62px; text-align:center; background-color:#000; opacity:0.8; filter:alpha(opacity=80);}
+.b-img:hover .viewimge{ display:block;}

@@ -908,12 +908,13 @@ def get_banner(block, site_id, filter_adv=None):
 
 
 def get_tops(filterAdv=None):
-    '''
+    """
         Get context advertisement items depended on received filter
 
         dict filterAdv - advertisement filter , can include countries organizations or branches
                 (get it from getDeatailAdv() or getListAdv() )
-    '''
+    """
+    is_adv_empty = True
 
     models = {
         Chamber: {
@@ -1008,6 +1009,12 @@ def get_tops(filterAdv=None):
 
         modelDict['queryset'] = queryset.order_by('?')[:int(modelDict['count'])]
 
+        if is_adv_empty and modelDict['queryset']:
+            is_adv_empty = False
+
+    if is_adv_empty:
+        return None
+
     return models
 
 
@@ -1032,7 +1039,6 @@ def get_detail_adv_filter(obj):
 
             if company.parent_id:
                 filter_by_model[Chamber.__name__] = [company.parent_id]
-
 
         if branches is not None:
             if Branch.__name__ in filter_by_model:

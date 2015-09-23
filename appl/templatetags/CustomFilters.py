@@ -2,23 +2,21 @@ from collections import OrderedDict
 from copy import copy
 from decimal import Decimal
 import os
+import datetime
 
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.models import Site
+from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import stringfilter
 from django.utils.translation import trans_real
 from lxml.html.clean import clean_html
-from haystack.query import SQ, SearchQuerySet
-from django.template import RequestContext, loader
-from django.conf import settings
-from django.template import Node, TemplateSyntaxError
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
 from django import template
 
 from appl.func import currencySymbol
-from appl import func
-from appl.models import *
-from b24online.models import Chamber
+from b24online.models import Chamber, Notification
+from tpp.SiteUrlMiddleWare import get_request
 import tppcenter.urls
 
 register = template.Library()
@@ -26,7 +24,14 @@ register = template.Library()
 
 @register.filter()
 def multiply(value, multiplier):
+    if isinstance(value, str):
+        return value * int(multiplier)
+
+    if isinstance(multiplier, str):
+        return int(value) * multiplier
+
     return Decimal(value) * Decimal(multiplier)
+
 
 @register.filter(name='sort')
 def sort(value):
@@ -160,83 +165,6 @@ def resolve(lookup, target):
         return None
 
 
-class RangeNode(Node):
-    def __init__(self, parser, range_args, context_name):
-        self.template_parser = parser
-        self.range_args = range_args
-        self.context_name = context_name
-
-    def render(self, context):
-        resolved_ranges = []
-        for arg in self.range_args:
-            compiled_arg = self.template_parser.compile_filter(arg)
-            resolved_ranges.append(compiled_arg.resolve(context, ignore_failures=True))
-        context[self.context_name] = range(*resolved_ranges)
-        return ""
-
-
-@register.tag
-def mkrange(parser, token):
-    """
-    Accepts the same arguments as the 'range' builtin and creates
-    a list containing the result of 'range'.
-
-    Syntax:
-        {% mkrange [start,] stop[, step] as context_name %}
-
-    For example:
-        {% mkrange 5 10 2 as some_range %}
-        {% for i in some_range %}
-          {{ i }}: Something I want to repeat\n
-        {% endfor %}
-
-    Produces:
-        5: Something I want to repeat
-        7: Something I want to repeat
-        9: Something I want to repeat
-    """
-
-    tokens = token.split_contents()
-    fnctl = tokens.pop(0)
-
-    def error():
-        raise TemplateSyntaxError("%s accepts the syntax: {%% %s [start,] " +
-                                  "stop[, step] as context_name %%}, where 'start', 'stop' " +
-                                  "and 'step' must all be integers." % (fnctl, fnctl))
-
-    range_args = []
-    while True:
-        if len(tokens) < 2:
-            error()
-
-        token = tokens.pop(0)
-
-        if token == "as":
-            break
-
-        range_args.append(token)
-
-    if len(tokens) != 1:
-        error()
-
-    context_name = tokens.pop()
-
-    return RangeNode(parser, range_args, context_name)
-
-
-@register.simple_tag
-def modelCount(model, owner=None):
-    klass = (globals()[model])
-
-    # sqs = klass.active.get_active().all()
-    sqs = func.getActiveSQS().models(klass)
-
-    if isinstance(owner, int):
-        sqs.filter(SQ(tpp=owner) | SQ(company=owner))
-
-    return sqs.count()
-
-
 @register.assignment_tag
 def getOwner(item):
     # TODO
@@ -268,9 +196,9 @@ def getLang():
     return trans_real.get_language()
 
 
-@register.simple_tag()
-def getCountry(obj):
-    return SearchQuerySet().filter(django_id=obj)[0].text
+# @register.simple_tag()
+# def getCountry(obj):
+#     return SearchQuerySet().filter(django_id=obj)[0].text
 
 
 @register.simple_tag(name='userName', takes_context=True)
@@ -292,8 +220,8 @@ def set_user_name(context):
     return user_name
 
 
-@register.simple_tag(name='notif', takes_context=True)
-def setNotification(context):
+@register.simple_tag(takes_context=True)
+def set_notification_count(context):
     request = context.get('request')
     user = request.user
     if user.is_authenticated():
@@ -303,8 +231,8 @@ def setNotification(context):
     return notification
 
 
-@register.simple_tag(name='mail', takes_context=True)
-def setMessage(context):
+@register.simple_tag(takes_context=True)
+def set_message_count(context):
     request = context.get('request')
 
     if request.user.is_authenticated():
@@ -316,134 +244,27 @@ def setMessage(context):
     return message
 
 
-@register.simple_tag(name='flags', takes_context=True)
-def setFlags(context, country, url_country, url_country_parametr):
-    request = context.get('request')
-    if len(url_country) > 0:
-        url_country = url_country
-    else:
-        url_country = 'home_country'
-
-    country = country
-    if len(url_country_parametr) > 0:
-        url_country_parametr = url_country_parametr
-    else:
-        url_country_parametr = []
-    flagList = func.getItemsList("Country", "NAME", "FLAG")
-
-    template = loader.get_template('main/Flags.html')
-    context = RequestContext(request, {'flagList': flagList, 'url_country': url_country, 'country': country,
-                                       'url_country_parametr': url_country_parametr})
-    flags = template.render(context)
-
-    return flags
-
-
-@register.simple_tag(name='logo', takes_context=True)
-def setLogo(context):
-    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-    user_logo = user_site.getAttributeValues('SITE_LOGO')
-    if len(user_logo) > 0:
-        return user_logo[0]
-
-    return ""
-
-
-@register.simple_tag(name='footer_text', takes_context=True)
-def setLogo(context):
-    user_site = UserSites.objects.get(sites__id=settings.SITE_ID)
-    site_footer = user_site.getAttributeValues('DETAIL_TEXT')
-    if len(site_footer) > 0:
-        return site_footer[0]
-
-    return ""
-
-
-@register.simple_tag(name='categories', takes_context=True)
-def setCategories(context):
-    request = context.get('request')
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-    categotySelect = func.setStructureForHiearhy(hierarchyStructure, categories)
-
-    template = loader.get_template('main/Category.html')
-    context = RequestContext(request, {'categotySelect': categotySelect})
-    categories_select = template.render(context)
-
-    return categories_select
-
-
-@register.simple_tag(name='countries', takes_context=True)
-def setCountries(context):
-    request = context.get('request')
-    selectd = request.GET.get("country", None)
-
-    countryList = SearchQuerySet().models(Country).order_by('title_sort')
-
-    template = loader.get_template('main/Country.html')
-    context = RequestContext(request, {'countryList': countryList, 'selectd': selectd})
-    categories_select = template.render(context)
-
-    return categories_select
-
-
-@register.simple_tag(name='right_tv', takes_context=True)
-def rightTv(context):
-    request = context.get('request')
-    if request.resolver_match.namespace == 'innov':
-        is_innov = True
-        tvValues = ""
-    else:
-        sqs = func.getActiveSQS().models(TppTV)
-        if sqs.count() == 0:
-            return ''
-        else:
-            sqs = sqs.order_by('-obj_create_date')[0]
-            tvValues = Item.getItemsAttributesValues(('YOUTUBE_CODE', 'NAME', 'SLUG'), [sqs.pk])
-            tvValues = tvValues[sqs.pk]
-            is_innov = False
-    template = loader.get_template('main/tv.html')
-    context = RequestContext(request, {'tvValues': tvValues, 'is_innov': is_innov})
-    tv = template.render(context)
-    return tv
-
-
 @register.simple_tag(takes_context=True)
-def searchQuery(context):
+def search_query(context):
     request = context.get('request')
     return escape(request.GET.get('q', ''))
 
 
-@register.simple_tag(name='detail_page_to_tppcenter', takes_context=True)
-def detail_page_to_tppcenter(context, url, slug=None):
-    prefix = Site.objects.get(name='tppcenter').domain + '/'
-    if slug:
-        url = (reverse(viewname=url, urlconf=tppcenter.urls, args=[slug], prefix=prefix))
-    else:
-        url = (reverse(viewname=url, urlconf=tppcenter.urls, prefix=prefix))
+@register.simple_tag(name='detail_page_to_tppcenter')
+def detail_page_to_tppcenter(url, *args):
+    cache_name = "site:domain:tppcenter"
+    prefix = cache.get(cache_name)
 
-    return 'http://' + url
+    if not prefix:
+        prefix = Site.objects.get(name='tppcenter').domain + '/'
+        cache.set(cache_name, prefix, 60 * 60 * 24 * 7)
+    url = (reverse(viewname=url, urlconf=tppcenter.urls, args=args, prefix=prefix))
 
-
-@register.simple_tag(takes_context=True)
-def getTppName(context):
-    request = context.get('request', None)
-    SITE_ID = get_current_site(request).pk
-    organization = UserSites.objects.get(sites__id=SITE_ID).organization
-    company = getattr(organization, 'company', False)
-
-    if company:
-        company = SearchQuerySet().models(Company).filter(django_id=company.pk)[0]
-
-        if company.tpp:
-            return SearchQuerySet().models(Tpp).filter(django_id=company.tpp)[0].title
-
-    return ""
+    return 'http://%s' % url
 
 
 @register.assignment_tag
-def is_chamber_site(context):
+def is_chamber_site():
     organization = Site.objects.get_current().user_site.organization
     return isinstance(organization, Chamber)
 

@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from django.db import models
 from b24online.custom import CustomImageField
 
-from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing
+from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
 from b24online.utils import generate_upload_path
 
 templates_root = "%s/../templates" % settings.MEDIA_ROOT
@@ -77,7 +77,7 @@ class UserSite(ActiveModelMixing, models.Model):
 
     def get_gallery(self, user):
         model_type = ContentType.objects.get_for_model(self)
-        gallery, _ = Gallery.objects.get_or_create(content_type=model_type, object_id=self.pk, defaults={
+        gallery, _ = Gallery.objects.get_or_create(content_type__pk=model_type, object_id=self.pk, defaults={
             'created_by': user,
             'updated_by': user
         })
@@ -88,3 +88,8 @@ class UserSite(ActiveModelMixing, models.Model):
         index_together = [
             ['is_active', 'is_deleted'],
         ]
+
+    @property
+    def slider_images(self):
+        model_type = ContentType.objects.get_for_model(self)
+        return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
