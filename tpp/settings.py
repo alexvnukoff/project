@@ -46,8 +46,6 @@ DEBUG = False
 
 INTERNAL_IPS = ['80.179.7.34']
 
-TEMPLATE_DEBUG = False
-
 #ALLOWED_HOSTS = [
 #    '.b24online.com', # Also allow FQDN and subdomains
 #    '.tppcenter.com', # Also allow FQDN and subdomains
@@ -75,6 +73,27 @@ LOGGING = {
         },
     }
 }
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': False,
+            'context_processors': (
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.request",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+                'tpp.context_processors.site_processor'
+            )
+        }
+    },
+]
 
 
 
@@ -220,10 +239,6 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
                         "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 
 STATIC_URL = '/static/'
-
-TEMPLATE_DIRS = (
-    (os.path.join(BASE_DIR, 'tppcenter', 'templates').replace('\\', '/')),
-)
 ROOT_URLCONF = 'tppcenter.urls'
 #SITE_ID = 143
 
@@ -299,17 +314,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 
 MODELTRANSLATION_AUTO_POPULATE = 'required'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
-)
-
+ELASTIC_SEARCH_HOSTS = ['ec2-54-171-67-193.eu-west-1.compute.amazonaws.com']
 
 ######################## Haystack settings ###############################
 
