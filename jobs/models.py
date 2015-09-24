@@ -36,6 +36,9 @@ class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    legacy_id = models.PositiveIntegerField()
+
     @property
     def organization(self):
         return self.vacancy.department.organization
@@ -111,6 +114,8 @@ class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    legacy_id = models.PositiveIntegerField()
 
     @staticmethod
     def get_index_model(**kwargs):

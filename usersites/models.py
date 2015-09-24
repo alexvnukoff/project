@@ -17,6 +17,8 @@ class ExternalSiteTemplate(models.Model):
     name = models.CharField(max_length=100)
     folder_name = models.FilePathField(allow_folders=True, path=templates_root)
 
+    legacy_id = models.PositiveIntegerField()
+
     def theme_folder(self):
         return os.path.basename(self.folder_name)
 
@@ -41,7 +43,9 @@ class UserSite(ActiveModelMixing, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def upload_images(self, is_new_logo, changed_galleries=None):
+    legacy_id = models.PositiveIntegerField()
+
+    def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
         from core import tasks
         params = []
 
@@ -62,6 +66,15 @@ class UserSite(ActiveModelMixing, models.Model):
                     }
                 })
 
+        if changed_banners is not None:
+            for image_path in changed_banners:
+                params.append({
+                    'file': image_path,
+                    'sizes': {
+                        'big': {'box': (150, 150), 'fit': False},
+                    }
+                })
+
         tasks.upload_images.delay(*params)
 
     @property
@@ -77,7 +90,7 @@ class UserSite(ActiveModelMixing, models.Model):
 
     def get_gallery(self, user):
         model_type = ContentType.objects.get_for_model(self)
-        gallery, _ = Gallery.objects.get_or_create(content_type__pk=model_type, object_id=self.pk, defaults={
+        gallery, _ = Gallery.objects.get_or_create(content_type=model_type, object_id=self.pk, defaults={
             'created_by': user,
             'updated_by': user
         })

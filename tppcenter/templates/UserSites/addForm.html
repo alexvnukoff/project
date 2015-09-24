@@ -38,6 +38,15 @@
 
             $(".external-type, #fade-profile").hide();
       });
+
+      $('#user_site_form').submit(function() {
+        $('input[name$="block"]').each(function(index, element) {
+            var li = $(this).closest('li');
+            if (li.find('input[name$="advertisement_ptr"]').val() == '' && li.find('input[name$="image"]').val() == '') {
+                $(this).val('');
+            }
+        });
+      });
     });
 </script>
 
@@ -51,6 +60,25 @@
     .error-handler {
         float: none;
     }
+    .b-img.banner {
+        width: 150px;
+        height: 150px;
+    }
+
+    .b-img.banner img {
+        width: auto;
+        height: auto;
+        max-width: 150px;
+        max-height: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .b-img {
+       float: none;
+    }
+
 </style>
 <div class="external-r">
     <div class="external-step1">
@@ -66,7 +94,7 @@
         </p>
         <h3>{% trans "Your site" %}</h3>
     </div>
-    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html" id="user_site_form">
         {% csrf_token %}
         <div class="external-step3">
             <ul class="step3form">
@@ -160,6 +188,41 @@
                                         <input type="file" name="{{ gallery_form.image.html_name }}">
                                     </div>
                                 </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li><div >{% trans "Banners" %}:</div></li>
+                <li>
+                    <div>
+                        <ul>
+                            {{ banners_form.management_form }}
+                            {{ banners_form.non_form_errors }}
+                            {% for banner_form in banners_form %}
+                                {{ banner_form.id }}
+                                {% with valid_blocks|pop_val:banner_form.block.value as block %}
+                                    <li>
+                                        <div class="left">{{ block.name }}</div>
+                                        <div class="right">
+                                            {% if banner_form.initial.image %}
+                                                <div class="b-img banner">
+                                                    <img src='{{ banner_form.initial.image.big }}'>
+                                                </div>
+                                                <div>{% trans 'Remove' %}{{ banner_form.DELETE }}</div>
+                                            {% endif %}
+                                            {% if banner_form.errors.image %}
+                                                <div class="error-handler">
+                                                    <div class="formserror">{{ banner_form.errors.image.0 }}</div>
+                                                </div>
+                                            {% endif %}
+                                            <div class="fileinputs">
+                                                <input type="file" name="{{ banner_form.image.html_name }}">
+                                                <input value="{{ block.pk }}" type="hidden" name="{{ banner_form.block.html_name }}">
+                                                <input value="{{ banner_form.advertisement_ptr.value|default_if_none:"" }}" type="hidden" name="{{ banner_form.advertisement_ptr.html_name }}">
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endwith %}
                             {% endfor %}
                         </ul>
                     </div>

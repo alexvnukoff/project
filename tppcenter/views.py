@@ -333,8 +333,10 @@ def my_companies(request):
         organizations = get_objects_for_user(request.user, ['b24online.manage_organization'],
                                              Organization.active_objects.all(), with_superuser=False)
 
+        organizations = Organization.objects.filter(pk__in=organizations)
+
         if current_company is not None:
-            organizations = Organization.objects.filter(pk__in=organizations).exclude(pk=current_company)
+            organizations = organizations.exclude(pk=current_company)
 
             if page == 1:
                 user_name = request.user.profile.full_name or request.user.email

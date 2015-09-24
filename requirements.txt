@@ -17,12 +17,13 @@ django-mptt==0.7.4
 django-polymorphic==0.7.1
 django-polymorphic-tree==1.1.1
 django-recaptcha==1.0.4
+django-redis==4.2.0
 django-registration-redux==1.2
 django-tag-parser==2.1
 django-tools==0.29.5
 django-uuslug==1.1.6
 docutils==0.12
-elasticsearch==1.6.0
+elasticsearch==1.7.0
 elasticsearch-dsl==0.0.8
 future==0.15.0
 futures==2.2.0
@@ -31,6 +32,7 @@ httplib2==0.9.1
 jmespath==0.7.1
 kombu==3.0.26
 lxml==3.4.4
+msgpack-python==0.4.6
 oauth2client==1.5.1
 Pillow==2.9.0
 pip-autoremove==0.9.0
@@ -39,8 +41,8 @@ pyasn1==0.1.8
 pyasn1-modules==0.0.7
 pygeoip==0.3.2
 python-dateutil==2.4.2
-python-slugify==1.1.3
-pytz==2015.4
+python-slugify==1.1.4
+pytz==2015.6
 redis==2.10.3
 requests==2.7.0
 rsa==3.2

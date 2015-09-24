@@ -6,7 +6,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.forms import inlineformset_factory
-from b24online.models import GalleryImage, Gallery
+from b24online.models import GalleryImage, Gallery, Banner
 
 from usersites.models import UserSite
 
@@ -122,5 +122,10 @@ class GalleryForm(forms.ModelForm):
 
         return image_obj
 
+
 GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
                                             form=GalleryForm, max_num=5, validate_max=True, extra=5)
+CompanyBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr',),
+                                             validate_max=True, max_num=8, extra=8)
+ChamberBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr',),
+                                             validate_max=True, max_num=3, extra=3)

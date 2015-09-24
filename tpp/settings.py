@@ -157,18 +157,15 @@ WSGI_APPLICATION = 'tpp.wsgi.application'
 
 
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#         'LOCATION': 'tppcache.wlj5jm.0001.euw1.cache.amazonaws.com:11211',
-#         'TIMEOUT': 300,
-#         'OPTIONS': {
-#             'MAX_ENTRIES': 10000,
-#             'CULL_FREQUENCY:': 2
-#
-#         }
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 #SESSION_COOKIE_DOMAIN=".stackoverflow.com"

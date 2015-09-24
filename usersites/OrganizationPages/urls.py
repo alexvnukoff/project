@@ -11,5 +11,5 @@ urlpatterns = patterns('',
      url(r'^structure$', Structure.as_view(), name='structure'),
      url(r'^contacts/$', Contacts.as_view(), name='contacts'),
      url(r'^gallery/$', TemplateView.as_view(template_name='OrganizationPages/gallery.html'), name='gallery'),
-     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<item_id>[0-9]+)\.html$', PageDetail.as_view(), name='detail'),
+     url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$', PageDetail.as_view(), name='detail'),
 )

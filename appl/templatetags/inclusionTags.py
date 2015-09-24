@@ -26,7 +26,8 @@ def site_banner(block):
     cached = cache.get(cache_name)
 
     if not cached:
-        banner = Banner.objects.filter(block__code=block, block__block_type='user_site').order_by('?').first()
+        banner = Banner.objects.filter(site_id=site_pk, block__code=block, block__block_type='user_site').order_by('?')\
+            .first()
 
         if banner:
             cache.set(cache_name, banner, 60 * 60)
@@ -237,8 +238,9 @@ def site_slider():
     if custom_images:
         images = [obj.image.original for obj in custom_images.only('image')]
     else:
+        static_url = "%stemplates" % settings.STATIC_URL
         dir = user_site.template.folder_name
-        images = ["%s%s/%s" % (settings.MEDIA_URL, os.path.basename(dir), os.path.basename(image))
+        images = ["%s/%s/%s" % (static_url, os.path.basename(dir), os.path.basename(image))
                   for image in glob.glob(dir + "/*.jpg")]
 
     return {'images': images}

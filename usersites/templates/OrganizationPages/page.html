@@ -1,11 +1,12 @@
 {% extends 'index.html' %}
+{% load CustomFilters %}
 {% block content %}
     {{ block.super }}
     <div class="new-details">
-        <h1 class="titlepage">{{ title }}</h1>
+        <h1 class="titlepage">{{ object.title }}</h1>
 
         <div class="content-news">
-            <p>{{ content|cleanHtml|safe }} </p>
+            <p>{{ object.content|cleanHtml|safe }} </p>
         </div>
     </div>
 {% endblock %}

@@ -16,7 +16,7 @@ class PageDetail(ItemDetail):
     template_name = 'OrganizationPages/page.html'
 
     def get_queryset(self):
-        Site.objects.get_current().user_site.organization.additional_pages.all()
+        return Site.objects.get_current().user_site.organization.additional_pages.all()
 
 
 class Contacts(DetailView):

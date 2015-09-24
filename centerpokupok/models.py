@@ -21,6 +21,8 @@ class B2CProductCategory(MPTTModel, IndexedModelMixin):
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
+    legacy_id = models.PositiveIntegerField()
+
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import B2cProductCategoryIndex
@@ -55,6 +57,8 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    legacy_id = models.PositiveIntegerField()
 
     class Meta:
         index_together = [

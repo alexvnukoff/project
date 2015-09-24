@@ -1,28 +1,33 @@
+from collections import OrderedDict
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView
 
-from b24online.models import Organization
-from tppcenter.UserSites.forms import GalleryImageFormSet, SiteForm
+from b24online.models import Organization, Company, BannerBlock
+from tppcenter.UserSites.forms import GalleryImageFormSet, SiteForm, CompanyBannerFormSet, ChamberBannerFormSet
 from usersites.models import UserSite, ExternalSiteTemplate
 
 
 @login_required()
 def form_dispatch(request):
     organization_id = request.session.get('current_company', None)
+
+    if not organization_id:
+        return HttpResponseRedirect(reverse('denied'))
+
     organization = Organization.objects.get(pk=organization_id)
 
     try:
         site = UserSite.objects.get(organization=organization)
-        return SiteUpdate.as_view()(request, site=site)
+        return SiteUpdate.as_view()(request, site=site, organization=organization)
     except ObjectDoesNotExist:
-        return SiteCreate.as_view()(request)
+        return SiteCreate.as_view()(request, organization=organization)
 
 
 class SiteCreate(CreateView):
@@ -32,8 +37,18 @@ class SiteCreate(CreateView):
     success_url = reverse_lazy('site:main')
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, organization, *args, **kwargs):
+        self.organization = organization
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_valid_blocks(self):
+        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER"]
+
+        if isinstance(self.organization, Company):
+            valid_blocks += ["SITES RIGHT 1", "SITES RIGHT 2", "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
+
+        return OrderedDict(BannerBlock.objects.filter(block_type='user_site', code__in=valid_blocks).order_by('code')
+                           .values_list('pk', 'name'))
 
     def get(self, request, *args, **kwargs):
         """
@@ -43,9 +58,12 @@ class SiteCreate(CreateView):
         self.object = None
         form_class = self.get_form_class()
         self.gallery_images_form = GalleryImageFormSet()
+        banners_form = self.get_banners_form()
         form = self.get_form(form_class)
 
-        return self.render_to_response(self.get_context_data(form=form, gallery_images_form=self.gallery_images_form))
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             gallery_images_form=self.gallery_images_form,
+                                                             banners_form=banners_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -56,12 +74,21 @@ class SiteCreate(CreateView):
         self.object = None
         form_class = self.get_form_class()
         self.gallery_images_form = GalleryImageFormSet(self.request.POST, self.request.FILES)
+        banners_form = self.get_banners_form(self.request.POST, self.request.FILES)
         form = self.get_form(form_class)
 
-        if form.is_valid() and self.gallery_images_form.is_valid():
-            return self.form_valid(form, self.gallery_images_form)
+        if form.is_valid() and self.gallery_images_form.is_valid() and banners_form.is_valid():
+            return self.form_valid(form, gallery_images_form=self.gallery_images_form, banners_form=banners_form)
         else:
-            return self.form_invalid(form, self.gallery_images_form)
+            return self.form_invalid(form, gallery_images_form=self.gallery_images_form, banners_form=banners_form)
+
+    def get_banners_form(self, *args, **kwargs):
+        if isinstance(self.organization, Company):
+            form = CompanyBannerFormSet(*args, **kwargs)
+        else:
+            form = ChamberBannerFormSet(*args, **kwargs)
+
+        return form
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -69,7 +96,7 @@ class SiteCreate(CreateView):
 
         return kwargs
 
-    def form_valid(self, form, gallery_images_form):
+    def form_valid(self, form, gallery_images_form, banners_form):
         """
         Called if all forms are valid. Creates a Recipe instance along with
         associated Ingredients and Instructions and then redirects to a
@@ -77,8 +104,7 @@ class SiteCreate(CreateView):
         """
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
-        organization_id = self.request.session.get('current_company', None)
-        form.instance.organization = Organization.objects.get(pk=organization_id)
+        form.instance.organization = self.organization
         form.instance.domain_part = form.cleaned_data.get('domain', None) or form.cleaned_data.get('sub_domain')
 
         with transaction.atomic():
@@ -90,6 +116,7 @@ class SiteCreate(CreateView):
             form.instance.site = Site.objects.create(name='usersites', domain=domain)
             self.object = form.save()
             gallery_images_form.instance = self.object.get_gallery(self.request.user)
+            banners_form.instance = self.object.site
 
             for gallery in gallery_images_form:
                 gallery.instance.created_by = self.request.user
@@ -97,24 +124,34 @@ class SiteCreate(CreateView):
 
             gallery_images_form.save()
 
+            for banner in banners_form:
+                banner.instance.created_by = self.request.user
+                banner.instance.updated_by = self.request.user
+                banner.instance.dates = (None, None)
+
+            banners_form.save()
+
             changed_galleries = [obj.instance.image.path for obj in gallery_images_form if obj.has_changed()]
+            changed_banners = [obj.instance.image.path for obj in banners_form if obj.has_changed()]
 
         is_logo_changed = 'logo' in form.changed_data
-        self.object.upload_images(is_logo_changed, changed_galleries)
+        self.object.upload_images(is_logo_changed, changed_galleries, changed_banners)
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form, gallery_images_form):
+    def form_invalid(self, form, gallery_images_form, banners_form):
         """
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
-        context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form)
+        context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form,
+                                             banners_form=banners_form)
         return self.render_to_response(context_data)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['domain'] = settings.USER_SITES_DOMAIN
+        context_data['valid_blocks'] = self.get_valid_blocks()
         template_id = context_data.get('form')['template'].value()
 
         if template_id:
@@ -130,9 +167,26 @@ class SiteUpdate(UpdateView):
     success_url = reverse_lazy('site:main')
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        self.site = kwargs.pop('site')
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, site, organization, *args, **kwargs):
+        self.site = site
+        self.organization = organization
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_valid_blocks(self):
+        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER"]
+
+        if isinstance(self.organization, Company):
+            valid_blocks += ["SITES RIGHT 1", "SITES RIGHT 2", "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
+
+        return OrderedDict(BannerBlock.objects.filter(block_type='user_site', code__in=valid_blocks)
+                           .order_by('code').values_list('pk', 'name'))
+
+    def get_banners_form(self, *args, **kwargs):
+        if isinstance(self.organization, Company):
+            return CompanyBannerFormSet(*args, **kwargs)
+
+        return ChamberBannerFormSet(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
@@ -141,10 +195,13 @@ class SiteUpdate(UpdateView):
         """
         self.object = self.get_object()
         self.gallery_images_form = GalleryImageFormSet(instance=self.object.get_gallery(self.request.user))
+        banners_form = self.get_banners_form(instance=self.object.site)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
-        return self.render_to_response(self.get_context_data(form=form, gallery_images_form=self.gallery_images_form))
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             gallery_images_form=self.gallery_images_form,
+                                                             banners_form=banners_form))
 
     def post(self, request, *args, **kwargs):
         """
@@ -155,13 +212,14 @@ class SiteUpdate(UpdateView):
         self.object = self.get_object()
         self.gallery_images_form = GalleryImageFormSet(self.request.POST, self.request.FILES,
                                                        instance=self.object.get_gallery(self.request.user))
+        banners_form = self.get_banners_form(self.request.POST, self.request.FILES, instance=self.object.site)
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
-        if form.is_valid() and self.gallery_images_form.is_valid():
-            return self.form_valid(form, self.gallery_images_form)
+        if form.is_valid() and self.gallery_images_form.is_valid() and banners_form.is_valid():
+            return self.form_valid(form, self.gallery_images_form, banners_form=banners_form)
         else:
-            return self.form_invalid(form, self.gallery_images_form)
+            return self.form_invalid(form, self.gallery_images_form, banners_form=banners_form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -169,7 +227,7 @@ class SiteUpdate(UpdateView):
 
         return kwargs
 
-    def form_valid(self, form, gallery_images_form):
+    def form_valid(self, form, gallery_images_form, banners_form):
         """
         Called if all forms are valid. Creates a Recipe instance along with
         associated Ingredients and Instructions and then redirects to a
@@ -191,6 +249,13 @@ class SiteUpdate(UpdateView):
 
             gallery_images_form.save()
 
+            for banner in banners_form:
+                banner.instance.created_by = self.request.user
+                banner.instance.updated_by = self.request.user
+                banner.instance.dates = (None, None)
+
+            banners_form.save()
+
             domain = form.cleaned_data.get('domain', None)
 
             if not domain:
@@ -201,21 +266,23 @@ class SiteUpdate(UpdateView):
             site.save()
 
         changed_galleries = [obj.instance.image.path for obj in gallery_images_form if obj.has_changed()]
+        changed_banners = [obj.instance.image.path for obj in banners_form if obj.has_changed()]
         is_logo_changed = 'logo' in form.changed_data
-        self.object.upload_images(is_logo_changed, changed_galleries)
+        self.object.upload_images(is_logo_changed, changed_galleries, changed_banners)
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form, gallery_images_form):
+    def form_invalid(self, form, gallery_images_form, banners_form):
         """
         Called if a form is invalid. Re-renders the context data with the
         data-filled forms and errors.
         """
-        context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form)
+        context_data = self.get_context_data(form=form, gallery_images_form=gallery_images_form, banners_form=banners_form)
         return self.render_to_response(context_data)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        context_data['valid_blocks'] = self.get_valid_blocks()
         template_id = context_data.get('form')['template'].value()
 
         if template_id:

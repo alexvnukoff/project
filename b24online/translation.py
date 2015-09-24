@@ -3,7 +3,22 @@ from modeltranslation.translator import TranslationOptions
 
 from b24online.models import Country, Branch, Chamber, Company, Department, Vacancy, BusinessProposalCategory, \
     InnovationProject, B2BProductCategory, B2BProduct, NewsCategory, Greeting, News, Tender, \
-    Profile, Exhibition, StaticPage, BusinessProposal
+    Profile, Exhibition, StaticPage, BusinessProposal, Gallery, Document, AdditionalPage, BannerBlock, Banner
+
+
+@register(Gallery)
+class GalleryTranslationOptions(TranslationOptions):
+    fields = ('title',)
+
+
+@register(Document)
+class DocumentTranslationOptions(TranslationOptions):
+    fields = ('name', 'description')
+
+
+@register(AdditionalPage)
+class AdditionalPageTranslationOptions(TranslationOptions):
+    fields = ('title', 'content', 'slug')
 
 
 @register(Branch)
@@ -17,7 +32,7 @@ class CountryTranslationOptions(TranslationOptions):
 
 
 @register(Chamber)
-class TppTranslationOptions(TranslationOptions):
+class ChamberTranslationOptions(TranslationOptions):
     fields = ('name', 'slug', 'description', 'short_description', 'keywords', 'director', 'address',)
 
 
@@ -48,7 +63,7 @@ class BusinessProposalCategoryTranslationOptions(TranslationOptions):
 
 @register(InnovationProject)
 class InnovationProjectTranslationOptions(TranslationOptions):
-    fields = ('name', 'slug', 'description', 'keywords',)
+    fields = ('name', 'slug', 'description', 'keywords', 'product_name', 'business_plan')
 
 
 @register(B2BProductCategory)
@@ -73,7 +88,7 @@ class GreetingTranslationOptions(TranslationOptions):
 
 @register(News)
 class NewsTranslationOptions(TranslationOptions):
-    fields = ('title', 'slug', 'content', 'keywords', )
+    fields = ('title', 'slug', 'content', 'keywords', 'short_description')
 
 
 @register(Tender)
@@ -88,10 +103,21 @@ class ProfileTranslationOptions(TranslationOptions):
 
 @register(Exhibition)
 class ExhibitionTranslationOptions(TranslationOptions):
-    fields = ('title', 'slug', 'description', 'keywords', 'route', )
+    fields = ('title', 'slug', 'description', 'keywords', 'route', 'city', )
 
 
 @register(StaticPage)
-class ExhibitionTranslationOptions(TranslationOptions):
+class StaticPageTranslationOptions(TranslationOptions):
     fields = ('title', 'slug', 'content', )
+
+
+@register(BannerBlock)
+class BannerBlockTranslationOptions(TranslationOptions):
+    fields = ('name', 'description', )
+
+
+@register(Banner)
+class BannerTranslationOptions(TranslationOptions):
+    fields = ('title', )
+
 

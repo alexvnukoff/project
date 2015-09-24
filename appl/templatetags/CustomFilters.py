@@ -273,3 +273,12 @@ def is_chamber_site():
 @stringfilter
 def basename(value):
     return os.path.basename(value)
+
+
+@register.filter
+def pop_val(value, key=None):
+    if not isinstance(value, (list, OrderedDict)):
+        return value
+
+    key = key or list(value.keys())[0]
+    return {'name': value.pop(int(key)), 'pk': key}
