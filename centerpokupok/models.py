@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
@@ -21,7 +22,7 @@ class B2CProductCategory(MPTTModel, IndexedModelMixin):
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     @staticmethod
     def get_index_model(**kwargs):
@@ -55,10 +56,10 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     class Meta:
         index_together = [
@@ -116,7 +117,7 @@ class B2CProductComment(MPTTModel):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
 

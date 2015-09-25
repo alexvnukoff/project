@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models
+from django.utils import timezone
 from b24online.custom import CustomImageField
 
 from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
@@ -17,7 +18,7 @@ class ExternalSiteTemplate(models.Model):
     name = models.CharField(max_length=100)
     folder_name = models.FilePathField(allow_folders=True, path=templates_root)
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     def theme_folder(self):
         return os.path.basename(self.folder_name)
@@ -40,10 +41,10 @@ class UserSite(ActiveModelMixing, models.Model):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
         from core import tasks

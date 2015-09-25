@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from b24online.models import Vacancy, Country, ContextAdvertisement, IndexedModelMixin, ActiveModelMixing
@@ -33,11 +34,11 @@ class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     @property
     def organization(self):
@@ -112,10 +113,10 @@ class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
     institution = models.CharField(max_length=100, null=True, blank=True)
 
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    legacy_id = models.PositiveIntegerField()
+    legacy_id = models.PositiveIntegerField(null=True)
 
     @staticmethod
     def get_index_model(**kwargs):
