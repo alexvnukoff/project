@@ -270,7 +270,7 @@ class Document(models.Model):
 
 class AdditionalPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     content = models.TextField(blank=False, null=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -290,7 +290,7 @@ class AdditionalPage(models.Model):
 
 class Branch(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     legacy_id = models.PositiveIntegerField(null=True)
@@ -310,7 +310,7 @@ class Branch(MPTTModel, IndexedModelMixin):
 class Country(models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     flag = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
 
     legacy_id = models.PositiveIntegerField(null=True)
 
@@ -394,7 +394,7 @@ class Chamber(Organization, IndexedModelMixin):
     ]
 
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
@@ -545,7 +545,7 @@ class Chamber(Organization, IndexedModelMixin):
 
 class Company(Organization, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
@@ -660,7 +660,7 @@ class Company(Organization, IndexedModelMixin):
 
 class Department(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     organization = models.ForeignKey(Organization, db_index=True, related_name='departments')
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
@@ -690,7 +690,7 @@ class Department(models.Model):
 
 class Vacancy(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
 
@@ -735,7 +735,7 @@ class Vacancy(models.Model):
 
 class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     legacy_id = models.PositiveIntegerField(null=True)
@@ -754,7 +754,7 @@ class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
 
 class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=False, null=False)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     additional_pages = GenericRelation(AdditionalPage)
@@ -802,7 +802,7 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=False, null=False)
     product_name = models.CharField(max_length=255, blank=False, null=False)
     business_plan = models.TextField(blank=False, null=False)
@@ -876,7 +876,7 @@ class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 class B2BProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
 
@@ -896,7 +896,7 @@ class B2BProductCategory(MPTTModel, IndexedModelMixin):
 
 class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, name=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
@@ -995,7 +995,7 @@ class B2BProductComment(MPTTModel):
 class NewsCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     legacy_id = models.PositiveIntegerField(null=True)
@@ -1016,7 +1016,7 @@ class Greeting(models.Model, IndexedModelMixin):
     photo = models.CharField(max_length=255, blank=False, null=False)
     organization = models.CharField(max_length=255, blank=False, null=False)
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     position = models.CharField(max_length=255, blank=False, null=False)
     content = models.TextField(blank=False, null=False)
 
@@ -1042,7 +1042,7 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                              sizes=['big', 'small', 'th'], max_length=255, blank=True)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     short_description = models.TextField()
     content = models.TextField()
     is_tv = models.BooleanField(default=False)
@@ -1112,7 +1112,7 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     content = models.TextField(blank=False, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
@@ -1226,7 +1226,7 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=False, null=False)
     documents = GenericRelation(Document)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
@@ -1296,7 +1296,7 @@ class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 class StaticPage(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     content = models.TextField(blank=False, null=False)
     is_on_top = models.BooleanField(default=False)
 

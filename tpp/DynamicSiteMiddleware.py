@@ -78,7 +78,7 @@ logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
 SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
 
 try:
-    FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
+    FALLBACK_SITE = Site.objects.fiter(name='tppcenter').first()
 except Site.DoesNotExist as e:
     all_sites = Site.objects.all()
     msg = "Fallback SITE_ID %i doesn't exist: %s (Existing sites: %s)" % (

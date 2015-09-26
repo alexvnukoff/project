@@ -10,7 +10,7 @@ from b24online.models import Vacancy, Country, ContextAdvertisement, IndexedMode
 
 class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     vacancy = models.ForeignKey(Vacancy, related_name='job_requirement')
     city = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(blank=False, null=False)
@@ -79,7 +79,7 @@ class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
     ]
 
     title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     martial_status = models.CharField(max_length=10, blank=True, null=True, choices=MARTIAL_STATUSES)
     nationality = models.CharField(max_length=255, null=False, blank=True)
     telephone_number = models.CharField(max_length=255)

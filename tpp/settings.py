@@ -212,7 +212,7 @@ DATABASES = {
         },
     },
     'new': {
-         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
          'NAME': 'b24online_db',
          'USER': 'b24online',
          'PASSWORD': 'b24online**',
@@ -220,8 +220,6 @@ DATABASES = {
          'PORT': '5432'
     }
 }
-
-SOUTH_DATABASE_ADAPTERS = {'default': "south.db.oracle"}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -254,7 +252,7 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler
 
 STATIC_URL = '/static/'
 ROOT_URLCONF = 'tppcenter.urls'
-#SITE_ID = 143
+SITE_ID = 143
 
 
 #Were added by Expert Center -----------------------------------------------------

@@ -18,7 +18,7 @@ from b24online.utils import generate_upload_path, reindex_instance
 
 class B2CProductCategory(MPTTModel, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
@@ -39,7 +39,7 @@ class B2CProductCategory(MPTTModel, IndexedModelMixin):
 class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, name=False)
     categories = models.ManyToManyField(B2CProductCategory, related_name='products')
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255)
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
