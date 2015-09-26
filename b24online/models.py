@@ -1169,14 +1169,14 @@ class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
-    first_name = models.CharField(max_length=255, blank=False, null=False)
-    middle_name = models.CharField(max_length=255, blank=True, null=False)
-    last_name = models.CharField(max_length=255, blank=True, null=False)
+    first_name = models.CharField(max_length=255, blank=False, null=True)
+    middle_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
                               sizes=['big', 'small', 'th'], max_length=255, blank=True, null=True)
-    mobile_number = models.CharField(max_length=255, blank=True, null=False)
-    site = models.URLField(max_length=255, blank=True, null=False)
-    profession = models.CharField(max_length=255, blank=True, null=False)
+    mobile_number = models.CharField(max_length=255, blank=True, null=True)
+    site = models.URLField(max_length=255, blank=True, null=True)
+    profession = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey(Country)
     birthday = models.DateField(null=True, blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="profile", on_delete=models.CASCADE)
