@@ -78,6 +78,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'tppcenter', 'templates').replace('\\', '/')],
         'OPTIONS': {
             'debug': False,
             'context_processors': (
