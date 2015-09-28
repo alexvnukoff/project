@@ -28,9 +28,19 @@ class GreetingList(ItemsList):
     model = Greeting
     template_name = 'Greetings/index.html'
 
+    def get_queryset(self):
+        if self.is_filtered() and not self.is_my():
+            return self.get_filtered_items().sort(*self._get_sorting_params())
+
+        queryset = self.model.objects.filter(is_active=True).order_by(*self._get_sorting_params())
+        return self.optimize_queryset(queryset)
+
 
 class GreetingDetail(ItemDetail):
     model = Greeting
     template_name = 'Greetings/detailContent.html'
 
     current_section = _("Greetings")
+
+    def get_queryset(self):
+        return self.model.objects.all()

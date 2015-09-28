@@ -801,10 +801,10 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField(max_length=255)
+    name = models.CharField(max_length=2048, blank=False, null=False)
+    slug = models.SlugField(max_length=2048)
     description = models.TextField(blank=False, null=False)
-    product_name = models.CharField(max_length=255, blank=False, null=False)
+    product_name = models.CharField(max_length=2048, blank=False, null=False)
     business_plan = models.TextField(blank=False, null=False)
     documents = GenericRelation(Document)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
@@ -895,8 +895,8 @@ class B2BProductCategory(MPTTModel, IndexedModelMixin):
 
 
 class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, name=False)
-    slug = models.SlugField(max_length=255)
+    name = models.CharField(max_length=2048, blank=False, name=False)
+    slug = models.SlugField(max_length=2048)
     short_description = models.TextField(null=False)
     description = models.TextField(blank=False, null=False)
     image = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big', 'small', 'th'],
@@ -1048,7 +1048,7 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_tv = models.BooleanField(default=False)
     categories = models.ManyToManyField(NewsCategory)
     galleries = GenericRelation(Gallery)
-    video_code = models.CharField(max_length=255, blank=True, null=False)
+    video_code = models.CharField(max_length=255, blank=True, null=True)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -1111,8 +1111,8 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
-    title = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField(max_length=255)
+    title = models.CharField(max_length=2048, blank=False, null=False)
+    slug = models.SlugField(max_length=2048)
     content = models.TextField(blank=False, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
     cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
@@ -1232,7 +1232,7 @@ class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     dates = DateRangeField(null=True)
     city = models.CharField(max_length=255, blank=False, null=True)
-    route = models.CharField(blank=True, null=False, max_length=1024)
+    route = models.CharField(blank=True, null=False, max_length=2048)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     country = models.ForeignKey(Country)

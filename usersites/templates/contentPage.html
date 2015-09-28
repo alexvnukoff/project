@@ -24,7 +24,7 @@
         <h2 class="titlepage">{% trans "News" %}</h2>
         {% for article in news %}
         <li>
-            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+            <h3><a href="{% url 'news:detail' article.slug article.pk %}">{{ article.title }}</a></h3>
             <div class="thumb">
                 {% if article.image %}
                     <img style="max-width: 70px; max-height: 60px;" src="{{ article.image.small }} " alt="{{ article.title }}" title="{{ article.title }}"/>
@@ -41,7 +41,7 @@
                          {{ article.content|cleanHtml|safe|truncatewords_html:"30" }}
                     {% endif %}
                 </p>
-                <p class="linkmore"><a href="{{ article.get_absolute_url }}">{% trans "More" %}...</a></p>
+                <p class="linkmore"><a href="{% url 'news:detail' article.slug article.pk %}">{% trans "More" %}...</a></p>
             </div>
         </li>
         {% endfor %}

@@ -11,7 +11,7 @@ from tppcenter.Resume.forms import ResumeForm, WorkPositionFormSet
 
 
 class ResumeList(ItemsList):
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ResumeList, self).dispatch(*args, **kwargs)
 
@@ -63,7 +63,7 @@ class ResumeDetail(ItemDetail):
     current_section = _('Resume')
     addUrl = 'resume:add'
 
-    @method_decorator(login_required(login_url='/login/'))
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ResumeDetail, self).dispatch(*args, **kwargs)
 

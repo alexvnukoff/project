@@ -18,8 +18,6 @@ class ExternalSiteTemplate(models.Model):
     name = models.CharField(max_length=100)
     folder_name = models.FilePathField(allow_folders=True, path=templates_root)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     def theme_folder(self):
         return os.path.basename(self.folder_name)
 
@@ -30,7 +28,7 @@ class ExternalSiteTemplate(models.Model):
 class UserSite(ActiveModelMixing, models.Model):
     template = models.ForeignKey(ExternalSiteTemplate, blank=True, null=True)
     organization = models.ForeignKey(Organization)
-    slogan = models.CharField(max_length=255, blank=True, null=True)
+    slogan = models.CharField(max_length=2048, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], max_length=255)
@@ -43,8 +41,6 @@ class UserSite(ActiveModelMixing, models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def upload_images(self, is_new_logo, changed_galleries=None, changed_banners=None):
         from core import tasks
