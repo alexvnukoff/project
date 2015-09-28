@@ -258,7 +258,7 @@ class ItemsList(HybridListView):
     def _get_sorting_params(self):
         order = []
 
-        self.sortField1 = self.request.GET.get('sortField1', list(self.sortFields.keys())[0])
+        self.sortField1 = self.request.GET.get('sortField1', 'date')
         self.sortField2 = self.request.GET.get('sortField2', None)
         self.order1 = self.request.GET.get('order1', 'desc')
         self.order2 = self.request.GET.get('order2', None)

@@ -30,9 +30,9 @@ class GreetingList(ItemsList):
 
     def get_queryset(self):
         if self.is_filtered() and not self.is_my():
-            return self.get_filtered_items().sort(*self._get_sorting_params())
+            return self.get_filtered_items().sort('name')
 
-        queryset = self.model.objects.order_by(*self._get_sorting_params())
+        queryset = self.model.objects.order_by('name')
         return self.optimize_queryset(queryset)
 
 

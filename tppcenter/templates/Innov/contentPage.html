@@ -12,9 +12,9 @@
                 <li>
                 {% setContextMenu innov %}
                     <div class="title">
-                    {% if innovation_project.country %}
+                    {% if innov.country %}
                         <i class="flag sprite {{ innov.country.flag }}" title="{{ innov.country.name }}"></i>
-                    {% elif innov.organization %}
+                    {% elif innov.organization.flag %}
                         <img src="{{ innov.organization.flag_url }}" class="flag" title="{{ innov.organization.name }}" alt="{{ innov.organization.name }}"/>
                     {% else %}
                         <i class="flag sprite {{ innov.created_by.profile.country.flag }}" title="{{ innov.created_by.profile.country.name }}"></i>
