@@ -83,7 +83,7 @@ class NewsCategoryTranslationOptions(TranslationOptions):
 
 @register(Greeting)
 class GreetingTranslationOptions(TranslationOptions):
-    fields = ('name', 'slug', 'content', 'position', 'organization')
+    fields = ('name', 'slug', 'content', 'position_name', 'organization_name')
 
 
 @register(News)
