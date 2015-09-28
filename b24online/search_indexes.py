@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from elasticsearch_dsl import DocType, analyzer, String, Boolean, Integer, Date, Double, token_filter, Search
 from elasticsearch_dsl.connections import connections
 
-from local_settings import ELASTIC_SEARCH_HOSTS
 
 html_strip = analyzer('html_strip',
                       tokenizer="standard",
@@ -656,7 +656,7 @@ class SearchEngine(Search):
     @staticmethod
     def get_connection():
         if not SearchEngine._cached_connection or not SearchEngine._cached_connection.ping():
-            SearchEngine._cached_connection = connections.create_connection(hosts=ELASTIC_SEARCH_HOSTS)
+            SearchEngine._cached_connection = connections.create_connection(hosts=settings.ELASTIC_SEARCH_HOSTS)
 
         return SearchEngine._cached_connection
 
