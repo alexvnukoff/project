@@ -255,8 +255,8 @@ def show_static_pages(site_type='b2b'):
     if not cached:
         pages = {}
 
-        for page in StaticPage.objects.filter(site_type=site_type).values('page_type', 'slug', 'title'):
-            pages[page['page_type']] = pages.get(page['page_type'], []) + [page]
+        for page in StaticPage.objects.filter(site_type=site_type).only('page_type', 'slug', 'title'):
+            pages[page.page_type] = pages.get(page.page_type, []) + [page]
 
         cache.set(cache_name, pages, 60 * 60 * 24 * 7)
     else:

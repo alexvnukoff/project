@@ -284,8 +284,6 @@ class Branch(MPTTModel, IndexedModelMixin):
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import BranchIndex
@@ -302,8 +300,6 @@ class Country(models.Model, IndexedModelMixin):
     name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
     flag = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     @staticmethod
     def get_index_model(**kwargs):
@@ -329,8 +325,6 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def has_perm(self, user):
         if user is None or not user.is_authenticated() or user.is_anonymous():
@@ -659,8 +653,6 @@ class Department(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     def has_perm(self, user):
         return self.organization.has_perm(user)
 
@@ -689,8 +681,6 @@ class Vacancy(models.Model):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def has_perm(self, user):
         return self.department.has_perm(user)
@@ -729,8 +719,6 @@ class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import BusinessProposalCategoryIndex
@@ -763,8 +751,6 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def has_perm(self, user):
         return self.organization.has_perm(user)
@@ -814,9 +800,6 @@ class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def has_perm(self, user):
         if not user.is_authenticated() or user.is_anonymous():
@@ -871,8 +854,6 @@ class B2BProductCategory(MPTTModel, IndexedModelMixin):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import B2bProductCategoryIndex
@@ -911,8 +892,6 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def upload_images(self):
         from core import tasks
@@ -989,8 +968,6 @@ class NewsCategory(MPTTModel, IndexedModelMixin):
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     @staticmethod
     def get_index_model(**kwargs):
         from b24online.search_indexes import NewsCategoryIndex
@@ -1052,8 +1029,6 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     @property
     def gallery_images(self):
@@ -1124,8 +1099,6 @@ class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    legacy_id = models.PositiveIntegerField(null=True)
-
     @property
     def start_date(self):
         if self.dates:
@@ -1178,8 +1151,6 @@ class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     TYPES = [('businessman', _('Businessman')), ('individual', _('Individual'))]
     user_type = models.CharField(max_length=255, default='individual', choices=TYPES)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     def upload_images(self):
         from core import tasks
@@ -1239,8 +1210,6 @@ class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    legacy_id = models.PositiveIntegerField(null=True)
 
     @property
     def start_date(self):
