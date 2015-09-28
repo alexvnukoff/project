@@ -19,13 +19,13 @@
 
     <div class="new-details">
 
-                    <h1>{{ item.title }}</h1>
+                    <h1>{{ item.name }}</h1>
                     <div class="content-news">
-                        <img class="tmb" src="{{ item.image.big }}" alt="{{ item.title }}" title="{{ item.title }}" />
-                        {{ item.text|cleanHtml|safe }}
+                        <img class="tmb" src="{{ item.photo.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
+                        {{ item.content|cleanHtml|safe }}
                     <p></p>
-                    <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ item.tpp_name }}</p>
-                    <p><strong>{% trans "Position" %}:</strong>  &nbsp;&nbsp;{{ item.position }}</p>
+                    <p><strong>{% trans "Organization" %}:</strong>  &nbsp;&nbsp;{{ item.organization_name }}</p>
+                    <p><strong>{% trans "Position" %}:</strong>  &nbsp;&nbsp;{{ item.position_name }}</p>
                     </div>
     </div>
 {% endblock %}

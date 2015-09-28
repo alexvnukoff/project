@@ -387,14 +387,14 @@
                   {% endif %}
                     <div class="items">
                     	<div class="bgtitle">
-                        	<div class="textin">{{ greet.organization }}</div>
+                        	<div class="textin">{{ greet.organization_name }}</div>
                         </div>
                     	<a href="{{ greet.get_absolute_url }}">
                             <img src="{{ greet.photo.big }}" alt="{{ greet.name }}" class="avatar" title="{{ greet.name }}" />
                         </a>
                         <div class="name">
                         	<a href="{{ greet.get_absolute_url }}">{{ greet.name }}</a>
-                            {{ greet.position }}
+                            {{ greet.position_name }}
                         </div>
                     </div>
 

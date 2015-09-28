@@ -32,7 +32,7 @@ class GreetingList(ItemsList):
         if self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
 
-        queryset = self.model.objects.filter(is_active=True).order_by(*self._get_sorting_params())
+        queryset = self.model.objects.order_by(*self._get_sorting_params())
         return self.optimize_queryset(queryset)
 
 

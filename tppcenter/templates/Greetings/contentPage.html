@@ -9,15 +9,15 @@
             <li>
                 <div class="thumb shadow">
                     <a href="{{ greeting.get_absolute_url }}">
-                        <img src="{{ greeting.image.big }}" alt="{{ greeting.title }}" title="{{ greeting.title }}" />
+                        <img src="{{ greeting.photo.big }}" alt="{{ greeting.name }}" title="{{ greeting.name }}" />
                     </a>
                 </div>
                 <div class="infoprd">
-                    <a href="{{ greeting.get_absolute_url }}" class="name">{{ greeting.title }}</a>
-                    {{ greeting.text|truncatewords_html:"30"|cleanHtml|safe }}
+                    <a href="{{ greeting.get_absolute_url }}" class="name">{{ greeting.name }}</a>
+                    {{ greeting.content|truncatewords_html:"30"|cleanHtml|safe }}
                 <br />
-                <p><strong>{% trans "Organization" %}:</strong> {{ greeting.tpp_name }}</p>
-                <p><strong>{% trans "Position" %}:</strong> {{ greeting.position }}</p>
+                <p><strong>{% trans "Organization" %}:</strong> {{ greeting.organization_name }}</p>
+                <p><strong>{% trans "Position" %}:</strong> {{ greeting.position_name }}</p>
 
                     <!--noindex-->
                         <a href="{{ greeting.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a>

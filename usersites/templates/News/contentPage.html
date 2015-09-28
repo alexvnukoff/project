@@ -8,7 +8,7 @@
     <ul class="walllist">
         {% for news in object_list %}
             <li>
-                <h3><a href="{{ news.get_absolute_url }}">{{ news.title }}</a></h3>
+                <h3><a href="{% url 'news:detail' news.slug news.pk %}">{{ news.title }}</a></h3>
                 <div class="thumb">
                     {% if news.image %}
                         <img style="max-width: 70px; max-height: 60px;" src="{{ news.image.small }} " alt="{{ news.title }}" title="{{ news.title }}"/>
@@ -27,7 +27,7 @@
                          {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
                     {% endif %}
                     </p>
-                    <p class="linkmore"><a href="{{ news.get_absolute_url }}">{% trans "More" %}...</a></p>
+                    <p class="linkmore"><a href="{% url 'news:detail' news.slug news.pk %}">{% trans "More" %}...</a></p>
                 </div>
             </li>
         {% endfor %}
