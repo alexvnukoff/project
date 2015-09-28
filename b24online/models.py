@@ -1013,7 +1013,8 @@ class NewsCategory(MPTTModel, IndexedModelMixin):
 
 
 class Greeting(models.Model, IndexedModelMixin):
-    photo = models.CharField(max_length=255, blank=False, null=False)
+    photo = CustomImageField(upload_to=generate_upload_path, storage=image_storage, sizes=['big'], 
+                             max_length=255, blank=True)
     organization_name = models.CharField(max_length=255, blank=False, null=False)
     name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
