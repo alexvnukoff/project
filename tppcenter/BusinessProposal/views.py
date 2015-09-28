@@ -56,7 +56,7 @@ class BusinessProposalList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.active_objects.filter(organization_id=current_org)
+                queryset = self.model.get_active_objects().filter(organization_id=current_org)
             else:
                 queryset = queryset.none()
 

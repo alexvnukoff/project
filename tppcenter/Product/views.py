@@ -53,7 +53,7 @@ class B2BProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.active_objects.filter(company_id=current_org)
+                queryset = self.model.get_active_objects().filter(company_id=current_org)
             else:
                 queryset = queryset.none()
 
@@ -97,7 +97,7 @@ class B2CProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.active_objects.filter(company_id=current_org)
+                queryset = self.model.get_active_objects().filter(company_id=current_org)
             else:
                 return queryset.none()
 

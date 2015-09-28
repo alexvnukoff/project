@@ -22,18 +22,15 @@ def home(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('wall:main'))
 
-    if request.POST.get('Register', None):
-        return registration(request)
+    organizations_list = Chamber.get_active_objects().filter(org_type='international')
 
-    organizations_list = Chamber.active_objects.filter(org_type='international')
-
-    product_list = B2BProduct.active_objects.select_related('company').prefetch_related('company__countries') \
+    product_list = B2BProduct.get_active_objects().select_related('company').prefetch_related('company__countries') \
                        .order_by('-created_at')[:3]
-    service_list = BusinessProposal.active_objects \
+    service_list = BusinessProposal.get_active_objects() \
                         .prefetch_related('country', 'organization', 'organization__countries') \
                         .order_by('-created_at')[:3]
     greetings_list = Greeting.objects.all()
-    exhibitions_list = Exhibition.active_objects.select_related('country').order_by('-created_at')[:3]
+    exhibitions_list = Exhibition.get_active_objects().select_related('country').order_by('-created_at')[:3]
 
     template_params = {
         'organizationsList': organizations_list,
@@ -331,7 +328,7 @@ def my_companies(request):
         paginate_by = 10
 
         organizations = get_objects_for_user(request.user, ['b24online.manage_organization'],
-                                             Organization.active_objects.all(), with_superuser=False)
+                                             Organization.get_active_objects().all(), with_superuser=False)
 
         organizations = Organization.objects.filter(pk__in=organizations)
 

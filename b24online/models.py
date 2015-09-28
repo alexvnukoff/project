@@ -20,16 +20,16 @@ from django.db import transaction
 
 
 
+
 # Create your models here.
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
-from mptt.managers import TreeManager
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from uuslug import uuslug
 
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
-from b24online.utils import create_slug, generate_upload_path, reindex_instance, document_upload_path
+from b24online.utils import generate_upload_path, reindex_instance, document_upload_path
 from tpp.celery import app
 
 CURRENCY = [
@@ -110,36 +110,27 @@ file_storage = S3FileStorage()
 #
 #         return organization_ids or []
 
-class ActiveManager(models.Manager):
+class ActiveModelMixing:
     fields_cache = {}
 
-    def get_queryset(self):
-        fields = self.fields_cache.get(self.model, None)
-
-        if not fields:
-            fields = [field.name for field in self.model._meta.get_fields()]
-            self.fields_cache[self.model] = fields
+    @classmethod
+    def get_active_objects(cls):
+        if not cls.fields_cache:
+            fields = [field.name for field in cls._meta.get_fields()]
+            cls.fields_cache = fields
 
         filter_args = {}
 
-        if 'is_active' in fields:
+        if 'is_active' in cls.fields_cache:
             filter_args['is_active'] = True
 
-        if 'is_deleted' in fields:
+        if 'is_deleted' in cls.fields_cache:
             filter_args['is_deleted'] = False
 
         if filter_args:
-            return super().get_queryset().filter(**filter_args)
+            return cls.objects.filter(**filter_args)
 
-        return super().get_queryset()
-
-
-class ActiveModelMixing(models.Model):
-    objects = models.Manager()
-    active_objects = ActiveManager()
-
-    class Meta:
-        abstract = True
+        return cls.objects.all()
 
 
 class IndexedModelMixin:

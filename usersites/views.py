@@ -8,12 +8,12 @@ from centerpokupok.models import B2CProduct
 
 def wall(request):
     organization = Site.objects.get_current().user_site.organization
-    proposals = BusinessProposal.active_objects.filter(organization=organization)[:3]
-    news = News.active_objects.filter(organization=organization)[:3]
+    proposals = BusinessProposal.get_active_objects().filter(organization=organization)[:3]
+    news = News.get_active_objects().filter(organization=organization)[:3]
 
     if isinstance(organization, Company):
-        b2c_products = B2CProduct.active_objects.filter(company=organization)[:4]
-        b2b_products = B2BProduct.active_objects.filter(company=organization)[:4]
+        b2c_products = B2CProduct.get_active_objects().filter(company=organization)[:4]
+        b2b_products = B2BProduct.get_active_objects().filter(company=organization)[:4]
     else:
         b2b_products = None
         b2c_products = None

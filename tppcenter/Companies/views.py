@@ -64,10 +64,10 @@ class CompanyList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.active_objects.filter(Q(parent_id=current_org) | Q(pk=current_org))
+                queryset = self.model.get_active_objects().filter(Q(parent_id=current_org) | Q(pk=current_org))
             else:
                 queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
-                                                Organization.active_objects.all()) \
+                                                Organization.get_active_objects().all()) \
                     .instance_of(Company)
 
         return queryset
@@ -92,7 +92,7 @@ class CompanyDetail(ItemDetail):
 
 
 def _tab_news(request, company, page=1):
-    news = News.active_objects.filter(organization=company)
+    news = News.get_active_objects().filter(organization=company)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -110,7 +110,7 @@ def _tab_news(request, company, page=1):
 
 
 def _tab_tenders(request, company, page=1):
-    tenders = Tender.active_objects.filter(organization=company)
+    tenders = Tender.get_active_objects().filter(organization=company)
     paginator = Paginator(tenders, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -129,7 +129,7 @@ def _tab_tenders(request, company, page=1):
 
 
 def _tabs_exhibitions(request, company, page=1):
-    exhibitions = Exhibition.active_objects.filter(organization=company)
+    exhibitions = Exhibition.get_active_objects().filter(organization=company)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -148,7 +148,7 @@ def _tabs_exhibitions(request, company, page=1):
 
 
 def _tab_products(request, company, page=1):
-    products = B2BProduct.active_objects.filter(company=company)
+    products = B2BProduct.get_active_objects().filter(company=company)
     paginator = Paginator(products, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -166,7 +166,7 @@ def _tab_products(request, company, page=1):
 
 
 def _tab_proposals(request, company, page=1):
-    proposals = BusinessProposal.active_objects.filter(organization=company)
+    proposals = BusinessProposal.get_active_objects().filter(organization=company)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -184,7 +184,7 @@ def _tab_proposals(request, company, page=1):
 
 
 def _tab_innovation_projects(request, company, page=1):
-    projects = InnovationProject.active_objects.filter(organization=company)
+    projects = InnovationProject.get_active_objects().filter(organization=company)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -381,7 +381,7 @@ def send_message(request):
                 company_pk = request.POST.get('company')
 
                 # this condition as temporary design for separation Users and Organizations
-                organization = Company.active_objects.get(pk=company_pk)
+                organization = Company.get_active_objects().get(pk=company_pk)
 
                 if not organization.email:
                     email = 'admin@tppcenter.com'

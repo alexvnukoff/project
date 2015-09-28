@@ -51,7 +51,7 @@ class ResumeList(ItemsList):
             if current_org is not None:
                 queryset = queryset.none()
             else:
-                queryset = self.model.active_objects.filter(user=self.request.user)
+                queryset = self.model.get_active_objects().filter(user=self.request.user)
 
         return queryset
 

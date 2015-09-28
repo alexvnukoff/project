@@ -45,9 +45,9 @@ class InnovationProjectList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.active_objects.filter(organization=current_org)
+                queryset = self.model.get_active_objects().filter(organization=current_org)
             else:
-                queryset = self.model.active_objects.filter(created_by=self.request.user, organization__isnull=True)
+                queryset = self.model.get_active_objects().filter(created_by=self.request.user, organization__isnull=True)
 
         return queryset
 

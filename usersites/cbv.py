@@ -40,7 +40,7 @@ class ItemList(ListView):
         }
 
     def get_queryset(self):
-        return self.model.active_objects.filter(**self.get_filter_kwargs())
+        return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 
 
 class ItemDetail(DetailView):
@@ -57,5 +57,5 @@ class ItemDetail(DetailView):
         }
 
     def get_queryset(self):
-        return self.model.active_objects.filter(**self.get_filter_kwargs())
+        return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 

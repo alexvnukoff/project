@@ -296,7 +296,7 @@ class ItemsList(HybridListView):
         if self.is_filtered() and not self.is_my():
             return self.get_filtered_items().sort(*self._get_sorting_params())
 
-        queryset = self.model.active_objects.filter(is_active=True).order_by(*self._get_sorting_params())
+        queryset = self.model.get_active_objects().filter(is_active=True).order_by(*self._get_sorting_params())
         return self.optimize_queryset(queryset)
 
 
@@ -314,7 +314,7 @@ class ItemDetail(DetailView):
         return self.addUrl
 
     def get_queryset(self):
-        return self.model.active_objects.all()
+        return self.model.get_active_objects().all()
 
     def get_object(self, queryset=None):
         self.item_id = self.kwargs.get('item_id', None)

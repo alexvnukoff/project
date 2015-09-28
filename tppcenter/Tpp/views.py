@@ -67,7 +67,7 @@ class ChamberList(ItemsList):
                 return queryset.filter(pk=current_org)
             else:
                 queryset = get_objects_for_user(self.request.user, ['b24online.manage_organization'],
-                                                Organization.active_objects.all()).instance_of(Chamber)
+                                                Organization.get_active_objects().all()).instance_of(Chamber)
 
         return queryset
 
@@ -86,7 +86,7 @@ class ChamberDetail(ItemDetail):
 
 
 def _tab_companies(request, tpp, page=1):
-    companies = Company.active_objects.filter(parent=tpp)
+    companies = Company.get_active_objects().filter(parent=tpp)
     paginator = Paginator(companies, 10)
 
     page = paginator.page(page)
@@ -105,7 +105,7 @@ def _tab_companies(request, tpp, page=1):
 
 
 def _tab_news(request, tpp, page=1):
-    news = News.active_objects.filter(organization=tpp)
+    news = News.get_active_objects().filter(organization=tpp)
     paginator = Paginator(news, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -141,7 +141,7 @@ def _tab_tenders(request, tpp, page=1):
 
 
 def _tab_exhibitions(request, tpp, page=1):
-    exhibitions = Exhibition.active_objects.filter(organization=tpp)
+    exhibitions = Exhibition.get_active_objects().filter(organization=tpp)
     paginator = Paginator(exhibitions, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -159,7 +159,7 @@ def _tab_exhibitions(request, tpp, page=1):
 
 
 def _tab_proposals(request, tpp, page=1):
-    proposals = BusinessProposal.active_objects.filter(organization=tpp)
+    proposals = BusinessProposal.get_active_objects().filter(organization=tpp)
     paginator = Paginator(proposals, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
@@ -177,7 +177,7 @@ def _tab_proposals(request, tpp, page=1):
 
 
 def _tab_innovation_projects(request, tpp, page=1):
-    projects = InnovationProject.active_objects.filter(organization=tpp)
+    projects = InnovationProject.get_active_objects().filter(organization=tpp)
     paginator = Paginator(projects, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
