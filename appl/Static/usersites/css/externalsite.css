@@ -310,3 +310,4 @@ form .fakeupload input {
 .viewimge .zoom{ float:left; width:20px; height:20px; background-position:-178px -60px;}
 .viewimge .zoomtext{ float:left; font-size:11px; color:#FFF; line-height:20px; width:62px; text-align:center; background-color:#000; opacity:0.8; filter:alpha(opacity=80);}
 .b-img:hover .viewimge{ display:block;}
+.category-selector {max-width: 300px;}

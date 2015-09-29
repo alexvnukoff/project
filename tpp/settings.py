@@ -104,7 +104,6 @@ INSTALLED_APPS = (
     'core',
     'appl',
     'b24online',
-    'legacy_data',
     'djcelery',
     'loginas',
     'tppcenter',

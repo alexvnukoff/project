@@ -39,7 +39,7 @@ class B2CProductList(ItemList):
                 categories_to_load.append(category.parent_id)
 
         if categories_to_load:
-            queryset = B2CProduct.objects.filter(pk__in=categories_to_load).order_by('level')
+            queryset = B2CProductCategory.objects.filter(pk__in=categories_to_load).order_by('level')
             loaded_categories = self._load_category_hierarchy(queryset, loaded_categories)
 
         return loaded_categories

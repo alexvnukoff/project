@@ -95,7 +95,7 @@
                 <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
             {% endif %}
 
-            {% if site.user_site.organization.b2c_products.exists %}
+            {% if site.user_site.organization.b2b_products.exists %}
                 <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
             {% endif %}
         {% endif %}
