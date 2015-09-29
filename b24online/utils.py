@@ -3,6 +3,7 @@ import uuid
 from PIL import Image
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.files import File, locks
 from django.core.files.move import file_move_safe
 from django.utils import translation
@@ -29,7 +30,7 @@ def deep_merge_dict(a, b, path=None):
             if isinstance(a[key], dict) and isinstance(b[key], dict):
                 deep_merge_dict(a[key], b[key], path + [str(key)])
             elif a[key] == b[key]:
-                pass # same leaf value
+                pass  # same leaf value
             else:
                 raise Exception('Conflict at %s' % '.'.join(path + [str(key)]))
         else:
@@ -44,7 +45,7 @@ def reindex_instance(instance):
     languages = [lan[0] for lan in settings.LANGUAGES]
 
     for lang in languages:
-        search_results = SearchEngine(lang=lang, doc_type=instance.get_index_model())\
+        search_results = SearchEngine(lang=lang, doc_type=instance.get_index_model()) \
             .query('match', django_id=instance.pk).execute().hits
         index_representation = instance.get_index_model().to_index(instance)
 

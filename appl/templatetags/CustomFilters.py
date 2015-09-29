@@ -4,6 +4,7 @@ from decimal import Decimal
 import os
 import datetime
 
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
@@ -263,9 +264,10 @@ def detail_page_to_tppcenter(url, *args):
     return 'http://%s' % url
 
 
-@register.assignment_tag
-def is_chamber_site():
-    organization = Site.objects.get_current().user_site.organization
+@register.assignment_tag(takes_context=True)
+def is_chamber_site(context):
+    request = context['request']
+    organization = get_current_site(request).user_site.organization
     return isinstance(organization, Chamber)
 
 

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext as _
 
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -46,7 +46,7 @@ class B2CProductList(ItemList):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        organization = Site.objects.get_current().user_site.organization
+        organization = get_current_site(self.request).user_site.organization
         categories = B2CProductCategory.objects.filter(products__company_id=organization.pk)\
             .order_by('level').distinct()
 

@@ -1,12 +1,8 @@
 from threading import current_thread
-import os
-import sys
+from django.contrib.sites.shortcuts import get_current_site
 
-from django.contrib.sites.models import Site
-
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils import translation
-from django.views.debug import technical_500_response
 from django.conf import settings
 from django.core.cache import cache
 
@@ -88,24 +84,17 @@ class SiteLangRedirect:
     def process_request(self, request):
         lang = request.get_host().split('.')[0]
         languages = [lan[0] for lan in settings.LANGUAGES]
-        userLang = getattr(request, 'LANGUAGE_CODE', None)
+        user_lang = getattr(request, 'LANGUAGE_CODE', None)
 
-        if lang not in languages and userLang and userLang in languages and settings.SITE_ID:
-
-            cache_name = 'site_pk_%s' % settings.SITE_ID
-
-            domain = cache.get(cache_name)
-
-            if not domain:
-                site = Site.objects.get(pk=settings.SITE_ID)
-                domain = site.domain
-                cache.set(cache_name, domain)
+        if lang not in languages and user_lang and user_lang in languages:
+            site = get_current_site(request)
             protocol = 'http' if not request.is_secure() else 'https'
+            redirect_url = "%s://%s.%s%s" % (protocol, request.LANGUAGE_CODE, site.domain, request.get_full_path())
             
-            return HttpResponseRedirect(protocol + '://' + request.LANGUAGE_CODE + '.' + domain + request.get_full_path())
+            return HttpResponseRedirect(redirect_url)
 
 
-class SubdomainLanguageMiddleware(object):
+class SubDomainLanguageMiddleware(object):
     """
     Set the language for the site based on the subdomain the request
     is being served on. For example, serving on 'fr.domain.com' would

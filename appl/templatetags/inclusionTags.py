@@ -2,7 +2,7 @@ import os
 
 from django import template
 from django.conf import settings
-from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
 from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
@@ -19,9 +19,10 @@ from jobs.models import Requirement, Resume
 register = template.Library()
 
 
-@register.inclusion_tag('banner.html')
-def site_banner(block):
-    site_pk = Site.objects.get_current().pk
+@register.inclusion_tag('banner.html', takes_context=True)
+def site_banner(context, block):
+    request = context['request']
+    site_pk = get_current_site(request).pk
     cache_name = "banner:usersite:%s:%s" % (block, site_pk)
     cached = cache.get(cache_name)
 
@@ -37,9 +38,10 @@ def site_banner(block):
     return {'banner': banner}
 
 
-@register.inclusion_tag('tops.html')
-def site_context_adv():
-    organization_id = Site.objects.get_current().organization.pk
+@register.inclusion_tag('tops.html', takes_context=True)
+def site_context_adv(context):
+    request = context['request']
+    organization_id = get_current_site(request).user_site.organization.pk
     cache_name = "adv:context:%s:%s" % (get_language(), organization_id)
     cached = cache.get(cache_name)
 
@@ -229,10 +231,11 @@ def getLastNews(context):
     return {'MEDIA_URL': MEDIA_URL, 'newsValues': newsValues}
 
 
-@register.inclusion_tag('slider.html')
-def site_slider():
+@register.inclusion_tag('slider.html', takes_context=True)
+def site_slider(context):
     import glob
-    user_site = Site.objects.get_current().user_site
+    request = context['request']
+    user_site = get_current_site(request).user_site
     custom_images = user_site.slider_images
 
     if custom_images:

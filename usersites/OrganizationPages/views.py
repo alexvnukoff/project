@@ -1,12 +1,13 @@
 from collections import OrderedDict
-from django.contrib.sites.models import Site
+
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.utils.translation import ugettext as _
 
-from b24online.models import AdditionalPage, Profile, Department, GalleryImage
+from b24online.models import AdditionalPage, Department
 from usersites.OrganizationPages.forms import ContactForm
 from usersites.cbv import ItemDetail
 
@@ -16,7 +17,7 @@ class PageDetail(ItemDetail):
     template_name = 'OrganizationPages/page.html'
 
     def get_queryset(self):
-        return Site.objects.get_current().user_site.organization.additional_pages.all()
+        return get_current_site(self.request).user_site.organization.additional_pages.all()
 
 
 class Contacts(DetailView):
@@ -45,7 +46,7 @@ class Contacts(DetailView):
         return self.render_to_response(context_data)
 
     def get_object(self, queryset=None):
-        return Site.objects.get_current().user_site.organization
+        return get_current_site(self.request).user_site.organization
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -60,7 +61,7 @@ class Structure(ListView):
     ordering = ['name']
 
     def get_queryset(self):
-        return Site.objects.get_current().user_site.organization.departments.all()
+        return get_current_site(self.request).user_site.organization.departments.all()
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

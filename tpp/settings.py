@@ -158,7 +158,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
     'tpp.SiteUrlMiddleWare.SiteLangRedirect',
-    'tpp.SiteUrlMiddleWare.SubdomainLanguageMiddleware',
+    'tpp.SiteUrlMiddleWare.SubDomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'tpp.SetCurCompanyMiddleware.SetCurCompany'
