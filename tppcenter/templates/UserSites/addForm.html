@@ -223,10 +223,10 @@
                                             <div>
                                             {% if banner_form.errors.link %}
                                                 <div class="error-handler">
-                                                    <div class="formserror">{{ banner_form.link.image.0 }}</div>
+                                                    <div class="formserror">{{ banner_form.errors.link.0 }}</div>
                                                 </div>
                                             {% endif %}
-                                                {% trans 'Link URL' %}: <input value="{{ banner_form.link.value|default_if_none:"" }}" type="hidden" name="{{ banner_form.link.html_name }}">
+                                                {% trans 'Link URL' %}: <input value="{{ banner_form.link.value|default_if_none:"" }}" type="text" name="{{ banner_form.link.html_name }}">
                                             </div>
                                         </div>
                                     </li>

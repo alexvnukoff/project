@@ -442,7 +442,7 @@ class Chamber(Organization, IndexedModelMixin):
             raise ValueError('Not international chamber have more than one country')
 
         if len(countries) == 0:
-            raise ValueError("Can not find country for chambers: (%s, %s)" % (self.pk, chamber.pk))
+            return None#raise ValueError("Can not find country for chambers: (%s, %s)" % (self.pk, chamber.pk))
 
         return countries[0]
 
@@ -1344,8 +1344,8 @@ class Message(models.Model):
 class BannerBlock(models.Model):
     code = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    width = models.PositiveSmallIntegerField()
-    height = models.PositiveSmallIntegerField()
+    width = models.PositiveSmallIntegerField(null=True, blank=True)
+    height = models.PositiveSmallIntegerField(null=True, blank=True)
     image = CustomImageField(storage=image_storage, null=True)
     description = models.CharField(max_length=1024)
     factor = models.FloatField(default=1)

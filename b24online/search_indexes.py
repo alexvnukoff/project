@@ -322,9 +322,6 @@ class ChamberIndex(DocType):
         else:
             countries = obj.parent.countries.all().values_list('pk', flat=True)
 
-        if not countries:
-            raise ValueError('Can not fetch countries from chamber')
-
         index_instance.countries = list(countries)
 
         return index_instance
