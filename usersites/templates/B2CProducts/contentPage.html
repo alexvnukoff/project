@@ -33,7 +33,7 @@
                 <div class="thumb">
                     <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
                         {% if product.image %}
-                          <img style="max-width: 150px; max-height: 138px;" id="largeImage" src="{{ product.image.small }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                          <img style="max-width: 150px; max-height: 138px;" id="largeImage" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                         {% else %}
                           <img id="largeImage" src="{% static 'tppcenter/img/item.jpg' %}" alt="" />
                         {% endif %}

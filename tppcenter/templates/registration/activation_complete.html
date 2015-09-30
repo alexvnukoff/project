@@ -22,7 +22,7 @@
 
     <div style="margin-top: 20px;">
            <span style="font-size: 15px;"> {% trans 'Thank you for registration! Now you can  ' %}
-              <a href='{% url ' login' %}'>{% trans 'sign in' %}</a>, {% trans 'using email and password that you provided during sign up.' %}</span>
+              <a href='{% url 'auth_login' %}'>{% trans 'sign in' %}</a>, {% trans 'using email and password that you provided during sign up.' %}</span>
     </div>
 </div>
 {% endblock %}

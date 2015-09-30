@@ -166,11 +166,7 @@ class NewsFeed(Feed):
     feed_type = CustomFeedGenerator
 
     def items(self):
-        group = Group.objects.get(name='Redactor')
-        users = group.user_set.all()
-        return News.active.get_active() \
-                   .filter(create_user__in=users, c2p__parent__in=NewsCategories.objects.all()) \
-                   .order_by("-create_date")[:20]
+        return News.objects.none() # TODO
 
     def item_title(self, item):
         return item.getName()

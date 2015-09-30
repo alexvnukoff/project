@@ -26,7 +26,7 @@ autocomplete = analyzer('autocomplete',
 
 class GreetingIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
     organization_name = String(analyzer='snowball')
 
     @staticmethod
@@ -39,14 +39,14 @@ class GreetingIndex(DocType):
         return cls(
             django_id=obj.pk,
             name=obj.name,
-            organization_name=obj.organization
+            organization_name=obj.organization_name
         )
 
 
 class CompanyIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     is_active = Boolean()
     is_deleted = Boolean()
     country = Integer()
@@ -86,8 +86,8 @@ class CompanyIndex(DocType):
 
 class ExhibitionIndex(DocType):
     django_id = Integer()
-    title = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     city = String(analyzer='snowball')
     organization = Integer()
     country = Integer()
@@ -128,8 +128,8 @@ class ExhibitionIndex(DocType):
 
 class BusinessProposalIndex(DocType):
     django_id = Integer()
-    title = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     organization = Integer()
     country = Integer()
     branches = Integer(multi=True)
@@ -288,9 +288,9 @@ class BranchIndex(DocType):
 
 class ChamberIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
     name_auto = String(analyzer=autocomplete)
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     countries = Integer(multi=True)
     is_active = Boolean()
     is_deleted = Boolean()
@@ -332,8 +332,8 @@ class ChamberIndex(DocType):
 
 class B2BProductIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     branches = Integer(multi=True)
     b2b_categories = Integer(multi=True)
@@ -379,8 +379,8 @@ class B2BProductIndex(DocType):
 
 class B2cProductIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     b2c_categories = Integer(multi=True)
     organization = Integer()
@@ -421,8 +421,8 @@ class B2cProductIndex(DocType):
 
 class NewsIndex(DocType):
     django_id = Integer()
-    title = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    content = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    content = String(analyzer=html_strip, fields={'raw': String(index='no')})
     news_categories = Integer(multi=True)
     organization = Integer()
     country = Integer()
@@ -464,8 +464,8 @@ class NewsIndex(DocType):
 
 class TenderIndex(DocType):
     django_id = Integer()
-    title = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    content = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
+    content = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     organization = Integer()
     branches = Integer(multi=True)
@@ -510,8 +510,8 @@ class TenderIndex(DocType):
 
 class InnovationProjectIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     country = Integer()
     organization = Integer()
     branches = Integer(multi=True)
@@ -551,8 +551,8 @@ class InnovationProjectIndex(DocType):
 
 class ProfileIndex(DocType):
     django_id = Integer()
-    email = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
+    email = String(analyzer='snowball', fields={'raw': String(index='no')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
     is_active = Boolean()
 
     @staticmethod
@@ -578,7 +578,7 @@ class ProfileIndex(DocType):
 
 class ResumeIndex(DocType):
     django_id = Integer()
-    name = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
+    name = String(analyzer='snowball', fields={'raw': String(index='no')})
     country = Integer()
     is_active = Boolean()
     is_deleted = Boolean()
@@ -612,11 +612,11 @@ class ResumeIndex(DocType):
 
 class RequirementIndex(DocType):
     django_id = Integer()
-    title = String(analyzer='snowball', fields={'raw': String(index='not_analyzed')})
+    title = String(analyzer='snowball', fields={'raw': String(index='no')})
     country = Integer()
-    description = String(analyzer=html_strip, fields={'raw': String(index='not_analyzed')})
+    description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     is_anonymous = Boolean()
-    type_of_employment = String(index='not_analyzed')
+    type_of_employment = String(index='no')
     is_active = Boolean()
     is_deleted = Boolean()
     created_at = Date()

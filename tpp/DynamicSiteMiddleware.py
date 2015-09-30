@@ -10,17 +10,13 @@ class DynamicSiteMiddleware(object):
         if host not in SITE_CACHE:
             site = self._get_site_from_host(host)
 
+            if isinstance(site, HttpResponse):
+                return site
+
             if site is None:
                 return HttpResponseBadRequest()
             else:
                 SITE_CACHE[host] = site
-
-            return site
-
-        site = self._get_site_from_host(request)
-
-        if isinstance(site, HttpResponse):
-            return site
 
     @staticmethod
     def _get_site_from_host(host):

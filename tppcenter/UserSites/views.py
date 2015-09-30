@@ -42,10 +42,7 @@ class SiteCreate(CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_valid_blocks(self):
-        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER"]
-
-        if isinstance(self.organization, Company):
-            valid_blocks += ["SITES RIGHT 1", "SITES RIGHT 2", "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
+        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER", "SITES RIGHT 1", "SITES RIGHT 2", "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
 
         return OrderedDict(BannerBlock.objects.filter(block_type='user_site', code__in=valid_blocks).order_by('code')
                            .values_list('pk', 'name'))
@@ -174,10 +171,8 @@ class SiteUpdate(UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_valid_blocks(self):
-        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER"]
-
-        if isinstance(self.organization, Company):
-            valid_blocks += ["SITES RIGHT 1", "SITES RIGHT 2", "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
+        valid_blocks = ["SITES LEFT 1", "SITES LEFT 2", "SITES FOOTER", "SITES RIGHT 1", "SITES RIGHT 2",
+                        "SITES RIGHT 3", "SITES RIGHT 4", "SITES RIGHT 5"]
 
         return OrderedDict(BannerBlock.objects.filter(block_type='user_site', code__in=valid_blocks)
                            .order_by('code').values_list('pk', 'name'))

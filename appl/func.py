@@ -1078,7 +1078,7 @@ def get_list_adv_filter(request):
 
         filter_by_model['country'][1] += countries
         list_filter = dict(filter_by_model.values())
-        cache.set(cache_key, filter_by_model, 60 * 5)
+        cache.set(cache_key, list_filter, 60 * 5)
 
     return list_filter
 
