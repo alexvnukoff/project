@@ -5,10 +5,11 @@
 {% load i18n %}
 {% load cache %}
 {% is_chamber_site as is_chamber %}
+{% get_current_language as LANGUAGE_CODE %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block header %}
-    {% cache 3600 top_menu site.pk %}
+    {% cache 3600 top_menu site.pk LANGUAGE_CODE %}
        {% include 'header.html' %}
     {% endcache %}
 {% endblock %}
@@ -23,14 +24,14 @@
     <div class="main">
         <div class="wrapper">
             {% block sidebar %}
-                {% cache 3600 menu site.pk %}
+                {% cache 3600 menu site.pk LANGUAGE_CODE %}
                     {% include 'site_sidebar.html' %}
                 {% endcache %}
             {% endblock %}
 
             <div class="mainright">
                 {% block slider %}
-                    {% cache 3600 slider site.pk %}
+                    {% cache 3600 slider site.pk LANGUAGE_CODE %}
                         {% site_slider %}
                     {% endcache %}
                 {% endblock %}
