@@ -125,7 +125,7 @@ class GalleryForm(forms.ModelForm):
 
 GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage,
                                             form=GalleryForm, max_num=5, validate_max=True, extra=5)
-CompanyBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr',),
+CompanyBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=8, extra=8)
-ChamberBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr',),
+ChamberBannerFormSet = inlineformset_factory(Site, Banner, fields=('image', 'block', 'advertisement_ptr', 'link'),
                                              validate_max=True, max_num=3, extra=3)
