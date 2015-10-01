@@ -15,8 +15,8 @@ templates_root = "%s/../templates" % settings.MEDIA_ROOT
 
 
 class ExternalSiteTemplate(models.Model):
-    name = models.CharField(max_length=100)
-    folder_name = models.CharField()
+    name = models.CharField(max_length=255)
+    folder_name = models.CharField(max_length=255)
 
     def theme_folder(self):
         return os.path.basename(self.folder_name)
