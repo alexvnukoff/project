@@ -174,7 +174,7 @@ class BusinessProposalIndex(DocType):
 
 class CountryIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -193,7 +193,7 @@ class CountryIndex(DocType):
 
 class NewsCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -212,7 +212,7 @@ class NewsCategoryIndex(DocType):
 
 class B2bProductCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -231,7 +231,7 @@ class B2bProductCategoryIndex(DocType):
 
 class B2cProductCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -250,7 +250,7 @@ class B2cProductCategoryIndex(DocType):
 
 class BusinessProposalCategoryIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -269,7 +269,7 @@ class BusinessProposalCategoryIndex(DocType):
 
 class BranchIndex(DocType):
     django_id = Integer()
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete)
 
     @staticmethod
     def get_model():
@@ -289,7 +289,7 @@ class BranchIndex(DocType):
 class ChamberIndex(DocType):
     django_id = Integer()
     name = String(analyzer='snowball', fields={'raw': String(index='no')})
-    name_auto = String(analyzer=autocomplete)
+    name_auto = String(index_analyzer=autocomplete, search_analyzer='simple')
     description = String(analyzer=html_strip, fields={'raw': String(index='no')})
     countries = Integer(multi=True)
     is_active = Boolean()
