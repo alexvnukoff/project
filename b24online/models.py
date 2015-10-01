@@ -1485,5 +1485,5 @@ def initial_department(sender, instance, created, **kwargs):
 @receiver(post_save, sender=B2BProductCategory)
 @receiver(post_save, sender=BusinessProposalCategory)
 @receiver(post_save, sender=NewsCategory)
-def initial_department(sender, instance, created, **kwargs):
+def index_item(sender, instance, created, **kwargs):
     instance.reindex()

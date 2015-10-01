@@ -22,7 +22,7 @@ class Command(NoArgsCommand):
 
         index_data = index.to_dict()
 
-        bulk_size = 100
+        bulk_size = 2000
        
         for lang in languages:
             index_name = get_index_name(lang)
