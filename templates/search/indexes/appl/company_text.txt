@@ -1,2 +1,0 @@
-{{ object.getName }}
-{{ object.getDescription }}
