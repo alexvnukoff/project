@@ -1,8 +1,8 @@
-{% extends "b24online/registration/registration_base.html" %}
+{% extends "registration/registration_base.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
 
-{% block title %}{% trans "Logged out" %}{% endblock %}
+{% block title %}{% trans 'Registration complete' %}{% endblock %}
 
 {% block header %}
     {% include "b24online/login_header.html" %}
@@ -15,10 +15,12 @@
     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
 {% endblock %}
 
-
-
 {% block content %}
-<div class="blogin">
-    <h3>{% trans 'Successfully logged out' %}</h3>
-</div>
+    <div class="blogin">
+        <h3>{% trans "Activation email sent" %}</h3>
+
+        <div style="margin-top: 20px;">
+        <span style="font-size: 15px;"> {% trans "Please check your email to complete the registration process." %}</span>
+        </div>
+    </div>
 {% endblock %}
