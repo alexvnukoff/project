@@ -1,0 +1,235 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $( ".date" ).datepicker();
+            setTiny('textarea[class="tiny"]');
+        });
+
+        var marker;
+
+        {% if form.latitude.value and form.longitude.value %}
+         marker = new google.maps.Marker({
+            position: new google.maps.LatLng({{ form.latitude.value  }}, {{ form.longitude.value }})
+        });
+        {% endif %}
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        $(document).bind('branchSelected', function(event, pk, name) {
+            add_branch(name, pk);
+        });
+
+        $(document).on('click', '.branch-remove', function() {
+            var li = $(this).parents('li')
+            var pk = li.data('pk');
+            li.remove();
+            $('input.brnach-' + pk).remove();
+            return false;
+        });
+    </script>
+    <style>
+        .list-cat li {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #333;
+            color: #FFF;
+            padding-right: 25px;
+            position: relative;
+            float: left;
+            margin-bottom: 5px;
+            margin-right: 5px;
+        }
+
+        .list-cat li .i-close {
+            position: absolute;
+            width: 8px;
+            height: 7px;
+            background-position: -195px 0;
+            top: 8px;
+            right: 5px;
+        }
+    </style>
+    <div class="newsform">
+    <form enctype="multipart/form-data" method="post" onkeypress="return event.keyCode != 13;" action="" xmlns="http://www.w3.org/1999/html">
+    {% csrf_token %}
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label>{% trans 'Image' %}</label>
+                {% if form.errors.logo %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.logo.0 }}</div></div>
+                {% endif %}
+                {% if form.initial.logo %}
+                    <div>
+                        <img src="{{ form.initial.logo.small }}">
+                        <!--<div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">-->
+                            <!--{% trans 'delete' %}</span>-->
+                        <!--</div>-->
+                        <!--<div class="gray-img"></div>-->
+                        <!--<input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />-->
+                    </div>
+                {% endif %}
+
+                <div class="fileinputs">
+                    <input name="logo" type="file" style="width: 100%"  />
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Vatin' %}</label>
+                {% if form.errors.vatin %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.vatin.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="INN" value="{{ form.vatin.value|default_if_none:"" }}"placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.phone %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.phone.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="phone" value="{{ form.phone.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.director %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.director.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="director" value="{{ form.director.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                    <label>{% trans 'Slogan' %}</label>
+                    {% if form.errors.slogan %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.slogan.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="slogan" value="{{ form.slogan.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Fax' %}</label>
+                {% if form.errors.fax %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.fax.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="fax" value="{{ form.fax.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                {% if form.errors.email %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.email.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="email" value="{{ form.email.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Site URL' %}</label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="site" value="{{ form.site.value|default_if_none:"" }}"/>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+            <div>
+                {% if form.errors.branches %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.branches.0 }}</div>
+                    </div>
+                {% endif %}
+                <label class="sapce">{% trans 'Branches' %}</label>
+                    <ul class="list-cat" id="list-branches">
+                    </ul>
+                    <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
+                    <script>
+                    for(i in branches) {
+                        add_branch(branches[i].name, branches[i].pk)
+                    }
+                </script>
+            </div>
+        </div>
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.name %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.name.0 }}</div></div>
+                  {% endif %}
+                <input type="text" class="text" placeholder="" name="name" value="{{ form.name.value|default_if_none:"" }}" />
+            </li>
+
+             <li>
+                <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
+                  {% if form.errors.short_description %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.short_description.0 }}</div></div>
+                  {% endif %}
+                <textarea rows="5" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
+            </li>
+            <li>
+                <label>{% trans 'Detail description' %}</label>
+                {% if form.errors.description %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.description.0 }}</div>
+                    </div>
+                {% endif %}
+            </li>
+            <li>
+                <div class="detail">
+                    <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
+                </div>
+            </li>
+             <li>
+                <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
+                 {% if form.errors.address %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.address.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="address" value="{{ form.address.value|default_if_none:"" }}" placeholder="" class="text" />
+            </li>
+            <li>
+                <label>{% trans 'Chamber of Commerce:' %}</label>
+                {% if form.errors.chamber %}
+                      <div class="error-handler"> <div class="formserror">{{ form.errors.chamber.0 }}</div></div>
+                {% endif %}
+                {{ form.chamber }}
+            </li>
+        </ul>
+        <div style="padding: 0 10px;">
+            <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
+            {% if form.errors.location %}
+                <div class="error-handler"> <div class="formserror">{{ form.errors.location.0 }}</div></div>
+            {% endif %}
+            <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+            <div id="map-canvas"></div>
+        </div>
+        <div class="append-formin">
+            <div class="addpage-title">{% trans 'Additional pages' %}</div>
+            <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+            {{ additional_page_form.management_form }}
+            {{ additional_page_form.non_form_errors }}
+            {% for form in additional_page_form %}
+                {{ form.id }}
+                {% with prefix=form.prefix num=forloop.counter0 %}
+                    {% include "b24online/additionalPage.html" %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+        <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
+        <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
+    </form>
+</div>
+{% endblock %}

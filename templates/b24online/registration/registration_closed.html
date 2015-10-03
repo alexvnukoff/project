@@ -1,0 +1,25 @@
+{% extends "b24online/registration/registration_base.html" %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "Registration is closed" %}{% endblock %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/login.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+{% endblock %}
+
+{% block content %}
+    <div class="blogin">
+        <h3>{% trans 'Registration error' %}</h3>
+        <div style="margin-top: 20px;">
+            <span style="font-size: 15px;">{% trans "Sorry, but registration is closed at this moment. Come back later." %}</span>
+        </div>
+    </div>
+{% endblock %}

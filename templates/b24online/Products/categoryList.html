@@ -1,0 +1,66 @@
+{% extends "b24online/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load addParameter %}
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+{% endblock %}
+{% block body %}
+
+{% if bread_crumbs %}
+    <style>
+        .breadcrumb li {
+            float: left;
+        }
+    </style>
+
+    <ul class="breadcrumb">
+        <li><a href="{% query_string "" "parent" %}">{% trans "Main" %}</a></li>
+        {% for crumb in bread_crumbs %}
+            {% if forloop.last %}
+                <li> &rarr; <strong>{{ crumb.name }}</strong></li>
+            {% else %}
+                <li> &rarr;  <a href="{% query_string "parent=crumb.pk" "parent" %}">{{ crumb.name }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<table class="table-deals" cellpadding="0" cellspacing="0">
+                	<tbody><tr class="top">
+                    	<td width="24">&nbsp;</td>
+                        <td>{% trans "Category" %}</td>
+                        <td class="end">{% trans "Select" %}</td>
+                    </tr>
+                    {% for cat in object_list %}
+                        <tr>
+                            <td><span class="thumb"></span></td>
+                            {% if cat.is_leaf_node %}
+                                <td>{{ cat.name }}</td>
+                            {% else %}
+                                <td><a href="{% query_string "parent=cat.pk"  "" %}">{{ cat.name }}</a></td>
+                            {% endif %}
+                            <td class="end">
+                                <a href="#" class="stt-add"><input class="category" data-name="{{ cat.name }}" type="checkbox" value="{{ cat.pk }}" /></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody></table>
+
+    <style>
+    .category-selected {
+        font-weight: bold;
+    }
+    </style>
+<script>
+    $(document).on('click', '.category', function() {
+
+       window.opener.$(window.opener.document).trigger("categorySelected", [$(this).val(), $(this).data('name')]);
+       window.close();
+    });
+</script>
+{% endblock %}
+{% block footer %}{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'b24online/main_page.html' %}
+{% load i18n %}
+{% load staticfiles static %}
+{% block keywords %}{% endblock %}
+
+
+{% block title %}{% trans 'Advertisement basket' %}{% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
+    {% endblock %}
+
+{% block content %}
+
+<div class="deals" id="advertising">
+                <table class="table-deals" cellpadding="0" cellspacing="0">
+                	<tr class="top">
+                        <td>{% trans "Type" %}</td>
+                        <td>{% trans "Start date" %}</td>
+                        <td>{% trans "End Date" %}</td>
+                        <td class="pr">{% trans "Summary" %}</td>
+                        <td class="end">{% trans "Status" %}</td>
+                    </tr>
+                    {% for pk, attr in adv.items %}
+                        <tr>
+                            <td>{{ attr.type }}</td>
+                            <td>{{ attr.start_date }}</td>
+                            <td>{{ attr.end_date }}</td>
+                            <td class="pr">{{ attr.total }}</td>
+                            <td>{{ attr.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% include "b24online/main/paginator.html" %}
+            </div>
+{% endblock %}

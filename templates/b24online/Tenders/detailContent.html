@@ -1,0 +1,111 @@
+{% extends 'b24online/main_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
+    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script>
+        {% getOwner item.pk as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+        {% endif %}
+        ga('set', 'dimension2', 'exhibition');
+    </script>
+
+<script>
+$(function() {
+	 $(".goods-details-tab").tabs();});
+</script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+    <div class="tender">
+        <div class="tender-details-title">
+            {% if item.organization.flag %}
+                <img src="{{ item.organization.flag_url }}" class="flag" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                <font class="name">{{ item.organization.name }}</font>
+            {% else %}
+                <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
+                <font class="name">{{ item.country.name }}</font>
+            {% endif %}
+        </div>
+        <div class="tender-info">
+            <div class="tender-button"><a class="bigbuy" href="#">{% trans "Apply now" %}</a></div>
+                <span class="title">{{ item.title }}</span>
+                <ul class="infolist">
+                    <li>
+                        <label>{% trans 'Publication date' %}:</label>
+                        <span class="right">{{ item.start_date|default_if_none:"" }}</span>
+                    </li>
+                    <li>
+                        <label>{% trans 'Deadline for receiving bids' %}:</label>
+                        <span class="right">{{ item.end_date|default_if_none:"" }}</span>
+                    </li>
+                    <li>
+                        <label>{% trans 'Starting price' %}:</label>
+                        <span class="right"><font class="price">{{ item.currency|default_if_none:""|getSymbol }} {{ item.cost|default_if_none:""|formatPrice }} </font></span>
+                    </li>
+                </ul>
+                <div class="tender-bottom">
+                    <div class="tender-bottom-left">
+                        <img src="{{ item.organization.logo.big }}" class="thumb" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" />
+                        <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
+                    </div>
+                    <div class="tender-bottom-right">
+                        {% b2b_social_buttons  item.logo item.title item.description %}
+                    </div>
+                </div>
+                <div class="goods-details-tab cpn-details-tab">
+                    <div class="tab-cate">
+                        <ul>
+                        <li><a href="#goods-tabs-1">{% trans 'Description' %}</a></li>
+                        <li>
+                            <a data-id="gallery-tabs" href="{% url "tenders:tabs_gallery" item.pk %}">
+                                {% trans "Gallery" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="document-tabs" href="{% url "tenders:tabs_documents" item.pk %}">
+                                {% trans "Documents" %}
+                            </a>
+                        </li>
+                        {% for page in item.additional_pages.all %}
+                             <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="goods-tabs-1">
+                        <div class="content-goods-tab">{{ item.content|cleanHtml|safe }} </div>
+                    </div>
+                {% for page in item.additional_pages.all %}
+                    <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                          <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                     </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

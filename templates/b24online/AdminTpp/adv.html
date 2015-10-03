@@ -1,0 +1,159 @@
+{% extends "b24online/AdminTpp/baseAdmin.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans 'Advertisement Orders' %}{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <!-- DATA TABLES -->
+    <link href="{% static "b24online/admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">{% trans 'Advertisement Orders' %}</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>{% trans 'Type' %}</th>
+                                                <th>{% trans 'Owner' %}</th>
+                                                <th>{% trans 'Target' %}</th>
+                                                <th>{% trans 'Start Date' %}</th>
+                                                <th>{% trans 'End Date' %}</th>
+                                                <th>{% trans 'Active' %}</th>
+                                                <th>{% trans 'Price' %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="dataTables_empty">{% trans 'Loading data from server' %}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>{% trans 'Type' %}</th>
+                                                <th>{% trans 'Owner' %}</th>
+                                                <th>{% trans 'Target' %}</th>
+                                                <th>{% trans 'Start Date' %}</th>
+                                                <th>{% trans 'End Date' %}</th>
+                                                <th>{% trans 'Active' %}</th>
+                                                <th>{% trans 'Price' %}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+        <!-- Bootstrap -->
+
+        <!-- DATA TABES SCRIPT -->
+
+        <!-- AdminLTE App -->
+
+
+        <!-- page script -->
+
+{% endblock %}
+
+{% block bottomScript %}
+    {{ block.super }}
+    <script src="{% static "b24online/admin-tpp/js/bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "b24online/admin-tpp/js/plugins/datatables/jquery.dataTables.js" %}" type="text/javascript"></script>
+    <script src="{% static "b24online/admin-tpp/js/plugins/datatables/dataTables.bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "b24online/admin-tpp/js/AdminLTE/app.js" %}" type="text/javascript"></script>
+    <script type="text/javascript">
+            $(function() {
+                $(document).on('click', 'a.targets', function() {
+                    var url = $(this).attr('href');
+
+                    window.open(url, "", "width=280, height=365, directories=no, channelmode=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no, titlebar=no, toolbar=no");
+
+                    return false;
+                });
+
+                $(document).on('click', '.active-action', function() {
+                    $(this).addClass("disabled");
+                    var url = '{% url "AdminTpp:adv" %}';
+                    var id = $(this).data('id');
+                    var button = $(this);
+
+                    $.post(url, {'id': id}, function() {
+                        if (button.hasClass('btn-success')) {
+                            button.removeClass('btn-success').addClass('btn-danger').text('{% trans 'Deactivate' %}');
+                        } else {
+                            button.removeClass('btn-danger').addClass('btn-success').text('{% trans 'Activate' %}');
+                        }
+
+                        button.removeClass('disabled');
+                    });
+
+                    return false;
+                });
+
+
+                $('.table').dataTable( {
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": "{% url "AdminTpp:adv" %}",
+                    "aoColumnDefs": [
+                      { 'bSortable': false, 'aTargets': [ 0 ]
+
+
+                      },
+                      {
+                            "aTargets": [ 0 ],
+                            "mData": 0,
+                            "mRender": function ( data, type, full ) {
+                                if (full[8]){
+                                    return '<a target="_blank" href="' + full[8] + '">' + data + '</a>';
+                                } else {
+                                    return data
+                                }
+
+                            }
+                        },
+                        {
+                            "aTargets": [ 5 ],
+                            "mData": 5,
+                            "mRender": function ( data, type, full ) {
+
+                                if (data == "0"){
+                                    return '<a href="#">' +
+                                    '<button data-id="' + full[7] + '" class="active-action btn btn-success">{% trans 'Activate' %}</button>' +
+                                    '</a>';
+                                } else if(data == "2") {
+                                    return '{% trans "Expired" %}';
+                                } else {
+                                    return '<a href="#">' +
+                                    '<button data-id="' + full[7] + '" class="active-action btn btn-danger">{% trans 'Deactivate' %}</button>' +
+                                    '</a>';
+                                }
+
+                            }
+                        },
+                        {
+                            "aTargets": [ 2 ],
+                            "mData": 2,
+                            "mRender": function ( data, type, full ) {
+
+                                return '<a class="targets" href="' + data + '">{% trans 'View targeting' %}</a>';
+
+                            }
+                        },
+                      { "bVisible": false,  "aTargets": [ 7,8 ] }
+
+                   ]
+
+                });
+            });
+    </script>
+{% endblock %}

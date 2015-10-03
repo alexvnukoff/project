@@ -1,0 +1,171 @@
+{% extends 'b24online/main_page.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+  <div class="tender">
+               <div class="tender-info" id="resume-dt">
+					<ul class="inforesume">
+                    	<li>
+                        	<label>{% trans 'Vacancy title' %}:</label>
+                            <span class="right">{{ item.title }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'User name' %}:</label>
+                            <span class="right">
+                                {% if item.created_by.profile.full_name %}
+                                    {{ item.created_by.profile.full_name }}
+                                {% else %}
+                                    {% trans "Name not found" %}
+                                {% endif %}
+                            </span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Birthday' %}:</label>
+                            <span class="right">{{ item.user.profile.birthday|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Marital status' %}:</label>
+                            <span class="right">{{ item.get_martial_status_display }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Citezenship' %}:</label>
+                            <span class="right">{{ item.nationality|default_if_none:"" }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Telephone number' %}:</label>
+                            <span class="right"> {{ item.telephone_number|default_if_none:"" }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Address' %}:</label>
+                            <span class="right">{{ item.address|default_if_none:"" }}</span>
+                        </li>
+                        <li>
+                        	<label>{% trans 'Salary' %}:</label>
+                            <span class="right">{{ item.salary|default_if_none:"" }}</span>
+                        </li>
+                    </ul>
+                    <div class="goods-details-tab">
+                        <div class="tab-cate">
+                            <ul>
+                                <li><a href="#goods-tabs-1">{% trans 'Education' %}</a></li>
+                                <li><a href="#goods-tabs-2">{% trans 'Experience' %}</a></li>
+                                <li><a href="#goods-tabs-3">{% trans 'Skills' %}</a></li>
+                                <li><a href="#goods-tabs-4">{% trans 'Additional' %}</a></li>
+                            </ul>
+                        </div>
+                        <div id="goods-tabs-1">
+                            <div class="content-goods-tab">
+                                <ul class="inforesume">
+                                    <li>
+                                        <label>{% trans 'Institution' %}:</label>
+                                        <span class="right">{{ item.institution|default_if_none:"" }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Faculty' %}:</label>
+                                        <span class="right">{{ item.faculty|default_if_none:"" }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Study period' %}:</label>
+                                        <span class="right">{{ item.study_start_date|default_if_none:""|date:"d M Y" }} - {{ item.study_end_date|default_if_none:""|date:'d M Y' }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Profession' %}:</label>
+                                        <span class="right">{{ item.profession|default_if_none:"" }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Additional' %}:</label>
+                                        <span class="right"> {{ item.additional_study|default_if_none:"" }}</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-2">
+                            <div class="content-goods-tab">
+
+
+                                <ul class="inforesume">
+                                    <li>
+                                        <label>{% trans 'Company' %}:</label>
+                                        <span  class="resume">{{ item.company_exp_1|default_if_none:"" }}</span>
+                                        <label>{% trans 'Position' %}:</label>
+                                        <span class="resume">{{ item.position_exp_1|default_if_none:"" }}</span>
+                                        <label>{% trans 'Work  period' %}:</label>
+                                        <span class="resume">{{ item.start_date_exp_1|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_1|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                                    </li>
+                                     <li>
+                                        <label>{% trans 'Company' %}:</label>
+                                        <span  class="resume">{{ item.company_exp_2|default_if_none:"" }}</span>
+                                        <label>{% trans 'Position' %}:</label>
+                                        <span class="resume">{{ item.position_exp_2|default_if_none:"" }}</span>
+                                        <label>{% trans 'Work  period' %}:</label>
+                                        <span class="resume">{{ item.start_date_exp_2|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_2|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                                    </li>
+                                     <li>
+                                        <label>{% trans 'Company' %}:</label>
+                                        <span  class="resume">{{ item.company_exp_3|default_if_none:"" }}</span>
+                                        <label>{% trans 'Position' %}:</label>
+                                        <span class="resume">{{ item.position_exp_3|default_if_none:"" }}</span>
+                                        <label>{% trans 'Work  period' %}:</label>
+                                        <span class="resume">{{ item.start_date_exp_3|default_if_none:""|makeDate|date:"d M Y" }} - {{ item.end_date_exp_3|default_if_none:""|makeDate|date:'d M Y' }}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                          </div>
+
+                        <div id="goods-tabs-3">
+                            <div class="content-goods-tab">
+                                <ul class="inforesume">
+                                    <li>
+                                        <label>{% trans 'Language skills' %}:</label>
+                                        <span class="right">{{ item.language_skill|default_if_none:"" }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Computer skills' %}:</label>
+                                        <span class="right">{{ item.computer_skill|default_if_none:"" }}</span>
+                                    </li>
+                                    <li>
+                                        <label>{% trans 'Additional skills' %}:</label>
+                                        <span class="right">{{ item.additional_skill|default_if_none:"" }}</span>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="goods-tabs-4">
+                            <div class="content-goods-tab">
+                                {{ item.additional_information|default_if_none:"" }}
+                            </div>
+                        </div>
+                    </div>
+               </div>
+     </div>
+{% endblock %}

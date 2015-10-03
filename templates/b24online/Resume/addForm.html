@@ -1,0 +1,214 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+    <script type="text/javascript">
+            $(function() {
+                $( ".date" ).datepicker({
+                  dateFormat: "dd/mm/yy"
+                });
+                setTiny('textarea[class="tiny"]');
+            });
+    </script>
+
+    {% block keywords %}{% endblock %}
+
+    <div class="newsform">
+        <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <ul class="tenderline">
+                <li>{% trans 'Filling resume does not obligate company that publishes job on the site TPP-Center, enter into a contract of employment.' %}</li>
+                <li>
+                    <label>{% trans 'Resume title' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.title %}
+                        <div class="error-handler"><div class="formserror">{{ form.errors.title.0 }}</div></div>
+                   {% endif %}
+                    <input type="text" name="title" value="{{ form.title.value|default_if_none:"" }}" placeholder="" class="text" />
+                </li>
+                <li>
+                    <div class="clumn1">
+                        <label>{% trans 'Address' %}</label>
+                        {% if form.errors.address %}
+                                <div class="error-handler"><div class="formserror">{{ form.errors.address.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="address" value="{{ form.address.value|default_if_none:"" }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans 'Marital Status' %}</label>
+                        {% if form.errors.martial_status %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.martial_status.0 }}</div></div>
+                        {% endif %}
+                        {{ form.martial_status }}
+                    </div>
+                </li>
+                <li>
+                    <div class="clumn1">
+                        <label>{% trans 'Citizenship' %}</label>
+                        {% if form.errors.nationality %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.nationality.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="nationality" value="{{ form.nationality.value|default_if_none:"" }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.telephone_number %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.telephone_number.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="telephone_number" value="{{ form.telephone_number.value|default_if_none:"" }}" placeholder="" class="text" style="width:91%;" />
+                    </div>
+                </li>
+            </ul>
+            <div class="addpage-title">{% trans 'Education' %}</div>
+            <ul class="tenderline">
+                <li>
+                    <label>{% trans 'Institution' %}</label>
+                    {% if form.errors.institution %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.institution.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="institution" value="{{ form.institution.value|default_if_none:"" }}" placeholder="" class="text" />
+                </li>
+                <li>
+                    <div class="clumn1">
+                        <label>{% trans 'Faculty' %}</label>
+                        {% if form.errors.faculty %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.faculty.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="faculty" value="{{ form.faculty.value|default_if_none:"" }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans 'Study period' %}</label>
+                        {% if form.errors.study_start_date %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.study_start_date.0 }}</div></div>
+                        {% endif %}
+                       {% if form.errors.study_end_date %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.study_end_date.0 }}</div></div>
+                        {% endif %}
+                        <div class="clumn3">
+                            <span>{% trans 'from' %}:</span>
+                            <input type="text" name="study_start_date" value="{{ form.study_start_date.value|default_if_none:""|date:"d/m/Y" }}" placeholder="" class="date" style=" width:68%;" />
+                        </div>
+                        <div class="clumn4">
+                            <span>{% trans 'to' %}:</span>
+                            <input type="text" name="study_end_date" value="{{ form.study_end_date.value|default_if_none:""|date:"d/m/Y" }}" placeholder="" class="date" style=" width:68%;" />
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="clumn1">
+                        <label>{% trans 'Specialty' %}</label>
+                        {% if form.errors.profession %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.profession.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="profession" value="{{ form.profession.value|default_if_none:"" }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn2">
+                        <label>{% trans 'Form of study' %}</label>
+                        {% if form.errors.study_form %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.study_form.0 }}</div></div>
+                        {% endif %}
+                       {{ form.study_form }}
+                    </div>
+                </li>
+                <li>
+                    <label>{% trans 'Additionally' %}</label>
+                    {% if form.errors.additional_study %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.additional_study.0 }}</div></div>
+                    {% endif %}
+                    <div class=""><textarea name="additional_study" style="width: 810px;height: 135px;" >{{ form.additional_study.value|default_if_none:"" }}</textarea></div>
+                </li>
+            </ul>
+            <div class="addpage-title">{% trans 'Experience' %}</div>
+            <ul class="tenderline">
+                <li><b>{% trans 'Specify the last 3 jobs' %}</b></li>
+                {{ work_position_form.management_form }}
+                {{ work_position_form.non_form_errors }}
+                {% for work in work_position_form %}
+                <li>
+                    <div class="clumn5">
+                        <label>{% trans 'Company' %}</label>
+                        {% if work.errors.company_name %}
+                            <div class="error-handler"><div class="formserror">{{ work.errors.company_name.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="{{ work.company_name.html_name }}" value="{{ work.company_name.value|default_if_none:"" }}" placeholder="" class="text" style="width:85%;" />
+                    </div>
+                    <div class="clumn5">
+                        <label>{% trans 'Position' %}</label>
+                        {% if work.errors.position %}
+                            <div class="error-handler"><div class="formserror">{{ work.errors.position.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="{{ work.position.html_name }}" value="{{ work.position.value|default_if_none:"" }}" placeholder="" class="text" />
+                    </div>
+                    <div class="clumn6">
+                        <label>{% trans 'Work period' %}</label>
+                        {% if work.errors.start_work %}
+                            <div class="error-handler"><div class="formserror">{{ work.errors.start_work.0 }}</div></div>
+                        {% endif %}
+                        {% if work.errors.end_work %}
+                            <div class="error-handler"><div class="formserror">{{ work.errors.end_work.0 }}</div></div>
+                        {% endif %}
+                        <div class="clumn3">
+                            <span>{% trans 'From' %}:</span>
+                            <input type="text" name="{{ work.start_work.html_name }}" value="{{ work.start_work.value|default_if_none:""|date:"d/m/Y" }}" placeholder="" class="date" style=" width:60%;" />
+                        </div>
+                        <div class="clumn4">
+                            <span>{% trans 'To' %}:</span>
+                            <input type="text" name="{{ work.end_work.html_name }}" value="{{ work.end_work.value|default_if_none:""|date:"d/m/Y" }}" placeholder="" class="date" style=" width:60%;" />
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="addpage-title">{% trans 'Skills' %}</div>
+            <ul class="tenderline">
+                <li>
+                    <label>{% trans 'Language skills' %}</label>
+                    {% if form.errors.language_skill %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.language_skill.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="language_skill" value="{{ form.language_skill.value|default_if_none:"" }}" placeholder="" class="text" />
+                </li>
+                <li>
+                    <label>{% trans 'Computer skills' %}</label>
+                    {% if form.errors.computer_skill %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.computer_skill.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="computer_skill" value="{{ form.computer_skill.value|default_if_none:"" }}" placeholder="" class="text" />
+                </li>
+                <li>
+                    <label>{% trans 'Additionally' %}</label>
+                    {% if form.errors.additional_skill %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.additional_skill.0 }}</div></div>
+                    {% endif %}
+                    <div class=""><textarea name="additional_skill" style="width: 810px;height: 135px;">{{ form.additional_skill.value|default_if_none:"" }}</textarea></div>
+                </li>
+            </ul>
+            <div class="addpage-title">{% trans 'Additionally' %}</div>
+            <ul class="tenderline">
+                <li>
+                    <label>{% trans 'Your salary expectations' %}</label>
+                    {% if form.errors.salary %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.salary.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="salary" value="{{ form.salary.value|default_if_none:"" }}" placeholder="" class="text" />
+                </li>
+                <li>
+                    <label>{% trans 'Information about which you wish to inform' %}</label>
+                    {% if form.errors.additional_information %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.additional_information.0 }}</div></div>
+                    {% endif %}
+                    <div class=""><textarea name="additional_information" style="width: 810px;height: 135px;" >{{ form.additional_information.value|default_if_none:"" }}</textarea></div>
+                </li>
+                <li>
+                    {% trans 'I confirm that all information provided by me in this form on the site TPP-Center, are true and complete' %}.<br />
+                    {% trans "I don't mind for checking the information reported by me" %} .
+                </li>
+            </ul>
+            <div class="newform-button">
+                <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+                <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

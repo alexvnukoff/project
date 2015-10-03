@@ -1,0 +1,33 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+<div class="container">
+{% include "b24online/main/popupFilter.html" %}
+ {% include "b24online/main/local_menu_script.html" %}
+    <div class="companies">
+    {% include "b24online/main/paginator.html" %}
+            <ul class="vacancy-list">
+            {% for vacancy in object_list %}
+                <li>
+                {% setContextMenu vacancy %}
+                <h2><a href="{{ vacancy.get_absolute_url }}">{{ vacancy.title }}</a></h2>
+                    <div class="vacancy-desc">
+                         {% if vacancy.country %}
+                            <i class="flag sprite {{ vacancy.country.flag }}" title="{{ vacancy.country.name }}" ></i>
+                        {% endif %}
+                        <font class="date">{{ vacancy.country.name }}, {{ vacancy.city }}, {% trans 'Date' %}: {{ vacancy.created_at|date:'d M Y' }}</font>
+
+                       <p>{{ vacancy.description|cleanHtml|safe|truncatewords_html:30 }} </p>
+                       <a href="{{ vacancy.get_absolute_url }}" class="more">{% trans "More" %}...</a>
+                    </div>
+                </li>
+            {% empty %}
+                <div class="no-results">{% trans "No results found" %}</div>
+            {% endfor %}
+
+        </ul>
+    </div>
+{% include "b24online/main/paginator.html" %}
+</div>

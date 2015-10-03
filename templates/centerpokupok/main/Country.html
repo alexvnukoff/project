@@ -1,0 +1,14 @@
+  {% load i18n %}
+                        <div class="styled-select">
+                            <select name="country">
+                              <option>{% trans "Choose region" %}</option>
+                                     {% for  country  in countryList %}
+                                         {% if selected == country.pk %}
+                                             <option selected="selected" value="{{ country.pk }}">{{ country.text }}</option>
+                                         {% else %}
+                                            <option value="{{ country.pk }}">{{ country.text }}</option>
+                                         {% endif %}
+                                     {% endfor %}
+
+                            </select>
+                        </div>

@@ -1,0 +1,125 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load CustomFilters %}
+{% load i18n %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/datepicker.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+
+    <style>
+        .ads-details-center .filter {
+            margin-top: 15px;
+        }
+        .ads-details-center .filter label {
+            font-weight: bold;
+
+        }
+        .ads-details-center .ads-line:after {
+           content: "";
+           display: block;
+           clear: both;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $( "#tabs" ).tabs();
+            $( ".tabfilter" ).tabs();
+
+
+            $(".messages-l").tabs();
+            $(".message-tabcontent").tabs();
+            $('.custom-ms').slimScroll({
+                height: '750px',
+                railVisible: true,
+                alwaysVisible: false
+            });
+            $('.customtablein').slimScroll({
+                height: '580px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            $('.ads-pricein').slimScroll({
+                height: '270px',
+                railVisible: true,
+                alwaysVisible: true
+            });
+            //slimScroll fix
+            $('.arrow-scroll-down').click(function(){
+                $(this).parent().find('.custom-ms').trigger('scrollContent', [1] );
+                $(this).parent().find('.customtablein').trigger('scrollContent', [1] );
+                $(this).parent().find('.clumnin').trigger('scrollContent', [1] );
+                $(this).parent().find('.ads-pricein').trigger('scrollContent', [1] );
+            });
+
+            $('.arrow-scroll-up').click(function(){
+                $('.custom-ms').trigger('scrollContent', [-1] );
+                $('.customtablein').trigger('scrollContent', [-1] );
+                $('.clumnin').trigger('scrollContent', [-1] );
+                $('.ads-pricein').trigger('scrollContent', [-1] );
+            });
+    </script>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="new-details">
+
+        <div><h1 class="title">{% trans "Order details" %}</h1></div>
+        <div class="ads-order-details">
+
+                <div class="ads-price">
+                	<div class="arrow-scroll-up"></div>
+                	<div class="ads-pricein">
+                    	<ul>
+                            {% for component in price_components %}
+                                <li>
+                                    <span class="left">{{ component.item.name }}</span>
+                                    <span class="right">{{ component.price|multiply:item.price_factor }} $</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="arrow-scroll-down"></div>
+                </div>
+                <div class="total-price brown">
+                	<span class="left">{% trans "Start date" %}:</span>
+                    <span class="right">{{ item.start_date|date:"d M Y" }}</span>
+                </div>
+                <div class="total-price white">
+                	<span class="left">{% trans "End date" %}:</span>
+                    <span class="right">{{ item.end_date|date:"d M Y" }}</span>
+                </div>
+                <div class="total-price brown">
+                	<span class="left">{% trans "Days Q-ty" %}:</span>
+                    <span class="right">{{ item.days }}</span>
+                </div>
+                <div class="total-price white">
+                	<span class="left"><b>{% trans "Summary" %}:</b></span>
+                    <span class="right"><b>{{ item.total_cost }}</b><b> $</b></span>
+                </div>
+                <div class="total-price brown">
+                	<span class="left"><b>{% trans "Order number" %}:</b></span>
+                    <span class="right"><b>{{ item.pk }}</b></span>
+                </div>
+
+
+
+        </div>
+        <div class="ads-order-details" style="margin-left: 10px;">
+            <div>{% trans "Thank you for order, you will be notified when the advertisement will published" %}</div>
+            <div style="margin-top: 10px;"><img src="{{ item.advertisement.image.url }}" /></div>
+            <a href="{% url "main" %}" class="btnprice">{% trans "Continue" %}</a>
+        </div>
+</div>
+{% endblock %}

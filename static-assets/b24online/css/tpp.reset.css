@@ -1,0 +1,42 @@
+.table-big{ width:100%; margin:12px 0 0 0;}
+.table-big tr td{ padding:8px; font-size:11px;}
+
+.table-big tr.top td{ font-size:12px; font-weight:bold;}
+.table-big tr:nth-child(4n+1){ background-color:#fcfcfc;}
+.table-big tr:nth-child(4n+2){ background-color:#fcfcfc;}
+.no-results { text-align: center; }
+.table-big tr td img {
+    max-width: 115px;
+    max-height: 100px;
+}
+
+.table-big tr:nth-child(2n+2) td:nth-child(1) { width: 120px; }
+.table-big tr:nth-child(2n+2) td:nth-child(2) { vertical-align: top; }
+
+.table-deals td img{ width: 50px;}
+
+.sitemap .vacancy li:hover {
+    cursor: pointer;
+}
+
+.sitemap .vacancy li.selected {
+    background-color: #454ED6;
+    color: #FFFFFF;
+}
+
+.sitemap > li.selected {
+    background-color: #B9C9FA;
+}
+
+.sitemap .vacancy li:not(.selected):hover,
+.sitemap li.selected a {
+    color: #FFFFFF;
+}
+
+.sitemap > li:not(.selected):hover {
+    background-color: #E6E6E6;
+}
+
+.sitemap .vacancy li:not(.selected):hover {
+    background-color: #BBBEBE;
+}

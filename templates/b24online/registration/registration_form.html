@@ -1,0 +1,51 @@
+{% extends "b24online/registration/registration_base.html" %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block title %}{% trans 'Sign Up' %}{% endblock %}
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+{% block styles %}
+     {{ block.super }}
+     <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/login.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+
+{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+<ul class="formlogin" id="register">
+                     <div>
+                         {% for key, value in form.errors.items %}
+                             {% ifequal key '__all__' %}  <p style="color: red;padding-bottom: 25px;">{{ value.as_text }} </p>{% endifequal %}
+                         {% endfor %}
+                     </div>
+                	<li>
+                    	<label>{% trans 'E-mail' %}</label>
+                        <input id="id_email" name="email" class="text   {% if form.email.errors   %}error{% endif %}" type="email" >
+                        {% if form.email.errors   %}<div class="formerror">{{ form.email.errors.as_text }}</div>{% endif %}
+                    </li>
+                    <li>
+                    	<label>{% trans 'Password' %}</label>
+                        <input id="id_password1" type="password"  class="text {% if form.password1.errors   %}error{% endif %}"  name="password1">
+                       {% if form.password1.errors   %}<div class="formerror">{{ form.password1.errors.as_text }}</div>{% endif %}
+
+                    </li>
+                    <li>
+                    	<label>{% trans 'Confirm password' %}</label>
+                         <input id="id_password2" type="password" class="text {% if form.password2.errors   %}error{% endif %}"  name="password2">
+                       {% if form.password2.errors   %}<div class="formerror">{{ form.password2.errors.as_text }}</div>{% endif %}
+                    </li>
+                    <li>
+                         <div style="margin-top: 10px;color: red;">{{ form.errors.rules }}</div>
+                    	<input type="checkbox" name="tos" /> {% trans 'I have read and accept' %} <a href="#">{% trans 'the terms of use' %}</a>
+
+                    </li>
+                    <li><input type="submit" name="Register" class="btnlogin" value="{% trans "Sign up" %}"></li>
+
+                </ul>
+</form>
+{% endblock %}

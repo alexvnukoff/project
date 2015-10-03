@@ -1,0 +1,20 @@
+{% load staticfiles %}
+{% load i18n %}
+
+{% for notification in notifications %}
+    <li data-id="{{ notification.pk }}">
+
+        <img src="{% static 'b24online/img/imgnone.png' %}" class="image" alt="" />
+        <div class="info">{{ notification.message }}</div>
+    </li>
+{% empty %}
+    <li class="no-results">
+        {% trans "No results found" %}
+    </li>
+{% endfor %}
+
+{% if last_line %}
+    <li class="last"></li>
+{% endif %}
+
+

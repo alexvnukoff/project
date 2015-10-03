@@ -1,0 +1,126 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css"%}" />
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css"%}" />
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(document).ready(function() {
+        var analytic = {
+            	proposal: 0,
+            	company: 0,
+            	exhibition: 0,
+            	innov: 0,
+            	news: 0,
+            	product: 0,
+            	tender: 0,
+            	tpp: 0
+        }
+
+        $.ajax("{% url "analytic:get_analytic" %}", {
+                   type: "GET",
+                   success: function(data) {
+                       if ( data.length > 0 )
+                       {
+                           for ( i in data )
+                           {
+                               dict = data[i];
+
+                               if ( dict.type in analytic )
+                                    analytic[dict.type] = dict.count;
+                           }
+                       }
+
+                       for ( i in analytic )
+                       {
+                           $('#analytic-' + i).html(analytic[i]);
+                       }
+                   },
+                   async: true,
+                   cache: false,
+                   dataType: 'json'
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+<div class="analytics">
+                <div class="title">{% trans "My sections" %}</div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-analytics">
+                  <tr class="top">
+                    <td>{% trans "Section name" %}</td>
+                    <td>{% trans "Views" %}</td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Products" %}</td>
+                    <td id="analytic-product"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Business Proposals" %}</td>
+                    <td id="analytic-proposal"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Innovation Projects" %}</td>
+                    <td id="analytic-innov"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Tenders" %}</td>
+                    <td id="analytic-tender"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Exhibitions" %}</td>
+                    <td id="analytic-exhibition"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                {% if tpp %}
+                  <tr>
+                    <td>{% trans "Company" %}</td>
+                    <td id="analytic-company"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+
+                {% else %}
+                  <tr>
+                    <td>{% trans "Main" %}</td>
+                    <td id="analytic-tpp"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                  <tr>
+                    <td>{% trans "Companies" %}</td>
+                    <td id="analytic-company"><img src="{% static "b24online/img/analytic-loader.gif" %}"></td>
+                  </tr>
+                {% endif %}
+                </table>
+
+                {% if chamber_events %}
+
+                    <div class="title">{% trans "Chamber events" %}</div>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-analytics">
+                      <tr class="top">
+                        <td>{% trans "Section name" %}</td>
+                        <td>{% trans "Views" %}</td>
+                      </tr>
+                      <tr>
+                        <td>{% trans "Business Proposals" %}</td>
+                        <td>{{ chamber_events.proposals }}</td>
+                      </tr>
+                      <tr>
+                        <td>{% trans "Exhibitions" %}</td>
+                        <td>{{ chamber_events.exhibitions }}</td>
+                      </tr>
+                      <tr>
+                        <td>{% trans "Tenders" %}</td>
+                        <td>{{ chamber_events.tenders }}</td>
+                      </tr>
+                     </table>
+                {% endif %}
+            </div>
+
+{% endblock %}

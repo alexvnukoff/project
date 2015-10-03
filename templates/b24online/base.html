@@ -1,0 +1,236 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load cache %}
+{% load inclusionTags %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="{% getLang %}">
+    {% block head %}
+        <link rel="shortcut icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+        <link rel="icon" href="{% static "b24online/favicon.ico" %}" type="image/x-icon">
+
+        {% block  meta%}
+
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta name='yandex-verification' content='7036efbb8c82d0da' />
+            <meta name="google-site-verification" content="jiUM5LM1ZlyRH-TqDBWw2gzVZ_byLFmAanuRUZt4wxc" />
+
+            {% if meta %}
+                <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
+                <meta property="og:url" content="{{ meta.url }}" />
+                {% autoescape off %}
+                    <meta property="og:description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
+                {% endautoescape %}
+
+                {% if meta.image %}
+                    <meta property="og:image" content="{{ meta.image.big }}" />
+                {% endif %}
+
+                <title>{{ meta.title|truncatechars:80}}</title>
+                {% autoescape off %}
+                    <meta name="description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
+                {% endautoescape %}
+
+            {% else %}
+
+                {% if current_section %}
+                    <title>{{ current_section }}</title>
+                {% else %}
+                    <title>{% block title %}{% trans 'Main page' %}{% endblock %}</title>
+                {% endif %}
+
+                {% block description %}
+                 <meta name="description" content="{% blocktrans %}Программа развития и продвижения предпринимательства,
+                 Портфель инструментов  в помощь предпринимателям для успешного продвижения сделок,
+                 проектов и услуг-Аналитическая информация о бизнес  процессах и интересах, Фактор безопасной сделки,
+                 Бизнес–предложения, Индекс предпринимателей - партнёры, инвесторы  и клиенты, Съезды, выставки и конференции,
+                 Конкурсы, тендеры, Собственный Интернет-сайт, Электронный магазин B2B , Электронный магазин B2C,
+                 Инновационные проекты, Электронный банк, ToolBar - Панель инструментов B2B,Социальная сеть предпринимателей,
+                 Корпоративный Блог Предпринимателя, менеджера и работников, Новости и актуалии государственной и
+                 международной экономики,Советы профессионалов, Виральный маркетинг, Электронная подпись, CRM Система управления бизнесом{% endblocktrans %}"/>
+                {% endblock %}
+
+            {% endif %}
+
+
+           <meta property="og:site_name" content="B24 Online"/>
+
+        {% endblock %}
+
+
+
+        {% block styles %}
+            <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css' />
+            <link type="text/css" rel="stylesheet" href="{% static "b24online/css/main.css"%}" />
+            <link type="text/css" rel="stylesheet" href="{% static "b24online/css/reset.css"%}" />
+               <link type="text/css" rel="stylesheet" href="{% static "b24online/css/flags.css"%}" />
+            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+
+        {% endblock %}
+
+
+
+
+        {% block js %}
+            <script type="application/javascript">
+                var statciPath = '{% static "b24online/" %}';
+                var LANG = {};
+            </script>
+		    <script  type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <script  type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <script  type="text/javascript"  src="http://malsup.github.com/jquery.form.js"></script>
+            <script  type="text/javascript" src="{% static "b24online/js/base.js"%}"></script>
+            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+            <!-- Yandex.Metrika counter -->
+            <script type="text/javascript">
+                (function (d, w, c) {
+                    (w[c] = w[c] || []).push(function() {
+                        try {
+                            w.yaCounter22547614 = new Ya.Metrika({id:22547614,
+                                    webvisor:true,
+                                    clickmap:true,
+                                    trackLinks:true,
+                                    accurateTrackBounce:true});
+                        } catch(e) { }
+                    });
+
+                    var n = d.getElementsByTagName("script")[0],
+                        s = d.createElement("script"),
+                        f = function () { n.parentNode.insertBefore(s, n); };
+                    s.type = "text/javascript";
+                    s.async = true;
+                    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+                    if (w.opera == "[object Opera]") {
+                        d.addEventListener("DOMContentLoaded", f, false);
+                    } else { f(); }
+                })(document, window, "yandex_metrika_callbacks");
+            </script>
+            <noscript><div><img src="//mc.yandex.ru/watch/22547614" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+            <!-- /Yandex.Metrika counter -->
+
+
+            <!-- Google analytics -->
+            <script  type="text/javascript">
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-42990905-1', 'tppcenter.com');
+            </script>
+            <!-- /Google analytics -->
+
+        {% endblock %}
+
+    {% endblock %}
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="{% static "b24online/css/ie.css" %}" /><![endif]-->
+
+    <!-- Google Translate-->
+    <meta name="google-translate-customization" content="9f8a9fe353239dc5-b335cb56807d048b-g90bcd7b3122ff75d-11">
+
+</head>
+
+<body>
+    {% block header %}
+
+    {% endblock %}
+    {% block rtl %}
+         {% if LANGUAGE_BIDI %}
+              <link type="text/css" rel="stylesheet" href="{% static "b24online/css/rtl.css"%}" />
+          {% endif %}
+    {% endblock %}
+
+    {% block body %}
+
+
+
+
+
+    {% endblock %}
+
+
+{% block footer %}
+
+
+    <div class="wrapper">
+        <div class="linkbottom">
+            {% show_static_pages %}
+            <ul class="clumn">
+                <li>
+                    <a href="https://vk.com/tppcentr"><i class="imgmain iconsocial i-blog"></i></a>
+                    <a href="https://www.facebook.com/tppcentercom"><i class="imgmain iconsocial i-face"></i></a>
+                    <a href="https://www.youtube.com/channel/UCoQtkd1hIT62K3dXGizgRaQ"><i class="imgmain iconsocial i-video"></i></a>
+                </li>
+                {% cache 3600 statistic LANGUAGE_CODE %}
+                    {% statistic %}
+                {% endcache %}
+            </ul>
+        </div>
+    </div>
+ </div>
+    <div id="footer">
+        <div class="wrapper">
+            © 2010–2014 {% trans "TPP-Center" %} — {% trans "Center of chambers of commerce, associations, unions and guilds " %}
+        </div>
+    </div>
+
+ <div class="black_overlay" id="fade-profile"></div>
+ {% endblock %}
+    <script type="text/javascript">
+     if ( typeof ui != 'undefined' ){
+         $(document).bind(ui.signals['end_load'], function(event, url, data, history) {
+             ga('send', 'pageview', {page: history});
+         });
+     }
+     ga('send', 'pageview');
+    </script>
+<div style="display: none;" class="white_content" id="light-contact">
+    <div class="contact-table">
+        <div class="contact-tablein">
+        	<a onclick="document.getElementById('light-contact').style.display='none';document.getElementById('fade-contact').style.display='none'" href="javascript:void(0)"><i class="close-event imgnews"></i></a>
+          <form id="messageToCompany"  enctype="multipart/form-data">
+
+            <ul class="contactform">
+                <li style="text-align: center;">
+                    <label id="send_succsefuly" style="color: #008000;" hidden="hidden">{% trans 'You have successfully sent the message.' %}</label>
+                </li>
+
+
+            	<li>
+                	<label>{% trans 'Send message to' %}:</label>
+                    <label id="send_to" ></label>
+                </li>
+                <li>
+                	<label>{% trans 'Message' %} <font color="#FF0000">*</font></label>
+                    <div class=""><textarea name="message" style="width: 498px;height: 135px;"></textarea></div>
+                </li>
+                <li>
+                	<label id="file-title">{% trans 'File' %}</label>
+                    <input name="file" id="file-input" type="file" />
+                    <input name="company" id="toCompany" type="hidden" />
+                </li>
+                <li class="end">
+                	<div class="newform-button">
+                        <a id="send-message" class="btntype2" href="#">{% trans 'Send' %}</a>
+                        <a class="btntype1" id="cancel" href="#">{% trans 'Cancel' %}</a>
+                    </div>
+                </li>
+            </ul>
+          </form>
+        </div>
+    </div>
+</div>
+<div class="black_overlay" id="fade-contact"></div>
+
+
+{% block vacancy %}
+
+
+{% endblock %}
+</body>
+</html>

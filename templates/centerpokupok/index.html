@@ -1,0 +1,96 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load inclusionTags %}
+{% load i18n %}
+{% block title %}{% trans 'Shopcenter' %}{% endblock %}
+
+
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-countdown/1.6.3/jquery.countdown.min.js"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+                    $('#slider').anythingSlider({hashTags: false});
+                    $('#slider1').anythingSlider({hashTags: false});
+                    $('#slideimage').anythingSlider({
+                        buildNavigation     : true,
+                        buildArrows         : false,
+                        autoPlay            : true,
+                        hashTags			: false
+                    });
+
+                    $('#bestproduct').anythingSlider({hashTags: false});
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            bigCoupon = $('#topCountdown');
+
+            if(bigCoupon.length > 0)
+            {
+                var until = parseInt(bigCoupon.data('countdown')) * 1000;
+                bigCoupon.countdown({until: new Date(until), format: getFormat(until)})
+            }
+        })
+        $(function () {
+            $('.countdowntext').each(function() {
+                var until = parseInt($(this).data('until')) * 1000;
+                now = +new Date();
+                var lay = ((untill - now) <= 1000 * 60 * 60 * 24) ? '{hnn}{sep}{mnn}{sep}{snn} {desc}' : '{dn}&nbsp;&nbsp;{dl} {desc}'
+                $(this).countdown({until: new Date(until), layout: lay, format: 'DHMS'});
+            });
+        });
+    </script>
+{% endblock %}
+{% block header %}
+{% include "centerpokupok/header_big.html" %}
+{% endblock %}
+        {% block body %}
+            <div id="main">
+                <div id="vartop">
+                    {% mainMenuB2C %}
+                    {% include "centerpokupok/main/main_banner.html" %}
+                </div>
+                {% include "centerpokupok/main/main_coupons.html" %}
+                <div class="var-main">
+                    {% include "centerpokupok/main/products.html" %}
+                   <div class="items-coupon">
+                        <h2>{% trans 'Special price' %}</h2>
+                        <ul>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> 30%</div>
+                                <img alt="" src="{% static 'centerpokupok/images/products/pr2.jpg' %}">
+                                <div class="coupon-info">
+                                    <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> 30%</div>
+                                <img alt="" src="{% static 'centerpokupok/images/products/pr3.jpg' %}">
+                                <div class="coupon-info">
+                                    <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                    <p class="price">
+                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                        Экономия: $ 22.10
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% include "centerpokupok/main/products_discount.html" %}
+            </div>
+        {% endblock %}

@@ -1,0 +1,54 @@
+    {% extends "centerpokupok/base.html" %}
+    {% load staticfiles %}
+    {% load i18n %}
+
+                   {% block title %}{{ user.username }}{% endblock %}
+
+    {% block header %}
+    {% include "centerpokupok/header_big.html" %}
+    {% endblock %}
+    {% block body %}
+    <div id="main">
+            <div id="sidebar">
+                {% include "centerpokupok/main/cabinet_menu.html" %}
+            </div>
+            <div id="main-r">
+                <div class="breadcrumbs">
+                    <div xmlns="http://rdf.data-vocabulary.org/#">
+                        <span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans 'Home page' %}</a> &rarr;</span>
+                    </div>
+            </div>
+            <div class="topcart">
+				<p>{% trans 'Welcome' %}, <strong>{{ user.username }}</strong>.
+				{% trans "Here, you can change your data, shipment address and monitor orders." %} </p>
+			</div>
+                <div class="listitemcart">
+                    <span class="title">{% trans "My profile" %}</span>
+                  <div class="titleform">
+                         {% trans "User details "%} <span style="font-weight: bolder; color: red;">{{ succsefull_save }}</span>
+
+
+                  </div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                  <ul class="bgform">
+                   {% for field in user_form %}
+                        <li>
+                            <label class="control-left">{{ field.label_tag }}</label>
+                            <div class="control">
+                                {{ field }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                   </ul>
+                   <div class="rows-check"><input type="submit"  class="btnreg" value="{% trans "Save" %}"></div>
+                 </form>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    {% endblock %}

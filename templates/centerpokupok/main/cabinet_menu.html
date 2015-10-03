@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load static %}
+    <ul id="categories">
+				<li {% if curr_url == "favorite" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:favorite" %}">{% trans "My favorite products" %}</a>
+                </li>
+				<li {% if curr_url == "main" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:main" %}">{% trans "Personal data" %}</a>
+                </li>
+				<li {% if curr_url == "shipping_address" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:shipping_address" %}">{% trans "Shipment address" %}</a>
+                </li>
+				<li {% if curr_url == "order_history" %} class="parent" {% endif %}>
+                    <a href="{% url "profile:order_history" %}">{% trans "Order History" %}</a>
+                </li>
+    </ul>
+                <div class="support">
+                    <img src="{% static 'centerpokupok/images/gallery/sp.jpg' %}" alt="" class="avatar" />
+                    <div class="infosupport">
+                        <p class="namesp">{% trans 'Eva' %} </p>
+                        <p class="agent">{% trans 'Virtual Agent' %}</p>
+                        <p>
+                            {% trans '24 hour' %} <br>
+                            {% trans 'Smart Response' %}
+                        </p>
+                    </div>
+                </div>
+                <div class="bchat">
+                    <textarea name="" placeholder="{% trans "Ask a question" %}" cols="30" rows="5"></textarea>
+                    <div class="btnsubmit"><a class="btnreg" href="#">{% trans "Start chat" %}</a></div>
+                </div>

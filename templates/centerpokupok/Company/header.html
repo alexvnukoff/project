@@ -1,0 +1,52 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+<div id="mainpage">
+	<div id="top">
+		<div class="container">
+			<span><i class="icons i-company"></i><a href="/" class="company">{% trans 'Shopcenter' %}</a></span>
+			<span><i class="icons i-questinon"></i><a href="#">{% trans 'Ask a question' %}</a></span>
+			<span><i class="icons i-customer"></i><a href="#">{% trans 'Consumer protection' %}</a></span>
+            {% if user.is_authenticated  %}
+                <span class="reg"><i class="icons i-reg"></i><a href="{% url "profile:main" %}"> {{ user.email }}</a> <a href="{% url "logout" %}"> , {% trans  "sign out"%}</a></span>
+            {% else %}
+                <span class="reg"><i class="icons i-reg"></i><a href="{% url "register" %}">{% trans "Sign in" %}</a></span>
+            {% endif %}
+
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div id="company-header">
+    	<a href="{% url "main" %}" id="company-logo"><img src="{{ MEDIA_URL }}big/{{ company.image }}" alt="{{ company.title }}" /></a>
+        <div id="company-info">
+        	<span class="company-name">{{ company.title }}</span>
+            <p><font class="cpn-no">{% trans "Store No" %}.{{ company.pk }}</font></p>
+            <p>{% getCountry company.country %}</p>
+        </div>
+        <div class="company-search">
+        	<div class="bgsearch">
+                <form id="searchForm" action="{% url "companies:products" company.pk %}">
+                    <input type="text" name="q" placeholder="{% trans 'Search in the store' %}" class="text">
+                </form>
+                <a onClick="$('#searchForm').submit();" href="#" class="icons btnsl"></a>
+            </div>
+        </div>
+        <div class="sale-left">
+            <img src="{% static "centerpokupok/images/gallery/p1.png" %}" alt="" class="avatar">
+            <div class="saleinfo">
+                <i class="icons icon-status status-online"></i>
+                <p>{% trans 'Salesman online' %}</p>
+                <p><a href="#">Juliy Juliy</a></p>
+                <p><a href="#" class="btnreg"><i class="icons i-cm"></i>{% trans 'Write' %}</a></p>
+            </div>
+        </div>
+    </div>
+    <ul id="nav-company">
+    	<li><a href="{% url "companies:main" company.pk %}" {% if menu == 'main' %}class="current"{% endif %}>{% trans "Store main page" %}</a></li>
+        <li><a href="{% url "companies:about" company.pk %}" {% if menu == 'about' %}class="current"{% endif %}>{% trans "About" %}</a></li>
+        <li><a href="{% url "companies:products" company.pk %}" {% if menu == 'products' %}class="current"{% endif %}>{% trans "Products" %}</a></li>
+        <li><a href="{% url "companies:coupons" company.pk %}" {% if menu == 'coupons' %}class="current"{% endif %}>{% trans "Coupons" %}</a></li>
+        <li><a href="{% url "companies:contact" company.pk %}" {% if menu == 'contact' %}class="current"{% endif %}>{% trans "Contacts" %}</a></li>
+    </ul>

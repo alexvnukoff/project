@@ -1,0 +1,85 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        {% block head %}
+            {% block  meta%}
+                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                  {% load i18n %}
+            {% endblock %}
+
+            <title>{% block title %}{% trans 'Shopcenter' %}{% endblock %}</title>
+
+            {% block styles %}
+                <link href='http://fonts.googleapis.com/css?family=Roboto:100,300,700,400&subset=latin,latin-ext,cyrillic-ext' rel='stylesheet' type='text/css'>
+                <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/reset.css" %}">
+                <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/shopcenter.css" %}">
+                    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/anythingslider.css" %}">
+                <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+            {% endblock %}
+
+            {% block js %}
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+                <script type="text/javascript" src="{% static "centerpokupok/js/base.js" %}"></script>
+                <script type="text/javascript" src="{% static "centerpokupok/js/jquery.anythingslider.js" %}"></script>
+            {% endblock %}
+        {% endblock %}
+    </head>
+
+    <body>
+        {% block header %}
+        {% endblock %}
+
+        {% block body %}
+        {% endblock %}
+
+        {% block footer %}
+            </div>
+            <div id="quicklnk">
+                <div class="container">
+                    <ul id="linkun">
+                        <li class="top">{% trans 'About project' %}</li>
+                        <li><a href="#">{% trans 'About system' %}</a></li>
+                        <li><a href="#">{% trans 'How the system works' %}</a></li>
+                        <li><a href="#">{% trans 'Announcements and product reviews' %}</a></li>
+                        <li><a href="#">{% trans 'Public offer' %}</a></li>
+                    </ul>
+                    <ul id="linkun">
+                        <li class="top">{% trans 'How to buy' %}</li>
+                        <li><a href="#">{% trans 'Subscribe to updates' %}</a></li>
+                        <li><a href="#">{% trans 'How to pay' %}</a></li>
+                        <li><a href="#">{% trans 'Delivery option' %}</a></li>
+                        <li><a href="#">{% trans 'Customers protection' %}</a></li>
+                        <li><a href="#">{% trans 'Quick reference' %}</a></li>
+                    </ul>
+                    <ul id="linkun">
+                        <li class="top">{% trans 'Services' %}</li>
+                        <li><a href="#">{% trans 'Contact us' %}</a></li>
+                        <li><a href="#">{% trans 'FAQ' %}</a></li>
+                        <li><a href="#">{% trans 'Ask about community' %}</a></li>
+                        <li><a href="#">{% trans 'Partner program' %}</a></li>
+                    </ul>
+                    <ul id="subscribe">
+                        <li class="top">
+                            <i class="imgshop i-subs"></i>{% trans 'Subscribe to newsletter' %}
+                        </li>
+                        <li>{% trans 'Receive our weekly announcements and reviews of new products' %}</li>
+                        <li><input type="text" name="" placeholder="Ваш E-mail" class="text" /></li>
+                        <li><a class="btnreg" href="#">{% trans 'Subscribe' %}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="footer">
+                <div class="container">
+                    <label>© 2013 {% trans 'Shopping center - buy with pleasure all over the world' %}</label>
+                    <div class="social">
+                        <a href="#" class="imgshop icon-social i-face"></a>
+                        <a href="#" class="imgshop icon-social i-twitter"></a>
+                        <a href="#" class="imgshop icon-social i-youtube"></a>
+                        <a href="#" class="imgshop icon-social i-vimeo"></a>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,167 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+
+               {% block title %}{% trans "Order step one" %}{% endblock %}
+
+
+{% block header %}
+{% include "centerpokupok/header_big.html" %}
+{% endblock %}
+{% block body %}
+<div id="main">
+		<div id="sidebar">
+           {% include "centerpokupok/main/cabinet_menu.html" %}
+
+		</div>
+		<div id="main-r">
+		<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Start page" %}</a> &rarr;</span>
+				</div>
+			</div>
+
+        <form method="POST" action="">
+        {% csrf_token %}
+			<div class="listitemcart">
+				<span class="title">{%  trans "Ordering"%}</span>
+                {% with address.ADDRESS_ZIP|first as zip %}
+                {% with address.SHIPPING_NAME|first as name %}
+                {% with address.ADDRESS|first as addr %}
+                {% with address.ADDRESS_COUNTRY|first as country %}
+                {% with address.TELEPHONE_NUMBER|first as telephone %}
+                {% with address.ADDRESS_CITY|first as city %}
+                <div class="listitemcart">
+			       <ul id="itemcart">
+					<li>
+                        {% with productValues.NAME|first as product_name %}
+                        {% with productValues.IMAGE|first as product_picture %}
+                        {% with productValues.CURRENCY|first as product_currency %}
+                        {% with productValues.COST|first as product_cost %}
+						<div class="thumb">
+							<img src="{{ MEDIA_URL }}small/{{ product_picture }}" alt="{{ product_name }}" class="thumb" />
+						</div>
+						<div class="infoproduct">
+							<p>{{ product_name }}</p>
+						</div>
+						<div class="code">
+							<p><font class="grey">Размер:</font> XS</p>
+							<p><font class="grey">Цвет:</font> красный</p>
+						</div>
+						<div class="numberoder">
+							<p><font class="number">{{ product_currency|getSymbol }} {{ product_cost|formatPrice}}</font></p>
+
+
+						</div>
+						<div class="price">{{ product_currency|getSymbol }} {{ totalCost|formatPrice }}</div>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+				     </li>
+                   </ul>
+                </div>
+				<div class="titleform">
+					{% trans "Shipping Addres" %}
+                  <span class="textnote"><font color="#cc4f36">*</font>{% trans "Required fields" %}</span>
+				</div>
+
+
+				<ul class="bgform">
+					<li>
+						<label class="control-left">{% trans "Recipient Name" %} <b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ name }}" name="recipient_name" class="textcheck" style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.recipient_name %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.recipient_name.as_text }}</span></div>
+						</div>
+					</li>
+                	<li>
+						<label class="control-left">{% trans "Region" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ region }}" name="city" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.region %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.region.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "City" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ city }}" name="city" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.city %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.city.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Zipcode" %}<b>*</b></label>
+						<div class="control">
+                    		<input type="text" value="{{ zip }}" name="zipcode" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.zipcode %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.zipcode.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Country" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ country }}" name="country" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.country %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.country.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Adress" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ addr }}" name="address" class="textcheck"  style="width:265px;" />
+                            <div class="warning">{% if orderForm.errors.address %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.address.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Telephone number" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" value="{{ telephone }}" name="telephone_number" class="textcheck" style="width:265px;" />
+                            <div class="warning"><span>{% if orderForm.errors.telephone_number %}<span class="i-wrn">!</span>{% endif %}<span>{{ orderForm.errors.telephone_number.as_text }}</span></div>
+						</div>
+					</li>
+				</ul>
+
+				<span class="title">{% trans "Delivery method" %}</span>
+                <span style="color: red;font-size: 20px;"> {{ orderForm.errors.delivery }}</span>
+				<div class="titleform">
+					{% trans "Choose delivery method" %}
+				</div>
+				<ul class="bgform">
+					<li>
+						<div class="option-left"><input type="radio" name="delivery" value="kurer" /> Курьером  (доставка на следующий день)</div>
+						<div class="option-right">$ 3.80</div>
+					</li>
+					<li>
+						<div class="option-left"><input type="radio" name="delivery" value="alo"/> Priority Mail (1-3 days)</div>
+						<div class="option-right">$ 19.80</div>
+					</li>
+					<li>
+						<div class="option-left"><input type="radio" name="delivery" value="privet"/> Express Mail (1-2 days)</div>
+						<div class="option-right">$ 19.80</div>
+					</li>
+				</ul>
+                	<div class="titleform">{% trans "Comment to your order"%}</div>
+				<ul class="bgform">
+					<li>
+						<div class="control-left">{% trans "Comment" %}</div>
+						<div class="control"><textarea name="comment"  cols="70" rows="5"></textarea></div>
+					</li>
+				</ul>
+				<span class="title">{% trans "Payment method" %}</span>
+
+                 {% endwith %}
+                 {% endwith %}
+                 {% endwith %}
+                 {% endwith %}
+                 {% endwith %}
+                 {% endwith %}
+				<div class="rows-check"><input type="submit" name="Continue" class="btnreg" value="{% trans "Continue" %}"></div>
+            </div>
+        </form>
+		</div>
+
+</div>
+
+
+
+ {% endblock %}

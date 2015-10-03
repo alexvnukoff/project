@@ -1,0 +1,262 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans 'Latest' %}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+     $(document).ready(function () {
+
+                    $('#slider1').anythingSlider({hashTags: false});
+     })
+    </script>
+{% endblock %}
+
+{% block header %}
+    {% include "centerpokupok/header_big.html" %}
+{% endblock %}
+
+{% block body %}
+		<div id="main">
+		    <div id="sidebar">
+
+		        {% include "centerpokupok/related_categories.html" %}
+
+                <div class="title-filter">
+				    Material <input type="checkbox" name="" value="" class="all"> <a href="#nogo" class="all">All</a>
+			    </div>
+                <ul id="filter">
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Acrylic </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Cotton </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Down </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Faux Fur </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Faux Leather </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Fur </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Leather </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Linen </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Paper </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Polyester </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Rayon </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Straw </a>(38090)</li>
+                    <li><input type="checkbox" name="" class="checkbox"> <a href="#">Wool </a>(38090)</li>
+                </ul>
+                <div class="title-filter">
+                    Color <input type="checkbox" name="" class="allcolors"> <a href="#nogo" >All</a>
+                </div>
+                <ul id="colors">
+                    <li>
+                        <span class="boxcolor color1"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color2"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color3"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color4"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color5"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color6"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color7"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color8"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color9"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                    <li>
+                        <span class="boxcolor color10"></span>
+                        <input type="checkbox" name="" class="checkcolor">
+                    </li>
+                </ul>
+
+            </div>
+            <div id="main-r">
+                <div class="breadcrumbs">
+                    <div xmlns="http://rdf.data-vocabulary.org/#">
+                        <span typeof="v:Breadcrum">
+                            <a property="v:title" rel="v:url" href="{% url "main" %}">{% trans "Main" %}</a> &rarr;
+                        </span>
+                        <span typeof="v:Breadcrum">
+                            <a href="{% url "products:list" %}" property="v:title" rel="v:url">{% trans "Coupons" %}</a>
+                        </span>
+                        {% for id, crumb in breadCrumbs.items %}
+                            {% with crumb.NAME|first as name %}
+                                &rarr;
+                                <span typeof="v:Breadcrum">
+                                    <a href="{% url "products:category" id %}" property="v:title" rel="v:url">{{ name }}</a>
+                                </span>
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="title-items">
+                    {% trans "Products" %}  <i>/</i>  {{ currentCat }}
+                </div>
+                <div class="topitems">
+                    <label>{% trans "Show only" %}</label>
+                    <span>
+                        <input type="checkbox" name="" class="checkbox">
+                        <i class="icons icon-display1"></i>
+                        <font>{% trans "Salesman online" %}</font>
+                    </span>
+                    <span>
+                        <input type="checkbox" name="" class="checkbox">
+                        <i class="icons icon-display2"></i>
+                        <font>{% trans "High raiting" %}</font>
+                    </span>
+                    <span>
+                        <input type="checkbox" name="" class="checkbox">
+                        <i class="icons icon-display3"></i>
+                        <font>{% trans "Free shipping" %}</font>
+                    </span>
+
+                </div>
+                <div class="topitems">
+                    <label>{% trans "Sort by" %}</label>
+                    <span id="sortby">
+                        <a href="#nogo" class="pricefilter">{% trans "Price" %} </a>
+                        <div class="sortprice">
+                            <ul>
+                                <li><a href="#">$100 ~ $200</a></li>
+                                <li><a href="#">$200 ~ $300</a></li>
+                                <li><a href="#">$300 ~ $400</a></li>
+                                <li><a href="#">$400 ~ $500</a></li>
+                                <li><a href="#">$500 ~ $600</a></li>
+                            </ul>
+                        </div>
+                    </span>
+                    <span>
+                        <a href="#">{% trans "Raiting" %}</a>
+                    </span>
+
+                </div>
+                <ul id="s_listitems">
+                    {% for id , product in products_list.items %}
+                        {% with product.NAME|first as name %}
+                         {% with product.IMAGE|first as picture %}
+                         {% with product.COST|first as price %}
+                         {% with product.CURRENCY|first as currency %}
+                         {% with product.COMPANY_NAME|first as company %}
+                         {% with product.COMPANY_IMAGE|first as company_image %}
+                         {% with product.COUNTRY_NAME|first as country %}
+                    <li>
+
+                        <a href="{% url "products:detail" id %}">
+                       <div class="img_gallery">
+                            <div class="shadow"></div>
+                            <div class="img_block">
+
+                                <img src="{{ MEDIA_URL }}big/{{ picture }} " alt="{{ name }}" >
+                            </div>
+                        </div>
+                    </a>
+                        <p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+                        <div class="price">
+
+                            <font class="num">{{ currency }} {{ price }}</font>
+
+                        </div>
+
+                        <div class="bgname">
+                            <a href="#" class="offline">
+                                <i class="icons i-name"></i>
+                                <b>{{ company }}</b>
+                                <i class="icons icon-chat"></i>
+                            </a>
+                            <div class="salepopup">
+                                <img src="{{ MEDIA_URL }}small/{{ company_image }}" class="avatar" alt="{{ company }}" />
+                                <div class="infosale">
+                                    <i class="icons icon-status status-online"></i>
+                                    <a href="#">{{ company }}</a>
+                                    <p><i class="icons icon-people"></i><i class="icons icon-people"></i><i class="icons icon-people"></i></p>
+                                    <p>{{ country }}</p>
+                                    <p><i class="icons icon-cmt"></i><font class="number">96.3%</font> <a href="#">positive feedback</a></p>
+                                    <p><a class="btnreg" href="#"><i class="icons i-cm"></i>{% trans 'Write to salesman' %}</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                        {% endwith %}
+                          {% endwith %}
+                          {% endwith %}
+                          {% endwith %}
+                          {% endwith %}
+                          {% endwith %}
+                          {% endwith %}
+                    {% endfor %}
+
+                </ul>
+
+                <div class="items-coupon">
+                    <h3>{% trans 'Sales' %}</h3>
+                    <ul>
+                        <li>
+                            <div class="discount"><i class="icons i-after"></i> 30%</div>
+                            <img src="images/products/pr2.jpg" alt="">
+                            <div class="coupon-info">
+                                <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                <p class="price">
+                                    <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                    Экономия: $ 22.10
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="discount"><i class="icons i-after"></i> 30%</div>
+                            <img src="images/products/pr3.jpg" alt="">
+                            <div class="coupon-info">
+                                <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                <p class="price">
+                                    <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                    Экономия: $ 22.10
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="discount"><i class="icons i-after"></i> 30%</div>
+                            <img src="images/products/pr2.jpg" alt="">
+                            <div class="coupon-info">
+                                <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                <p class="price">
+                                    <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                    Экономия: $ 22.10
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="discount"><i class="icons i-after"></i> 30%</div>
+                            <img src="images/products/pr3.jpg" alt="">
+                            <div class="coupon-info">
+                                <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                                <p class="price">
+                                    <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                    Экономия: $ 22.10
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                {% include "centerpokupok/paginator.html" %}
+
+        </div>
+    </div>
+{% endblock %}

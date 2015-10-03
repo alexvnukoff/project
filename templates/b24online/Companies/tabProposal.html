@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+<div class="tpp-dt-content">
+    <table class="table-deals" cellpadding="0" cellpadding="0">
+        <tr class="top">
+            <td>№</td>
+            <td>{% trans "Name" %}</td>
+            <td>{% trans "Date" %}</td>
+        </tr>
+
+       {% for proposal in page.object_list %}
+            <tr>
+                <td>{{ proposal.pk }}</td>
+                <td>
+                    <a href="{{ proposal.get_absolute_url }}" title="{{ proposal.title }}">
+                        {{ proposal.title|truncatewords:10 }}
+                    </a>
+                </td>
+                <td>
+                    {{ proposal.created_at|date:'d M Y' }}
+                </td>
+            </tr>
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </table>
+    {% include "b24online/main/paginator.html" %}
+</div>

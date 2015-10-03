@@ -1,0 +1,7 @@
+{% for name, items in filters.items %}
+    {% if items %}
+        {% for item in items %}
+            <input type="hidden" class="filter-item" name="filter[{{ name }}][]" value="{{ item.pk }}" data-text="{{ item.name }}">
+        {% endfor %}
+    {% endif %}
+{% endfor %}

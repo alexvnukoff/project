@@ -1,0 +1,168 @@
+{% extends 'b24online/main_page.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script>
+        {% getOwner item.pk as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+        {% endif %}
+        ga('set', 'dimension2', 'exhibition');
+    </script>
+
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+  <div class="tender">
+       <div class="tender-details-title">
+       {% if item.country %}
+           <i class="flag sprite {{ item.country.flag }}"></i>
+           <font class="name">{{ item.country.name }}</font>
+       {% elif item.organization.flag  %}
+            <img src="{{ item.organization.flag_url }}" class="flag" />
+            <font class="name">{{ item.organization.name }}</font>
+       {% endif %}
+       </div>
+       <div class="tender-info">
+            <span class="title">{{ item.name }}</span>
+            <div class="tender-bottom">
+                <div class="tender-bottom-left">
+                    {% if item.organization.logo %}
+                        <img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                    {% else %}
+                        <img src="{% static 'b24online/img/company.jpg' %}" class="thumb" />
+                    {% endif %}
+
+                    {% if item.organization %}
+                        <a href="{{ item.organization.get_absolute_url }} "> {{ item.organization.name }}</a>
+                    {% else %}
+                        {{ item.created_by.profile.full_name }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="innov-details">
+                <p>{{ item.description|cleanHtml|safe }}</p>
+            </div>
+            <div class="goods-details-tab cpn-details-tab">
+                <div class="tab-cate">
+                    <ul>
+                        <li><a href="#goods-tabs-1">{% trans 'Main' %}</a></li>
+                        <li><a href="#goods-tabs-2">{% trans 'Business plan' %}</a></li>
+                        <li>
+                            <a data-id="gallery-tabs" href="{% url "innov:tabs_gallery" item.pk %}">
+                                {% trans "Gallery" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="document-tabs" href="{% url "innov:tabs_documents" item.pk %}">
+                                {% trans "Documents" %}
+                            </a>
+                        </li>
+                        <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
+                    {% for page in item.additional_pages.all %}
+                         <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div id="goods-tabs-1">
+                    <div class="content-goods-tab">
+                        <ul class="innov-tab-content">
+                            <li>
+                                <span class="left">{% trans 'Product' %}: </span>
+                                <span class="right">{{ item.product_name }}</span>
+                            </li>
+                            <li>
+                                <span class="left">{% trans 'Industry' %}: </span>
+                                <span class="right">
+                                    {% if item.branches.count != 0 %}
+                                        {% for branch in item.branches.all %}{{ branch.name }} {% endfor %}
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li>
+                                <span class="left">{% trans 'Cost' %}: </span>
+                                <span class="right">{{ item.currency|getSymbol }} {{ item.cost|formatPrice }}</span>
+                            </li>
+                            <li>
+                                <span class="left">{% trans 'Realese date' %}: </span>
+                                <span class="right">{{ item.release_date }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="goods-tabs-2">
+                    <div class="content-goods-tab">
+                        <p>{{ item.business_plan|cleanHtml|safe }}</p>
+                    </div>
+                </div>
+                <div id="goods-tabs-4">
+                    <div class="content-goods-tab">
+                        <ul class="innov-tab-content">
+                            {% if item.organization.address %}
+                                <li>
+                                    <span class="left">{% trans 'Address' %}: </span>
+                                    <span class="right">{{ item.organization.address }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.organization.phone %}
+                                <li>
+                                    <span class="left">{% trans 'Telephone number' %}: </span>
+                                    <span class="right">{{ item.organization.phone }} </span>
+                                </li>
+                            {% endif %}
+                            {% if item.organization.fax %}
+                                <li>
+                                    <span class="left">{% trans 'Fax' %}: </span>
+                                    <span class="right">{{ item.organization.fax }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.organization.email %}
+                                <li>
+                                        <span class="left">{% trans 'Email' %}: </span>
+                                        <span class="right">{{ item.organization.email }}</span>
+                                </li>
+                            {% endif %}
+                            {% if item.organization.site %}
+                                <li>
+                                    <span class="left">{% trans 'WWW' %}: </span>
+                                    <span class="right">{{ item.organization.site }}</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                {% for page in item.additional_pages.all %}
+                <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                      <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                 </div>
+                {% endfor %}
+            </div>
+       </div>
+  </div>
+{% endblock %}

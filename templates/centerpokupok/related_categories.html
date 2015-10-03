@@ -1,0 +1,12 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+<h3>{% trans "Categories" %}</h3>
+<ul id="categories">
+    {% if currentCat %}
+        <li class="parent">{{ currentCat.text }}</li>
+    {% endif %}
+    {% for category in categories %}
+            <li><a href="{% url category_namespace category.pk %}" >{{ category.text }}</a></li>
+    {% endfor %}
+</ul>

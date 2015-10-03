@@ -1,0 +1,63 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% if models %}
+    <div class="news-ads-wrapper">
+        <div class="news-ads">
+            <div class="title">{% trans "Paid ads" %}</div>
+            {% for model, modelDict in models.items %}
+
+                {% if modelDict.queryset %}
+
+                <span class="titlesub">{{ modelDict.text }}</span>
+                <ul class="list-ads">
+
+                    {% for top in modelDict.queryset %}
+                            <li>
+                                <div class="top">
+                                    {% if top.flag %}
+                                        <img class="sprite flag" src="{{ top.flag_url }} " />
+                                    {% elif top.country %}
+                                        <i class="sprite {{ top.country.flag }}"></i>
+                                    {% elif top.organizaion.flag %}
+                                        <img class="sprite flag" src="{{ top.organization.flag_url }} " />
+                                    {% endif %}
+
+                                    {% if top.title %}
+                                        <a title="{{ top.title }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.title }}</a>
+                                    {% else %}
+                                        <a title="{{ top.name }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.name }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="infoads">
+                                    {% if top.title %}
+                                        <a title="{{ top.title }}" href="{{ top.get_absolute_url }}">
+                                    {% else %}
+                                        <a title="{{ top.name }}" href="{{ top.get_absolute_url }}">
+                                    {% endif %}
+                                    {% if top.image %}
+                                        {% if top.title %}
+                                            <img src="{{ top.image.small }}" alt="{{ top.title }}" class="thumb" />
+                                        {% else %}
+                                            <img src="{{ top.image.small }}" alt="{{ top.name }}" class="thumb" />
+                                        {% endif %}
+                                    {% elif top.logo %}
+                                        {% if top.title %}
+                                            <img src="{{ top.logo.small }}" alt="{{ top.title }}" class="thumb" />
+                                        {% else %}
+                                            <img src="{{ top.logo.small }}" alt="{{ top.name }}" class="thumb" />
+                                        {% endif %}
+                                    {% endif %}
+                                    </a>
+                                    {% if top.description  %}
+                                        {{ top.description|cleanHtml|safe|truncatewords_html:7 }}
+                                    {% endif %}
+                                </div>
+                            </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

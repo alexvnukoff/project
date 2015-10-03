@@ -1,0 +1,12 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+{% for item in items %}
+      <a href="{{ item }}/">{{ item  }}</a><br>
+{% endfor %}
+</body>
+</html>
