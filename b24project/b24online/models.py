@@ -27,6 +27,7 @@ from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic import PolymorphicModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from registration.signals import user_registered
 from uuslug import uuslug
 
 from b24online.custom import CustomImageField, S3ImageStorage, S3FileStorage
@@ -1504,3 +1505,8 @@ def initial_department(sender, instance, created, **kwargs):
 @receiver(post_save, sender=NewsCategory)
 def index_item(sender, instance, created, **kwargs):
     instance.reindex()
+
+
+@receiver(user_registered)
+def initial_profile(sender, user, request):
+    Profile.objects.create(user=user, country=Country.objects.first())

@@ -64,9 +64,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        from b24online.models import Profile
-        Profile.objects.create(user=user)
-
         return user
 
     def create_superuser(self, email, username, password):

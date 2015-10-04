@@ -16,22 +16,6 @@
         <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-    <script>
-        {% getOwner item.pk as owner %}
-
-        {% if owner %}
-            {% if owner.type == 'tpp' %}
-                ga('set', 'dimension1', {{ owner.pk }});
-            {% else %}
-                ga('set', 'dimension3', {{ owner.pk }});
-            {% endif %}
-        {% endif %}
-        ga('set', 'dimension2', 'exhibition');
-    </script>
-{% endblock %}
-
 {% block keywords %}{% endblock %}
 
 <script>
@@ -104,7 +88,7 @@
                             </div>
                             <div id="thumbs">
                                {% for gallery in item.galleries.all %}
-                                {% for gallery_item in gallery.gallery_items %}
+                                {% for gallery_item in gallery.gallery_items.all %}
                                     <img src="{{ gallery_item.image.big }}" alt="" />
                                 {% endfor %}
                                {% endfor %}

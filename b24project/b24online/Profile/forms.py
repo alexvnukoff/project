@@ -10,7 +10,7 @@ class ProfileForm(forms.ModelForm):
         # first call parent's constructor
         super().__init__(*args, **kwargs)
 
-        if self.instance.pk:
+        if self.instance.pk and self.instance.birthday:
             self.initial['birthday'] = self.instance.birthday.strftime('%d/%m/%Y')
 
         self.fields['first_name'].widget.attrs.update({'class': 'text'})
