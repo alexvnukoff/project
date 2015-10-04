@@ -1508,5 +1508,5 @@ def index_item(sender, instance, created, **kwargs):
 
 
 @receiver(user_registered)
-def initial_profile(sender, user, request):
+def initial_profile(sender, user, request, **kwargs):
     Profile.objects.create(user=user, country=Country.objects.first())

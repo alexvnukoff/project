@@ -4,7 +4,7 @@
 {% load CustomFilters %}
 {% block content %}
     {{ block.super }}
-    {% include 'Paginator.html' %}
+    {% include 'usersites/Paginator.html' %}
     <ul class="walllist">
         {% for proposal in object_list %}
             <li>
@@ -17,5 +17,5 @@
             </li>
         {% endfor %}
     </ul>
-    {% include 'Paginator.html' %}
+    {% include 'usersites/Paginator.html' %}
 {% endblock %}

@@ -10,7 +10,7 @@
 
 {% block header %}
     {% cache 3600 top_menu site.pk LANGUAGE_CODE %}
-       {% include 'header.html' %}
+       {% include 'usersites/header.html' %}
     {% endcache %}
 {% endblock %}
 
@@ -25,7 +25,7 @@
         <div class="wrapper">
             {% block sidebar %}
                 {% cache 3600 menu site.pk LANGUAGE_CODE %}
-                    {% include 'site_sidebar.html' %}
+                    {% include 'usersites/site_sidebar.html' %}
                 {% endcache %}
             {% endblock %}
 
@@ -61,5 +61,5 @@
 
 
 {% block footer %}
-   {% include 'footer.html' %}
+   {% include 'usersites/footer.html' %}
 {% endblock %}
