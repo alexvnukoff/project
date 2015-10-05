@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import HStoreField
+from django.contrib.postgres.fields import HStoreField, DateRangeField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
@@ -51,6 +51,9 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
+    discount = models.FloatField(null=True, blank=True)
+    coupon_discount = models.FloatField(null=True, blank=True)
+    coupon_dates = DateRangeField()
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')

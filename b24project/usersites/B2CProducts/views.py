@@ -9,7 +9,7 @@ from usersites.cbv import ItemDetail, ItemList
 class B2CProductList(ItemList):
     model = B2CProduct
     template_name = 'usersites/B2CProducts/contentPage.html'
-    paginate_by = 10
+    paginate_by = 16
     filter_key = 'company'
     url_paginator = "b2c_products:paginator"
     current_section = _("B2C Products")

@@ -588,6 +588,10 @@ def make_object_dates_aware(obj):
 
 def autocomplete_filter(filter_key, q, page):
     filters = {
+        'countries': {
+            'model': Country,
+            'index_model': CountryIndex,
+        },
         'country': {
             'model': Country,
             'index_model': CountryIndex,

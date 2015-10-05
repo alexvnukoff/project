@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-02 13:39+0000\n"
+"POT-Creation-Date: 2015-10-05 10:29+0000\n"
 "PO-Revision-Date: 2014-06-15 14:36+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,8 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.6.4\n"
 
-#: b24project/appl/func.py:382 templates/b24online/Messages/index.html:39
+#: b24project/appl/func.py:382 templates/b24online/AdminTpp/prices.html:51
+#: templates/b24online/Messages/index.html:39
 #: templates/b24online/main_page.html:186
 #: templates/b24online/main_page.html:214
 msgid "Organizations"
@@ -105,12 +106,12 @@ msgstr "Выставки"
 msgid "Partners"
 msgstr "Партнеры"
 
-#: b24project/b24online/AdminTpp/views.py:186
+#: b24project/b24online/AdminTpp/views.py:195
 #: b24project/b24online/Adv/views.py:63
 msgid "Banner"
 msgstr "Баннер"
 
-#: b24project/b24online/AdminTpp/views.py:186
+#: b24project/b24online/AdminTpp/views.py:195
 #: b24project/b24online/Adv/views.py:61
 msgid "Top"
 msgstr "Топ"
@@ -192,9 +193,11 @@ msgstr "Только зарегистрированные пользовател
 
 #: b24project/b24online/Greetings/views.py:23
 #: b24project/b24online/Greetings/views.py:43
+#: templates/b24online/AdminTpp/greetings.html:5
+#: templates/b24online/AdminTpp/greetings.html:20
 #: templates/b24online/index.html:381 templates/b24online/job_index.html:417
 #: templates/b24online/main/staticPages.html:13
-#: templates/b24online/registration/password_reset_email.html:4
+#: templates/registration/password_reset_email.html:4
 msgid "Greetings"
 msgstr "Приветствия"
 
@@ -383,6 +386,7 @@ msgid "Image height don't meet the requirements (%s px)"
 msgstr ""
 
 #: b24project/b24online/Users/views.py:13
+#: templates/b24online/AdminTpp/users.html:5
 #: templates/b24online/Messages/index.html:42
 #: templates/b24online/main_page.html:198
 #: templates/b24online/main_page.html:234
@@ -408,107 +412,108 @@ msgstr "Только зарегистрированные пользовател
 msgid "Wall"
 msgstr "Стена"
 
-#: b24project/b24online/models.py:37
+#: b24project/b24online/models.py:38
 msgid "Israeli New Sheqel"
 msgstr ""
 
-#: b24project/b24online/models.py:38
+#: b24project/b24online/models.py:39
 msgid "Euro"
 msgstr ""
 
-#: b24project/b24online/models.py:39
+#: b24project/b24online/models.py:40
 msgid "Dollar"
 msgstr ""
 
-#: b24project/b24online/models.py:40
+#: b24project/b24online/models.py:41
 msgid "Hryvnia"
 msgstr ""
 
-#: b24project/b24online/models.py:41
+#: b24project/b24online/models.py:42
 #, fuzzy
 #| msgid "Russian"
 msgid "Russian Ruble"
 msgstr "Русский"
 
-#: b24project/b24online/models.py:45
+#: b24project/b24online/models.py:46
 msgid "Kilogram"
 msgstr ""
 
-#: b24project/b24online/models.py:46
+#: b24project/b24online/models.py:47
 msgid "Piece"
 msgstr ""
 
-#: b24project/b24online/models.py:320
-msgid "parent"
-msgstr ""
-
-#: b24project/b24online/models.py:377
-msgid "International"
-msgstr ""
-
-#: b24project/b24online/models.py:378
-#, fuzzy
-#| msgid "Additional"
-msgid "National"
-msgstr "Дополнительно"
-
-#: b24project/b24online/models.py:379
-#, fuzzy
-#| msgid "Affiche"
-msgid "Affiliate"
-msgstr "Афиша"
-
-#: b24project/b24online/models.py:1150
-msgid "Male"
-msgstr ""
-
-#: b24project/b24online/models.py:1150
-msgid "Female"
-msgstr ""
-
-#: b24project/b24online/models.py:1153
-#, fuzzy
-#| msgid "Business plan"
-msgid "Businessman"
-msgstr "Бизнес план"
-
-#: b24project/b24online/models.py:1153
-msgid "Individual"
-msgstr ""
-
-#: b24project/b24online/models.py:1266 b24project/b24online/models.py:1355
-msgid "B2B"
-msgstr ""
-
-#: b24project/b24online/models.py:1267 b24project/b24online/models.py:1356
-msgid "B2C"
-msgstr ""
-
-#: b24project/b24online/models.py:1268 b24project/b24online/models.py:1357
-#, fuzzy
-#| msgid "Users"
-msgid "User sites"
-msgstr "Пользователи"
-
-#: b24project/b24online/models.py:1398
+#: b24project/b24online/models.py:148
+#: templates/b24online/AdminTpp/adv_sett.html:20
 #: templates/b24online/AdvBanner/index.html:7
 #: templates/b24online/UserSites/addForm.html:195
 #: templates/b24online/main_page.html:225
 msgid "Banners"
 msgstr "Реклама"
 
-#: b24project/b24online/models.py:1398
+#: b24project/b24online/models.py:148
 #, fuzzy
 msgid "Context Advertisement"
 msgstr "Реклама на портале"
 
-#: b24project/b24online/models.py:1479
+#: b24project/b24online/models.py:341
+msgid "parent"
+msgstr ""
+
+#: b24project/b24online/models.py:398
+msgid "International"
+msgstr ""
+
+#: b24project/b24online/models.py:399
+#, fuzzy
+#| msgid "Additional"
+msgid "National"
+msgstr "Дополнительно"
+
+#: b24project/b24online/models.py:400
+#, fuzzy
+#| msgid "Affiche"
+msgid "Affiliate"
+msgstr "Афиша"
+
+#: b24project/b24online/models.py:1186
+msgid "Male"
+msgstr ""
+
+#: b24project/b24online/models.py:1186
+msgid "Female"
+msgstr ""
+
+#: b24project/b24online/models.py:1189
+#, fuzzy
+#| msgid "Business plan"
+msgid "Businessman"
+msgstr "Бизнес план"
+
+#: b24project/b24online/models.py:1189
+msgid "Individual"
+msgstr ""
+
+#: b24project/b24online/models.py:1302 b24project/b24online/models.py:1391
+msgid "B2B"
+msgstr ""
+
+#: b24project/b24online/models.py:1303 b24project/b24online/models.py:1392
+msgid "B2C"
+msgstr ""
+
+#: b24project/b24online/models.py:1304 b24project/b24online/models.py:1393
+#, fuzzy
+#| msgid "Users"
+msgid "User sites"
+msgstr "Пользователи"
+
+#: b24project/b24online/models.py:1496
 #, fuzzy
 #| msgid "Administrator"
 msgid "Administration"
 msgstr "Администратор"
 
-#: b24project/b24online/models.py:1480
+#: b24project/b24online/models.py:1497
 msgid "Admin"
 msgstr ""
 
@@ -632,7 +637,7 @@ msgstr "Дата рождения"
 msgid "Agreement with terms is required"
 msgstr "Соглашение с условиями обязательно"
 
-#: b24project/core/models.py:93
+#: b24project/core/models.py:91
 msgid "date joined"
 msgstr "Дата регистрации"
 
@@ -749,6 +754,359 @@ msgstr "Структура"
 msgid "Business proposals"
 msgstr "Бизнес предложения"
 
+#: templates/b24online/AdminTpp/adv.html:5
+#: templates/b24online/AdminTpp/adv.html:19
+#, fuzzy
+msgid "Advertisement Orders"
+msgstr "Реклама на портале"
+
+#: templates/b24online/AdminTpp/adv.html:25
+#: templates/b24online/AdminTpp/adv.html:41
+#: templates/b24online/AdminTpp/pages.html:28
+#: templates/b24online/AdminTpp/pages.html:41
+#: templates/b24online/AdminTpp/pages.html:86
+#: templates/b24online/Adv/basket.html:19
+msgid "Type"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:26
+#: templates/b24online/AdminTpp/adv.html:42
+msgid "Owner"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:27
+#: templates/b24online/AdminTpp/adv.html:43
+msgid "Target"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:28
+#: templates/b24online/AdminTpp/adv.html:44
+#, fuzzy
+#| msgid "Start date"
+msgid "Start Date"
+msgstr "Дата начала"
+
+#: templates/b24online/AdminTpp/adv.html:29
+#: templates/b24online/AdminTpp/adv.html:45
+#: templates/b24online/Adv/basket.html:21
+msgid "End Date"
+msgstr "Дата окончания"
+
+#: templates/b24online/AdminTpp/adv.html:30
+#: templates/b24online/AdminTpp/adv.html:46
+msgid "Active"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:31
+#: templates/b24online/AdminTpp/adv.html:47
+#: templates/b24online/AdminTpp/prices.html:26
+#: templates/b24online/AdminTpp/prices.html:38
+#: templates/b24online/AdminTpp/prices.html:58
+#: templates/b24online/AdminTpp/prices.html:70
+#: templates/b24online/AdminTpp/prices.html:90
+#: templates/b24online/AdminTpp/prices.html:102
+#: templates/b24online/Companies/tabProducts.html:11
+#: templates/b24online/Companies/tabTenders.html:10
+#: templates/b24online/Products/detailContent.html:64
+#: templates/b24online/Products/detailContentB2C.html:64
+#: templates/b24online/Tpp/tabTenders.html:10
+#: templates/centerpokupok/Product/new.html:136
+#: templates/usersites/B2BProducts/detailContent.html:45
+#: templates/usersites/B2CProducts/detailContent.html:36
+msgid "Price"
+msgstr "Цена"
+
+#: templates/b24online/AdminTpp/adv.html:36
+#: templates/b24online/AdminTpp/dashboard.html:30
+#: templates/b24online/AdminTpp/dashboard.html:60
+#: templates/b24online/AdminTpp/dashboard.html:90
+#: templates/b24online/AdminTpp/dashboard.html:120
+#: templates/b24online/AdminTpp/greetings.html:35
+#: templates/b24online/AdminTpp/pages.html:34
+#: templates/b24online/AdminTpp/prices.html:32
+#: templates/b24online/AdminTpp/prices.html:64
+#: templates/b24online/AdminTpp/prices.html:96
+msgid "Loading data from server"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:91
+#: templates/b24online/AdminTpp/adv.html:137
+msgid "Deactivate"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv.html:93
+#: templates/b24online/AdminTpp/adv.html:131
+#, fuzzy
+#| msgid "Accountant name"
+msgid "Activate"
+msgstr "ФИО бухгалтера"
+
+#: templates/b24online/AdminTpp/adv.html:134
+#, fuzzy
+#| msgid "Expire in 7 days"
+msgid "Expired"
+msgstr "Заканчивается через 7 дней"
+
+#: templates/b24online/AdminTpp/adv.html:148
+#, fuzzy
+#| msgid "View store"
+msgid "View targeting"
+msgstr "Посмотреть магазин"
+
+#: templates/b24online/AdminTpp/adv_sett.html:5
+#, fuzzy
+msgid "Adveretisement settnings"
+msgstr "Реклама на портале"
+
+#: templates/b24online/AdminTpp/adv_sett.html:26
+#: templates/b24online/AdminTpp/adv_sett.html:41
+#: templates/b24online/AdminTpp/dashboard.html:24
+#: templates/b24online/AdminTpp/dashboard.html:35
+#: templates/b24online/AdminTpp/dashboard.html:54
+#: templates/b24online/AdminTpp/dashboard.html:65
+#: templates/b24online/AdminTpp/dashboard.html:84
+#: templates/b24online/AdminTpp/dashboard.html:95
+#: templates/b24online/AdminTpp/dashboard.html:114
+#: templates/b24online/AdminTpp/dashboard.html:125
+#: templates/b24online/AdminTpp/greetings.html:27
+#: templates/b24online/AdminTpp/greetings.html:41
+#: templates/b24online/AdminTpp/greetings.html:88
+#: templates/b24online/AdminTpp/prices.html:25
+#: templates/b24online/AdminTpp/prices.html:37
+#: templates/b24online/AdminTpp/prices.html:57
+#: templates/b24online/AdminTpp/prices.html:69
+#: templates/b24online/AdminTpp/prices.html:89
+#: templates/b24online/AdminTpp/prices.html:101
+#: templates/b24online/AdminTpp/users.html:25
+#: templates/b24online/AdminTpp/users.html:39
+#: templates/b24online/Companies/addForm.html:165
+#: templates/b24online/Companies/tabExhibitions.html:7
+#: templates/b24online/Companies/tabInnov.html:8
+#: templates/b24online/Companies/tabProducts.html:9
+#: templates/b24online/Companies/tabProposal.html:8
+#: templates/b24online/Companies/tabStaff.html:22
+#: templates/b24online/Companies/tabTenders.html:7
+#: templates/b24online/Exhibitions/detailContent.html:166
+#: templates/b24online/Products/addForm.html:126
+#: templates/b24online/Products/addFormB2C.html:124
+#: templates/b24online/Tpp/addForm.html:133
+#: templates/b24online/Tpp/tabCompanies.html:8
+#: templates/b24online/Tpp/tabExhibitions.html:7
+#: templates/b24online/Tpp/tabInnov.html:8
+#: templates/b24online/Tpp/tabProposal.html:8
+#: templates/b24online/Tpp/tabStaff.html:17
+#: templates/b24online/Tpp/tabTenders.html:7
+msgid "Name"
+msgstr "Название"
+
+#: templates/b24online/AdminTpp/adv_sett.html:27
+#: templates/b24online/AdminTpp/adv_sett.html:42
+#: templates/b24online/Tpp/tabCompanies.html:10
+#: templates/b24online/main_page.html:229
+msgid "Site"
+msgstr "Сайт"
+
+#: templates/b24online/AdminTpp/adv_sett.html:28
+#: templates/b24online/AdminTpp/adv_sett.html:43
+msgid "Factor"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv_sett.html:29
+#: templates/b24online/AdminTpp/adv_sett.html:44
+msgid "Width"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv_sett.html:30
+#: templates/b24online/AdminTpp/adv_sett.html:45
+msgid "Height"
+msgstr ""
+
+#: templates/b24online/AdminTpp/adv_sett.html:31
+#: templates/b24online/AdminTpp/adv_sett.html:46
+#: templates/b24online/AdminTpp/dashboard.html:25
+#: templates/b24online/AdminTpp/dashboard.html:36
+#: templates/b24online/AdminTpp/dashboard.html:55
+#: templates/b24online/AdminTpp/dashboard.html:66
+#: templates/b24online/AdminTpp/dashboard.html:85
+#: templates/b24online/AdminTpp/dashboard.html:96
+#: templates/b24online/AdminTpp/dashboard.html:115
+#: templates/b24online/AdminTpp/dashboard.html:126
+#: templates/b24online/AdminTpp/greetings.html:30
+#: templates/b24online/AdminTpp/greetings.html:44
+#: templates/b24online/AdminTpp/pages.html:29
+#: templates/b24online/AdminTpp/pages.html:42
+#: templates/b24online/AdminTpp/users.html:29
+#: templates/b24online/AdminTpp/users.html:43
+#, fuzzy
+#| msgid "Education"
+msgid "Action"
+msgstr "Образование"
+
+#: templates/b24online/AdminTpp/dashboard.html:4
+#: templates/b24online/AdminTpp/prices.html:5
+#, fuzzy
+msgid "Adveretisement prices"
+msgstr "Реклама на портале"
+
+#: templates/b24online/AdminTpp/dashboard.html:18
+#: templates/b24online/AdminTpp/prices.html:19
+#: templates/b24online/Tpp/addForm.html:125
+#, fuzzy
+#| msgid "Country"
+msgid "Countries"
+msgstr "Страна"
+
+#: templates/b24online/AdminTpp/dashboard.html:48
+#, fuzzy
+#| msgid "Categories"
+msgid "B2C Categories"
+msgstr "Категории"
+
+#: templates/b24online/AdminTpp/dashboard.html:78
+#: templates/b24online/AdminTpp/prices.html:83
+#: templates/b24online/BusinessProposal/addForm.html:102
+#: templates/b24online/Companies/addForm.html:152
+#: templates/b24online/Exhibitions/addForm.html:120
+#: templates/b24online/Innov/addForm.html:108
+#: templates/b24online/Tenders/addForm.html:110
+#, fuzzy
+#| msgid "Branch"
+msgid "Branches"
+msgstr "Отрасль"
+
+#: templates/b24online/AdminTpp/dashboard.html:108
+#, fuzzy
+#| msgid "Categories"
+msgid " B2B Categories"
+msgstr "Категории"
+
+#: templates/b24online/AdminTpp/dashboard.html:191
+#: templates/b24online/AdminTpp/greetings.html:119
+#: templates/b24online/AdminTpp/pages.html:103
+#: templates/b24online/AdminTpp/prices.html:27
+#: templates/b24online/AdminTpp/prices.html:39
+#: templates/b24online/AdminTpp/prices.html:59
+#: templates/b24online/AdminTpp/prices.html:71
+#: templates/b24online/AdminTpp/prices.html:91
+#: templates/b24online/AdminTpp/prices.html:103
+#: templates/b24online/BusinessProposal/addForm.html:162
+#: templates/b24online/Companies/addForm.html:228
+#: templates/b24online/Exhibitions/addForm.html:176
+#: templates/b24online/Innov/addForm.html:174
+#: templates/b24online/News/addForm.html:87
+#: templates/b24online/Products/addForm.html:227
+#: templates/b24online/Products/addFormB2C.html:210
+#: templates/b24online/Profile/addForm.html:107
+#: templates/b24online/Resume/addForm.html:209
+#: templates/b24online/Tenders/addForm.html:152
+#: templates/b24online/Tpp/addForm.html:217
+#: templates/b24online/TppTV/addForm.html:90
+#: templates/b24online/UserSites/addForm.html:249
+#: templates/b24online/Vacancy/addForm.html:111
+#: templates/centerpokupok/Cabinet/index.html:45
+#: templates/centerpokupok/Cabinet/shippingAddress.html:39
+msgid "Save"
+msgstr "Сохранить"
+
+#: templates/b24online/AdminTpp/greetings.html:26
+#: templates/b24online/AdminTpp/greetings.html:40
+msgid "Th"
+msgstr ""
+
+#: templates/b24online/AdminTpp/greetings.html:28
+#: templates/b24online/AdminTpp/greetings.html:42
+#: templates/b24online/AdminTpp/greetings.html:97
+#: templates/b24online/Companies/tabStaff.html:24
+#: templates/b24online/Exhibitions/detailContent.html:182
+#: templates/b24online/Greetings/contentPage.html:20
+#: templates/b24online/Greetings/detailContent.html:28
+#: templates/b24online/Resume/addForm.html:137
+#: templates/b24online/Resume/detailContent.html:116
+#: templates/b24online/Resume/detailContent.html:124
+#: templates/b24online/Resume/detailContent.html:132
+#: templates/b24online/Tpp/tabStaff.html:19
+#: templates/usersites/OrganizationPages/structure.html:14
+msgid "Position"
+msgstr "Должность"
+
+#: templates/b24online/AdminTpp/greetings.html:29
+#: templates/b24online/AdminTpp/greetings.html:43
+#: templates/b24online/AdminTpp/greetings.html:106
+#: templates/b24online/BusinessProposal/contentPage.html:24
+#: templates/b24online/Companies/popupFilter.html:10
+#: templates/b24online/Exhibitions/popupFilter.html:10
+#: templates/b24online/Greetings/contentPage.html:19
+#: templates/b24online/Greetings/detailContent.html:27
+#: templates/b24online/Innov/popupFilter.html:20
+#: templates/b24online/News/popupFilter.html:10
+#: templates/b24online/Products/popupFilter.html:10
+#: templates/b24online/Tenders/popupFilter.html:10
+#: templates/b24online/TppTV/popupFilter.html:10
+#: templates/b24online/Wall/contentPage.html:108
+#: templates/b24online/main/popupFilter.html:19
+msgid "Organization"
+msgstr "Организация"
+
+#: templates/b24online/AdminTpp/greetings.html:57
+#, fuzzy
+#| msgid "Greetings"
+msgid "Add Greeting"
+msgstr "Приветствия"
+
+#: templates/b24online/AdminTpp/pages.html:5
+#, fuzzy
+msgid "Adveretisement Settnings"
+msgstr "Реклама на портале"
+
+#: templates/b24online/AdminTpp/pages.html:20
+msgid "Pages B2B"
+msgstr ""
+
+#: templates/b24online/AdminTpp/pages.html:26
+#: templates/b24online/AdminTpp/pages.html:39
+#: templates/b24online/AdminTpp/pages.html:74
+#: templates/b24online/BusinessProposal/addForm.html:133
+#: templates/b24online/Exhibitions/addForm.html:133
+#: templates/b24online/News/addForm.html:56
+#: templates/b24online/Tenders/addForm.html:123
+#: templates/b24online/TppTV/addForm.html:59
+#: templates/b24online/Vacancy/addForm.html:64
+#: templates/b24online/additionalPage.html:4
+#: templates/b24online/baseFilter.html:98
+#: templates/b24online/baseFilter.html:124
+msgid "Title"
+msgstr "Заголовок"
+
+#: templates/b24online/AdminTpp/pages.html:27
+#: templates/b24online/AdminTpp/pages.html:40
+#, fuzzy
+#| msgid "add top"
+msgid "On top"
+msgstr "добавить в топ"
+
+#: templates/b24online/AdminTpp/pages.html:55
+#, fuzzy
+#| msgid "Add page"
+msgid "Add new page"
+msgstr "Добавить страницу"
+
+#: templates/b24online/AdminTpp/pages.html:90
+msgid "Is on top"
+msgstr ""
+
+#: templates/b24online/AdminTpp/pages.html:161
+msgid "Edit"
+msgstr ""
+
+#: templates/b24online/AdminTpp/pages.html:164
+#: templates/b24online/News/addForm.html:32
+#: templates/b24online/TppTV/addForm.html:30
+#: templates/b24online/UserSites/addForm.html:178
+#: templates/b24online/UserSites/addForm.html:211
+#: templates/b24online/tab_documents_structure.html:13
+msgid "Remove"
+msgstr "Удалить"
+
 #: templates/b24online/AdminTpp/targetsList.html:7
 msgid "Targets List"
 msgstr ""
@@ -770,14 +1128,49 @@ msgstr "Кол-во дней"
 msgid "Summary"
 msgstr "Сумма"
 
+#: templates/b24online/AdminTpp/users.html:19
+#, fuzzy
+#| msgid "Users"
+msgid "User List"
+msgstr "Пользователи"
+
+#: templates/b24online/AdminTpp/users.html:26
+#: templates/b24online/AdminTpp/users.html:40
+#: templates/b24online/BusinessProposal/detailContent.html:114
+#: templates/b24online/Companies/detailContent.html:274
+#: templates/b24online/Exhibitions/detailContent.html:135
+#: templates/b24online/Exhibitions/detailContent.html:170
+#: templates/b24online/Innov/detailContent.html:147
+#: templates/b24online/Tpp/detailContent.html:225
+#: templates/b24online/main/user_profile.html:49
+#: templates/centerpokupok/registration/login.html:17
+#: templates/usersites/Proposals/detailContent.html:103
+msgid "Email"
+msgstr "Email"
+
+#: templates/b24online/AdminTpp/users.html:27
+#: templates/b24online/AdminTpp/users.html:41
+#, fuzzy
+#| msgid "Login"
+msgid "Last login"
+msgstr "Войти"
+
+#: templates/b24online/AdminTpp/users.html:28
+#: templates/b24online/AdminTpp/users.html:42
+#, fuzzy
+#| msgid "date joined"
+msgid "Date joined"
+msgstr "Дата регистрации"
+
+#: templates/b24online/AdminTpp/users.html:83
+#: templates/b24online/main/user_profile.html:53
+msgid "Login"
+msgstr "Войти"
+
 #: templates/b24online/Adv/basket.html:7
 #, fuzzy
 msgid "Advertisement basket"
 msgstr "Реклама на портале"
-
-#: templates/b24online/Adv/basket.html:19
-msgid "Type"
-msgstr ""
 
 #: templates/b24online/Adv/basket.html:20
 #: templates/b24online/AdvBanner/addForm.html:289
@@ -789,10 +1182,6 @@ msgstr ""
 #: templates/b24online/Tpp/tabTenders.html:8
 msgid "Start date"
 msgstr "Дата начала"
-
-#: templates/b24online/Adv/basket.html:21
-msgid "End Date"
-msgstr "Дата окончания"
 
 #: templates/b24online/Adv/basket.html:23
 #: templates/b24online/Companies/tabStaff.html:26
@@ -982,16 +1371,6 @@ msgstr "Выберить отрасль "
 msgid "Keywords"
 msgstr "Ключевые слова"
 
-#: templates/b24online/BusinessProposal/addForm.html:102
-#: templates/b24online/Companies/addForm.html:152
-#: templates/b24online/Exhibitions/addForm.html:120
-#: templates/b24online/Innov/addForm.html:108
-#: templates/b24online/Tenders/addForm.html:110
-#, fuzzy
-#| msgid "Branch"
-msgid "Branches"
-msgstr "Отрасль"
-
 #: templates/b24online/BusinessProposal/addForm.html:105
 #: templates/b24online/Companies/addForm.html:155
 #: templates/b24online/Exhibitions/addForm.html:123
@@ -1018,18 +1397,6 @@ msgstr "Категории"
 #, fuzzy
 msgid "Add categories"
 msgstr "Все категории"
-
-#: templates/b24online/BusinessProposal/addForm.html:133
-#: templates/b24online/Exhibitions/addForm.html:133
-#: templates/b24online/News/addForm.html:56
-#: templates/b24online/Tenders/addForm.html:123
-#: templates/b24online/TppTV/addForm.html:59
-#: templates/b24online/Vacancy/addForm.html:64
-#: templates/b24online/additionalPage.html:4
-#: templates/b24online/baseFilter.html:98
-#: templates/b24online/baseFilter.html:124
-msgid "Title"
-msgstr "Заголовок"
 
 #: templates/b24online/BusinessProposal/addForm.html:140
 #: templates/b24online/Companies/tabProducts.html:10
@@ -1065,25 +1432,6 @@ msgstr "Дополнительные страницы"
 #: templates/b24online/Tpp/addForm.html:206
 msgid "Add page"
 msgstr "Добавить страницу"
-
-#: templates/b24online/BusinessProposal/addForm.html:162
-#: templates/b24online/Companies/addForm.html:228
-#: templates/b24online/Exhibitions/addForm.html:176
-#: templates/b24online/Innov/addForm.html:174
-#: templates/b24online/News/addForm.html:87
-#: templates/b24online/Products/addForm.html:227
-#: templates/b24online/Products/addFormB2C.html:210
-#: templates/b24online/Profile/addForm.html:107
-#: templates/b24online/Resume/addForm.html:209
-#: templates/b24online/Tenders/addForm.html:152
-#: templates/b24online/Tpp/addForm.html:217
-#: templates/b24online/TppTV/addForm.html:90
-#: templates/b24online/UserSites/addForm.html:249
-#: templates/b24online/Vacancy/addForm.html:111
-#: templates/centerpokupok/Cabinet/index.html:45
-#: templates/centerpokupok/Cabinet/shippingAddress.html:39
-msgid "Save"
-msgstr "Сохранить"
 
 #: templates/b24online/BusinessProposal/addForm.html:163
 #: templates/b24online/Companies/addForm.html:229
@@ -1125,26 +1473,11 @@ msgstr "Выйти"
 msgid "Date"
 msgstr "Дата"
 
-#: templates/b24online/BusinessProposal/contentPage.html:24
-#: templates/b24online/Companies/popupFilter.html:10
-#: templates/b24online/Exhibitions/popupFilter.html:10
-#: templates/b24online/Greetings/contentPage.html:19
-#: templates/b24online/Greetings/detailContent.html:27
-#: templates/b24online/Innov/popupFilter.html:20
-#: templates/b24online/News/popupFilter.html:10
-#: templates/b24online/Products/popupFilter.html:10
-#: templates/b24online/Tenders/popupFilter.html:10
-#: templates/b24online/TppTV/popupFilter.html:10
-#: templates/b24online/Wall/contentPage.html:108
-#: templates/b24online/main/popupFilter.html:19
-msgid "Organization"
-msgstr "Организация"
-
 #: templates/b24online/BusinessProposal/contentPage.html:29
 #: templates/b24online/Companies/contentPage.html:40
 #: templates/b24online/Exhibitions/contentPage.html:22
 #: templates/b24online/Innov/contentPage.html:42
-#: templates/b24online/News/detailContent.html:172
+#: templates/b24online/News/detailContent.html:156
 #: templates/b24online/Resume/contentPage.html:20
 #: templates/b24online/Tenders/contentPage.html:35
 #: templates/b24online/Tpp/contentPage.html:35
@@ -1255,18 +1588,6 @@ msgstr "Номер телефона"
 msgid "Fax"
 msgstr "Факс"
 
-#: templates/b24online/BusinessProposal/detailContent.html:114
-#: templates/b24online/Companies/detailContent.html:274
-#: templates/b24online/Exhibitions/detailContent.html:135
-#: templates/b24online/Exhibitions/detailContent.html:170
-#: templates/b24online/Innov/detailContent.html:147
-#: templates/b24online/Tpp/detailContent.html:225
-#: templates/b24online/main/user_profile.html:49
-#: templates/centerpokupok/registration/login.html:17
-#: templates/usersites/Proposals/detailContent.html:103
-msgid "Email"
-msgstr "Email"
-
 #: templates/b24online/BusinessProposal/detailContent.html:120
 #: templates/b24online/Companies/detailContent.html:280
 #: templates/b24online/Exhibitions/detailContent.html:141
@@ -1316,26 +1637,6 @@ msgstr "Слоган"
 #| msgid "Site"
 msgid "Site URL"
 msgstr "Сайт"
-
-#: templates/b24online/Companies/addForm.html:165
-#: templates/b24online/Companies/tabExhibitions.html:7
-#: templates/b24online/Companies/tabInnov.html:8
-#: templates/b24online/Companies/tabProducts.html:9
-#: templates/b24online/Companies/tabProposal.html:8
-#: templates/b24online/Companies/tabStaff.html:22
-#: templates/b24online/Companies/tabTenders.html:7
-#: templates/b24online/Exhibitions/detailContent.html:166
-#: templates/b24online/Products/addForm.html:126
-#: templates/b24online/Products/addFormB2C.html:124
-#: templates/b24online/Tpp/addForm.html:133
-#: templates/b24online/Tpp/tabCompanies.html:8
-#: templates/b24online/Tpp/tabExhibitions.html:7
-#: templates/b24online/Tpp/tabInnov.html:8
-#: templates/b24online/Tpp/tabProposal.html:8
-#: templates/b24online/Tpp/tabStaff.html:17
-#: templates/b24online/Tpp/tabTenders.html:7
-msgid "Name"
-msgstr "Название"
 
 #: templates/b24online/Companies/addForm.html:173
 #: templates/b24online/Tpp/addForm.html:141
@@ -1468,34 +1769,10 @@ msgstr "Начало события"
 msgid "Project cost"
 msgstr "Сайт проекта"
 
-#: templates/b24online/Companies/tabProducts.html:11
-#: templates/b24online/Companies/tabTenders.html:10
-#: templates/b24online/Products/detailContent.html:64
-#: templates/b24online/Products/detailContentB2C.html:64
-#: templates/b24online/Tpp/tabTenders.html:10
-#: templates/centerpokupok/Product/new.html:136
-#: templates/usersites/B2BProducts/detailContent.html:45
-#: templates/usersites/B2CProducts/detailContent.html:36
-msgid "Price"
-msgstr "Цена"
-
 #: templates/b24online/Companies/tabStaff.html:23
 #: templates/b24online/Tpp/tabStaff.html:18
 msgid "Department"
 msgstr "Отдел"
-
-#: templates/b24online/Companies/tabStaff.html:24
-#: templates/b24online/Exhibitions/detailContent.html:182
-#: templates/b24online/Greetings/contentPage.html:20
-#: templates/b24online/Greetings/detailContent.html:28
-#: templates/b24online/Resume/addForm.html:137
-#: templates/b24online/Resume/detailContent.html:116
-#: templates/b24online/Resume/detailContent.html:124
-#: templates/b24online/Resume/detailContent.html:132
-#: templates/b24online/Tpp/tabStaff.html:19
-#: templates/usersites/OrganizationPages/structure.html:14
-msgid "Position"
-msgstr "Должность"
 
 #: templates/b24online/Companies/tabStaff.html:25
 #: templates/b24online/Tpp/tabStaff.html:20
@@ -1545,7 +1822,7 @@ msgstr "Организатор"
 
 #: templates/b24online/Exhibitions/detailContent.html:75
 #: templates/b24online/Exhibitions/detailContent.html:189
-#: templates/b24online/registration/registration_form.html:5
+#: templates/registration/registration_form.html:5
 #, fuzzy
 msgid "Sign Up"
 msgstr "Зарегистрируйтесь"
@@ -1642,14 +1919,6 @@ msgstr "Отправить"
 msgid "Messages"
 msgstr "Сообщения"
 
-#: templates/b24online/News/addForm.html:32
-#: templates/b24online/TppTV/addForm.html:30
-#: templates/b24online/UserSites/addForm.html:178
-#: templates/b24online/UserSites/addForm.html:211
-#: templates/b24online/tab_documents_structure.html:13
-msgid "Remove"
-msgstr "Удалить"
-
 #: templates/b24online/News/addForm.html:46
 #: templates/b24online/TppTV/addForm.html:50
 #: templates/b24online/Vacancy/addForm.html:34
@@ -1669,7 +1938,7 @@ msgstr "Описание"
 msgid "Content"
 msgstr "Описание"
 
-#: templates/b24online/News/detailContent.html:157
+#: templates/b24online/News/detailContent.html:141
 #: templates/b24online/TppTV/detailContent.html:51
 msgid "Similar news"
 msgstr "Похожие новости"
@@ -1990,12 +2259,6 @@ msgstr ""
 msgid "VATIN"
 msgstr "ИНН"
 
-#: templates/b24online/Tpp/addForm.html:125
-#, fuzzy
-#| msgid "Country"
-msgid "Countries"
-msgstr "Страна"
-
 #: templates/b24online/Tpp/addForm.html:176
 msgid "Detail"
 msgstr "Детальное описание"
@@ -2031,11 +2294,6 @@ msgstr "Реквизиты банка"
 #: templates/b24online/Tpp/tabCompanies.html:7
 msgid "Logo"
 msgstr "Логотип"
-
-#: templates/b24online/Tpp/tabCompanies.html:10
-#: templates/b24online/main_page.html:229
-msgid "Site"
-msgstr "Сайт"
 
 #: templates/b24online/Tpp/tabGallery.html:37
 #: templates/b24online/documents.html:37
@@ -2426,9 +2684,10 @@ msgstr "Вакансии"
 #: templates/b24online/job_index.html:241
 #: templates/b24online/job_index.html:267
 #: templates/b24online/job_index.html:282
+#: templates/b24online/login_header.html:25
 #: templates/b24online/main_header.html:10
-#: templates/b24online/registration/registration_form.html:47
 #: templates/centerpokupok/registration/registration_form.html:56
+#: templates/registration/registration_form.html:47
 msgid "Sign up"
 msgstr "Зарегистрируйтесь"
 
@@ -2514,16 +2773,16 @@ msgid "right now"
 msgstr "прямо сейчас"
 
 #: templates/b24online/index.html:264 templates/b24online/job_index.html:275
-#: templates/b24online/registration/login.html:36
-#: templates/b24online/registration/registration_form.html:32
 #: templates/centerpokupok/registration/login.html:23
 #: templates/centerpokupok/registration/registration_form.html:31
 #: templates/centerpokupok/registration/registration_form.html:42
+#: templates/registration/login.html:36
+#: templates/registration/registration_form.html:32
 msgid "Password"
 msgstr "Пароль"
 
 #: templates/b24online/index.html:265 templates/b24online/job_index.html:276
-#: templates/b24online/registration/registration_form.html:38
+#: templates/registration/registration_form.html:38
 msgid "Confirm password"
 msgstr "Подтвердить пароль"
 
@@ -2584,11 +2843,11 @@ msgstr "Выйти"
 
 #: templates/b24online/login_header.html:25
 #: templates/b24online/main_header.html:10
-#: templates/b24online/registration/login.html:40
 #: templates/centerpokupok/Company/header.html:14
 #: templates/centerpokupok/header_big.html:13
 #: templates/centerpokupok/header_small.html:9
 #: templates/centerpokupok/registration/login.html:3
+#: templates/registration/login.html:40
 msgid "Sign in"
 msgstr "Войти"
 
@@ -2614,10 +2873,12 @@ msgid "Total pages"
 msgstr "Всего страниц"
 
 #: templates/b24online/main/paginator.html:7
+#: templates/usersites/Paginator.html:5
 msgid "Back"
 msgstr "Назад"
 
 #: templates/b24online/main/paginator.html:17
+#: templates/usersites/Paginator.html:19
 msgid "Forward"
 msgstr "Вперед"
 
@@ -2632,10 +2893,6 @@ msgstr "Профиль пользователя"
 #: templates/b24online/main/user_profile.html:41
 msgid "First name"
 msgstr "Имя"
-
-#: templates/b24online/main/user_profile.html:53
-msgid "Login"
-msgstr "Войти"
 
 #: templates/b24online/main/user_profile.html:83
 msgid "Mobile number"
@@ -2678,300 +2935,6 @@ msgstr ""
 #, fuzzy
 msgid "or create a new one"
 msgstr " или создать"
-
-#: templates/b24online/registration/activate.html:5
-#, fuzzy
-msgid "Account activation failed."
-msgstr "Активация завершена"
-
-#: templates/b24online/registration/activation_complete.html:5
-#, fuzzy
-#| msgid "Accountant name"
-msgid "Account Activated"
-msgstr "ФИО бухгалтера"
-
-#: templates/b24online/registration/activation_complete.html:21
-#, fuzzy
-msgid "Activation is completed"
-msgstr "Активация завершена"
-
-#: templates/b24online/registration/activation_complete.html:24
-#, fuzzy
-msgid "Thank you for registration! Now you can  "
-msgstr "Спасибо , что закончили регистрацию, сейчас вы можете "
-
-#: templates/b24online/registration/activation_complete.html:25
-#: templates/centerpokupok/registration/activation_complete.html:51
-msgid "sign in"
-msgstr "войти"
-
-#: templates/b24online/registration/activation_complete.html:25
-#, fuzzy
-msgid "using email and password that you provided during sign up."
-msgstr "используя email и пароль указанные при регистрации"
-
-#: templates/b24online/registration/activation_email.html:7
-msgid "registration"
-msgstr "регистрация"
-
-#: templates/b24online/registration/activation_email.html:12
-#, python-format
-msgid ""
-"\n"
-"    You (or someone pretending to be you) have asked to register an account "
-"at\n"
-"    %(site_name)s.  If this wasn't you, please ignore this email\n"
-"    and your address will be removed from our records.\n"
-"    "
-msgstr ""
-
-#: templates/b24online/registration/activation_email.html:19
-#, python-format
-msgid ""
-"\n"
-"    To activate this account, please click the following link within the "
-"next\n"
-"    %(expiration_days)s days:\n"
-"    "
-msgstr ""
-
-#: templates/b24online/registration/activation_email.html:31
-#, python-format
-msgid ""
-"\n"
-"    Sincerely,\n"
-"    %(site_name)s Management\n"
-"    "
-msgstr ""
-
-#: templates/b24online/registration/activation_email.txt:3
-#, python-format
-msgid ""
-"\n"
-"You (or someone pretending to be you) have asked to register an account at\n"
-"%(site_name)s.  If this wasn't you, please ignore this email\n"
-"and your address will be removed from our records.\n"
-msgstr ""
-
-#: templates/b24online/registration/activation_email.txt:8
-#, python-format
-msgid ""
-"\n"
-"To activate this account, please click the following link within the next\n"
-"%(expiration_days)s days:\n"
-msgstr ""
-
-#: templates/b24online/registration/activation_email.txt:15
-#, python-format
-msgid ""
-"\n"
-"Sincerely,\n"
-"%(site_name)s Management\n"
-msgstr ""
-
-#: templates/b24online/registration/activation_email_subject.txt:1
-#, fuzzy
-#| msgid "Activation problem"
-msgid "Account activation on"
-msgstr "Проблема активации"
-
-#: templates/b24online/registration/login.html:5
-msgid "Log in"
-msgstr ""
-
-#: templates/b24online/registration/login.html:20
-msgid "Authorization"
-msgstr "Авторизация"
-
-#: templates/b24online/registration/login.html:31
-#: templates/b24online/registration/password_reset_form.html:39
-#: templates/b24online/registration/registration_form.html:27
-#: templates/centerpokupok/registration/registration_form.html:20
-msgid "E-mail"
-msgstr "E-mail"
-
-#: templates/b24online/registration/login.html:41
-msgid "Forgot password"
-msgstr "Забыли пароль"
-
-#: templates/b24online/registration/logout.html:5
-msgid "Logged out"
-msgstr ""
-
-#: templates/b24online/registration/logout.html:22
-#, fuzzy
-#| msgid "was successfully saved "
-msgid "Successfully logged out"
-msgstr "были удачно сохранены"
-
-#: templates/b24online/registration/password_change_done.html:4
-#, fuzzy
-#| msgid "Password reset"
-msgid "Password changed"
-msgstr "Восстановление пароля"
-
-#: templates/b24online/registration/password_change_done.html:7
-#, fuzzy
-#| msgid "was successfully saved "
-msgid "Password successfully changed!"
-msgstr "были удачно сохранены"
-
-#: templates/b24online/registration/password_change_form.html:4
-#: templates/b24online/registration/password_change_form.html:10
-#: templates/centerpokupok/registration/password_change_form.html:8
-#: templates/centerpokupok/registration/password_reset_confirm.html:52
-msgid "Change password"
-msgstr "Изменить пароль"
-
-#: templates/b24online/registration/password_reset_complete.html:5
-#: templates/b24online/registration/password_reset_complete.html:20
-#, fuzzy
-#| msgid "Password reset done"
-msgid "Password reset complete"
-msgstr "Восстановление пароля завершено "
-
-#: templates/b24online/registration/password_reset_complete.html:24
-#, fuzzy
-#| msgid "Your password has been changed!"
-msgid "Your password has been reset!"
-msgstr "Ваш пароль был изменен "
-
-#: templates/b24online/registration/password_reset_complete.html:25
-#, fuzzy
-#| msgid "You email"
-msgid "You may now"
-msgstr "Ваша почта"
-
-#: templates/b24online/registration/password_reset_complete.html:25
-msgid "log in"
-msgstr ""
-
-#: templates/b24online/registration/password_reset_confirm.html:5
-#, fuzzy
-#| msgid "Confirm password"
-msgid "Confirm password reset"
-msgstr "Подтвердить пароль"
-
-#: templates/b24online/registration/password_reset_confirm.html:26
-#: templates/b24online/registration/password_reset_done.html:5
-#: templates/b24online/registration/password_reset_done.html:20
-#: templates/b24online/registration/password_reset_form.html:5
-#: templates/b24online/registration/password_reset_form.html:22
-msgid "Password reset"
-msgstr "Восстановление пароля"
-
-#: templates/b24online/registration/password_reset_confirm.html:28
-#, fuzzy
-#| msgid "Enter your new password below to change the old password:"
-msgid "Enter your new password below to reset your password:"
-msgstr "Введите новый пароль ниже, чтобы изменить старый пароль:"
-
-#: templates/b24online/registration/password_reset_confirm.html:32
-#, fuzzy
-#| msgid "Sent password"
-msgid "Set password"
-msgstr "Послать пароль"
-
-#: templates/b24online/registration/password_reset_done.html:23
-msgid ""
-"\n"
-"                We have sent you an email with a link to reset your "
-"password.  Please check\n"
-"                your email and click the link to continue.\n"
-"                "
-msgstr ""
-
-#: templates/b24online/registration/password_reset_email.html:6
-#, python-format
-msgid ""
-"\n"
-"You are receiving this email because you (or someone pretending to be you)\n"
-"requested that your password be reset on the %(domain)s site.  If you do "
-"not \n"
-"wish to reset your password, please ignore this message.\n"
-msgstr ""
-
-#: templates/b24online/registration/password_reset_email.html:12
-#, fuzzy
-#| msgid ""
-#| "To change the password, click the following to link or copy it into your "
-#| "browser:"
-msgid ""
-"\n"
-"To reset your password, please click the following link, or copy and paste "
-"it\n"
-"into your web browser:\n"
-msgstr ""
-"Что изменить пароль перейдите по следующей ссылке , или скопируйте ее в ваш "
-"браузер "
-
-#: templates/b24online/registration/password_reset_email.html:19
-msgid "Your username, in case you've forgotten:"
-msgstr ""
-
-#: templates/b24online/registration/password_reset_email.html:22
-#, fuzzy
-#| msgid "Best deals"
-msgid "Best regards"
-msgstr "Лучшие предложения"
-
-#: templates/b24online/registration/password_reset_email.html:23
-msgid "Management"
-msgstr ""
-
-#: templates/b24online/registration/password_reset_form.html:25
-#: templates/centerpokupok/registration/password_reset_form.html:45
-msgid ""
-"Forgot your password? Enter your e-mail and we will send you the required "
-"information to create a new password."
-msgstr ""
-"Забыли пароль? Введите свой ​​адрес электронной почты, и мы вышлем вам "
-"необходимую   информация чтобы  создать новый пароль ."
-
-#: templates/b24online/registration/password_reset_form.html:43
-#, fuzzy
-#| msgid "Reset password"
-msgid "Reset Password"
-msgstr "Изменение пароля"
-
-#: templates/b24online/registration/registration_closed.html:5
-#, fuzzy
-msgid "Registration is closed"
-msgstr "Регистрация завершена"
-
-#: templates/b24online/registration/registration_closed.html:20
-#: templates/centerpokupok/registration/registration_closed.html:6
-msgid "Registration error"
-msgstr "Ошибка регистрации"
-
-#: templates/b24online/registration/registration_closed.html:22
-msgid "Sorry, but registration is closed at this moment. Come back later."
-msgstr ""
-
-#: templates/b24online/registration/registration_complete.html:5
-#: templates/centerpokupok/registration/activation_complete.html:6
-msgid "Registration complete"
-msgstr "Регистрация завершена"
-
-#: templates/b24online/registration/registration_complete.html:20
-#, fuzzy
-#| msgid "Activation complete"
-msgid "Activation email sent"
-msgstr "Активация завершена"
-
-#: templates/b24online/registration/registration_complete.html:23
-#, fuzzy
-#| msgid "Thank you that you have completed the registration! Now you can  "
-msgid "Please check your email to complete the registration process."
-msgstr "Спасибо , что закончили регистрацию, сейчас вы можете "
-
-#: templates/b24online/registration/registration_form.html:44
-msgid "I have read and accept"
-msgstr "Я прочитал и согласен с "
-
-#: templates/b24online/registration/registration_form.html:44
-msgid "the terms of use"
-msgstr "правилами использования "
 
 #: templates/b24online/tab_documents_structure.html:19
 #: templates/usersites/B2BProducts/detailContent.html:109
@@ -3748,9 +3711,19 @@ msgstr "в своем профиле"
 msgid "Sorry but you activation key is invalid"
 msgstr "Ваш ключ активации неверен"
 
+#: templates/centerpokupok/registration/activation_complete.html:6
+#: templates/registration/registration_complete.html:5
+msgid "Registration complete"
+msgstr "Регистрация завершена"
+
 #: templates/centerpokupok/registration/activation_complete.html:50
 msgid "Thank you that you have completed the registration! Now you can  "
 msgstr "Спасибо , что закончили регистрацию, сейчас вы можете "
+
+#: templates/centerpokupok/registration/activation_complete.html:51
+#: templates/registration/activation_complete.html:25
+msgid "sign in"
+msgstr "войти"
 
 #: templates/centerpokupok/registration/activation_complete.html:51
 msgid "using the email and password you provided during registration."
@@ -3798,6 +3771,13 @@ msgstr "Изменить пароль"
 #: templates/centerpokupok/registration/password_change_done.html:5
 msgid "The password has been changed successfully!"
 msgstr "Пароль успешно изменен "
+
+#: templates/centerpokupok/registration/password_change_form.html:8
+#: templates/centerpokupok/registration/password_reset_confirm.html:52
+#: templates/registration/password_change_form.html:4
+#: templates/registration/password_change_form.html:10
+msgid "Change password"
+msgstr "Изменить пароль"
 
 #: templates/centerpokupok/registration/password_reset_complete.html:6
 msgid "Reset complete"
@@ -3869,9 +3849,23 @@ msgstr "С уважением, Администрация,"
 msgid "Reset password"
 msgstr "Изменение пароля"
 
+#: templates/centerpokupok/registration/password_reset_form.html:45
+#: templates/registration/password_reset_form.html:25
+msgid ""
+"Forgot your password? Enter your e-mail and we will send you the required "
+"information to create a new password."
+msgstr ""
+"Забыли пароль? Введите свой ​​адрес электронной почты, и мы вышлем вам "
+"необходимую   информация чтобы  создать новый пароль ."
+
 #: templates/centerpokupok/registration/password_reset_form.html:49
 msgid "Sent password"
 msgstr "Послать пароль"
+
+#: templates/centerpokupok/registration/registration_closed.html:6
+#: templates/registration/registration_closed.html:20
+msgid "Registration error"
+msgstr "Ошибка регистрации"
 
 #: templates/centerpokupok/registration/registration_closed.html:52
 msgid "Registration error. Please try again "
@@ -3897,6 +3891,13 @@ msgstr "Регистрация покупателя"
 msgid "Create new account"
 msgstr "Создать новый аккаунт"
 
+#: templates/centerpokupok/registration/registration_form.html:20
+#: templates/registration/login.html:31
+#: templates/registration/password_reset_form.html:39
+#: templates/registration/registration_form.html:27
+msgid "E-mail"
+msgstr "E-mail"
+
 #: templates/centerpokupok/registration/registration_form.html:55
 msgid "I agree to the"
 msgstr "Я согласен с"
@@ -3904,6 +3905,262 @@ msgstr "Я согласен с"
 #: templates/centerpokupok/registration/registration_form.html:55
 msgid "terms"
 msgstr "условиями"
+
+#: templates/registration/activate.html:5
+#, fuzzy
+msgid "Account activation failed."
+msgstr "Активация завершена"
+
+#: templates/registration/activation_complete.html:5
+#, fuzzy
+#| msgid "Accountant name"
+msgid "Account Activated"
+msgstr "ФИО бухгалтера"
+
+#: templates/registration/activation_complete.html:21
+#, fuzzy
+msgid "Activation is completed"
+msgstr "Активация завершена"
+
+#: templates/registration/activation_complete.html:24
+#, fuzzy
+msgid "Thank you for registration! Now you can  "
+msgstr "Спасибо , что закончили регистрацию, сейчас вы можете "
+
+#: templates/registration/activation_complete.html:25
+#, fuzzy
+msgid "using email and password that you provided during sign up."
+msgstr "используя email и пароль указанные при регистрации"
+
+#: templates/registration/activation_email.html:7
+msgid "registration"
+msgstr "регистрация"
+
+#: templates/registration/activation_email.html:12
+#, python-format
+msgid ""
+"\n"
+"    You (or someone pretending to be you) have asked to register an account "
+"at\n"
+"    %(site_name)s.  If this wasn't you, please ignore this email\n"
+"    and your address will be removed from our records.\n"
+"    "
+msgstr ""
+
+#: templates/registration/activation_email.html:19
+#, python-format
+msgid ""
+"\n"
+"    To activate this account, please click the following link within the "
+"next\n"
+"    %(expiration_days)s days:\n"
+"    "
+msgstr ""
+
+#: templates/registration/activation_email.html:31
+#, python-format
+msgid ""
+"\n"
+"    Sincerely,\n"
+"    %(site_name)s Management\n"
+"    "
+msgstr ""
+
+#: templates/registration/activation_email.txt:3
+#, python-format
+msgid ""
+"\n"
+"You (or someone pretending to be you) have asked to register an account at\n"
+"%(site_name)s.  If this wasn't you, please ignore this email\n"
+"and your address will be removed from our records.\n"
+msgstr ""
+
+#: templates/registration/activation_email.txt:8
+#, python-format
+msgid ""
+"\n"
+"To activate this account, please click the following link within the next\n"
+"%(expiration_days)s days:\n"
+msgstr ""
+
+#: templates/registration/activation_email.txt:15
+#, python-format
+msgid ""
+"\n"
+"Sincerely,\n"
+"%(site_name)s Management\n"
+msgstr ""
+
+#: templates/registration/activation_email_subject.txt:1
+#, fuzzy
+#| msgid "Activation problem"
+msgid "Account activation on"
+msgstr "Проблема активации"
+
+#: templates/registration/login.html:5
+msgid "Log in"
+msgstr ""
+
+#: templates/registration/login.html:20
+msgid "Authorization"
+msgstr "Авторизация"
+
+#: templates/registration/login.html:41
+msgid "Forgot password"
+msgstr "Забыли пароль"
+
+#: templates/registration/logout.html:5
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logout.html:22
+#, fuzzy
+#| msgid "was successfully saved "
+msgid "Successfully logged out"
+msgstr "были удачно сохранены"
+
+#: templates/registration/password_change_done.html:4
+#, fuzzy
+#| msgid "Password reset"
+msgid "Password changed"
+msgstr "Восстановление пароля"
+
+#: templates/registration/password_change_done.html:7
+#, fuzzy
+#| msgid "was successfully saved "
+msgid "Password successfully changed!"
+msgstr "были удачно сохранены"
+
+#: templates/registration/password_reset_complete.html:5
+#: templates/registration/password_reset_complete.html:20
+#, fuzzy
+#| msgid "Password reset done"
+msgid "Password reset complete"
+msgstr "Восстановление пароля завершено "
+
+#: templates/registration/password_reset_complete.html:24
+#, fuzzy
+#| msgid "Your password has been changed!"
+msgid "Your password has been reset!"
+msgstr "Ваш пароль был изменен "
+
+#: templates/registration/password_reset_complete.html:25
+#, fuzzy
+#| msgid "You email"
+msgid "You may now"
+msgstr "Ваша почта"
+
+#: templates/registration/password_reset_complete.html:25
+msgid "log in"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:5
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Confirm password reset"
+msgstr "Подтвердить пароль"
+
+#: templates/registration/password_reset_confirm.html:26
+#: templates/registration/password_reset_done.html:5
+#: templates/registration/password_reset_done.html:20
+#: templates/registration/password_reset_form.html:5
+#: templates/registration/password_reset_form.html:22
+msgid "Password reset"
+msgstr "Восстановление пароля"
+
+#: templates/registration/password_reset_confirm.html:28
+#, fuzzy
+#| msgid "Enter your new password below to change the old password:"
+msgid "Enter your new password below to reset your password:"
+msgstr "Введите новый пароль ниже, чтобы изменить старый пароль:"
+
+#: templates/registration/password_reset_confirm.html:32
+#, fuzzy
+#| msgid "Sent password"
+msgid "Set password"
+msgstr "Послать пароль"
+
+#: templates/registration/password_reset_done.html:23
+msgid ""
+"\n"
+"                We have sent you an email with a link to reset your "
+"password.  Please check\n"
+"                your email and click the link to continue.\n"
+"                "
+msgstr ""
+
+#: templates/registration/password_reset_email.html:6
+#, python-format
+msgid ""
+"\n"
+"You are receiving this email because you (or someone pretending to be you)\n"
+"requested that your password be reset on the %(domain)s site.  If you do "
+"not \n"
+"wish to reset your password, please ignore this message.\n"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:12
+#, fuzzy
+#| msgid ""
+#| "To change the password, click the following to link or copy it into your "
+#| "browser:"
+msgid ""
+"\n"
+"To reset your password, please click the following link, or copy and paste "
+"it\n"
+"into your web browser:\n"
+msgstr ""
+"Что изменить пароль перейдите по следующей ссылке , или скопируйте ее в ваш "
+"браузер "
+
+#: templates/registration/password_reset_email.html:19
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:22
+#, fuzzy
+#| msgid "Best deals"
+msgid "Best regards"
+msgstr "Лучшие предложения"
+
+#: templates/registration/password_reset_email.html:23
+msgid "Management"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:43
+#, fuzzy
+#| msgid "Reset password"
+msgid "Reset Password"
+msgstr "Изменение пароля"
+
+#: templates/registration/registration_closed.html:5
+#, fuzzy
+msgid "Registration is closed"
+msgstr "Регистрация завершена"
+
+#: templates/registration/registration_closed.html:22
+msgid "Sorry, but registration is closed at this moment. Come back later."
+msgstr ""
+
+#: templates/registration/registration_complete.html:20
+#, fuzzy
+#| msgid "Activation complete"
+msgid "Activation email sent"
+msgstr "Активация завершена"
+
+#: templates/registration/registration_complete.html:23
+#, fuzzy
+#| msgid "Thank you that you have completed the registration! Now you can  "
+msgid "Please check your email to complete the registration process."
+msgstr "Спасибо , что закончили регистрацию, сейчас вы можете "
+
+#: templates/registration/registration_form.html:44
+msgid "I have read and accept"
+msgstr "Я прочитал и согласен с "
+
+#: templates/registration/registration_form.html:44
+msgid "the terms of use"
+msgstr "правилами использования "
 
 #: templates/usersites/B2BProducts/contentPage.html:21
 #: templates/usersites/B2CProducts/contentPage.html:21
@@ -4208,9 +4465,6 @@ msgstr ""
 #~ msgid "Expire in 24 hours"
 #~ msgstr "Заканчивается через 24 часа"
 
-#~ msgid "Expire in 7 days"
-#~ msgstr "Заканчивается через 7 дней"
-
 #~ msgid "positive feedback"
 #~ msgstr "положительные отзывы"
 
@@ -4273,9 +4527,6 @@ msgstr ""
 
 #~ msgid "Notification in your communities"
 #~ msgstr "Уведомления от ваших сообществ"
-
-#~ msgid "add top"
-#~ msgstr "добавить в топ"
 
 #~ msgid "Cost of project"
 #~ msgstr "Требуемый бюджет"

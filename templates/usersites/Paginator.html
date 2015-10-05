@@ -1,22 +1,22 @@
 {% load CustomFilters %}
-{% if page.paginator.num_pages > 1 %}
+{% if page_obj.paginator.num_page_obj. > 1 %}
         <div class="panaging">
-             {%  if page.has_previous %}
-                    &larr; <a href="{% dynurl url_paginator url_parameter  page.previous_page_number %}" >Назад</a>
+             {%  if page_obj.has_previous %}
+                    &larr; <a href="{% dynurl url_paginator url_parameter  page_obj.previous_page_obj.number %}" >{% trans 'Back' %}</a>
             {% endif %}
 
 
                 {% for i in paginator_range %}
 
 
-                   {% ifequal i page.number %}
-                       <span style="font-weight: bolder" class="current">{{ page.number }}</span>
+                   {% ifequal i page_obj.number %}
+                       <span style="font-weight: bolder" class="current">{{ page_obj.number }}</span>
                           {% else %}
                        <a href="{% dynurl url_paginator url_parameter i%}">{{ i }}</a>
                  {% endifequal %}
                {% endfor %}
-               {%  if page.has_next %}
-                          <a href="{% dynurl url_paginator url_parameter page.next_page_number%}" >Вперед</a>&rarr;
+               {%  if page_obj.has_next %}
+                          <a href="{% dynurl url_paginator url_parameter page_obj.next_page_obj.number%}" >{% trans 'Forward' %}</a>&rarr;
                {% endif %}
         </div>
  {% endif %}

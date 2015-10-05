@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
+from django.utils.translation import activate, deactivate
 from elasticsearch.helpers import bulk
 from math import ceil
 from elasticsearch_dsl import Index, DocType
@@ -25,6 +26,7 @@ class Command(NoArgsCommand):
         bulk_size = 2000
        
         for lang in languages:
+            activate(lang)
             index_name = get_index_name(lang)
             conn.indices.delete(index=index_name, ignore=404)
             conn.indices.create(index=index_name, body=index_data)
@@ -49,3 +51,4 @@ class Command(NoArgsCommand):
 
                     bulk(conn, actions)
                     start_size = end_size
+            deactivate()
