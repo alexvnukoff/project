@@ -1,5 +1,7 @@
 {% load CustomFilters %}
-{% if page_obj.paginator.num_pages > 1 %}
+{% load i18n %}
+
+{% if is_paginated %}
         <div class="panaging">
              {%  if page_obj.has_previous %}
                     &larr; <a href="{% dynurl url_paginator url_parameter  page_obj.previous_page_number %}" >{% trans 'Back' %}</a>

@@ -271,26 +271,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
-    'default': ('en', 'ru'),
-    'en': ('ru',),
-    'ru': ('en',),
-    'he': ('en',),
-    'am': ('ru',),
-    'ar': ('en',),
-    'zh': ('en',),
-    #'az': ('ru',),
-    #'be': ('ru',),
-    #'et': ('ru',),
-    #'ka': ('ru',),
-    #'kk': ('ru',),
-    #'kg': ('ru',),
-    #'lt': ('ru',),
-    #'lv': ('ru',),
-    #'mo': ('ru',),
-    #'tg': ('ru',),
-    #'tm': ('ru',),
-    'uk': ('ru',),
-    #'uz': ('ru',),
+    'default': ('en', 'ru', 'he', 'am', 'ar', 'zh', 'uk')
 }
 
 

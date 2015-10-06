@@ -57,12 +57,12 @@ def _wall_content(request):
         if values:
             applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
 
-    innovation_project = InnovationProject.objects.all()
-    products = B2BProduct.objects.all().prefetch_related('company__countries')
-    proposal = BusinessProposal.objects.all()
-    exhibition = Exhibition.objects.all()
+    innovation_project = InnovationProject.get_active_objects()
+    products = B2BProduct.get_active_objects().prefetch_related('company__countries')
+    proposal = BusinessProposal.get_active_objects()
+    exhibition = Exhibition.get_active_objects()
     # TODO, show only specific news
-    news = News.objects.all()
+    news = News.get_active_objects()
 
     if applied_filters or q:
         filter_list = list(valid_filters.keys())

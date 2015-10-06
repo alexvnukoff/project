@@ -9,7 +9,8 @@ Django==1.8.4
 django-appconf==1.0.1
 django-celery==3.1.16
 django-debug-toolbar==1.3.2
-django-guardian==1.3
+-e git+https://github.com/fatal10110/django-guardian.git#egg=django-guardian
+-e git+https://github.com/fatal10110/django-paypal.git#egg=django-paypal-fork
 django-loginas==0.1.5
 django-modeltranslation==0.10.1
 django-mptt==0.7.4

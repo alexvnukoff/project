@@ -1,6 +1,6 @@
 {% load CustomFilters %}
 {% load i18n %}
-{% if page.paginator.num_pages > 1 %}
+{% if is_paginated > 1 %}
        <div class="panaging">
              {%  if page.has_previous %}
                     <a href="{% dynurl url_paginator url_parameter "1"  %}" >{% trans "Start" %}</a>
@@ -13,7 +13,7 @@
 
 
                    {% ifequal i page.number %}
-                       <a href="{% dynurl url_paginator url_parameter page.number  %}" class="current">{{ page.number }}</a>
+                           <a href="{% dynurl url_paginator url_parameter page.number  %}" class="current">{{ page.number }}</a>
                           {% else %}
                        <a href="{% dynurl url_paginator url_parameter i  %}">{{ i }}</a>
                  {% endifequal %}

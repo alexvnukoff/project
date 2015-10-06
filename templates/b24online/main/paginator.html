@@ -1,6 +1,6 @@
 {% load CustomFilters %}
 {% load i18n %}
-{% if page.paginator.num_pages > 1 %}
+{% if is_paginated %}
     <div class="panging">
         <span style="float: left;">{% trans "Total pages" %} : {{ page.paginator.num_pages }} </span>
         {%  if page.has_previous %}

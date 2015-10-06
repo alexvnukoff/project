@@ -652,3 +652,8 @@ def get_categories_data_for_products(object_list):
     #     new_object_list.append(obj)
 
     return new_object_list
+
+
+def verify_ipn_request(payment_obj):
+    if not payment_obj.item_number:
+        return False # TODO
