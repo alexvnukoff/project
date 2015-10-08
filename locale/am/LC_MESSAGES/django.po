@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 10:29+0000\n"
+"POT-Creation-Date: 2015-10-08 16:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,6 +119,7 @@ msgstr "TPP"
 #: b24project/b24online/AdvBanner/forms.py:33
 #: b24project/b24online/AdvTop/forms.py:23
 #: b24project/b24online/Exhibitions/forms.py:37
+#: b24project/b24online/Product/forms.py:68
 #: b24project/b24online/Resume/forms.py:20
 #: b24project/b24online/Resume/forms.py:38
 #: b24project/b24online/Tenders/forms.py:26
@@ -211,16 +212,40 @@ msgstr "Ինովացիոն ծրագիր"
 msgid "Private messages"
 msgstr "Անձնական հաղորդագրություն"
 
+#: b24project/b24online/Product/forms.py:56
+#: b24project/b24online/Product/forms.py:78
+msgid "Discount can not be smaller than 1 percent"
+msgstr ""
+
+#: b24project/b24online/Product/forms.py:59
+#: b24project/b24online/Product/forms.py:81
+msgid "Discount can not be bigger than 99 percent"
+msgstr ""
+
+#: b24project/b24online/Product/forms.py:62
+msgid "You should provide coupon start date"
+msgstr ""
+
+#: b24project/b24online/Product/forms.py:65
+#, fuzzy
+#| msgid "You should choose a valid date range"
+msgid "You should provide coupon end date"
+msgstr "Դուք պետք է ընտրեք ամսաթվի  ճիշտ ժամանակահատված"
+
+#: b24project/b24online/Product/forms.py:71
+msgid "Coupon discount percrnt should be provided"
+msgstr ""
+
 #: b24project/b24online/Product/views.py:26
-#: b24project/b24online/Product/views.py:111
+#: b24project/b24online/Product/views.py:112
 #: templates/b24online/main_page.html:185
 #: templates/b24online/main_page.html:212
 #, fuzzy
 msgid "Products B2B"
 msgstr "Ապրանքներ"
 
-#: b24project/b24online/Product/views.py:73
-#: b24project/b24online/Product/views.py:122
+#: b24project/b24online/Product/views.py:74
+#: b24project/b24online/Product/views.py:123
 #: templates/b24online/main_page.html:213
 #, fuzzy
 msgid "Products B2C"
@@ -474,45 +499,45 @@ msgstr "Լրացուցիչ"
 msgid "Affiliate"
 msgstr "Ցուցադրել"
 
-#: b24project/b24online/models.py:1186
+#: b24project/b24online/models.py:1187
 msgid "Male"
 msgstr ""
 
-#: b24project/b24online/models.py:1186
+#: b24project/b24online/models.py:1187
 msgid "Female"
 msgstr ""
 
-#: b24project/b24online/models.py:1189
+#: b24project/b24online/models.py:1190
 #, fuzzy
 #| msgid "Business plan"
 msgid "Businessman"
 msgstr "Բիզնես պլան"
 
-#: b24project/b24online/models.py:1189
+#: b24project/b24online/models.py:1190
 msgid "Individual"
 msgstr ""
 
-#: b24project/b24online/models.py:1302 b24project/b24online/models.py:1391
+#: b24project/b24online/models.py:1303 b24project/b24online/models.py:1392
 msgid "B2B"
 msgstr ""
 
-#: b24project/b24online/models.py:1303 b24project/b24online/models.py:1392
+#: b24project/b24online/models.py:1304 b24project/b24online/models.py:1393
 msgid "B2C"
 msgstr ""
 
-#: b24project/b24online/models.py:1304 b24project/b24online/models.py:1393
+#: b24project/b24online/models.py:1305 b24project/b24online/models.py:1394
 #, fuzzy
 #| msgid "Users"
 msgid "User sites"
 msgstr "Օգտագործող"
 
-#: b24project/b24online/models.py:1496
+#: b24project/b24online/models.py:1497
 #, fuzzy
 #| msgid "Administrator"
 msgid "Administration"
 msgstr "Ադմինիստրատոր"
 
-#: b24project/b24online/models.py:1497
+#: b24project/b24online/models.py:1498
 msgid "Admin"
 msgstr ""
 
@@ -582,7 +607,7 @@ msgstr "Քաղաք"
 #: templates/b24online/News/popupFilter.html:9
 #: templates/b24online/Products/popupFilter.html:9
 #: templates/b24online/Profile/addForm.html:65
-#: templates/b24online/Tenders/addForm.html:91
+#: templates/b24online/Tenders/addForm.html:92
 #: templates/b24online/Tenders/popupFilter.html:9
 #: templates/b24online/TppTV/popupFilter.html:9
 #: templates/b24online/Vacancy/addForm.html:41
@@ -599,7 +624,7 @@ msgstr "Փոստային ինդեքս"
 
 #: b24project/centerpokupok/forms.py:10
 #: templates/b24online/BusinessProposal/detailContent.html:96
-#: templates/b24online/Companies/addForm.html:193
+#: templates/b24online/Companies/addForm.html:202
 #: templates/b24online/Companies/detailContent.html:256
 #: templates/b24online/Exhibitions/detailContent.html:117
 #: templates/b24online/Innov/detailContent.html:129
@@ -684,35 +709,35 @@ msgstr ""
 msgid "Extramural"
 msgstr ""
 
-#: b24project/tpp/settings.py:249
+#: b24project/tpp/settings.py:248
 msgid "Russia"
 msgstr "Ռուսաստան"
 
-#: b24project/tpp/settings.py:250
+#: b24project/tpp/settings.py:249
 msgid "Armenia"
 msgstr ""
 
-#: b24project/tpp/settings.py:253
+#: b24project/tpp/settings.py:252
 msgid "England"
 msgstr "Անգլիա"
 
-#: b24project/tpp/settings.py:263 templates/b24online/index.html:86
+#: b24project/tpp/settings.py:262 templates/b24online/index.html:86
 #: templates/b24online/job_index.html:109
 #: templates/centerpokupok/header_big.html:40
 msgid "Ukrainian"
 msgstr ""
 
-#: b24project/tpp/settings.py:265
+#: b24project/tpp/settings.py:264
 msgid "Israel"
 msgstr "Իսրայել"
 
-#: b24project/tpp/settings.py:266 templates/b24online/index.html:81
+#: b24project/tpp/settings.py:265 templates/b24online/index.html:81
 #: templates/b24online/job_index.html:104
 #: templates/centerpokupok/header_big.html:35
 msgid "Arabic"
 msgstr ""
 
-#: b24project/tpp/settings.py:267 templates/b24online/index.html:85
+#: b24project/tpp/settings.py:266 templates/b24online/index.html:85
 #: templates/b24online/job_index.html:108
 #: templates/centerpokupok/header_big.html:39
 msgid "Chinese"
@@ -727,8 +752,8 @@ msgstr ""
 msgid "B2B Products"
 msgstr "Ապրանքներ"
 
-#: b24project/usersites/B2CProducts/views.py:15
-#: b24project/usersites/B2CProducts/views.py:16
+#: b24project/usersites/B2CProducts/views.py:17
+#: b24project/usersites/B2CProducts/views.py:18
 #: templates/usersites/contentPage.html:53
 #: templates/usersites/site_sidebar.html:96
 #, fuzzy
@@ -881,7 +906,7 @@ msgstr "Գովազդի տեղադրման պայմանները"
 #: templates/b24online/AdminTpp/prices.html:101
 #: templates/b24online/AdminTpp/users.html:25
 #: templates/b24online/AdminTpp/users.html:39
-#: templates/b24online/Companies/addForm.html:165
+#: templates/b24online/Companies/addForm.html:174
 #: templates/b24online/Companies/tabExhibitions.html:7
 #: templates/b24online/Companies/tabInnov.html:8
 #: templates/b24online/Companies/tabProducts.html:9
@@ -889,8 +914,8 @@ msgstr "Գովազդի տեղադրման պայմանները"
 #: templates/b24online/Companies/tabStaff.html:22
 #: templates/b24online/Companies/tabTenders.html:7
 #: templates/b24online/Exhibitions/detailContent.html:166
-#: templates/b24online/Products/addForm.html:126
-#: templates/b24online/Products/addFormB2C.html:124
+#: templates/b24online/Products/addForm.html:127
+#: templates/b24online/Products/addFormB2C.html:166
 #: templates/b24online/Tpp/addForm.html:133
 #: templates/b24online/Tpp/tabCompanies.html:8
 #: templates/b24online/Tpp/tabExhibitions.html:7
@@ -967,10 +992,10 @@ msgstr "Բաժիններ"
 #: templates/b24online/AdminTpp/dashboard.html:78
 #: templates/b24online/AdminTpp/prices.html:83
 #: templates/b24online/BusinessProposal/addForm.html:102
-#: templates/b24online/Companies/addForm.html:152
+#: templates/b24online/Companies/addForm.html:161
 #: templates/b24online/Exhibitions/addForm.html:120
-#: templates/b24online/Innov/addForm.html:108
-#: templates/b24online/Tenders/addForm.html:110
+#: templates/b24online/Innov/addForm.html:109
+#: templates/b24online/Tenders/addForm.html:111
 #, fuzzy
 #| msgid "Branch"
 msgid "Branches"
@@ -992,15 +1017,15 @@ msgstr "Բաժիններ"
 #: templates/b24online/AdminTpp/prices.html:91
 #: templates/b24online/AdminTpp/prices.html:103
 #: templates/b24online/BusinessProposal/addForm.html:162
-#: templates/b24online/Companies/addForm.html:228
+#: templates/b24online/Companies/addForm.html:237
 #: templates/b24online/Exhibitions/addForm.html:176
-#: templates/b24online/Innov/addForm.html:174
+#: templates/b24online/Innov/addForm.html:175
 #: templates/b24online/News/addForm.html:87
-#: templates/b24online/Products/addForm.html:227
-#: templates/b24online/Products/addFormB2C.html:210
+#: templates/b24online/Products/addForm.html:228
+#: templates/b24online/Products/addFormB2C.html:247
 #: templates/b24online/Profile/addForm.html:107
 #: templates/b24online/Resume/addForm.html:209
-#: templates/b24online/Tenders/addForm.html:152
+#: templates/b24online/Tenders/addForm.html:153
 #: templates/b24online/Tpp/addForm.html:217
 #: templates/b24online/TppTV/addForm.html:90
 #: templates/b24online/UserSites/addForm.html:249
@@ -1070,7 +1095,7 @@ msgstr ""
 #: templates/b24online/BusinessProposal/addForm.html:133
 #: templates/b24online/Exhibitions/addForm.html:133
 #: templates/b24online/News/addForm.html:56
-#: templates/b24online/Tenders/addForm.html:123
+#: templates/b24online/Tenders/addForm.html:124
 #: templates/b24online/TppTV/addForm.html:59
 #: templates/b24online/Vacancy/addForm.html:64
 #: templates/b24online/additionalPage.html:4
@@ -1363,29 +1388,29 @@ msgid "Select"
 msgstr "Ընտրել մասնաճյուղը"
 
 #: templates/b24online/BusinessProposal/addForm.html:83
-#: templates/b24online/Companies/addForm.html:140
+#: templates/b24online/Companies/addForm.html:149
 #: templates/b24online/Exhibitions/addForm.html:99
-#: templates/b24online/Innov/addForm.html:55
-#: templates/b24online/Products/addForm.html:96
-#: templates/b24online/Products/addFormB2C.html:95
-#: templates/b24online/Tenders/addForm.html:98
+#: templates/b24online/Innov/addForm.html:56
+#: templates/b24online/Products/addForm.html:97
+#: templates/b24online/Products/addFormB2C.html:98
+#: templates/b24online/Tenders/addForm.html:99
 #: templates/b24online/Tpp/addForm.html:110
 msgid "Keywords"
 msgstr "Հիմնաբառեր"
 
 #: templates/b24online/BusinessProposal/addForm.html:105
-#: templates/b24online/Companies/addForm.html:155
+#: templates/b24online/Companies/addForm.html:164
 #: templates/b24online/Exhibitions/addForm.html:123
-#: templates/b24online/Innov/addForm.html:111
-#: templates/b24online/Tenders/addForm.html:113
+#: templates/b24online/Innov/addForm.html:112
+#: templates/b24online/Tenders/addForm.html:114
 #, fuzzy
 #| msgid "Add page"
 msgid "Add branches"
 msgstr "Ավելացնել էջ"
 
 #: templates/b24online/BusinessProposal/addForm.html:118
-#: templates/b24online/Products/addForm.html:110
-#: templates/b24online/Products/addFormB2C.html:109
+#: templates/b24online/Products/addForm.html:111
+#: templates/b24online/Products/addFormB2C.html:151
 #: templates/centerpokupok/Categories/index.html:8
 #: templates/centerpokupok/related_categories.html:4
 #: templates/usersites/B2BProducts/contentPage.html:19
@@ -1394,8 +1419,8 @@ msgid "Categories"
 msgstr "Բաժիններ"
 
 #: templates/b24online/BusinessProposal/addForm.html:121
-#: templates/b24online/Products/addForm.html:113
-#: templates/b24online/Products/addFormB2C.html:112
+#: templates/b24online/Products/addForm.html:114
+#: templates/b24online/Products/addFormB2C.html:154
 #, fuzzy
 msgid "Add categories"
 msgstr "Բոլոր բաժինները"
@@ -1403,9 +1428,9 @@ msgstr "Բոլոր բաժինները"
 #: templates/b24online/BusinessProposal/addForm.html:140
 #: templates/b24online/Companies/tabProducts.html:10
 #: templates/b24online/Exhibitions/addForm.html:140
-#: templates/b24online/Innov/addForm.html:136
-#: templates/b24online/Innov/addForm.html:153
-#: templates/b24online/Tenders/addForm.html:130
+#: templates/b24online/Innov/addForm.html:137
+#: templates/b24online/Innov/addForm.html:154
+#: templates/b24online/Tenders/addForm.html:131
 #: templates/b24online/Tenders/detailContent.html:83
 #: templates/b24online/Vacancy/addForm.html:71
 #: templates/b24online/Vacancy/detailContent.html:57
@@ -1414,40 +1439,40 @@ msgid "Description"
 msgstr "Նկարագրություն"
 
 #: templates/b24online/BusinessProposal/addForm.html:150
-#: templates/b24online/Companies/addForm.html:216
+#: templates/b24online/Companies/addForm.html:225
 #: templates/b24online/Exhibitions/addForm.html:164
-#: templates/b24online/Innov/addForm.html:162
-#: templates/b24online/Products/addForm.html:215
-#: templates/b24online/Products/addFormB2C.html:198
-#: templates/b24online/Tenders/addForm.html:140
+#: templates/b24online/Innov/addForm.html:163
+#: templates/b24online/Products/addForm.html:216
+#: templates/b24online/Products/addFormB2C.html:235
+#: templates/b24online/Tenders/addForm.html:141
 #: templates/b24online/Tpp/addForm.html:205
 msgid "Additional pages"
 msgstr "Լրացուցիչ էջերը"
 
 #: templates/b24online/BusinessProposal/addForm.html:151
-#: templates/b24online/Companies/addForm.html:217
+#: templates/b24online/Companies/addForm.html:226
 #: templates/b24online/Exhibitions/addForm.html:165
-#: templates/b24online/Innov/addForm.html:163
-#: templates/b24online/Products/addForm.html:216
-#: templates/b24online/Products/addFormB2C.html:199
-#: templates/b24online/Tenders/addForm.html:141
+#: templates/b24online/Innov/addForm.html:164
+#: templates/b24online/Products/addForm.html:217
+#: templates/b24online/Products/addFormB2C.html:236
+#: templates/b24online/Tenders/addForm.html:142
 #: templates/b24online/Tpp/addForm.html:206
 msgid "Add page"
 msgstr "Ավելացնել էջ"
 
 #: templates/b24online/BusinessProposal/addForm.html:163
-#: templates/b24online/Companies/addForm.html:229
+#: templates/b24online/Companies/addForm.html:238
 #: templates/b24online/Companies/detailContent.html:64
 #: templates/b24online/Companies/detailContent.html:72
 #: templates/b24online/Exhibitions/addForm.html:177
 #: templates/b24online/Exhibitions/detailContent.html:190
-#: templates/b24online/Innov/addForm.html:175
+#: templates/b24online/Innov/addForm.html:176
 #: templates/b24online/News/addForm.html:88
-#: templates/b24online/Products/addForm.html:228
-#: templates/b24online/Products/addFormB2C.html:211
+#: templates/b24online/Products/addForm.html:229
+#: templates/b24online/Products/addFormB2C.html:248
 #: templates/b24online/Profile/addForm.html:108
 #: templates/b24online/Resume/addForm.html:210
-#: templates/b24online/Tenders/addForm.html:153
+#: templates/b24online/Tenders/addForm.html:154
 #: templates/b24online/Tpp/addForm.html:218
 #: templates/b24online/Tpp/detailContent.html:64
 #: templates/b24online/Tpp/detailContent.html:72
@@ -1534,7 +1559,7 @@ msgstr "Ոչ մի արդյունք չի գտնվել"
 #: templates/b24online/Tenders/detailContent.html:86
 #: templates/b24online/Tpp/detailContent.html:134
 #: templates/usersites/B2BProducts/detailContent.html:89
-#: templates/usersites/B2CProducts/detailContent.html:80
+#: templates/usersites/B2CProducts/detailContent.html:83
 #: templates/usersites/OrganizationPages/gallery.html:4
 #: templates/usersites/Proposals/detailContent.html:31
 #: templates/usersites/site_sidebar.html:110
@@ -1604,16 +1629,16 @@ msgstr ""
 #: templates/b24online/Companies/addForm.html:64
 #: templates/b24online/Companies/tabProducts.html:8
 #: templates/b24online/News/addForm.html:21
-#: templates/b24online/Products/addForm.html:72
-#: templates/b24online/Products/addFormB2C.html:71
+#: templates/b24online/Products/addForm.html:73
+#: templates/b24online/Products/addFormB2C.html:74
 #: templates/b24online/Tpp/addForm.html:35
 #: templates/b24online/TppTV/addForm.html:19
 msgid "Image"
 msgstr "Նկար"
 
 #: templates/b24online/Companies/addForm.html:72
-#: templates/b24online/Products/addForm.html:84
-#: templates/b24online/Products/addFormB2C.html:83
+#: templates/b24online/Products/addForm.html:85
+#: templates/b24online/Products/addFormB2C.html:86
 #: templates/b24online/Tpp/addForm.html:43
 #: templates/b24online/Tpp/addForm.html:63
 msgid "delete"
@@ -1633,28 +1658,32 @@ msgstr "Տնօրենի անունը"
 msgid "Slogan"
 msgstr "Լոզունգ"
 
-#: templates/b24online/Companies/addForm.html:133
+#: templates/b24online/Companies/addForm.html:127
+msgid "PayPal account (E-mail)"
+msgstr ""
+
+#: templates/b24online/Companies/addForm.html:142
 #: templates/b24online/Tpp/addForm.html:103
 #, fuzzy
 #| msgid "Site"
 msgid "Site URL"
 msgstr "Կայք"
 
-#: templates/b24online/Companies/addForm.html:173
+#: templates/b24online/Companies/addForm.html:182
 #: templates/b24online/Tpp/addForm.html:141
 msgid "Preview description "
 msgstr "Նախադիտման նկարագրությունը"
 
-#: templates/b24online/Companies/addForm.html:180
+#: templates/b24online/Companies/addForm.html:189
 #: templates/b24online/Tpp/addForm.html:148
 msgid "Detail description"
 msgstr "Մանրամասն նկարագրություն"
 
-#: templates/b24online/Companies/addForm.html:200
+#: templates/b24online/Companies/addForm.html:209
 msgid "Chamber of Commerce:"
 msgstr ""
 
-#: templates/b24online/Companies/addForm.html:208
+#: templates/b24online/Companies/addForm.html:217
 #: templates/b24online/Tpp/addForm.html:169
 msgid "Place on the map"
 msgstr "Տեղանքը քարտեզի վրա"
@@ -1762,7 +1791,7 @@ msgid "Start Event"
 msgstr "Իրադարձություն սկիզբ "
 
 #: templates/b24online/Companies/tabInnov.html:9
-#: templates/b24online/Innov/addForm.html:77
+#: templates/b24online/Innov/addForm.html:78
 #: templates/b24online/Innov/contentPage.html:26
 #: templates/b24online/Tpp/tabInnov.html:9
 #: templates/b24online/Wall/contentPage.html:52
@@ -1849,38 +1878,38 @@ msgstr "Դուք հաջողությամբ գրանցվել եք"
 msgid "Read more"
 msgstr "Կարդալ ավելին"
 
-#: templates/b24online/Innov/addForm.html:62
+#: templates/b24online/Innov/addForm.html:63
 #, fuzzy
 msgid "Release date"
 msgstr "Թողարկման ամսաթիվը"
 
-#: templates/b24online/Innov/addForm.html:69
+#: templates/b24online/Innov/addForm.html:70
 msgid "Project site"
 msgstr "նախագծի կայքը"
 
-#: templates/b24online/Innov/addForm.html:86
-#: templates/b24online/Products/addForm.html:181
-#: templates/b24online/Products/addFormB2C.html:179
-#: templates/b24online/Tenders/addForm.html:80
+#: templates/b24online/Innov/addForm.html:87
+#: templates/b24online/Products/addForm.html:182
+#: templates/b24online/Products/addFormB2C.html:118
+#: templates/b24online/Tenders/addForm.html:81
 msgid "Currency"
 msgstr "Արտարժույթ"
 
-#: templates/b24online/Innov/addForm.html:122
+#: templates/b24online/Innov/addForm.html:123
 msgid "Project name"
 msgstr "Ծրագրի անվանումը"
 
-#: templates/b24online/Innov/addForm.html:129
+#: templates/b24online/Innov/addForm.html:130
 msgid "Product name"
 msgstr "Ապրանքի անվանումը"
 
-#: templates/b24online/Innov/addForm.html:147
+#: templates/b24online/Innov/addForm.html:148
 #: templates/b24online/Innov/detailContent.html:76
 msgid "Business plan"
 msgstr "Բիզնես պլան"
 
 #: templates/b24online/Innov/contentPage.html:22
 #: templates/b24online/Resume/contentPage.html:16
-#: templates/b24online/Tenders/addForm.html:58
+#: templates/b24online/Tenders/addForm.html:59
 #: templates/b24online/Tenders/contentPage.html:25
 #: templates/b24online/Tenders/detailContent.html:59
 #: templates/b24online/UserSites/contentPage.html:36
@@ -1897,8 +1926,8 @@ msgid "Industry"
 msgstr "Արդյունաբերություն"
 
 #: templates/b24online/Innov/detailContent.html:109
-#: templates/b24online/Products/addForm.html:168
-#: templates/b24online/Products/addFormB2C.html:166
+#: templates/b24online/Products/addForm.html:169
+#: templates/b24online/Products/addFormB2C.html:108
 msgid "Cost"
 msgstr "Արժեք"
 
@@ -1929,8 +1958,8 @@ msgid "Keyword"
 msgstr "Հիմնաբառը"
 
 #: templates/b24online/News/addForm.html:64
-#: templates/b24online/Products/addForm.html:148
-#: templates/b24online/Products/addFormB2C.html:146
+#: templates/b24online/Products/addForm.html:149
+#: templates/b24online/Products/addFormB2C.html:188
 #: templates/b24online/TppTV/addForm.html:67
 msgid "Preview description"
 msgstr "Ծանոթանալ նկարագրությանը"
@@ -1950,20 +1979,48 @@ msgstr "Նմանատիպ նորություններ"
 msgid "Last News"
 msgstr "Նորություններ"
 
-#: templates/b24online/Products/addForm.html:138
-#: templates/b24online/Products/addFormB2C.html:136
+#: templates/b24online/Products/addForm.html:139
+#: templates/b24online/Products/addFormB2C.html:178
 msgid "Part number"
 msgstr "Մասի համարը"
 
-#: templates/b24online/Products/addForm.html:155
-#: templates/b24online/Products/addFormB2C.html:153
+#: templates/b24online/Products/addForm.html:156
+#: templates/b24online/Products/addFormB2C.html:195
 msgid "Detail text"
 msgstr "Տեքստի մանրամասները"
 
-#: templates/b24online/Products/addForm.html:197
+#: templates/b24online/Products/addForm.html:198
 #, fuzzy
 msgid "Measurement unit"
 msgstr "Չափման միավոր"
+
+#: templates/b24online/Products/addFormB2C.html:135
+#, fuzzy
+#| msgid "Discount"
+msgid "Discount percent"
+msgstr "Զեղչեր"
+
+#: templates/b24online/Products/addFormB2C.html:207
+#, fuzzy
+#| msgid "Coupons"
+msgid "Coupon"
+msgstr "Արժեկտրոններ"
+
+#: templates/b24online/Products/addFormB2C.html:211
+msgid "Coupon percent"
+msgstr ""
+
+#: templates/b24online/Products/addFormB2C.html:218
+#, fuzzy
+#| msgid "Start date"
+msgid "Coupon start date"
+msgstr "Ժամկետի սկիզբը"
+
+#: templates/b24online/Products/addFormB2C.html:225
+#, fuzzy
+#| msgid "Choose date"
+msgid "Coupon end date"
+msgstr "Ընտրել ամսաթիվը"
 
 #: templates/b24online/Products/contentPage.html:32
 #: templates/usersites/B2BProducts/contentPage.html:50
@@ -2004,7 +2061,6 @@ msgstr "Միավոր"
 #: templates/b24online/Products/detailContent.html:80
 #: templates/b24online/Products/detailContentB2C.html:80
 #: templates/usersites/B2BProducts/detailContent.html:61
-#: templates/usersites/B2CProducts/detailContent.html:52
 msgid "Amount"
 msgstr "Գումարի չափը"
 
@@ -2016,7 +2072,7 @@ msgstr "Դիտումներ"
 
 #: templates/b24online/Products/detailContentB2C.html:147
 #: templates/usersites/B2BProducts/detailContent.html:88
-#: templates/usersites/B2CProducts/detailContent.html:79
+#: templates/usersites/B2CProducts/detailContent.html:82
 #: templates/usersites/Proposals/detailContent.html:30
 msgid "Document"
 msgstr "Փաստաթուղթ"
@@ -2238,12 +2294,12 @@ msgstr "Աշխատանքային ժամկետը"
 msgid "Additional skills"
 msgstr "Լրացուցիչ հմտություններ"
 
-#: templates/b24online/Tenders/addForm.html:65
+#: templates/b24online/Tenders/addForm.html:66
 #: templates/b24online/Tenders/detailContent.html:63
 msgid "Deadline for receiving bids"
 msgstr "Հայտերի ընդունման վերջնաժամկետ"
 
-#: templates/b24online/Tenders/addForm.html:73
+#: templates/b24online/Tenders/addForm.html:74
 #: templates/b24online/Tenders/contentPage.html:30
 #: templates/b24online/Tenders/detailContent.html:67
 msgid "Starting price"
@@ -2333,7 +2389,7 @@ msgstr "Հեռացնել"
 #: templates/b24online/Tpp/tab_gallery_structure.html:18
 #: templates/b24online/tab_gallery_structure.html:18
 #: templates/usersites/B2BProducts/detailContent.html:131
-#: templates/usersites/B2CProducts/detailContent.html:122
+#: templates/usersites/B2CProducts/detailContent.html:125
 #: templates/usersites/OrganizationPages/gallery.html:16
 #: templates/usersites/Proposals/detailContent.html:70
 msgid "zoom"
@@ -2880,12 +2936,12 @@ msgid "Total pages"
 msgstr "Լրացուցիչ էջերը"
 
 #: templates/b24online/main/paginator.html:7
-#: templates/usersites/Paginator.html:5
+#: templates/usersites/Paginator.html:7
 msgid "Back"
 msgstr ""
 
 #: templates/b24online/main/paginator.html:17
-#: templates/usersites/Paginator.html:19
+#: templates/usersites/Paginator.html:21
 msgid "Forward"
 msgstr ""
 
@@ -2945,7 +3001,7 @@ msgstr "կամ ստեղծել"
 
 #: templates/b24online/tab_documents_structure.html:19
 #: templates/usersites/B2BProducts/detailContent.html:109
-#: templates/usersites/B2CProducts/detailContent.html:100
+#: templates/usersites/B2CProducts/detailContent.html:103
 #: templates/usersites/Proposals/detailContent.html:50
 msgid "Download"
 msgstr ""
@@ -3217,7 +3273,7 @@ msgid "View store"
 msgstr "Նայել խանութները"
 
 #: templates/centerpokupok/News/detail.html:39
-#: templates/usersites/B2CProducts/detailContent.html:78
+#: templates/usersites/B2CProducts/detailContent.html:81
 msgid "About company"
 msgstr "Ընկերության մասին"
 
@@ -4196,12 +4252,11 @@ msgid "Slect Category"
 msgstr "Ընտրեք երկիրը"
 
 #: templates/usersites/B2BProducts/detailContent.html:67
-#: templates/usersites/B2CProducts/detailContent.html:58
 msgid "Deleviry method"
 msgstr "Առաքման եղանակը"
 
 #: templates/usersites/B2BProducts/detailContent.html:80
-#: templates/usersites/B2CProducts/detailContent.html:71
+#: templates/usersites/B2CProducts/detailContent.html:74
 msgid "Countact us"
 msgstr "Կապ մեզ հետ"
 
@@ -4304,9 +4359,6 @@ msgstr ""
 
 #~ msgid "The image size cannot exceed 50 KB"
 #~ msgstr "Նկարի չափը չպետք է գերազանցի 50 ԿԲ"
-
-#~ msgid "You should choose a valid date range"
-#~ msgstr "Դուք պետք է ընտրեք ամսաթվի  ճիշտ ժամանակահատված"
 
 #~ msgid "Error occurred while trying to proceed your request"
 #~ msgstr "Սխալ է տեղի ունեցել Ձեր հարցմանը անցնելու ժամանակ"
@@ -4422,9 +4474,6 @@ msgstr ""
 
 #~ msgid "To(date)"
 #~ msgstr "Մինչեւ (ամսաթիվը)"
-
-#~ msgid "Discount"
-#~ msgstr "Զեղչեր"
 
 #~ msgid "Your profile was updated"
 #~ msgstr "Ձեր պրոֆիլը թարմացվել է"
