@@ -21,11 +21,11 @@ from django.db import transaction
 
 
 
+
 # Create your models here.
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from polymorphic import PolymorphicModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from registration.signals import user_registered
 from uuslug import uuslug
@@ -562,6 +562,7 @@ class Company(Organization, IndexedModelMixin):
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)
     slogan = models.CharField(max_length=2048, blank=True, null=False)
+    company_paypal_account = models.EmailField(blank=True, null=True)
     metadata = HStoreField()
     branches = models.ManyToManyField(Branch)
     additional_pages = GenericRelation(AdditionalPage)

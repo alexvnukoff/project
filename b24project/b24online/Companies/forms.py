@@ -44,7 +44,7 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ('name', 'description', 'keywords', 'short_description', 'logo',
-                  'director', 'address', 'slogan', 'branches')
+                  'director', 'address', 'slogan', 'branches', 'company_paypal_account')
 
 
 AdditionalPageFormSet = generic_inlineformset_factory(AdditionalPage, fields=('title', 'content'), max_num=5,

@@ -48,6 +48,7 @@
                     <font class="num"> {{ object.get_measurement_unit_display }}</font>
                 </div>
             </li>
+            {% comment %}
             <li>
                 <label>{% trans 'Amount' %}:</label>
                  <div class="rightinfo">
@@ -64,9 +65,10 @@
                         <span class="trans-services"><i class="imgmain transport trans-5"></i></span>
                  </div>
             </li>
+            {% endcomment %}
             <li>
-                {% if cost %}
-
+                {% if paypal_form %}
+                    {{ paypal_form.render }}
                 {% else %}
                     <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                 {% endif %}

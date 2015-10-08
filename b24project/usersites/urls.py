@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from paypal.standard.ipn.views import ipn
 
 import usersites.views
 import usersites.OrganizationPages.urls
@@ -19,10 +21,11 @@ urlpatterns = patterns('',
                        url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
                        url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
                        url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
+                       url(r'^ipn/', ipn, name='paypal-ipn'),
                        )
 
-import debug_toolbar
-
-urlpatterns += patterns('',
-                        url(r'^__debug__/', include(debug_toolbar.urls)),
-                        )
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

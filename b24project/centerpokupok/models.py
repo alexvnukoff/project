@@ -51,9 +51,9 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     is_deleted = models.BooleanField(default=False)
     additional_pages = GenericRelation(AdditionalPage)
     metadata = HStoreField()
-    discount = models.FloatField(null=True, blank=True)
-    coupon_discount = models.FloatField(null=True, blank=True)
-    coupon_dates = DateRangeField()
+    discount_percent = models.FloatField(null=True, blank=True)
+    coupon_discount_percent = models.FloatField(null=True, blank=True)
+    coupon_dates = DateRangeField(null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -107,6 +107,20 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     def gallery_images(self):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
+    @property
+    def start_coupon_date(self):
+        if self.coupon_dates:
+            return self.coupon_dates.lower
+
+        return None
+
+    @property
+    def end_coupon_date(self):
+        if self.coupon_dates:
+            return self.coupon_dates.upper
+
+        return None
 
 
 class B2CProductComment(MPTTModel):

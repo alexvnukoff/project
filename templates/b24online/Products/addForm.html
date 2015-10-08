@@ -1,6 +1,7 @@
 {% extends 'b24online/forms.html' %}
 {% load static %}
 {% load i18n %}
+{% load l10n %}
 {% block content %}
 <script type="text/javascript">
     $(function() {
@@ -172,7 +173,7 @@
                                 <div class="formserror">{{ form.errors.cost.0 }}</div>
                             </div>
                         {% endif %}
-                        <input type="text"  name="cost" value="{{ form.cost.value|default_if_none:"" }}" placeholder="" class="text"/>
+                        <input type="text"  name="cost" value="{{ form.cost.value|default_if_none:""|unlocalize }}" placeholder="" class="text"/>
                     </div>
                 </div>
 

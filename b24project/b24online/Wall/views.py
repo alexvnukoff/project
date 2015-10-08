@@ -55,7 +55,7 @@ def _wall_content(request):
         values = request.GET.getlist(key)
 
         if values:
-            applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
+            applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
     innovation_project = InnovationProject.get_active_objects()
     products = B2BProduct.get_active_objects().prefetch_related('company__countries')

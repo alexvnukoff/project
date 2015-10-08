@@ -244,7 +244,7 @@ class ItemsList(HybridListView):
             values = request.GET.getlist(key)
 
             if values:
-                self.applied_filters[f] = model.objects.filter(pk__in=values).values('pk', 'name')
+                self.applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)

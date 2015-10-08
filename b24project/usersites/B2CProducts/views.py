@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from paypal.standard.forms import PayPalPaymentsForm
 
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.cbv import ItemDetail, ItemList
@@ -81,3 +83,24 @@ class B2CProductDetail(ItemDetail):
     model = B2CProduct
     filter_key = 'company'
     template_name = 'usersites/B2CProducts/detailContent.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        domain = get_current_site(self.request).domain
+
+        if self.object.cost and self.object.company.company_paypal_account:
+            paypal_dict = {
+                "business": self.object.company.company_paypal_account,
+                "amount": self.object.cost,
+                "notify_url": "http://%s%s" % (domain, reverse('paypal-ipn')),
+                "return_url": self.request.build_absolute_uri(),
+                "cancel_return": self.request.build_absolute_uri(),
+                "item_number": self.object.pk,
+                "item_name": self.object.name,
+                "no_shipping": 0,
+                "quantity": 1
+            }
+
+            context_data['paypal_form'] = PayPalPaymentsForm(initial=paypal_dict)
+
+        return context_data

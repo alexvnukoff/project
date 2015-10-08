@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEFAULT_FROM_EMAIL = 'noreply@tppcenter.com'
@@ -97,7 +95,6 @@ TEMPLATES = [
 # django
 DJANGO_APPS = (
     'django.contrib.postgres',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -116,6 +113,7 @@ LOCAL_APPS = (
 )
 
 EXTERNAL_APPS = (
+    'debug_toolbar',
     'djcelery',
     'loginas',
     'registration',
@@ -123,7 +121,7 @@ EXTERNAL_APPS = (
     'polymorphic',
     'mptt',
     'modeltranslation',
-    'debug_toolbar',
+    'django.contrib.admin',
     'guardian',
     'captcha',
 )
@@ -146,27 +144,28 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = 'profile:main'
 
 MIDDLEWARE_CLASSES = (
-    'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
+    'tpp.SiteUrlMiddleWare.SiteLangRedirect',
+    'tpp.SiteUrlMiddleWare.SubDomainLanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'tpp.ChangeCsrfCookieDomainMiddleware.ChangeCsrfCookieDomainMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'tpp.DynamicSiteMiddleware.DynamicSiteMiddleware',
-    'tpp.SiteUrlMiddleWare.SiteLangRedirect',
-    'tpp.SiteUrlMiddleWare.SubDomainLanguageMiddleware',
     'tpp.SiteUrlMiddleWare.GlobalRequest',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'tpp.SetCurCompanyMiddleware.SetCurCompany'
 )
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
-}
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TOOLBAR_CALLBACK': 'appl.func.show_toolbar'
+# }
 
 WSGI_APPLICATION = 'tpp.wsgi.application'
 

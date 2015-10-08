@@ -262,7 +262,7 @@ def show_top_static_pages(site_type='b2b'):
     cached = cache.get(cache_name)
 
     if not cached:
-        pages = StaticPage.objects.filter(is_on_top=True, site_type=site_type).values('pk', 'slug', 'title')
+        pages = StaticPage.objects.filter(is_on_top=True, site_type=site_type).only('title')
         cache.set(cache_name, pages, 60 * 60 * 24 * 7)
     else:
         pages = cache.get(cache_name)

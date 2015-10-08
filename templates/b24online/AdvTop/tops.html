@@ -24,9 +24,9 @@
                                     {% endif %}
 
                                     {% if top.title %}
-                                        <a title="{{ top.title }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.title }}</a>
+                                        <a title="{{ top.title }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.title|truncatewords:4 }}</a>
                                     {% else %}
-                                        <a title="{{ top.name }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.name }}</a>
+                                        <a title="{{ top.name }}" href="{{ top.get_absolute_url }}" class="linkads">{{ top.name|truncatewords:4 }}</a>
                                     {% endif %}
                                 </div>
                                 <div class="infoads">
@@ -50,7 +50,9 @@
                                     {% endif %}
                                     </a>
                                     {% if top.description  %}
-                                        {{ top.description|truncatewords_html:7 }}
+                                        {{ top.description|striptags|truncatewords:7 }}
+                                    {% elif top.content  %}
+                                        {{ top.content|striptags|truncatewords:7 }}
                                     {% endif %}
                                 </div>
                             </li>

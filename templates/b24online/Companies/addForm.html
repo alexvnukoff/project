@@ -122,6 +122,15 @@
                 {% endif %}
                 <input type="text" class="text" placeholder="" name="fax" value="{{ form.fax.value|default_if_none:"" }}" />
             </div>
+            {% if user.is_admin or user.is_commando %}
+                <div>
+                    <label class="sapce">{% trans 'PayPal account (E-mail)' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.company_paypal_account %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.company_paypal_account.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" class="text" placeholder="" name="company_paypal_account" value="{{ form.company_paypal_account.value|default_if_none:"" }}" />
+                </div>
+            {% endif %}
             <div>
                 <label class="sapce">E-mail <font color="#FF0000">*</font></label>
                 {% if form.errors.email %}

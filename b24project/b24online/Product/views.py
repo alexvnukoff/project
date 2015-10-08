@@ -53,7 +53,8 @@ class B2BProductList(ItemsList):
             current_org = self._current_organization
 
             if current_org is not None:
-                queryset = self.model.get_active_objects().filter(company_id=current_org)
+                queryset = self.model.get_active_objects().filter(company_id=current_org)\
+                    .order_by(*self._get_sorting_params())
             else:
                 queryset = queryset.none()
 
@@ -358,6 +359,11 @@ class B2CProductCreate(ItemCreate):
         form.instance.company = Company.objects.get(pk=organization_id)
         form.instance.metadata = {'stock_keeping_unit': form.cleaned_data['sku']}
 
+        if form.cleaned_data['start_coupon_date'] and form.cleaned_data['end_coupon_date'] \
+                and form.cleaned_data['coupon_discount_percent']:
+
+            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], form.cleaned_data['end_coupon_date'])
+
         with transaction.atomic():
             self.object = form.save()
             additional_page_form.instance = self.object
@@ -441,6 +447,13 @@ class B2CProductUpdate(ItemUpdate):
 
         if form.changed_data and 'sku' in form.changed_data:
             form.instance.metadata['stock_keeping_unit'] = form.cleaned_data['sku']
+
+        if form.cleaned_data['start_coupon_date'] and form.cleaned_data['end_coupon_date'] \
+                and form.cleaned_data['coupon_discount_percent']:
+
+            form.instance.coupon_dates = (form.cleaned_data['start_coupon_date'], form.cleaned_data['end_coupon_date'])
+        else:
+            form.instance.coupon_dates = None
 
         with transaction.atomic():
             self.object = form.save()
