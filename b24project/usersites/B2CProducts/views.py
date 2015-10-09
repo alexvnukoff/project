@@ -1,7 +1,9 @@
 from collections import OrderedDict
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
+from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -83,6 +85,13 @@ class B2CProductDetail(ItemDetail):
     model = B2CProduct
     filter_key = 'company'
     template_name = 'usersites/B2CProducts/detailContent.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

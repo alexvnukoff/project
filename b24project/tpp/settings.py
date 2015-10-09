@@ -124,6 +124,7 @@ EXTERNAL_APPS = (
     'django.contrib.admin',
     'guardian',
     'captcha',
+    'paypal.standard.ipn',
 )
 
 # the order is important!

@@ -2,6 +2,7 @@ import hashlib
 
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import make_aware, is_naive, get_current_timezone, now
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -15,6 +16,7 @@ from b24online.models import Chamber, InnovationProject, News, Company, Business
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
 from b24online.search_indexes import CountryIndex, ChamberIndex, BranchIndex, B2bProductCategoryIndex, \
     BusinessProposalCategoryIndex, SearchEngine
+from centerpokupok.models import B2CProduct
 from core.models import Item
 from jobs.models import Requirement
 from tpp.SiteUrlMiddleWare import get_request
@@ -656,4 +658,15 @@ def get_categories_data_for_products(object_list):
 
 def verify_ipn_request(payment_obj):
     if not payment_obj.item_number:
-        return False # TODO
+        return True, 'Item id was not provided'
+
+    try:
+        product = B2CProduct.objects.get(pk=payment_obj.item_number)
+    except ObjectDoesNotExist:
+        return True, "B2C product does not exist. (%s)" % payment_obj.item_number
+
+    if product.comapny.company_paypal_account != payment_obj.receiver_email:
+        return True, "Invalid receiver_email. (%s)" % payment_obj.receiver_email
+
+    return True, 'test'
+
