@@ -35,7 +35,7 @@ from b24online.utils import generate_upload_path, reindex_instance, document_upl
 from tpp.celery import app
 
 CURRENCY = [
-    ('NIS', _('Israeli New Sheqel')),
+    ('ILS', _('Israeli New Sheqel')),
     ('EUR', _('Euro')),
     ('USD', _('Dollar')),
     ('UAH', _('Hryvnia')),
@@ -152,7 +152,7 @@ class AdvertisementPrice(models.Model):
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
     dates = DateTimeRangeField()
-    price = models.DecimalField(max_digits=15, decimal_places=3, null=False, blank=False)
+    price = models.DecimalField(max_digits=15, decimal_places=2, null=False, blank=False)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
@@ -197,11 +197,6 @@ class ContextAdvertisement(ActiveModelMixing, Advertisement):
 
     def has_perm(self, user):
         return self.item.has_perm(user)
-
-    class Meta:
-        index_together = [
-            ['content_type', 'is_active'],
-        ]
 
 
 class AdvertisementTarget(models.Model):
@@ -300,7 +295,7 @@ class AdditionalPage(models.Model):
 
 
 class Branch(MPTTModel, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     prices = GenericRelation(AdvertisementPrice)
@@ -318,7 +313,7 @@ class Branch(MPTTModel, IndexedModelMixin):
 
 
 class Country(models.Model, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     flag = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     prices = GenericRelation(AdvertisementPrice)
@@ -380,10 +375,6 @@ class Organization(ActiveModelMixing, PolymorphicMPTTModel):
             ('manage_organization', 'Manage Organization'),
         )
 
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
-
 
 class ProjectUserObjectPermission(UserObjectPermissionBase):
     content_object = models.ForeignKey(Organization)
@@ -400,7 +391,7 @@ class Chamber(Organization, IndexedModelMixin):
         ('affiliate', _('Affiliate')),
     ]
 
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
@@ -668,7 +659,7 @@ class Company(Organization, IndexedModelMixin):
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     organization = models.ForeignKey(Organization, db_index=True, related_name='departments')
 
@@ -696,7 +687,7 @@ class Department(models.Model):
 
 
 class Vacancy(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     department = models.ForeignKey(Department, related_name='vacancies', db_index=True, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, related_name='work_positions')
@@ -739,7 +730,7 @@ class Vacancy(models.Model):
 
 
 class BusinessProposalCategory(MPTTModel, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
@@ -790,11 +781,6 @@ class BusinessProposal(ActiveModelMixing, models.Model, IndexedModelMixin):
     def get_absolute_url(self):
         return reverse('proposal:detail', args=[self.slug, self.pk])
 
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
-
     @property
     def gallery_images(self):
         model_type = ContentType.objects.get_for_model(self)
@@ -809,7 +795,7 @@ class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     business_plan = models.TextField(blank=False, null=False)
     documents = GenericRelation(Document)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
-    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
+    cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
     organization = models.ForeignKey(Organization, null=True, on_delete=models.CASCADE)
     branches = models.ManyToManyField(Branch)
     metadata = HStoreField()
@@ -866,14 +852,9 @@ class InnovationProject(ActiveModelMixing, models.Model, IndexedModelMixin):
     def get_absolute_url(self):
         return reverse('innov:detail', args=[self.slug, self.pk])
 
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
-
 
 class B2BProductCategory(MPTTModel, IndexedModelMixin):
-    name = models.CharField(max_length=255, blank=False, null=False, db_index=True)
+    name = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     image = CustomImageField(storage=image_storage, blank=True, null=True)
@@ -902,7 +883,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=True, null=True, choices=CURRENCY)
     measurement_unit = models.CharField(max_length=255, blank=True, null=True, choices=MEASUREMENT_UNITS)
-    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
+    cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     documents = GenericRelation(Document)
     galleries = GenericRelation(Gallery)
     branches = models.ManyToManyField(Branch)
@@ -960,7 +941,7 @@ class B2BProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     class Meta:
         index_together = [
-            ['is_active', 'is_deleted', 'created_at', 'company'],
+            ['created_at', 'company'],
         ]
 
     @property
@@ -1109,18 +1090,13 @@ class News(ActiveModelMixing, models.Model, IndexedModelMixin):
 
         return reverse('news:detail', args=[self.slug, self.pk])
 
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
-
 
 class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=2048, blank=False, null=False)
     slug = models.SlugField(max_length=2048)
     content = models.TextField(blank=False, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
-    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
+    cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
     branches = models.ManyToManyField(Branch)
     documents = GenericRelation(Document)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
@@ -1164,11 +1140,6 @@ class Tender(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def get_absolute_url(self):
         return reverse('tenders:detail', args=[self.slug, self.pk])
-
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
 
 
 class Profile(ActiveModelMixing, models.Model, IndexedModelMixin):
@@ -1286,11 +1257,6 @@ class Exhibition(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def get_absolute_url(self):
         return reverse('exhibitions:detail', args=[self.slug, self.pk])
-
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
 
 
 class StaticPage(models.Model):
@@ -1433,7 +1399,7 @@ class Banner(ActiveModelMixing, Advertisement):
 
 class AdvertisementOrder(Order):
     advertisement = models.OneToOneField(Advertisement)
-    total_cost = models.DecimalField(max_digits=15, decimal_places=3, null=False, blank=False)
+    total_cost = models.DecimalField(max_digits=15, decimal_places=2, null=False, blank=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     purchaser = GenericForeignKey('content_type', 'object_id')

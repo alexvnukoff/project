@@ -88,7 +88,7 @@ class B2CProductDetail(ItemDetail):
         context_data = super().get_context_data(**kwargs)
         domain = get_current_site(self.request).domain
 
-        if self.object.cost and self.object.company.company_paypal_account:
+        if self.object.currency and self.object.cost and self.object.company.company_paypal_account:
             paypal_dict = {
                 "business": self.object.company.company_paypal_account,
                 "amount": self.object.cost,
@@ -98,7 +98,8 @@ class B2CProductDetail(ItemDetail):
                 "item_number": self.object.pk,
                 "item_name": self.object.name,
                 "no_shipping": 0,
-                "quantity": 1
+                "quantity": 1,
+                "currency_code": self.object.currency
             }
 
             context_data['paypal_form'] = PayPalPaymentsForm(initial=paypal_dict)

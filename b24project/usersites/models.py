@@ -92,12 +92,10 @@ class UserSite(ActiveModelMixing, models.Model):
 
         return gallery
 
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted'],
-        ]
-
     @property
     def slider_images(self):
         model_type = ContentType.objects.get_for_model(self)
         return GalleryImage.objects.filter(gallery__content_type=model_type, gallery__object_id=self.pk)
+
+    def __str__(self):
+        return self.domain_part

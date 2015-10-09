@@ -11,7 +11,7 @@ from b24online.models import Vacancy, Country, ContextAdvertisement, IndexedMode
 class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
-    vacancy = models.ForeignKey(Vacancy, related_name='job_requirement')
+    vacancy = models.ForeignKey(Vacancy, related_name='job_requirement', db_index=True)
     city = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(blank=False, null=False)
     requirements = models.TextField(blank=False, null=False)
@@ -34,7 +34,7 @@ class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_create_user')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_update_user')
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -54,11 +54,6 @@ class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     def __str__(self):
         return self.title
-
-    class Meta:
-        index_together = [
-            ['is_active', 'is_deleted', 'created_at'],
-        ]
 
 
 class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
@@ -129,5 +124,5 @@ class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     class Meta:
         index_together = [
-            ['is_active', 'is_deleted', 'created_at', 'user'],
+            ['created_at', 'user'],
         ]

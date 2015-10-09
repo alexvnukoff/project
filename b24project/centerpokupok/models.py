@@ -45,7 +45,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='b2c_products')
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     currency = models.CharField(max_length=255, blank=False, null=True, choices=CURRENCY)
-    cost = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=False)
+    cost = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=False)
     galleries = GenericRelation(Gallery)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
@@ -62,7 +62,7 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     class Meta:
         index_together = [
-            ['is_active', 'is_deleted', 'created_at', 'company'],
+            ['created_at', 'company'],
         ]
 
     def upload_images(self):
