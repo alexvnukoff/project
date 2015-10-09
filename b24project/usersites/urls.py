@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from paypal.standard.ipn.views import ipn
+from appl import func
 
 import usersites.views
 import usersites.OrganizationPages.urls
@@ -21,7 +22,7 @@ urlpatterns = patterns('',
                        url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
                        url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
                        url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
-                       url(r'^ipn/', ipn, name='paypal-ipn'),
+                       url(r'^ipn/', ipn(func.verify_ipn_request), name='paypal-ipn'),
                        )
 
 if settings.DEBUG:
