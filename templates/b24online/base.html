@@ -33,6 +33,7 @@
                     <meta name="description" content="{{ meta.description|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
                 {% endautoescape %}
 
+                <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
             {% else %}
 
                 {% if current_section %}

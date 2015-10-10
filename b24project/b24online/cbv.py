@@ -341,7 +341,8 @@ class ItemDetail(DetailView):
             'title': Truncator(title).chars("80", truncate='...'),
             'image': image,
             'url': url.scheme + "://" + url.netloc + url.path,
-            'text': getattr(self.object, 'description', "") or getattr(self.object, 'content', "")
+            'description': getattr(self.object, 'description', "") or getattr(self.object, 'content', ""),
+            'keywords':  getattr(self.object, 'keywords', '')
         }
 
     def get_context_data(self, **kwargs):
