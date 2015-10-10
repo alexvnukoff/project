@@ -21,16 +21,16 @@
                 <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
                 <meta property="og:url" content="{{ meta.url }}" />
                 {% autoescape off %}
-                    <meta property="og:description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
+                    <meta property="og:description" content="{{ meta.description|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
                 {% endautoescape %}
 
                 {% if meta.image %}
-                    <meta property="og:image" content="{{ meta.image.big }}" />
+                    <meta property="og:image" content="{{ meta.image }}" />
                 {% endif %}
 
                 <title>{{ meta.title|truncatechars:80}}</title>
                 {% autoescape off %}
-                    <meta name="description" content="{{ meta.text|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
+                    <meta name="description" content="{{ meta.description|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
                 {% endautoescape %}
 
             {% else %}

@@ -330,20 +330,19 @@ class ItemDetail(DetailView):
 
     def _get_item_meta(self):
         title = getattr(self.object, 'title', '') or getattr(self.object, 'name', '')
-        image = settings.MEDIA_URL + 'original/' + self.object.image
+        image = getattr(self.object, 'image', '') or getattr(self.object, 'logo', '')
 
         if image:
-            getattr(self.object, 'logo', '') or getattr(self.object, 'image', '')
+            image = image.big
 
         url = urlparse(self.request.build_absolute_uri())
 
         return {
             'title': Truncator(title).chars("80", truncate='...'),
-            'image': getattr(self.object, 'logo', '') or getattr(self.object, 'image', ''),
+            'image': image,
             'url': url.scheme + "://" + url.netloc + url.path,
             'text': getattr(self.object, 'description', "") or getattr(self.object, 'content', "")
         }
-        pass
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
@@ -352,7 +351,7 @@ class ItemDetail(DetailView):
             'item_id': self.item_id,
             'addNew': '' if not self.get_add_url() else reverse(self.get_add_url()),
             'current_section': self.current_section,
-            'meta': {}
+            'meta': self._get_item_meta()
         })
 
         return context
