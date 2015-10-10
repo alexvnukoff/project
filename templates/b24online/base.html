@@ -20,19 +20,14 @@
             {% if meta %}
                 <meta property="og:title" content="{{ meta.title|truncatechars:80}}" />
                 <meta property="og:url" content="{{ meta.url }}" />
-                {% autoescape off %}
-                    <meta property="og:description" content="{{ meta.description|linebreaks|cleanHtml|striptags|truncatechars:150 }}" />
-                {% endautoescape %}
+                <meta property="og:description" content="{{ meta.description|linebreaks|truncatechars:350 }}" />
 
                 {% if meta.image %}
                     <meta property="og:image" content="{{ meta.image }}" />
                 {% endif %}
 
                 <title>{{ meta.title|truncatechars:80}}</title>
-                {% autoescape off %}
-                    <meta name="description" content="{{ meta.description|linebreaks|cleanHtml|striptags|truncatechars:150 }}"/>
-                {% endautoescape %}
-
+                <meta name="description" content="{{ meta.description|linebreaks|truncatechars:350 }}"/>
                 <meta name="keywords" content="{{ meta.keywords|truncatewords:10 }}">
             {% else %}
 
