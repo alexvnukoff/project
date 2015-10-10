@@ -17,7 +17,7 @@
     {{ block.super }}
     <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
     <script>
-        {% getOwner item.pk as owner %}
+        {% getOwner item as owner %}
 
         {% if owner %}
             {% if owner.type == 'tpp' %}

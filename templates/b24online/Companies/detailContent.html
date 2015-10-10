@@ -14,7 +14,7 @@
 {% block js %}
     {{ block.super }}
     <script>
-        {% getOwner item.pk as owner %}
+        {% getOwner item as owner %}
 
 
         ga('set', 'dimension1', {{ item.pk }});

@@ -19,7 +19,7 @@
 {% block keywords %}{% endblock %}
 
 <script>
-    {% getOwner item_id as owner %}
+    {% getOwner item as owner %}
 
     {% if owner %}
         {% if owner.type == 'tpp' %}

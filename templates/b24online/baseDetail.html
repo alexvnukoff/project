@@ -18,7 +18,7 @@
 {% block js %}
     {{ block.super }}
     <script>
-        {% getOwner item.pk as owner %}
+        {% getOwner item as owner %}
 
         {% if owner %}
             {% if owner.type == 'tpp' %}

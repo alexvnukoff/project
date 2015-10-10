@@ -168,26 +168,13 @@ def resolve(lookup, target):
 
 @register.assignment_tag
 def getOwner(item):
-    # TODO
+    org = getattr(item, 'organization', None) or getattr(item, 'company', None)
 
-    # if not item:
-    #     return None
-    #
-    # obj = func.getActiveSQS().filter(django_id=item)
-    #
-    # if obj.count() == 0:
-    #     return None
-    # else:
-    #     obj = obj[0]
-    #
-    # company = getattr(obj, "company", False)
-    # tpp = getattr(obj, "tpp", False)
-    #
-    # if company:
-    #     return {'type': 'company', 'pk': company}
-    #
-    # if tpp:
-    #     return {'type': 'tpp', 'pk': tpp}
+    if org:
+        return {
+            'type': 'tpp' if isinstance(org, Chamber) else 'company',
+            'pk': org.pk
+        }
 
     return None
 
