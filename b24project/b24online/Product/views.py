@@ -86,7 +86,7 @@ class B2CProductList(ItemsList):
         return context
 
     def ajax(self, request, *args, **kwargs):
-        self.template_name = 'b24online/Products/contentPage.html'
+        self.template_name = 'b24online/Products/contentPageB2C.html'
 
     def no_ajax(self, request, *args, **kwargs):
         self.template_name = 'b24online/Products/index.html'
