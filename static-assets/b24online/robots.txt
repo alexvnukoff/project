@@ -20,4 +20,4 @@ Disallow: /account/
 Disallow: /static/
 Disallow: */tabs/
 Disallow: /adv/
-Host: B24Online.COM
+Host: B24Online.com
