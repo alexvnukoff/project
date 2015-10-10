@@ -45,7 +45,7 @@ class RequirementList(ItemsList):
             if current_org is not None:
                 queryset = self.model.get_active_objects().filter(vacancy__department__organization_id=current_org)
             else:
-                queryset = queryset.objects.none()
+                queryset = queryset.none()
 
         return queryset
 

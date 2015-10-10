@@ -22,7 +22,7 @@ urlpatterns = patterns('',
                        url(r'^b2b-products/', include(usersites.B2BProducts.urls, namespace='b2b_products')),
                        url(r'^b2c-products/', include(usersites.B2CProducts.urls, namespace='b2c_products')),
                        url(r'^pages/', include(usersites.OrganizationPages.urls, namespace='pages')),
-                       url(r'^ipn/', ipn(func.verify_ipn_request), name='paypal-ipn'),
+                       url(r'^ipn/', ipn, {'item_check_callable': func.verify_ipn_request}, name='paypal-ipn'),
                        )
 
 if settings.DEBUG:

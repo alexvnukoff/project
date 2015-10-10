@@ -11,6 +11,7 @@ from django.template import RequestContext, loader
 from django.utils.translation import ugettext as _
 import lxml
 from lxml.html.clean import clean_html
+from b24online.Analytic.analytic import get_results
 
 from b24online.models import Chamber, InnovationProject, News, Company, BusinessProposal, Exhibition, Country, Branch, \
     Organization, B2BProduct, Banner, B2BProductCategory, BusinessProposalCategory
@@ -318,8 +319,6 @@ def publish_realtime(publication_type, **params):
 
 
 def get_analytic(params=None):
-    from appl.analytic.analytic import get_results
-
     if not isinstance(params, dict):
         raise ValueError('Filter required')
 
@@ -665,8 +664,8 @@ def verify_ipn_request(payment_obj):
     except ObjectDoesNotExist:
         return True, "B2C product does not exist. (%s)" % payment_obj.item_number
 
-    if product.comapny.company_paypal_account != payment_obj.receiver_email:
+    if product.company.company_paypal_account != payment_obj.receiver_email:
         return True, "Invalid receiver_email. (%s)" % payment_obj.receiver_email
 
-    return True, 'test'
+    return False, None
 

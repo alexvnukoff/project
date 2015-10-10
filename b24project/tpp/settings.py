@@ -133,8 +133,8 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + EXTERNAL_APPS
 # For installations on which you want to use the sandbox,
 # set PAYPAL_TEST to True.  Ensure PAYPAL_RECEIVER_EMAIL is set to
 # your sandbox account email too.
-PAYPAL_TEST = True
-PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
+PAYPAL_TEST = False
+# PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
 CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
