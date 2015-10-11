@@ -9,67 +9,57 @@
             <a href="{% url "coupons:list" %}">{% trans "More" %}</a>
         </span>
     </div>
-
     <div class="best-cp">
-
         {% for coupon in coupons %}
-
-            {% if forloop.counter == 1 %}
-
+            {% if forloop.first %}
                 <div class="best-cp-l">
-
                     <div class="thumb-cp">
-                        <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon }}%</div>
-                        <a title="{{ coupon.title }}" href="{% url "products:detail" coupon.pk %}">
-                            <img width="225" height="225" alt="{{ coupon.title }}" src="{{ MEDIA_URL }}big/{{ coupon.image }} ">
+                        <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon_discount_percent }}%</div>
+                        <a title="{{ coupon.name }}" href="{% url "products:detail" coupon.pk %}">
+                            <img width="225" height="225" alt="{{ coupon.name }}" src="{{ coupon.image.big }} ">
                         </a>
                     </div>
                     <div class="couponinfo">
-                        <a title="{{ coupon.title }}" href="{% url "products:detail" coupon.pk %}">{{ coupon.title }}</a>
+                        <a title="{{ coupon.name }}" href="{% url "products:detail" coupon.pk %}">{{ coupon.name }}</a>
                         <div class="clock">
                             <p>{% trans "Remaining time" %}</p>
-                            <div data-countdown="{{ coupon.coupon_end|date:"U" }}" id="topCountdown"></div>
+                            <div data-countdown="{{ coupon.end_coupon_date|date:"U" }}" id="topCountdown"></div>
                         </div>
                     </div>
                     <div class="bottom-cp">
                         <div class="price-cp">
                             <span>
                                 <p>
-                                    <font class="price1">{{ coupon.currency|getSymbol }} {{ coupon.price|discountPrice:coupon.coupon }}</font>
+                                    <font class="price1">{{ coupon.currency|getSymbol }} {{ coupon.cost|discountPrice:coupon.coupon_discount_percent }}</font>
                                 </p>
                             </span>
                         </div>
                         <a class="btnbuy" href="{% url "products:detail" coupon.pk %}">{% trans "Buy" %}</a>
                     </div>
                 </div>
-
             {% else %}
-                {% if forloop.counter == 2 %}
+                {% if not forloop.first %}
                     <ul class="best-cp-r">
                 {% endif %}
-
                     <li>
                         <div class="thumb">
-                            <a title="{{ coupon.title }}" href="{% url "products:detail" coupon.pk %}">
-                                <img width="140" height="100" alt="{{ coupon.title }}" src="{{ MEDIA_URL }}big/{{ coupon.image }} ">
+                            <a title="{{ coupon.name }}" href="{% url "products:detail" coupon.pk %}">
+                                <img width="140" height="100" alt="{{ coupon.name }}" src="{{ coupon.image.big }} ">
                             </a>
-                            <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon }}%</div>
+                            <div class="discount"><i class="icons i-after"></i> -{{ coupon.coupon_discount_percent }}%</div>
                         </div>
                         <div class="discountinfo">
-                            <a title="{{ coupon.title }}" href="{% url "products:detail" coupon.pk %}">{{ coupon.title }}</a>
+                            <a title="{{ coupon.name }}" href="{% url "products:detail" coupon.pk %}">{{ coupon.name }}</a>
                             <p>
-                                <font class="number">{{ coupon.currency|getSymbol }} {{ coupon.price|discountPrice:coupon.coupon }}</font>
+                                <font class="number">{{ coupon.currency|getSymbol }} {{ coupon.cost|discountPrice:coupon.coupon_discount_percent }}</font>
                                 <br />
                             </p>
                         </div>
                     </li>
-
-                {% if forloop.counter == 3 %}
+                {% if forloop.last %}
                     </ul>
                 {% endif %}
-
             {% endif %}
         {% endfor %}
-
     </div>
 {% endif %}

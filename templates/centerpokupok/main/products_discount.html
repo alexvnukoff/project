@@ -24,19 +24,18 @@
 
         <ul id="bestproduct">
             {% for product in productsSale %}
-
-                {% if  forloop.counter == 1 %}
+                {% if forloop.first %}
                     <li>
                 {% endif %}
 
                 <div class="clumn-best">
-                    <div class="discount"><i class="icons i-after"></i> -{{ product.discount }}%</div>
+                    <div class="discount"><i class="icons i-after"></i> -{{ product.discount_percent }}%</div>
                     <div class="discount-image-holder">
                         <a href="{% url "products:detail" product.pk %}">
-                            <img alt="{{ product.title }}" src="{{ MEDIA_URL }}big/{{ product.image }}" class="thumb" />
+                            <img alt="{{ product.name }}" src="{{ product.image.big }}" class="thumb" />
                         </a>
                     </div>
-                    <a href="{% url "products:detail" product.pk %}" class="name">{{ product.title }}</a>
+                    <a href="{% url "products:detail" product.pk %}" class="name">{{ product.name }}</a>
                 </div>
 
                 {% if forloop.counter|divisibleby:"5" and not forloop.last  %}

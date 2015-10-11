@@ -1,6 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.sites.models import Site
 from django.views.generic import ListView, DetailView
+
 from appl import func
 
 
@@ -60,3 +60,11 @@ class ItemDetail(DetailView):
     def get_queryset(self):
         return self.model.get_active_objects().filter(**self.get_filter_kwargs())
 
+    def get_title(self):
+        return getattr(self.object, 'title', '') or getattr(self.object, 'name', '')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        context_data['title'] = self.get_title(),
+
+        return context_data

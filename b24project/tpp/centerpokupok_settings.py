@@ -9,5 +9,4 @@ ALLOWED_HOSTS = [
     '.centerpokupok.com'
 ]
 
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'centerpokupok','templates').replace('\\', '/'))
 ROOT_URLCONF = 'centerpokupok.urls'

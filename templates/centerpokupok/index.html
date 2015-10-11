@@ -2,9 +2,8 @@
 {% load staticfiles %}
 {% load inclusionTags %}
 {% load i18n %}
+
 {% block title %}{% trans 'Shopcenter' %}{% endblock %}
-
-
 
 {% block styles %}
     {{ block.super }}
@@ -52,45 +51,45 @@
     </script>
 {% endblock %}
 {% block header %}
-{% include "centerpokupok/header_big.html" %}
+    {% include "centerpokupok/header_big.html" %}
 {% endblock %}
-        {% block body %}
-            <div id="main">
-                <div id="vartop">
-                    {% mainMenuB2C %}
-                    {% include "centerpokupok/main/main_banner.html" %}
-                </div>
-                {% include "centerpokupok/main/main_coupons.html" %}
-                <div class="var-main">
-                    {% include "centerpokupok/main/products.html" %}
-                   <div class="items-coupon">
-                        <h2>{% trans 'Special price' %}</h2>
-                        <ul>
-                            <li>
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <img alt="" src="{% static 'centerpokupok/images/products/pr2.jpg' %}">
-                                <div class="coupon-info">
-                                    <p><a href="#">Женские босоножки “Осенний туман”</a></p>
-                                    <p class="price">
-                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
-                                        Экономия: $ 22.10
-                                    </p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="discount"><i class="icons i-after"></i> 30%</div>
-                                <img alt="" src="{% static 'centerpokupok/images/products/pr3.jpg' %}">
-                                <div class="coupon-info">
-                                    <p><a href="#">Женские босоножки “Осенний туман”</a></p>
-                                    <p class="price">
-                                        <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
-                                        Экономия: $ 22.10
-                                    </p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                {% include "centerpokupok/main/products_discount.html" %}
+{% block body %}
+    <div id="main">
+        <div id="vartop">
+            {% categories_menu %}
+            {% include "centerpokupok/main/main_banner.html" %}
+        </div>
+        {% include "centerpokupok/main/main_coupons.html" %}
+        <div class="var-main">
+            {% include "centerpokupok/main/products.html" %}
+           <div class="items-coupon">
+                <h2>{% trans 'Special price' %}</h2>
+                <ul>
+                    <li>
+                        <div class="discount"><i class="icons i-after"></i> 30%</div>
+                        <img alt="" src="{% static 'centerpokupok/images/products/pr2.jpg' %}">
+                        <div class="coupon-info">
+                            <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                            <p class="price">
+                                <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                Экономия: $ 22.10
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="discount"><i class="icons i-after"></i> 30%</div>
+                        <img alt="" src="{% static 'centerpokupok/images/products/pr3.jpg' %}">
+                        <div class="coupon-info">
+                            <p><a href="#">Женские босоножки “Осенний туман”</a></p>
+                            <p class="price">
+                                <font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+                                Экономия: $ 22.10
+                            </p>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        {% endblock %}
+        </div>
+        {% include "centerpokupok/main/products_discount.html" %}
+    </div>
+{% endblock %}

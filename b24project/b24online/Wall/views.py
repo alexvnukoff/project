@@ -154,7 +154,7 @@ def apply_filters(request, model, q, valid_filters):
     if q:
         s = s.query("multi_match", query=q, fields=['title', 'name', 'description', 'content'])
 
-    return s
+    return s.query('match', is_active=True).query('match', is_deleted=False)
 
 
 def get_sorting(request, sort_fields=None):

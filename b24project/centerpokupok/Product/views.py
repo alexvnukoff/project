@@ -17,7 +17,7 @@ from appl.models import Product, Comment, Category, Company, Country, Cabinet, O
 from centerpokupok.cbv import ItemsList
 from core.models import Item, Dictionary, Relationship
 from appl import func
-from b24online.forms import ItemForm
+#from b24online.forms import ItemForm
 from centerpokupok.forms import OrderForm
 
 

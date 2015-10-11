@@ -18,7 +18,7 @@
             <div class="gallery">
                 <div id="panel">
                     {% if object.image %}
-                      <img id="largeImage" style="max-width: 150px; max-height: 138px;" src="{{ object.image.small }}" alt="{{ object.name }}" title="{{ object.name }}" />
+                      <img id="largeImage" style="max-width: 150px; max-height: 138px;" src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />
                     {% else %}
                       <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
                     {% endif %}

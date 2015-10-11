@@ -7,11 +7,10 @@ from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 
-from appl.models import Category, NewsCategories
+from appl.models import NewsCategories
 from b24online.models import Chamber, B2BProduct, Organization, StaticPage, Exhibition, Tender, InnovationProject, \
     BusinessProposal, Company, News, Banner
-from centerpokupok.models import B2CProduct
-from centerpokupok.views import _sortMenu
+from centerpokupok.models import B2CProduct, B2CProductCategory
 from appl import func
 from core.models import Item
 from jobs.models import Requirement, Resume
@@ -280,31 +279,11 @@ def b2b_social_buttons(context, image, title, text):
 
 
 @register.inclusion_tag("centerpokupok/main/main_menu.html", takes_context=True)
-def mainMenuB2C(context):
-    lang = settings.LANGUAGE_CODE
-    cache_name = "b2c_menu_%s" % lang
+def categories_menu(context):
+    # lang = settings.LANGUAGE_CODE
+    # cache_name = "menu:b2c:%s" % lang
 
-    sortedHierarchyStructure = cache.get(cache_name)
-
-    if not sortedHierarchyStructure:
-
-        # ----MAIN MENU AND CATEGORIES IN HEADER ------#
-        hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-        categories_id = [cat['ID'] for cat in hierarchyStructure]
-        categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-        sortedHierarchyStructure = _sortMenu(hierarchyStructure) if len(hierarchyStructure) > 0 else {}
-        level = 0
-
-        for node in sortedHierarchyStructure:
-            node['pre_level'] = level
-            node['item'] = categories[node['ID']]
-            node['parent_item'] = categories[node['PARENT_ID']] if node['PARENT_ID'] is not None else ""
-            level = node['LEVEL']
-
-        cache.set(cache_name, sortedHierarchyStructure, 60 * 60 * 24 * 7)
-
-    return {'sortedHierarchyStructure': sortedHierarchyStructure}
+    return {'categories': B2CProductCategory.objects.filter(level=0).order_by('name')[:5]}
 
 
 @register.inclusion_tag("centerpokupok/Company/header.html", takes_context=True)
