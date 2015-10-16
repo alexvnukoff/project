@@ -596,7 +596,9 @@ class CompanyCreate(ItemCreate):
             additional_page_form.save()
 
         self.object.reindex()
-        self.object.upload_images()
+
+        if 'logo' in form.changed_data:
+            self.object.upload_images()
 
         return HttpResponseRedirect(self.get_success_url())
 

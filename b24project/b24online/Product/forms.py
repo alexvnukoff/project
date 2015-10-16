@@ -8,7 +8,7 @@ from centerpokupok.models import B2CProduct
 
 
 class B2BProductForm(forms.ModelForm):
-    sku = forms.CharField(required=True)
+    sku = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor

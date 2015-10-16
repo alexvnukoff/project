@@ -21,7 +21,6 @@ class CompanyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # there's a `fields` property now
         self.fields['logo'].required = True
-        self.fields['director'].required = True
         self.fields['short_description'].required = True
         self.fields['address'].required = True
 

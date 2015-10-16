@@ -219,7 +219,9 @@ class NewsCreate(ItemCreate):
 
         result = super().form_valid(form)
         self.object.reindex()
-        self.object.upload_images()
+
+        if 'image' in form.changed_data:
+            self.object.upload_images()
 
         return result
 

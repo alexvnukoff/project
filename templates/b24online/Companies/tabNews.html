@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load CustomFilters %}
+{% load staticfiles %}
 <div class="tpp-dt-content">
     <table class="table-big" cellpadding="0" cellpadding="0">
         {% for news in page.object_list %}
@@ -13,7 +14,11 @@
             <tr>
                 <td>
                     <a href="{{ news.get_absolute_url }}" title="{{ news.title }}">
-                        <img src="{{ news.image.small }}" alt="{{ news.title }}" title="{{ news.title }}"/>
+                        {% if news.image %}
+                            <img src="{{ news.image.small }}" alt="{{ news.title }}" title="{{ news.title }}"/>
+                        {% else %}
+                            <img src="{% static 'b24online/img/news.jpg' %}"/>
+                        {% endif %}
                     </a>
                 </td>
                 <td>

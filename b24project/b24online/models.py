@@ -548,7 +548,7 @@ class Company(Organization, IndexedModelMixin):
     short_description = models.TextField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     logo = CustomImageField(upload_to=generate_upload_path, storage=image_storage,
-                            sizes=['big', 'small', 'th'], max_length=255)
+                            sizes=['big', 'small', 'th'], max_length=255, blank=True)
     keywords = models.CharField(max_length=2048, blank=True, null=False)
     director = models.CharField(max_length=255, blank=True, null=False)
     address = models.CharField(max_length=2048, blank=True, null=False)

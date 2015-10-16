@@ -460,7 +460,7 @@ class B2CProductUpdate(ItemUpdate):
             additional_page_form.instance = self.object
 
             for page_form in additional_page_form:
-                if not page_form.instance.created_by:
+                if not page_form.instance.created_by_id:
                     page_form.instance.created_by = self.request.user
                 page_form.instance.updated_by = self.request.user
 
