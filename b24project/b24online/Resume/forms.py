@@ -39,7 +39,7 @@ class ResumeForm(forms.ModelForm):
 
     class Meta:
         model = Resume
-        fields = ('title', 'martial_status', 'nationality', 'telephone_number', 'address', 'faculty', 'profession',
+        fields = ('title', 'marital_status', 'nationality', 'telephone_number', 'address', 'faculty', 'profession',
                   'study_start_date', 'study_end_date', 'study_form', 'additional_study', 'language_skill',
                   'computer_skill', 'additional_skill', 'salary', 'additional_information', 'institution')
 
