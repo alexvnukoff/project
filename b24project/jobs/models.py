@@ -57,7 +57,7 @@ class Requirement(ActiveModelMixing, models.Model, IndexedModelMixin):
 
 
 class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
-    MARTIAL_STATUSES = [
+    MARITAL_STATUSES = [
         ('married', _('Married')),
         ('widowed', _('Widowed')),
         ('separated', _('Separated')),
@@ -72,7 +72,7 @@ class Resume(ActiveModelMixing, models.Model, IndexedModelMixin):
 
     title = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(max_length=255)
-    martial_status = models.CharField(max_length=10, blank=True, null=True, choices=MARTIAL_STATUSES)
+    marital_status = models.CharField(max_length=10, blank=True, null=True, choices=MARITAL_STATUSES)
     nationality = models.CharField(max_length=255, null=False, blank=True)
     telephone_number = models.CharField(max_length=255)
     address = models.CharField(max_length=255, null=True, blank=True)
