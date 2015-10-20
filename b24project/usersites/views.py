@@ -1,7 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.translation import ugettext as _
 
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
@@ -20,11 +19,10 @@ def wall(request):
         b2c_products = None
 
     current_section = ''
-    title = _("Wall")
 
     template_params = {
         'current_section': current_section,
-        'title': title,
+        'title': get_current_site(request).user_site.organization.name,
         'proposals': proposals,
         'news': news,
         'b2c_products': b2c_products,
