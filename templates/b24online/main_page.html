@@ -124,15 +124,19 @@
                 </div>
               {% if not addNew or not user.is_authenticated %}
                   <a  class="add-new {% if not user.is_authenticated %}logged-out{% endif %}" href="#">
-                  <i class="imgnews btn-fil disable"></i>
+                    <button class="addButton disable">
+                        <img src="plus.svg" alt="">
+                        <span>{% trans 'Add' %}</span>
+                    </button>
+                  </a>
               {% else %}
-                  <a class="add-new" href="{{ addNew }}">
-                  <i class="imgnews btn-fil"></i>
+                    <a class="add-new" href="{{ addNew }}">
+                        <button class="addButton">
+                            <img src="plus.svg" alt="">
+                            <span>{% trans 'Add' %}</span>
+                        </button>
+                    </a>
               {% endif %}
-
-                </a>
-
-
             </div>
           <script>
                     $(document).ready(function() {

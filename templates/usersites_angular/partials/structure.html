@@ -1,0 +1,31 @@
+<div class="container" ng-class="class">
+                
+                    <section class="content__info__structute clearfix">
+
+                        <div class="wrap" ng-repeat="item in structure">
+                            <h2>שיווק ומכירות</h2>
+                            <article class="workers">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>Работник</td>
+                                            <td>Должность</td>
+                                            <td>Номер телефона</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="worker in item.workers">
+                                            <td><img ng-src="{{worker.img}}" alt=""></td>
+                                            <td>{{worker.name}}</td>
+                                            <td>{{worker.post}}</td>
+                                            <td>{{worker.phone}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </article>
+                        </div>
+                        
+                    </section>
+
+                </div>
