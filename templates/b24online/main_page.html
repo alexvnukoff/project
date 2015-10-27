@@ -125,14 +125,14 @@
               {% if not addNew or not user.is_authenticated %}
                   <a  class="add-new {% if not user.is_authenticated %}logged-out{% endif %}" href="#">
                     <button class="addButton disable">
-                        <img src="plus.svg" alt="">
+                        <img src="{% static 'b24online/img/plus.svg' %}" alt="">
                         <span>{% trans 'Add' %}</span>
                     </button>
                   </a>
               {% else %}
                     <a class="add-new" href="{{ addNew }}">
                         <button class="addButton">
-                            <img src="plus.svg" alt="">
+                            <img src="{% static 'b24online/img/plus.svg' %}" alt="">
                             <span>{% trans 'Add' %}</span>
                         </button>
                     </a>
