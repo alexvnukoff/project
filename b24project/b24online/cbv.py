@@ -189,7 +189,10 @@ class ItemsList(HybridListView):
         return self.filter_search_object(s)
 
     def get_add_url(self):
-        return self.addUrl
+        if self.request.user.is_authenticated():
+            return self.addUrl
+
+        return None
 
     def get_data(self, context):
         # For JSON response
@@ -309,7 +312,10 @@ class ItemDetail(DetailView):
     current_section = ''
 
     def get_add_url(self):
-        return self.addUrl
+        if self.request.user.is_authenticated():
+            return self.addUrl
+
+        return None
 
     def get_queryset(self):
         return self.model.get_active_objects().all()

@@ -44,7 +44,7 @@ class SiteSettings(APIView):
     def _get_menu(self):
         result = []
 
-        for page in get_current_site(self.request).user_site.organization.additional_pages.all:
+        for page in get_current_site(self.request).user_site.organization.additional_pages.all():
             result.append({'name': page})
 
     def _get_slider_list(self):

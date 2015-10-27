@@ -304,13 +304,11 @@ var ui =
         ui.setFilters(data.filters);
 
         $(ui.container).replaceWith( data.content );
-        var addBtn = $('.add-new');
+        var addBtn = $('.addButton');
 
 
 
         if ( !addBtn.hasClass('logged-out')) {
-            var imgBtn = addBtn.find('.btn-fil');
-
             if ( data.addNew != '' ) {
                imgBtn.removeClass('disable');
                addBtn.attr('href', data.addNew);
