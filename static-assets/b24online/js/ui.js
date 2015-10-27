@@ -310,12 +310,12 @@ var ui =
 
         if ( !addBtn.hasClass('logged-out')) {
             if ( data.addNew != '' ) {
-               imgBtn.removeClass('disable');
+               addBtn.parent().removeClass('disable');
                addBtn.attr('href', data.addNew);
 
             } else {
-               addBtn.attr('href', '#');
-               imgBtn.addClass('disable');
+               addBtn.parent().attr('href', '#');
+               addBtn.addClass('disable');
             }
         }
 
