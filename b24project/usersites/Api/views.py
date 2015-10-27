@@ -47,6 +47,8 @@ class SiteSettings(APIView):
         for page in get_current_site(self.request).user_site.organization.additional_pages.all():
             result.append({'name': page})
 
+        return result
+
     def _get_slider_list(self):
         import glob
         user_site = get_current_site(self.request).user_site
@@ -142,7 +144,7 @@ class SiteBarMenu(APIView):
         if organization.proposals.exists():
             result['items'].append({"name": _('Business Proposals'), "href": "#/offers"})
 
-        if not isinstance(organization, Company):
+        if isinstance(organization, Company):
             if organization.b2b_products.exists():
                 result['items'].append({"name": _('B2C Products'), "subCategory": self._get_b2c_categories_list()})
 
