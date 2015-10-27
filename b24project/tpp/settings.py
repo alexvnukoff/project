@@ -140,6 +140,11 @@ PAYPAL_RECEIVER_EMAIL = 'migirov@gmail.com'
 
 CAN_LOGIN_AS = lambda request, target_user: request.user.is_admin or request.user.is_commando
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
 
 ACCOUNT_ACTIVATION_DAYS = 7 #One week user's account activation period
 REGISTRATION_OPEN = True    #Registration now is open

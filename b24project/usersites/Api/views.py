@@ -9,8 +9,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.utils.translation import ugettext as _
 
-from b24online.models import Banner
+from b24online.models import Banner, B2BProductCategory, Company
 
 from centerpokupok.models import B2CProductCategory, B2CProduct
 
@@ -21,7 +22,7 @@ class SiteSettings(APIView):
     def get(self, request, format=None):
         result = {
             'slides': self._get_slider_list(),
-            'categories': self._get_categories_list(),
+            'menu': self._get_menu(),
             'contacts': self._get_contacts(),
             'footerBanner': self._get_foot_banner(),
             'orgLogo': get_current_site(self.request).user_site.organization.logo.big,
@@ -40,6 +41,12 @@ class SiteSettings(APIView):
 
         return Response(result)
 
+    def _get_menu(self):
+        result = []
+
+        for page in get_current_site(self.request).user_site.organization.additional_pages.all:
+            result.append({'name': page})
+
     def _get_slider_list(self):
         import glob
         user_site = get_current_site(self.request).user_site
@@ -54,47 +61,6 @@ class SiteSettings(APIView):
                       for image in glob.glob(dir + "/*.jpg")]
 
         return images
-
-    def _get_categories_list(self):
-        organization = get_current_site(self.request).user_site.organization
-        categories = B2CProductCategory.objects.filter(products__company_id=organization.pk) \
-            .order_by('level').distinct()
-
-        result = []
-
-        for _, cat in sorted(self._load_category_hierarchy(categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]):
-            category = {'name': cat.name, 'id': cat.id}
-
-            if cat.level == 0:
-                result.append(category)
-            else:
-                parent_node = result[-1] if cat.level == 1 else result[-1]['subCategory'][-1]
-
-                if 'subCategory' not in parent_node:
-                    parent_node['subCategory'] = []
-
-                parent_node['subCategory'].append(category)
-
-        return result
-
-    def _load_category_hierarchy(self, categories, loaded_categories=None):
-
-        if not loaded_categories:
-            loaded_categories = {}
-
-        categories_to_load = []
-
-        for category in categories:
-            loaded_categories[category.pk] = category
-
-            if category.parent_id and category.parent_id not in loaded_categories:
-                categories_to_load.append(category.parent_id)
-
-        if categories_to_load:
-            queryset = B2CProductCategory.objects.filter(pk__in=categories_to_load).order_by('level')
-            loaded_categories = self._load_category_hierarchy(queryset, loaded_categories)
-
-        return loaded_categories
 
     def _get_contacts(self):
         return {
@@ -156,3 +122,102 @@ def actions(request):
         })
 
     return Response(result)
+
+
+class SiteBarMenu(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, format=None):
+        result = {
+            "items": [
+                {"name": _('Main Page'), "href": "#/home"},
+            ]
+        }
+
+        organization = get_current_site(self.request).user_site.organization
+
+        if organization.news.exists():
+            result['items'].append({"name": _('Company News'), "href": "#/news"})
+
+        if organization.proposals.exists():
+            result['items'].append({"name": _('Business Proposals'), "href": "#/offers"})
+
+        if not isinstance(organization, Company):
+            if organization.b2b_products.exists():
+                result['items'].append({"name": _('B2C Products'), "subCategory": self._get_b2c_categories_list()})
+
+            if organization.b2c_products.exists():
+                result['items'].append({"name": _('B2B Products'), "subCategory": self._get_b2b_categories_list()})
+
+        if organization.galleries.exists():
+            result['items'].append({"name": _('Gallery'), "href": "#/gallery"})
+
+        result['items'] += [
+                {"name": _('Company Structure'), "href": "#/structure"},
+                {"name": _('Contact Us'), "href": "#/contact"}
+        ]
+
+        return Response(result)
+
+    def _get_b2c_categories_list(self):
+        organization = get_current_site(self.request).user_site.organization
+        categories = B2CProductCategory.objects.filter(products__company_id=organization.pk) \
+            .order_by('level').distinct()
+
+        result = []
+
+        for _, cat in sorted(self._load_category_hierarchy(categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]):
+            category = {'name': cat.name, 'id': cat.id}
+
+            if cat.level == 0:
+                result.append(category)
+            else:
+                parent_node = result[-1] if cat.level == 1 else result[-1]['subCategory'][-1]
+
+                if 'subCategory' not in parent_node:
+                    parent_node['subCategory'] = []
+
+                parent_node['subCategory'].append(category)
+
+        return result
+
+    def _get_b2b_categories_list(self):
+        organization = get_current_site(self.request).user_site.organization
+        categories = B2BProductCategory.objects.filter(products__company_id=organization.pk) \
+            .order_by('level').distinct()
+
+        result = []
+
+        for _, cat in sorted(self._load_category_hierarchy(categories).items(), key=lambda x: [x[1].tree_id, x[1].lft]):
+            category = {'name': cat.name, 'id': cat.id}
+
+            if cat.level == 0:
+                result.append(category)
+            else:
+                parent_node = result[-1] if cat.level == 1 else result[-1]['subCategory'][-1]
+
+                if 'subCategory' not in parent_node:
+                    parent_node['subCategory'] = []
+
+                parent_node['subCategory'].append(category)
+
+        return result
+
+    def _load_category_hierarchy(self, categories, loaded_categories=None):
+
+        if not loaded_categories:
+            loaded_categories = {}
+
+        categories_to_load = []
+
+        for category in categories:
+            loaded_categories[category.pk] = category
+
+            if category.parent_id and category.parent_id not in loaded_categories:
+                categories_to_load.append(category.parent_id)
+
+        if categories_to_load:
+            queryset = B2CProductCategory.objects.filter(pk__in=categories_to_load).order_by('level')
+            loaded_categories = self._load_category_hierarchy(queryset, loaded_categories)
+
+        return loaded_categories
