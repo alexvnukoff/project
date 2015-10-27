@@ -45,7 +45,7 @@ class SiteSettings(APIView):
         result = []
 
         for page in get_current_site(self.request).user_site.organization.additional_pages.all():
-            result.append({'name': page})
+            result.append({'name': page.title})
 
         return result
 
