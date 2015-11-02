@@ -310,8 +310,8 @@ var ui =
 
         if ( !addBtn.hasClass('logged-out')) {
             if ( data.addNew != '' ) {
-               addBtn.parent().removeClass('disable');
-               addBtn.attr('href', data.addNew);
+               addBtn.removeClass('disable');
+               addBtn.parent().attr('href', data.addNew);
 
             } else {
                addBtn.parent().attr('href', '#');

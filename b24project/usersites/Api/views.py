@@ -119,7 +119,8 @@ def actions(request):
             "percent":product.coupon_discount_percent,
             "endDate": product.end_coupon_date,
             "cover": product.image.big if product.image else None,
-            "more": "about.html",
+            "slug": product.slug,
+            "id": product.id,
             "details": product.short_description if product.short_description else product.description
         })
 

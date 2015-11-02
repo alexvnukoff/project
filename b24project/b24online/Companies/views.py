@@ -49,7 +49,7 @@ class CompanyList(ItemsList):
         self.template_name = 'b24online/Companies/index.html'
 
     def get_add_url(self):
-        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+        if self.request.user.is_authenticated():
             return self.addUrl
 
         return None
@@ -81,7 +81,7 @@ class CompanyDetail(ItemDetail):
     addUrl = 'companies:add'
 
     def get_add_url(self):
-        if self.request.user.is_authenticated() and (self.request.user.is_superuser or self.request.user.is_commando):
+        if self.request.user.is_authenticated():
             return self.addUrl
 
         return None
@@ -526,12 +526,6 @@ class CompanyCreate(ItemCreate):
     success_url = reverse_lazy('companies:main')
     org_required = False
     org_model = Chamber
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated() or not (request.user.is_commando or request.user.is_superuser):
-            return HttpResponseRedirect(reverse('denied'))
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
