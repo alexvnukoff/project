@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+<div class="container">
+    <script>
+        $(function(){
+
+            $('#file-title').remove();
+            $('#file-input').remove();
+        });
+    </script>
+    {% include "b24online/main/paginator.html" %}
+    {% include "b24online/main/popupFilter.html" %}
+
+     <ul class="listprd">
+        {% for user in object_list %}
+            <li>
+              <div class="thumb">
+                  <a href="#">
+                      {% if user.avatar %}
+                          <img src="{{ user.avatar.big }}" alt="{{ user|truncatechars:40 }}" title="{{ user }}" />
+                      {% else %}
+                          <img src="{% static 'b24online/img/profile.jpg' %}" alt="{{ user|truncatechars:40 }}" />
+                      {% endif %}
+                  </a>
+              </div>
+                <div class="link">
+                    {% if user.country %}
+                         <i class="flag sprite {{ user.country.flag }}" title="{{ user.country.name }}"></i>
+                    {% endif %}
+                <a href="#" class="name">{{ user }}</a>
+               </div>
+
+                <a href="#" style="height: 20px;" class="btnbuy staff-contact-msg img-status contact-us" data-name="{{ user }}" data-id="{{ user.pk }}">{% trans 'Send message' %}</a>
+
+            </li>
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+    </ul>
+   {% include "b24online/main/paginator.html" %}
+</div>

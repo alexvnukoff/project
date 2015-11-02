@@ -1,0 +1,35 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+               {% block title %}{% trans 'Order Step three' %}{% endblock %}
+
+
+
+
+
+
+
+
+{% block header %}
+{% include "centerpokupok/header_big.html" %}
+{% endblock %}
+{% block body %}
+
+<div id="main">
+		<div id="sidebar">
+			{% include "centerpokupok/main/cabinet_menu.html" %}
+
+		</div>
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#"></div>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
+
+
+                </div>
+                <div style="margin-top:50px;font-size: 20px;"><span> {% trans "Thank you for  shopping on our site," %} <a href="{% url 'profile:order_history' %}">{% trans "here" %} </a>  {% trans 'you can view your order history' %}</span></div>
+        </div>
+</div>
+ {% endblock %}

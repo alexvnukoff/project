@@ -1,0 +1,174 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+
+    <script>
+        {% getOwner item as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+        {% endif %}
+        ga('set', 'dimension2', 'product');
+    </script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+{% block content %}
+<div class="goods-details">
+    <h1>{{ item.name }}  {{ item.sku|default_if_none:"" }}</h1>
+    <div class="goods-details-left">
+        <div class="gallery">
+            <div id="panel">
+                {% if item.image %}
+                  <img id="largeImage" src="{{ item.image.big }}" alt="{{ item.name }}" title="{{ item.name }}" />
+                {% else %}
+                  <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                {% endif %}
+            </div>
+            <div id="thumbs">
+                {% for gallery_item in item.galleries.first.gallery_items.all|slice:":2" %}
+                    <img src="{{ gallery_item.image.big }}" alt="" />
+                {% endfor %}
+            </div>
+        </div>
+        {% b2b_social_buttons item.image item.name item.description %}
+
+    </div>
+    <div class="goods-details-center">
+        <ul>
+            <li>
+                <label>{% trans "Price" %}:</label>
+                <p>
+                    {% if item.cost %}
+                         {{ item.currency|getSymbol }} {{ item.cost|formatPrice }}
+                    {% else %}
+                         {% trans 'Get price' %}
+                    {% endif %}
+                </p>
+            </li>
+            {% if item.measurement_unit %}
+                <li>
+                    <label>{% trans 'Unit' %}:</label>
+                    <p>{{ item.get_measurement_unit_display }}</p>
+                </li>
+            {% endif %}
+            <li>
+                <label>{% trans 'Amount' %}:</label>
+                <input type="text" name="" value="" class="text" style="width:60%;" />
+            </li>
+            {% comment %}
+            <li>
+                <label>{% trans 'Delivery method' %}:</label>
+                <span class="trans-services"><i class="imgnews transport trans-1"></i></span>
+                <span class="trans-services"><i class="imgnews transport trans-2"></i></span>
+                <span class="trans-services selected"><i class="imgnews transport trans-3"></i></span>
+                <span class="trans-services"><i class="imgnews transport trans-4"></i></span>
+                <span class="trans-services"><i class="imgnews transport trans-5"></i></span>
+           </li>
+           {% endcomment %}
+           <li>
+               <a class="bigbuy contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
+           </li>
+        </ul>
+    </div>
+    <ul class="goods-info">
+       <li class="top">
+            <div class="iconinfo"><i class="sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i> </div>
+            <div class="nameinfo"><b><a href="{{ item.company.get_absolute_url }}">{{ item.company.name }}</a></b></div>
+       </li>
+       {% if item.company.address %}
+           <li>
+                <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                <div class="nameinfo">{{ item.company.address }}</div>
+           </li>
+       {% endif %}
+       {% if item.company.phone %}
+           <li>
+                <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                <div class="nameinfo">{{ item.company.phone }}</div>
+           </li>
+       {% endif %}
+       {% if item.company.fax %}
+           <li>
+                <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                <div class="nameinfo">{{ item.company.fax }}</div>
+           </li>
+       {% endif %}
+       {% if item.company.site %}
+           <li>
+                <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                <div class="nameinfo"><a href="#">{{ item.company.site }}</a></div>
+           </li>
+       {% endif %}
+       <li>
+            <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+            <div class="nameinfo">
+                <a class="contact-us" data-name="{{ item.name }}" data-id="{{ item.company.pk }}" href="#" >{% trans 'Contact us' %}</a>
+            </div>
+       </li>
+    </ul>
+    <div class="goods-details-tab cpn-details-tab">
+        <div class="tab-cate">
+            <ul>
+                <li><a href="#goods-tabs-1">{% trans 'About' %}</a></li>
+                {% comment %}
+                <li>
+                    <a data-id="gallery-tabs" href="{% url "products:tabs_gallery" item.pk %}">
+                        {% trans "Gallery" %}
+                    </a>
+                </li>
+                {% endcomment %}
+                <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
+                <li><a href="#goods-tabs-3">{% trans 'Reviews' %}</a></li>
+                {% for page in item.additional_pages.all %}
+                     <li><a href="#goods-tabs-{{ forloop.counter0|add:4 }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="goods-tabs-1">
+            <div class="content-goods-tab">{{ item.description|cleanHtml|safe }}</div>
+        </div>
+        <div id="goods-tabs-2">
+            <div class="content-goods-tab">
+                {% for document in item.documents.all %}
+                    <a href="{{ MEDIA_URL}}document/{{ document.document_url }}">{% trans 'Link to the document' %}</a><br>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="goods-tabs-3">
+            <div class="content-goods-tab">
+
+            </div>
+        </div>
+        {% for page in item.additional_pages.all %}
+            <div id="goods-tabs-{{ forloop.counter0|add:4 }}">
+                     <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+             </div>
+         {% endfor %}
+    </div>
+</div>
+{% endblock %}

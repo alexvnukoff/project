@@ -1,0 +1,158 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load CustomFilters %}
+
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+<script type="text/javascript">
+        $(function() {
+            $( ".date" ).datepicker({
+              dateFormat: "dd/mm/yy"
+            });
+            setTiny('textarea[class="tiny"]');
+        });
+
+    $(document).bind('branchSelected', function(event, pk, name) {
+        add_branch(name, pk);
+    });
+
+    $(document).on('click', '.branch-remove', function() {
+        var li = $(this).parents('li')
+        var pk = li.data('pk');
+        li.remove();
+        $('input.brnach-' + pk).remove();
+        return false;
+    });
+</script>
+<style>
+    .list-cat li {
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #333;
+        color: #FFF;
+        padding-right: 25px;
+        position: relative;
+        float: left;
+        margin-bottom: 5px;
+        margin-right: 5px;
+    }
+
+    .list-cat li .i-close {
+        position: absolute;
+        width: 8px;
+        height: 7px;
+        background-position: -195px 0;
+        top: 8px;
+        right: 5px;
+    }
+</style>
+
+{% block keywords %}{% endblock %}
+
+<div class="newsform">
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        <div class="uploadimgage">
+            <div>
+                <label class="sapce">{% trans 'Publication date' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.start_date %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.start_date.0 }}</div></div>
+                {% endif %}
+                <input type="text"  name="start_date" value="{{ form.start_date.value|default_if_none:"" }}"  placeholder="" class="date" />
+            </div>
+            <div>
+                <label class="sapce">  {% trans 'Deadline for receiving bids' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.end_date %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.end_date.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="end_date" value="{{ form.end_date.value|default_if_none:"" }}" placeholder="" class="date"  />
+            </div>
+            <div>
+                <div class="clumn1">
+                    <label class="sapce">{% trans 'Starting price' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.cost %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.cost.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="cost" value="{{ form.cost.value|default_if_none:""|unlocalize }}" placeholder="" class="text" />
+                </div>
+                <div class="clumn2">
+                    <label class="sapce">{% trans 'Currency' %}</label>
+                    {% if form.errors.currency %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.currency.0 }}</div>
+                        </div>
+                    {% endif %}
+
+                    {{ form.currency }}
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                {% if form.errors.country %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.country.0 }}</div></div>
+                {% endif %}
+                {{ form.country }}
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+            <div>
+                {% if form.errors.branches %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.branches.0 }}</div>
+                    </div>
+                {% endif %}
+                <label class="sapce">{% trans 'Branches' %}</label>
+                    <ul id="list-branches" class="list-cat">
+                    </ul>
+                    <a href="#" id="select-branch" class="buttonclear  add-advandce">{% trans "Add branches" %}</a>
+                    <script>
+                    for(i in branches) {
+                        add_branch(branches[i].name, branches[i].pk)
+                    }
+                </script>
+            </div>
+        </div>
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Title' %} <font color="#FF0000">*</font></label>
+                 {% if form.errors.title %}
+                     <div class="error-handler"> <div class="formserror">{{ form.errors.title.0 }}</div></div>
+                 {% endif %}
+                <input type="text" name="title" value="{{ form.title.value|default_if_none:"" }}" placeholder="" class="text" />
+            </li>
+            <li>
+                <label>{% trans 'Description' %}</label>
+                {% if form.errors.content %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.content.0 }}</div></div>
+                {% endif %}
+            </li>
+            <li>
+                <div class="tiny"><textarea class="tiny" rows="10"   name="content" >{{ form.content.value|default_if_none:"" }}</textarea></div>
+            </li>
+        </ul>
+        <div class="append-formin" >
+            <div class="addpage-title">{% trans 'Additional pages' %}</div>
+            <a data-prefix="{{ additional_page_form.prefix }}" id="add-page" href="#" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+            {{ additional_page_form.management_form }}
+            {{ additional_page_form.non_form_errors }}
+            {% for form in additional_page_form %}
+                {{ form.id }}
+                {% with prefix=form.prefix num=forloop.counter0 %}
+                    {% include "b24online/additionalPage.html" %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+       <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+       </div>
+    </form>
+</div>
+{% endblock %}

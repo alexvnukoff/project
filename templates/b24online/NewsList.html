@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The books list </title>
+</head>
+<body>
+<table style="max-width: 850px;">
+
+{% with itemsList.values as attr %}
+
+    {% load staticfiles %}
+    {% with attr.Text|first as text  %}
+    {% with attr.Photo|first as picture  %}
+    {%with attr.Anons|first as name  %}
+
+
+  <tr >
+
+     <td colspan="2">
+       <span  style="font-size: x-large;">{{ name }}</span>
+     </td>
+  </tr>
+  <tr >
+   <td>
+     <img width="120" height="100" src=" {% static  picture %}"/>
+     </td>
+       <td style="vertical-align: top;" >
+
+      <span>{{ text|truncatechars:250}}</span>
+
+       </td>
+ </tr>
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+
+   <TR>
+       <td>
+           <span> It's empty</span>
+       </td>
+   </TR>
+
+
+
+
+</table>
+{% include "b24online/Paginator.html" %}
+</body>
+</html>
+
+

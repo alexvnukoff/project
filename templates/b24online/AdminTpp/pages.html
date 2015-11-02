@@ -1,0 +1,173 @@
+{% extends "b24online/AdminTpp/baseAdmin.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans 'Adveretisement Settnings' %}{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <!-- DATA TABLES -->
+    <link href="{% static "b24online/admin-tpp/css/datatables/dataTables.bootstrap.css" %}" rel="stylesheet" type="text/css"
+          xmlns="http://www.w3.org/1999/html"/>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{% trans 'Pages B2B' %}</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body table-responsive">
+                    <table id="pages-b2b" class="pages table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Title' %}</th>
+                                <th>{% trans 'On top' %}</th>
+                                <th>{% trans 'Type' %}</th>
+                                <th>{% trans 'Action' %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="10" class="dataTables_empty">{% trans 'Loading data from server' %}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>{% trans 'Title' %}</th>
+                                <th>{% trans 'On top' %}</th>
+                                <th>{% trans 'Type' %}</th>
+                                <th>{% trans 'Action' %}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div><!-- /.box-body -->
+
+            </div><!-- /.box -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{% trans 'Add new page' %}</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body table-responsive">
+
+                {% if form.errors %}
+                    {% for type, error in result.errors.items %}
+                        <p class="text-red">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                         {% if form.errors.title  %}
+                            <label class="control-label" for="inputError">
+                                <i class="fa fa-times-circle-o"></i>
+                                {{ form.errors.title.0 }}
+                            </label>
+                        {% endif %}
+                        <input name="title" type="text" class="form-control" value="{{ form.title.value|default_if_none:"" }}" placeholder="{% trans 'Title' %}">
+                    </div>
+                    <div class="form-group">
+
+                        <div>
+                            {% if form.errors.page_type  %}
+                                <label class="control-label" for="inputError">
+                                    <i class="fa fa-times-circle-o"></i>
+                                    {{ form.errors.page_type.0 }}
+                                </label>
+                            {% endif %}
+                        </div>
+                        <label>{% trans 'Type' %}</label>
+                        {{ form.page_type }}
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans 'Is on top' %}</label>
+                        {{ form.is_on_top }}
+                    </div>
+                    <div class="form-group">
+                        {% if form.errors.content  %}
+                            <label class="control-label" for="inputError">
+                                <i class="fa fa-times-circle-o"></i>
+                                {{ form.errors.content.0 }}
+                            </label>
+                        {% endif %}
+                        <textarea class="tiny" name="content" >{{ form.content.value|default_if_none:"" }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="{% trans 'Save' %}" />
+                    </div>
+
+                </form>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottomScript %}
+    {{ block.super }}
+    <script src="{% static "b24online/admin-tpp/js/bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="{% static "b24online/admin-tpp/js/plugins/datatables/dataTables.bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "b24online/admin-tpp/js/AdminLTE/app.js" %}" type="text/javascript"></script>
+    <script src="//tinymce.cachefly.net/4/tinymce.min.js"></script>
+    <script src="//tinymce.cachefly.net/4/jquery.tinymce.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+
+            $('.tiny').tinymce({
+                        mode:"textareas",
+                        selector: '.tiny',
+                        plugins : "image wordcount media textcolor hr autolink link lists print preview code",
+                        //language_url : '{% static "b24online/js/tinymce/langs/ru.js" %}'
+                    });
+
+            $(document).on('click', '.savePage', function() {
+               var ser = $(this).parents('tr').find('input').serialize();
+
+               var button = $(this);
+               $(this).addClass("disabled");
+
+               $.post("/admin-tpp/pages/edit/" + $(this).data('pk') + "/", ser, function() {
+                    button.removeClass('disabled');
+               });
+            });
+
+           $('#pages-b2b').on( 'draw.dt', function () {
+                    $("input[type='checkbox'], input[type='radio']").iCheck({
+                        checkboxClass: 'icheckbox_minimal',
+                        radioClass: 'iradio_minimal'
+                    });
+            } ).dataTable( {
+                "ajax": "{% url "AdminTpp:pages" %}?type=b2b",
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "ordering":  false,
+                "columnDefs": [
+                    {
+                        "targets": [ 3 ],
+                        "data": 3,
+                        "render": function ( data, type, full ) {
+
+                            return '<a href="' + data[0] + '">' +
+                                    '<button class="btn btn-info">{% trans 'Edit' %}</button>' +
+                                    '</a> ' +
+                                    '<a href="' + data[1] + '">' +
+                                    '<button class="btn btn-danger">{% trans 'Remove' %}</button>' +
+                                    '</a>';
+
+                        }
+                    }
+               ]
+            });
+        });
+    </script>
+{% endblock %}

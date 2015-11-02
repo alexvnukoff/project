@@ -1,0 +1,93 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+
+
+               {% block title %}{% trans "Order step one" %}{% endblock %}
+
+
+{% block header %}
+{% include "centerpokupok/header_big.html" %}
+{% endblock %}
+{% block body %}
+<div id="main">
+		<div id="sidebar">
+           {% include "centerpokupok/main/cabinet_menu.html" %}
+
+		</div>
+		<div id="main-r">
+		<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Start page" %}</a> &rarr;</span>
+				</div>
+			</div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <ul class="bgform">
+					<li>
+						<label class="control-left">{% trans "Card holder name" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" name="card_holder" class="textcheck" style="width:265px;">
+                            <div class="warning"><span>{% if form.errors.card_holder %}<span class="i-wrn">!</span>{% endif %}<span>{{ form.errors.card_holder.as_text }}</span></div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Card number" %}<b>*</b></label>
+						<div class="control">
+							<input type="text" name="card_number" class="textcheck" style="width:265px;">
+						</div>
+					</li>
+                    <li>
+						<label class="control-left">E-mail<b>*</b></label>
+						<div class="control">
+							<input type="text" name="email" class="textcheck" style="width:265px;">
+						</div>
+					</li>
+                    <li>
+						<label class="control-left">CVV<b>*</b></label>
+						<div class="control">
+							<input type="text" name="cvv" class="textcheck" style="width:265px;">
+						</div>
+					</li>
+					<li>
+						<label class="control-left">{% trans "Card expire date" %}</label>
+						<div class="control">
+			              	<div id="date">
+								<div class="styled-select">
+					                <select name="exp_month">
+					                  <option>{% trans "Month" %}</option>
+                                       {% for month in monthRange %}
+					                        <option value="{{ month }}">{{ month }}</option>
+                                        {% endfor %}
+					                </select>
+				              	</div>
+			              	</div>
+			              	<div id="date">
+								<div class="styled-select">
+					                <select name="exp_year">
+					                  <option>{% trans "Year" %}</option>
+                                        {% for year in yearRange %}
+					                        <option value="{{ year }}">{{ year }}</option>
+                                        {% endfor %}
+					                </select>
+				              	</div>
+			              	</div>
+						</div>
+					</li>
+					<li>
+						<label class="control-left">&nbsp;</label>
+					</li>
+				</ul>
+                <input type="hidden" name="continue" value="1" />
+
+        <div class="bottom-order">
+		    <div class="rows-check"><input type="submit" name="Continue" class="btnreg" value="{% trans "Pay" %}"></div>
+     	</div>
+            </form>
+		</div>
+
+
+</div>
+
+{% endblock %}

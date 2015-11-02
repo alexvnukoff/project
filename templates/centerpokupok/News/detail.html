@@ -1,0 +1,158 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}News Detail{% endblock %}
+
+
+{{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
+{% endblock %}
+
+{% block header %}
+    {% include "centerpokupok/header_big.html" %}
+{% endblock %}
+
+{% block body %}
+    <div id="main">
+		<div id="sidebar">
+			<ul id="categories">
+				<li class="parent">{% trans 'Product reviews' %}</li>
+				<li><a href="#">{% trans 'Seller anounses' %}</a></li>
+				<li><a href="#">Полезные статьи</a></li>
+			</ul>
+			<div class="shopinfo margintop">
+				<span class="title"><a href="#">{% trans 'View store' %} &rarr;</a></span>
+				<div class="shopinfoin">
+					<label>Автор обзора:</label>
+					<p><font class="white">ООО «Металлопрофиль»</font></p>
+				</div>
+			</div>
+			<ul id="categories" class="margintop">
+				<li><a href="#">{% trans 'About company' %}</a></li>
+				<li><a href="#">{% trans 'Company products' %}</a></li>
+				<li><a href="#">{% trans 'Contact' %} </a></li>
+			</ul>
+
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<h2>{% trans 'Special price' %}</h2>
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Изучение английского, немецкого, французского, испанского и др. языков</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> -30%</div>
+							<a href="#"><img src="images/products/pr4.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">5, 10 или 15 посещений подземного соляного грота</a></p>
+								<p class="price">
+									<font class="number">$ 53.80 </font><font class="dv">/ пара</font>
+									Экономия: $ 22.10
+								</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="recommended margintop">
+				<div class="items-recm">
+					<h2>Рекомендуем</h2>
+					<ul>
+
+                    {% for id , attr  in newProducrList.items %}
+                        {% with attr.NAME|first as name %}
+                        {% with attr.IMAGE|first as picture %}
+                        {% with attr.CURRENCY|first as currency %}
+                        {% with attr.COST|first as cost  %}
+                        {% with attr.CATEGORY_NAME as category_name  %}
+                        {% with attr.CATEGORY_ID as category_id  %}
+						<li>
+							<a href="{% url "products:detail" id %}"><img src="{% static picture %}" alt=""></a>
+							<p><a href="{% url "products:detail" id %}">{{ name }}</a></p>
+							<p class="price">
+								<font class="number">{{ currency }} {{ cost }}</font><font class="dv"></font>
+							</p>
+							<p><a class="recm-more" href="{% url "products:category" category_id %}">{{ category_name }} →</a></p>
+						</li>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+						{% endfor %}
+
+					</ul>
+				</div>
+			</div>
+
+			<div class="bestbuy">
+				<div class="items-coupon">
+					<ul>
+						<li>
+							<div class="discount"><i class="icons i-after"></i> спеццена</div>
+							<a href="#"><img src="images/products/pr8.jpg" alt=""></a>
+							<div class="coupon-info">
+								<p><a href="#">Распродажа</a></p>
+								<p>осенней коллекции</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="alldeal"><a href="#">Все спецпредложения →</a></div>
+		</div>
+
+		<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">Главная</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Новостные материалы </a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a href="#" property="v:title" rel="v:url">Обзоры </a></span>
+				</div>
+			</div>
+
+            {% with newAttr as  attr   %}
+            {% with attr.NAME|first as name  %}
+            {% with attr.IMAGE|first as picture  %}
+            {% with attr.DETAIL_TEXT|first as content %}
+            {%  with attr.Active_From|first as date  %}
+
+			<div class="article">
+				<h2>{{ name }}</h2>
+				<div class="starvote">
+					<span>{{ date }}</span>
+					<span><img src="images/stars-vote.png" alt="" /></span>
+					<span class="articlelink"><a href="#">Посмотреть магазин &rarr;</a></span>
+				</div>
+				<div class="sortdes">
+					<div class="clumnleft">
+						<img src="{% static picture %}" alt="{{ name }}" />
+					</div>
+                    <p>{{ content }}</p>
+                </div>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}

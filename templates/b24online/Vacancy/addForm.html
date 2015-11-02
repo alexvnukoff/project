@@ -1,0 +1,116 @@
+{% extends 'b24online/forms.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load set_var %}
+{% block content %}
+    <link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}" />
+    <script type="text/javascript">
+        $(function() {
+            setTiny('textarea[class="tiny"]');
+        });
+    </script>
+
+    <div class="newsform">
+        <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+            {% csrf_token %}
+            <div class="uploadimgage">
+                <div>
+                    <label class="sapce">{% trans 'City' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.city %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.city.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" name="city" value="{{ form.city.value|default_if_none:"" }}" placeholder="" class="text" />
+                </div>
+                <div>
+                    <label class="sapce">{% trans 'Type of employment' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.type_of_employment %}
+                          <div class="error-handler"><div class="formserror">{{ form.errors.type_of_employment.0 }}</div></div>
+                    {% endif %}
+
+                     {{ form.type_of_employment }}
+                </div>
+                <div>
+                    <label class="sapce">{% trans 'Keyword' %}</label>
+                    {% if form.errors.keywords %}
+                        <div class="error-handler"><div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                    {% endif %}
+                    <textarea name="keywords" rows="5">{{ form.keywords.value|default_if_none:"" }}</textarea>
+                </div>
+                <div>
+                    <label class="sapce">{% trans 'Country' %}  <font color="#FF0000">*</font></label>
+                    {% if form.errors.country %}
+                        <div class="error-handler"> <div class="formserror">{{ form.errors.country.0 }}</div></div>
+                    {% endif %}
+                    {{ form.country }}
+                </div>
+                <div>
+                    <label class="sapce">{% trans 'Vacancy' %}</label>
+                    {% if form.errors.vacancy %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.vacancy.0 }}</div>
+                        </div>
+                    {% endif %}
+
+                    {{ form.vacancy }}
+                </div>
+                <div>
+                    <label class="sapce">{% trans 'Make vacancy anonymous' %}</label>
+                    <div>{{ form.is_anonymous }} — {% trans 'Company title will be hidden' %}</div>
+                </div>
+            </div>
+            <ul class="uploadconfig">
+                <li>
+                    <label>{% trans 'Title' %} <font color="#FF0000">*</font></label>
+                    {% if form.errors.title %}
+                        <div class="error-handler"><div class="formserror">{{ form.errors.title.0 }}</div></div>
+                    {% endif %}
+                    <input type="text" id="id_name" name="title" value="{{ form.title.value|default_if_none:"" }}" class="text"/>
+                </li>
+                <li>
+                    <label>{% trans 'Description' %}</label>
+                    {% if form.errors.description %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.description.0 }}</div>
+                        </div>
+                    {% endif %}
+                </li>
+                <li>
+                    <div class="detail">
+                        <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
+                    </div>
+                </li>
+                <li>
+                    <label>{% trans 'Requirements' %}</label>
+                    {% if form.errors.requirements %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.requirements.0 }}</div>
+                        </div>
+                    {% endif %}
+                </li>
+                <li>
+                    <div class="detail">
+                        <textarea class="tiny" name="requirements">{{ form.requirements.value|default_if_none:"" }}</textarea>
+                    </div>
+                </li>
+                <li>
+                    <label>{% trans 'Terms' %}</label>
+                    {% if form.errors.terms %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.terms.0 }}</div>
+                        </div>
+                    {% endif %}
+                </li>
+                <li>
+                    <div class="detail">
+                        <textarea class="tiny" name="terms">{{ form.terms.value|default_if_none:"" }}</textarea>
+                    </div>
+                </li>
+            </ul>
+          <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+          </div>
+        </form>
+    </div>
+{% endblock %}

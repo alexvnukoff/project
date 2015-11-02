@@ -1,0 +1,58 @@
+{% load i18n %}
+{% load staticfiles %}
+<div class="tpp-dt-content">
+    {% if has_perm %}
+        <div class="uploader">
+                <form>
+                    <input id="image-upload" name="image" type="file" multiple="true">
+                    <div id="image-upload-queue"></div>
+                </form>
+        </div>
+    {% endif %}
+    <div class="files_holder">
+        {% include "b24online/tab_gallery_structure.html" %}
+    </div>
+</div>
+
+{% if has_perm %}
+    <!-- Gallery uploader -->
+    <style>
+        .uploader {
+            max-height: 130px;
+            overflow-y: hidden;
+        }
+        #image-upload-queue, #image-upload {
+            float: left;
+            margin-left: 11px;
+        }
+        .uploader:after {
+           content: "";
+           display: block;
+           clear: both;
+        }
+    </style>
+
+    <script>
+        LANG['UPLOAD'] = {
+            'uploading': '{% trans "Uploading" %}',
+            'success': '{% trans "Uploaded" %}',
+            'fail': '{% trans "Fail" %}',
+            'wasUploaded': '{% trans "The following files were not uploaded" %}'
+        };
+
+        var buttonImage= '{% static "b24online/img/folder-blue-upload.png" %}';
+
+        options = {
+            fileSizeLimit: '500KB',
+            fileTypeExts: '*.jpg; *.jpeg; *.png; *.gif',
+            fileObjName: 'image',
+            swf: '{% static "b24online/uploadify.swf" %}',
+            uploader: '{{ uploaderURL }}',
+            buttonImage: buttonImage,
+            queueID: 'image-upload-queue'
+        }
+
+        FileUploader.init($('#image-upload'), LANG['UPLOAD'], buttonImage, '{{ structureURL }}', options);
+    </script>
+    <!-- /Gallery uploader -->
+{% endif %}

@@ -1,0 +1,197 @@
+{% extends 'b24online/main_page.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+
+{% block header %}
+    {% include "b24online/login_header.html" %}
+{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/news.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'b24online/css/company.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static "b24online/js/jquery.uploadify.min.js" %}"></script>
+    <script>
+        {% getOwner item as owner %}
+
+        {% if owner %}
+            {% if owner.type == 'tpp' %}
+                ga('set', 'dimension1', {{ owner.pk }});
+            {% else %}
+                ga('set', 'dimension3', {{ owner.pk }});
+            {% endif %}
+        {% endif %}
+        ga('set', 'dimension2', 'exhibition');
+    </script>
+    <script>
+    $(function() {
+         $(".goods-details-tab").tabs();});
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+     <script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
+     <script type="text/javascript">
+
+            $(function() {
+                 $(".goods-details-tab").tabs();});
+
+          var marker;
+                $(document).ready(function($) {
+                    var tabs =  $( '.goods-details-tab' )
+                    tabs.tabs();
+
+                    var href = tabs.find('a[href="#goods-tabs-4"]');
+                    href.on('click',function(){
+
+                        {% if item.location %}
+                          {% with item.location|split:"," as LatLng %}
+                          marker = new google.maps.Marker({
+                            position: new google.maps.LatLng({{ LatLng.0 }}, {{ LatLng.1 }})
+
+                            });
+                          {% endwith %}
+                        {% endif %}
+                      initialize(false);
+                    })});
+        </script>
+{% endblock %}
+
+{% block keywords %}{% endblock %}
+
+{% block content %}
+    <div class="tender">
+        <div class="tender-details-title">
+            <i class="flag sprite {{ item.country.flag }}" title="{{ item.country.name }}"></i>
+            <font class="name">{{ item.country.name }}, {{ item.city }}, {{ item.start_date|date:"d M Y" }} - {{ item.end_date|date:"d M Y"  }}</font>
+        </div>
+        <div class="tender-info">
+            <div class="tender-button"><a class="bigbuy" href="#" id="afisha">{% trans 'Sign Up' %}</a></div>
+			    <span class="title">{{ item.title }}</span>
+                <div class="tender-bottom">
+                   	<div class="tender-bottom-left">
+                      	<img src="{{ item.organization.logo.big }}" title="{{ item.organization.name }}" alt="{{ item.organization.name }}" class="thumb" />
+                        <a href="{{ item.organization.get_absolute_url }}">{{ item.organization.name }}</a>
+                    </div>
+                </div>
+                <div class="innov-details">
+                  	<p>{{ item.description|cleanHtml|safe }}</p>
+                </div>
+                <div class="goods-details-tab cpn-details-tab">
+                    <div class="tab-cate">
+                        <ul>
+                            <li><a href="#goods-tabs-1">{% trans 'Route Description' %}</a></li>
+                            <li>
+                                <a data-id="document-tabs" href="{% url "exhibitions:tabs_documents" item.pk %}">
+                                    {% trans "Documents" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="gallery-tabs" href="{% url "exhibitions:tabs_gallery" item.pk %}">
+                                    {% trans "Gallery" %}
+                                </a>
+                            </li>
+                            <li><a href="#goods-tabs-4">{% trans 'Contacts' %}</a></li>
+                            {% for page in item.additional_pages.all %}
+                                 <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="goods-tabs-1">
+                        <div class="content-goods-tab">
+                            {{ item.route }}
+                        </div>
+                    </div>
+                    <div id="goods-tabs-4">
+                        <div class="tpp-dt-content">
+                            <div class="org-contacts">
+                                <ul class="innov-tab-content">
+                                    {% if item.organization.address %}
+                                        <li>
+                                            <span class="left">{% trans 'Address' %}: </span>
+                                            <span class="right">{{ item.organization.address }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.phone %}
+                                        <li>
+                                            <span class="left">{% trans 'Telephone number' %}: </span>
+                                            <span class="right">{{ item.organization.phone }} </span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.fax %}
+                                        <li>
+                                            <span class="left">{% trans 'Fax' %}: </span>
+                                            <span class="right">{{ item.organization.fax }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.email %}
+                                        <li>
+                                                <span class="left">{% trans 'Email' %}: </span>
+                                                <span class="right">{{ item.organization.email }}</span>
+                                        </li>
+                                    {% endif %}
+                                    {% if item.organization.site %}
+                                        <li>
+                                            <span class="left">{% trans 'WWW' %}: </span>
+                                            <span class="right">{{ item.organization.site }}</span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="org-map"><div id="map-canvas"></div></div>
+                        </div>
+                    </div>
+                    {% for page in item.additional_pages.all %}
+                        <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
+                              <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
+                         </div>
+                    {% endfor %}
+                </div>
+                <div class="afisha-reg">
+                    <form id="registration_to_ex">
+                        <i class="close-regform imgnews"></i>
+                        <ul>
+                            <li>
+                            	<label id="registration_error_ex" style="margin-left:110px;color: red;" hidden="hidden">{% trans 'Name and Email are required' %}</label>
+                                <label id="registration_succsefuly_ex" style="margin-left:110px;color: #008000;" hidden="hidden">{% trans 'You are registered successfully.' %}</label>
+
+                            </li>
+                        	<li>
+                            	<label><b>{% trans 'Name' %}</b><font color="#FF0000">*</font></label>
+                                <input type="text" name="name_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans "Email" %}</b><font color="#FF0000">*</font></label>
+                                <input type="email" name="email_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Telephone number' %}</b></label>
+                                <input type="text" name="telephone_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Company' %}</b></label>
+                                 <input type="text" name="company_register" placeholder="" class="text" />
+                            </li>
+                            <li>
+                            	<label><b>{% trans 'Position' %}</b></label>
+                                <input type="text" name="position_register" placeholder="" class="text" />
+                            </li>
+
+                            <li class="end">
+                                <input type="hidden" name="email_company_register" placeholder="" value="{{ item.organization.email }}"  />
+                                <input type="hidden" name="ex_name_register" placeholder="" value="{{ item.title }}"  />
+                            	<a class="btntype2 reg_to_exhebition" href="#">{% trans 'Sign Up' %}</a>
+                                <a class="btntype1" href="#">{% trans 'Cancel' %}</a>
+                            </li>
+                        </ul>
+                     </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="myApp">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
+        <meta http-equiv="ImageResize" content="no">
+        <meta http-equiv="ImageToolbar" content="no">
+        <meta name="MSSmartTagsPreventParsing" content="true">
+        <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
+        <meta property="og:url" content="">
+        <meta property="og:title" content="">
+        <meta property="og:description" content="">
+        <meta property="og:image" content="">
+        <meta name="google-site-verification" content="">
+        <!--<link rel="shortcut icon" href="images/favicon.ico">-->
+
+        <script src="js/vendor/jquery-1.11.3.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+
+        
+        <link rel="stylesheet" href="js/slick/slick.css">
+        <link rel="stylesheet" href="js/slick/slick-theme.css">
+        <link rel="stylesheet" href="js/fancybox/jquery.fancybox.css">
+
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/general.css">
+        <!--<link rel="stylesheet" href="css/animate.css">-->
+    </head>
+    <body ng-controller="mainInfoCtrl">
+
+
+    
+        <header>
+            <div class="wrapper clearfix">
+                <div id="menuToggle">
+                    <img src="images/svg/menu.svg" alt="">
+                </div>
+                <div class="horMenu">
+                    <ul class="navigation vertical">
+                        <li ng-repeat="menuItem in menu">
+                            <a href="#">{{menuItem}}</a>
+                        </li>
+                    </ul>
+                    <div class="busket vertical">
+                        <span>-</span>
+                    </div>
+                </div><!--End mainMenu--> 
+                <div class="tel vertical">
+                    <img src="images/svg/tel.svg" alt="">
+                    <a href="tel:{{contacts.tel}}">{{contacts.phone}}</a>
+                </div>
+            </div>
+        </header>
+
+        <section class="offer">
+            <div class="wrapper">
+                
+                <div class="logo">
+                    <img ng-src="{{logo}}" alt="">
+                </div>
+
+                <div class="offer__slider">
+                    <slick autoplay="true" autoplaySpeed="500" fade="true" dots="true">
+                        <div class="slide" ng-repeat="slide in slides">
+                            <img ng-src="{{slide.url}}" alt="">
+                        </div>   
+                    </slick>
+                </div>
+
+                <div class="offer__icons">
+                    <a href="#" id="display-vertical">display vertical</a>
+                    <div class="offer__icons__icon" ng-repeat="icon in offerIcons">
+                        <img ng-src="{{icon.url}}" alt="">
+                    </div>
+                </div>         
+
+            </div><!-- end wrapper-->
+        </section><!-- end offer-->
+
+
+
+        <section class="content">
+            <div class="wrapper">
+                <aside class="sidebar">                
+                    <div class = "select -lang">
+                        <span>Russian</span>
+                        <ul class="select-dropdown">
+                            <li>
+                                <a href = "#" class="lang-hebrew">Hebrew</a>
+                            </li>
+                            <li>
+                                <a href = "#">Russian</a>
+                            </li>
+                            <li>
+                                <a href = "#">Item 3</a>
+                            </li>
+                            <li>
+                                <a href = "#">Item 4</a>
+                            </li>
+                            <li>
+                                <a href = "#" c>Item 5</a>
+                            </li>
+                        </ul>            
+                    </div>
+
+                    <ul class="sidebar-menu">
+
+                        <li>    
+                            <a href="#/home">Главная</a>
+                        </li>
+                        <li>    
+                            <a href="#/news">Новости компании</a>
+                        </li>
+                        <li>    
+                            <a href="#/offers">Бизнес предложения</a>
+                        </li>
+                        <li>    
+                            <a href="#">B2C products</a>
+                            <ul class="sidebar-menu__submenu">
+                                <li><a href="">Лекарственные средства</a></li>
+                                <li><a href="">Урология</a></li>
+                                <li><a href="">Офтальмология</a></li>
+                                <li><a href="">Ортопедия</a></li>
+                                <li><a href="">Косметология</a></li>
+                                <li><a href="">Диетология</a></li>
+                                <li><a href="">Дерматология</a></li>
+                                <li><a href="">Венерология</a></li>
+                                <li><a href="">Обезбаливающее/Анальгетики</a></li>
+                                <li><a href="">Лекарства Без Рецепта</a></li>
+                            </ul>
+                        </li>
+                        <li>    
+                            <a href="#">B2B products</a>
+                            <ul class="sidebar-menu__submenu">
+                                <li><a href="">Лекарственные средства</a></li>
+                                <li><a href="">Урология</a></li>
+                                <li><a href="">Офтальмология</a></li>
+                                <li><a href="">Ортопедия</a></li>
+                                <li><a href="">Косметология</a></li>
+                                <li><a href="">Диетология</a></li>
+                                <li><a href="">Дерматология</a></li>
+                                <li><a href="">Венерология</a></li>
+                                <li><a href="">Обезбаливающее/Анальгетики</a></li>
+                                <li><a href="">Лекарства Без Рецепта</a></li>
+                            </ul>
+                        </li>           
+                        <li>    
+                            <a href="#/gallery">Галерея</a>
+                        </li>
+                        <li>    
+                            <a href="#/structure">Структура компании</a>
+                        </li> 
+                        <li>    
+                            <a href="#/contact">Связаться с нами</a>
+                        </li>                            
+                    </ul>
+                </aside><!-- end content-->
+
+
+
+            <section class="content__info" ng-controller="contentCtrl">
+
+                <div class="container" ng-class="class">
+                
+					<article class="clearfix">
+					    <h3>{{ article.title }}</h3>
+					    <img ng-src="{{ article.cover }}" alt="">
+					    <p>
+					        {{ article.fullText }}
+					    </p>
+					</article>
+
+					<div class="socials">
+						<a href="" class="fb"></a>
+						<a href="" class="gg"></a>
+						<a href="" class="tw"></a>
+						<a href="" class="vk"></a>
+					</div>
+
+                </div>
+
+
+
+                <form action="#" class="clearfix">
+                    <h2>Задать вопрос</h2>
+                    <input type="text" name="name" placeholder="Ваше имя" required>
+                    <input type="email" name="email" placeholder="Ваша почта" required>
+                    <textarea name="message" id="" placeholder="Сообщение" required></textarea>
+                    <button>Отправить</button>
+                </form><!-- end form-->
+
+
+
+                <div class="contacts">
+                    <p class="address"><strong>{{contacts.address}}</strong></p>
+                    <p class="phone-num"><a href="tel:{{contacts.tel}}"><strong>{{contacts.phone}}</strong></a></p>
+                </div>
+            </section><!-- end content-info-->
+
+        </div><!-- end wrapper -->
+    </section><!-- end content-->
+
+    <div class="map" id="map">
+        
+    </div>
+
+    <footer>
+        <div class="footer-content wrapper">
+            <div class="copy">
+                <img <img ng-src="{{orgLogo}}" alt="">
+                <p><strong>{{contacts.orgName}}</span></p>
+            </div>
+            <div class="banner">
+                <img ng-src="{{footerBanner}}" alt="">
+            </div>
+        </div>
+    </footer>
+    
+<!-- //////////////////////////////////////////////////////////////////////// -->
+    
+    
+        <script src="js/vendor/modernizr.js"></script>
+       
+
+        <script src="js/slick/slick.min.js"></script>
+
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+        <script src="js/jquery.plugin.min.js"></script>
+        <script src="js/fancybox/jquery.fancybox.js"></script>
+        <script src="js/jquery.countdown.min.js"></script>
+        <script src="js/dirPagination.js"></script>
+        <script src="js/angular-slick/dist/slick.js"></script>
+        <script src="app.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

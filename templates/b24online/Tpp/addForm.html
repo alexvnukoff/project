@@ -1,0 +1,229 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static "b24online/css/gmapCompany.css" %}" />
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script src="{% static "b24online/js/gmapSearchMarker.js" %}"></script>
+
+<script type="text/javascript">
+        $(function() {
+
+            $( ".date" ).datepicker();
+            setTiny('textarea[class="tiny"]');
+        });
+
+     var marker;
+
+        {% if form.latitude.value and form.longitude.value %}
+         marker = new google.maps.Marker({
+            position: new google.maps.LatLng({{ form.latitude.value  }}, {{ form.longitude.value }})
+        });
+        {% endif %}
+         google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+     {% block keywords %}{% endblock %}
+
+    <div class="newsform">
+    <form enctype="multipart/form-data"  method="post" action="" onkeypress="return event.keyCode != 13;" xmlns="http://www.w3.org/1999/html">
+
+
+    {% csrf_token %}
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label>{% trans 'Image' %}</label>
+                {% if form.errors.logo %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.logo.0 }}</div></div>
+                {% endif %}
+                {% if form.initial.logo %}
+                    <div>
+                        <img src="{{ form.initial.logo.small }}">
+                        <!--<div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">-->
+                            <!--{% trans 'delete' %}</span>-->
+                        <!--</div>-->
+                        <!--<div class="gray-img"></div>-->
+                        <!--<input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />-->
+                    </div>
+                {% endif %}
+
+                <div class="fileinputs">
+                    <input name="logo" type="file" style="width: 100%"  />
+                </div>
+            </div>
+            <div class="imgbig">
+                <label>{% trans 'Flag' %}</label>
+                {% if form.errors.flag %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.flag.0 }}</div></div>
+                {% endif %}
+                {% if form.initial.flag %}
+                    <div>
+                        <img src="{{ MEDIA_URL }}small/{{ form.initial.flag }}">
+                        <!--<div class="deleteimge"><i class="imgnews delete"></i><span class="deletext">-->
+                            <!--{% trans 'delete' %}</span>-->
+                        <!--</div>-->
+                        <!--<div class="gray-img"></div>-->
+                        <!--<input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ image }}" hidden="hidden" />-->
+                    </div>
+                {% endif %}
+
+                <div class="fileinputs">
+                    <input name="flag" type="file" style="width: 100%"  />
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Director name' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.director %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.director.0 }}</div></div>
+                {% endif %}
+                <input type="text" name="director" value="{{ form.director.value|default_if_none:"" }}" placeholder="" class="text" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Telephone number' %} <font color="#FF0000">*</font></label>
+                {% if form.errors.phone %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.phone.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="phone" value="{{ form.phone.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Fax' %}</label>
+                {% if form.errors.fax %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.fax.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="fax" value="{{ form.fax.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">E-mail <font color="#FF0000">*</font></label>
+                {% if form.errors.email %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.email.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="email" value="{{ form.email.value|default_if_none:"" }}" />
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Site URL' %}</label>
+                {% if form.errors.site %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.site.0 }}</div></div>
+                {% endif %}
+                <input type="text" class="text" placeholder="" name="site" value="{{ form.site.value|default_if_none:"" }}"/>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords"  rows="4" >{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+        </div>
+                  <ul class="uploadconfig">
+                        <li>
+                            <div class="clumn1">
+                                <label>{% trans 'VATIN' %}</label>
+                                 {% if form.errors.vatin %}<div class="error-handler"> <div class="formserror">{{ form.errors.vatin.0 }}</div></div>{% endif %}
+                                <input type="text" name="vatin" value="{{ form.vatin.value|default_if_none:"" }}"placeholder="" class="text" style="width:94%;" />
+                            </div>
+                            <div class="clumn2">
+                                <label>{% trans 'Countries' %}  <font color="#FF0000">*</font></label>
+                                {% if form.errors.countries %}
+                                    <div class="error-handler"> <div class="formserror">{{ form.errors.countries.0 }}</div></div>
+                                {% endif %}
+                                {{ form.countries }}
+                            </div>
+                        </li>
+                        <li>
+                            <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
+                              {% if form.errors.name %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.name.0 }}</div></div>
+                              {% endif %}
+                            <input type="text" class="text" placeholder="" name="name" value="{{ form.name.value|default_if_none:"" }}" />
+                        </li>
+
+                         <li>
+                            <label>{% trans 'Preview description ' %} <font color="#FF0000">*</font></label>
+                              {% if form.errors.short_description %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.short_description.0 }}</div></div>
+                              {% endif %}
+                            <textarea rows="5" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
+                        </li>
+                        <li>
+                            <label>{% trans 'Detail description' %}</label>
+                            {% if form.errors.description %}
+                                <div class="error-handler">
+                                    <div class="formserror">{{ form.errors.description.0 }}</div>
+                                </div>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <div class="detail">
+                                <textarea class="tiny" name="description">{{ form.description.value|default_if_none:"" }}</textarea>
+                            </div>
+                        </li>
+                         <li>
+                            <label>{% trans 'Address' %} <font color="#FF0000">*</font></label>
+                             {% if form.errors.address %}
+                                  <div class="error-handler"> <div class="formserror">{{ form.errors.address.0 }}</div></div>
+                            {% endif %}
+                            <input type="text" name="address" value="{{ form.address.value|default_if_none:"" }}" placeholder="" class="text" />
+                        </li>
+                  </ul>
+                    <div style="padding: 0 10px;">
+                            <label>{% trans 'Place on the map' %} <font color="#FF0000">*</font></label>
+                        {% if form.errors.location %}
+                            <div class="error-handler"> <div class="formserror">{{ form.errors.location.0 }}</div></div>
+                        {% endif %}
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map-canvas"></div>
+                   </div>
+                    <!--<div class="addpage-title">{% trans 'Detail' %}</div>-->
+                    <!--<div class="addpage-form">-->
+                        <!--<div class="clumn1">-->
+                            <!--<label>{% trans 'RRC' %}</label>-->
+                             <!--{% if form.errors.KPP %}<div class="error-handler"> <div class="formserror">{{ form.errors.KPP }}</div></div>{% endif %}-->
+                            <!--<input type="text" name="KPP" value="{{kpp}}" placeholder="" class="text" style="width:89%;" />-->
+                            <!--<label>{% trans 'RCEO' %}</label>-->
+                            <!--{% if form.errors.OKPO %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKPO }}</div></div>{% endif %}-->
+                            <!--<input type="text" name="OKPO" value="{{okpo}}" placeholder="" class="text" style="width:89%;" />-->
+                            <!--<label>{% trans 'RCOSD' %}</label>-->
+                            <!--{% if form.errors.OKATO %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKATO }}</div></div>{% endif %}-->
+                            <!--<input type="text" name="OKATO" value="{{okato }}" placeholder="" class="text" style="width:89%;" />-->
+                            <!--<label>{% trans 'ARCEA' %}</label>-->
+                            <!--{% if form.errors.OKVED %}<div class="error-handler"> <div class="formserror">{{ form.errors.OKVED }}</div></div>{% endif %}-->
+                            <!--<input type="text" name="OKVED" value="{{okved }}" placeholder="" class="text" style="width:89%;" />-->
+                            <!--<label>{% trans 'Accountant name' %}</label>-->
+                             <!--{% if form.errors.ACCOUNTANT %}<div class="error-handler"> <div class="formserror">{{ form.errors.ACCOUNTANT }}</div></div>{% endif %}-->
+                            <!--<input type="text"  name="ACCOUNTANT" value="{{accountant }}" placeholder="" class="text" style="width:89%;" />-->
+                        <!--</div>-->
+                        <!--<div class="clumn2">-->
+                            <!--<label>{% trans 'Account number' %}</label>-->
+                            <!--{% if form.errors.ACCOUNT_NUMBER %}<div class="error-handler"> <div class="formserror">{{ form.errors.ACCOUNT_NUMBER }}</div></div>{% endif %}-->
+                            <!--<input type="text" name="ACCOUNT_NUMBER" value="{{acoount_number }}" placeholder="" class="text" style="width:95%;" />-->
+                            <!--<label>{% trans 'Bank details' %}</label>-->
+                            <!--{% if form.errors.BANK_DETAILS %}<div class="error-handler"> <div class="formserror">{{ form.errors.BANK_DETAILS }}</div></div>{% endif %}-->
+                            <!--<textarea name="BANK_DETAILS"  rows="11" style="width:95%;">{{bank_detail }}</textarea>-->
+                        <!--</div>-->
+                    <!--</div>-->
+               <div class="append-formin">
+                   <div class="addpage-title">{% trans 'Additional pages' %}</div>
+                   <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+                        {{ additional_page_form.management_form }}
+                        {{ additional_page_form.non_form_errors }}
+                        {% for form in additional_page_form %}
+                            {{ form.id }}
+                            {% with prefix=form.prefix num=forloop.counter0 %}
+                                {% include "b24online/additionalPage.html" %}
+                            {% endwith %}
+                        {% endfor %}
+                </div>
+            <div class="newform-button">
+                <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+                <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+            </div>
+
+         <input type="hidden" id="latFld" name="latitude" value="{{ form.latitude.value|default_if_none:"" }}">
+         <input type="hidden" id="lngFld" name="longitude" value="{{ form.longitude.value|default_if_none:"" }}">
+
+
+    </form>
+
+                </div>
+
+{% endblock %}

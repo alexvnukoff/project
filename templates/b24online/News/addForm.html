@@ -1,0 +1,104 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static "b24online/css/datepicker.css" %}"/>
+
+<script type="text/javascript">
+
+    $(function () {
+        setTiny('textarea[class="tiny"]');
+    });
+</script>
+
+
+<div class="newsform">
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        <div class="uploadimgage">
+            <div class="imgbig">
+                <label class="sapce">{% trans 'Image' %}</label>
+
+                {% if form.errors.image %}
+                    <div class="error-handler">
+                    <div class="formserror">{{ form.errors.image.0 }}</div></div>
+                {% endif %}
+
+                {% if form.initial.image %}
+                    <div>
+                        <img src="{{ form.initial.image.small }}">
+                        <!--<div class="deleteimge">-->
+                            <!--<i class="imgnews delete"></i><span class="deletext">{% trans "Remove" %}</span>-->
+                        <!--</div>-->
+
+                        <!--<div class="gray-img"></div>-->
+                        <!--<input id="delete" type="checkbox" name="IMAGE-CLEAR" value="{{ form.initial.image }}" hidden="hidden"/>-->
+                    </div>
+                {% endif %}
+
+                <div class="fileinputs">
+                    <input name="image" type="file" style="width: 100%">
+                </div>
+            </div>
+
+            <div>
+                <label class="sapce">{% trans 'Keyword' %}</label>
+                {% if form.errors.keywords %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.keywords.0 }}</div></div>
+                {% endif %}
+                <textarea name="keywords" rows="5">{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+        </div>
+
+        <ul class="uploadconfig">
+            <li>
+                <label>{% trans 'Title' %}</label>
+
+                {% if form.errors.title %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.title.0 }}</div></div>
+                {% endif %}
+                <input type="text" id="id_name" name="title" value="{{ form.title.value|default_if_none:"" }}" class="text"/>
+            </li>
+            <li>
+                <label>{% trans 'Preview description' %}</label>
+                {% if form.errors.short_description %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.short_description.0 }}</div></div>
+                {% endif %}
+                <div>
+                    <textarea rows="5" id="id_anons" name="short_description">{{ form.short_description.value|default_if_none:"" }}</textarea>
+                </div>
+            </li>
+            <li>
+                <label>{% trans 'Content' %}</label>
+                {% if form.errors.content %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.content.0 }}</div></div>
+                {% endif %}
+            </li>
+            <li>
+                <div>
+                    <textarea style="height: 300px;" class="tiny" id="id_content" name="content">
+                        {{ form.content.value|default_if_none:"" }}
+                    </textarea>
+                </div>
+            </li>
+        </ul>
+        <div class="newform-button">
+            <input class="btntype2" type="submit" name="submit" value="{% trans 'Save' %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+
+    </form>
+
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

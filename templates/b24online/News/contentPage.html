@@ -1,0 +1,59 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+
+
+<div class="container">
+    {% include "b24online/main/popupFilter.html" %}
+    {% include "b24online/main/paginator.html" %}
+    {% include "b24online/main/local_menu_script.html" %}
+
+    <ul class="listnews">
+        {% for news in object_list %}
+            <li>
+            {% setContextMenu news %}
+
+                <div class="thumb shadow">
+                    <a href="{{ news.get_absolute_url }}">
+                        {% if news.image %}
+                            <img src="{{ news.image.big }} " alt="{{ news.title }}" title="{{ news.title }}"/>
+                        {% else %}
+                            <img src="{% static "b24online/img/news.jpg" %}" alt="" />
+                        {% endif %}
+                    </a>
+                </div>
+
+                <div class="infoprd">
+                    <a href="{{ news.get_absolute_url }}" class="name">{{ news.title }}</a>
+                    <p class="date">
+                    {% if news.organization %}
+                        {% if news.organization.flag %}
+                            <img src="{{ news.organization.flag_url }}" class="flag" title="{{ news.organization.name }}" alt="{{ news.organization.name }}" />
+                        {% else %}
+                            <i class="sprite {{ news.organization.country.flag }}" title="{{ news.organization.country.name }}"></i>
+                        {% endif %}
+                    {% elif news.country %}
+                        <i class="sprite {{ news.country.flag }}" title="{{ news.country.name }}"></i>
+                    {% endif %}
+                    {{ news.created_at|date:'d M Y' }}</p>
+                    <p>
+                        {% if news.short_description %}
+                            {% autoescape off %}
+                                {{ news.short_description|force_escape|linebreaks }}
+                            {% endautoescape %}
+                        {% else %}
+                            {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
+                        {% endif %}
+                    </p>
+                    <!--noindex--><a href="{{ news.get_absolute_url }}" class="more">{% trans 'Read more' %}...</a><!--/noindex-->
+                </div>
+            </li>
+
+        {% empty %}
+            <div class="no-results">{% trans "No results found" %}</div>
+        {% endfor %}
+
+    </ul>
+    {% include "b24online/main/paginator.html" %}
+</div>

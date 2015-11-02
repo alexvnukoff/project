@@ -1,0 +1,29 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+    {% block title %}{% trans 'Companies' %}{% endblock %}
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         {% for style in styles %}
+            <link type="text/css" rel="stylesheet" href="{{ style }}" />
+         {% endfor %}
+    {% endblock %}
+
+    {% block js %}
+         {{ block.super }}
+         {% for script in scripts %}
+            <script type="text/javascript" src="{{ script }}"></script>
+         {% endfor %}
+    {% endblock %}
+
+
+
+     {% block content %} {% include "b24online/Companies/contentPage.html" %} {% endblock %}
+
+
+

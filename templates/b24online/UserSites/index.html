@@ -1,0 +1,33 @@
+{% extends 'b24online/main_page.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+
+   {% block title %}
+       {% if title %}
+            {{ title }}
+       {% else %}
+            {% trans 'Sites' %}
+       {% endif %}
+   {% endblock %}
+
+
+
+
+
+    {% block header %}
+        {% include "b24online/login_header.html" %}
+    {% endblock %}
+
+    {% block styles %}
+         {{ block.super }}
+         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/news.css" %}" />
+         <link type="text/css" rel="stylesheet" href="{% static "b24online/css/company.css" %}"/>
+
+    {% endblock %}
+
+    {% block js %}
+        {{  block.super }}
+    {% endblock %}
+
+{% block content %} {{ sitePage }}{% endblock %}

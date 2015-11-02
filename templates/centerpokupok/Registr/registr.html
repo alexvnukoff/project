@@ -1,0 +1,77 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+              {% block title %}{% trans "Registration" %}{% endblock %}
+
+
+{{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/shopcenter.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/anythingslider.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/jquery.countdown.css" %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.anythingslider.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown.js" %}"></script>
+    <script type="text/javascript" src="{% static "centerpokupok/js/jquery.countdown-ru.js" %}"></script>
+{% endblock %}
+
+
+
+{% block header %}
+{% include "centerpokupok/header_big.html" %}
+{% endblock %}
+{% block body %}
+
+    <div id="main">
+		<div id="sidebar">
+			<div class="reginfo-rows">
+				{% trans "On August 20 at the website registered" %}
+				<p><font class="number">120 352</font> customers</p>
+			</div>
+			<div class="reginfo-rows margintop">
+			{% trans "We protect the interests of our customers, so the site has a system" %} <a href="#">{% trans "Consumer protection" %}</a>
+			</div>
+			<ul class="policy">
+				<li>
+					<i class="icons i-plc icon-plc1"></i>
+					{% trans "The guaranteed delivery within 30 days" %}
+				</li>
+				<li>
+					<i class="icons i-plc icon-plc2"></i>
+					{% trans "Return policy and warranty" %}
+				</li>
+				<li>
+					<i class="icons i-plc icon-plc3"></i>
+					{% trans "Freezing of seller's funds till then buyer  confirm receipt of the goods" %}
+				</li>
+				<li class="end"><a href="#" class="btnback">{% trans "Ask us a question" %}</a></li>
+			</ul>
+		</div>
+<div id="main-r">
+			<div class="breadcrumbs">
+				<div xmlns="http://rdf.data-vocabulary.org/#">
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="/">{% trans "Home page" %}</a> &rarr;</span>
+					<span typeof="v:Breadcrum"><a property="v:title" rel="v:url" href="#">{% trans "Registration" %} </a></span>
+				</div>
+			</div>
+    {% include "centerpokupok/registration/registration_form.html" %}
+
+
+				<div class="reg-right">
+					<span class="title"><a href="http://b24online.com" >{% trans 'No, I am seller' %}</a></span>
+{% include "centerpokupok/registration/login.html" %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+ {% endblock %}
+{% block footer %}
+{{ block.super }}
+    {% endblock %}

@@ -1,0 +1,55 @@
+{% extends "centerpokupok/base.html" %}
+{% load staticfiles %}
+{% load CustomFilters %}
+{% load i18n %}
+{% load inclusionTags %}
+
+{% block title %}{% trans 'About' %}{% endblock %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "centerpokupok/css/company.css" %}">
+
+    <!--[if IE]><link type="text/css" rel="stylesheet" href="css/ie.css" /><![endif]-->
+{% endblock %}
+
+{% block header %}
+    {% companyMenuB2C companyID "about" %}
+{% endblock %}
+
+{% block body %}
+    <div id="main">
+            <div id="sidebar">
+                <div class="bestbuy">
+                    <div class="items-coupon">
+                        <ul>
+                            <li>
+                                <div class="discount"><i class="icons i-after"></i> {% trans 'special price' %}</div>
+                                <a href="#"><img alt="" src="{% static "centerpokupok/images/products/pr8.jpg" %}"></a>
+                                <div class="coupon-info">
+                                    <p><a href="#">{% trans 'Sale' %}</a></p>
+                                    <p>{% trans 'winter collection' %}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul id="subscribe">
+                    <li class="top">
+                        <i class="imgshop i-subs"></i>{% trans 'Subscribe to newsletter' %}
+                    </li>
+                    <li>{% trans 'Receive our weekly announcements and reviews of new products' %}</li>
+                    <li><input type="text" class="text" placeholder="Ваш E-mail" name=""></li>
+                    <li><a href="#" class="btnreg">{% trans 'Subscripe' %}</a></li>
+                </ul>
+            </div>
+            <div id="main-r">
+            <div class="textright">
+                <div class="title-items">
+                    <h2>{{ name }}</h2>
+                </div>
+                <div class="pagetext">{{ detail_text|cleanHtml|safe }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

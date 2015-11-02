@@ -1,0 +1,252 @@
+{% extends 'b24online/forms.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% block content %}
+<script type="text/javascript">
+    $(function() {
+
+        $( ".date" ).datepicker({
+            dateFormat: "dd/mm/yy"
+        });
+        setTiny('textarea[class="tiny"]');
+    });
+
+    $(document).on('click', '#select-cat', function() {
+        var url = "{% url "products:B2CCategoryList" %}";
+        window.open(url, "test", "width=600,height=600");
+
+        return false;
+    });
+
+    $(document).bind('categorySelected', function(event, pk, name) {
+        add_category(name, pk);
+    });
+
+    $(document).on('click', '.category-remove', function() {
+        var li = $(this).parents('li')
+        var pk = li.data('pk');
+        li.remove();
+        $('input.category-' + pk).remove();
+        return false;
+    });
+
+    var categories = [
+        {% if categories %}
+            {% for category in categories %}
+                {
+                    pk: {{ category.pk }},
+                    name: '{{ category.name }}'
+                },
+
+            {% endfor %}
+        {% endif %}
+    ];
+</script>
+<style>
+        .list-cat li {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #333;
+            color: #FFF;
+            padding-right: 25px;
+            position: relative;
+            float: left;
+            margin-bottom: 5px;
+            margin-right: 5px;
+        }
+
+        .list-cat li .i-close {
+            position: absolute;
+            width: 8px;
+            height: 7px;
+            background-position: -195px 0;
+            top: 8px;
+            right: 5px;
+        }
+</style>
+<div class="newsform">
+    <form enctype="multipart/form-data" method="post" action="" xmlns="http://www.w3.org/1999/html">
+        {% csrf_token %}
+        <div class="uploadimgage">
+            <div class="imgbig">
+
+                <label class="sapce">{% trans 'Image' %}</label>
+
+                {% if form.errors.image %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.image.0 }}</div>
+                    </div>
+                {% endif %}
+
+                {% if form.initial.image %}
+                    <div>
+                        <div><img src="{{ form.initial.image.small }}"></div>
+                        <!--<div class="deleteimge">-->
+                            <!--<i class="imgnews delete"></i><span class="deletext">{% trans 'delete' %}</span>-->
+                        <!--</div>-->
+                        <!--<input id="delete" type="checkbox" name="image-clear" hidden="hidden" />-->
+                    </div>
+                {% endif %}
+
+                <div class="fileinputs">
+                    <input name="image" type="file" style="width: 100%"  />
+                </div>
+            </div>
+
+            <div>
+                <label class="sapce">{% trans 'Keywords' %}</label>
+                {% if form.errors.keywords %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.keywords.0 }}</div>
+                        </div>
+                {% endif %}
+                <textarea rows="5" name="keywords">{{ form.keywords.value|default_if_none:"" }}</textarea>
+            </div>
+            <div>
+                <div class="clumn1">
+                    <label class="sapce">{% trans 'Cost' %}</label>
+
+                    {% if form.errors.cost %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.cost.0 }}</div>
+                        </div>
+                    {% endif %}
+                    <input type="text"  name="cost" value="{{ form.cost.value|default_if_none:""|unlocalize }}" placeholder="" class="text"/>
+                </div>
+                <div class="clumn2">
+                    <label class="sapce">{% trans 'Currency' %}</label>
+                    {% if form.errors.currency %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.currency.0 }}</div>
+                        </div>
+                    {% endif %}
+
+                    <select id="id_currency" name="currency">
+                        {% for choice in form.currency.field.choices %}
+                            <option value="{{ choice.0 }}"{% if choice.0 == form.currency.value %} selected="selected" {% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="sapce">{% trans 'Discount percent' %}</label>
+                {% if form.errors.discount_percent %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.discount_percent.0 }}</div>
+                    </div>
+                {% endif %}
+                <div class="clumn1">
+                    <input type="text" name="discount_percent" value="{{ form.discount_percent.value|default_if_none:""|unlocalize }}" placeholder="" class="text"/>
+                </div>
+            </div>
+            <div>
+                {% if form.errors.categories %}
+                    <div class="error-handler">
+                        <div class="formserror">{{ form.errors.categories.0 }}</div>
+                    </div>
+                {% endif %}
+                <label class="sapce">{% trans 'Categories' %}</label>
+                <ul class="list-cat" id="list-categories">
+                </ul>
+                <a href="#" id="select-cat" class="buttonclear  add-advandce">{% trans "Add categories" %}</a>
+                <script>
+                    for(i in categories) {
+                        add_category(categories[i].name, categories[i].pk)
+                    }
+                </script>
+            </div>
+        </div>
+
+        <ul class="uploadconfig">
+            <li>
+                <div class="clumn1">
+                    <label>{% trans 'Name' %} <font color="#FF0000">*</font></label>
+
+                    {% if form.errors.name %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.name.0 }}</div>
+                        </div>
+                    {% endif %}
+
+                    <input type="text"  name="name"  placeholder="" class="text" value="{{ form.name.value|default_if_none:"" }}" />
+                </div>
+
+                <div class="clumn2">
+                    <label>{% trans 'Part number' %}</label>
+                    {% if form.errors.sku %}
+                        <div class="error-handler">
+                            <div class="formserror">{{ form.errors.sku.0 }}</div>
+                        </div>
+                    {% endif %}
+                    <input type="text" name="sku" value="{{ form.sku.value|default_if_none:"" }}" placeholder="" class="text" style="width:92%;" />
+                </div>
+            </li>
+            <li>
+                <label>{% trans 'Preview description' %}</label>
+                {% if form.errors.short_description %}
+                    <div class="error-handler"><div class="formserror">{{ form.errors.short_description.0 }}</div></div>
+                {% endif %}
+                <textarea rows="7" name="short_description" >{{ form.short_description.value|default_if_none:"" }}</textarea>
+            </li>
+            <li>
+                <label>{% trans 'Detail text' %}</label>
+                {% if form.errors.description %}
+                    <div class="error-handler"> <div class="formserror">{{ form.errors.description.0 }}</div></div>
+                {% endif %}
+            </li>
+            <li>
+                <div class="detail">
+                    <textarea class="tiny" name="description" >{{ form.description.value|default_if_none:"" }}</textarea>
+                </div>
+            </li>
+        </ul>
+        <div>
+            <div class="addpage-title">{% trans 'Coupon' %}</div>
+            <ul class="tenderline">
+                <li>
+                    <div class="clumn5">
+                        <label>{% trans 'Coupon percent' %}</label>
+                        {% if form.errors.coupon_discount_percent %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.coupon_discount_percent.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="{{ form.coupon_discount_percent.html_name }}" value="{{ form.coupon_discount_percent.value|default_if_none:""|unlocalize }}" placeholder="" class="text" style="width:85%;" />
+                    </div>
+                    <div class="clumn5">
+                        <label>{% trans 'Coupon start date' %}</label>
+                        {% if form.errors.start_coupon_date %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.start_coupon_date.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="{{ form.start_coupon_date.html_name }}" value="{{ form.start_coupon_date.value|default_if_none:"" }}" placeholder="" class="date" />
+                    </div>
+                    <div class="clumn6">
+                        <label>{% trans 'Coupon end date' %}</label>
+                        {% if form.errors.end_coupon_date %}
+                            <div class="error-handler"><div class="formserror">{{ form.errors.end_coupon_date.0 }}</div></div>
+                        {% endif %}
+                        <input type="text" name="{{ form.end_coupon_date.html_name }}" value="{{ form.end_coupon_date.value|default_if_none:"" }}" placeholder="" class="date" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="append-formin">
+                   <div class="addpage-title">{% trans 'Additional pages' %}</div>
+                   <a href="#" data-prefix="{{ additional_page_form.prefix }}" id="add-page" class="buttonclear  add-advandce">{% trans 'Add page' %}</a>
+                    {{ additional_page_form.management_form }}
+                    {{ additional_page_form.non_form_errors }}
+                    {% for form in additional_page_form %}
+                        {{ form.id }}
+                        {% with prefix=form.prefix num=forloop.counter0 %}
+                            {% include "b24online/additionalPage.html" %}
+                        {% endwith %}
+                    {% endfor %}
+        </div>
+        <div class="newform-button">
+            <input type="submit" class="btntype2" name="submmit" value="{% trans "Save" %}">
+            <a href="#" class="btntype1">{% trans 'Cancel' %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

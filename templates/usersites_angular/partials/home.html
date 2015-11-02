@@ -1,0 +1,116 @@
+                    <p class="about-company"><strong>Какое-то описание надаваемыъ услуг!</strong></p>
+
+                    <section class="content__info__actions">
+
+
+                        <div class="header vertical">
+                            <dir-pagination-controls max-size="8"  direction-links="true" boundary-links="true"  class="paginator">  </dir-pagination-controls>
+
+                            <div class="view vertical">
+                                <button class="display-list" ng-class="{active: class=='layout'}" ng-click="layoutClass()"></button>
+                                <button class="display-square" ng-class="{active: class=='grid-layout'}" ng-click="gridClass()"></button>
+                            </div>
+
+                            <div class = "select category">
+                                <span ng-click="toggleCateg();">Категория</span>
+
+
+                                <ul class="select-dropdown" ng-show="show">
+                                    <li ng-repeat="item in categories" ng-class="{sub: item.subCategory}">
+                                        <a href="">{{item.name}}</a>
+                                        <ul class="sub-menu" ng-if="item.subCategory">
+                                            <li ng-repeat="subItem in item.subCategory" ng-class="{sub: subItem.subSubCategory}">
+                                                <a href="">{{subItem.name}}</a>
+                                                <ul class="sub-menu sub-sub-menu" ng-if="subItem.subSubCategory">
+                                                    <li ng-repeat="subSubItem in subItem.subSubCategory">
+                                                        <a href="">{{subSubItem.name}}</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>    
+                                    </li>
+                                </ul>  
+
+
+                            </div> <!-- end select category -->
+
+                        </div> <!-- end header -->
+
+
+
+                        <div class="main-action">
+
+                            <div class="main-action__cover" style="background-image: url('images/sale-01.png');">
+                                <div class="sale"><span>-30%</span></div>
+                            </div> <!-- end main-action__cover -->
+
+                            <div class="main-action__info">
+                                <h3><a href="">ויזות, רישום וקבלתם</a></h3>
+                                <p class="timer-heading">Время до окончания</p>
+
+                                <div class="timer" timer date="November 2, 2015" id="timer"></div>
+
+                                <div class="offer vertical">
+                                    <p class="price">Дол. 340.0</p>
+                                    <p class="economy">
+                                        <span>Вы экономите</span>
+                                        <span class="value">Дол. 0.0</span>
+                                    </p>
+                                    <a href="" class="buy"><span>Купить</span></a>
+                                </div>
+                            </div> <!-- end main-action__info -->
+
+                        </div> <!-- end main-action -->
+
+
+
+                        <div class="actions">
+
+                            <div class="action square" ng-repeat="action in actions">
+                                <div class="action__cover" style="background-image: url('{{ action.cover }}');">    <div class="sale"><span>-{{ action.percent }}%</span></div>
+                                </div>
+                                <div class="action__info">
+                                    <h3><a ng-href="{{ action.more }}">{{ action.name }}</a></h3>
+                                    <p><span class="old-price">Дол. {{ action.oldPrice }}</span><span class="new-price">Дол. {{ action.oldPrice - action.oldPrice*action.percent/100 }}</span></p>
+                                    <p class="timer-heading">Время до окончания:</p>
+
+                                    <div class="timer-mini" compact date="{{action.endDate}}"></div>
+
+                                </div>
+                            </div>
+
+                        </div> <!-- ens actions -->
+                    </section> <!-- end content__info__actions -->
+
+
+                    <section class="content__info__news">
+                        <h2>Новости</h2>
+                        <article class="news" ng-repeat="item in news">
+                            <h3>{{ item.title }}</h3>
+                            <div class="news__content clearfix">
+                                <div class="news__content__cover"><img ng-src="{{ item.cover }}" alt=""></div>
+                                <div class="news__content__desc clearfix">
+                                    <p class="date">{{ item.pubDate }}</p>
+                                    <p class="text">{{ item.preview }}</p>
+                                </div>
+                                <a ng-href="article.html" class="more vertical"><span>Подробнее</span></a>
+                            </div>
+                        </article>
+                    </section>
+
+
+
+                    <section class="content__info__products">
+                        <h2>B2C Products</h2>
+                        <ul class="products-list">
+                            <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
+                                <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
+                                <div class="product__about">
+                                    <p class="desc"><strong>{{product.name}}</strong></p>
+                                    <p class="detail">{{product.details}}</p>
+                                    <p class="price"><span class="value">{{product.price}}</span><span class="currency">₪</span></p>
+                                </div>
+                                <a href="" class="product__buy vertical"><span>Купить</span></a>
+                            </li>
+                        </ul>
+                    </section><!-- end ccontent__info__products-->

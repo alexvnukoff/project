@@ -1,0 +1,76 @@
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load inclusionTags %}
+<div class="container">
+    <div class="companies">
+        {% include "b24online/main/popupFilter.html" %}
+        {% include "b24online/main/paginator.html" %}
+        {% include "b24online/main/local_menu_script.html" %}
+        <ul class="company-list">
+            {% for tpp in object_list %}
+                <li>
+                {% setContextMenu tpp %}
+                    <div class="title">
+                        {% if tpp.flag %}
+                                <img src="{{ tpp.flag_url }}" class="flag" alt="{{ tpp.name }}" title="{{ tpp.name }}"/>
+                        {% else %}
+                               <i class="flag sprite {{ tpp.country.flag }}" title="{{ tpp.country.name }}" ></i>
+                        {% endif %}
+                        <a href="{{ tpp.get_absolute_url }}">{{ tpp.name }}</a>
+                    </div>
+
+                    <div class="company-infor">
+                        {% if tpp.logo %}
+                            <img src="{{ tpp.logo.big }}" class="logocompany" alt="{{ tpp.name }}" title="{{ tpp.name }}" />
+                        {% else %}
+                            <img src="{% static 'b24online/img/tpp.jpg' %}" class="logocompany" alt="" />
+                        {% endif %}
+                        <div class="desc">
+                            {% if tpp.short_description %}
+                                {{ tpp.short_description|force_escape|linebreaks }}
+                            {% else %}
+                                {{ tpp.description|cleanHtml|safe|truncatewords_html:"30" }}
+                            {% endif %}
+                            <a href="{{ tpp.get_absolute_url }}">{% trans "More" %}...</a>
+                        </div>
+                        <div class="companycontact">
+                            {% if tpp.address %}
+                                <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info1"></i></div>
+                                    <div class="nameinfo">{{ tpp.address }}</div>
+                               </div>
+                            {% endif %}
+                            {% if tpp.phone %}
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info2"></i></div>
+                                    <div class="nameinfo">{{ tpp.phone }}</div>
+                               </div>
+                            {% endif %}
+                            {% if tpp.fax %}
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info3"></i></div>
+                                    <div class="nameinfo">{{ tpp.fax }}</div>
+                               </div>
+                            {% endif %}
+                            {% if tpp.site %}
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info4"></i></div>
+                                    <div class="nameinfo"><a href="http://{{ tpp.site }}">{{ tpp.site }}</a></div>
+                               </div>
+                            {% endif %}
+                               <div class="line">
+                                    <div class="iconinfo"><i class="imgnews icon-info5"></i></div>
+                                    <div class="nameinfo"><a href="#">{% trans 'Contact us' %}</a></div>
+                               </div>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <div class="no-results">{% trans "No results found" %}</div>
+                {% endfor %}
+
+        </ul>
+        {% include "b24online/main/paginator.html" %}
+    </div>
+</div>
