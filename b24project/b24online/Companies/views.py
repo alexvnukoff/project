@@ -19,7 +19,7 @@ from b24online.cbv import ItemsList, ItemDetail, ItemUpdate, ItemCreate, ItemDea
     DeleteGalleryImage, DeleteDocument, DocumentList
 from b24online.models import Company, News, Tender, Exhibition, B2BProduct, BusinessProposal, InnovationProject, \
     Vacancy, Organization, Branch, Chamber
-from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm
+from b24online.Companies.forms import AdditionalPageFormSet, CompanyForm, AdminCompanyForm
 
 
 class CompanyList(ItemsList):
@@ -431,6 +431,14 @@ class CompanyUpdate(ItemUpdate):
 
         return self.render_to_response(self.get_context_data(form=form, additional_page_form=additional_page_form))
 
+    def get_form_class(self):
+        form_class = super().get_form_class()
+
+        if self.request.user.is_admin or self.request.user.is_commando:
+            form_class = AdminCompanyForm
+
+        return form_class
+
     def post(self, request, *args, **kwargs):
         """
             Handles POST requests, instantiating a form instance and its inline
@@ -439,6 +447,7 @@ class CompanyUpdate(ItemUpdate):
             """
         self.object = self.get_object()
         form_class = self.get_form_class()
+
         form = self.get_form(form_class)
         additional_page_form = AdditionalPageFormSet(self.request.POST, instance=self.object)
 

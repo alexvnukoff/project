@@ -102,7 +102,7 @@
                             <span>
                                 <p>
                                     <font class="price1">
-                                        {{ prod.currency|getSymbol }} {{ prod.price|discountPrice:prod.coupon }}
+                                        {{ prod.currency|getSymbol }} {{ prod.cost|discountPrice:prod.cocoupon_discount_percentupon }}
                                     </font>
                                 </p>
                             </span>
@@ -110,7 +110,7 @@
                                 <p>{% trans "You save" %}</p>
                                 <p>
                                     <font class="price2">
-                                        {{ prod.currency|getSymbol }} {{  prod.price|discountDiff:prod.coupon }}
+                                        {{ prod.currency|getSymbol }} {{  prod.cost|discountDiff:prod.coupon_discount_percent }}
                                     </font>
                                 </p>
                             </span>
@@ -125,10 +125,10 @@
                 {% endif %}
                     <li>
                         <div class="thumb">
-                            <a href="{% url "products:detail" prod.pk %}" title="{{ prod.title }}">
+                            <a href="{% url "products:detail" prod.pk %}" title="{{ prod.name }}">
                                 <img width="140" height="100" src="{{ MEDIA_URL }}small/{{ prod.image }}" alt="{{ prod.title }}" />
                             </a>
-                            <div class="discount"><i class="icons i-after"></i> -{{ prod.coupon }}%</div>
+                            <div class="discount"><i class="icons i-after"></i> -{{ prod.coupon_discount_percent }}%</div>
                         </div>
                         <div class="discountinfo">
                             <a href="{% url "products:detail" prod.pk %}" title="{{ prod.title }}">{{ prod.title }}</a>

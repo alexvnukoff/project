@@ -119,7 +119,6 @@ def _wall_content(request):
         sort = get_sorting(request, {'date': 'created_at', 'name': 'title'})
         news = news.order_by(*sort).first()
 
-
     template = loader.get_template('b24online/Wall/contentPage.html')
 
     template_params = {

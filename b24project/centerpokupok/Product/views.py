@@ -2,7 +2,6 @@ from collections import OrderedDict
 import json
 
 from django.shortcuts import render_to_response, get_object_or_404
-from haystack.query import SearchQuerySet
 from django.http import Http404, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
@@ -15,57 +14,38 @@ from django.db import transaction
 
 from appl.models import Product, Comment, Category, Company, Country, Cabinet, Order, Favorite
 from centerpokupok.cbv import ItemsList
+from centerpokupok.models import B2CProduct
 from core.models import Item, Dictionary, Relationship
 from appl import func
-#from b24online.forms import ItemForm
 from centerpokupok.forms import OrderForm
 
 
-def productDetail(request, item_id, page=1):
+def product_detail(request, item_id, page=1):
 
-    if request.POST.get('subCom', False):
-        form = addComment(request, item_id)
-        if isinstance(form, HttpResponseRedirect):
-            return form
-    else:
-        form = ItemForm("Comment")
+    # if request.POST.get('subCom', False):
+    #     form = addComment(request, item_id)
+    #     if isinstance(form, HttpResponseRedirect):
+    #         return form
+    # else:
+    #     form = ItemForm("Comment")
 
-    product = get_object_or_404(Product, pk=item_id)
+    product = get_object_or_404(B2CProduct, pk=item_id)
 
-    productValues = SearchQuerySet().models(Product).filter(django_id=item_id)[0]
+    same_products = B2CProduct.objects.filter(categories__in=product.categories.all()).exclude(pk=item_id)[:4]
 
-    sameProducts = SearchQuerySet().models(Product).filter(categories__in=productValues.categories).exclude(django_id=item_id)[:4]
-    #-------- Comments ----------------#
-    result = _getComment(item_id, page)
-    commentsList = result[0]
-    paginator_range = result[1]
-    page = result[2]
+    # if request.user.is_authenticated():
+    #     try:
+    #         favorite = Favorite.active.get_active_related().get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
+    #     except ObjectDoesNotExist:
+    #         pass
 
-    dictionaryLabels = {"DETAIL_TEXT": _("Comment")}
-    form.setlabels(dictionaryLabels)
-
-    store_url = 'companies:products_category'
-
-    favorite = 0
-
-    if request.user.is_authenticated():
-        try:
-            favorite = Favorite.active.get_active_related().get(c2p__parent__cabinet__user=request.user, p2c__child=item_id)
-        except ObjectDoesNotExist:
-            pass
-
-    templateParams = {
-        'productValues': productValues,
-        'sameProducts': sameProducts,
-        'commentsList': commentsList,
-        'paginator_range': paginator_range,
-        'page': page,
-        'store_url': store_url,
-        'favorite': favorite,
-        'company': SearchQuerySet().models(Company).filter(django_id=productValues.company)[0]
+    template_params = {
+        'product': product,
+        'same_products': same_products,
+        'page': page
     }
 
-    return render_to_response("Product/detail.html", templateParams, context_instance=RequestContext(request))
+    return render_to_response("centerpokupok/Product/detail.html", template_params, context_instance=RequestContext(request))
 
 
 def addComment(request, item_id):

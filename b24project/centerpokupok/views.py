@@ -35,54 +35,7 @@ def home(request, country=None):
 
 
 def about(request):
-    return render_to_response("About/About.html")
-
-
-def set_news_list(request):
-    page = request.GET.get('page', 1)
-    result = func.getItemsListWithPagination("News", "Anons", "DETAIL_TEXT", "IMAGE", page=page)
-
-    itemsList = result[0]
-    page = result[1]
-    return render_to_response('NewsList.html', locals())
-
-
-def _sortMenu(hierarchyStructure):
-    count = 0
-    sortedHierarchyStructure = []
-    dictToSort = []
-    id = hierarchyStructure[0]['ID']
-    for i in range(0, len(hierarchyStructure)):
-        if hierarchyStructure[i]["LEVEL"] == 1 and hierarchyStructure[i]['ID'] != id:
-            if count == 9:
-                break
-            id = hierarchyStructure[i]['ID']
-            sortedHierarchyStructure.extend(_sortList(dictToSort))
-            dictToSort = []
-            count += 1
-
-        dictToSort.append(hierarchyStructure[i])
-
-    if len(dictToSort) > 0:
-        sortedHierarchyStructure.extend(_sortList(dictToSort))
-
-    return sortedHierarchyStructure
-
-
-def _sortList(dict):
-    sortedDict = []
-    i = 0
-    while i < len(dict):
-        if dict[i]['LEVEL'] > 3:
-            dict.pop(i)
-            i -= 1
-        if dict[i]['ISLEAF'] == 1 and dict[i]["LEVEL"] == 2:
-            sortedDict.append(dict.pop(i))
-            i -= 1
-        i += 1
-
-    dict.extend(sortedDict)
-    return dict
+    return render_to_response("centerpokupok/About/About.html")
 
 
 def registration(request, form, auth_form):
@@ -116,7 +69,7 @@ def registration(request, form, auth_form):
 
             return HttpResponseRedirect(request.GET.get('next', '/'))
 
-    return render_to_response("Registr/registr.html", locals(), context_instance=RequestContext(request))
+    return render_to_response("centerpokupok/Registr/registr.html", locals(), context_instance=RequestContext(request))
 
 
 def user_logout(request):

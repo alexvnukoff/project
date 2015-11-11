@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
@@ -32,6 +33,9 @@ class B2CProductCategory(MPTTModel, IndexedModelMixin):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 
 class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
@@ -121,6 +125,11 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
             return self.coupon_dates.upper
 
         return None
+
+    @property
+    def is_coupon(self):
+        return self.start_coupon_date and self.end_coupon_date \
+               and self.start_coupon_date <= now().date() < self.end_coupon_date
 
 
 class B2CProductComment(MPTTModel):

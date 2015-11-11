@@ -6,7 +6,6 @@ from django.http import Http404
 from django.utils.text import Truncator
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView
-from haystack.query import SearchQuerySet
 
 from appl import func
 from appl.models import Country, AdditionalPages, Gallery, Favorite

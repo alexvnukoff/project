@@ -25,22 +25,22 @@
                 </span>
 			</div>
 		</div>
-        {% for parent_name , dict  in dictStructured|sort  %}
-            {%  for name , item in  dict|sort %}
-            {% with item.ID as id %}
-                {% if name == "@Parent" %}
-                    {% if  parent_name|first !=  a|first or forloop.parentloop.first  %}
-                        <div class="letters">{{ parent_name|first }}</div>
-                    {% endif %}
-                    <div class="cateparent"><a style="color: #000000;" href="{% url "products:category" id %}">{{ item.item.NAME|first }}</a></div>
-                    <ul class="subcate">
-                {% else %}
-                    <li><a href="{% url "products:category" id %}">{{ name }}</a></li>
-                {% endif %}
-            {% endwith %}
-            {% endfor %}
+        {% for parent_category in categories %}
+            {% ifchanged parent_category.name|first %}
+                <div class="letters">{{ parent_category.name|first }}</div>
+            {% endifchanged %}
+            <div class="cateparent">
+                <a style="color: #000000;" href="{% url "products:category" parent_category.pk %}">
+                    {{ parent_category.name|title }}
+                </a>
+            </div>
+            <ul class="subcate">
+                {% for child_category in parent_category.children.all%}
+                    <li>
+                        <a href="{% url "products:category" child_category.pk %}">{{ child_category.name|title }}</a>
+                    </li>
+                {% endfor %}
             </ul>
-            {% set a =  parent_name  %}
         {% endfor %}
         </div>
     </div>

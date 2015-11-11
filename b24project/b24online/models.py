@@ -18,11 +18,6 @@ from django.utils.translation import ugettext_lazy as _
 from guardian.models import UserObjectPermissionBase, GroupObjectPermissionBase
 from django.db import transaction
 
-
-
-
-
-# Create your models here.
 from guardian.shortcuts import assign_perm, remove_perm
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -161,6 +156,7 @@ class AdvertisementPrice(models.Model):
 
     class Meta:
         unique_together = ("content_type", "object_id")
+
 
 class Order(models.Model):
     pass
@@ -456,7 +452,7 @@ class Chamber(Organization, IndexedModelMixin):
             raise ValueError('Not international chamber have more than one country')
 
         if len(countries) == 0:
-            return None#raise ValueError("Can not find country for chambers: (%s, %s)" % (self.pk, chamber.pk))
+            return None  # raise ValueError("Can not find country for chambers: (%s, %s)" % (self.pk, chamber.pk))
 
         return countries[0]
 

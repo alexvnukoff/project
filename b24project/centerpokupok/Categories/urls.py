@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', centerpokupok.Categories.views.categoryList, name="list"),
+     url(r'^$', centerpokupok.Categories.views.category_list, name="list"),
 
 
 

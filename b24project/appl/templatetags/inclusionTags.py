@@ -3,7 +3,6 @@ import os
 from django import template
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from haystack.query import SearchQuerySet
 from django.core.cache import cache
 from django.utils.translation import get_language, gettext as _
 
@@ -280,8 +279,6 @@ def b2b_social_buttons(context, image, title, text):
 
 @register.inclusion_tag("centerpokupok/main/main_menu.html", takes_context=True)
 def categories_menu(context):
-    # lang = settings.LANGUAGE_CODE
-    # cache_name = "menu:b2c:%s" % lang
 
     return {'categories': B2CProductCategory.objects.filter(level=0).order_by('name')[:5]}
 
@@ -292,7 +289,7 @@ def companyMenuB2C(context, company, menu):
     MEDIA_URL = context.get('MEDIA_URL', '')
 
     return {
-        'company': SearchQuerySet().models(Company).filter(django_id=company)[0],
+        'company': Company.objects.get(pk=company),
         'menu': menu,
         'MEDIA_URL': MEDIA_URL,
         'user': request.user

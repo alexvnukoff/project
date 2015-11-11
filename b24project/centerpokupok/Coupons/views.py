@@ -1,4 +1,4 @@
-from haystack.query import SearchQuerySet
+
 from centerpokupok.cbv import ItemsList
 from core.models import Item
 

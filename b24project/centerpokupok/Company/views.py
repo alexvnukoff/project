@@ -1,67 +1,58 @@
 from django.http import HttpResponseNotFound
 from django.utils.timezone import now
-from haystack.backends import SQ
-from haystack.query import SearchQuerySet
-
+from b24online.models import Company
 from centerpokupok.cbv import ItemsList
 
-from appl.models import Company, Product
+from appl.models import Product
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
+from centerpokupok.models import B2CProduct
 
 
 def storeMain(request, company, category=None):
-
     if not Company.objects.filter(pk=company).exists():
         return HttpResponseNotFound()
 
-
-    #----NEW PRODUCT LIST -----#
-    newProducrList = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID, company=company)\
-        .order_by('-obj_create_date')[:4]
+    new_products = B2CProduct.objects.filter(company=company).order_by('-created_at')[:4]
 
     if category:
-        newProducrList = newProducrList.filter(categories=category)
+        new_products = new_products.filter(category=category)
 
-    #----NEW PRODUCT LIST -----#
-    products = Product.getTopSales().filter(sites=settings.SITE_ID)
-
-    products = products.filter(c2p__parent_id=company)
+    top_products = B2CProduct.objects.filter(company=company).order_by('?')[:4]
 
     if category:
-        products = products.filter(c2p__parent_id=category)
+        top_products = top_products.filter(category=category)
 
-    products = [prd.pk for prd in products[:4]]
+    coupons = B2CProduct.get_active_objects() \
+                  .filter(company=company, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0) \
+                  .order_by("-created_at")[:3]
 
-    topPoductList = SearchQuerySet().models(Product).filter(django_id__in=products)
+    if category:
+        coupons = coupons.filter(category=category)
 
-    #------ 3 Coupons ----------#
-    coupons = SearchQuerySet().models(Product).filter(sites=settings.SITE_ID, coupon__gt=0,
-                                                         coupon_end__gt=now(), coupon_start__lte=now(),
-                                                         company=company).order_by('coupon_end')[:3]
+    product_sale = B2CProduct.get_active_objects().filter(discount_percent__gt=0, company=company) \
+                       .exclude(coupon_dates__contains=now().date()).order_by("-created_at")[:15]
 
-    #----------- Products with discount -------------#
-    productsSale = SearchQuerySet().models(Product)\
-        .filter(SQ(coupon=0) | SQ(coupon_end__lte=now()) | SQ(coupon_start__gt=now()),
-                sites=settings.SITE_ID, company=company, discount__gt=0).order_by('-discount')[:15]
+    if category:
+        product_sale = product_sale.filter(category=category)
 
-    templateParams = {
+    template_params = {
         'companyID': company,
         'coupons': coupons,
-        'productsSale': productsSale,
-        'newProducrList': newProducrList,
-        'topPoductList': topPoductList, 'menu': 'main',
+        'product_sale': product_sale,
+        'new_products': new_products,
+        'top_products': top_products,
+        'menu': 'main',
         'store_url': 'companies:category'
     }
 
+    return render_to_response("centerpokupok/Company/index.html", template_params, context_instance=RequestContext(request))
 
-    return render_to_response("Company/index.html", templateParams, context_instance=RequestContext(request))
 
 def about(request, company):
     if not Company.objects.filter(pk=company).exists():
         return HttpResponseNotFound()
-
 
     templateParams = {
         'companyID': company,
@@ -70,11 +61,10 @@ def about(request, company):
 
     return render_to_response("Company/about.html", templateParams, context_instance=RequestContext(request))
 
-def contact(request, company):
 
+def contact(request, company):
     if not Company.objects.filter(pk=company).exists():
         return HttpResponseNotFound()
-
 
     templateParams = {
         'companyID': company,
@@ -82,8 +72,8 @@ def contact(request, company):
 
     return render_to_response("Company/contact.html", templateParams, context_instance=RequestContext(request))
 
-class companyProductList(ItemsList):
 
+class companyProductList(ItemsList):
     model = Product
     template_name = "Company/products.html"
 
@@ -108,6 +98,7 @@ class companyProductList(ItemsList):
             return sqs.filter(title=q)
 
         return sqs
+
 
 '''
 def products(request, company, category=None, page=1):
@@ -224,7 +215,6 @@ def coupons(request, company, category=None, page=1):
 
 
 class companyCoupontList(ItemsList):
-
     model = Product
     template_name = "Company/coupons.html"
 

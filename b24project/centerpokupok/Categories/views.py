@@ -1,26 +1,15 @@
-from django.shortcuts import render
 from django.shortcuts import render_to_response
-from appl.models import News, Category
-from core.models import Value, Item, Attribute, Dictionary
-from appl import func
 from django.template import RequestContext
 
-from django.conf import settings
-
-def categoryList(request):
-    user = request.user
-    hierarchyStructure = Category.hierarchy.getTree(siteID=settings.SITE_ID)
-    categories_id = [cat['ID'] for cat in hierarchyStructure]
-    categories = Item.getItemsAttributesValues(("NAME",), categories_id)
-
-    dictStructured = func.setStructureForHiearhy(hierarchyStructure, categories)
-    categotySelect = dictStructured
-    url_country = "home_country"
+from centerpokupok.models import B2CProductCategory
 
 
+def category_list(request):
+    categories = B2CProductCategory.objects.filter(level=0).order_by('name').prefetch_related('children')
 
-
-    return render_to_response("Categories/index.html", locals(), context_instance=RequestContext(request))
+    return render_to_response("centerpokupok/Categories/index.html",
+                              {'categories': categories},
+                              context_instance=RequestContext(request))
 
 
 

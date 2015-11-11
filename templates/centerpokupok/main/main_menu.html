@@ -2,7 +2,7 @@
 {% load i18n %}
 <ul id="sidevar">
     {% for category in categories %}
-        <li class="level1-li sub"><a class="level1-a" href="{% url "products:category" category.pk %}  ">{{ category.name }}</a>
+        <li class="level1-li sub"><a class="level1-a" href="{% url "products:category" category.pk %}">{{ category.name }}</a></li>
     {% endfor %}
     <li class="level1-li sub"><a class="level1-a" href="{% url "categories:list" %}">{% trans "All categories" %}</a></li>
 </ul>

@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block header %}
-    {% companyMenuB2C company.pk "products" %}
+    {% companyMenuB2C product.company.pk "products" %}
 {% endblock %}
 
 {% block body %}
@@ -103,11 +103,11 @@
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:main" company.pk %}" property="v:title" rel="v:url">{{ company.title }}</a>
+                        <a href="{% url "companies:main" product.company.pk %}" property="v:title" rel="v:url">{{ product.company.name }}</a>
                         &rarr;
                     </span>
 					<span typeof="v:Breadcrum">
-                        <a href="{% url "companies:products" company.pk %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
+                        <a href="{% url "companies:products" product.company.pk %}" property="v:title" rel="v:url">{% trans "Products" %}</a>
                     </span>
 				</div>
 			</div>
@@ -115,24 +115,24 @@
 				<a href="javascript:history.back()" class="btnback">← {% trans "Back to catalog" %}</a>
 			</div>
 
-			<div class="titleproduct">{{ productValues.title }}</div>
+			<div class="titleproduct">{{ product.name }}</div>
 
             <div id="details-prd">
 				<div class="galleryprd">
-                    <p><font class="id">{% trans "Product ID" %}: {{ productValues.pk }}</font></p>
+                    <p><font class="id">{% trans "Product ID" %}: {{ product.pk }}</font></p>
 					<div class="imagelib">
 						<div class="imgout">
 							<div id="imagebig">
                                 <a href="#" data-index="0" class="bzoom"><i class="icons i-zoom"></i></a>
-								<img src="{{ MEDIA_URL }}big/{{ productValues.image }}" border="0" />
+								<img src="{{ product.image.big }}" border="0" />
 							</div>
 						</div>
 						<ul class="allthumb">
 							<li>
-                                <a href="#"  data-big="{{ MEDIA_URL }}big/{{ productValues.image }}" class="image">
-                                    <img src="{{ MEDIA_URL }}small/{{ productValues.image }}" class="imagesmall" border="0"/>
+                                <a href="#"  data-big="{{ product.image.big }}" class="image">
+                                    <img src="{{ product.image.small }}" class="imagesmall" border="0"/>
                                 </a>
-                                <a href="{{ MEDIA_URL }}big/{{ productValues.image }}" class="fancybox" rel="gallery" style="display: none;"></a>
+                                <a href="{{ product.image.big }}" class="fancybox" rel="gallery" style="display: none;"></a>
                             </li>
 						</ul>
 					</div>
@@ -140,37 +140,37 @@
 
 				<div class="infodetails">
 					<div class="pricedt">
-                        {% if productValues.coupon %}
-                            <p><font class="price1"> {{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
+                        {% if product.is_coupon %}
+                            <p><font class="price1"> {{ productValues.currency|getSymbol }} {{ product.cost|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
-                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.coupon }}
+                                    {{ product.currency|getSymbol  }} {{ product.cost|discountPrice:product.coupon_discount_percent }}
                                 </font>
                             </p>
-                        {% elif productValues.discount %}
-                            <p><font class="price1">{{ productValues.currency|getSymbol }} {{ productValues.price|formatPrice }}</font></p>
+                        {% elif product.discount_percent %}
+                            <p><font class="price1">{{ product.currency|getSymbol }} {{ product.cost|formatPrice }}</font></p>
                             <p>
                                 <font class="price2">
-                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.discount }}
+                                    {{ product.currency|getSymbol  }} {{ product.cost|discountPrice:product.discount_percent }}
                                 </font>
                             </p>
                         {% else %}
 						    <p>
                                 <font class="price2">
-                                    {{ productValues.currency|getSymbol  }} {{ productValues.price|formatPrice }}
+                                    {{ product.currency|getSymbol  }} {{ product.cost|formatPrice }}
                                 </font>
                             </p>
                         {% endif %}
 					</div>
-                    {% if productValues.coupon %}
+                    {% if product.is_coupon %}
                         <div class="discountinfo">
                             <div class="rows">
                                 <i class="icons i-clock"></i>
                                 <label>{% trans "Discount will end in" %}:</label>
                                 <div class="countdowntext"
                                      {% if productValues.discount %}
-                                        data-discount="{{ productValues.currency|getSymbol  }} {{ productValues.price|discountPrice:productValues.discount }}"
-                                     {% endif %}  data-countdown="{{ productValues.coupon_end|date:"U" }}">
+                                        data-discount="{{ product.currency|getSymbol  }} {{ product.cost|discountPrice:product.coupon_discount_percent }}"
+                                     {% endif %}  data-countdown="{{ product.coupon_end_date|date:"U" }}">
                                 </div>
                             </div>
                         </div>
@@ -182,7 +182,7 @@
                             <ul>
                                 <li>
 
-                              <input type="hidden" name="product" value="{{ productValues.pk }}">
+                              <input type="hidden" name="product" value="{{ product.pk }}">
 
                                     <label>{% trans "Quantity" %}</label>
 
@@ -194,21 +194,17 @@
                                 </li>
                             </ul>
                         </div>
-
+                        {% comment %}
                         <div class="details-action">
                             <a href="javascript:void(0);" onclick="$(this).closest('form').submit();" class="bigbuy">{% trans "Buy" %}</a>
 
                             <div class="wl favorite">
-                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ productValues.pk }}" ></i>
+                                <i class="icons {% if favorite == 0 %} icon-heart {% else %} icon-colored-heart{% endif %}" data-gid="{{ product.pk }}" ></i>
                                 <p><a href="#"  class="wish">{% trans 'Favorite' %}</a></p>
                             </div>
                         </div>
+                        {% endcomment %}
                     </form>
-					<div class="socialplugin">
-						<div><img src="{% static "centerpokupok/images/fb.gif" %}"></div>
-						<div><img src="{% static "centerpokupok/images/tw.gif" %}"></div>
-						<div><img src="{% static "centerpokupok/images/pin.gif" %}"></div>
-					</div>
 				</div>
 
 				<div class="ship">
@@ -218,15 +214,9 @@
 					</div>
 					<div class="configuration">
 						<ul>
-                            {% if productValues.anons %}
-							<li>
-								<span class="left">{% trans "Short description" %}:</span>
-								<span class="right">{{ productValues.anons }}</span>
-							</li>
-                            {% endif %}
 							<li>
 								<span class="left">{% trans "Complete description" %}</span>
-								<span class="right">{{ productValues.text|striptags }}</span>
+								<span class="right">{{ product.description|cleanHtml|safe }}</span>
 							</li>
 
 						</ul>
@@ -236,80 +226,70 @@
 
 					<div class="feedback">
 						<h3>{% trans 'Transaction History & Feedback' %}</h3>
-                    {% for id , attr  in commentsList.items %}
+                        {% comment %}
+                        {% for id , attr  in commentsList.items %}
+                                <ul class="feedbacklist">
+                                    <li>
 
-                        {% with attr.DETAIL_TEXT|first as content  %}
-                        {% with attr.Date as date  %}
-                        {% with attr.User.username as user %}
-                            <ul class="feedbacklist">
-                                <li>
+                                        <div class="name">
+                                            {{ user }}
 
-                                    <div class="name">
-                                        {{ user }}
+                                        </div>
 
-                                    </div>
+                                        <div class="date">
+                                            {{ date }}
 
-                                    <div class="date">
-                                        {{ date }}
+                                        </div>
 
-                                    </div>
+                                        <div class="cmt">
 
-                                    <div class="cmt">
+                                            <p>{{ content }}</p>
+                                        </div>
 
-                                        <p>{{ content }}</p>
-                                    </div>
+                                    </li>
+                                </ul>
+                        {% endfor %}
+                        {% include "centerpokupok/paginator.html" %}
 
-                                </li>
-                            </ul>
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
-                    {% endfor %}
 
-					 {% include "centerpokupok/paginator.html" %}
+                        {% if form.is_multipart %}
+                          <form enctype="multipart/form-data" method="post" action="">
+                        {% else %}
+                          <form action="" method="post">
+                        {% endif %}
 
-                    {% if form.is_multipart %}
-                      <form enctype="multipart/form-data" method="post" action="">
-                    {% else %}
-                      <form action="" method="post">
-                    {% endif %}
+                            {{ form.management_form }}
 
-                        {{ form.management_form }}
-
-                        {% csrf_token %}
-                            <ul class="bgform">
-                                <li>
-                                    <div class="control-left">
-                                        {{ form.DETAIL_TEXT.label_tag }}
-                                    </div>
-                                    <div class="control" style="font-weight: bolder;color: red">
-                                        {{  form.DETAIL_TEXT.errors }}
-                                    </div>
-                                    <div class="control">
-                                        <textarea cols="70" name="DETAIL_TEXT" rows="7"></textarea>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="rows-check">
-                                <input type="submit" name = "subCom" class="btnreg" value="{% trans 'Post' %}">
-                            </div>
-                        </form>
+                            {% csrf_token %}
+                                <ul class="bgform">
+                                    <li>
+                                        <div class="control-left">
+                                            {{ form.DETAIL_TEXT.label_tag }}
+                                        </div>
+                                        <div class="control" style="font-weight: bolder;color: red">
+                                            {{  form.DETAIL_TEXT.errors }}
+                                        </div>
+                                        <div class="control">
+                                            <textarea cols="70" name="DETAIL_TEXT" rows="7"></textarea>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="rows-check">
+                                    <input type="submit" name = "subCom" class="btnreg" value="{% trans 'Post' %}">
+                                </div>
+                            </form>
+                          {% endcomment %}
                     </div>
                 </div>
 
-                {% if sameProducts %}
+                {% if same_products %}
                     <div class="otherprd">
                         <h1>{% trans "Similar products" %} </h1>
 
                         <ul id="slider2">
-                          {% for prod  in sameProducts %}
+                          {% for same_prod  in same_products %}
 
-                            {% with prod.title as name  %}
-                            {% with prod.price as cost  %}
-                            {% with prod.currency as currency  %}
-                            {% with prod.image as picture  %}
-
-                            {% if  forloop.counter == 1 %}
+                            {% if forloop.first %}
                                 <li>
                             {% endif %}
 
@@ -317,30 +297,25 @@
                                 <div class="img_prod_slider">
                                     <div class="shadow"></div>
                                     <div class="img_block">
-                                        <img src="{{ MEDIA_URL }}small/{{ picture }}" alt="{{ name }}">
+                                        <img src="{{ same_prod.image.small }}" alt="{{ same_prod.name }}">
 
                                     </div>
                                 </div>
 
                                 <div class="infopeople">
-                                    <p><a href="{% url "products:detail" prod.pk %}">{{ name }}</a></p>
-                                    <p><font class="number">{{ currency|getSymbol }} {{ cost|formatPrice }}</font></p>
+                                    <p><a href="{% url "products:detail" same_prod.pk %}">{{ same_prod.name }}</a></p>
+                                    <p><font class="number">{{ same_prod.currency|getSymbol }} {{ same_prod.cost|formatPrice }}</font></p>
                                 </div>
                             </div>
 
-                            {% if forloop.counter|divisibleby:"4" and   forloop.counter != forloop.last  %}
+                            {% if forloop.counter|divisibleby:"4" and not forloop.last  %}
                                 </li>
                                 <li>
                             {% endif %}
 
-                            {% if  forloop.counter == forloop.last %}
+                            {% if forloop.last %}
                                 </li>
                             {% endif %}
-
-                            {% endwith %}
-                            {% endwith %}
-                            {% endwith %}
-                            {% endwith %}
                           {% endfor %}
 
                         </ul>
