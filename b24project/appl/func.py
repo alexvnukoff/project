@@ -601,6 +601,10 @@ def autocomplete_filter(filter_key, q, page):
             'model': Chamber,
             'index_model': ChamberIndex,
         },
+        'organization': {
+            'model': Chamber,
+            'index_model': ChamberIndex,
+        },
         'branches': {
             'model': Branch,
             'index_model': BranchIndex,

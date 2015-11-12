@@ -10,7 +10,8 @@
         selectBranch: '{% trans "Select branch"  %}',
         selectCompany: '{% trans "Select company"  %}',
         selectCountry: '{% trans "Select country"  %}',
-        selectCategory: '{% trans "Select category"  %}'
+        selectCategory: '{% trans "Select category"  %}',
+        selectOrganization: '{% trans "Select organization"  %}'
     };
 
     baseOptions = {
@@ -53,6 +54,7 @@
         bp_categories: jQuery.extend(true, {}, baseOptions),
         country: jQuery.extend(true, {}, baseOptions),
         countries: jQuery.extend(true, {}, baseOptions),
+        organization: jQuery.extend(true, {}, baseOptions),
     };
 
     options.chamber.placeholder = LANG['live-filter']['selectOrg'];
@@ -61,6 +63,7 @@
     options.country.placeholder = LANG['live-filter']['selectCountry'];
     options.countries.placeholder = LANG['live-filter']['selectCountry'];
     options.branches.placeholder = LANG['live-filter']['selectBranch'];
+    options.organization.placeholder = LANG['live-filter']['selectOrganization'];
 </script>
 
 <div class="popuplifter">

@@ -39,6 +39,11 @@ var ui =
             selector: '#filter-chamber',
             name: 'filter[chamber]'
         },
+        organization:
+        {
+            selector: '#filter-organization',
+            name: 'filter[organization]'
+        },
         company:
         {
             selector: '#filter-company',

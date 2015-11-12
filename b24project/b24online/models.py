@@ -1456,8 +1456,8 @@ def slugify(sender, instance, **kwargs):
 @receiver(post_save, sender=Chamber)
 def initial_department(sender, instance, created, **kwargs):
     if not instance.created_by.is_superuser and not instance.created_by.is_commando and created:
-        department = instance.create_department(_('Administration'), instance.created_by)
-        vacancy = instance.create_vacancy(_('Admin'), department, instance.created_by)
+        department = instance.create_department('Administration', instance.created_by)
+        vacancy = instance.create_vacancy('Admin', department, instance.created_by)
         vacancy.assign_employee(instance.created_by, True)
 
 
