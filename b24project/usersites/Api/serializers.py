@@ -73,7 +73,7 @@ class DepartmentSerializer(serializers.BaseSerializer):
 class VacancySerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
         return {
-            'img': obj.user.profile.avatar.th if obj.user else '',
+            'img': obj.user.profile.avatar.th if obj.user and obj.user.profile.avatar else '',
             'name': clean_html(obj.user.profile.full_name) if obj.user else '',
             'post': clean_html(obj.name),
             'phone': clean_html(obj.user.profile.mobile_number) if obj.user and obj.user.profile.mobile_number else ''
