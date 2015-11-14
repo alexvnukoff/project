@@ -1,7 +1,11 @@
+from django.conf.urls import patterns, url
 from rest_framework.routers import DefaultRouter
-
 from usersites.Api.views import NewsViewSet, BusinessProposalViewSet, GalleryViewSet, CompanyStructureViewSet, \
-    B2CProductViewSet, B2BProductViewSet, B2BProductCategoryViewSet, B2CProductCategoryViewSet
+    B2CProductViewSet, B2BProductViewSet, B2BProductCategoryViewSet, B2CProductCategoryViewSet, interface
+
+urlpatterns = patterns('',
+                       url(r'^', interface)
+                       )
 
 router = DefaultRouter()
 router.register(r'news', NewsViewSet)
@@ -13,4 +17,4 @@ router.register(r'b2c/products', B2CProductViewSet)
 router.register(r'b2b/categories', B2BProductCategoryViewSet)
 router.register(r'b2c/categories', B2CProductCategoryViewSet)
 
-urlpatterns = router.urls
+urlpatterns += router.urls

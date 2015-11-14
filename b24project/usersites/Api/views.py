@@ -1,6 +1,9 @@
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import viewsets
+from rest_framework.decorators import permission_classes, api_view
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.utils.translation import ugettext as _
 
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -128,7 +131,7 @@ class B2BProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
-        return queryset.filter(products__company_id=organization.pk)\
+        return queryset.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
 
 
@@ -163,5 +166,42 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
-        return queryset.filter(products__company_id=organization.pk)\
+        return queryset.filter(products__company_id=organization.pk) \
             .order_by('level').distinct()
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def interface(request):
+    organization = get_current_site(request).user_site.organization
+    menu = []
+
+    if organization.news.exists():
+        menu.append({
+            'name': _('News'),
+            'href': 'news/'
+        })
+
+    if organization.b2b_products.exists() or organization.b2c_products.exists():
+        sub_categories = []
+
+        menu.append({
+            'name': _('Products'),
+            'href': 'products/',
+            "subCategories": sub_categories
+        })
+
+        if organization.b2b_products.exists():
+            sub_categories.append({
+                "name": _("B2C"),
+                "href": "b2c/"
+            })
+
+        if organization.b2c_products.exists():
+            sub_categories.append({
+                "id": 2,
+                "name": _("B2C"),
+                "href": "b2c/"
+            })
+
+    return Response(menu)
