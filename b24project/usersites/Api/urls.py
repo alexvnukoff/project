@@ -4,7 +4,7 @@ from usersites.Api.views import NewsViewSet, BusinessProposalViewSet, GalleryVie
     B2CProductViewSet, B2BProductViewSet, B2BProductCategoryViewSet, B2CProductCategoryViewSet, interface
 
 urlpatterns = patterns('',
-                       url(r'^', interface)
+                       url(r'^$', interface)
                        )
 
 router = DefaultRouter()
