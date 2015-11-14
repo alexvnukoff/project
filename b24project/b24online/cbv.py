@@ -18,7 +18,7 @@ from django.views.generic import UpdateView, DetailView, CreateView, DeleteView,
 
 from appl import func
 from b24online.models import Organization, Country, B2BProductCategory, Branch, BusinessProposalCategory, Gallery, \
-    GalleryImage, Document
+    GalleryImage, Document, Chamber
 from b24online.search_indexes import SearchEngine
 from core import tasks
 from core.cbv import HybridListView
@@ -139,7 +139,8 @@ class ItemsList(HybridListView):
 
     # Allowed filter list
     filter_list = {
-        'organization': Organization,
+        'organization': Chamber,
+        'chamber': Chamber,
         'country': Country,
         'countries': Country,
         'b2b_categories': B2BProductCategory,
@@ -247,7 +248,7 @@ class ItemsList(HybridListView):
             values = request.GET.getlist(key)
 
             if values:
-                self.applied_filters[f] = model.objects.filter(pk__in=values).only('pk', 'name')
+                self.applied_filters[f] = model.objects.filter(pk__in=values)
 
         if request.is_ajax():
             self.ajax(request, *args, **kwargs)
