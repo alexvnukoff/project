@@ -39,7 +39,7 @@ class ListBusinessProposalSerializer(serializers.BaseSerializer):
             'id': obj.pk,
             'title': clean_html(obj.title),
             'pubDate': obj.created_at.strftime("%d.%m.%y"),
-            'shortText': clean_html(Truncator(obj.description).words("30", html=True)) if obj.descriptio else '',
+            'shortText': clean_html(Truncator(obj.description).words("30", html=True)) if obj.description else '',
         }
 
 
@@ -76,7 +76,7 @@ class VacancySerializer(serializers.BaseSerializer):
             'img': obj.user.profile.avatar.th if obj.user else '',
             'name': clean_html(obj.user.profile.full_name) if obj.user else '',
             'post': clean_html(obj.name),
-            'phone': clean_html(obj.user.profile.mobile_number) if obj.user else ''
+            'phone': clean_html(obj.user.profile.mobile_number) if obj.user and obj.user.profile.mobile_number else ''
         }
 
 
