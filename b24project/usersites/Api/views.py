@@ -1,11 +1,16 @@
+import os
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from lxml.html.clean import clean_html
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from django.utils.translation import ugettext as _
-from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory
+
+from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
+    Banner
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
@@ -224,3 +229,73 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
                 return DetaiCouponSerializer
 
         return None
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def settings_api(request):
+    user_site = get_current_site(request).user_site
+    result = {
+        'menu': [],
+        'slides': [],
+        'contacts': {
+            'tel': clean_html(user_site.organization.phone) if user_site.organization.phone else None,
+            'email': clean_html(user_site.organization.email) if user_site.organization.email else None,
+            'address': clean_html(user_site.organization.address) if user_site.organization.address else None,
+            'orgName': clean_html(user_site.organization.name)
+        },
+        'map': None,
+        "orgLogo": user_site.organization.logo.original if user_site.organization.logo else None,
+        "logo": user_site.logo.original if user_site.logo else None,
+        "offerIcons": [],
+        "footerBanner": None,
+    }
+
+    for page in user_site.organization.additional_pages.all():
+        result['menu'].append({
+            'name': clean_html(page.title),
+            'href': "/current",
+        })
+
+    import glob
+    if user_site.slider_images:
+        images = [obj.image.original for obj in user_site.slider_images.only('image')]
+    else:
+        static_url = "%susersites/templates" % settings.STATIC_URL
+        dir = user_site.template.folder_name
+        images = ["%s/%s/%s" % (static_url, os.path.basename(dir), os.path.basename(image))
+                  for image in glob.glob(dir + "/*.jpg")]
+
+    for image in images:
+        result['slides'].append({
+            'url': image,
+        })
+
+    if user_site.organization.location:
+        lat, long = user_site.organization.location.split(',')
+
+        result['contacts']['map'] = {
+            "lat": lat,
+            "longt": long
+        },
+
+    #TOOD cache it
+    banner_blocks = ['SITES RIGHT 1', 'SITES RIGHT 2', 'SITES RIGHT 3', 'SITES RIGHT 4', 'SITES RIGHT 5', 'SITES FOOTER']
+
+    for block in banner_blocks:
+        banner = Banner.objects.filter(
+            site_id=get_current_site(request).pk,
+            block__code=block,
+            block__block_type='user_site',
+            image__isnull=False
+        ).order_by('?').first()
+
+        if not banner:
+            continue
+
+        if block == 'SITES FOOTER':
+            result['footerBanner'] = banner.image.url
+        else:
+            result['offerIcons'].append({'url': banner.image.url})
+
+    return Response(result)
