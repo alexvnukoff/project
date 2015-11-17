@@ -12,9 +12,8 @@ router.register(r'news', NewsViewSet)
 router.register(r'offers', BusinessProposalViewSet)
 router.register(r'gallery', GalleryViewSet)
 router.register(r'structure', CompanyStructureViewSet)
+router.register(r'products/b2b/categories', B2BProductCategoryViewSet)
+router.register(r'products/b2b/categories', B2CProductCategoryViewSet)
 router.register(r'products/b2b', B2BProductViewSet)
 router.register(r'products/b2c', B2CProductViewSet)
-router.register(r'categories/b2b', B2BProductCategoryViewSet)
-router.register(r'categories/b2c', B2CProductCategoryViewSet)
-
 urlpatterns += router.urls
