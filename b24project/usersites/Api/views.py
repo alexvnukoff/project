@@ -1,20 +1,21 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.timezone import now
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.utils.translation import ugettext as _
-
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
-    DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer
+    DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
+    DetaiCouponSerializer
 
 
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = News.objects.all()
+    queryset = News.get_active_objects()
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -31,7 +32,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class BusinessProposalViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = BusinessProposal.objects.all()
+    queryset = BusinessProposal.get_active_objects()
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -67,7 +68,7 @@ class CompanyStructureViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = B2BProduct.objects.all()
+    queryset = B2BProduct.get_active_objects()
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -84,7 +85,7 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = B2CProduct.objects.all()
+    queryset = B2CProduct.get_active_objects()
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -205,3 +206,21 @@ def interface(request):
             })
 
     return Response(menu)
+
+
+class CouponViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = B2CProduct.get_active_objects()
+
+    def filter_queryset(self, queryset):
+        organization = get_current_site(self.request).user_site.organization
+        return queryset.filter(company=organization, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0) \
+            .order_by("-created_at")
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action'):
+            if self.action == 'list':
+                return ListCouponSerializer
+            else:
+                return DetaiCouponSerializer
+
+        return None

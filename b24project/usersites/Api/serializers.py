@@ -158,3 +158,36 @@ class B2BProductCategorySerializer(serializers.BaseSerializer):
             'name': obj.name,
             'parentId': obj.parent_id,
         }
+
+
+class ListCouponSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        if obj.short_description:
+            short_text = obj.short_description
+        else:
+            short_text = Truncator(obj.description).words("30", html=True)
+
+        return {
+            'id': obj.pk,
+            'name': clean_html(obj.name),
+            'endDate': obj.coupon_end_date.strftime("%d.%m.%y"),
+            'currency': currency_symbol(obj.currency),
+            'oldPrice': obj.cost,
+            'cover': obj.image.big if obj.image else '',
+            'details': clean_html(short_text) if short_text else '',
+            'percent': obj.coupon_discount_percent
+        }
+
+
+class DetaiCouponSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'name': clean_html(obj.name),
+            'endDate': obj.coupon_end_date.strftime("%d.%m.%y"),
+            'currency': currency_symbol(obj.currency),
+            'oldPrice': obj.cost,
+            'cover': obj.image.big if obj.image else '',
+            'details': clean_html(obj.description) if obj.description else '',
+            'percent': obj.coupon_discount_percent
+        }
