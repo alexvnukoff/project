@@ -6,7 +6,7 @@ from usersites.Api.views import NewsViewSet, BusinessProposalViewSet, GalleryVie
 
 urlpatterns = patterns('',
                        url(r'^$', interface),
-                       url(r'^settings$', settings_api)
+                       url(r'^settings/$', settings_api)
                        )
 
 router = DefaultRouter()
