@@ -1,5 +1,5 @@
             <div class="container" ng-class="class">
-                
+
                     <section>
                         <div class="header vertical">
                             <dir-pagination-controls max-size="20"  direction-links="true" boundary-links="true"  class="paginator">  </dir-pagination-controls>
@@ -12,10 +12,10 @@
 
                         <ul class="gallery">
                             <figure  dir-paginate="img in galleryImages | itemsPerPage: 8">
-                                <a ng-href="{{img.url}}" data-fancybox-group="gallery" fancybox class="fancybox">
-                                    <img ng-src="{{img.url}}">
+                                <a  data-fancybox-group="gallery" fancybox class="fancybox">
+                                    <img ng-src="{{ img.url }}">
                                 </a>
-                                <div class="descr"><p>{{img.descr}}</p></div>
+                                <div class="descr"><p>{{ img.description }}</p></div>
                             </figure>
                         </ul>
                      </section>

@@ -1,16 +1,16 @@
                 <div class="container" ng-class="class">
-                
+
                     <section class="content__info__news news-page">
                         <h2>Новости</h2>
                         <article class="news" ng-repeat="item in news">
-                            <h3>{{ item.title }}</h3>
+                            <h3 formatted-text="{{ item.title }}"></h3>
                             <div class="news__content clearfix">
                                 <div class="news__content__cover"><img ng-src="{{ item.cover }}" alt=""></div>
                                 <div class="news__content__desc clearfix">
                                     <p class="date">{{ item.pubDate }}</p>
-                                    <p class="text">{{ item.preview }}</p>
+                                    <p class="text" formatted-text="{{ item.shortText }}"></p>
                                 </div>
-                                <a href="#/article" class="more vertical"><span>Подробнее</span></a>
+                                <a ng-href="#news/{{ item.id }}" class="more vertical"><span>Подробнее</span></a>
                             </div>
                         </article>
                     </section>

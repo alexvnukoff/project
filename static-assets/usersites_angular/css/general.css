@@ -71,6 +71,20 @@ a[href^=tel]                            {
 }
 
 
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/Preloader_8.gif) center no-repeat #fff;
+}
+
+
+
 
 
 .display-vertical .offer__icons             {
@@ -429,7 +443,7 @@ ul.navigation                           {
                                             cursor: pointer;
                                             text-align: left;
                                         }
-.select span                            {
+.select>span                            {
                                             display: inline-block;
                                             vertical-align: middle;
                                             padding-left: 30px;
@@ -1325,7 +1339,7 @@ Content Info (actions)
                                         }
 .product__about                         {    padding: 18px 0 14px; text-align: center;}
 .product__about .desc                   {
-                                            height: 45px;
+                                            height: 120px;
                                             font-size: 16px;
                                             padding: 0 5%;
                                             text-align: center;
@@ -1629,7 +1643,7 @@ a[href^="https://maps.google.com/maps"] {    display: none !important }
 .workers table thead                    {   background-color: #CCE5ED;}
 .workers table tbody tr                 {   border-bottom: 2px solid #CCE5ED;}
 .workers table td                       {   height: 35px; text-align: left; font-size: 14px; padding: 0 5px;}
-.workers table tr td:nth-child(1) img   {   height: 100%; max-width: 100%; margin: 2px 0;}
+.workers table tr td:nth-child(1) img   {  max-width: 100%; margin: 2px 0;}
 
 .workers table tr td:nth-child(1)       {   width: 10%; text-align: center;}
 .workers table tr td:nth-child(2)       {   width: 30%;}

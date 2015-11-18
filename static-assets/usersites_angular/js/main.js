@@ -3,6 +3,12 @@
 #   Main JS for ____________   #
 #############################
 */
+$(window).load(function() {
+  // Animate loader off screen
+  $(".se-pre-con").fadeOut("slow");
+});
+
+
 
 $(document).on('click', '.sub', function(event){
   event.preventDefault();
@@ -100,7 +106,7 @@ $('.sidebar-menu>li').each(function(){
 
         var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        var markerImage = new google.maps.MarkerImage('images/svg/marker.svg');
+        var markerImage = new google.maps.MarkerImage('static/images/svg/marker.svg');
         var marker = new google.maps.Marker({
           icon: markerImage,
           position: mapMarkerCoord, 

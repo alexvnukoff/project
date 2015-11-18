@@ -13,32 +13,18 @@
                         <div class = "select category">
                             <span ng-click="toggleCateg();">Категория</span>
                             <ul class="select-dropdown" ng-show="show">
-                                <li class="sub">
-                                    <a href = "#/products" ng-click="hideCateg();">Products</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="#/products" ng-click="selectCategory('econom')">Econom</a></li>
-                                        <li><a href="#/products" ng-click="selectCategory('business')">Business</a></li>
-                                        <li><a href="#/products" ng-click="selectCategory('luxury')">Luxury</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href = "#/products" ng-click="hideCateg();">Products</a>
-                                </li>
-                                <li class="sub">
-                                    <a href = "#/products" ng-click="hideCateg();">Item 3</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="">some product category 1</a></li>
-                                        <li><a href="">some product category 2 and one very long</a></li>
-                                        <li><a href="">some product category 3</a></li>
-                                        <li><a href="">some product category 4</a></li>
-                                        <li><a href="">some product category 5</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href = "#/products" ng-click="hideCateg();">Item 4</a>
-                                </li>
-                                <li>
-                                    <a href = "#/products" ng-click="hideCateg();">Item 5</a>
+                                <li ng-repeat="item in categories" ng-class="{sub: item.subCategory}">
+                                    <a href="#/products" ng-click="selectCategory('econom')">{{item.name}}</a>
+                                    <ul class="sub-menu" ng-if="item.subCategory">
+                                        <li ng-repeat="subItem in item.subCategory" ng-class="{sub: subItem.subSubCategory}">
+                                            <a href="">{{subItem.name}}</a>
+                                            <ul class="sub-menu sub-sub-menu" ng-if="subItem.subSubCategory">
+                                                <li ng-repeat="subSubItem in subItem.subSubCategory">
+                                                    <a href="" ng-click="selectCategory(subSubItem.category)">{{subSubItem.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>    
                                 </li>
                             </ul>            
                         </div> <!-- end select category -->
@@ -46,7 +32,7 @@
 
 
                     <section class="content__info__products">
-                        <h2>B2C Products</h2>
+                        <h2>Our products</h2>
                         <ul class="products-list">
                             <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>

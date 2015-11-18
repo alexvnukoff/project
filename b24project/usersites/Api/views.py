@@ -277,7 +277,7 @@ def settings_api(request):
         result['contacts']['map'] = {
             "lat": lat,
             "longt": long
-        },
+        }
 
     #TOOD cache it
     banner_blocks = ['SITES RIGHT 1', 'SITES RIGHT 2', 'SITES RIGHT 3', 'SITES RIGHT 4', 'SITES RIGHT 5', 'SITES FOOTER']

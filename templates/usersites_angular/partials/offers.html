@@ -1,16 +1,16 @@
                 <div class="container" ng-class="class">
-                
+
                     <section class="content__info__news business-offers clearfix">
                         <h2>Бизнес предложение</h2>
                         <article class="news" ng-repeat="offer in offers">
-                            <h3>{{ offer.title }}</h3>
+                            <h3 formatted-text="{{ offer.title }}"></h3>
                             <div class="news__content clearfix">
                                 <div class="news__content__cover"><img ng-src="{{ offer.cover }}" alt=""></div>
                                 <div class="news__content__desc clearfix">
                                     <p class="date">{{ offer.pubDate }}</p>
-                                    <p class="text">{{ offer.preview }}</p>
+                                    <p class="text" formatted-text="{{ offer.shortText }}"></p>
                                 </div>
-                                <a ng-href="{{ offer.more }}" class="more vertical"><span>Подробнее</span></a>
+                                <a ng-href="#offers/{{ offer.id }}" class="more vertical"><span>Подробнее</span></a>
                             </div>
                         </article>
                     </section>

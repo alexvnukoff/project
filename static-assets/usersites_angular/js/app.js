@@ -1,10 +1,23 @@
-var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion']);
+var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion', 'gettext']);
 
-myApp.config(function($routeProvider) {
+myApp.run(function (gettextCatalog) {
+    gettextCatalog.setCurrentLanguage();
+});
+
+myApp.constant('startPoint', '/api/');
+
+myApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+
+
 	$routeProvider
 		.when("/home", {
 			templateUrl: "partials/home.html",
-			title: "Main Page"
+			title: "Main Page",
+			controller: "homeCtrl"
+		})
+		.when("/article/:slug", {
+			templateUrl: "partials/article.html",
+			controller: "articleCtrl"
 		})
 		.when("/contact", {
 			templateUrl: "partials/contact.html",
@@ -12,29 +25,52 @@ myApp.config(function($routeProvider) {
 		})
 		.when("/gallery", {
 			templateUrl: "partials/gallery.html",
-			title: "Gallery"
+			title: "Gallery",
+			controller: "galleryCtrl"
 		})
 		.when("/offers", {
 			templateUrl: "partials/offers.html",
-			title: "Offers"
+			title: "Offers",
+			controller: "offersCtrl"
 		})
+        .when("/offers/:id", {
+            templateUrl: "partials/one-offer.html",
+            title: "Offer",
+            controller: "oneOfferCtrl"
+        })
 		.when("/news", {
 			templateUrl: "partials/news.html",
-			title: "News"
+			title: "News",
+			controller: "newsCtrl"
 		})
-		.when("/products", {
+        .when("/news/:id", {
+            templateUrl: "partials/one-news.html",
+            title: "News",
+            controller: "oneNewsCtrl"
+        })
+		.when("/products/:sub", {
 			templateUrl: "partials/products.html",
-			title: "Our products"
+			title: "Our products",
+			controller: "productsCtrl"
 		})
 		.when("/structure", {
 			templateUrl: "partials/structure.html",
-			title: "Company structure"
+			title: "Company structure",
+			controller: "structureCtrl"
 		})
 	.otherwise({
 		redirectTo: "/home"
 	});
-});
+}]);
 
+
+myApp.factory('Page', function() {
+   var title = 'default';
+   return {
+     title: function() { return title; },
+     setTitle: function(newTitle) { title = newTitle }
+   };
+});
 
 
 myApp.directive('fancybox', function() {
@@ -55,7 +91,7 @@ myApp.directive('timer', function() {
    return function(scope, element, attrs) {
        element.countdown({
             until: new Date(date),
-            format: 'dHM' 
+            format: 'dHM'
        });
    }
 });
@@ -117,133 +153,219 @@ myApp.directive('slick', function($timeout) {
             })
         }), 100)
     }
-})
+});
 
-myApp.controller('mainInfoCtrl', function($scope, $http) {
+myApp.directive('formattedText', function() {
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function($scope, $elem, $attrs) {
+            var formattedText = $attrs['formattedText'];
+            $elem.html(formattedText);
+        }
+    }
+});
 
+myApp.directive('preventDefaultBehavior', function(locationProvider) {
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function($scope, $elem) {
+            var before =
 
-	$scope.toggleCateg = function(){
-    		$scope.show = !$scope.show
-  		}
-  		$scope.hideCateg = function(){
-    		$scope.show = false
-  		}
+            $elem.on('click', function($event) {
+                $event.preventDefault();
+            });
+        }
+    }
+});
 
-	$http.get("pharm-sp/siteBarMenu.json")
-		.success(function(response) {$scope.siteBar = response;});
+myApp.filter('removeTags', function() {
+    return function(input) {
+        return angular.element(input).text();
+    }
+});
 
-	$http.get("pharm-sp/settings.json")
-		.success(function(response) {$scope.settings = response;});
+myApp.controller('title', function($scope, $http, gettextCatalog, Page) {
+	$scope.Page = Page;
+});
 
+myApp.controller('title', function($scope, $http, gettextCatalog, Page) {
+	$scope.Page = Page;
+});
 
-    $scope.menu = [
-	        "קוסמטיקה רפואית",
-	        "מכון אורטופדי",
-	        "מוצרי קוסמטיקה",
-	        "אודות",
-	        "בית מרקחת"
-    ];
+myApp.controller('mainInfoCtrl', function($scope, $http, gettextCatalog, startPoint) {
 
+	$scope.toggleCateg = function() {
+        $scope.show = !$scope.show;
+    }
 
-    $scope.contacts = {
-    		phone: "054-6449654",
-            tel: "0546449654",
-            email: "email@email.com",
-            address: "84201 רח' קקל 94 באר שבע 84201",
-            orgName: "Member of Торгово-промышленная палата и промышленности Баэр-Шева и Негев, Израиль"
-    };
-    
-    $scope.logo =   'images/logo.png';
-    $scope.offerIcons = [
-	        {
-				url: 'images/icon-1.jpg'
-			},
-			{
-				url: 'images/icon-2.jpg'
-			},
-			{
-				url: 'images/icon-3.jpg'
-			},
-			{
-				url: 'images/icon-4.jpg'
-			},
-			{
-				url: 'images/icon-5.jpg'
-			}
-    ];
+  	$scope.hideCateg = function() {
+        $scope.show = false;
+    }
 
+    // Implemented
+    $http.get(startPoint).success(function(response) {
+        $scope.siteBar = response;
+    });
 
-    $scope.orgLogo      =   "images/organization-logo.jpg";
-    $scope.footerBanner =   "images/banner.jpg";
+    // Implemented
+    $http.get(startPoint + '/settings').success(function(response) {
+        $scope.settings = response;
+
+        $scope.settings.contacts.phone = angular.element($scope.settings.contacts.tel).text();
+        $scope.settings.contacts.tel = $scope.settings.contacts.phone.replace('-', '');
+    });
+
+	$scope.changeLang = function (lang) {
+        gettextCatalog.setCurrentLanguage(lang);
+        console.log(lang);
+    }
+
 });
 
 myApp.controller("contentCtrl", function($scope, $http){
 
-		$http.get("pharm-sp/categories.json")
-			.success(function(response) {$scope.categories = response.categories;});
+	$scope.class = "grid-layout";
 
-		$http.get("pharm-sp/structure.json")
-			.success(function(response) {$scope.structure = response.structure;});
+	$scope.gridClass = function(){
+          if ($scope.class === "layout"){
+            $scope.class = "grid-layout";
+        };
+	};
 
-
-  		$http.get("pharm-sp/actions.json")
-			.success(function(response) {$scope.actions = response.actions;});
-
-
-		$http.get("pharm-sp/article.json")
-			.success(function(response) {
-				$scope.article = response;
-			});
-
-		$http.get("pharm-sp/news.json")
-			.success(function(response) {$scope.news = response.news;});
-
-
-		$http.get("pharm-sp/products.json")
-			.success(function(response) {
-					$scope.allProducts = response.products;
-					$scope.products = $scope.allProducts.all;
-				});
-
-		$scope.selectCategory = function(value){
-			$scope.show = false;
-			switch (value) {
-					case "econom":
-						$scope.products = $scope.allProducts.econom;
-						break
-					case "business":
-						$scope.products = $scope.allProducts.business;
-						break
-					case "luxury":
-						$scope.products = $scope.allProducts.luxury;
-						break
-				}
-		};
-
-
-
-	    $scope.class = "grid-layout";
-
-	        $scope.gridClass = function(){
-	          if ($scope.class === "layout"){
-	            $scope.class = "grid-layout";
-	        };
-    	};
-	        $scope.layoutClass = function(){
-	          if ($scope.class === "grid-layout"){
-	            $scope.class = "layout";
-	        };
-    	};
-
-	$http.get("pharm-sp/offers.json")
-		.success(function(response) {$scope.offers = response.offers;});
-
-
-
-	$http.get("pharm-sp/gallery.json")
-		.success(function(response) {$scope.galleryImages = response.gallery;});
-
+	$scope.layoutClass = function(){
+          if ($scope.class === "grid-layout"){
+            $scope.class = "layout";
+        };
+	};
 
 });
 
 
+myApp.controller("homeCtrl", function($scope, $http, Page, startPoint){
+
+	Page.setTitle('Главная страница');
+
+    // TODO: Implemented
+    $http.get(startPoint + 'categories/').success(function(response) {
+        $scope.categories = response;
+    });
+
+    // Implemented
+    $http.get(startPoint + '/coupons').success(function(response) {
+        $scope.coupons = response;
+    });
+
+    // Implemented
+    $http.get(startPoint + 'news/').success(function(response) {
+        $scope.news = response;
+    });
+
+    // Implemented
+	$http.get(startPoint + 'products/b2b/').success(function(response) {
+		$scope.products = response;
+	});
+
+});
+
+myApp.controller("galleryCtrl", function($scope, $http, Page, startPoint) {
+    // Implemented
+    $http.get(startPoint + 'gallery/').success(function(response) {
+        $scope.galleryImages = response;
+    });
+
+	Page.setTitle('Галлерея');
+});
+
+
+
+
+myApp.controller("offersCtrl", function($scope, $http, Page, startPoint){
+	Page.setTitle('Бизнес предложения');
+
+    // Implemented
+    $http.get(startPoint + 'offers/').success(function(response) {
+        $scope.offers = response;
+    });
+});
+
+
+
+myApp.controller("newsCtrl", function($scope, $http, Page, startPoint){
+	Page.setTitle('Новости компании');
+
+    // Implemented
+    $http.get(startPoint + 'news/').success(function(response) {
+        $scope.news = response;
+    });
+});
+
+
+
+myApp.controller("productsCtrl", function($scope, $http, Page, startPoint, $routeParams){
+	Page.setTitle('Наши продукты');
+
+    $http.get(startPoint + 'products/' + $routeParams.sub).success(function(response) {
+        $scope.products = response;
+    });
+
+    // TODO: must be Implemented!!!
+	$http.get("categories.json")
+		.success(function(response) {$scope.categories = response.categories;});
+
+	$scope.selectCategory = function(value){
+		console.log(value);
+		$http.get("products.json?category=" + value)
+			.success(function(response) {
+				$scope.products = response.products;
+			});
+	};
+
+});
+
+
+
+myApp.controller("structureCtrl", function($scope, $http, Page, startPoint){
+	Page.setTitle('Структура компании');
+
+    // Implemented
+    $http.get(startPoint + '/structure').success(function(response) {
+        $scope.structure = response;
+    });
+});
+
+
+
+myApp.controller("articleCtrl", function($scope, $http, $location, Page){
+
+	var file = $location.path().split("/")[2];
+
+	$http.get("posts/" + file + ".json")
+		.success(function(response) {
+			$scope.article = response;
+			Page.setTitle($scope.article.title);
+		})
+		.error(function(){
+			$location.path('#/home');
+		})
+
+});
+
+myApp.controller('oneNewsCtrl', function($scope, $http, $routeParams, Page, startPoint) {
+    $http.get(startPoint + '/news/' + $routeParams.id).success(function(response) {
+        $scope.news = response;
+
+        var title = angular.element($scope.news.title).text();
+        Page.setTitle(title);
+    });
+});
+
+myApp.controller('oneOfferCtrl', function($scope, $http, $routeParams, Page, startPoint) {
+    $http.get(startPoint + '/offers/' + $routeParams.id).success(function(response) {
+        $scope.offer = response;
+
+        var title = angular.element($scope.offer.title).text();
+        Page.setTitle(title);
+    });
+});

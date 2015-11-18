@@ -1,9 +1,9 @@
 {% verbatim %}
 <!DOCTYPE html>
 <html lang="ru" ng-app="myApp">
-    <head>
+    <head ng-controller="title">
         <meta charset="UTF-8">
-        <title ng-bind-html="title ">Main page</title>
+        <title>{{ Page.title() }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
         <meta http-equiv="ImageResize" content="no">
         <meta http-equiv="ImageToolbar" content="no">
@@ -11,49 +11,49 @@
         <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
         <meta property="og:url" content="">
-        <meta property="og:title" content="">
+        <meta property="og:title" content="{{ Page.title() }}">
         <meta property="og:description" content="">
         <meta property="og:image" content="">
         <meta name="google-site-verification" content="">
-        <!--<link rel="shortcut icon" href="/static/usersites_angular/images/favicon.ico">-->
+        <!--<link rel="shortcut icon" href="static/images/favicon.ico">-->
 
-        <script src="/static/usersites_angular/js/vendor/jquery-1.11.3.min.js"></script>
+        <script src="static/libs/vendor/jquery-1.11.3.min.js"></script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 
-        
-        <link rel="stylesheet" href="/static/usersites_angular/js/slick/slick.css">
-        <link rel="stylesheet" href="/static/usersites_angular/js/slick/slick-theme.css">
-        <link rel="stylesheet" href="/static/usersites_angular/js/fancybox/jquery.fancybox.css">
 
-        <link rel="stylesheet" href="/static/usersites_angular/css/main.css">
-        <link rel="stylesheet" href="/static/usersites_angular/css/normalize.css">
-        <link rel="stylesheet" href="/static/usersites_angular/css/general.css">
-        <!--<link rel="stylesheet" href="/static/usersites_angular/css/animate.css">-->
+        <link rel="stylesheet" href="static/libs/slick/slick.css">
+        <link rel="stylesheet" href="static/libs/slick/slick-theme.css">
+        <link rel="stylesheet" href="static/libs/fancybox/jquery.fancybox.css">
+
+        <link rel="stylesheet" href="static/css/main.css">
+        <link rel="stylesheet" href="static/css/normalize.css">
+        <link rel="stylesheet" href="static/css/general.css">
+        <!--<link rel="stylesheet" href="css/animate.css">-->
     </head>
     <body ng-controller="mainInfoCtrl">
+        <div class="se-pre-con"></div>
 
 
-    
         <header>
             <div class="wrapper clearfix">
                 <div id="menuToggle">
-                    <img src="/static/usersites_angular/images/svg/menu.svg" alt="">
+                    <img src="static/images/svg/menu.svg" alt="">
                 </div>
                 <div class="horMenu">
                     <ul class="navigation vertical">
                         <li ng-repeat="menuItem in settings.menu">
-                            <a href="#">{{menuItem.name}}</a>
+                            <a href="#{{ menuItem.href }}">{{ menuItem.name | removeTags }}</a>
                         </li>
                     </ul>
                     <div class="busket vertical">
                         <span>-</span>
                     </div>
-                </div><!--End mainMenu--> 
+                </div><!--End mainMenu-->
                 <div class="tel vertical">
-                    <img src="/static/usersites_angular/images/svg/tel.svg" alt="">
+                    <img src="static/images/svg/tel.svg" alt="">
                     <a href="tel:{{settings.contacts.tel}}">{{settings.contacts.phone}}</a>
                 </div>
             </div>
@@ -61,7 +61,7 @@
 
         <section class="offer">
             <div class="wrapper">
-                
+
                 <div class="logo">
                     <img ng-src="{{settings.logo}}" alt="">
                 </div>
@@ -70,16 +70,16 @@
                     <slick init-onload="true">
                         <div class="slide" ng-repeat="slide in settings.slides">
                             <img ng-src="{{slide.url}}" alt="">
-                        </div>   
+                        </div>
                     </slick>
                 </div>
 
                 <div class="offer__icons" ng-class="{disable: !settings.offerIcons}">
-                    <a href="#" id="display-vertical">display vertical</a>
+                    <a href="#" id="display-vertical" translate>display vertical</a>
                     <div class="offer__icons__icon" ng-repeat="icon in settings.offerIcons">
                         <img ng-src="{{icon.url}}" alt="">
                     </div>
-                </div>         
+                </div>
 
             </div><!-- end wrapper-->
         </section><!-- end offer-->
@@ -89,34 +89,37 @@
         <section class="content">
             <div class="wrapper">
                 <aside class="sidebar">
-                
+
                     <div class = "select -lang">
-                        <span>Russian</span>
+                        <span>English</span>
                         <ul class="select-dropdown">
-                            <li>
-                                <a href = "#" class="lang-hebrew">Hebrew</a>
+                             <li>
+                                <a href = "#" ng-click="changeLang('en')">English</a>
                             </li>
                             <li>
-                                <a href = "#">Russian</a>
+                                <a href = "#" class="lang-hebrew" ng-click="changeLang('he_IL')">עברית</a>
                             </li>
                             <li>
-                                <a href = "#">Item 3</a>
+                                <a href = "#" ng-click="changeLang('ru')">Русский</a>
                             </li>
                             <li>
-                                <a href = "#">Item 4</a>
+                                <a href = "#" ng-click="changeLang('ar')" >العربية</a>
                             </li>
                             <li>
-                                <a href = "#" c>Item 5</a>
+                                <a href = "#" ng-click="changeLang('hy_AM')">Armenian</a>
                             </li>
-                        </ul>            
+                            <li>
+                                <a href = "#" ng-click="changeLang('zh')">中国</a>
+                            </li>
+                        </ul>
                     </div>
 
                     <ul class="sidebar-menu" ng-accordion>
 
-                        <li ng-repeat="item in siteBar.items" ng-accordion-group>    
-                            <a ng-attr-href="{{!item.subCategory  ? item.href : 'false'}}" ng-class="{sub: item.subCategory}" toggle-class="active" ng-accordion-heading> {{item.name}}</a>
-                            <ul class="sidebar-menu__submenu" ng-class="{display: !item.subCategory}" ng-accordion-body>
-                                <li ng-repeat="subItem in item.subCategory" ><a href="">{{subItem.name}}</a></li>
+                        <li ng-repeat="item in siteBar" ng-accordion-group>
+                            <a ng-attr-href="{{!item.subCategories ? '#/' + item.href : 'false'}}" ng-class="{sub: item.subCategories}" toggle-class="active" ng-accordion-heading> {{item.name}}</a>
+                            <ul class="sidebar-menu__submenu" ng-class="{display: !item.subCategories}" ng-accordion-body>
+                                <li ng-repeat="subItem in item.subCategories" ><a ng-attr-href="{{ '#/' + item.href + subItem.href }}">{{subItem.name}}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -127,22 +130,22 @@
 
             <section class="content__info" ng-controller="contentCtrl">
 
-                <div ng-view class="container" ng-class="class"></div>
+                <div ng-view class="container" ng-class="class" autoscroll="true"></div>
 
 
                 <form action="#" class="clearfix">
-                    <h2>Задать вопрос</h2>
-                    <input type="text" name="name" placeholder="Ваше имя" required>
-                    <input type="email" name="email" placeholder="Ваша почта" required>
-                    <textarea name="message" id="" placeholder="Сообщение" required></textarea>
-                    <button>Отправить</button>
+                    <h2 translate>Ask question</h2>
+                    <input type="text" name="name"  placeholder="{{'Your name'| translate}}" required>
+                    <input type="email" name="email"  placeholder="{{'Your email'| translate}}" required>
+                    <textarea name="message" id=""  placeholder="{{'Massage'| translate}}" required></textarea>
+                    <button translate >Send</button>
                 </form><!-- end form-->
 
 
 
                 <div class="contacts">
-                    <p class="address"><strong>{{contacts.address}}</strong></p>
-                    <p class="phone-num"><a href="tel:{{contacts.tel}}"><strong>{{contacts.phone}}</strong></a></p>
+                    <p class="address"><strong>{{ settings.contacts.address | removeTags }}</strong></p>
+                    <p class="phone-num"><a href="tel:{{settings.contacts.tel}}"><strong>{{ settings.contacts.phone }}</strong></a></p>
                 </div>
             </section><!-- end content-info-->
 
@@ -150,36 +153,38 @@
     </section><!-- end content-->
 
     <div class="map" id="map" ng-class="{disable: !settings.map}">
-        
+
     </div>
 
     <footer>
         <div class="footer-content wrapper">
             <div class="copy">
-                <img ng-src="{{settings.orgLogo}}" alt="">
-                <p><strong>{{settings.contacts.orgName}}</strong></p>
+                <img <img ng-src="{{settings.orgLogo}}" alt="">
+                <p><strong>{{settings.contacts.orgName | removeTags }}</span></p>
             </div>
             <div class="banner">
                 <img ng-src="{{settings.footerBanner}}" alt="">
             </div>
         </div>
     </footer>
-    
-<!-- //////////////////////////////////////////////////////////////////////// -->
-    
-    
-        <script src="/static/usersites_angular/js/vendor/modernizr.js"></script>
-        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-        <script src="/static/usersites_angular/js/ui-accordion.js"></script>
-        
-        <script src="/static/usersites_angular/js/jquery.plugin.min.js"></script>
-        <script src="/static/usersites_angular/js/fancybox/jquery.fancybox.js"></script>
-        <script src="/static/usersites_angular/js/jquery.countdown.min.js"></script>
-        <script src="/static/usersites_angular/js/dirPagination.js"></script>
-        <script src="/static/usersites_angular/js/slick/slick.min.js"></script>
 
-        <script src="/static/usersites_angular/js/app.js"></script>
-        <script src="/static/usersites_angular/js/main.js"></script>
+<!-- //////////////////////////////////////////////////////////////////////// -->
+
+
+        <script src="static/libs/vendor/modernizr.js"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script src="static/libs/ui-accordion.js"></script>
+
+        <script src="static/libs/jquery.plugin.min.js"></script>
+        <script src="static/libs/fancybox/jquery.fancybox.js"></script>
+        <script src="static/libs/jquery.countdown.min.js"></script>
+        <script src="static/libs/dirPagination.js"></script>
+        <script src="static/libs/slick/slick.min.js"></script>
+        <script src="static/libs/angular-gettext.min.js"></script>
+        <script src="static/js/translations.js"></script>
+
+        <script src="static/js/app.js"></script>
+        <script src="static/js/main.js"></script>
     </body>
 </html>
 {% endverbatim %}

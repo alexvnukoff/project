@@ -1,12 +1,16 @@
                <div class="container" ng-class="class">
-                
+
                     <div>
                         <p class="address">
-                            <strong>{{contacts.address}}<br><br>
-                            <a href="mailto:{{contacts.email}}">{{contacts.email}}</a>
+                            <strong >{{ settings.contacts.address | removeTags }}</strong><br><br>
+                            <a href="mailto:{{ settings.contacts.email | removeTags }}">{{ settings.contacts.email | removeTags }}</a>
                         </p>
 
-                        <p class="phone-num"><a href="tel:{{contacts.tel}}"><strong>{{contacts.phone}}</strong></a></p>
+                        <p class="phone-num">
+                            <a href="tel:{{settings.contacts.tel}}">
+                                <strong>{{ settings.contacts.phone | removeTags }}</strong>
+                            </a>
+                        </p>
                     </div>
 
                 </div>

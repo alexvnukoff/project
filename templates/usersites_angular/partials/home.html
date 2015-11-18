@@ -27,9 +27,9 @@
                                                     </li>
                                                 </ul>
                                             </li>
-                                        </ul>    
+                                        </ul>
                                     </li>
-                                </ul>  
+                                </ul>
 
 
                             </div> <!-- end select category -->
@@ -40,7 +40,7 @@
 
                         <div class="main-action">
 
-                            <div class="main-action__cover" style="background-image: url('images/sale-01.png');">
+                            <div class="main-action__cover" style="background-image: url('static/images/sale-01.png');">
                                 <div class="sale"><span>-30%</span></div>
                             </div> <!-- end main-action__cover -->
 
@@ -64,17 +64,17 @@
 
 
 
-                        <div class="actions">
+                        <div class="actions" ng-if="coupons">
 
-                            <div class="action square" ng-repeat="action in actions">
-                                <div class="action__cover" style="background-image: url('{{ action.cover }}');">    <div class="sale"><span>-{{ action.percent }}%</span></div>
+                            <div class="action square" ng-repeat="coupon in coupons">
+                                <div class="action__cover" style="background-image: url('{{ coupon.cover }}');">    <div class="sale"><span>-{{ coupon.percent }}%</span></div>
                                 </div>
                                 <div class="action__info">
-                                    <h3><a ng-href="{{ action.more }}">{{ action.name }}</a></h3>
-                                    <p><span class="old-price">Дол. {{ action.oldPrice }}</span><span class="new-price">Дол. {{ action.oldPrice - action.oldPrice*action.percent/100 }}</span></p>
+                                    <h3><a ng-href="{{ coupon.more }}">{{ coupon.name }}</a></h3>
+                                    <p><span class="old-price">Дол. {{ coupon.oldPrice }}</span><span class="new-price">Дол. {{ coupon.oldPrice - coupon.oldPrice * coupon.percent / 100 }}</span></p>
                                     <p class="timer-heading">Время до окончания:</p>
 
-                                    <div class="timer-mini" compact date="{{action.endDate}}"></div>
+                                    <div class="timer-mini" compact date="{{ coupon.endDate }}"></div>
 
                                 </div>
                             </div>
@@ -83,32 +83,32 @@
                     </section> <!-- end content__info__actions -->
 
 
-                    <section class="content__info__news">
+                    <section class="content__info__news" ng-if="news">
                         <h2>Новости</h2>
                         <article class="news" ng-repeat="item in news">
-                            <h3>{{ item.title }}</h3>
+                            <h3 formatted-text="{{ item.title }}"></h3>
                             <div class="news__content clearfix">
                                 <div class="news__content__cover"><img ng-src="{{ item.cover }}" alt=""></div>
                                 <div class="news__content__desc clearfix">
                                     <p class="date">{{ item.pubDate }}</p>
-                                    <p class="text">{{ item.preview }}</p>
+                                    <p class="text" formatted-text="{{ item.shortText }}"></p>
                                 </div>
-                                <a ng-href="article.html" class="more vertical"><span>Подробнее</span></a>
+                                <a ng-href="#news/{{ item.id }}" class="more vertical"><span>Подробнее</span></a>
                             </div>
                         </article>
                     </section>
 
 
 
-                    <section class="content__info__products">
+                    <section class="content__info__products" ng-if="products">
                         <h2>B2C Products</h2>
                         <ul class="products-list">
                             <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
                                 <div class="product__about">
-                                    <p class="desc"><strong>{{product.name}}</strong></p>
+                                    <p class="desc"><strong formatted-text="{{ product.name }}"></strong></p>
                                     <p class="detail">{{product.details}}</p>
-                                    <p class="price"><span class="value">{{product.price}}</span><span class="currency">₪</span></p>
+                                    <p class="price"><span class="value">{{product.price}}</span><span class="currency">{{product.curency}}</span></p>
                                 </div>
                                 <a href="" class="product__buy vertical"><span>Купить</span></a>
                             </li>

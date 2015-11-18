@@ -1,0 +1,73 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: index.html:105
+msgid "Arabic"
+msgstr "阿拉伯语"
+
+#: index.html:108
+msgid "Armenian"
+msgstr ""
+
+#: index.html:136
+msgid "Ask question"
+msgstr "亚美尼亚"
+
+#: index.html:111
+msgid "Chinese"
+msgstr "中国"
+
+#: index.html:77
+msgid "display vertical"
+msgstr "垂坠"
+
+#: index.html:93 index.html:96
+msgid "English"
+msgstr "英语"
+
+#: index.html:99
+msgid "Hebrew"
+msgstr "希伯来语"
+
+#: index.html:5
+msgid "Main page"
+msgstr "主页"
+
+#: index.html:139
+msgid "Massage"
+msgstr "信息"
+
+#: index.html:102
+msgid "Russian"
+msgstr "俄"
+
+#: index.html:140
+msgid "Send"
+msgstr "提交"
+
+#: index.html:138
+msgid "Your email"
+msgstr "你的邮件"
+
+#: index.html:137
+msgid "Your name"
+msgstr "你的名字"
+
+#: article.html:119
+msgid "Вернуться назад"
+msgstr "退回"
+
+#: article.html:116
+msgid "На главную"
+msgstr "主页"
