@@ -1,7 +1,7 @@
                 <div class="container" ng-class="class">
-                
+
                     <div class="header vertical">
-     
+
                         <dir-pagination-controls max-size="8"  direction-links="true" boundary-links="true"  class="paginator">  </dir-pagination-controls>
                          <!-- end paginator -->
 
@@ -13,20 +13,20 @@
                         <div class = "select category">
                             <span ng-click="toggleCateg();">Категория</span>
                             <ul class="select-dropdown" ng-show="show">
-                                <li ng-repeat="item in categories" ng-class="{sub: item.subCategory}">
+                                <li ng-repeat="item in categories" ng-class="{sub: item.subCategories}">
                                     <a href="#/products" ng-click="selectCategory('econom')">{{item.name}}</a>
-                                    <ul class="sub-menu" ng-if="item.subCategory">
-                                        <li ng-repeat="subItem in item.subCategory" ng-class="{sub: subItem.subSubCategory}">
+                                    <ul class="sub-menu" ng-if="item.subCategories">
+                                        <li ng-repeat="subItem in item.subCategories" ng-class="{sub: subItem.subCategories}">
                                             <a href="">{{subItem.name}}</a>
-                                            <ul class="sub-menu sub-sub-menu" ng-if="subItem.subSubCategory">
-                                                <li ng-repeat="subSubItem in subItem.subSubCategory">
+                                            <ul class="sub-menu sub-sub-menu" ng-if="subItem.subCategories">
+                                                <li ng-repeat="subSubItem in subItem.subCategories">
                                                     <a href="" ng-click="selectCategory(subSubItem.category)">{{subSubItem.name}}</a>
                                                 </li>
                                             </ul>
                                         </li>
-                                    </ul>    
+                                    </ul>
                                 </li>
-                            </ul>            
+                            </ul>
                         </div> <!-- end select category -->
                     </div>
 
@@ -37,11 +37,11 @@
                             <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
                                 <div class="product__about">
-                                    <p class="desc"><strong>{{product.name}}</strong></p>
-                                    <p class="detail">{{product.details}}</p>
+                                    <p class="desc"><strong>{{product.name | removeTags }}</strong></p>
+                                    <p class="detail">{{ product.details | removeTags }}</p>
                                     <p class="price"><span class="value">{{product.price}}</span><span class="currency">₪</span></p>
                                 </div>
-                                <a href="" class="product__buy vertical"><span>Купить</span></a>
+                                <a ng-href="{{ getCurrentUrl() + '/' + product.id }}" class="product__buy vertical"><span>Купить</span></a>
                             </li>
                         </ul>
                     </section><!-- end ccontent__info__products-->

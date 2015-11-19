@@ -3,38 +3,7 @@
                     <section class="content__info__actions">
 
 
-                        <div class="header vertical">
-                            <dir-pagination-controls max-size="8"  direction-links="true" boundary-links="true"  class="paginator">  </dir-pagination-controls>
 
-                            <div class="view vertical">
-                                <button class="display-list" ng-class="{active: class=='layout'}" ng-click="layoutClass()"></button>
-                                <button class="display-square" ng-class="{active: class=='grid-layout'}" ng-click="gridClass()"></button>
-                            </div>
-
-                            <div class = "select category">
-                                <span ng-click="toggleCateg();">Категория</span>
-
-
-                                <ul class="select-dropdown" ng-show="show">
-                                    <li ng-repeat="item in categories" ng-class="{sub: item.subCategory}">
-                                        <a href="">{{item.name}}</a>
-                                        <ul class="sub-menu" ng-if="item.subCategory">
-                                            <li ng-repeat="subItem in item.subCategory" ng-class="{sub: subItem.subSubCategory}">
-                                                <a href="">{{subItem.name}}</a>
-                                                <ul class="sub-menu sub-sub-menu" ng-if="subItem.subSubCategory">
-                                                    <li ng-repeat="subSubItem in subItem.subSubCategory">
-                                                        <a href="">{{subSubItem.name}}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-
-
-                            </div> <!-- end select category -->
-
-                        </div> <!-- end header -->
 
 
 
