@@ -180,7 +180,10 @@ class B2CProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 @permission_classes((AllowAny,))
 def interface(request):
     organization = get_current_site(request).user_site.organization
-    menu = []
+    menu = [{
+        'name': _('Home'),
+        'href': 'home/'
+    }]
 
     if organization.news.exists():
         menu.append({
@@ -205,10 +208,23 @@ def interface(request):
 
         if organization.b2c_products.exists():
             sub_categories.append({
-                "id": 2,
-                "name": _("B2C"),
-                "href": "b2c/"
+                "name": _("B2B"),
+                "href": "b2b/"
             })
+
+    if organization.galleries.exists():
+        menu.append({
+            'name': _('Gallery'),
+            'href': 'gallery/'
+        })
+
+    menu += [{
+        "name": _("Structure"),
+        "href": "structure/"
+    }, {
+        "name": _("Contacts"),
+        "href": "contact/"
+    }]
 
     return Response(menu)
 
