@@ -8,6 +8,10 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.cbv import ItemDetail, ItemList
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.views.decorators.cache import never_cache
+from django.shortcuts import render
+import json, redis
 
 
 class B2CProductList(ItemList):
@@ -114,3 +118,56 @@ class B2CProductDetail(ItemDetail):
             context_data['paypal_form'] = PayPalPaymentsForm(initial=paypal_dict)
 
         return context_data
+
+
+@never_cache
+def B2CProductBasket(request):
+
+                # Enter the valid credentials for Redis server
+    r           = redis.StrictRedis(host='localhost', port=6379, db=2)
+    user_id     = request.user.pk
+    basket_name = 'nyawesomebasket_' + str(user_id)
+    domain      = get_current_site(request).domain
+
+    if request.method == 'POST':
+
+        jdata       = json.loads(request.body.decode('utf-8'))
+        product_id  = jdata['product_id']
+
+        if product_id:
+            r.sadd(basket_name, product_id)
+        else:
+            r.srem(basket_name, product_id)
+        return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
+
+    else:
+        if request.GET.get('count'):
+            return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
+        if request.GET.get('delete'):
+            r.delete(basket_name)
+            return HttpResponse(status=200)
+
+        basket_list = B2CProduct.objects.filter(pk__in=r.smembers(basket_name))
+
+        if basket_list:
+            paypal_dict = {
+                'business': basket_list[0].company.company_paypal_account,
+                'amount': 'replace_on_js',
+                'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
+                'return_url': request.build_absolute_uri(),
+                'cancel_return': request.build_absolute_uri(),
+                'item_name': _('Products from website ') + domain,
+                'no_shipping': 0,
+                'quantity': 1, # basket_list.count makes a multiplication ;-)
+                'currency_code': basket_list[0].currency
+                }
+        else:
+            paypal_dict = {}
+
+        data = {
+            'title': _('B2C Basket'),
+            'basket_list': basket_list,
+            'paypal_form': PayPalPaymentsForm(initial=paypal_dict)
+            }
+
+        return render(request, 'usersites/B2CProducts/basket.html', data)

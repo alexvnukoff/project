@@ -1,0 +1,109 @@
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div style="margin-top:240px;">
+<h2>{% trans 'List of products:' %}</h2>
+
+{% if basket_list %}
+
+<table style="width:100%">
+{% for i in basket_list %}
+
+
+  <tr style="background:#{% cycle 'ffffff' 'fafafa' %}">
+    <td style="padding:10px 0 10px 0;width:120px;">
+        <a href="{% url 'b2c_products:detail' i.slug i.pk %}">
+            {% if i.image %}
+                <img style="width:150px;" src="{{ i.image.small }}" alt="i.name">
+            {% else %}
+                <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
+            {% endif %}
+        </a>
+    </td>
+    <td style="width:420px;padding:20px 20px 0 20px;vertical-align:top;">
+        <a href="{% url 'b2c_products:detail' i.slug i.pk %}">
+            <h2 style="padding-bottom:5px;">{{ i.name }} ({{ i.name }})</h2>
+        </a>
+        <p>{{ i.short_description }}</p>
+        <p>{{ i.company.company_paypal_account }}</p>
+    </td>
+
+    <td style="text-align:center;">
+        {% if i.cost %}
+        Price<br>
+        <strong>
+            <span class="raw_cost">{{ i.cost|formatPrice }}</span>
+            <span class="currency_symbol">{{ i.currency|getSymbol }}</span>
+        </strong>
+        {% else %}
+            {% trans 'Contact to price' %}
+        {% endif %}
+    </td>
+
+  </tr>
+  <tr>
+
+
+
+{% endfor %}
+</table>
+
+<script>
+var sum=0;
+var price=document.getElementsByClassName('raw_cost');
+var paypal_email=document.getElementsByClassName('currency_symbol')[0];
+var currency=document.getElementsByClassName('currency_symbol')[0];
+$(price).each(function(){sum += parseFloat($(this).text());});
+$(document).ready(function(){
+$('.total_form_raw_cost').html(sum.toFixed(2));
+$('.currency_for_total_cost').html(currency.innerHTML);
+document.getElementById('id_amount').value = sum.toFixed(2);
+});
+</script>
+
+<hr style="border:0;border-top:1px solid #dedede;margin:10px 0 10px 0;">
+<p style="text-align:right;font-size:15px;">
+    Total: <strong class="total_form_raw_cost"></strong>
+           <strong class="currency_for_total_cost"></strong>
+</p>
+
+    <button style="margin:15px 0 10px 0;
+        background: #CD363A;
+        text-align:center;
+        color: #FFF;
+        font-size:12px;
+        padding:2px 5px 2px 5px;
+        cursor:pointer;
+        border:0;
+        position:absolute;
+        box-shadow: 0px 1px 2px #DDD;"
+        ng-click="deleteBasket({{user.pk}})">
+        {% trans 'Delete order' %}
+    </button>
+
+
+    <div style="text-align:right">
+    {% if paypal_form %}
+        <br>
+    {{ paypal_form.render }}
+
+    {% else %}
+        <a class="bigbuy contact-us" style="display:block;margin-top:5px;" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+    {% endif %}
+
+    </div>
+
+{% else %}
+<br>
+<p>{% trans 'Your basket is empty.' %}</p>
+
+
+{% endif %}
+
+</div>
+{% endblock %}

@@ -32,6 +32,8 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     import debug_toolbar
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     urlpatterns += patterns('',
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
+    urlpatterns += staticfiles_urlpatterns()

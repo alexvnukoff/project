@@ -67,11 +67,28 @@
             </li>
             {% endcomment %}
             <li>
+
                 {% if paypal_form %}
                     {{ paypal_form.render }}
                 {% else %}
                     <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
                 {% endif %}
+                <!-- MyAwesomeBasket -->
+                <button style="margin:15px 0 10px 0;
+                background: #369BCD;
+                text-align:center;
+                color: #FFF;
+                font-size:12px;
+                padding:2px 5px 2px 5px;
+                cursor:pointer;
+                border:0;
+                box-shadow: 0px 1px 2px #DDD;"
+                ng-click="addToBasket({{object.pk}})">
+                <span ng-hide="add_to_basket">{% trans 'Add to basket' %}</span>
+                <span ng-show="add_to_basket">{% trans 'Done!' %}</span>
+            </button>
+
+
            </li>
         </ul>
         <div class="prj-details-tab">
