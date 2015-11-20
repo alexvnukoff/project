@@ -1,28 +1,16 @@
-.idea/
-
-local_settings.py
-
-appl/Static/upload
-appl/Static/gallery
-
-*.pyo
-
-*/migrations/
-whoosh_index
-
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
-# C extensions
+*$py.class
 *.so
-
-# Distribution / packaging
-bin/
+.Python
+venv/
+venv3/
 build/
 develop-eggs/
 dist/
+downloads/
 eggs/
+.eggs/
 lib/
 lib64/
 parts/
@@ -31,32 +19,35 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-
-# Installer logs
+*.manifest
+*.spec
 pip-log.txt
 pip-delete-this-directory.txt
-
-# Unit test / coverage reports
+htmlcov/
 .tox/
 .coverage
+.coverage.*
 .cache
 nosetests.xml
 coverage.xml
-
-# Translations
+*,cover
 *.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
-
-# Django stuff:
-*.log
 *.pot
-
-# Sphinx documentation
+*.log
 docs/_build/
+*.iml
+.idea/
+*.ipr
+*.iws
+/out/
+.idea_modules/
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+local_settings.py
+logs/
+*.sqlite3
+*/migrations/*
+uploads/
+static/
+media/

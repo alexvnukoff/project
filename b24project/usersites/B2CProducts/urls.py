@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
-from usersites.B2CProducts.views import B2CProductList, B2CProductDetail
+from usersites.B2CProducts.views import B2CProductList, B2CProductDetail, B2CProductBasket
 
 admin.autodiscover()
 
@@ -15,5 +15,6 @@ urlpatterns = patterns('',
                            name="category_paged"),
                        url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$',
                            B2CProductDetail.as_view(), name='detail'),
-
+                       url(r'^basket\.html$',
+                           B2CProductBasket, name='basket'),
                        )

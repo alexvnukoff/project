@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+import os, logging
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -311,6 +311,6 @@ ORDERS_REDIS_HOST = 'tornado-redis.wlj5jm.0001.euw1.cache.amazonaws.com'
 ###################### Custom settings ###################################
 try:
     from local_settings import *
-except ImportError:
-    pass
+except ImportError as e:
+    logging.info(e)
 

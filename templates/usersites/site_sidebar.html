@@ -109,6 +109,7 @@
         {% endif %}
         <li><a href="{% url 'pages:structure' %}">{% trans 'Company structure' %}</a></li>
         <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
+        <li><a href="{% url 'b2c_products:basket' %}">{% trans 'My basket' %} ({% verbatim %}{{basket_count}}{% endverbatim %})</a></li>
     </ul>
     <div class="banners left">
         {% site_banner "SITES LEFT 1" %}

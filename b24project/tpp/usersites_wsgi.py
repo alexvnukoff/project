@@ -11,7 +11,6 @@ import os
 
 import newrelic.agent
 from django.core.wsgi import get_wsgi_application
-
 newrelic.agent.initialize('/var/www/b24app/newrelic.ini')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tpp.usersites_settings")

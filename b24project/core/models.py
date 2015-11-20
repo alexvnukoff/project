@@ -35,7 +35,7 @@ def createHash(string):
 #             Class UserManager defines manager for user
 # ----------------------------------------------------------------------------------------------------------
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, password=None, **extra_fields):
         request = get_request()
 
         if request:
@@ -66,11 +66,11 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, password):
-        user = self.create_user(email,
-                                password=password,
-                                username=username)
+    def create_superuser(self, email, password, **extra_fields):
+        user = self.create_user(email, password, **extra_fields)
+        user.is_active = True
         user.is_admin = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
