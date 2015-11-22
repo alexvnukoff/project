@@ -122,6 +122,7 @@ class B2CProductDetail(ItemDetail):
         return context_data
 
 
+@csrf_exempt
 @never_cache
 def B2CProductBasket(request):
 
