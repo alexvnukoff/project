@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
@@ -290,7 +291,7 @@ def settings_api(request):
     if user_site.organization.location:
         lat, long = user_site.organization.location.split(',')
 
-        result['contacts']['map'] = {
+        result['map'] = {
             "lat": lat,
             "longt": long
         }

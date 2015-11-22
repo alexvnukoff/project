@@ -1,4 +1,6 @@
 from collections import OrderedDict
+
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
@@ -124,7 +126,7 @@ class B2CProductDetail(ItemDetail):
 def B2CProductBasket(request):
 
                 # Enter the valid credentials for Redis server
-    r           = redis.StrictRedis(host='localhost', port=6379, db=2)
+    r           = redis.StrictRedis(host=settings.ORDERS_REDIS_HOST, port=6379, db=2)
     user_id     = request.user.pk
     basket_name = 'nyawesomebasket_' + str(user_id)
     domain      = get_current_site(request).domain
