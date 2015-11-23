@@ -26,7 +26,10 @@ class PaginationClass(LimitOffsetPagination):
     default_limit = 50
 
     def get_paginated_response(self, data):
-        return Response(data)
+        return Response({
+            'count': self.count,
+            'items': data
+        })
 
 
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
