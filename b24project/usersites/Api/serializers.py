@@ -170,7 +170,7 @@ class ListCouponSerializer(serializers.BaseSerializer):
         return {
             'id': obj.pk,
             'name': clean_html(obj.name),
-            'endDate': obj.coupon_end_date.strftime("%d.%m.%y"),
+            'endDate': obj.end_coupon_date.strftime("%d.%m.%y"),
             'currency': currency_symbol(obj.currency),
             'oldPrice': obj.cost,
             'cover': obj.image.big if obj.image else '',
@@ -184,7 +184,7 @@ class DetaiCouponSerializer(serializers.BaseSerializer):
         return {
             'id': obj.pk,
             'name': clean_html(obj.name),
-            'endDate': obj.coupon_end_date.strftime("%d.%m.%y"),
+            'endDate': obj.end_coupon_date.strftime("%d.%m.%y"),
             'currency': currency_symbol(obj.currency),
             'oldPrice': obj.cost,
             'cover': obj.image.big if obj.image else '',

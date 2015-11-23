@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes, api_view
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -20,8 +21,17 @@ from usersites.Api.serializers import GallerySerializer, \
     DetaiCouponSerializer
 
 
+class PaginationClass(LimitOffsetPagination):
+    max_limit = 50
+    default_limit = 50
+
+    def get_paginated_response(self, data):
+        return Response(data)
+
+
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = News.get_active_objects()
+    pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -39,6 +49,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
 
 class BusinessProposalViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BusinessProposal.get_active_objects()
+    pagination_class = PaginationClass
 
     def filter_queryset(self, queryset):
         organization = get_current_site(self.request).user_site.organization
@@ -55,6 +66,7 @@ class BusinessProposalViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GalleryViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = PaginationClass
     serializer_class = GallerySerializer
     # Preventing routing exception
     queryset = GalleryImage.objects.all()
@@ -74,6 +86,7 @@ class CompanyStructureViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = PaginationClass
     queryset = B2BProduct.get_active_objects()
 
     def filter_queryset(self, queryset):
@@ -91,6 +104,7 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = PaginationClass
     queryset = B2CProduct.get_active_objects()
 
     def filter_queryset(self, queryset):
@@ -231,6 +245,7 @@ def interface(request):
 
 
 class CouponViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = PaginationClass
     queryset = B2CProduct.get_active_objects()
 
     def filter_queryset(self, queryset):
