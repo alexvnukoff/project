@@ -40,7 +40,7 @@ class B2BProductList(ItemList):
                 categories_to_load.append(category.parent_id)
 
         if categories_to_load:
-            queryset = B2BProduct.objects.filter(pk__in=categories_to_load).order_by('level')
+            queryset = B2BProductCategory.objects.filter(pk__in=categories_to_load).order_by('level')
             loaded_categories = self._load_category_hierarchy(queryset, loaded_categories)
 
         return loaded_categories
@@ -73,7 +73,7 @@ class B2BProductList(ItemList):
             else:
                 categories = self.category.get_descendants(include_self=True)
 
-            queryset = queryset.filter(categories__in=categories)
+            queryset = queryset.filter(categories__in=categories).distinct()
 
         return queryset
 

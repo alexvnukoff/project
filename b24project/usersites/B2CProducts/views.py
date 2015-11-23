@@ -82,7 +82,7 @@ class B2CProductList(ItemList):
             else:
                 categories = self.category.get_descendants(include_self=True)
 
-            queryset = queryset.filter(categories__in=categories)
+            queryset = queryset.filter(categories__in=categories).distinct()
 
         return queryset
 

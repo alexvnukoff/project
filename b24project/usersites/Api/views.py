@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes, api_view
+from rest_framework.filters import DjangoFilterBackend, BaseFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -31,6 +32,28 @@ class PaginationClass(LimitOffsetPagination):
             'items': data
         })
 
+class CategoryFilterBackend(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.GET.get('categories', None):
+            category_model = self._get_category_model(queryset.model)
+            category_ids = request.GET.get('categories', None).split(',')
+            filter_category_ids = []
+
+            for category in category_model.objects.filter(pk__in=category_ids):
+                filter_category_ids += self._get_category_tree(category)
+
+            return queryset.filter(categories__in=filter_category_ids).distinct()
+
+        return queryset
+
+    def _get_category_tree(self, category):
+        if category.is_leaf_node():
+            return [category.pk]
+        else:
+            return category.get_descendants(include_self=True).values_list('pk', flat=True)
+
+    def _get_category_model(self, model):
+        return model._meta.get_field('categories').related_model
 
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = News.get_active_objects()
@@ -91,8 +114,11 @@ class CompanyStructureViewSet(viewsets.ReadOnlyModelViewSet):
 class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
     queryset = B2BProduct.get_active_objects()
+    filter_backends = (CategoryFilterBackend,)
 
     def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+
         organization = get_current_site(self.request).user_site.organization
         return queryset.filter(company=organization)
 
@@ -109,8 +135,10 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
 class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
     queryset = B2CProduct.get_active_objects()
+    filter_backends = (CategoryFilterBackend,)
 
     def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
         return queryset.filter(company=organization)
 
@@ -250,8 +278,10 @@ def interface(request):
 class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
     queryset = B2CProduct.get_active_objects()
+    filter_backends = (CategoryFilterBackend,)
 
     def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
         return queryset.filter(company=organization, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0) \
             .order_by("-created_at")
