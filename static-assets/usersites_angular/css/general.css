@@ -287,7 +287,8 @@ ul.navigation                           {
                                         }
 .offer__slider .slick-slider            {   height: 100%;}
 .offer__slider .slide  img              {
-                                            min-width: 100%;
+                                            /*min-width: 100%;*/
+                                            width: 670px;
                                             height: 100%;
                                             position: absolute;
                                             top: 50%;
@@ -361,7 +362,7 @@ ul.navigation                           {
                                         }
 .offer__icons__icon:first-child         {    margin-left: 0 }
 .offer__icons__icon:last-child          {    margin-right: 0 }
-.offer__icons__icon img                 {    max-width: 100% }
+.offer__icons__icon img                 {    width: 200px; /*max-width: 100%*/ }
 
 
         @media (max-width: 1250px)                 {
@@ -1899,6 +1900,7 @@ footer:after                            {
 
 .one-product img {
     float: left;
+    padding: 10px;
 }
 
 .one-product .price, .one-product .date {
@@ -1916,6 +1918,10 @@ footer:after                            {
 
 .one-product .description {
     text-align: left;
+}
+
+.selectedCategory {
+    font-weight: bold;
 }
 
         @media (max-width: 1250px)                  {

@@ -12,7 +12,7 @@
 
                         <ul class="gallery">
                             <figure  dir-paginate="img in galleryImages | itemsPerPage: 8">
-                                <a  data-fancybox-group="gallery" fancybox class="fancybox">
+                                <a href="{{ img.url }}" data-fancybox-group="gallery" fancybox class="fancybox">
                                     <img ng-src="{{ img.url }}">
                                 </a>
                                 <div class="descr"><p>{{ img.description }}</p></div>

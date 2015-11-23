@@ -185,9 +185,28 @@ myApp.directive('preventDefaultBehavior', function(locationProvider) {
     }
 });
 
+myApp.filter('splitLongText', function() {
+    return function(input, length) {
+        var count = parseInt(length);
+
+        if (input.length < count) {
+            return input;
+        } else {
+            return input.substring(0, count) + '...';
+        }
+    }
+});
+
 myApp.filter('removeTags', function() {
     return function(input) {
-        return angular.element(input).text();
+        var result = input;
+
+        try {
+            result = angular.element(input).text();
+        }
+        catch (err) {};
+
+        return result;
     }
 });
 
@@ -238,6 +257,8 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
         $scope.settings.contacts.phone = angular.element($scope.settings.contacts.tel).text();
         $scope.settings.contacts.tel = $scope.settings.contacts.phone.replace('-', '');
     });
+
+
 
     // Choose default language by current url
     function chooseDefaultLanguage(lang, needNavigate) {
@@ -308,25 +329,29 @@ myApp.controller("homeCtrl", function($scope, $http, Page, startPoint){
 
     // Implemented
     $http.get(startPoint + 'coupons/').success(function(response) {
-        $scope.coupons = response;
+        $scope.coupons = response.items;
     });
 
     // Implemented
     $http.get(startPoint + 'news/').success(function(response) {
-        $scope.news = response;
+        $scope.news = response.items;
     });
 
     // Implemented
 	$http.get(startPoint + 'products/b2b/').success(function(response) {
-		$scope.products = response;
+		$scope.products = response.items;
 	});
+
+    $http.get(startPoint + 'products/b2c/').success(function(response) {
+        $scope.b2bProducts = response.items;
+    });
 
 });
 
 myApp.controller("galleryCtrl", function($scope, $http, Page, startPoint) {
     // Implemented
     $http.get(startPoint + 'gallery/').success(function(response) {
-        $scope.galleryImages = response;
+        $scope.galleryImages = response.items;
     });
 
 	Page.setTitle('Галлерея');
@@ -340,7 +365,7 @@ myApp.controller("offersCtrl", function($scope, $http, Page, startPoint){
 
     // Implemented
     $http.get(startPoint + 'offers/').success(function(response) {
-        $scope.offers = response;
+        $scope.offers = response.items;
     });
 });
 
@@ -351,7 +376,7 @@ myApp.controller("newsCtrl", function($scope, $http, Page, startPoint){
 
     // Implemented
     $http.get(startPoint + 'news/').success(function(response) {
-        $scope.news = response;
+        $scope.news = response.items;
     });
 });
 
@@ -359,11 +384,84 @@ myApp.controller("newsCtrl", function($scope, $http, Page, startPoint){
 
 myApp.controller("productsCtrl", function($scope, $http, Page, startPoint, $routeParams, $window){
 	Page.setTitle('Наши продукты');
-    var url = startPoint + 'products/' + $routeParams.sub;
+    var templateUrl = startPoint + 'products/' + $routeParams.sub;
+    var url = templateUrl;
+    $scope.products = [];
 
-    $http.get(url).success(function(response) {
-        $scope.products = response;
-    });
+    // $http.get(url).success(function(response) {
+    //     $scope.products = response.items;
+    // });
+
+    // Default data
+    $scope.totalProducts = 0;
+    $scope.productsPerPage = 4; // this should match however many results your API puts on one page
+    getResultsPage(0);
+    var lastPage = 0;
+
+    $scope.pagination = {
+        current: 1
+    };
+
+    $scope.toggleCategory = function(id) {
+        // Category already choosen
+        if (url.indexOf('?categories=') > -1) {
+            var cats = url.substring(url.lastIndexOf('?categories=') + '?categories='.length);
+            // Already exists
+            if (cats.indexOf('' + id) > -1) {
+                var catsArr = cats.split(',');
+                catsArr.splice(catsArr.indexOf(id), 1);
+                var catsResult = catsArr.join(',');
+
+                if (catsResult.length > 0) {
+                    url = templateUrl + '/?categories=' + catsResult;
+                } else {
+                    url = templateUrl;
+                }
+
+            } else {
+                url += ',' + id;
+            }
+        } else {
+            url = templateUrl + '/?categories=' + id;
+        }
+
+
+        //     if (cats.indexOf(id) > -1) {
+        //         var catsArr = cats.split(',');
+        //
+        //         if (catsArr.indexOf('' + id) > -1) {
+        //             catsArr.splice(catsArr.indexOf(id), 1);
+        //         } else {
+        //             catsArr.push('' + id);
+        //         }
+        //
+        //         var catsResult = catsArr.join(',');
+        //     } else {
+        //         url += ',' + id;
+        //     }
+        // } else {
+        //     url = templateUrl + '/?categories=' + id;
+        // }
+
+        getResultsPage(lastPage);
+    }
+
+    // Load data from one page
+    $scope.pageChanged = function(newPage) {
+        getResultsPage(newPage);
+    };
+
+    function getResultsPage(pageNumber) {
+        lastPage = pageNumber;
+        // this is just an example, in reality this stuff should be in a service
+        var queryUrl = url + (url.lastIndexOf('/') < url.lastIndexOf('?') ? '&' : '/?');
+        $http.get(queryUrl + 'offset=' + ((pageNumber - 1) * $scope.productsPerPage) + '&limit=' + $scope.productsPerPage)
+            .then(function(result) {
+                $scope.products = result.data.items;
+                $scope.totalProducts = result.data.count
+            });
+    }
+
 
     function getCategories(categoriesData) {
         var categories = {};

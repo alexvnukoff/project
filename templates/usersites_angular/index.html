@@ -63,7 +63,7 @@
             <div class="wrapper">
 
                 <div class="logo">
-                    <img ng-src="{{settings.logo}}" alt="">
+                    <a ng-href="#/"><img ng-src="{{settings.logo}}" alt=""></a>
                 </div>
 
                 <div class="offer__slider">
@@ -115,11 +115,15 @@
                     </div>
 
                     <ul class="sidebar-menu" ng-accordion>
-
-                        <li ng-repeat="item in siteBar" ng-accordion-group>
-                            <a ng-attr-href="{{!item.subCategories ? '#/' + item.href : 'false'}}" ng-class="{sub: item.subCategories}" toggle-class="active" ng-accordion-heading> {{item.name}}</a>
+                        <li ng-repeat="item in siteBar" ng-accordion-group is-open="item.isOpen">
+                            <a ng-attr-href="{{!item.subCategories ? '#/' + item.href : '#'}}"
+                               ng-class="{sub: item.subCategories}"
+                               toggle-class="active"
+                               ng-accordion-heading> {{item.name}}</a>
                             <ul class="sidebar-menu__submenu" ng-class="{display: !item.subCategories}" ng-accordion-body>
-                                <li ng-repeat="subItem in item.subCategories" ><a ng-attr-href="{{ '#/' + item.href + subItem.href }}">{{subItem.name}}</a></li>
+                                <li ng-repeat="subItem in item.subCategories" >
+                                    <a ng-attr-href="{{ '#/' + item.href + subItem.href }}">{{subItem.name}}</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -133,7 +137,7 @@
                 <div ng-view class="container" ng-class="class" autoscroll="true"></div>
 
 
-                <form action="#" class="clearfix">
+                <form action="#" class="clearfix" ng-show="false">
                     <h2 translate>Ask question</h2>
                     <input type="text" name="name"  placeholder="{{'Your name'| translate}}" required>
                     <input type="email" name="email"  placeholder="{{'Your email'| translate}}" required>
@@ -152,7 +156,7 @@
         </div><!-- end wrapper -->
     </section><!-- end content-->
 
-    <div class="map" id="map" ng-class="{disable: !settings.map}">
+    <div class="map" id="map" ng-if="settings && settings.map" ng-class="{disable: !settings.map}">
 
     </div>
 
