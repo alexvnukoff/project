@@ -246,13 +246,13 @@ def interface(request):
             "subCategories": sub_categories
         })
 
-        if organization.b2b_products.exists():
+        if organization.b2c_products.exists():
             sub_categories.append({
                 "name": _("B2C"),
                 "href": "b2c/"
             })
 
-        if organization.b2c_products.exists():
+        if organization.b2b_products.exists():
             sub_categories.append({
                 "name": _("B2B"),
                 "href": "b2b/"
@@ -359,8 +359,16 @@ def settings_api(request):
             continue
 
         if block == 'SITES FOOTER':
-            result['footerBanner'] = banner.image.url
+            result['footerBanner'] = {
+                'url': banner.image.url,
+                'title': banner.title,
+                'link': banner.link
+            }
         else:
-            result['offerIcons'].append({'url': banner.image.url})
+            result['offerIcons'].append({
+                'url': banner.image.url,
+                'title': banner.title,
+                'link': banner.link
+            })
 
     return Response(result)
