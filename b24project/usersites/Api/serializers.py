@@ -5,6 +5,22 @@ from rest_framework import serializers
 from appl.func import currency_symbol
 
 
+class ListAdditionalPageSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+
+        return {
+            'id': obj.pk,
+            'title': clean_html(obj.title),
+        }
+
+class DetailAdditionalPageSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj.pk,
+            'title': clean_html(obj.title),
+            'fullText': clean_html(obj.content) if obj.content else '',
+        }
+
 class ListNewsSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
 

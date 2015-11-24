@@ -1,5 +1,4 @@
 import os
-
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.timezone import now
@@ -11,15 +10,14 @@ from rest_framework.filters import DjangoFilterBackend, BaseFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
-    Banner
+    Banner, AdditionalPage, Company
 from centerpokupok.models import B2CProduct, B2CProductCategory
 from usersites.Api.serializers import GallerySerializer, \
     DepartmentSerializer, ListNewsSerializer, DetailNewsSerializer, ListBusinessProposalSerializer, \
     DetailBusinessProposalSerializer, ListB2BProductSerializer, DetaiB2BlProductSerializer, ListB2CProductSerializer, \
     DetaiB2ClProductSerializer, B2BProductCategorySerializer, B2CProductCategorySerializer, ListCouponSerializer, \
-    DetaiCouponSerializer
+    DetaiCouponSerializer, ListAdditionalPageSerializer, DetailAdditionalPageSerializer
 
 
 class PaginationClass(LimitOffsetPagination):
@@ -31,6 +29,7 @@ class PaginationClass(LimitOffsetPagination):
             'count': self.count,
             'items': data
         })
+
 
 class CategoryFilterBackend(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
@@ -55,6 +54,7 @@ class CategoryFilterBackend(BaseFilterBackend):
     def _get_category_model(self, model):
         return model._meta.get_field('categories').related_model
 
+
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = News.get_active_objects()
     pagination_class = PaginationClass
@@ -69,6 +69,22 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
                 return ListNewsSerializer
             else:
                 return DetailNewsSerializer
+
+        return None
+
+
+class AdditionalPageViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AdditionalPage.objects.all()
+
+    def get_queryset(self):
+        return get_current_site(self.request).user_site.organization.additional_pages
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action'):
+            if self.action == 'list':
+                return ListAdditionalPageSerializer
+            else:
+                return DetailAdditionalPageSerializer
 
         return None
 
@@ -116,6 +132,15 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2BProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        organization = get_current_site(self.request).user_site.organization
+
+        if isinstance(organization, Company):
+            return queryset
+        else:
+            return queryset.none()
+
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
 
@@ -136,6 +161,15 @@ class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = PaginationClass
     queryset = B2CProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        organization = get_current_site(self.request).user_site.organization
+
+        if isinstance(organization, Company):
+            return queryset
+        else:
+            return queryset.none()
 
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
@@ -237,7 +271,7 @@ def interface(request):
             'href': 'news/'
         })
 
-    if organization.b2b_products.exists() or organization.b2c_products.exists():
+    if isinstance(organization, Company) and organization.b2b_products.exists() or organization.b2c_products.exists():
         sub_categories = []
 
         menu.append({
@@ -280,6 +314,16 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2CProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        organization = get_current_site(self.request).user_site.organization
+
+        if isinstance(organization, Company):
+            return queryset
+        else:
+            return queryset.none()
+
+
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
@@ -316,6 +360,7 @@ def settings_api(request):
         "footerBanner": None,
     }
 
+    # Deprecated
     for page in user_site.organization.additional_pages.all():
         result['menu'].append({
             'name': clean_html(page.title),
@@ -344,8 +389,9 @@ def settings_api(request):
             "longt": long
         }
 
-    #TOOD cache it
-    banner_blocks = ['SITES RIGHT 1', 'SITES RIGHT 2', 'SITES RIGHT 3', 'SITES RIGHT 4', 'SITES RIGHT 5', 'SITES FOOTER']
+    # TOOD cache it
+    banner_blocks = ['SITES RIGHT 1', 'SITES RIGHT 2', 'SITES RIGHT 3', 'SITES RIGHT 4', 'SITES RIGHT 5',
+                     'SITES FOOTER']
 
     for block in banner_blocks:
         banner = Banner.objects.filter(
