@@ -45,7 +45,7 @@ $('.sidebar-menu>li').each(function(){
             } else {
               $(this).text('vertical');
             }
-          };   
+          };
         });
     });
 
@@ -86,41 +86,41 @@ $('.sidebar-menu>li').each(function(){
     var date = $('.timer-mini').attr('date');
     $('.timer-mini').countdown({until: new Date(date), compact: true});
   })
-  
+
 
   //--------------------------------Google Карта в футере ---------------------------------
-  function googleMap_initialize() {
-
-      $.getJSON( "settings.json").done(function(data){
-        var mapCenterCoord = new google.maps.LatLng(data.map.lat, data.map.longt);
-        var mapMarkerCoord = new google.maps.LatLng(data.map.lat, data.map.longt);
-
-        var mapOptions = {
-          center: mapCenterCoord,
-          zoom: 13,
-          //draggable: false,
-          disableDefaultUI: true,
-          scrollwheel: false,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
-        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-        var markerImage = new google.maps.MarkerImage('static/images/svg/marker.svg');
-        var marker = new google.maps.Marker({
-          icon: markerImage,
-          position: mapMarkerCoord, 
-          map: map,
-          title:"Omega Tours"
-        });
-
-        $(window).resize(function (){
-          map.setCenter(mapCenterCoord);
-        });  
-      }) 
-
-  };
-  googleMap_initialize();
+  // function googleMap_initialize() {
+  //
+  //     $.getJSON( "settings.json").done(function(data){
+  //       var mapCenterCoord = new google.maps.LatLng(data.map.lat, data.map.longt);
+  //       var mapMarkerCoord = new google.maps.LatLng(data.map.lat, data.map.longt);
+  //
+  //       var mapOptions = {
+  //         center: mapCenterCoord,
+  //         zoom: 13,
+  //         //draggable: false,
+  //         disableDefaultUI: true,
+  //         scrollwheel: false,
+  //         mapTypeId: google.maps.MapTypeId.ROADMAP
+  //       };
+  //
+  //       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  //
+  //       var markerImage = new google.maps.MarkerImage('static/images/svg/marker.svg');
+  //       var marker = new google.maps.Marker({
+  //         icon: markerImage,
+  //         position: mapMarkerCoord,
+  //         map: map,
+  //         title:"Omega Tours"
+  //       });
+  //
+  //       $(window).resize(function (){
+  //         map.setCenter(mapCenterCoord);
+  //       });
+  //     })
+  //
+  // };
+  // googleMap_initialize();
 
 
   $('.-lang .select-dropdown a').on('click', function(event) {

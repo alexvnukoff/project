@@ -24,6 +24,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 
 
+
         <link rel="stylesheet" href="static/libs/slick/slick.css">
         <link rel="stylesheet" href="static/libs/slick/slick-theme.css">
         <link rel="stylesheet" href="static/libs/fancybox/jquery.fancybox.css">
@@ -67,7 +68,12 @@
                 </div>
 
                 <div class="offer__slider">
-                    <slick init-onload="true">
+                    <!-- <slick init-onload="true">
+                        <div class="slide" ng-repeat="slide in settings.slides">
+                            <img ng-src="{{slide.url}}" alt="">
+                        </div>
+                    </slick> -->
+                    <slick>
                         <div class="slide" ng-repeat="slide in settings.slides">
                             <img ng-src="{{slide.url}}" alt="">
                         </div>
@@ -134,7 +140,7 @@
 
             <section class="content__info" ng-controller="contentCtrl">
 
-                <div ng-view class="container" ng-class="class" autoscroll="true"></div>
+                <div ng-view class="container" ng-class="class" autoscroll="false"></div>
 
 
                 <form action="#" class="clearfix" ng-show="false">
@@ -156,7 +162,7 @@
         </div><!-- end wrapper -->
     </section><!-- end content-->
 
-    <div class="map" id="map" ng-if="settings && settings.map" ng-class="{disable: !settings.map}">
+    <div class="map" id="map" ng-show="showMap" ng-class="{disable: !settings.map}">
 
     </div>
 
@@ -167,7 +173,7 @@
                 <p><strong>{{settings.contacts.orgName | removeTags }}</span></p>
             </div>
             <div class="banner">
-                <img ng-src="{{settings.footerBanner}}" alt="">
+                <img ng-src="{{settings.footerBanner.url}}" alt="">
             </div>
         </div>
     </footer>
@@ -176,7 +182,8 @@
 
 
         <script src="static/libs/vendor/modernizr.js"></script>
-        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <!-- <script src="http://maps.googleapis.com/maps/api/js"></script> -->
+        <script src="http://maps.google.com/maps/api/js?libraries=placeses,visualization,drawing,geometry,places"></script>
         <script src="static/libs/ui-accordion.js"></script>
 
         <script src="static/libs/jquery.plugin.min.js"></script>
@@ -184,8 +191,10 @@
         <script src="static/libs/jquery.countdown.min.js"></script>
         <script src="static/libs/dirPagination.js"></script>
         <script src="static/libs/slick/slick.min.js"></script>
+        <script src="static/libs/slick.js"></script>
         <script src="static/libs/angular-gettext.min.js"></script>
         <script src="static/js/translations.js"></script>
+        <script src="static/libs/ng-map.min.js"></script>
 
         <script src="static/js/app.js"></script>
         <script src="static/js/main.js"></script>

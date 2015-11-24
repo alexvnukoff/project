@@ -362,7 +362,7 @@ ul.navigation                           {
                                         }
 .offer__icons__icon:first-child         {    margin-left: 0 }
 .offer__icons__icon:last-child          {    margin-right: 0 }
-.offer__icons__icon img                 {    width: 200px; /*max-width: 100%*/ }
+.offer__icons__icon img                 {    width: 200px; max-height: 200px;/*max-width: 100%*/ }
 
 
         @media (max-width: 1250px)                 {
@@ -1905,7 +1905,7 @@ footer:after                            {
 
 .one-product .price, .one-product .date {
     font-weight: bold;
-    color: lightblue;
+    color: black;
 }
 
 .one-product .date {

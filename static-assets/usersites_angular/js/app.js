@@ -1,4 +1,4 @@
-var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion', 'gettext']);
+var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion', 'gettext', 'slick']);
 
 myApp.run(function (gettextCatalog) {
     gettextCatalog.setCurrentLanguage();
@@ -141,7 +141,7 @@ myApp.directive('siteHeader', function () {
     };
 });
 
-myApp.directive('slick', function($timeout) {
+myApp.directive('customSlick', function($timeout) {
     return function(scope, el, attrs) {
         $timeout((function() {
             el.slick({
@@ -151,8 +151,8 @@ myApp.directive('slick', function($timeout) {
                 autoplay: true,
                 autoplaySpeed: 6500,
                 speed: 1500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
+                slidesToShow: 3,
+                slidesToScroll: 3,
                 fade: true,
                 cssEase: 'linear'
             })
@@ -245,6 +245,42 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
         $scope.show = false;
     }
 
+    $scope.showMap = true;
+
+    function initializeMap() {
+        if ($scope.settings === undefined) {
+            $scope.showMap = false;
+            return;
+        }
+
+        var mapCenterCoord = new google.maps.LatLng($scope.settings.map.lat, $scope.settings.map.longt);
+        var mapMarkerCoord = new google.maps.LatLng($scope.settings.map.lat, $scope.settings.map.longt);
+
+        var mapOptions = {
+            center: mapCenterCoord,
+            zoom: 13,
+            //draggable: false,
+            disableDefaultUI: true,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        var markerImage = new google.maps.MarkerImage('static/images/svg/marker.svg');
+        var marker = new google.maps.Marker({
+            icon: markerImage,
+            position: mapMarkerCoord,
+            map: map,
+            title:"Omega Tours"
+        });
+
+        $(window).resize(function (){
+            map.setCenter(mapCenterCoord);
+        });
+    }
+
+
     // Implemented
     $http.get(startPoint).success(function(response) {
         $scope.siteBar = response;
@@ -256,6 +292,8 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
 
         $scope.settings.contacts.phone = angular.element($scope.settings.contacts.tel).text();
         $scope.settings.contacts.tel = $scope.settings.contacts.phone.replace('-', '');
+
+        initializeMap();
     });
 
 
@@ -343,7 +381,7 @@ myApp.controller("homeCtrl", function($scope, $http, Page, startPoint){
 	});
 
     $http.get(startPoint + 'products/b2c/').success(function(response) {
-        $scope.b2bProducts = response.items;
+        $scope.b2cProducts = response.items;
     });
 
 });

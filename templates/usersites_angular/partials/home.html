@@ -7,7 +7,7 @@
 
 
 
-                        <div class="main-action" ng-show="coupons && coupons.length">
+                        <div class="main-action" ng-show="false">
 
                             <div class="main-action__cover" style="background-image: url('static/images/sale-01.png');">
                                 <div class="sale"><span>-30%</span></div>
@@ -39,11 +39,12 @@
                                 <div class="action__cover" style="background-image: url('{{ coupon.cover }}');">    <div class="sale"><span>-{{ coupon.percent }}%</span></div>
                                 </div>
                                 <div class="action__info">
-                                    <h3><a ng-href="{{ coupon.more }}">{{ coupon.name }}</a></h3>
+                                    <h3><a ng-href="{{ coupon.more }}">{{ coupon.name | removeTags }}</a></h3>
                                     <p><span class="old-price">Дол. {{ coupon.oldPrice }}</span><span class="new-price">Дол. {{ coupon.oldPrice - coupon.oldPrice * coupon.percent / 100 }}</span></p>
-                                    <p class="timer-heading">Время до окончания:</p>
+                                    <p class="timer-heading">Дата окончания:</p>
+                                    <div class="timer-mini">{{ coupon.endDate }}</div>
 
-                                    <div class="timer-mini" compact date="{{ coupon.endDate }}"></div>
+                                    <!-- <div class="timer-mini" compact date="{{ coupon.endDate }}"></div> -->
 
                                 </div>
                             </div>
@@ -67,23 +68,23 @@
                         </article>
                     </section>
 
-                    <section class="content__info__products" ng-if="b2bProducts && b2bProducts.length">
-                        <h2>B2B Products</h2>
+                    <section class="content__info__products" ng-if="b2cProducts && b2cProducts.length">
+                        <h2>B2C Products</h2>
                         <ul class="products-list">
-                            <li class="product" dir-paginate="product in b2bProducts | itemsPerPage: 8" >
+                            <li class="product" dir-paginate="product in b2cProducts | itemsPerPage: 8" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
                                 <div class="product__about">
                                     <p class="desc"><strong formatted-text="{{ product.name }}"></strong></p>
                                     <p class="detail">{{product.details}}</p>
                                     <p class="price"><span class="value">{{product.price}}</span><span class="currency">{{product.curency}}</span></p>
                                 </div>
-                                <a href="#products/b2b/{{ product.id }}" class="product__buy vertical"><span>Купить</span></a>
+                                <a href="#products/b2c/{{ product.id }}" class="product__buy vertical"><span>Купить</span></a>
                             </li>
                         </ul>
                     </section><!-- end ccontent__info__products-->
 
                     <section class="content__info__products" ng-if="products && products.length">
-                        <h2>B2C Products</h2>
+                        <h2>B2B Products</h2>
                         <ul class="products-list">
                             <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
