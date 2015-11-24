@@ -1,4 +1,5 @@
 import os
+
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.timezone import now
@@ -6,10 +7,11 @@ from django.utils.translation import ugettext as _
 from lxml.html.clean import clean_html
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.filters import DjangoFilterBackend, BaseFilterBackend
+from rest_framework.filters import BaseFilterBackend
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
 from b24online.models import News, BusinessProposal, GalleryImage, Department, B2BProduct, B2BProductCategory, \
     Banner, AdditionalPage, Company
 from centerpokupok.models import B2CProduct, B2CProductCategory
@@ -132,20 +134,14 @@ class B2BProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2BProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
 
         if isinstance(organization, Company):
-            return queryset
+            return queryset.filter(company=organization)
         else:
             return queryset.none()
-
-    def filter_queryset(self, queryset):
-        queryset = super().filter_queryset(queryset)
-
-        organization = get_current_site(self.request).user_site.organization
-        return queryset.filter(company=organization)
 
     def get_serializer_class(self):
         if hasattr(self, 'action'):
@@ -162,19 +158,14 @@ class B2CProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2CProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        organization = get_current_site(self.request).user_site.organization
-
-        if isinstance(organization, Company):
-            return queryset
-        else:
-            return queryset.none()
-
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
-        return queryset.filter(company=organization)
+
+        if isinstance(organization, Company):
+            return queryset.filter(company=organization)
+        else:
+            return queryset.none()
 
     def get_serializer_class(self):
         if hasattr(self, 'action'):
@@ -271,7 +262,7 @@ def interface(request):
             'href': 'news/'
         })
 
-    if isinstance(organization, Company) and organization.b2b_products.exists() or organization.b2c_products.exists():
+    if isinstance(organization, Company) and (organization.b2b_products.exists() or organization.b2c_products.exists()):
         sub_categories = []
 
         menu.append({
@@ -314,21 +305,15 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = B2CProduct.get_active_objects()
     filter_backends = (CategoryFilterBackend,)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        organization = get_current_site(self.request).user_site.organization
-
-        if isinstance(organization, Company):
-            return queryset
-        else:
-            return queryset.none()
-
-
     def filter_queryset(self, queryset):
         queryset = super().filter_queryset(queryset)
         organization = get_current_site(self.request).user_site.organization
-        return queryset.filter(company=organization, coupon_dates__contains=now().date(), coupon_discount_percent__gt=0) \
-            .order_by("-created_at")
+
+        if isinstance(organization, Company):
+            return queryset.filter(company=organization, coupon_dates__contains=now().date(),
+                                   coupon_discount_percent__gt=0).order_by("-created_at")
+        else:
+            return queryset.none()
 
     def get_serializer_class(self):
         if hasattr(self, 'action'):
