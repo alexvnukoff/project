@@ -126,7 +126,7 @@ class B2CProductDetail(ItemDetail):
 class B2CProductBasket(View):
     def get(self, request):
         if not request.session.get('basket_hash'):
-            request.session['basket_hash'] = uuid.uuid4()
+            request.session['basket_hash'] = str(uuid.uuid4())
 
         product_id = request.GET.get('pk')
         quantity = request.GET.get('q')
