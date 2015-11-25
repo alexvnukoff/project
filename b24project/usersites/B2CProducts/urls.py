@@ -16,5 +16,5 @@ urlpatterns = patterns('',
                        url(r'^(?P<slug>[a-zA-z0-9-]+)-(?P<pk>[0-9]+)\.html$',
                            B2CProductDetail.as_view(), name='detail'),
                        url(r'^basket\.html$',
-                           B2CProductBasket.as_view()a, name='basket'),
+                           B2CProductBasket.as_view(), name='basket'),
                        )
