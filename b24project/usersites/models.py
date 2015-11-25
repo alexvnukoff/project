@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 import os
-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -7,9 +7,9 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.utils import timezone
 from b24online.custom import CustomImageField
-
 from b24online.models import Organization, image_storage, Gallery, ActiveModelMixing, GalleryImage
 from b24online.utils import generate_upload_path
+from django.utils.translation import ugettext as _
 
 
 class ExternalSiteTemplate(models.Model):
@@ -99,3 +99,4 @@ class UserSite(ActiveModelMixing, models.Model):
 
     def __str__(self):
         return self.domain_part
+
