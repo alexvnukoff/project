@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField, DateRangeField
+from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
@@ -10,7 +12,6 @@ from django.utils import timezone
 from django.utils.timezone import now
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-
 from b24online.custom import CustomImageField
 from b24online.models import Company, CURRENCY, AdditionalPage, Gallery, image_storage, IndexedModelMixin, \
     ActiveModelMixing, GalleryImage
@@ -146,3 +147,27 @@ class B2CProductComment(MPTTModel):
 @receiver(post_save, sender=B2CProductCategory)
 def initial_department(sender, instance, created, **kwargs):
     instance.reindex()
+
+
+
+class B2CBasket(models.Model):
+    class Meta:
+        verbose_name = _("B2C Basket")
+        verbose_name_plural = _("B2C Baskets")
+
+    user_id     = models.CharField(_('User ID'), max_length=111)
+    product_id  = models.ForeignKey('B2CProduct')
+    quantity    = models.IntegerField(_('Quanitty'))
+    ordered     = models.BooleanField(_('Ordered?'), default=False)
+    created     = models.DateTimeField(_('Created'), default=timezone.now)
+
+    def __str__(self):
+        return self.user_id
+
+    def get_currency(self):
+        "Returns currency."
+        return self.product_id.currency
+
+    def get_price(self):
+        "Returns the cost and currency."
+        return ('{0} {1}').format(self.product_id.cost, self.product_id.currency)

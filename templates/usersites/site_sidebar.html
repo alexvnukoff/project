@@ -5,6 +5,15 @@
 {% is_chamber_site as is_chamber %}
 <div class="sidebar">
     <a href="/"><i class="" id="logo"><img src="{{ site.user_site.logo.big }}"/></i></a>
+
+        <!-- MyAwesomeBasket -->
+        <div class="basket-wrapper">
+            <a href="{% url 'b2c_products:basket' %}" class="basket-btn">
+                    <span>{% trans 'Basket:' %}</span>
+                <i class="icon-basket"></i>(<strong ngCloak>{% verbatim %}{{basket_count}}{% endverbatim %}</strong>)
+            </a>
+        </div>
+
     <select id="lang_select" style="height: 29px;width: 220px;" >
         <option>{% trans 'Mother tongue' %}</option>
         <option value="am">Armenian</option>
@@ -109,7 +118,6 @@
         {% endif %}
         <li><a href="{% url 'pages:structure' %}">{% trans 'Company structure' %}</a></li>
         <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
-        <li><a href="{% url 'b2c_products:basket' %}">{% trans 'My basket' %} ({% verbatim %}{{basket_count}}{% endverbatim %})</a></li>
     </ul>
     <div class="banners left">
         {% site_banner "SITES LEFT 1" %}

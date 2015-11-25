@@ -17,6 +17,7 @@
 {% block styles %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static "usersites/css/reset-adv.css" %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static "usersites/css/tmp.css" %}"/>
 {% endblock %}
 
 
@@ -28,6 +29,7 @@
 
     <div class="main" ng-app="myApp" ng-controller="MyAwesomeBasket">
         <div class="wrapper">
+
             {% block sidebar %}
                 {% cache 3600 menu site.pk LANGUAGE_CODE %}
                     {% include 'usersites/site_sidebar.html' %}

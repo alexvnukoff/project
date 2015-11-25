@@ -3,6 +3,8 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
+{% load inclusionTags %}
+
 {% block content %}
     {{ block.super }}
     <script>
@@ -29,6 +31,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% b2b_social_buttons object.image object.name object.description %}
         </div>
 
         <ul class="prd-info">
@@ -42,19 +45,21 @@
                     {% endif %}
               </div>
             </li>
+             {% if object.measurement_unit %}
             <li>
                 <label>{% trans 'Unit' %}:</label>
                 <div class="rightinfo">
                     <font class="num"> {{ object.get_measurement_unit_display }}</font>
                 </div>
             </li>
-            {% comment %}
+            {% endif %}
             <li>
                 <label>{% trans 'Amount' %}:</label>
                  <div class="rightinfo">
-                      <input id="item-amount" type="text" name="" value="1" class="text" style="width:60%;"/>
+                      <input id="item-amount" ng-model="quantity" type="text" maxlength="5" value="1" style="width:60%;"/>
                 </div>
             </li>
+            {% comment %}
             <li>
                 <label>{% trans 'Deleviry method' %}:</label>
                  <div class="rightinfo">
@@ -67,28 +72,23 @@
             </li>
             {% endcomment %}
             <li>
-
-                {% if paypal_form %}
-                    {{ paypal_form.render }}
-                {% else %}
-                    <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-                {% endif %}
-                <!-- MyAwesomeBasket -->
-                <button style="margin:15px 0 10px 0;
-                background: #369BCD;
-                text-align:center;
-                color: #FFF;
-                font-size:12px;
-                padding:2px 5px 2px 5px;
-                cursor:pointer;
-                border:0;
-                box-shadow: 0px 1px 2px #DDD;"
-                ng-click="addToBasket({{object.pk}})">
-                <span ng-hide="add_to_basket">{% trans 'Add to basket' %}</span>
-                <span ng-show="add_to_basket">{% trans 'Done!' %}</span>
-            </button>
-
-
+            <script>
+            $(document).ready(function(){
+                $("#item-amount").keyup(function() {
+                    document.getElementById('id_quantity').value = this.value;
+                });
+            });
+            </script>
+            {% if paypal_form %}
+            {{ paypal_form.render }}
+            {% else %}
+                <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+            {% endif %}
+            <!-- MyAwesomeBasket -->
+            <button ng-disabled="add_to_basket" class="basket-btn" ng-click="addToBasket({{object.pk}}, quantity)">
+            <span ng-hide="add_to_basket"><i class="icon-basket">&nbsp;</i>{% trans 'Add to basket' %}</span>
+            <span ng-show="add_to_basket"><i class="icon-ok">&nbsp;</i>{% trans 'Done!' %}</span>
+        </button>
            </li>
         </ul>
         <div class="prj-details-tab">
@@ -155,4 +155,58 @@
             {% endfor %}
         </div>
     </div>
+
+<script>
+<!-- Share for social networks -->
+Share = {
+        vkontakte: function(purl, ptitle, pimg, text) {
+            var url  = 'http://vkontakte.ru/share.php?';
+            url += 'url='          + encodeURIComponent(purl);
+            url += '&title='       + encodeURIComponent(ptitle);
+            url += '&description=' + encodeURIComponent(text);
+            url += '&image='       + encodeURIComponent(pimg);
+            url += '&noparse=true';
+            Share.popup(url);
+        },
+        odnoklassniki: function(purl, text) {
+            var url  = 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1';
+            url += '&st.comments=' + encodeURIComponent(text);
+            url += '&st._surl='    + encodeURIComponent(purl);
+            Share.popup(url);
+        },
+        facebook: function(purl, ptitle, pimg, text) {
+            var url  = 'http://www.facebook.com/sharer.php?s=100';
+            url += '&p[title]='     + encodeURIComponent(ptitle);
+            url += '&p[summary]='   + encodeURIComponent(text);
+            url += '&p[url]='       + encodeURIComponent(purl);
+            url += '&p[images][0]=' + encodeURIComponent(pimg);
+            Share.popup(url);
+        },
+        twitter: function(purl, ptitle) {
+            var url  = 'http://twitter.com/share?';
+            url += 'text='      + encodeURIComponent(ptitle);
+            url += '&url='      + encodeURIComponent(purl);
+            url += '&counturl=' + encodeURIComponent(purl);
+            Share.popup(url);
+        },
+        mailru: function(purl, ptitle, pimg, text) {
+            var url  = 'http://connect.mail.ru/share?';
+            url += 'url='          + encodeURIComponent(purl);
+            url += '&title='       + encodeURIComponent(ptitle);
+            url += '&description=' + encodeURIComponent(text);
+            url += '&imageurl='    + encodeURIComponent(pimg);
+            Share.popup(url)
+        },
+
+        me : function(el){
+            console.log(el.href);
+            Share.popup(el.href);
+            return false;
+        },
+        popup: function(url) {
+            window.open(url,'','toolbar=0,status=0,width=626,height=436');
+        }
+};
+<!-- /Share for social networks -->
+</script>
 {% endblock %}
