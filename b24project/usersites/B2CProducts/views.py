@@ -191,7 +191,7 @@ class B2CProductBasket(View):
 
         data = {
             'title': _('B2C Basket'),
-            'products': basket_list,
+            'products': [row.product for row in basket_list],
             'price': total_price,
             'paypal_form': PayPalPaymentsForm(initial=paypal_dict),
         }

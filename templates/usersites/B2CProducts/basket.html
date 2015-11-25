@@ -8,13 +8,13 @@
 {% if products %}
 <form method="post" action="">{% csrf_token %}
 <table>
-{% for i in products %}
+{% for product in products %}
 
   <tr style="background:#{% cycle 'ffffff' 'fafafa' %}">
     <td class="image">
-        <a href="{% url 'b2c_products:detail' i.product_id.slug i.product_id.pk %}">
-            {% if i.product_id.image %}
-                <img src="{{ i.product_id.image.small }}" alt="i.name">
+        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+            {% if product.image %}
+                <img src="{{ product.image.small }}" alt="product.name">
             {% else %}
                 <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
             {% endif %}
@@ -22,23 +22,23 @@
     </td>
 
     <td class="main">
-        <a href="{% url 'b2c_products:detail' i.product_id.slug i.product_id.pk %}">
-            <h2 style="padding-bottom:5px;">{{ i.product_id.name }} ({{ i.product_id.name }})</h2>
+        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+            <h2 style="padding-bottom:5px;">{{ product.name }} ({{ product.name }})</h2>
         </a>
-        <p>{{ i.product_id.short_description|truncatewords:30 }}</p>
+        <p>{{ product.short_description|truncatewords:30 }}</p>
     </td>
 
     <td class="last">
-        {% if i.product_id.cost %}
+        {% if product.cost %}
         Price<br>
         <strong>
-            <span class="raw_cost">{{ i.product_id.cost|formatPrice }}</span>
-            <span class="currency_symbol">{{ i.product_id.currency|getSymbol }}</span>
+            <span class="raw_cost">{{ product.cost|formatPrice }}</span>
+            <span class="currency_symbol">{{ product.currency|getSymbol }}</span>
 
-            <input type="hidden" name="product_id" value="{{ i.product_id.id }}">
-            <input class="quantity" type="text" name="quantity" value="{{ i.quantity }}">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input class="quantity" type="text" name="quantity" value="{{ product.quantity }}">
 
-            <a href="{% url 'b2c_products:basket' %}?del={{ i.product_id.id }}" onclick="if (confirm('{% trans "Are you sure delete this product?" %}'));" class="btn-cancel"><i class="icon-cancel"></i></a>
+            <a href="{% url 'b2c_products:basket' %}?del={{ product.id }}" onclick="if (confirm('{% trans "Are you sure delete this product?" %}'));" class="btn-cancel"><i class="icon-cancel"></i></a>
         </strong>
         {% else %}
             {% trans 'Contact to price' %}
