@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import HStoreField, DateRangeField
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -149,21 +150,20 @@ def initial_department(sender, instance, created, **kwargs):
     instance.reindex()
 
 
-
 class B2CBasket(models.Model):
     class Meta:
         verbose_name = _("B2C Basket")
         verbose_name_plural = _("B2C Baskets")
 
-    user_id     = models.CharField(_('User ID'), max_length=111)
-    product_id  = models.ForeignKey('B2CProduct')
-    quantity    = models.IntegerField(_('Quanitty'))
-    site_name   = models.CharField(_('Domain'), max_length=111)
-    ordered     = models.BooleanField(_('Ordered?'), default=False)
-    created     = models.DateTimeField(_('Created'), default=timezone.now)
+    user_uuid = models.CharField(_('User ID'), max_length=111)
+    product = models.ForeignKey(B2CProduct)
+    quantity = models.IntegerField(_('Quanitty'))
+    site = models.ForeignKey(Site)
+    ordered = models.BooleanField(_('Ordered?'), default=False)
+    created = models.DateTimeField(_('Created'), default=timezone.now)
 
     def __str__(self):
-        return self.user_id
+        return self.user_uuid
 
     def get_currency(self):
         "Returns currency."

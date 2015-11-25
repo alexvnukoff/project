@@ -6,8 +6,8 @@ from centerpokupok.models import B2CProductCategory, B2CProduct, B2CBasket
 
 class B2CBasketAdmin(admin.ModelAdmin):
 
-    list_display    = ['user_id', 'site_name', 'ordered', 'created', 'product_id', 'quantity',]
-    readonly_fields = ['user_id', 'quantity', 'site_name',]
+    list_display    = ['user_id', 'site', 'ordered', 'created', 'product_id', 'quantity',]
+    readonly_fields = ['user_id', 'quantity', 'site',]
 
 
 admin.site.register(B2CProductCategory, MPTTModelAdmin)
