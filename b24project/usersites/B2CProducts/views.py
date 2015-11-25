@@ -5,7 +5,7 @@ from collections import OrderedDict
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
 from django.db.models import F, Sum, IntegerField
-from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
@@ -139,7 +139,7 @@ class B2CProductBasket(View):
             try:
                 product_id = int(product_id)
             except ValueError:
-                return Http404()
+                return HttpResponseNotFound()
 
             product = get_object_or_404(B2CProduct, pk=product_id)
 
@@ -209,7 +209,7 @@ class B2CProductBasket(View):
                 B2CBasket.objects.filter(user_uuid=request.session['basket_hash'], site_name=domain).delete()
                 return HttpResponseRedirect((reverse('b2c_products:basket')))
             # If not a digits go away..
-            raise Http404()
+            return HttpResponseNotFound()
 
         return render(request, 'usersites/B2CProducts/basket.html', data)
 
