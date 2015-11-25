@@ -136,6 +136,11 @@ class B2CProductBasket(View):
 
         # Adding product to basket
         if product_id and quantity:
+            try:
+                product_id = int(product_id)
+            except ValueError:
+                return Http404()
+
             product = get_object_or_404(B2CProduct, pk=product_id)
 
             # Create a new product row or update existing quantity
