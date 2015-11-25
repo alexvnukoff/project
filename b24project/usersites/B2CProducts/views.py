@@ -206,9 +206,12 @@ class B2CProductBasket(View):
         # Clean basket
         if clean:
             if clean.isdigit():
-                B2CBasket.objects.filter(user_uuid=request.session['basket_hash'], site_name=domain).delete()
+                B2CBasket.objects.filter(
+                    user_uuid=request.session['basket_hash'],
+                    site=get_current_site(request)).delete()
+
                 return HttpResponseRedirect((reverse('b2c_products:basket')))
-            # If not a digits go away..
+
             return HttpResponseNotFound()
 
         return render(request, 'usersites/B2CProducts/basket.html', data)
