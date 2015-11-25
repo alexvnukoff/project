@@ -75,14 +75,6 @@
 
 </div>
 
-{% else %}
-<br>
-<p>{% trans 'Your basket is empty.' %}</p>
-{% endif %}
-
-</div>
-</div>
-
 <script>
 
     var currency=document.getElementsByClassName('currency_symbol')[0];
@@ -91,5 +83,15 @@
     });
 
 </script>
+
+{% else %}
+<br>
+<p>{% trans 'Your basket is empty.' %}</p>
+{% endif %}
+
+</div>
+</div>
+
+
 
 {% endblock %}
