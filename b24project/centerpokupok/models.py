@@ -158,6 +158,7 @@ class B2CBasket(models.Model):
     user_id     = models.CharField(_('User ID'), max_length=111)
     product_id  = models.ForeignKey('B2CProduct')
     quantity    = models.IntegerField(_('Quanitty'))
+    site_name   = models.CharField(_('Domain'), max_length=111)
     ordered     = models.BooleanField(_('Ordered?'), default=False)
     created     = models.DateTimeField(_('Created'), default=timezone.now)
 

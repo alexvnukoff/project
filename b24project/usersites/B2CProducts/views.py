@@ -1,6 +1,5 @@
+# -*- coding: utf-8 -*-
 from collections import OrderedDict
-
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
@@ -8,13 +7,15 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 
-from centerpokupok.models import B2CProduct, B2CProductCategory
+from centerpokupok.models import B2CProduct, B2CProductCategory, B2CBasket
 from usersites.cbv import ItemDetail, ItemList
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.views.decorators.cache import never_cache
-from django.shortcuts import render
-import json, redis
-
+from django.shortcuts import render, get_object_or_404
+from django.contrib.sessions.backends.db import SessionStore
+from django.db.models import Q, F, Sum, Avg, IntegerField
+import json, time, hashlib, random
+from .forms import B2CProductForm
 
 class B2CProductList(ItemList):
     model = B2CProduct
@@ -82,7 +83,7 @@ class B2CProductList(ItemList):
             else:
                 categories = self.category.get_descendants(include_self=True)
 
-            queryset = queryset.filter(categories__in=categories).distinct()
+            queryset = queryset.filter(categories__in=categories)
 
         return queryset
 
@@ -122,55 +123,181 @@ class B2CProductDetail(ItemDetail):
         return context_data
 
 
-@csrf_exempt
+
 @never_cache
 def B2CProductBasket(request):
+    domain = get_current_site(request).domain
+    if request.method == "POST":
 
-                # Enter the valid credentials for Redis server
-    r           = redis.StrictRedis(host=settings.ORDERS_REDIS_HOST, port=6379, db=2)
-    user_id     = request.user.pk
-    basket_name = 'nyawesomebasket_' + str(user_id)
-    domain      = get_current_site(request).domain
+        product   = request.POST.getlist('product_id')
+        quantity  = request.POST.getlist('quantity')
+        basket    = dict(zip(product, quantity))
 
-    if request.method == 'POST':
-
-        jdata       = json.loads(request.body.decode('utf-8'))
-        product_id  = jdata['product_id']
-
-        if product_id:
-            r.sadd(basket_name, product_id)
-        else:
-            r.srem(basket_name, product_id)
-        return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
-
+        for k, v in basket.items():
+            # Simple anti-hack digit vallidation
+            if k.isdigit() and v.isdigit():
+                if v == '0': v = '1'
+                B2CBasket.objects.filter(user_id=request.session['basket_hash'],
+                                                     product_id_id=int(k),
+                                                     site_name=domain, ordered=False).update(quantity=int(v))
+            else:
+                return HttpResponseRedirect((reverse('b2c_products:basket')))
+        return HttpResponseRedirect((reverse('b2c_products:basket')))
     else:
-        if request.GET.get('count'):
-            return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
-        if request.GET.get('delete'):
-            r.delete(basket_name)
-            return HttpResponse(status=200)
 
-        basket_list = B2CProduct.objects.filter(pk__in=r.smembers(basket_name))
+        if not request.session.get('basket_hash'):
+            basket_hash = hashlib.md5(str(random.randrange(333,999) + time.time()).encode('utf-8')).hexdigest()
+            request.session['basket_hash'] = basket_hash
+
+        product_id = request.GET.get('pk')
+        quantity = request.GET.get('q')
+        get_stat = request.GET.get('get_stat')
+        del_product = request.GET.get('del')
+        clean = request.GET.get('clean')
+
+        # Adding product to basket
+        if product_id and quantity:
+
+            # Simple anti-hack digit vallidation
+            if product_id.isdigit() and quantity.isdigit():
+                try:
+                    get_object_or_404(B2CProduct, pk=product_id)
+                except ValueError:
+                    raise Http404
+
+                # Create a new product row or update existing quantity
+                B2CBasket.objects.update_or_create(user_id=request.session['basket_hash'],
+                                                   product_id_id=product_id,
+                                                   site_name=domain,
+                                                   ordered=False,
+                                                   defaults={'quantity': quantity})
+
+                data = B2CBasket.objects.filter(user_id=request.session['basket_hash'], ordered=False, \
+                                                           site_name=domain).aggregate(Sum('quantity'))
+                return JsonResponse(data, status=200)
+
+            # If not a digits go away..
+            raise Http404()
+
+        # Getting basket count only if has basket_hash
+        if request.session.get('basket_hash') and get_stat == '1':
+            data = B2CBasket.objects.filter(user_id=request.session.get('basket_hash'), ordered=False, \
+                                                           site_name=domain).aggregate(Sum('quantity'))
+            if data['quantity__sum'] != None:
+                return JsonResponse(data, status=200)
+            return HttpResponse(status=403)
+
+        # List of products
+        basket_list = B2CBasket.objects.filter(user_id=request.session['basket_hash'], site_name=domain, ordered=False)
+        total_price = basket_list.aggregate(total=Sum(F('quantity')*F('product_id__cost'), output_field=IntegerField()))
 
         if basket_list:
+
             paypal_dict = {
-                'business': basket_list[0].company.company_paypal_account,
-                'amount': 'replace_on_js',
+                'business': basket_list[0].product_id.company.company_paypal_account,
+                'amount': total_price['total'],
                 'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
                 'return_url': request.build_absolute_uri(),
                 'cancel_return': request.build_absolute_uri(),
                 'item_name': _('Products from website ') + domain,
                 'no_shipping': 0,
                 'quantity': 1, # basket_list.count makes a multiplication ;-)
-                'currency_code': basket_list[0].currency
+                'currency_code': basket_list[0].product_id.currency
                 }
         else:
             paypal_dict = {}
 
         data = {
             'title': _('B2C Basket'),
-            'basket_list': basket_list,
-            'paypal_form': PayPalPaymentsForm(initial=paypal_dict)
+            'products': basket_list,
+            'price': total_price,
+            'paypal_form': PayPalPaymentsForm(initial=paypal_dict),
             }
 
+        # Delete product form basket
+        if del_product:
+            if del_product.isdigit():
+                B2CBasket.objects.filter(product_id_id=del_product, site_name=domain, user_id=request.session['basket_hash']).delete()
+                return HttpResponseRedirect((reverse('b2c_products:basket')))
+            # If not a digits go away..
+            raise Http404()
+
+        # Clean basket
+        if clean:
+            if clean.isdigit():
+                B2CBasket.objects.filter(user_id=request.session['basket_hash'], site_name=domain).delete()
+                return HttpResponseRedirect((reverse('b2c_products:basket')))
+            # If not a digits go away..
+            raise Http404()
+
         return render(request, 'usersites/B2CProducts/basket.html', data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @never_cache
+# def B2CProductBasket(request):
+
+#                 # Enter the valid credentials for Redis server
+#     r           = redis.StrictRedis(host='localhost', port=6379, db=2)
+#     user_id     = request.user.pk
+#     basket_name = 'nyawesomebasket_' + str(user_id)
+#     domain      = get_current_site(request).domain
+
+#     if request.method == 'POST':
+
+#         jdata       = json.loads(request.body.decode('utf-8'))
+#         product_id  = jdata['product_id']
+
+#         if product_id:
+#             r.sadd(basket_name, product_id)
+#         else:
+#             r.srem(basket_name, product_id)
+#         return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
+
+#     else:
+#         if request.GET.get('count'):
+#             return JsonResponse({'basket_count': r.scard(basket_name)}, status=200)
+#         if request.GET.get('delete'):
+#             r.delete(basket_name)
+#             return HttpResponse(status=200)
+
+#         basket_list = B2CProduct.objects.filter(pk__in=r.smembers(basket_name))
+
+#         if basket_list:
+#             paypal_dict = {
+#                 'business': basket_list[0].company.company_paypal_account,
+#                 'amount': 'replace_on_js',
+#                 'notify_url': 'http://{0}{1}'.format(domain, reverse('paypal-ipn')),
+#                 'return_url': request.build_absolute_uri(),
+#                 'cancel_return': request.build_absolute_uri(),
+#                 'item_name': _('Products from website ') + domain,
+#                 'no_shipping': 0,
+#                 'quantity': 1, # basket_list.count makes a multiplication ;-)
+#                 'currency_code': basket_list[0].currency
+#                 }
+#         else:
+#             paypal_dict = {}
+
+#         data = {
+#             'title': _('B2C Basket'),
+#             'basket_list': basket_list,
+#             'paypal_form': PayPalPaymentsForm(initial=paypal_dict)
+#             }
+
+#         return render(request, 'usersites/B2CProducts/basket.html', data)
