@@ -167,7 +167,7 @@ class B2CProductBasket(View):
         basket_list = B2CBasket.objects.filter(
             user_uuid=request.session['basket_hash'],
             site=get_current_site(request),
-            ordered=False)
+            ordered=False).select_related()
 
         total_price = basket_list.aggregate(
             total=Sum(F('quantity') * F('product__cost'), output_field=IntegerField()))
@@ -191,7 +191,7 @@ class B2CProductBasket(View):
 
         data = {
             'title': _('B2C Basket'),
-            'products': [row.product for row in basket_list],
+            'products': basket_list,
             'price': total_price,
             'paypal_form': PayPalPaymentsForm(initial=paypal_dict),
         }

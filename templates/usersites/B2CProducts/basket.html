@@ -1,4 +1,9 @@
-{% extends 'usersites/index.html' %}{% load static %}{% load i18n %}{% load CustomFilters %}{% load staticfiles %}{% load humanize %}
+{% extends 'usersites/index.html' %}
+{% load static %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% load humanize %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 
@@ -8,37 +13,37 @@
 {% if products %}
 <form method="post" action="">{% csrf_token %}
 <table>
-{% for product in products %}
+{% for data in products %}
 
   <tr style="background:#{% cycle 'ffffff' 'fafafa' %}">
     <td class="image">
-        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-            {% if product.image %}
-                <img src="{{ product.image.small }}" alt="product.name">
+        <a href="{% url 'b2c_products:detail' data.product.slug data.product.pk %}">
+            {% if data.product.image %}
+                <img src="{{ data.product.image.small }}" alt="data.product.name">
             {% else %}
                 <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
             {% endif %}
         </a>
     </td>
 
-    <td class="main">
-        <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
-            <h2 style="padding-bottom:5px;">{{ product.name }} ({{ product.name }})</h2>
+    <td class="main">{{ product.quantity }}
+        <a href="{% url 'b2c_products:detail' data.product.slug data.product.pk %}">
+            <h2 style="padding-bottom:5px;">{{ data.product.name }} ({{ data.product.name }})</h2>
         </a>
-        <p>{{ product.short_description|truncatewords:30 }}</p>
+        <p>{{ data.product.short_description|truncatewords:30 }}</p>
     </td>
 
     <td class="last">
-        {% if product.cost %}
+        {% if data.product.cost %}
         Price<br>
         <strong>
-            <span class="raw_cost">{{ product.cost|formatPrice }}</span>
-            <span class="currency_symbol">{{ product.currency|getSymbol }}</span>
+            <span class="raw_cost">{{ data.product.cost|formatPrice }}</span>
+            <span class="currency_symbol">{{ data.product.currency|getSymbol }}</span>
 
-            <input type="hidden" name="product_id" value="{{ product.id }}">
-            <input class="quantity" type="text" name="quantity" value="{{ product.quantity }}">
+            <input type="hidden" name="product_id" value="{{ data.product.id }}">
+            <input class="quantity" type="text" name="quantity" value="{{ data.quantity }}">
 
-            <a href="{% url 'b2c_products:basket' %}?del={{ product.id }}" onclick="if (confirm('{% trans "Are you sure delete this product?" %}'));" class="btn-cancel"><i class="icon-cancel"></i></a>
+            <a href="{% url 'b2c_products:basket' %}?del={{ data.product.id }}" onclick="return confirm('{% trans "Are you sure delete this product?" %}');" class="btn-cancel"><i class="icon-trash-empty"></i></a>
         </strong>
         {% else %}
             {% trans 'Contact to price' %}
@@ -61,7 +66,7 @@
 <div style="text-align:right">
 <p id="total_cost"><strong>Total: {{ price.total|intcomma }} {{ products.get_currency }}</strong>
 <strong class="currency_for_total_cost"></strong></p>
-<button class="basket-btn btn-green" style="display:none;">{% trans "Send to E-mail" %}</button>
+<button class="basket-btn btn-green" style="display:none;">{% trans "Checkout by E-mail" %}</button>
 <button class="basket-btn">{% trans "Update price" %}</button>
 </form>
 
