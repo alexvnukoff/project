@@ -350,7 +350,7 @@ ul.navigation                           {
 /* ------ offer icons ----- */
 .offer__icons                           {
                                             width: 100%;
-                                            margin: 20px 0;
+                                            margin: 50px 0px 20px 0px;
                                         }
 .offer__icons.disable                   {   display: none;}
 .offer__icons__icon                     {
@@ -511,9 +511,9 @@ ul.navigation                           {
 .sidebar-menu>li>a.sub.active           {
                                             background-image: url(../images/sidebarArD.png);
                                             background-color: #CCE5ED;
-                                            font-weight: 700;
+                                            /*font-weight: 700;*/
                                         }
-.sidebar-menu>li>a:hover                {
+.sidebar-menu>li>a:hover, .activeItem                {
                                             background-color: #CCE5ED;
                                             font-weight: 700;
                                         }
@@ -1647,9 +1647,10 @@ a[href^="https://maps.google.com/maps"] {    display: none !important }
 .workers table tr td:nth-child(1) img   {  max-width: 100%; margin: 2px 0;}
 
 .workers table tr td:nth-child(1)       {   width: 10%; text-align: center;}
-.workers table tr td:nth-child(2)       {   width: 30%;}
-.workers table tr td:nth-child(3)       {   width: 30%;}
-.workers table tr td:nth-child(4)       {   width: 30%;}
+.workers table tr td:nth-child(2)       {   width: 25%;}
+.workers table tr td:nth-child(3)       {   width: 25%;}
+.workers table tr td:nth-child(4)       {   width: 20%;}
+.workers table tr td:nth-child(5)       {   width: 20%;}
 
 
 @media (max-width: 500px) {

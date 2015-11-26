@@ -1,4 +1,4 @@
-var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion', 'gettext', 'slick']);
+var myApp = angular.module("myApp", ["ngRoute", "ngAnimate", 'angularUtils.directives.dirPagination',  'uiAccordion', 'gettext']);
 
 myApp.run(function (gettextCatalog) {
     gettextCatalog.setCurrentLanguage();
@@ -19,6 +19,10 @@ myApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 			templateUrl: "partials/article.html",
 			controller: "articleCtrl"
 		})
+        .when("/coupons/:id", {
+            templateUrl: "partials/one-coupon.html",
+            controller: "oneCouponCtrl"
+        })
 		.when("/contact", {
 			templateUrl: "partials/contact.html",
 			title: "Contact us now"
@@ -63,6 +67,11 @@ myApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 			title: "Company structure",
 			controller: "structureCtrl"
 		})
+        .when("/pages/:id", {
+            templateUrl: "partials/page.html",
+            title: "Page",
+            controller: "pageCtrl"
+        })
 	.otherwise({
 		redirectTo: "/home"
 	});
@@ -141,22 +150,23 @@ myApp.directive('siteHeader', function () {
     };
 });
 
-myApp.directive('customSlick', function($timeout) {
+myApp.directive('slickMy', function($timeout) {
     return function(scope, el, attrs) {
-        $timeout((function() {
+        $timeout(function() {
             el.slick({
+                centerMode: true,
                 arrows: true,
                 dots: true,
                 infinite: true,
                 autoplay: true,
-                autoplaySpeed: 6500,
+                autoplaySpeed: 3000,
                 speed: 1500,
-                slidesToShow: 3,
-                slidesToScroll: 3,
+                slidesToShow: 1,
+                slidesToScroll: 1,
                 fade: true,
                 cssEase: 'linear'
-            })
-        }), 100)
+            });
+        }, 3000);
     }
 });
 
@@ -235,7 +245,13 @@ myApp.controller('title', function($scope, $http, gettextCatalog, Page) {
 	$scope.Page = Page;
 });
 
-myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog, startPoint) {
+myApp.controller('mainInfoCtrl', function($scope, $http, $window, $compile, $timeout, $location, gettextCatalog, startPoint) {
+
+    $scope.selectedItem = 0;
+
+    $scope.getCurrentUrl = function() {
+        return $window.location.href;
+    }
 
 	$scope.toggleCateg = function() {
         $scope.show = !$scope.show;
@@ -261,6 +277,7 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
             zoom: 13,
             //draggable: false,
             disableDefaultUI: true,
+            zoomControl:true,
             scrollwheel: false,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -280,6 +297,48 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
         });
     }
 
+    function buildSlider() {
+        var items = '';
+        for (var i = 0; i < $scope.settings.slides.length; i++) {
+            items += '<div class="slide">' +
+                '<img src="' + $scope.settings.slides[i].url + '" alt="">' +
+            '</div>\n'
+        }
+
+        var el = angular.element('slick');
+        var parentEl = angular.element('.offer__slider');
+        parentEl.css('visibility', 'hidden');
+
+        $timeout(function() {
+            el.slick({
+                centerMode: true,
+                arrows: true,
+                dots: true,
+                infinite: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                speed: 1500,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                fade: true,
+                cssEase: 'linear'
+            });
+
+            parentEl.css('visibility', '');
+        }, 100);
+    }
+
+    $scope.getClass = function(path) {
+        path = path.substring(0, path.length - 1);
+        var partStart = $location.$$absUrl.indexOf('#') + 2;
+        var part = $location.$$absUrl.substring(partStart, partStart + path.length);
+
+        if (part === path) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     // Implemented
     $http.get(startPoint).success(function(response) {
@@ -293,7 +352,14 @@ myApp.controller('mainInfoCtrl', function($scope, $http, $window, gettextCatalog
         $scope.settings.contacts.phone = angular.element($scope.settings.contacts.tel).text();
         $scope.settings.contacts.tel = $scope.settings.contacts.phone.replace('-', '');
 
+        // Draw header slider
+        buildSlider();
+
         initializeMap();
+    });
+
+    $http.get(startPoint + 'pages/').success(function(response) {
+        $scope.pages = response;
     });
 
 
@@ -367,12 +433,21 @@ myApp.controller("homeCtrl", function($scope, $http, Page, startPoint){
 
     // Implemented
     $http.get(startPoint + 'coupons/').success(function(response) {
-        $scope.coupons = response.items;
+        //$scope.coupons = response.items;
+
+        if (response.items.length > 0) {
+            $scope.mainCoupon = response.items[0];
+
+            $scope.coupons = angular.copy(response.items);
+            $scope.coupons.splice(0, 1);
+        }
     });
 
     // Implemented
     $http.get(startPoint + 'news/').success(function(response) {
-        $scope.news = response.items;
+        $scope.news = angular.copy(response.items);
+
+        $scope.news = $scope.news.splice(0, 1);
     });
 
     // Implemented
@@ -432,7 +507,7 @@ myApp.controller("productsCtrl", function($scope, $http, Page, startPoint, $rout
 
     // Default data
     $scope.totalProducts = 0;
-    $scope.productsPerPage = 4; // this should match however many results your API puts on one page
+    $scope.productsPerPage = 8; // this should match however many results your API puts on one page
     getResultsPage(0);
     var lastPage = 0;
 
@@ -610,3 +685,21 @@ myApp.controller('oneProductCtrl', function($scope, $http, $routeParams, Page, s
         Page.setTitle(title);
     });
 });
+
+myApp.controller('oneCouponCtrl', function($scope, $http, $routeParams, Page, startPoint) {
+    $http.get(startPoint + 'coupons/' + $routeParams.id).success(function(response) {
+        $scope.coupon = response;
+
+        var title = angular.element(response.name).text();
+        Page.setTitle(title);
+    });
+});
+
+myApp.controller('pageCtrl', function($scope, $http, $routeParams, Page, startPoint) {
+    $http.get(startPoint + 'pages/' + $routeParams.id).success(function(response) {
+        $scope.page = response;
+
+        var title = angular.element($scope.title).text();
+        Page.setTitle(title);
+    });
+})

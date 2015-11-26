@@ -7,25 +7,25 @@
 
 
 
-                        <div class="main-action" ng-show="false">
+                        <div class="main-action" ng-show="mainCoupon">
 
-                            <div class="main-action__cover" style="background-image: url('static/images/sale-01.png');">
-                                <div class="sale"><span>-30%</span></div>
+                            <div class="main-action__cover" style="background-image: url('{{ mainCoupon.cover }}');">
+                                <div class="sale"><span>-{{ mainCoupon.percent }}%</span></div>
                             </div> <!-- end main-action__cover -->
 
                             <div class="main-action__info">
-                                <h3><a href="">ויזות, רישום וקבלתם</a></h3>
-                                <p class="timer-heading">Время до окончания</p>
+                                <h3><a href="#/coupons/{{ mainCoupon.id }}">{{ mainCoupon.name | removeTags }}</a></h3>
+                                <p class="timer-heading">Дата окончания</p>
 
-                                <div class="timer" timer date="November 2, 2015" id="timer"></div>
+                                <div class="timer"id="timer">{{ mainCoupon.endDate }}</div>
 
                                 <div class="offer vertical">
-                                    <p class="price">Дол. 340.0</p>
+                                    <p class="price">{{ mainCoupon.currency }} {{ mainCoupon.oldPrice }}</p>
                                     <p class="economy">
                                         <span>Вы экономите</span>
-                                        <span class="value">Дол. 0.0</span>
+                                        <span class="value">{{ mainCoupon.currency }} {{ mainCoupon.oldPrice * 0.01 * mainCoupon.percent }}</span>
                                     </p>
-                                    <a href="" class="buy"><span>Купить</span></a>
+                                    <a href="#/coupons/{{ mainCoupon.id }}" class="buy"><span>Купить</span></a>
                                 </div>
                             </div> <!-- end main-action__info -->
 
@@ -39,7 +39,7 @@
                                 <div class="action__cover" style="background-image: url('{{ coupon.cover }}');">    <div class="sale"><span>-{{ coupon.percent }}%</span></div>
                                 </div>
                                 <div class="action__info">
-                                    <h3><a ng-href="{{ coupon.more }}">{{ coupon.name | removeTags }}</a></h3>
+                                    <h3><a ng-href="#/coupons/{{ coupon.id }}">{{ coupon.name | removeTags }}</a></h3>
                                     <p><span class="old-price">Дол. {{ coupon.oldPrice }}</span><span class="new-price">Дол. {{ coupon.oldPrice - coupon.oldPrice * coupon.percent / 100 }}</span></p>
                                     <p class="timer-heading">Дата окончания:</p>
                                     <div class="timer-mini">{{ coupon.endDate }}</div>
@@ -71,7 +71,7 @@
                     <section class="content__info__products" ng-if="b2cProducts && b2cProducts.length">
                         <h2>B2C Products</h2>
                         <ul class="products-list">
-                            <li class="product" dir-paginate="product in b2cProducts | itemsPerPage: 8" >
+                            <li class="product" dir-paginate="product in b2cProducts | itemsPerPage: 4" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
                                 <div class="product__about">
                                     <p class="desc"><strong formatted-text="{{ product.name }}"></strong></p>
@@ -86,7 +86,7 @@
                     <section class="content__info__products" ng-if="products && products.length">
                         <h2>B2B Products</h2>
                         <ul class="products-list">
-                            <li class="product" dir-paginate="product in products | itemsPerPage: 8" >
+                            <li class="product" dir-paginate="product in products | itemsPerPage: 4" >
                                 <div class="product__cover vertical"><img ng-src="{{ product.cover }}" alt=""></div>
                                 <div class="product__about">
                                     <p class="desc"><strong formatted-text="{{ product.name }}"></strong></p>

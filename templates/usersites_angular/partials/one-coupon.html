@@ -2,21 +2,20 @@
 
 	<article class="clearfix">
 		<div class="one-product">
-		    <h2>{{ product.name | removeTags }}</h2>
-		    <img ng-src="{{ product.cover }}" alt="">
+		    <h2>{{ coupon.name | removeTags }}</h2>
+		    <img ng-src="{{ coupon.cover }}" alt="">
 		    <p>
-				<p class="price">{{ product.price }}{{ product.currency }}</p>
+				<p class="price">Old price: {{ coupon.oldPrice }}{{ coupon.currency }}</p>
+				<p class="price">New price: {{ coupon.oldPrice - coupon.oldPrice * coupon.percent * 0.01 }}{{ coupon.currency }}</p>
 				<br/>
-				<p class="date">{{ product.pubDate }}</p>
-		        <p class="description">{{ product.details | removeTags }}</p>
+				<p class="date">End date: {{ coupon.endDate }}</p>
+		        <p class="description">{{ coupon.details | removeTags }}</p>
 		    </p>
 		</div>
 	</article>
 
 	<div class="socials">
-
-
-		<a href="#nul" class="fb" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=site.ru','','Toolbar=1,Location=0,Directories=0,Status=0,Menubar=0,Scrollbars=0,Resizable=0,Width=550,Height=400')"></a>
+<a href="#nul" class="fb" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=site.ru','','Toolbar=1,Location=0,Directories=0,Status=0,Menubar=0,Scrollbars=0,Resizable=0,Width=550,Height=400')"></a>
 
 
         <a href="#nul" class="gg" onclick="window.open('https://plus.google.com/share?url=http://serhiyhulyi.com.ua/pharm-sp/article.html','','Toolbar=1,Location=0,Directories=0,Status=0,Menubar=0,Scrollbars=0,Resizable=0,Width=550,Height=400');"></a>

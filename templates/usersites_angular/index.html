@@ -45,8 +45,8 @@
                 </div>
                 <div class="horMenu">
                     <ul class="navigation vertical">
-                        <li ng-repeat="menuItem in settings.menu">
-                            <a href="#{{ menuItem.href }}">{{ menuItem.name | removeTags }}</a>
+                        <li ng-repeat="page in pages">
+                            <a href="#pages/{{ page.id }}">{{ page.title | removeTags }}</a>
                         </li>
                     </ul>
                     <div class="busket vertical">
@@ -68,12 +68,13 @@
                 </div>
 
                 <div class="offer__slider">
+
                     <!-- <slick init-onload="true">
                         <div class="slide" ng-repeat="slide in settings.slides">
                             <img ng-src="{{slide.url}}" alt="">
                         </div>
                     </slick> -->
-                    <slick>
+                    <slick init-onload="true">
                         <div class="slide" ng-repeat="slide in settings.slides">
                             <img ng-src="{{slide.url}}" alt="">
                         </div>
@@ -83,7 +84,7 @@
                 <div class="offer__icons" ng-class="{disable: !settings.offerIcons}">
                     <a href="#" id="display-vertical" translate>display vertical</a>
                     <div class="offer__icons__icon" ng-repeat="icon in settings.offerIcons">
-                        <img ng-src="{{icon.url}}" alt="">
+                        <a href="{{ icon.link }}"><img ng-src="{{icon.url}}" alt=""></a>
                     </div>
                 </div>
 
@@ -121,9 +122,9 @@
                     </div>
 
                     <ul class="sidebar-menu" ng-accordion>
-                        <li ng-repeat="item in siteBar" ng-accordion-group is-open="item.isOpen">
-                            <a ng-attr-href="{{!item.subCategories ? '#/' + item.href : '#'}}"
-                               ng-class="{sub: item.subCategories}"
+                        <li ng-repeat="item in siteBar track by $index" ng-accordion-group is-open="item.isOpen">
+                            <a ng-attr-href="{{!item.subCategories ? '#/' + item.href : getCurrentUrl() }}"
+                               ng-class="{sub: item.subCategories, activeItem: getClass(item.href)}"
                                toggle-class="active"
                                ng-accordion-heading> {{item.name}}</a>
                             <ul class="sidebar-menu__submenu" ng-class="{display: !item.subCategories}" ng-accordion-body>
@@ -191,7 +192,7 @@
         <script src="static/libs/jquery.countdown.min.js"></script>
         <script src="static/libs/dirPagination.js"></script>
         <script src="static/libs/slick/slick.min.js"></script>
-        <script src="static/libs/slick.js"></script>
+        <!-- <script src="static/libs/slick.js"></script> -->
         <script src="static/libs/angular-gettext.min.js"></script>
         <script src="static/js/translations.js"></script>
         <script src="static/libs/ng-map.min.js"></script>
@@ -200,4 +201,5 @@
         <script src="static/js/main.js"></script>
     </body>
 </html>
+
 {% endverbatim %}
