@@ -38,11 +38,11 @@
 
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?62615246');
-  src: url('../font/fontello.eot?62615246#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff?62615246') format('woff'),
-       url('../font/fontello.ttf?62615246') format('truetype'),
-       url('../font/fontello.svg?62615246#fontello') format('svg');
+  src: url('../font/fontello.eot?90373385');
+  src: url('../font/fontello.eot?90373385#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff?90373385') format('woff'),
+       url('../font/fontello.ttf?90373385') format('truetype'),
+       url('../font/fontello.svg?90373385#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -102,6 +102,10 @@
 
 .icon-cancel:before {
     content: '\e802';
+}
+
+.icon-trash-empty:before {
+  content: '\e803';
 }
 
 .basket-wrapper {
@@ -212,12 +216,13 @@ background: #2CA93B;
 }
 
 .basket_detail a.btn-cancel {
-    color:#919191;
-    margin-top:5px;
+    color:#848484;
+    display:inline-block;
+    margin-top:3px;
 }
 
-.basket_detail a.btn-cancel i.icon-cancel {
-    font-size:12px;
+.basket_detail a.btn-cancel i.icon-trash-empty {
+    font-size:14px;
 }
 
 .basket_detail .a-btn {
