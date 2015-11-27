@@ -25,6 +25,7 @@ class ChamberList(ItemsList):
     # pagination url
     url_paginator = "tpp:paginator"
     url_my_paginator = "tpp:my_main_paginator"
+    addUrl = 'tpp:add'
 
     # Lists of required scripts and styles for ajax request
     styles = [
@@ -73,6 +74,7 @@ class ChamberList(ItemsList):
 class ChamberDetail(ItemDetail):
     model = Chamber
     template_name = 'b24online/Tpp/detailContent.html'
+    addUrl = 'tpp:add'
 
     current_section = _("Tpp")
 

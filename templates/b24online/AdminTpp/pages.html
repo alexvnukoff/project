@@ -146,9 +146,9 @@
                         radioClass: 'iradio_minimal'
                     });
             } ).dataTable( {
-                "ajax": "{% url "AdminTpp:pages" %}?type=b2b",
-                "processing": true,
-                "serverSide": true,
+                "sAjaxSource": "{% url "AdminTpp:pages" %}?type=b2b",
+                "bProcessing": true,
+                "bServerSide": true,
                 "searching": false,
                 "ordering":  false,
                 "columnDefs": [
