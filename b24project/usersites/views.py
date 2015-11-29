@@ -4,15 +4,16 @@ from django.shortcuts import render_to_response
 
 from b24online.models import BusinessProposal, B2BProduct, News, Company
 from centerpokupok.models import B2CProduct
+from django.utils.timezone import now
 
 
 def wall(request):
     organization = get_current_site(request).user_site.organization
-    proposals = BusinessProposal.get_active_objects().filter(organization=organization)[:3]
-    news = News.get_active_objects().filter(organization=organization)[:3]
+    proposals = BusinessProposal.get_active_objects().filter(organization=organization)[:1]
+    news = News.get_active_objects().filter(organization=organization)[:1]
 
     if isinstance(organization, Company):
-        b2c_products = B2CProduct.get_active_objects().filter(company=organization)[:4]
+        b2c_products = B2CProduct.get_active_objects().filter(company=organization)
         b2b_products = B2BProduct.get_active_objects().filter(company=organization)[:4]
     else:
         b2b_products = None
@@ -25,7 +26,8 @@ def wall(request):
         'title': get_current_site(request).user_site.organization.name,
         'proposals': proposals,
         'news': news,
-        'b2c_products': b2c_products,
+        'coupons': b2c_products,
+        'b2c_products': b2c_products[:4],
         'b2b_products': b2b_products
     }
 
