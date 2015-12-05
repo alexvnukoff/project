@@ -1,16 +1,26 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load CustomFilters %}
-<div class="slidehome">
-    <ul class="slide">
+
+    <div class="offer__slider">
         {% if images|length == 0 %}
-            <li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
-            <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
-            <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
+
+            <div class="slide">
+                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/1.jpg" alt="">
+            </div>
+            <div class="slide">
+                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/2.jpg" alt="">
+            </div>
+            <div class="slide">
+                <img src="{% static 'usersites/templates/' %}{{ site.user_site.template.theme_folder }}/3.jpg" alt="">
+            </div>
+
         {% else %}
             {% for image in images %}
-                <li style="width: 700px;height: 183px;"><img src="{{ image }}" alt="" /></li>
+                <div class="slide">
+                    <img src="{{ image }}" alt="">
+                </div>
             {% endfor %}
         {% endif %}
-    </ul>
-</div>
+    </div>
+

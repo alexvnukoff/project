@@ -3,10 +3,10 @@
 {% load staticfiles %}
 {% load CustomFilters %}
 {% block content %}
-<link type="text/css" rel="stylesheet" href="{% static "b24online/css/jquery.bxslider.css" %}"/>
-<link type="text/css" rel="stylesheet" href="{% static "usersites/css/tmp.css" %}"/>
-<script  type="text/javascript" src="{% static "b24online/js/jquery.bxslider.js"%}"></script>
-<script  type="text/javascript" src="{% static "b24online/js/jquery.slimscroll.min.js"%}"></script>
+<link type="text/css" rel="stylesheet" href="{% static 'b24online/css/jquery.bxslider.css' %}"/>
+<link type="text/css" rel="stylesheet" href="{% static 'usersites/css/tmp.css' %}"/>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.bxslider.js' %}"></script>
+<script  type="text/javascript" src="{% static 'b24online/js/jquery.slimscroll.min.js' %}"></script>
 
 <script type="text/javascript">
     $(document).ready(function(e) {
@@ -131,10 +131,9 @@
         <label>{% trans "Site category" %}</label>
         <input id="input-template" type="hidden" name="template" value="{{ form.template.value|default_if_none:"" }}">
         <div class="template">
-            <input id="input-template" type="hidden" name="template" value="{{ form.template.value|default_if_none:"" }}">
             {% if template  %}
-                <div class="ex-img"><img class="template1" src="{% static "usersites/templates" %}/{{ template.theme_folder }}/1.jpg"></div>
-                <div class="ex-img"><img class="template2" src="{% static "usersites/templates" %}/{{ template.theme_folder }}/2.jpg"></div>
+                <div class="ex-img"><img class="template1" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/1.jpg"></div>
+                <div class="ex-img"><img class="template2" src="{% static 'usersites/templates' %}/{{ template.theme_folder }}/2.jpg"></div>
             {% else %}
                 <div class="ex-img"><img class="template1" src="{% static "b24online/img/ex-img.jpg" %}"></div>
                 <div class="ex-img"><img class="template2" src="{% static "b24online/img/ex-img.jpg" %}"></div>
@@ -223,4 +222,19 @@
     </form>
 </div>
 
+<div class="external-type">
+    <i class="close-regform imgnews"></i>
+    <div class="title">{% trans "Select a category" %}</div>
+    <div class="listtype">
+        {% for template in form.template.field.choices.queryset.all %}
+             {% if forloop.counter|add:-1|divisibleby:"16" or forloop.counter0 == 0 %}
+                  <ul>
+             {% endif %}
+                  <li><a class="selectTemplate" data-id="{{ template.pk }}" data-folder="{{ template.theme_folder }}" href="#">{{ template.name }}</a></li>
+            {% if forloop.counter|divisibleby:"16" or forloop.last %}
+                  </ul>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

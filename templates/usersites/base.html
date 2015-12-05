@@ -1,61 +1,158 @@
-{% load staticfiles %}
-{% load i18n %}
-{% load CustomFilters %}
-{% load inclusionTags %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+{% load staticfiles %}{% load i18n %}{% load CustomFilters %}{% load inclusionTags %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
-    {% block head %}
-        {% block  meta%}
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            {% block description %}{% endblock %}
-        {% endblock %}
+    <meta charset="utf-8">
 
-        <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
+    <title>{% block title %}{{ site.user_site.organization.name }}{% endblock %}</title>
 
-        {% block styles %}
-            <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
-            <link type="text/css" href="{% static 'usersites/css/reset.css' %}" rel="stylesheet" />
-            <link type="text/css" href="{% static 'usersites/css/externalsite.css'%}" rel="stylesheet" />
-            <link type="text/css" href="{% static 'usersites/css/flags.css'%}" rel="stylesheet" />
-            <link type="text/css" rel="stylesheet" href="{% static 'usersites/css/jquery.bxslider.css'%}" />
-            <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
-        {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><!--[if IE]>
+    <meta http-equiv="ImageResize" content="no">
+    <meta http-equiv="ImageToolbar" content="no">
+    <meta name="MSSmartTagsPreventParsing" content="true">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><![endif]-->
 
-        {% block js %}
-            <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-            <script type="text/javascript" src="{% static  "usersites/js/jquery.bxslider.js" %}"></script>
-            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-           <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-            <script type="text/javascript">
-            $(document).ready(function() {
-                $('.slide').bxSlider({
-                    pager: true,
-                    controls: false,
-                    auto: true
-                });
+    <!--<link rel="shortcut icon" href="images/favicon.ico">-->
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/slick/slick-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/js/fancybox/jquery.fancybox.css' %}" />
+    <link rel="stylesheet" href="{% static 'usersites/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'usersites/css/general.css' %}">
 
-                $(".fancybox").fancybox({
-                    openEffect	: 'none',
-                    closeEffect	: 'none'
-                });
-            });
-            </script>
-        {% endblock %}
-    {% endblock %}
 </head>
 
-<body>
-    {% block header %}{% endblock %}
+<body class="display-vertical {% if LANGUAGE_BIDI %} hebrew{% endif %}" ng-app="usRSite" ng-controller="MyAwesomeBasket">
 
-    {% block body %}{% endblock %}
+    {% include 'usersites/header.html' %}
 
-    {% block rtl %}
-        {% if LANGUAGE_BIDI %}
-            <link type="text/css" href="{% static 'usersites/css/rtl.css'%}" rel="stylesheet" />
+        <section class="offer">
+            <div class="wrapper">
+
+                <div class="logo">
+                    <a href="/" rel="first">
+                        <img src="{{ site.user_site.logo.big }}" alt="">
+                    </a>
+                </div>
+
+    {% include 'usersites/slider.html' %}
+
+            <div class="offer__icons">
+                {% if is_chamber %}
+                        {% site_context_adv %}
+                {% else %}
+                        {% site_banner "top" "SITES RIGHT 1" %}
+                        {% site_banner "top" "SITES RIGHT 2" %}
+                        {% site_banner "top" "SITES RIGHT 3" %}
+                        {% site_banner "top" "SITES RIGHT 4" %}
+                        {% site_banner "top" "SITES RIGHT 5" %}
+                {% endif %}
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="content">
+            <div class="wrapper">
+                <aside class="sidebar">
+
+                    <div class="select -lang">
+                        <select name="lang" id="lang_select">
+                            <option>{% trans 'Mother tongue' %}</option>
+                            <option value="am">Armenian</option>
+                            <option value="ar"> Arabic </option>
+                            <option value="en">English</option>
+                            <option value="he">עברית</option>
+                            <option value="ru">Русский</option>
+                            <option value="zh">Chinese</option>
+                        </select>
+                    </div>
+
+
+                    <ul class="sidebar-menu">
+                        <li><a href="{% url 'main' %}">{% trans 'Main' %}</a></li>
+                        <li><a href="{% url 'news:main' %}">{% trans 'Company news' %}</a></li>
+                        <li><a href="{% url 'proposal:main' %}">{% trans 'Business proposals' %}</a></li>
+                {% if not is_chamber %}
+                    {% if site.user_site.organization.b2c_products.exists %}
+                        <li><a href="{% url 'b2c_products:main' %}">{% trans 'B2C Products' %}</a></li>
+                    {% endif %}
+
+                    {% if site.user_site.organization.b2b_products.exists %}
+                        <li><a href="{% url 'b2b_products:main' %}">{% trans 'B2B Products' %}</a></li>
+                    {% endif %}
+                {% endif %}
+                {% comment %}
+                    {% for page in site.user_site.organization.additional_pages %}
+                        <li><a href="{% url 'page:detail' page.slug page.pk %}">{{ page.title }}</a></li>
+                    {% endfor %}
+                {% endcomment %}
+                {% if site.user_site.organization.galleries.exists %}
+                    <li><a href="{% url 'pages:gallery' %}">{% trans 'Gallery' %}</a></li>
+                {% endif %}
+                <li><a href="{% url 'pages:structure' %}">{% trans 'Company structure' %}</a></li>
+                <li><a href="{% url 'pages:contacts' %}">{% trans 'Contact us' %}</a></li>
+                    </ul>
+
+                    {% site_banner "left" "SITES LEFT 1" %}
+                    {% site_banner "left" "SITES LEFT 2" %}
+                    <br><br>
+                </aside>
+
+    {% block content %}{% endblock %}
+
+        </div>
+    </section>
+
+    {% include 'usersites/footer.html' %}
+
+<!-- //////////////////////////////////////////////////////////////////////// -->
+
+        <script src="{% static 'usersites/js/vendor/modernizr.js' %}"></script>
+        <script src="{% static 'usersites/js/angular.min.js' %}"></script>
+        <script src="{% static 'usersites/js/vendor/jquery-1.11.3.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.arbitrary-anchor.js' %}"></script>
+        <script src="{% static 'usersites/js/slick/slick.min.js' %}"></script>
+        <script src="{% static 'usersites/js/fancybox/jquery.fancybox.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.plugin.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'usersites/js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'usersites/js/basket.js' %}"></script>
+        <script src="{% static 'usersites/js/main.js' %}"></script>
+
+
+    <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+
+    <script>
+    function initMap() {
+        {% if site.user_site.organization.location %}
+          {% with site.user_site.organization.location|split:"," as LatLng %}
+            var myLatLng = { lat: {{ LatLng.0 }}, lng: {{ LatLng.1 }} };
+          {% endwith %}
         {% endif %}
-    {% endblock %}
 
-    {% block footer %}{% endblock %}
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 11,
+        disableDefaultUI: true,
+        scrollwheel: false,
+        navigationControl: false,
+        mapTypeControl: false,
+        scaleControl: false,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map
+      });
+    }
+
+    </script>
+
+
+{% block js %}{% endblock %}
+
 </body>
 

@@ -1,27 +1,75 @@
 {% load CustomFilters %}
 {% load i18n %}
 
-{% if is_paginated %}
-        <div class="panaging">
-             {%  if page_obj.has_previous %}
-                    &larr; <a href="{% dynurl url_paginator url_parameter  page_obj.previous_page_number %}" >{% trans 'Back' %}</a>
+{% if is_paginated or categories %}
+<section class="content__info__actions">
+        <div class="header vertical clearfix">
+
+
+            {% if is_paginated %}
+
+                <div class="paginator">
+                       {% if page_obj.has_previous %}
+                        <a href="{% dynurl url_paginator url_parameter page_obj.previous_page_number %}" class="paginator__prev"></a>
+                      {% endif %}
+                        <ul>
+
+                          {% for i in paginator_range %}
+                               {% ifequal i page_obj.number %}
+                                   <li><a href="" class="active">{{ page_obj.number }}</a></li>
+                                      {% else %}
+                                    <li><a href="{% dynurl url_paginator url_parameter i%}">{{ i }}</a></li>
+                               {% endifequal %}
+                          {% endfor %}
+                        </ul>
+                     {%  if page_obj.has_next %}
+                        <a href="{% dynurl url_paginator url_parameter page_obj.next_page_number%}" class="paginator__next"></a>
+                     {% endif %}
+                </div>
+
+
             {% endif %}
 
 
-                {% for i in paginator_range %}
 
 
-                   {% ifequal i page_obj.number %}
-                       <span style="font-weight: bolder" class="current">{{ page_obj.number }}</span>
-                          {% else %}
-                       <a href="{% dynurl url_paginator url_parameter i%}">{{ i }}</a>
-                 {% endifequal %}
-               {% endfor %}
-               {%  if page_obj.has_next %}
-                          <a href="{% dynurl url_paginator url_parameter page_obj.next_page_number%}" >{% trans 'Forward' %}</a>&rarr;
-               {% endif %}
+            {% if categories %}
+
+                <div class="view vertical">
+                    <button class="display-list"></button>
+                    <button class="display-square active"></button>
+                </div>
+
+               <div class="select category">
+                    <select class="category-selector">
+
+                      {% if 'b2c-products' in request.path %}
+
+                          <option value="{% url 'b2c_products:main' %}">{% trans 'Slect Category' %}</option>
+                          {% for pk, category in categories.items %}
+                          <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2c_products:category' category.slug pk %}">
+                              {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                          </option>
+                          {% endfor %}
+
+                      {% else %}
+
+                          <option value="{% url 'b2b_products:main' %}">{% trans 'Slect Category' %}</option>
+                          {% for pk, category in categories.items %}
+                          <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
+                              {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
+                          </option>
+                          {% endfor %}
+
+                      {% endif %}
+                  </select>
+              </div>
+
+
+          {% endif %}
         </div>
- {% endif %}
+</section>
+{% endif %}
 
 
 

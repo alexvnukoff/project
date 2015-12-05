@@ -2,57 +2,43 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
-{% block js %}
-    {{ block.super }}
-
-    <script>
-        $(document).ready(function() {
-            $('.category-selector').on('change', function() {
-                window.location.href = this.value
-            });
-        });
-    </script>
-{% endblock %}
+{% load humanize %}
 {% block content %}
     {{ block.super }}
-    <div>
-        {% trans 'Categories' %}: <select class="category-selector">
 
-            <option value="{% url 'b2b_products:main' %}">{% trans 'Slect Category' %}</option>
-            {% for pk, category in categories.items %}
-            <option {% if selected_category == category %}selected="selected"{% endif %} value="{% url 'b2b_products:category' category.slug pk %}">
-                {{ "-"|multiply:category.level|multiply:2 }} {{ category.name }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
+<section class="content__info">
+   {% include 'usersites/Paginator.html' %}
 
-    {% include 'usersites/Paginator.html' %}
-    <ul class="listprd">
-        {% for product in object_list %}
-            <li>
-                <div class="thumb">
-                    <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
-                        {% if product.image %}
-                          <img id="largeImage" style="max-width: 150px; max-height: 138px;" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
-                        {% else %}
-                          <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                        {% endif %}
-                    </a>
-                </div>
-                <div class="link">
-                    <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="name">{{ product.name|truncatewords:8 }}</a>
-                </div>
-                <div class="price">
-                    {% if product.cost %}
-                        {{ product.cost|formatPrice }} {{ product.currency|getSymbol }}
-                    {% else %}
-                        {% trans 'Contact to price' %}
-                    {% endif %}
-                </div>
-                <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="btnbuy">{% trans "Buy" %}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    {% include 'usersites/Paginator.html' %}
+                <section class="content__info__products">
+                    <h2>B2B Products</h2>
+                    <ul class="products-list">
+
+                        {% for product in object_list %}
+
+                        <li class="product">
+                            <div class="product__cover vertical">
+                        <a href="{% url 'b2b_products:detail' product.slug product.pk %}">
+                            {% if product.image %}
+                              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                            {% else %}
+                              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                            {% endif %}
+                        </a>
+                            </div>
+                            <div class="product__about">
+
+                                <p class="desc">
+                                    <strong>{{ product.name|truncatewords:8 }}</strong></p>
+                                <p class="price"><span class="value">{% if product.is_coupon %}{{ product.get_discount_price }}{% else %}{{ product.cost|formatPrice }}{% endif %}</span><span class="currency">{{ product.currency|getSymbol }}</span></p>
+
+                            </div>
+                            <a href="{% url 'b2b_products:detail' product.slug product.pk %}" class="product__buy vertical"><span>{% trans "Buy" %}</span></a>
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+                </section>
+
+   {% include 'usersites/Paginator.html' %}
 {% endblock %}

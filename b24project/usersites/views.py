@@ -13,8 +13,10 @@ def wall(request):
     news = News.get_active_objects().filter(organization=organization)[:1]
 
     if isinstance(organization, Company):
-        b2c_products = B2CProduct.get_active_objects().filter(company=organization)
-        b2b_products = B2BProduct.get_active_objects().filter(company=organization)[:4]
+        b2c_products = B2CProduct.get_active_objects().filter(company=organization)[:3]
+        b2c_coupons  = B2CProduct.get_active_objects().filter(coupon_dates__contains=now().date(),
+                                   coupon_discount_percent__gt=0).order_by("-created_at")
+        b2b_products = B2BProduct.get_active_objects().filter(company=organization)[:3]
     else:
         b2b_products = None
         b2c_products = None
@@ -26,8 +28,8 @@ def wall(request):
         'title': get_current_site(request).user_site.organization.name,
         'proposals': proposals,
         'news': news,
-        'coupons': b2c_products,
-        'b2c_products': b2c_products[:4],
+        'b2c_coupons': b2c_coupons,
+        'b2c_products': b2c_products,
         'b2b_products': b2b_products
     }
 

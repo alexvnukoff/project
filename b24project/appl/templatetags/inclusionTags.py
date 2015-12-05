@@ -18,7 +18,7 @@ register = template.Library()
 
 
 @register.inclusion_tag('usersites/banner.html', takes_context=True)
-def site_banner(context, block):
+def site_banner(context, side, block):
     request = context['request']
     site_pk = get_current_site(request).pk
     cache_name = "banner:usersite:%s:%s" % (block, site_pk)
@@ -33,7 +33,7 @@ def site_banner(context, block):
     else:
         banner = cache.get(cache_name)
 
-    return {'banner': banner}
+    return {'banner': banner, 'side': side}
 
 
 @register.inclusion_tag('usersites/tops.html', takes_context=True)
