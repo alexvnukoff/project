@@ -156,8 +156,8 @@ button.basket-btn {
 a.red-btn {
     display:block;
     margin:15px 0 10px 0;
-    border:1px solid #cd363a;
-    background: #cd363a;
+    border:1px solid #dd4b39;
+    background: #dd4b39;
     text-align:center;
     color: #fff;
     font-size:12px !important;
@@ -172,7 +172,7 @@ a.red-btn:hover {
 }
 
 button.btn-green {
-background: #2CA93B;
+background: #2ca93b;
 }
 
 .basket_detail {
@@ -239,4 +239,255 @@ background: #2CA93B;
 .basket_detail p.total_cost {
     text-align:right;
     font-size:15px;
+}
+
+/* Wrapper for Usersites settings =========================================== */
+
+.clear {
+  clear:both;
+}
+
+#wrapper h1 {
+  margin:30px 0 10px 0;
+  font-size:24px;
+  color:#000;
+}
+
+#wrapper h3 {
+  margin:20px 0 10px 0;
+  font-size:20px;
+  color:#000;
+}
+
+#wrapper p {
+  font-size:13px;
+}
+
+#wrapper hr {
+  display:block;
+  border:0;
+  border-top:1px solid #dedede;
+  margin:20px 0;
+}
+
+#wrapper form {
+  font-size:13px;
+}
+
+#wrapper .form-group {
+  margin:10px 0 10px 0;
+}
+
+#wrapper .form-group label {
+  display:block;
+  font-weight:bold;
+}
+
+#wrapper .form-group label span {
+  color:#818181;
+  font-weight:normal;
+  font-size:12px;
+}
+
+#wrapper .form-group small{
+  display:block;
+}
+
+#wrapper .error {
+  color:red;
+}
+
+#wrapper .form-group input[type=text] {
+  margin:3px 0;
+  padding:5px;
+  border:2px solid #919191;
+}
+
+#wrapper .form-group input[type=file] {
+  margin:3px 0;
+  border:0;
+  display:block !important;
+  overflow:hidden!important;
+}
+
+#wrapper .form-group textarea {
+  width:600px;margin:3px 0;
+  padding:5px;
+  resize:none;
+  font-size:13px;
+  border:2px solid #919191 !important;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#wrapper .form-group .viewimg {
+  margin-top:8px;
+}
+
+#wrapper .form-group .viewimg img {
+  border:1px solid #dedede;
+}
+
+#wrapper .form-group a.btn-link {
+  color:000;
+  background:#dedede;
+}
+
+#wrapper .form-group .showtype {
+  margin-top:5px;
+}
+
+#wrapper .form-group .template .ex-img {
+  float:left;
+  margin:3px 10px 5px 0;
+}
+
+#wrapper .form-group .template .ex-img img {
+  width:428px;
+  border:1px solid #919191;
+}
+
+#wrapper .form-group ul.custom_images {
+  margin:0;padding:0;
+}
+
+#wrapper .form-group ul.custom_images li {
+  margin:3px 0;
+  padding:0;
+}
+
+#wrapper .form-group ul.custom_images li img {
+  width:428px;
+  border:1px solid #919191 !important;
+  margin:0;
+  poadding:0;
+  display:block;
+}
+
+#wrapper .form-group ul.custom_images .label {
+  font-weight:bold;
+  font-size:11px;
+  margin:5px 0;
+}
+
+#wrapper .form-group .b-img.banner {
+  border:0;
+  height:auto;
+  margin-bottom:5px;
+}
+
+/* Products SALE / Coupon stuff ============================================= */
+
+.product-sale::after {
+    content: " ";
+    border-width: 3px 3px 4px 4px;
+    border-style: solid;
+    border-color: transparent #954232 #954232 transparent;
+    position: absolute;
+    top: 0px;
+    right: 100%;
+}
+
+.product-sale {
+  background:#dd4b39;
+  color:#fff;
+  font-weight:bold;
+  padding:5px 8px 5px 8px;
+  margin:-5px 0 0 10px;
+  position:absolute;
+}
+
+.product-sale-box {
+  width:100%;
+  background:#eeeeee;
+  margin:20px 0 30px 0;
+}
+
+.product-sale-box .product-sale {
+  background:#dd4b39;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  padding:5px 8px 5px 8px;
+  margin:-5px 0 0 600px;
+  position:absolute;
+}
+
+.product-sale-box .cover-image {
+  text-align:center;
+}
+
+.product-sale-box .cover-image img {
+  width:100px;
+  margin:10px;
+  float:left;
+}
+
+.product-sale-box .cover-text {
+  margin:10px 0;
+  float:left;
+}
+
+.product-sale-box .cover-text h2 {
+  font-size:18px;
+  padding:5px 5px 10px 5px;
+  color:#444;
+}
+
+.product-sale-box .white-line {
+  width:550px;
+  background:#fff;
+  padding:10px;
+}
+
+.product-sale-box p.lead {
+  font-size:15px;
+}
+
+.product-sale-box span.price {
+  font-weight: bold;
+}
+
+.product-sale-box span.date {
+  color:#848484;
+}
+
+a.green-btn-sale {
+    display:inline-block;
+    margin:15px 0 10px 0;
+    border:1px solid #2ca93b;
+    background: #2ca93b;
+    text-align:center;
+    color: #fff;
+    font-size:12px !important;
+    padding:6px 10px 6px 10px;
+    cursor:pointer;
+    border:0;
+    box-shadow: 0px 1px 2px #ddd;
+}
+
+a.green-btn-sale:hover {
+  text-decoration:none;
+}
+
+/* Temp media queries ============================================= */
+
+@media only screen and (max-width:1250px){
+
+.sidebar {
+  display:none;
+}
+
+.adv, .banners {
+  display:none;
+}
+
+.wrapper {
+  width:100%;
+}
+
+.mainright {
+  float:none;
+  margin:0 auto;
+}
+
 }

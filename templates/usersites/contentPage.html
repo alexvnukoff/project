@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
+{% load humanize %}
 {% block content %}
     {{ block.super }}
     {% if proposals %}
@@ -11,7 +12,7 @@
         <li>
             <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
             <div class="desc">
-                <p class="date">{% trans 'Date' %}:  {{ proposal.created_at|date:'d M Y' }}</p>
+                <p class="date">{% trans 'Date' %}: {{ proposal.created_at|date:'d M Y' }}</p>
                 <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"30" }}</p>
                 <p class="linkmore"><a href="{{ proposal.get_absolute_url }}">{% trans "more" %}...</a></p>
             </div>
@@ -29,11 +30,11 @@
                 {% if article.image %}
                     <img style="max-width: 70px; max-height: 60px;" src="{{ article.image.small }} " alt="{{ article.title }}" title="{{ article.title }}"/>
                 {% else %}
-                    <img style="max-width: 70px;" src="{% static "b24online/img/news.jpg" %}" alt="" />
+                    <img style="max-width:70px;" src="{% static "b24online/img/news.jpg" %}" alt="" />
                 {% endif %}
             </div>
             <div class="desc">
-                <p class="date">{% trans 'Date' %}:  {{ article.created_at|date:'d M Y' }}</p>
+                <p class="date">{% trans 'Date' %}: {{ article.created_at|date:'d M Y' }}</p>
                 <p>
                     {% if article.short_description %}
                          {{ article.short_description|force_escape|linebreaks }}
@@ -47,6 +48,44 @@
         {% endfor %}
     </ul>
     {% endif %}
+
+    {% if coupons %}
+    <div class="clear"></div><br>
+    <h2>{% trans "Coupons" %}</h2>
+
+        {% for product in coupons %}
+        {% if product.is_coupon %}
+
+        <div class="product-sale-box">
+        <div class="product-sale">-{{ product.coupon_discount_percent|intword }}%</div>
+
+        <div class="cover-image">
+            {% if product.image %}
+              <img src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+            {% else %}
+              <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+            {% endif %}
+        </div>
+            <div class="cover-text">
+                <h2>{{ product.name }}</h2>
+
+                <div class="white-line">
+                <p class="lead">Price: <span class="price">{{ product.cost|formatPrice }} {{ product.currency|getSymbol }}</span> <span class="date">{% trans "Promotion ends" %} {{ product.end_coupon_date }}</span></p>
+                </div>
+
+                <a href="{% url 'b2c_products:detail' product.slug product.pk %}" class="green-btn-sale">{% trans "Buy Now" %}</a>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+        {% endif %}
+        {% endfor %}
+
+    {% endif %}
+
+
     {% if b2c_products %}
     <ul class="listprd">
         <h2 class="titlepage">
@@ -55,6 +94,9 @@
         {% for product in b2c_products %}
         <li>
             <div class="thumb">
+                {% if product.is_coupon %}
+                <div class="product-sale">-{{ product.coupon_discount_percent|intword }}%</div>
+                {% endif %}
                 {% if product.image %}
                     <img style="max-width: 150px; max-height: 138px;" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                 {% else %}

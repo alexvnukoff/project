@@ -18,6 +18,9 @@
   <tr style="background:#{% cycle 'ffffff' 'fafafa' %}">
     <td class="image">
         <a href="{% url 'b2c_products:detail' row.product.slug row.product.pk %}">
+            {% if row.product.is_coupon %}
+                <div class="product-sale">-{{ row.product.coupon_discount_percent|intword }}%</div>
+            {% endif %}
             {% if row.product.image %}
                 <img src="{{ row.product.image.small }}" alt="row.product.name">
             {% else %}

@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load CustomFilters %}
 {% load staticfiles %}
+{% load humanize %}
 {% block js %}
     {{ block.super }}
 
@@ -32,8 +33,11 @@
             <li>
                 <div class="thumb">
                     <a href="{% url 'b2c_products:detail' product.slug product.pk %}">
+                        {% if product.is_coupon %}
+                        <div class="product-sale">-{{ product.coupon_discount_percent|intword }}%</div>
+                        {% endif %}
                         {% if product.image %}
-                          <img style="max-width: 150px; max-height: 138px;" id="largeImage" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
+                          <img style="max-width:150px;max-height:138px;" id="largeImage" src="{{ product.image.big }}" alt="{{ product.name }}" title="{{ product.name }}" />
                         {% else %}
                           <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
                         {% endif %}
