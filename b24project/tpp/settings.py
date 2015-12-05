@@ -254,11 +254,12 @@ AUTHENTICATION_BACKENDS = (
 
 gettext = lambda s: s
 LANGUAGES = (
-    ('ru', gettext('Russia')),
-    ('am', gettext('Armenia')),
+    ('ru', gettext('Russian')),
+    ('am', gettext('Armenian')),
+    ('bg', gettext('Bulgarian')),
     #('az', gettext('Azerbaijan')),
     #('be', gettext('Belarus')),
-    ('en', gettext('England')),
+    ('en', gettext('English')),
     #('et', gettext('Estonia')),
     #('ka', gettext('Georgia')),
     #('kk', gettext('Kazakhstan')),
@@ -270,7 +271,7 @@ LANGUAGES = (
     #('tm', gettext('Turkmenistan')),
     ('uk', gettext('Ukrainian')),
     #('uz', gettext('Uzbekistan')),
-    ('he', gettext('Israel')),
+    ('he', gettext('Hebrew')),
     ('ar', gettext('Arabic')),
     ('zh', gettext('Chinese')),
 )

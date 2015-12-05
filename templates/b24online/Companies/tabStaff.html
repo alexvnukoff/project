@@ -27,25 +27,25 @@
                     <td class="status"></td>
                 </tr>
 
-                {% for user in page.object_list %}
-                    <tr data-item-id="{{ user.pk }}">
+                {% for vacancy in page.object_list %}
+                    <tr data-item-id="{{ vacancy.user.pk }}">
                         <td>
                             <div class="avatar">
-                                {% if user.profile.avatar %}
-                                     <img src="{{ user.profile.avatar.th }}" alt="{{ user.profile.full_name }}" />
+                                {% if vacancy.user.profile.avatar %}
+                                     <img src="{{ vacancy.user.profile.avatar.th }}" alt="{{ vacancy.user.profile.full_name }}" />
                                 {% else %}
-                                     <img style="width: 24px;height: 24px;" src="{% static "b24online/img/profile.jpg"  %}" alt="{{ user.profile.full_name }}" />
+                                     <img style="width: 24px;height: 24px;" src="{% static "b24online/img/profile.jpg"  %}" alt="{{ vacancy.user.profile.full_name }}" />
                                 {% endif %}
                             </div>
                         </td>
-                        {% if user.profile.full_name %}
-                            <td><a href="#" title="{{ user.profile.full_name }}">{{ user.profile.full_name }}</a></td>
+                        {% if vacancy.user.profile.full_name %}
+                            <td><a href="#" title="{{ vacancy.user.profile.full_name }}">{{ vacancy.user.profile.full_name }}</a></td>
                         {% else %}
-                            <td><a href="#" title="">{% trans "User with empty profile. User ID:" %} {{ user.pk }}</a></td>
+                            <td><a href="#" title="">{% trans "User with empty profile. User ID:" %} {{ vacancy.user.pk }}</a></td>
                         {% endif %}
-                        <td>{{ user.work_positions.first.department.name }}</td>
-                        <td>{{ user.work_positions.first.name }}</td>
-                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ user.profile.full_name }}" data-id="{{ user.pk }}"></i></td>
+                        <td>{{ vacancy.department.name }}</td>
+                        <td>{{ vacancy.name }}</td>
+                        <td><i class="staff-contact-msg img-status contact-us" data-name="{{ vacancy.user.profile.full_name }}" data-id="{{ vacancy.user.pk }}"></i></td>
                         <td><i class="staff-status-active img-status"></i></td>
                         {% comment %}
                             {% if status == 'Active' %}

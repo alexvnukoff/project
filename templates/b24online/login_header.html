@@ -16,7 +16,7 @@
         <div class="tophead-r">
             {% if user.email %}
                 {% trans 'Profile' %}:
-                 <a href="#" class="barca">{% userName %}</a>
+                 <a href="{% url "profile:main" %}" class="barca">{% userName %}</a>
             {% endif %}
 
         	{% if user.is_authenticated %}

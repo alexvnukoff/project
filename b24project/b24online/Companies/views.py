@@ -324,11 +324,10 @@ def _tab_staff(request, company, page=1):
                 vacancy = get_object_or_404(Vacancy, user=user, department__organization=organization)
                 vacancy.remove_employee()
 
-    users = get_user_model().objects.filter(is_active=True,
-                                            work_positions__department__organization=organization).distinct() \
-        .select_related('profile').prefetch_related('work_positions', 'work_positions__department')
+    vacancies = Vacancy.objects.filter(user__isnull=False, department__organization=organization)\
+        .select_related('user', 'user__profile', 'department')
 
-    paginator = Paginator(users, 10)
+    paginator = Paginator(vacancies, 10)
     page = paginator.page(page)
     paginator_range = func.get_paginator_range(page)
 
