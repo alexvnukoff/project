@@ -1,0 +1,36 @@
+{% extends 'usersites/index.html' %}
+{% load i18n %}
+{% load CustomFilters %}
+{% load staticfiles %}
+{% block content %}
+    {{ block.super }}
+    {% include 'usersites/Paginator.html' %}
+    <ul class="walllist">
+        {% for news in object_list %}
+            <li>
+                <h3><a href="{% url 'news:detail' news.slug news.pk %}">{{ news.title }}</a></h3>
+                <div class="thumb">
+                    {% if news.image %}
+                        <img style="max-width: 70px; max-height: 60px;" src="{{ news.image.small }} " alt="{{ news.title }}" title="{{ news.title }}"/>
+                    {% else %}
+                        <img style="max-width: 70px;" src="{% static "b24online/img/news.jpg" %}" alt="" />
+                    {% endif %}
+                </div>
+                <div class="desc">
+                    <p class="date" >
+                        {% trans 'Date' %}: {{ news.created_at|date:'d M Y' }}
+                    </p>
+                    <p>
+                    {% if news.short_description %}
+                         {{ news.short_description|force_escape|linebreaks }}
+                    {% else %}
+                         {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
+                    {% endif %}
+                    </p>
+                    <p class="linkmore"><a href="{% url 'news:detail' news.slug news.pk %}">{% trans "More" %}...</a></p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% include 'usersites/Paginator.html' %}
+{% endblock %}

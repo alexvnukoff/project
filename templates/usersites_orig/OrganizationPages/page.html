@@ -1,0 +1,12 @@
+{% extends 'usersites/index.html' %}
+{% load CustomFilters %}
+{% block content %}
+    {{ block.super }}
+    <div class="new-details">
+        <h1 class="titlepage">{{ object.title }}</h1>
+
+        <div class="content-news">
+            <p>{{ object.content|cleanHtml|safe }} </p>
+        </div>
+    </div>
+{% endblock %}

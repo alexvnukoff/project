@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load CustomFilters %}
+<div class="slidehome">
+    <ul class="slide">
+        {% if images|length == 0 %}
+            <li><img src="{% static "usersites/img/slide/slide-1.jpg" %}" alt="" /></li>
+            <li><img src="{% static "usersites/img/slide/slide-2.jpg" %}" alt="" /></li>
+            <li><img src="{% static "usersites/img/slide/slide-3.jpg" %}" alt="" /></li>
+        {% else %}
+            {% for image in images %}
+                <li style="width: 700px;height: 183px;"><img src="{{ image }}" alt="" /></li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>

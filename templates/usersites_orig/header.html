@@ -1,0 +1,8 @@
+{% load i18n %}
+{% load CustomFilters %}
+<div class="tophead">
+     <a href="{% url 'pages:about' %}">{% trans 'About us' %}</a>
+    {% for page in site.user_site.organization.additional_pages.all %}
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+    {% endfor %}
+</div>

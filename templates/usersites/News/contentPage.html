@@ -4,33 +4,37 @@
 {% load staticfiles %}
 {% block content %}
     {{ block.super }}
-    {% include 'usersites/Paginator.html' %}
-    <ul class="walllist">
+
+<section class="content__info">
+   {% include 'usersites/Paginator.html' %}
+       <section class="content__info__news news-page">
+        <h2>{% trans 'News' %}</h2>
+
         {% for news in object_list %}
-            <li>
+            <article class="news">
                 <h3><a href="{% url 'news:detail' news.slug news.pk %}">{{ news.title }}</a></h3>
-                <div class="thumb">
-                    {% if news.image %}
-                        <img style="max-width: 70px; max-height: 60px;" src="{{ news.image.small }} " alt="{{ news.title }}" title="{{ news.title }}"/>
-                    {% else %}
-                        <img style="max-width: 70px;" src="{% static "b24online/img/news.jpg" %}" alt="" />
-                    {% endif %}
+                <div class="news__content clearfix">
+                    <div class="news__content__cover">
+            {% if news.image %}
+                <img src="{{ news.image.small }} " alt="{{ news.title }}" title="{{ news.title }}"/>
+            {% else %}
+                <img src="{% static 'b24online/img/news.jpg' %}" alt="" />
+            {% endif %}
+            </div>
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{{ news.created_at|date:'d M Y' }}</p>
+                        <p class="text">
+                            {% if news.short_description %}
+                                 {{ news.short_description|force_escape|linebreaks }}
+                            {% else %}
+                                 {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'news:detail' news.slug news.pk %}" class="more vertical"><span>{% trans "More" %}</span></a>
                 </div>
-                <div class="desc">
-                    <p class="date" >
-                        {% trans 'Date' %}: {{ news.created_at|date:'d M Y' }}
-                    </p>
-                    <p>
-                    {% if news.short_description %}
-                         {{ news.short_description|force_escape|linebreaks }}
-                    {% else %}
-                         {{ news.content|cleanHtml|safe|truncatewords_html:"30" }}
-                    {% endif %}
-                    </p>
-                    <p class="linkmore"><a href="{% url 'news:detail' news.slug news.pk %}">{% trans "More" %}...</a></p>
-                </div>
-            </li>
+            </article>
         {% endfor %}
-    </ul>
-    {% include 'usersites/Paginator.html' %}
+ </section>
+     {% include 'usersites/Paginator.html' %}
 {% endblock %}

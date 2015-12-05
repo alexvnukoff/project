@@ -4,61 +4,73 @@
 {% load CustomFilters %}
 {% load staticfiles %}
 {% load inclusionTags %}
-
+{% load humanize %}
 {% block content %}
     {{ block.super }}
-    <script>
-    $(function() {
-         $(".prj-details-tab").tabs();});
-    </script>
 
-    <div class="goods-details">
-        <div class="country">
-            <label class="name-c">{{ object.name }}  {{ object.sku }}</label>
-        </div>
-        <div class="prd-details-left">
-            <div class="gallery">
-                <div id="panel">
-                    {% if object.image %}
-                      <img id="largeImage" style="max-width: 150px; max-height: 138px;" src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />
-                    {% else %}
-                      <img id="largeImage" src="{% static 'b24online/img/item.jpg' %}" alt="" />
-                    {% endif %}
-                </div>
-                <div id="thumbs">
-                    {% for gallery_obj in object.gallery_images|slice:":3" %}
-                       <img src="{{ gallery_obj.image.big }}" />
-                    {% endfor %}
-                </div>
+
+   <section class="content__info grid-layout">
+
+        <div class="product_box clearfix">
+            <h2>{{ object.name }} {{ object.sku }}</h2>
+            <div class="preview">
+                {% if object.image %}
+                  <img src="{{ object.image.big }}" alt="{{ object.name }}" title="{{ object.name }}" />
+                {% else %}
+                  <img src="{% static 'b24online/img/item.jpg' %}" alt="" />
+                {% endif %}
             </div>
-            {% b2b_social_buttons object.image object.name object.description %}
+            <div class="info">
+                <form>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{% trans "Price" %}:</td>
+                                <td>{{ object.currency|getSymbol }} {% if object.is_coupon %}{{ object.get_discount_price }}{% else %}{{ object.cost|formatPrice }}{% endif %}</td>
+                            </tr>
+                                {% if object.measurement_unit %}
+                                <tr>
+                                    <td>{% trans 'Unit' %}:</td>
+                                    <td>{{ object.get_measurement_unit_display }}</td>
+                                </tr>
+                                {% endif %}
+                            <tr>
+                                <td>{% trans 'Amount' %}:</td>
+                                <td><input type="text" id="item-amount" ng-model="quantity" name="amount"></td>
+                                </form>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td>
+                                    {% if paypal_form %}
+                                    {{ paypal_form.render }}
+                                    {% else %}
+                                        <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
+                                    {% endif %}
+                                </td>
+
+                            <tr>
+                                <td></td>
+                                <td>
+                                    {% b2b_social_buttons object.image object.name object.description %}
+                                </td>
+
+                            </td>
+                        </tbody>
+                    </table>
+
+                    <!-- MyAwesomeBasket -->
+                    <button ng-disabled="add_to_basket" ng-click="addToBasket({{object.pk}}, quantity)">
+                        <span ng-hide="add_to_basket"><i class="icon-basket">&nbsp;</i>{% trans 'Add to basket' %}</span>
+                        <span ng-show="add_to_basket"><i class="icon-ok">&nbsp;</i>{% trans 'Done!' %}</span>
+                    </button>
+
+            </div>
         </div>
 
-        <ul class="prd-info">
-            <li>
-                <label>{% trans "Price" %}:</label>
-                <div class="rightinfo">
-                    {% if object.cost %}
-                        <font class="num">  {{ object.currency|getSymbol }} {{ object.cost|formatPrice }}</font>
-                    {% else %}
-                         {% trans 'Contact to price' %}
-                    {% endif %}
-              </div>
-            </li>
-             {% if object.measurement_unit %}
-            <li>
-                <label>{% trans 'Unit' %}:</label>
-                <div class="rightinfo">
-                    <font class="num"> {{ object.get_measurement_unit_display }}</font>
-                </div>
-            </li>
-            {% endif %}
-            <li>
-                <label>{% trans 'Amount' %}:</label>
-                 <div class="rightinfo">
-                      <input id="item-amount" ng-model="quantity" type="text" maxlength="5" value="1" style="width:60%;"/>
-                </div>
-            </li>
+
+
             {% comment %}
             <li>
                 <label>{% trans 'Deleviry method' %}:</label>
@@ -71,142 +83,55 @@
                  </div>
             </li>
             {% endcomment %}
-            <li>
-            <script>
-            $(document).ready(function(){
-                $("#item-amount").keyup(function() {
-                    document.getElementById('id_quantity').value = this.value;
-                });
-            });
-            </script>
-            {% if paypal_form %}
-            {{ paypal_form.render }}
-            {% else %}
-                <a class="bigbuy contact-us" href="{% url 'pages:contacts' %}" >{% trans 'Countact us' %}</a>
-            {% endif %}
-            <!-- MyAwesomeBasket -->
-            <button ng-disabled="add_to_basket" class="basket-btn" ng-click="addToBasket({{object.pk}}, quantity)">
-            <span ng-hide="add_to_basket"><i class="icon-basket">&nbsp;</i>{% trans 'Add to basket' %}</span>
-            <span ng-show="add_to_basket"><i class="icon-ok">&nbsp;</i>{% trans 'Done!' %}</span>
-        </button>
-           </li>
-        </ul>
-        <div class="prj-details-tab">
-            <div class="tab-cate">
-                <ul>
-                    <li><a href="#goods-tabs-1">{% trans 'About company' %}</a></li>
-                    <li><a href="#goods-tabs-2">{% trans 'Document' %}</a></li>
-                    <li><a href="#goods-tabs-3">{% trans 'Gallery' %}</a></li>
-                    {% for page in object.additional_pages.all %}
-                        <li><a href="#goods-tabs-{{ forloop.counter0|add:5 }}">{{ page.title|truncatechars:10 }}</a></li>
+
+        <div class="InfoTabs">
+            <ul>
+                <li><a href="#tabs-1">{% trans 'About Company' %}</a></li>
+                <li><a href="#tabs-2">{% trans 'Document' %}</a></li>
+                <li><a href="#tabs-3">{% trans 'Gallery' %}</a></li>
+            </ul>
+
+
+            <div id="tabs-1">
+                {{ object.description|cleanHtml|safe }}
+            </div>
+
+
+            <div id="tabs-2">
+                <ul class="tpp-gallery gallery">
+                    {% for document_obj in object.documents.all %}
+                    <li>
+                        <div class="b-img">
+                            <a target="_blank" href="{{ document_obj.document.url }}">
+                                <img src="{% static "b24online/img/file_icon.png" %}" />
+                            </a>
+                            <div class="viewimge">
+                                <a target="_blank" href="{{ document_obj.document.url }}">
+                                    <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
+                                </a>
+                            </div>
+                            <div class="gray-img"></div>
+                        </div>
+                        <div>{{ document_obj.name }}</div>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
-            <div id="goods-tabs-1">
-                <div class="content-goods-tab">{{ object.description|cleanHtml|safe }}</div>
+
+
+            <div id="tabs-3">
+                <ul class="gallery">
+                {% for gallery_obj in object.gallery_images %}
+                    <figure>
+                            <a rel="gallery" fancybox class="fancybox" href="{{ gallery_obj.image.original }}">
+                                <img alt="" src="{{ gallery_obj.image.big }}" />
+                            </a>
+                    </figure>
+                {% endfor %}
+                 </ul>
             </div>
-            <div id="goods-tabs-2">
-                <div class="content-goods-tab">
-                    <ul class="tpp-gallery gallery">
-                        {% for document_obj in object.documents.all %}
-                        <li>
-                            <div class="b-img">
-                                <a target="_blank" href="{{ document_obj.document.url }}">
-                                    <img src="{% static "b24online/img/file_icon.png" %}" />
-                                </a>
-                                <div class="viewimge">
-                                    <a target="_blank" href="{{ document_obj.document.url }}">
-                                        <i class="imgnews"></i><span class="zoomtext">{% trans 'Download' %}</span>
-                                    </a>
-                                </div>
-                                <div class="gray-img"></div>
-                            </div>
-                            <div>{{ document_obj.name }}</div>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            <div id="goods-tabs-3">
-                <div class="content-goods-tab">
-                    <ul class="tpp-gallery gallery">
-                        {% for gallery_obj in object.gallery_images %}
-                            <li>
-                                <div class="b-img">
-                                    <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
-                                        <img alt=""  src="{{ gallery_obj.image.big }}" />
-                                    </a>
-                                    <div class="viewimge">
-                                        <a class="fancybox" rel="gallery" href="{{ gallery_obj.image.original }}">
-                                            <i class="imgnews zoom"></i><span class="zoomtext">{% trans 'zoom' %}</span>
-                                        </a>
-                                    </div>
-                                    <div class="gray-img"></div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            {% for page in object.additional_pages.all %}
-            <div id="goods-tabs-{{ forloop.counter0|add:5 }}">
-                  <div class="content-goods-tab">{{ page.content|cleanHtml|safe }}</div>
-             </div>
-            {% endfor %}
         </div>
-    </div>
+    </section>
 
-<script>
-<!-- Share for social networks -->
-Share = {
-        vkontakte: function(purl, ptitle, pimg, text) {
-            var url  = 'http://vkontakte.ru/share.php?';
-            url += 'url='          + encodeURIComponent(purl);
-            url += '&title='       + encodeURIComponent(ptitle);
-            url += '&description=' + encodeURIComponent(text);
-            url += '&image='       + encodeURIComponent(pimg);
-            url += '&noparse=true';
-            Share.popup(url);
-        },
-        odnoklassniki: function(purl, text) {
-            var url  = 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1';
-            url += '&st.comments=' + encodeURIComponent(text);
-            url += '&st._surl='    + encodeURIComponent(purl);
-            Share.popup(url);
-        },
-        facebook: function(purl, ptitle, pimg, text) {
-            var url  = 'http://www.facebook.com/sharer.php?s=100';
-            url += '&p[title]='     + encodeURIComponent(ptitle);
-            url += '&p[summary]='   + encodeURIComponent(text);
-            url += '&p[url]='       + encodeURIComponent(purl);
-            url += '&p[images][0]=' + encodeURIComponent(pimg);
-            Share.popup(url);
-        },
-        twitter: function(purl, ptitle) {
-            var url  = 'http://twitter.com/share?';
-            url += 'text='      + encodeURIComponent(ptitle);
-            url += '&url='      + encodeURIComponent(purl);
-            url += '&counturl=' + encodeURIComponent(purl);
-            Share.popup(url);
-        },
-        mailru: function(purl, ptitle, pimg, text) {
-            var url  = 'http://connect.mail.ru/share?';
-            url += 'url='          + encodeURIComponent(purl);
-            url += '&title='       + encodeURIComponent(ptitle);
-            url += '&description=' + encodeURIComponent(text);
-            url += '&imageurl='    + encodeURIComponent(pimg);
-            Share.popup(url)
-        },
 
-        me : function(el){
-            console.log(el.href);
-            Share.popup(el.href);
-            return false;
-        },
-        popup: function(url) {
-            window.open(url,'','toolbar=0,status=0,width=626,height=436');
-        }
-};
-<!-- /Share for social networks -->
-</script>
 {% endblock %}

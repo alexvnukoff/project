@@ -4,18 +4,26 @@
 {% load CustomFilters %}
 {% block content %}
     {{ block.super }}
-    {% include 'usersites/Paginator.html' %}
-    <ul class="walllist">
-        {% for proposal in object_list %}
-            <li>
+
+    <section class="content__info">
+     {% include 'usersites/Paginator.html' %}
+               <section class="content__info__news business-offers clearfix">
+        <h2>{% trans 'Business proposals' %}</h2>
+
+         {% for proposal in object_list %}
+            <article class="news">
                 <h3><a href="{{ proposal.get_absolute_url }}">{{ proposal.title }}</a></h3>
-                <div class="desc">
-                    <p class="date">{% trans 'Date' %}:  {{ proposal.created_at|date:'d M Y' }}</p>
-                    <p>{{ proposal.description|cleanHtml|safe|truncatewords_html:"30" }}</p>
-                    <p class="linkmore"><a href="{{ proposal.get_absolute_url }}">{% trans "More" %}...</a></p>
+                <div class="news__content clearfix">
+
+                    <div class="news__content__desc clearfix">
+                        <p class="date">{{ proposal.created_at|date:'d M Y' }}</p>
+                        {{ proposal.description|cleanHtml|safe|truncatewords_html:"30" }}
+                    </div>
+                    <a href="{% url 'proposal:detail' proposal.slug proposal.pk %}" class="more vertical"><span>{% trans "More" %}</span></a>
                 </div>
-            </li>
+            </article>
         {% endfor %}
-    </ul>
-    {% include 'usersites/Paginator.html' %}
+
+ </section>
+     {% include 'usersites/Paginator.html' %}
 {% endblock %}

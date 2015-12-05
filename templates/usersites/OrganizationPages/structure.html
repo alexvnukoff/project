@@ -4,32 +4,38 @@
 {% load staticfiles %}
 {% block content %}
     {{ block.super }}
-    <ul class="walllist">
-        {% for department, vacancies in departments.items %}
-            <h3 class="titlecpn">{{ department }}</h3>
-            <h4 class="titlecate">{% trans 'Department staff' %}:</h4>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-company">
-                <tr class="top">
-                    <td class="name">{% trans 'Employee' %}</td>
-                    <td>{% trans 'Position' %}</td>
-                    <td>{% trans 'Phone number' %}</td>
-                </tr>
-                {% for vacancy in vacancies %}
-                <tr>
-                    <td class="name">
-                        {% if profile.user.avatar %}
-                              <img src="{{ vacancy.user.profile.avatar.th }}" class="avatar" alt="" />
-                        {% else%}
-                            <img src="{% static 'b24online/img/profile.jpg' %}" class="avatar" alt="" />
-                        {% endif %}
 
-                       {{ vacancy.user.profile.full_name }}
-                    </td>
-                    <td>{{ vacancy.name }}</td>
-                    <td>{{ vacancy.user.profile.phone }}</td>
-                </tr>
-                {% endfor %}
+<section class="content__info">
+    {% for department, vacancies in departments.items %}
+            <h2>{{ department }}</h2>
+        <article class="workers">
+            <table>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>{% trans 'Employee' %}</td>
+                        <td>{% trans 'Position' %}</td>
+                        <td>{% trans 'Phone number' %}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vacancy in vacancies %}
+                        <tr>
+                            <td>
+                            {% if profile.user.avatar %}
+                                  <img src="{{ vacancy.user.profile.avatar.th }}" class="avatar" alt="" />
+                            {% else%}
+                                <img src="{% static 'b24online/img/profile.jpg' %}" class="avatar" alt="" />
+                            {% endif %}
+                            </td>
+                            <td>{{ vacancy.user.profile.full_name }}</td>
+                            <td>{{ vacancy.name }}</td>
+                            <td>{{ vacancy.user.profile.phone }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-        {% endfor %}
-    </ul>
+        </article>
+    {% endfor %}
+</section>
 {% endblock %}

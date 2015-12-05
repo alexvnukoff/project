@@ -3,19 +3,23 @@
 {% load staticfiles %}
 {% load i18n %}
 {% is_chamber_site as is_chamber %}
-<div class="companyinfo"><div style="margin: 0 15% 0 15%;">{{ site.user_site.footer_text }}</div></div>
-<div class="footer">
-	<div class="wrapper">
-    	<i class="logofooter imgmain"></i>
-        <div class="adress">
-            {% if not is_chamber and site.user_site.organization.parent %}
-        	    <h3>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</h3>
-            {% endif %}
 
-            {% blocktrans %}
-                Copyright © 2011 - 2015 Expert Center, All Rights Reserved.
-            {% endblocktrans %}        </div>
-        <div class="ads">{% site_banner "SITES FOOTER" %}</div>
+<!--  {{ site.user_site.footer_text }} -->
+
+    <div class="map" id="map" long="" lat="">
+
     </div>
-</div>
-<div class="tophead"></div>
+
+    <footer>
+        <div class="footer-content wrapper">
+            <div class="copy">
+                <img src="{{ site.user_site.logo.big }}" alt="">
+                {% if not is_chamber and site.user_site.organization.parent %}
+                <p><strong>{% trans "Member of" %} {{ site.user_site.organization.parent.name }}</strong><span>{% blocktrans %}Copyright © 2011 - 2015 Expert Center, All Rights Reserved.{% endblocktrans %}</span></p>
+                {% endif %}
+            </div>
+            <div class="banner">
+                {% site_banner "footer" "SITES FOOTER" %}
+            </div>
+        </div>
+    </footer>

@@ -133,6 +133,10 @@ class B2CProduct(ActiveModelMixing, models.Model, IndexedModelMixin):
         return self.start_coupon_date and self.end_coupon_date \
                and self.start_coupon_date <= now().date() < self.end_coupon_date
 
+    def get_discount_price(self):
+        return int(self.cost) - int(self.cost) * int(self.coupon_discount_percent) / 100
+
+
 
 class B2CProductComment(MPTTModel):
     content = models.TextField()
